@@ -70,8 +70,8 @@ jobs:
           basis=https://download.kiwix.org/release/kiwix-tools
           mkdir -p app/src-tauri/binaries kiwix && cd kiwix
           # Windows-curl (schannel) bricht ab, wenn der Sperrlisten-Server nicht antwortet – daher best-effort + Wiederholungen
-          extra=""; [ "${{ runner.os }}" = "Windows" ] && extra="--ssl-revoke-best-effort"
-          holen() { curl -fsSL $extra --retry 6 --retry-delay 10 --retry-all-errors -o paket "$1"; }
+          extra=""; [ "${{ runner.os }}" = "Windows" ] && extra="--ssl-no-revoke"
+          holen() { curl -fsSL $extra --retry 3 --retry-delay 10 --retry-all-errors -o paket "$1"; }
           if ! holen "$basis/$paket"; then
             [ -n "$alt" ] && holen "$basis/$alt"
           fi
@@ -95,14 +95,42 @@ jobs:
           releaseName: ${{ startsWith(github.ref, 'refs/tags/v') && format('OFFLINE {0}', github.ref_name) || '' }}
           releaseDraft: true
           prerelease: true
-      - name: Installer als Artefakt
-        uses: actions/upload-artifact@v4
+      - name: "macOS: Sidecar und Bundle ad-hoc signieren, prüfen, DMG bauen"
+        if: runner.os == 'macOS'
+        run: |
+          set -euo pipefail
+          app=$(find app/src-tauri/target -type d -path "*/release/bundle/macos/*.app" | head -1)
+          [ -n "$app" ] || { echo ".app nicht gefunden"; exit 1; }
+          echo "Bundle: $app"
+          # 1) mitgelieferte Programme und Hauptprogramm einzeln ad-hoc signieren (zuerst kiwix-serve)
+          for b in "$app/Contents/MacOS/"*; do
+            echo "signiere $b"; codesign --force --timestamp=none -s - "$b"
+          done
+          # 2) dann das Bundle als Ganzes
+          codesign --force --deep --timestamp=none -s - "$app"
+          # 3) prüfen – bricht ab, wenn die Signatur nicht zu den Ressourcen passt
+          codesign --verify --deep --strict --verbose=2 "$app"
+          codesign -dv --verbose=2 "$app" 2>&1 | head -12
+          # 4) frisches DMG aus dem signierten Bundle (ein DMG bewahrt Rechte und Struktur – ein ZIP nicht immer)
+          mkdir -p dist
+          name="OFFLINE-$(echo '${{ matrix.name }}' | tr ' ' '-')"
+          hdiutil create -volname OFFLINE -srcfolder "$app" -ov -format UDZO "dist/$name.dmg"
+          ls -la dist
+      - name: Installer als Artefakt (macOS)
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v5
+        with:
+          name: OFFLINE-${{ matrix.name }}
+          if-no-files-found: error
+          path: dist/*.dmg
+      - name: Installer als Artefakt (Windows/Linux)
+        if: runner.os != 'macOS'
+        uses: actions/upload-artifact@v5
         with:
           name: OFFLINE-${{ matrix.name }}
           if-no-files-found: warn
           path: |
             app/src-tauri/target/**/release/bundle/msi/*.msi
             app/src-tauri/target/**/release/bundle/nsis/*.exe
-            app/src-tauri/target/**/release/bundle/dmg/*.dmg
             app/src-tauri/target/**/release/bundle/appimage/*.AppImage
             app/src-tauri/target/**/release/bundle/deb/*.deb

@@ -93,6 +93,8 @@ npm run tauri dev      # startet die App mit der Oberfläche aus ../web
 npm run tauri build    # Installer unter src-tauri/target/release/bundle/
 ```
 
+**macOS ohne Entwicklerzertifikat:** Der Workflow signiert das Bundle nach dem Bauen ad-hoc – zuerst die mitgelieferten Programme (`kiwix-serve`), dann das Hauptprogramm, dann das Bundle – prüft es mit `codesign --verify --deep --strict` und baut daraus das `.dmg`. Ein gezipptes `.app` aus dem Build-Ordner startet auf Apple Silicon sonst nicht („Killed: 9“, Signatur passt nicht mehr zu den Ressourcen). Immer das `.dmg` verwenden.
+
 ## Signieren (vor dem ersten öffentlichen Download)
 
 Ohne Code-Signing warnen Windows („Unbekannter Herausgeber“) und macOS („kann nicht geöffnet werden“, Gatekeeper). Für die interne Erprobung ist das hinnehmbar; für den Start braucht es:
