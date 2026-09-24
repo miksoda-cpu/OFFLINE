@@ -90,6 +90,13 @@ p { margin: 0 0 1em; }
 .nav a:hover { background: var(--surface-2); color: var(--text); }
 .nav a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); }
 .nav svg { width: 18px; height: 18px; flex: none; }
+.download { margin-top: auto; border: 1px solid var(--line); border-radius: 12px; padding: .6rem .75rem; font-size: .8rem; background: var(--surface-2); }
+.download[hidden] { display: none; }
+.download + .status { margin-top: 0; }
+.download .dl-titel { font-weight: 700; color: var(--text); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.download .dl-zeile { display: flex; justify-content: space-between; gap: .5rem; align-items: center; margin-top: .25rem; color: var(--muted); }
+.download .progress { margin: .4rem 0 0; height: 5px; }
+.download .btn { margin-top: .5rem; }
 .status { margin-top: auto; font-size: .85rem; color: var(--muted); display: flex; flex-direction: column; gap: .3rem; padding: .5rem .75rem; }
 .status-zeile { display: flex; align-items: center; gap: .5rem; min-width: 0; }
 .status-zeile#app-info { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }

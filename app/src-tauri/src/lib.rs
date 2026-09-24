@@ -196,6 +196,40 @@ fn unix_jetzt() -> i64 {
 
 // ---------- Befehle: Pakete ----------
 
+// ---------- Offene Downloads (Staging-Ordner mit Manifest) ----------
+
+#[derive(Serialize)]
+struct OffenerDownload { id: String, version: String, titel: String, geladen: u64, gesamt: u64 }
+
+fn ordner_groesse(p: &Path) -> u64 {
+    let mut n = 0;
+    if let Ok(rd) = std::fs::read_dir(p) {
+        for e in rd.flatten() {
+            let pfad = e.path();
+            if pfad.is_dir() { n += ordner_groesse(&pfad); } else if let Ok(md) = e.metadata() { n += md.len(); }
+        }
+    }
+    n
+}
+
+/// Unterbrochene Downloads: jeder `<id>-<version>.neu/` mit paket.json. `geladen` ist, was schon auf der Platte liegt.
+#[tauri::command]
+fn downloads_offen(z: State<Zustand>) -> Vec<OffenerDownload> {
+    let wurzel = z.wurzel();
+    let mut offen = Vec::new();
+    let Ok(rd) = std::fs::read_dir(&wurzel) else { return offen };
+    for e in rd.flatten() {
+        let name = e.file_name().to_string_lossy().to_string();
+        if !name.ends_with(".neu") { continue; }
+        let Ok(bytes) = std::fs::read(e.path().join("paket.json")) else { continue };
+        let Ok(m) = serde_json::from_slice::<Manifest>(&bytes) else { continue };
+        // Fertig installierte Version gleichen Stands zählt nicht als offen
+        if einspielen::installierte_version(&wurzel, &m.id).map(|(v, _)| v == m.version).unwrap_or(false) { continue; }
+        offen.push(OffenerDownload { geladen: ordner_groesse(&e.path().join("inhalt")), gesamt: m.groesse, id: m.id, version: m.version, titel: m.titel });
+    }
+    offen
+}
+
 // ---------- App-Update (Tauri-Updater; nur mit Feature tls eingebaut) ----------
 
 #[derive(Serialize)]
@@ -640,7 +674,7 @@ pub fn start() {
         .invoke_handler(tauri::generate_handler![
             datenordner, installierte, paket_lesen, einspielen_ordner, einspielen_bytes, entfernen, stick_suchen, aufraeumen_start,
             abo_lesen, abo_schreiben, verbindung_melden, speicherort_setzen, katalog_laden, paket_laden, download_abbrechen, updates_jetzt, abo_status,
-            lokal_url, kiwix_url, fenster_oeffnen, alles_loeschen, app_info,
+            lokal_url, kiwix_url, fenster_oeffnen, alles_loeschen, app_info, downloads_offen,
             app_update::app_update_pruefen, app_update::app_update_installieren, app_neustart
         ])
         .run(tauri::generate_context!())

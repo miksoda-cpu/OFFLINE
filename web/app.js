@@ -23,6 +23,7 @@ const state = {
   checks: speicher.get("checks", {}),
   abo: speicher.get("abo", { intervall: "woechentlich", nurWlan: true, fenster: true, von: "02:00", bis: "05:00", aktiv: true }),
   fortschritt: null, // { pfad, geladen, gesamt } während eines Downloads
+  download: null, // Seitenleiste: { id, titel, status: laedt|unterbrochen|kaputt|fertig, geladen, gesamt, text }
   bundesland: speicher.get("bundesland", "Wien"),
   notizen: speicher.get("notizen", ""),
   filter: "Alle",
@@ -314,19 +315,45 @@ async function pruefeUpdates({ still = false } = {}) {
   } finally { if (!still) render(); }
 }
 
+// Seitenleiste: laufender, unterbrochener oder kaputter Download
+const STATUS_TEXT = { laedt: "Lädt", unterbrochen: "Unterbrochen", kaputt: "Fehler", fertig: "Fertig" };
+function downloadLeiste() {
+  const el = document.getElementById("download");
+  if (!el) return;
+  const d = state.download;
+  if (!d) { el.hidden = true; el.innerHTML = ""; return; }
+  const p = d.gesamt ? Math.min(100, (100 * d.geladen) / d.gesamt) : 0;
+  const tag = d.status === "laedt" ? "tag-pro" : d.status === "fertig" ? "tag-ok" : "tag-warn";
+  el.hidden = false;
+  el.innerHTML = `<span class="dl-titel" title="${esc(d.titel)}">${esc(d.titel)}</span>
+    <div class="dl-zeile"><span class="tag ${tag}">${STATUS_TEXT[d.status]}</span><span class="mono">${d.gesamt ? `${groesse(d.geladen)} / ${groesse(d.gesamt)}` : groesse(d.geladen)}</span></div>
+    ${d.status === "laedt" || d.status === "unterbrochen" ? `<div class="progress"><div style="width:${p}%"></div></div>` : ""}
+    ${d.status === "kaputt" && d.text ? `<div class="muted" style="margin-top:.3rem">${esc(d.text)}</div>` : ""}
+    ${d.status === "unterbrochen" ? `<button class="btn btn-sm btn-primary" data-install="${esc(d.id)}">Fortsetzen</button>` : ""}
+    ${d.status === "kaputt" ? `<button class="btn btn-sm" data-install="${esc(d.id)}">Erneut versuchen</button>` : ""}
+    ${d.status === "laedt" && desktop ? `<button class="btn btn-sm" data-abbrechen>Abbrechen</button>` : ""}`;
+}
+
 async function installiereMitMeldung(id, ziel) {
+  if (state.download?.status === "laedt") { zeige(ziel, "Es läuft schon ein Download – bitte warten oder abbrechen.", ""); return; }
   const k = katalog() ?? (await pruefeUpdates({ still: true }));
   const eintrag = k?.pakete.find((p) => p.id === id);
   if (!eintrag) { zeige(ziel, "Paket nicht im Katalog.", "err"); return; }
   const alt = installiertesPaket(id);
   zeige(ziel, `Lade ${esc(eintrag.titel)} …`, "");
+  state.download = { id, titel: eintrag.titel, status: "laedt", geladen: state.download?.id === id ? state.download.geladen : 0, gesamt: state.download?.id === id ? state.download.gesamt : eintrag.groesse };
+  downloadLeiste();
   try {
     const { paket, delta: d, geladen } = await installiere(k, eintrag, (f) => {
       state.fortschritt = f;
-      const bar = document.querySelector(".progress-dl");
+      state.download = { ...state.download, status: "laedt", geladen: f.geladen, gesamt: f.gesamt };
+      downloadLeiste();
       if (location.hash === "#updates") render();
     });
     state.fortschritt = null;
+    state.download = { ...state.download, status: "fertig", geladen: state.download.gesamt };
+    downloadLeiste();
+    setTimeout(() => { if (state.download?.status === "fertig") { state.download = null; downloadLeiste(); } }, 8000);
     const text = alt
       ? `${esc(paket.manifest.titel)} auf ${esc(paket.manifest.version)} aktualisiert – ${groesse(geladen)} geladen (${d.laden.length} von ${paket.manifest.dateien.length} Dateien), Signatur und Prüfsummen geprüft.`
       : `${esc(paket.manifest.titel)} ${esc(paket.manifest.version)} installiert – ${groesse(geladen)}, Signatur und Prüfsummen geprüft.`;
@@ -338,6 +365,8 @@ async function installiereMitMeldung(id, ziel) {
     const msg = String(e?.message ?? e);
     // Ein Abbruch durch den Nutzer ist keine Ablehnung – der Stand bleibt und wird beim nächsten Mal fortgesetzt
     const abbruch = msg.startsWith("Abgebrochen");
+    state.download = { ...state.download, status: abbruch ? "unterbrochen" : "kaputt", text: abbruch ? "" : msg };
+    downloadLeiste();
     zeige(ziel, (abbruch ? "" : "Abgelehnt: ") + esc(msg) + (abbruch ? " Zum Fortsetzen in der Bibliothek noch einmal auf „Installieren“ klicken." : ""), abbruch ? "" : "err");
     if (location.hash === "#updates") { state.meldung = abbruch ? { art: "warn", titel: "Abgebrochen", text: "Der bisherige Stand bleibt gespeichert. Zum Fortsetzen: Bibliothek → Installieren." } : { art: "fehler", titel: "Abgelehnt", text: esc(msg) }; render(); }
   }
@@ -540,7 +569,8 @@ main.addEventListener("change", (e) => {
   if (t.id === "bl") { state.bundesland = t.value; speicher.set("bundesland", t.value); render(); }
 });
 
-main.addEventListener("click", (e) => {
+// Klicks in der Hauptfläche und in der Download-Leiste der Seitenleiste
+function beiKlick(e) {
   const b = e.target.closest("button");
   if (!b) return;
   if (b.dataset.filter) { state.filter = b.dataset.filter; render(); }
@@ -565,7 +595,9 @@ main.addEventListener("click", (e) => {
   if (b.hasAttribute("data-loeschen-jetzt")) restlosLoeschen(document.getElementById("loeschen-wort")?.value ?? "");
   if (b.hasAttribute("data-speicherort")) client.ordnerWaehlen("Ordner für Pakete wählen (z. B. externe Platte)").then((p) => p && speicherortSetzen(p));
   if (b.hasAttribute("data-speicherort-standard")) speicherortSetzen(null);
-});
+}
+main.addEventListener("click", beiKlick);
+document.getElementById("download").addEventListener("click", beiKlick);
 
 main.addEventListener("submit", (e) => {
   if (e.target.id !== "chat-form") return;
@@ -586,7 +618,7 @@ main.addEventListener("input", (e) => {
 
 menu.addEventListener("click", () => { const open = sidebar.classList.toggle("open"); menu.setAttribute("aria-expanded", String(open)); });
 
-const APP_VERSION = "0.1.1";
+const APP_VERSION = "0.1.2";
 function netz() {
   const on = navigator.onLine;
   document.getElementById("net-dot").className = "dot " + (on ? "on" : "off");
@@ -626,8 +658,21 @@ netz();
 appAngaben();
 render();
 
+// Unterbrochene Downloads vom letzten Mal: anzeigen und, wenn online, von selbst fortsetzen
+async function offeneDownloads() {
+  if (!desktop) return;
+  let offen = [];
+  try { offen = await client.downloadsOffen(); } catch { return; }
+  const o = offen[0];
+  if (!o) return;
+  state.download = { id: o.id, titel: o.titel, status: "unterbrochen", geladen: o.geladen, gesamt: o.gesamt };
+  downloadLeiste();
+  if (navigator.onLine) installiereMitMeldung(o.id, "bib-msg");
+}
+
 // Erster Start: Österreich-Paket automatisch holen, wenn noch keins da ist. Danach still nach Updates sehen.
 (async () => {
+  await offeneDownloads();
   if (!P()) {
     if (!navigator.onLine) return;
     try {
