@@ -111,9 +111,35 @@ NOMAD orchestriert Docker-Container auf Debian. Das ist für Laien auf Windows/M
 
 ---
 
-## 5. Geschäftsmodell: Frei + Pro
+## 5. Geschäftsmodell: drei Ebenen (Entscheidung 24.09.2026)
 
-Die Software ist frei (Apache 2.0, wie das Vorbild). Bezahlt wird, was wir **selbst leisten**: Kuratierung, Pflege, Service, Hardware.
+Die Software ist frei (Apache 2.0, wie das Vorbild). Bezahlt wird, was wir **selbst leisten**: Kuratierung, Pflege, Service, Hardware. Alles läuft als signiertes Paket, auf allen drei Ebenen.
+
+```
+┌──────────────────────────────────────────────┐
+│ 3 · MARKTPLATZ (später)                      │
+│    Leute machen Pakete: gratis oder zum      │
+│    Verkauf, Erlös wird geteilt               │
+├──────────────────────────────────────────────┤
+│ 2 · FREISCHALTBAR                            │
+│    Verlagslizenzen, Pro-Funktionen (lokale   │
+│    KI, Übersetzung), große Kartenpakete      │
+├──────────────────────────────────────────────┤
+│ 1 · BASIS (gratis)                           │
+│    Offene Lizenzen, Gemeinfreies, RIS,       │
+│    NGO- und Behördeninhalte, Tresor          │
+└──────────────────────────────────────────────┘
+```
+
+Die Basis ist nicht nackt: Wikipedia, Karten, Erste Hilfe, Gemeinfreies und die NGO-Inhalte aus den Anfragebriefen reichen, damit man die App ernst nimmt. Der Tresor bleibt gratis, weil er das Argument ist, sie überhaupt zu installieren.
+
+**Marktplatz nur vorbereiten.** Mit einem Marktplatz werden wir zur Plattform (Meldewege, Verkäuferprüfung, Haftung bei falschen Erste-Hilfe-Tipps, Bezahlsysteme von Apple und Google bei einer Handy-Version). Das kommt erst nach dem Marktstart und nur mit Prüfung vor der Freigabe. Damit es dann kein Umbau wird, gilt ab jetzt:
+- **Paketangaben:** Jedes Paket kennt Herausgeber, Lizenz, Preis (gratis, Pro, Kauf) und Prüfstatus. Im Manifest seit Format 1 (`preis`, `pruefstatus` optional).
+- **Zwei Signaturebenen:** Wir signieren Herausgeber, Herausgeber signieren ihre Pakete. Spezifiziert als Format 2 in [PAKETFORMAT.md](PAKETFORMAT.md), Abschnitt 8.
+- **Offline gültige Lizenzen:** Ein Kauf wird zu einem signierten Lizenzschein am Gerät, der auch nach Monaten ohne Netz gilt. Ebenfalls Abschnitt 8.
+- **Regal statt Liste:** Die Bibliothek zeigt Pakete als Karten mit sichtbarem Herausgeber, damit die Rolle der NGOs, Verlage und später der Community von Anfang an sichtbar ist. Umsetzung in Phase 4b.
+
+Gestaltung: [DESIGN.md](DESIGN.md).
 
 | | **Frei** | **Pro** (Abo) | **Gemeinde / Schule / Betrieb** |
 |---|---|---|---|
@@ -156,9 +182,10 @@ Hinweise:
 | **2 – in Arbeit (24.09.2026)** | Rust-Kern (`kern/`, gleiche Tests wie das Werkzeug) und Tauri-Hülle (`app/`) mit Import vom USB-Stick; Installer für Windows, macOS, Linux über GitHub Actions ([DESKTOP.md](DESKTOP.md)). Offen: kiwix-serve + Kartendatei als mitgelieferte Programme | Installer Win/Mac/Linux (unsigniert) |
 | **3 – erledigt (24.09.2026)** | Update-Dienst im Rust-Kern: Katalog, fortsetzbare Downloads in Teilen, Delta gegen installierte Version, Hintergrund-Abo mit Zeitfenster; Speicherort auf externer Platte. Update-Server = statische Dateien auf Vercel | Abo funktioniert technisch |
 | **4 – in Arbeit** | Inhalte: kiwix-serve als mitgeliefertes Programm, Offline-Karte (PMTiles), lokaler Dateiserver, Update-Server auf Hetzner mit erstem Gigabyte-Paket (Wikivoyage) – fertig. Offen: Gigabyte-Test in der Desktop-App, Karte Österreich als PMTiles | Wikipedia und Karte offline |
-| **4b** | Tresor und Notfallmappe im Rust-Kern ([TRESOR.md](TRESOR.md)); kleine Werkzeuge ohne Netz (Radiofrequenzen, Sonnen- und Mondzeiten, Rechner) | das stärkste Gratis-Argument |
+| **4b** | Tresor und Notfallmappe im Rust-Kern ([TRESOR.md](TRESOR.md)); Bibliothek als Regal mit Herausgeber, Preis und Prüfstatus; kleine Werkzeuge ohne Netz (Radiofrequenzen, Sonnen- und Mondzeiten, Rechner); Startbild und dunkler Modus nach [DESIGN.md](DESIGN.md) | das stärkste Gratis-Argument |
 | **4c** | KI-Assistent (llama.cpp als mitgeliefertes Programm, Modell als Pro-Paket) | Fragen an die eigene Bibliothek |
-| **5** | Pro: Lizenzschlüssel, Zahlung, Code-Signing (Apple/Windows), Gemeinde-Version | Marktstart |
+| **5** | Pro: offline gültige Lizenzscheine, Zahlung, Herausgeber-Signaturen (Format 2), Code-Signing (Apple/Windows), Gemeinde-Version | Marktstart |
+| **6** | Marktplatz (Ebene 3) nach rechtlicher Prüfung; Handy-Version | Plattform |
 
 Offene Punkte:
 - **Ghost-Anmeldung (zurückgestellt am 24.09.2026):** Formular und Funktion `/api/anmelden` sind fertig, aber abgeschaltet. Zum Einschalten: Ghost gemäß [GHOST-SETUP.md](GHOST-SETUP.md) einrichten, in Vercel `ANMELDUNG_AKTIV=1` setzen, in `web/index.html` das `hidden` vom Formular `#anmeldung` entfernen und den Hinweis `#anmeldung-bald` löschen. Danach: Anschrift in `datenschutz.html` ergänzen, einmal selbst testen. Später: OFFLINE Pro als bezahlte Ghost-Stufe.

@@ -63,6 +63,8 @@ Der Ordnername ist `<id>-<version>`. Er ist nur Konvention; maßgeblich ist das 
 | `sprache` | ja | BCP-47, meist `de-AT`. |
 | `lizenz`, `herausgeber`, `quellen` | ja | Namensnennung, wie die Lizenzen es verlangen. |
 | `pro` | ja | `true`, wenn nur mit Pro-Lizenz. Die App zeigt es an; die Durchsetzung passiert beim Download-Server. |
+| `preis` | nein | `gratis`, `pro` (im Abo enthalten) oder `kauf` (Einzelkauf). Fehlt es, gilt `pro ? "pro" : "gratis"`. Vorbereitung für Ebene 2 und 3, siehe Abschnitt 8. |
+| `pruefstatus` | nein | `redaktion` (von uns geprüft), `herausgeber` (vom Herausgeber verantwortet, von uns freigegeben), `community` (später, Marktplatz). Fehlt es, gilt `redaktion`. Die App zeigt es im Regal an. |
 | `app_min` | ja | Kleinste App-Version, die das Paket versteht. |
 | `erstellt` | ja | Zeitpunkt der Erstellung, ISO 8601 UTC. |
 | `aenderungen` | nein | Was ist neu – Klartext für „Was ist neu?“. |
@@ -184,3 +186,23 @@ Alles, was scheitert, scheitert **vor** dem Tausch. Der installierte Stand bleib
 | `katalog <ziel> <paketordner…>` | Katalog aus Paketen bauen und signieren |
 
 Der Rust-Kern der Desktop-App implementiert `pruefen`, `delta` und den atomaren Tausch nach dieser Spezifikation; `werkzeug/test.mjs` enthält die Fälle, gegen die beide Umsetzungen laufen müssen.
+
+## 8. Ausblick: Herausgeber, Lizenzscheine, Marktplatz (Format 2, Entscheidung 24.09.2026)
+
+OFFLINE hat drei Ebenen: **Basis** (gratis, offene Lizenzen, Gemeinfreies, RIS, NGO- und Behördeninhalte, Tresor), **Freischaltbar** (Verlagslizenzen, Pro-Funktionen, große Kartenpakete) und später ein **Marktplatz**, auf dem andere Pakete anbieten. Damit der Marktplatz kein Umbau wird, ist Folgendes jetzt schon vorgesehen; umgesetzt wird es in Format 2, wenn der erste fremde Herausgeber kommt.
+
+**Paketangaben (heute, Format 1):** `herausgeber`, `lizenz`, `preis`, `pruefstatus` stehen im Manifest (siehe 2.1). Die Oberfläche zeigt Pakete als Regal mit Karten, auf denen der Herausgeber sichtbar ist.
+
+**Zwei Signaturebenen (Format 2):**
+- Wir signieren **Herausgeber**, nicht mehr jedes Paket: Ein Herausgeber-Eintrag (`herausgeber.json`: Name, öffentlicher Schlüssel, Zweck `pakete`, `gueltig_bis`, erlaubte Paket-Ids oder Präfix) trägt eine Signatur mit unserem Schlüssel.
+- Der Herausgeber signiert seine Pakete mit seinem Schlüssel. `paket.sig` bekommt dazu das Feld `herausgeber` mit dem signierten Eintrag, damit die Prüfung offline geht: erst unser Schlüssel über den Eintrag, dann der Herausgeber-Schlüssel über das Manifest, dann die Paket-Id gegen die erlaubten Ids.
+- Zurückziehen eines Herausgebers: Katalog führt eine Liste zurückgezogener Schlüssel-Ids; ein Paket eines zurückgezogenen Herausgebers wird nicht mehr installiert, Installiertes bleibt (mit Hinweis).
+- Unsere eigenen Pakete bleiben wie bisher direkt signiert; Format 1 bleibt gültig.
+
+**Offline gültige Lizenzscheine (Format 2, Phase 5):**
+- Ein Kauf oder ein Abo wird am Gerät zu einem **Lizenzschein**: JSON mit Geräte-Id, Paket-Id oder Ebene (`pro`), `gueltig_bis`, Ausstellungszeit, signiert mit einem eigenen Schlüssel für den Zweck `lizenzen` (Schlüsselliste wie in Abschnitt 4).
+- Die App prüft den Schein nur lokal. Ein Abo-Schein gilt bewusst länger als die Abrechnungsperiode (Vorschlag: Laufzeit + 6 Monate Nachfrist), damit gekaufte Inhalte in einem längeren Blackout nicht verschwinden. Verlängert wird still bei jeder Katalogprüfung.
+- Ein Einzelkauf-Schein hat kein `gueltig_bis`.
+- Der Download-Server (Vercel-Funktion) prüft denselben Schein und gibt eine zeitlich begrenzte Adresse auf den privaten Bereich des Buckets zurück.
+
+**Marktplatz (Ebene 3, offen):** Freigabe durch uns vor der Veröffentlichung, Meldeweg für rechtswidrige Inhalte, Identitätsprüfung der Verkäufer, Erlösteilung. Rechtlich zu klären: Plattformpflichten (DSA), Bezahlsysteme von Apple und Google bei einer Handy-Version (DMA-Ausnahmen). Erst nach Marktstart.
