@@ -153,6 +153,7 @@ Hinweise:
 | **5** | Pro: Lizenzschlüssel, Zahlung, Code-Signing (Apple/Windows), Gemeinde-Version | Marktstart |
 
 Offene Punkte:
+- **Ghost-Anmeldung (zurückgestellt am 24.09.2026):** Formular und Funktion `/api/anmelden` sind fertig, aber abgeschaltet. Zum Einschalten: Ghost gemäß [GHOST-SETUP.md](GHOST-SETUP.md) einrichten, in Vercel `ANMELDUNG_AKTIV=1` setzen, in `web/index.html` das `hidden` vom Formular `#anmeldung` entfernen und den Hinweis `#anmeldung-bald` löschen. Danach: Anschrift in `datenschutz.html` ergänzen, einmal selbst testen. Später: OFFLINE Pro als bezahlte Ghost-Stufe.
 - Code-Signing-Zertifikate (Apple Developer ~99 $/Jahr, Windows EV/OV-Zertifikat) – nötig, sonst warnen Windows und macOS beim Installieren.
 - Kooperationsanfragen: Zivilschutzverband, Landeswarnzentralen, Gemeindebund.
 - Rechtliche Prüfung der Vorsorge- und Gesundheitsinhalte (Haftungsausschluss).

@@ -15,6 +15,10 @@ function antwort(status, body) {
 }
 
 export async function POST(request) {
+  // Vorerst aus: Ghost ist noch nicht eingerichtet (siehe docs/GHOST-SETUP.md).
+  // Einschalten mit der Vercel-Umgebungsvariable ANMELDUNG_AKTIV=1.
+  if (process.env.ANMELDUNG_AKTIV !== "1") return antwort(503, { fehler: "Die Anmeldung startet in Kürze." });
+
   let d;
   try { d = await request.json(); } catch { return antwort(400, { fehler: "Ungültige Anfrage." }); }
 

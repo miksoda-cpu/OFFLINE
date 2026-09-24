@@ -1,3 +1,5 @@
+> **Status: zurückgestellt** (24.09.2026) – Formular ist live abgeschaltet. Wiederaufnahme: siehe „Offene Punkte“ in KONZEPT.md.
+
 # OFFLINE × Ghost – Einrichtung
 
 Die Anmeldung für das Gratis-Paket läuft über die Mitglieder von The Digioneer (Ghost auf digioneer.pro).

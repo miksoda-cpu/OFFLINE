@@ -30,8 +30,8 @@
       <h1>Wissen, das nicht ausfällt.</h1>
       <p class="lead">Wikipedia, Karten von ganz Österreich, Notfallwissen und ein KI-Assistent – auf deinem PC oder Mac, ohne Internet. Wenn du online bist, hält sich OFFLINE von selbst aktuell.</p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="#gratis">Gratis-Paket holen</a>
-        <a class="btn" href="/app.html">Prototyp ansehen</a>
+        <a class="btn btn-primary" href="/app.html">Prototyp ansehen</a>
+        <a class="btn" href="#gratis">Gratis-Paket</a>
       </div>
     </section>
 
@@ -76,7 +76,13 @@
           </ul>
           <p class="muted" style="font-size:.9rem">Die App ist noch in Arbeit. Wer sich jetzt anmeldet, bekommt als Erstes Bescheid, sobald der Download bereitsteht.</p>
         </div>
-        <form class="card" id="anmeldung" novalidate>
+        <div class="card" id="anmeldung-bald">
+          <span class="tag tag-warn">Bald</span>
+          <h3 style="margin-top:.6rem">Die Anmeldung öffnet in Kürze</h3>
+          <p class="muted" style="margin:0">Bis dahin kannst du den Prototyp im Browser ausprobieren – er funktioniert nach dem ersten Öffnen auch offline.</p>
+          <a class="btn btn-primary" href="/app.html" style="margin-top:1rem">Prototyp öffnen</a>
+        </div>
+        <form class="card" id="anmeldung" novalidate hidden>
           <div class="grid grid-2" style="gap:0 1rem">
             <div class="field"><label for="vorname">Vorname</label><input type="text" id="vorname" name="vorname" autocomplete="given-name" required minlength="2"></div>
             <div class="field"><label for="nachname">Nachname</label><input type="text" id="nachname" name="nachname" autocomplete="family-name" required minlength="2"></div>
