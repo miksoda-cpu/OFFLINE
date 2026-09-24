@@ -105,6 +105,9 @@ export function paketUrl(katalog, eintrag) {
 }
 
 // ---------- Pakete ----------
+export const istDesktop = false;
+export function installierteIds() { return speicher.installierte(); }
+
 export function installiertesPaket(id) {
   return speicher.get("paket:" + id, null);
 }

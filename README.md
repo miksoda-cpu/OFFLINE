@@ -11,6 +11,7 @@ Ein Projekt von The Digioneer und der digitalworld Academy. Inspiriert von [Proj
 | [`docs/KONZEPT.md`](docs/KONZEPT.md) | Konzept: Architektur, Offline-Installer, Update-Abo, Inhalte und Lizenzen, Frei/Pro, Fahrplan |
 | [`docs/PAKETFORMAT.md`](docs/PAKETFORMAT.md) | Paketformat: signierte Manifeste, Katalog, Delta-Updates, Schlüssel |
 | [`werkzeug/`](werkzeug/) | Paketwerkzeug (Node, keine Abhängigkeiten): Schlüssel, bauen, prüfen, delta, katalog – mit Tests |
+| [`app/`](app/) | Desktop-App (Tauri 2): Hülle um den Kern, Oberfläche aus `web/`. Installer baut [GitHub Actions](.github/workflows/desktop.yml), Anleitung in [`docs/DESKTOP.md`](docs/DESKTOP.md) |
 | [`kern/`](kern/) | Rust-Kern der Desktop-App: Signatur, Prüfsummen, Delta, atomares Einspielen – gleiche Tests wie das Werkzeug (`cargo test`) |
 | [`pakete/`](pakete/) | Quellen der Inhaltspakete (Österreich-Paket) |
 | [`schluessel/`](schluessel/) | Öffentliche Signaturschlüssel (derzeit Entwicklungsschlüssel) |

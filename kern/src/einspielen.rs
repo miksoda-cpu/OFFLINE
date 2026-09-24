@@ -14,7 +14,7 @@ use crate::Fehler;
 use std::cmp::Ordering;
 use std::path::{Path, PathBuf};
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
 pub struct Einspielergebnis {
     pub id: String,
     pub version: String,

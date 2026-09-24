@@ -1,0 +1,1 @@
+{"default":{"identifier":"default","description":"Hauptfenster: Kernbefehle, Ordnerauswahl, Links im Browser öffnen","local":true,"windows":["main"],"permissions":["core:default","dialog:allow-open","opener:allow-open-url"]}}

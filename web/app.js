@@ -1,8 +1,10 @@
 // OFFLINE – App-Oberfläche (Prototyp). Alle Inhalte kommen aus signierten Paketen, siehe paket-client.js.
-import {
-  speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates, inhalt,
-} from "./paket-client.js";
 import { versionVergleich } from "./paket-kern.js";
+
+// Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
+const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
+const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates, inhalt, installierteIds } = client;
+const desktop = client.istDesktop ? await client.init() : null;
 
 const BASISPAKET = "at-basis";
 
@@ -56,7 +58,7 @@ const seiten = {
     const laender = D("bundeslaender")?.laender ?? [];
     const erledigt = Object.values(state.checks).filter(Boolean).length;
     const gesamt = vorsorge.gruppen.reduce((s, g) => s + g.punkte.length, 0);
-    const installierte = speicher.installierte().map(installiertesPaket).filter(Boolean);
+    const installierte = installierteIds().map(installiertesPaket).filter(Boolean);
     const belegt = installierte.reduce((s, x) => s + x.manifest.groesse, 0);
     const k = katalog();
     const updates = k ? verfuegbareUpdates(k).length : 0;
@@ -78,7 +80,7 @@ const seiten = {
       ${land ? `<div class="card" style="margin-top:1rem"><strong>${esc(land.name)}</strong> <span class="muted">· Landeshauptstadt ${esc(land.hauptstadt)} · im Krisenfall informiert <strong>${esc(land.orf_radio)}</strong></span></div>` : ""}
       <h2 style="margin-top:2rem">Installiert</h2>
       <div class="card">
-        <div class="storage"><strong>${groesse(belegt)}</strong><div class="progress"><div style="width:${Math.min(100, (belegt / 64e9) * 100)}%"></div></div><span class="muted">von 64 GB auf „OFFLINE-Stick“</span></div>
+        <div class="storage"><strong>${groesse(belegt)}</strong><div class="progress"><div style="width:${Math.min(100, (belegt / 64e9) * 100)}%"></div></div><span class="muted">${desktop ? esc(desktop.datenordner) : "von 64 GB auf „OFFLINE-Stick“"}</span></div>
         <ul class="changelog" style="margin-top:.75rem">${installierte.map((x) =>
           `<li><span class="tag">${esc(ARTEN[x.manifest.art] ?? x.manifest.art)}</span><span>${esc(x.manifest.titel)} <span class="muted">· ${esc(x.manifest.version)} · ${groesse(x.manifest.groesse)} · Signatur geprüft ✓</span></span></li>`).join("")}</ul>
         <a class="btn btn-sm" href="#bibliothek" style="margin-top:.75rem">Pakete verwalten</a>
@@ -133,6 +135,10 @@ const seiten = {
     const liste = k.pakete.filter((p) => state.filter === "Alle" || (ARTEN[p.art] ?? p.art) === state.filter);
     return `
       ${kopf("Bibliothek", `Katalog vom ${datum(k.erstellt)} · Signatur geprüft ✓ · Pakete im Browser sind Textpakete, große kommen in die Desktop-App.`)}
+      ${desktop ? `<div class="card" style="margin-bottom:1rem"><h3>Vom USB-Stick oder Ordner einspielen</h3>
+        <p class="muted" style="margin:0 0 .75rem">Ohne Internet: Paketordner vom Stick auswählen. Der Kern prüft Signatur und jede Datei, bevor etwas übernommen wird.</p>
+        <button class="btn btn-sm btn-primary" data-stick-suchen>Datenträger durchsuchen</button> <button class="btn btn-sm" data-ordner-waehlen>Ordner wählen …</button>
+        <div id="stick-funde" style="margin-top:.75rem">${(state.funde ?? []).map((f) => `<div class="switch"><span><strong>${esc(f.titel)}</strong> <span class="muted">${esc(f.version)} · ${groesse(f.groesse)}</span><br><span class="muted mono" style="font-size:.8rem">${esc(f.pfad)}</span></span><button class="btn btn-sm btn-primary" data-stick="${esc(f.pfad)}">Einspielen</button></div>`).join("")}</div></div>` : ""}
       <div class="filters">${typen.map((t) => `<button data-filter="${esc(t)}" aria-pressed="${t === state.filter}">${esc(t)}</button>`).join("")}</div>
       <p class="form-msg" id="bib-msg"></p>
       <div class="grid grid-2">${liste.map((p) => {
@@ -241,6 +247,18 @@ async function installiereMitMeldung(id, ziel) {
   }
 }
 
+async function einspielenVonOrdner(pfad) {
+  zeige("bib-msg", `Prüfe und spiele ein: ${esc(pfad)} …`, "");
+  try {
+    const e = await client.einspielenOrdner(pfad);
+    state.meldung = { art: "ok", titel: "Eingespielt", text: `${esc(e.id)} ${esc(e.version)}${e.ersetzt ? ` (ersetzt ${esc(e.ersetzt)})` : ""} – ${groesse(e.kopiert_bytes)} kopiert, Signatur und Prüfsummen geprüft.` };
+    render();
+    zeige("bib-msg", state.meldung.text, "ok");
+  } catch (err) {
+    zeige("bib-msg", "Abgelehnt: " + esc(String(err?.message ?? err)), "err");
+  }
+}
+
 function zeige(id, html, art) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -304,7 +322,10 @@ main.addEventListener("click", (e) => {
   if (!b) return;
   if (b.dataset.filter) { state.filter = b.dataset.filter; render(); }
   if (b.dataset.install) installiereMitMeldung(b.dataset.install, "bib-msg");
-  if (b.dataset.remove) { entferne(b.dataset.remove); render(); }
+  if (b.dataset.remove) Promise.resolve(entferne(b.dataset.remove)).then(render);
+  if (b.hasAttribute("data-stick-suchen")) client.stickSuchen().then((f) => { state.funde = f; render(); if (!f.length) zeige("bib-msg", "Kein signiertes Paket auf einem Datenträger gefunden.", "err"); });
+  if (b.hasAttribute("data-ordner-waehlen")) client.ordnerWaehlen().then((p) => p && einspielenVonOrdner(p));
+  if (b.dataset.stick) einspielenVonOrdner(b.dataset.stick);
   if (b.dataset.intervall) { state.abo.intervall = b.dataset.intervall; speicher.set("abo", state.abo); render(); }
   if (b.hasAttribute("data-katalog")) pruefeUpdates();
   if (b.id === "jetzt") { b.disabled = true; b.textContent = "Prüfe …"; pruefeUpdates(); }

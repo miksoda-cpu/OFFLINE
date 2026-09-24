@@ -1,0 +1,84 @@
+# Baut die OFFLINE-Desktop-App für Windows, macOS (Intel + Apple Silicon) und Linux.
+# Läuft bei jedem Push auf den Entwicklungsbranch und bei Tags v*; die Installer liegen danach unter
+# „Actions → Lauf → Artifacts“ (bzw. bei Tags als GitHub-Release-Entwurf).
+name: Desktop-App
+
+on:
+  push:
+    branches: [claude/optimistic-hypatia-yymcne, main]
+    paths: [app/**, kern/**, web/**, schluessel/**, .github/workflows/desktop.yml]
+    tags: [v*]
+  workflow_dispatch:
+
+jobs:
+  kern:
+    name: Kern-Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: dtolnay/rust-toolchain@stable
+      - run: node --test werkzeug/test.mjs
+      - run: cargo test --manifest-path kern/Cargo.toml
+
+  bauen:
+    name: ${{ matrix.name }}
+    needs: kern
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows
+            os: windows-latest
+            args: ""
+          - name: macOS Apple Silicon
+            os: macos-latest
+            args: "--target aarch64-apple-darwin"
+          - name: macOS Intel
+            os: macos-latest
+            args: "--target x86_64-apple-darwin"
+          - name: Linux
+            os: ubuntu-22.04
+            args: ""
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ contains(matrix.args, 'aarch64') && 'aarch64-apple-darwin' || contains(matrix.args, 'x86_64-apple') && 'x86_64-apple-darwin' || '' }}
+      - name: Linux-Abhängigkeiten
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: app/src-tauri
+      - run: npm install
+        working-directory: app
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: app
+          tauriScript: npm run tauri
+          args: ${{ matrix.args }}
+          # Bei Tags v* entsteht ein Release-Entwurf mit allen Installern
+          tagName: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+          releaseName: ${{ startsWith(github.ref, 'refs/tags/v') && format('OFFLINE {0}', github.ref_name) || '' }}
+          releaseDraft: true
+          prerelease: true
+      - name: Installer als Artefakt
+        uses: actions/upload-artifact@v4
+        with:
+          name: OFFLINE-${{ matrix.name }}
+          if-no-files-found: warn
+          path: |
+            app/src-tauri/target/**/release/bundle/msi/*.msi
+            app/src-tauri/target/**/release/bundle/nsis/*.exe
+            app/src-tauri/target/**/release/bundle/dmg/*.dmg
+            app/src-tauri/target/**/release/bundle/appimage/*.AppImage
+            app/src-tauri/target/**/release/bundle/deb/*.deb
