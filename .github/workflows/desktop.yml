@@ -1,12 +1,11 @@
 # Baut die OFFLINE-Desktop-App für Windows, macOS (Intel + Apple Silicon) und Linux.
-# Läuft bei jedem Push auf den Entwicklungsbranch und bei Tags v*; die Installer liegen danach unter
-# „Actions → Lauf → Artifacts“ (bzw. bei Tags als GitHub-Release-Entwurf).
+# Läuft nur auf Knopfdruck („Run workflow“) und bei Tags v* – nicht bei jedem Push, weil macOS-Builds das
+# Minutenkontingent privater Repositories zehnfach belasten. Die Installer liegen danach unter
+# „Actions → Lauf → Artifacts“ (bzw. bei Tags als GitHub-Release-Entwurf); mit „Veröffentlichen“ zusätzlich auf Hetzner.
 name: Desktop-App
 
 on:
   push:
-    branches: [claude/optimistic-hypatia-yymcne, main]
-    paths: [app/**, kern/**, web/**, schluessel/**, .github/workflows/desktop.yml]
     tags: [v*]
   workflow_dispatch:
     inputs:

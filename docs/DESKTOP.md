@@ -84,7 +84,7 @@ Der private Updater-Schlüssel liegt **nicht** im Repository. Der öffentliche s
 
 ## Installer bauen – GitHub Actions
 
-Der Workflow `.github/workflows/desktop.yml` baut bei jedem Push auf den Entwicklungsbranch (wenn sich `app/`, `kern/`, `web/` oder `schluessel/` ändern) und auf Knopfdruck:
+Der Workflow `.github/workflows/desktop.yml` baut auf Knopfdruck (Actions → Desktop-App → Run workflow) und bei Tags `v*` – seit 24.09.2026 nicht mehr bei jedem Push: Das Repository ist privat, und GitHub rechnet macOS-Minuten zehnfach auf das Monatskontingent (2.000 Minuten im Free-Plan) an; ein voller Lauf kostet rund 130 Minuten. Abhilfe, wenn das Kontingent aufgebraucht ist: Repository öffentlich stellen (Apache 2.0 ist ohnehin der Plan; öffentliche Repositories haben kein Minutenlimit) oder unter Settings → Billing das Ausgabenlimit erhöhen.
 
 | System | Ergebnis |
 |---|---|
