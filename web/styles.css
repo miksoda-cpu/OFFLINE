@@ -207,17 +207,17 @@ input[type="time"], select, input[type="text"], input[type="email"], textarea { 
 .legal h2 { margin-top: 2rem; font-size: 1.2rem; }
 
 /* Tresor */
-.tresor { display: grid; grid-template-columns: 280px 1fr; gap: 1rem; align-items: start; }
-@media (max-width: 900px) { .tresor { grid-template-columns: 1fr; } }
+.tresor, .notizbuch { display: grid; grid-template-columns: 280px 1fr; gap: 1rem; align-items: start; }
+@media (max-width: 900px) { .tresor, .notizbuch { grid-template-columns: 1fr; } }
 .tresor-liste { display: flex; flex-direction: column; gap: 2px; max-height: 60vh; overflow: auto; }
 .tresor-liste button { text-align: left; border: 0; background: none; padding: .55rem .7rem; border-radius: 10px; color: var(--text); cursor: pointer; font: inherit; }
 .tresor-liste button:hover { background: var(--surface-2); }
 .tresor-liste button[aria-current="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
 .tresor-liste .muted { display: block; font-size: .8rem; font-weight: 400; }
-.tresor input[type="text"], .tresor input[type="password"], .tresor textarea, .tresor select { width: 100%; box-sizing: border-box; }
+.tresor input[type="text"], .tresor input[type="password"], .tresor textarea, .tresor select, .notizbuch input[type="text"], .notizbuch textarea { width: 100%; box-sizing: border-box; }
 .tresor input[type="password"] { font: inherit; padding: .5rem .7rem; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); }
-.tresor .titel { font-size: 1.2rem; font-weight: 700; }
-.tresor textarea { min-height: 40vh; resize: vertical; font: inherit; line-height: 1.5; }
+.tresor .titel, .notizbuch .titel { font-size: 1.2rem; font-weight: 700; }
+.tresor textarea, .notizbuch textarea { min-height: 40vh; resize: vertical; font: inherit; line-height: 1.5; }
 .code-anzeige { font-family: var(--mono); font-size: 1.5rem; letter-spacing: .08em; padding: 1rem; border: 2px dashed var(--accent); border-radius: 12px; text-align: center; margin: 1rem 0; user-select: all; }
 .code-gruppen { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; font-family: var(--mono); font-size: 1.1rem; }
 .code-gruppen input { width: 5.5em; text-align: center; font-family: var(--mono); text-transform: uppercase; }

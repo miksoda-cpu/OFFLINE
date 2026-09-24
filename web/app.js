@@ -19,6 +19,17 @@ if (desktop) {
 
 const BASISPAKET = "at-basis";
 
+function notizbuchLaden() {
+  const liste = speicher.get("notizbuch", null);
+  if (Array.isArray(liste)) return liste;
+  // Übernahme aus dem alten Prototyp: ein einzelnes Textfeld wird die erste Notiz
+  const alt = speicher.get("notizen", "");
+  const start = alt ? [{ id: Date.now().toString(36), titel: "Meine Notizen", text: alt, geaendert: new Date().toISOString() }] : [];
+  speicher.set("notizbuch", start);
+  return start;
+}
+const notizId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+
 const state = {
   checks: speicher.get("checks", {}),
   abo: speicher.get("abo", { intervall: "woechentlich", nurWlan: true, fenster: true, von: "02:00", bis: "05:00", aktiv: true }),
@@ -27,7 +38,8 @@ const state = {
   tresor: { status: null, notizen: [], aktiv: null, suche: "", code: null, codeGruppen: null, vorschau: null, msg: "", einstellungen: false, sperreMin: 5 },
   download: null, // Seitenleiste: { id, titel, status: laedt|unterbrochen|kaputt|fertig, geladen, gesamt, text }
   bundesland: speicher.get("bundesland", "Wien"),
-  notizen: speicher.get("notizen", ""),
+  notizbuch: notizbuchLaden(), // offene Notizen: [{ id, titel, text, geaendert }]
+  notizAktiv: null, notizSuche: "",
   filter: "Alle",
   meldung: null, // { text, art } für die Update-Seite
 };
@@ -271,8 +283,21 @@ const seiten = {
   },
 
   notizen() {
-    return `${kopf("Notizen", "Bleiben auf diesem Gerät. Markdown ist erlaubt. Passwörter, PINs und Ausweise gehören in den <a href=\"#tresor\">Tresor</a>.", '<span class="muted" id="gespeichert"></span>')}
-      <textarea id="notizen" rows="18" style="width:100%;resize:vertical" placeholder="z. B. Treffpunkt der Familie, wichtige Nummern, Medikamente …">${esc(state.notizen)}</textarea>`;
+    const q = state.notizSuche.trim().toLowerCase();
+    const alle = [...state.notizbuch].sort((a, b) => (a.geaendert < b.geaendert ? 1 : -1));
+    const liste = alle.filter((n) => !q || n.titel.toLowerCase().includes(q) || n.text.toLowerCase().includes(q));
+    const n = state.notizbuch.find((x) => x.id === state.notizAktiv) ?? null;
+    return `${kopf("Notizen", "Bleiben auf diesem Gerät, unverschlüsselt. Passwörter, PINs und Ausweise gehören in den <a href=\"#tresor\">Tresor</a>.", '<button class="btn btn-primary" data-notiz-neu>Neue Notiz</button>')}
+      <div class="notizbuch">
+        <div class="card">
+          <input type="text" id="notiz-suche" placeholder="Suchen …" value="${esc(state.notizSuche)}" autocomplete="off">
+          <div class="tresor-liste" style="margin-top:.6rem">${liste.length ? liste.map((x) => `<button data-notiz="${esc(x.id)}" aria-current="${x.id === state.notizAktiv}">${esc(x.titel || "Ohne Titel")}<span class="muted">${esc(x.text.split("\n")[0].slice(0, 40))}${x.text.length > 40 ? " …" : ""}<br>${datum(x.geaendert)}</span></button>`).join("") : `<p class="muted" style="padding:.5rem .7rem">${state.notizbuch.length ? "Nichts gefunden." : "Noch keine Notiz. Oben rechts „Neue Notiz“."}</p>`}</div>
+        </div>
+        <div class="card">${n ? `
+          <input type="text" class="titel" id="notiz-titel" value="${esc(n.titel)}" placeholder="Titel" autocomplete="off">
+          <textarea id="notiz-text" placeholder="z. B. Treffpunkt der Familie, Einkaufsliste für den Vorrat, Medikamente …" style="margin-top:.6rem">${esc(n.text)}</textarea>
+          <div style="display:flex;justify-content:space-between;gap:.5rem;margin-top:.6rem;flex-wrap:wrap"><span class="muted" id="notiz-gespeichert">Geändert ${datum(n.geaendert)}</span><span>${desktop ? `<button class="btn btn-sm" data-notiz-in-tresor="${esc(n.id)}" title="Verschlüsselt in den Tresor verschieben (Tresor muss offen sein)">In den Tresor</button> ` : ""}<button class="btn btn-sm" data-notiz-loeschen="${esc(n.id)}">Löschen</button></span></div>` : `<p class="muted">Links eine Notiz wählen oder oben „Neue Notiz“.</p>`}</div>
+      </div>`;
   },
 
   updates() {
@@ -774,6 +799,7 @@ function beiKlick(e) {
   if (b.dataset.filter) { state.filter = b.dataset.filter; render(); }
   if (b.dataset.install) installiereMitMeldung(b.dataset.install, "bib-msg");
   if ([...b.attributes].some((a) => a.name.startsWith("data-tresor"))) return tresorAktion(b);
+  if ([...b.attributes].some((a) => a.name.startsWith("data-notiz"))) return notizAktion(b);
   if (b.hasAttribute("data-lesen-zurueck")) { try { document.getElementById("lesen-rahmen")?.contentWindow.history.back(); } catch {} }
   if (b.hasAttribute("data-lesen-start")) { const f = document.getElementById("lesen-rahmen"); if (f) f.src = state.lesen.url; }
   if (b.hasAttribute("data-lesen-fenster")) client.fensterOeffnen(state.lesen.url, `OFFLINE – ${state.lesen.titel}`).catch(() => {});
@@ -825,12 +851,35 @@ main.addEventListener("submit", (e) => {
   input.value = "";
 });
 
+function notizbuchSpeichern() { speicher.set("notizbuch", state.notizbuch); }
+let notizTimer = null;
 main.addEventListener("input", (e) => {
-  if (e.target.id !== "notizen") return;
-  state.notizen = e.target.value;
-  speicher.set("notizen", state.notizen);
-  document.getElementById("gespeichert").textContent = "Gespeichert";
+  if (e.target.id === "notiz-titel" || e.target.id === "notiz-text") {
+    const n = state.notizbuch.find((x) => x.id === state.notizAktiv); if (!n) return;
+    n.titel = document.getElementById("notiz-titel").value; n.text = document.getElementById("notiz-text").value; n.geaendert = new Date().toISOString();
+    notizbuchSpeichern();
+    clearTimeout(notizTimer);
+    const g = document.getElementById("notiz-gespeichert"); if (g) g.textContent = "Gespeichert";
+    const b = document.querySelector(`[data-notiz="${n.id}"]`); if (b) b.firstChild.textContent = n.titel || "Ohne Titel";
+  }
+  if (e.target.id === "notiz-suche") { state.notizSuche = e.target.value; const pos = e.target.selectionStart; render(); const s2 = document.getElementById("notiz-suche"); s2?.focus(); s2?.setSelectionRange(pos, pos); }
 });
+async function notizAktion(b) {
+  if (b.hasAttribute("data-notiz-neu")) { const n = { id: notizId(), titel: "", text: "", geaendert: new Date().toISOString() }; state.notizbuch.push(n); state.notizAktiv = n.id; notizbuchSpeichern(); render(); document.getElementById("notiz-titel")?.focus(); return; }
+  if (b.dataset.notiz) { state.notizAktiv = b.dataset.notiz; return render(); }
+  if (b.dataset.notizLoeschen) { if (!confirm("Diese Notiz löschen?")) return; state.notizbuch = state.notizbuch.filter((x) => x.id !== b.dataset.notizLoeschen); state.notizAktiv = null; notizbuchSpeichern(); return render(); }
+  if (b.dataset.notizInTresor) {
+    const n = state.notizbuch.find((x) => x.id === b.dataset.notizInTresor); if (!n) return;
+    try {
+      const st = await client.tresorStatus();
+      if (!st.existiert || !st.offen) { alert(st.existiert ? "Bitte zuerst den Tresor öffnen, dann noch einmal „In den Tresor“." : "Bitte zuerst einen Tresor anlegen (Seite „Tresor“)."); return; }
+      await client.tresorNotizSchreiben({ id: "", titel: n.titel, text: n.text, reihe: 0, geaendert: "", anhaenge: [] });
+      state.notizbuch = state.notizbuch.filter((x) => x.id !== n.id); state.notizAktiv = null; notizbuchSpeichern();
+      state.tresor.status = null; // beim nächsten Öffnen der Tresor-Seite neu laden
+      render();
+    } catch (e) { alert("Nicht verschoben: " + String(e?.message ?? e)); }
+  }
+}
 
 menu.addEventListener("click", () => { const open = sidebar.classList.toggle("open"); menu.setAttribute("aria-expanded", String(open)); });
 
