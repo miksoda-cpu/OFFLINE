@@ -1,0 +1,18 @@
+OFFLINE – Wissen, das nicht ausfällt
+Copyright 2026 digitalworld Academy OG / The Digioneer (Michael Kainz)
+
+Lizenziert unter der Apache License, Version 2.0 (siehe LICENSE).
+
+Dieses Projekt übernimmt die Idee und einzelne Bausteine von
+Project N.O.M.A.D. (https://github.com/Crosstalk-Solutions/project-nomad),
+Copyright Crosstalk Solutions, Apache License 2.0. Name und Branding von
+NOMAD werden nicht verwendet.
+
+Mitgelieferte Bestandteile Dritter:
+- MapLibre GL JS (BSD-3-Clause), PMTiles (BSD-3-Clause), Protomaps Basemaps (BSD-3-Clause) – web/lib/
+- kiwix-serve (GPL-3.0) wird als eigenständiges Programm mitgeliefert und nicht in die App eingebunden;
+  Quelltext: https://github.com/kiwix/kiwix-tools
+- Rust-Kisten laut kern/Cargo.toml und app/src-tauri/Cargo.toml (MIT/Apache-2.0)
+
+Inhalte (Wikipedia, Wikivoyage, Wiktionary) stehen unter CC BY-SA und werden mit Namensnennung
+ausgeliefert; Karten von basemap.at (CC BY 4.0) und OpenStreetMap (ODbL).
