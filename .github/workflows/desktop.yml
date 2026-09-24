@@ -9,6 +9,11 @@ on:
     paths: [app/**, kern/**, web/**, schluessel/**, .github/workflows/desktop.yml]
     tags: [v*]
   workflow_dispatch:
+    inputs:
+      veroeffentlichen:
+        description: "Nach dem Bauen als App-Update veröffentlichen (Installer nach Hetzner, latest.json schreiben)"
+        type: boolean
+        default: false
 
 jobs:
   kern:
@@ -169,14 +174,16 @@ jobs:
             app/src-tauri/target/**/release/bundle/appimage/*.AppImage.sig
             app/src-tauri/target/**/release/bundle/deb/*.deb
 
-  # Bei Tags v*: Installer und Updater-Dateien nach Hetzner (app/<version>/) und latest.json schreiben,
-  # damit installierte Apps die neue Version über „App-Update“ finden.
+  # Bei Tags v* oder auf Knopfdruck („Run workflow“ → Veröffentlichen): Installer und Updater-Dateien nach Hetzner
+  # (app/<version>/) und latest.json schreiben, damit installierte Apps die neue Version über „App-Update“ finden.
+  # Die Version kommt aus app/src-tauri/tauri.conf.json.
   veroeffentlichen:
     name: Veröffentlichen (App-Update)
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || inputs.veroeffentlichen == true
     needs: bauen
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v5
       - uses: actions/download-artifact@v5
         with:
           path: artefakte
@@ -187,10 +194,10 @@ jobs:
           AWS_DEFAULT_REGION: eu-central-1
           ENDPOINT: ${{ secrets.HETZNER_S3_ENDPOINT }}
           BUCKET: ${{ secrets.HETZNER_S3_BUCKET }}
-          VERSION: ${{ github.ref_name }}
         run: |
           set -euo pipefail
-          version="${VERSION#v}"
+          version=$(python3 -c "import json; print(json.load(open('app/src-tauri/tauri.conf.json'))['version'])")
+          echo "Version $version"
           host="${ENDPOINT#https://}"
           basis="https://$BUCKET.$host/app/$version"
           find artefakte -type f | sort

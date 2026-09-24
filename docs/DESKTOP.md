@@ -71,7 +71,7 @@ Unter **Updates & Abo → App-Update → „Nach neuer Version suchen“** fragt
 
 **Eine neue Version veröffentlichen:**
 1. Version an drei Stellen erhöhen: `app/src-tauri/tauri.conf.json`, `app/src-tauri/Cargo.toml`, `APP_VERSION` in `web/app.js`.
-2. Committen, pushen, dann Tag setzen: `git tag v0.1.2 && git push origin v0.1.2`.
+2. Committen, pushen. Dann Actions → Desktop-App → „Run workflow“ → Häkchen „Veröffentlichen“ → Run (oder ein Tag `v0.1.2`).
 3. Der Workflow baut alle vier Installer, signiert die Updater-Dateien mit dem Secret `TAURI_SIGNING_PRIVATE_KEY`, lädt alles nach `app/<version>/` im Bucket und schreibt `app/latest.json`. Ab dann finden installierte Apps die neue Version.
 
 Ohne das Secret laufen die Builds weiter (mit Warnung), erzeugen aber keine Updater-Dateien; der Tag-Lauf bricht dann im Schritt „Veröffentlichen“ ab.
