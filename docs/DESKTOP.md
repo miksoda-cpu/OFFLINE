@@ -1,6 +1,6 @@
 # OFFLINE Desktop – Bauen und Ausliefern
 
-Stand: 24. September 2026 · Status: Phase 3, Update-Dienst im Kern, Installer über GitHub Actions
+Stand: 24. September 2026 · Status: Phase 4 begonnen – kiwix-serve und Offline-Karte angebunden, echte Inhaltspakete stehen aus
 
 ## Aufbau
 
@@ -46,6 +46,15 @@ Der Kern (`kern/src/download.rs`, `kern/src/abo.rs`) lädt Pakete selbst – die
 - Einstellungen und Zustand liegen in `abo.json` (Katalog-URL, Intervall, Fenster, letzte Prüfung, zuletzt gesehener Katalog).
 
 Kommandozeile zum Testen ohne App: `offline-kern katalog <url>` und `offline-kern laden <url> <id> <ordner>`.
+
+## Inhalte anzeigen (Phase 4)
+
+- **Lokaler Dateiserver** (`kern/src/lokalserver.rs`): nur 127.0.0.1, zufälliger Port, nur lesend, nur unter dem Paketordner, mit Bereichsanfragen. Darüber liest der Kartenviewer PMTiles-Dateien stückweise. Kein Zugriff von außen, keine Pfad-Ausbrüche (getestet).
+- **kiwix-serve** wird als mitgeliefertes Programm ausgeliefert (`app/src-tauri/binaries/`, holt der Build-Workflow von download.kiwix.org). Die App startet es bei Bedarf mit allen ZIM-Dateien der installierten `zim`-Pakete auf 127.0.0.1 und öffnet die Bibliothek in einem eigenen Fenster („Bibliothek → Öffnen“). Ändern sich die Pakete, wird es neu gestartet; beim Beenden der App endet es.
+- **Offline-Karte** (`web/karte.js`, MapLibre GL + PMTiles + Protomaps-Basemap-Stil aus `web/lib/`): sobald ein `karte`-Paket mit einer `.pmtiles`-Datei installiert ist, zeigt die Karten-Seite diese statt der Online-Karte. Erwarteter Paketinhalt: `inhalt/karte.pmtiles`, `inhalt/fonts/<Schrift>/<Bereich>.pbf` (Beschriftungen), optional `inhalt/sprites/`. Ohne Schriften werden nur Flächen und Linien gezeichnet.
+- **Restlos löschen** gibt es auch in der App (Updates & Abo → Werkzeuge): Wort eintippen + Bestätigung, dann sind Pakete und Einstellungen weg; das Programm selbst deinstalliert man über das Betriebssystem.
+
+Was noch fehlt: die **echten Pakete** (Wikivoyage/Wikipedia als ZIM, Österreich-Karte als PMTiles). Sie sind Gigabyte groß und müssen an einem Ort liegen, der Bereichsanfragen erlaubt und Datenverkehr günstig abgibt – siehe Konzept, Abschnitt „Update-Server“.
 
 ## Was die App in Phase 2 kann
 

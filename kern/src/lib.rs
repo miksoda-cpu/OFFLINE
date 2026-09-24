@@ -9,6 +9,7 @@ pub mod delta;
 pub mod einspielen;
 pub mod hash;
 pub mod katalog;
+pub mod lokalserver;
 pub mod manifest;
 pub mod paket;
 pub mod schluessel;

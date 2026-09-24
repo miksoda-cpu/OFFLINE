@@ -166,7 +166,7 @@ const seiten = {
         const inst = installiertesPaket(p.id);
         const update = inst && p.status === "verfuegbar" && versionVergleich(p.version, inst.manifest.version) > 0;
         let knopf;
-        if (inst) knopf = `${update ? `<button class="btn btn-sm btn-primary" data-install="${p.id}">Aktualisieren</button> ` : ""}<button class="btn btn-sm" data-remove="${p.id}">Entfernen</button>`;
+        if (inst) knopf = `${update ? `<button class="btn btn-sm btn-primary" data-install="${p.id}">Aktualisieren</button> ` : ""}${desktop && p.art === "zim" ? `<button class="btn btn-sm btn-primary" data-oeffnen-zim="${p.id}">Öffnen</button> ` : ""}${desktop && p.art === "karte" ? `<a class="btn btn-sm btn-primary" href="#karte">Karte öffnen</a> ` : ""}<button class="btn btn-sm" data-remove="${p.id}">Entfernen</button>`;
         else if (p.status !== "verfuegbar") knopf = `<span class="tag tag-warn">Geplant</span>`;
         else if (p.pro) knopf = `<button class="btn btn-sm" disabled title="Nur mit Pro">Nur mit Pro</button>`;
         else if (p.art !== "inhalt") knopf = `<span class="tag">Nur in der Desktop-App</span>`;
@@ -179,8 +179,10 @@ const seiten = {
   },
 
   karte() {
-    return `${kopf("Karte Österreich", "Im Prototyp live von basemap.at, in der App als Offline-Datei auf deinem Rechner.")}
-      <div id="karte" role="region" aria-label="Karte von Österreich"></div>`;
+    const kp = kartenPaket();
+    return `${kopf("Karte Österreich", kp ? `Offline aus ${esc(kp.manifest.titel)} ${esc(kp.manifest.version)} – kein Internet nötig.` : desktop ? "Noch kein Kartenpaket installiert – solange online von basemap.at. Kartenpaket: Bibliothek → Karten." : "Im Prototyp live von basemap.at, in der App als Offline-Datei auf deinem Rechner.")}
+      <div id="karte" role="region" aria-label="Karte von Österreich"></div>
+      <p class="form-msg" id="karte-msg"></p>`;
   },
 
   ki() {
@@ -231,15 +233,18 @@ const seiten = {
       </div>
       ${desktop ? `<div class="card" style="margin-top:1rem"><h3>Speicherort</h3><p class="muted" style="margin:0 0 .5rem">Pakete liegen in <span class="mono" style="font-size:.85rem">${esc(desktop.datenordner)}</span>. Für große Pakete (Wikipedia, Karten) kann das eine externe Platte sein.</p>
         <button class="btn btn-sm" data-speicherort>Ordner wählen …</button> <button class="btn btn-sm" data-speicherort-standard>Standard</button><p class="form-msg" id="ort-msg"></p></div>` : ""}
-      ${desktop ? "" : `<div class="card" style="margin-top:1rem"><h3>Werkzeuge</h3>
+      <div class="card" style="margin-top:1rem"><h3>Werkzeuge</h3>
         <div style="display:flex;flex-wrap:wrap;gap:.5rem">
-          <button class="btn btn-sm btn-primary" data-offline-pruefen>Offline-Bereitschaft prüfen</button>
+          ${desktop ? "" : `<button class="btn btn-sm btn-primary" data-offline-pruefen>Offline-Bereitschaft prüfen</button>
           <button class="btn btn-sm" data-app-installieren>Als App installieren</button>
-          <button class="btn btn-sm" data-zuruecksetzen>Alles zurücksetzen</button>
+          <button class="btn btn-sm" data-zuruecksetzen>Alles zurücksetzen</button>`}
           <button class="btn btn-sm" data-loeschen style="color:var(--accent);border-color:var(--accent)">Restlos löschen &amp; deinstallieren</button>
         </div>
-        <p class="muted" style="font-size:.85rem;margin:.6rem 0 0">„Zurücksetzen“ löscht alles und lädt OFFLINE frisch. „Restlos löschen“ entfernt alle Daten und die Offline-Kopie – doppelt gesichert, damit nichts aus Versehen verschwindet.</p>
-        <p class="form-msg" id="werkzeug-msg" role="status" aria-live="polite"></p></div>`}
+        ${state.loeschenOffen ? `<div class="card" style="margin-top:.75rem;border-color:var(--accent)"><strong>Wirklich alles löschen?</strong>
+          <p class="muted" style="margin:.3rem 0 .6rem">Pakete, Notizen, Checkliste und Einstellungen verschwinden von diesem Gerät. Das lässt sich nicht rückgängig machen. Zur Sicherheit bitte <strong>LÖSCHEN</strong> eintippen:</p>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap"><input type="text" id="loeschen-wort" autocomplete="off" placeholder="LÖSCHEN" style="min-width:12rem"><button class="btn btn-sm btn-primary" data-loeschen-jetzt>Jetzt löschen</button><button class="btn btn-sm" data-loeschen-abbrechen>Abbrechen</button></div></div>` : ""}
+        <p class="muted" style="font-size:.85rem;margin:.6rem 0 0">${desktop ? "„Restlos löschen“ entfernt alle Pakete und Einstellungen der App – doppelt gesichert. Das Programm selbst deinstallierst du danach über das Betriebssystem." : "„Zurücksetzen“ löscht alles und lädt OFFLINE frisch. „Restlos löschen“ entfernt alle Daten und die Offline-Kopie – doppelt gesichert, damit nichts aus Versehen verschwindet."}</p>
+        <p class="form-msg" id="werkzeug-msg" role="status" aria-live="polite"></p></div>
       <p class="muted" style="margin-top:1rem;font-size:.9rem">So läuft ein Update: Katalog laden → Signatur prüfen → Manifest gegen Katalog und Signatur prüfen → nur geänderte Dateien laden → jede Datei gegen ihre Prüfsumme prüfen → erst dann den alten Stand ersetzen. Details: <a href="https://github.com/miksoda-cpu/OFFLINE/blob/claude/optimistic-hypatia-yymcne/docs/PAKETFORMAT.md" rel="noopener">Paketformat</a>.</p>`;
   },
 };
@@ -288,6 +293,16 @@ async function installiereMitMeldung(id, ziel) {
     zeige(ziel, "Abgelehnt: " + esc(String(e?.message ?? e)), "err");
     if (location.hash === "#updates") { state.meldung = { art: "fehler", titel: "Abgelehnt", text: esc(String(e?.message ?? e)) }; render(); }
   }
+}
+
+async function zimOeffnen(id) {
+  zeige("bib-msg", "Starte die Bibliothek …", "");
+  try {
+    const url = await client.kiwixUrl();
+    if (!url) throw new Error("Kein Inhaltspaket gefunden");
+    await client.fensterOeffnen(url, `OFFLINE – ${esc(installiertesPaket(id)?.manifest.titel ?? "Bibliothek")}`);
+    zeige("bib-msg", "Geöffnet in einem eigenen Fenster.", "ok");
+  } catch (e) { zeige("bib-msg", "Konnte nicht öffnen: " + esc(String(e?.message ?? e)), "err"); }
 }
 
 async function einspielenVonOrdner(pfad) {
@@ -375,21 +390,25 @@ async function allesEntfernen() {
   if (indexedDB?.databases) for (const db of await indexedDB.databases()) if (db.name) indexedDB.deleteDatabase(db.name);
 }
 
-async function restlosLoeschen() {
+async function restlosLoeschen(wort) {
   // Sicherung 1: Wort eintippen. Sicherung 2: nochmals bestätigen.
-  const wort = prompt("Das entfernt OFFLINE mit allen Paketen, Notizen und Einstellungen von diesem Gerät.\n\nZur Sicherheit bitte LÖSCHEN eintippen:");
-  if (wort === null) return;
   if (wort.trim().toUpperCase() !== "LÖSCHEN") { zeige("werkzeug-msg", "Nicht gelöscht – das Wort stimmte nicht.", "err"); return; }
-  if (!confirm("Wirklich alles restlos löschen? Das lässt sich nicht rückgängig machen.")) { zeige("werkzeug-msg", "Abgebrochen – nichts gelöscht.", ""); return; }
+  if (!confirm("Wirklich alles restlos löschen? Das lässt sich nicht rückgängig machen.")) { zeige("werkzeug-msg", "Abgebrochen – nichts gelöscht.", ""); state.loeschenOffen = false; render(); return; }
+  let anleitungDesktop = null;
+  if (desktop) {
+    try { anleitungDesktop = await client.allesLoeschen(wort); }
+    catch (e) { zeige("werkzeug-msg", "Konnte nicht löschen: " + esc(String(e?.message ?? e)), "err"); return; }
+  }
   await allesEntfernen();
   const mac = /Mac/.test(navigator.platform);
   document.body.innerHTML = `<div class="wrap" style="padding:3rem 16px;max-width:40rem">
     <a class="brand" href="/"><span class="brand-flag" aria-hidden="true"></span>OFFLINE</a>
     <h1 style="font-size:1.8rem;margin-top:1.5rem">Alles gelöscht.</h1>
     <p class="muted">Pakete, Notizen, Checkliste, Einstellungen und die Offline-Kopie der App sind von diesem Gerät entfernt.</p>
-    <div class="card"><h3>Letzter Schritt: das App-Symbol entfernen</h3>
-      <p class="muted" style="margin:0">Falls du OFFLINE als App installiert hattest, ist noch das Symbol da. Es geht nur von Hand:</p>
-      <ul class="muted" style="padding-left:1.1rem;margin:.5rem 0 0">
+    <div class="card"><h3>Letzter Schritt: ${anleitungDesktop ? "das Programm deinstallieren" : "das App-Symbol entfernen"}</h3>
+      ${anleitungDesktop ? `<p class="muted" style="margin:0">${esc(anleitungDesktop)}</p>` : ""}
+      <p class="muted" style="margin:0;${anleitungDesktop ? "display:none" : ""}">Falls du OFFLINE als App installiert hattest, ist noch das Symbol da. Es geht nur von Hand:</p>
+      <ul class="muted" style="padding-left:1.1rem;margin:.5rem 0 0;${anleitungDesktop ? "display:none" : ""}">
         <li><strong>Chrome:</strong> In der App oben rechts das Menü (⋮) → „OFFLINE deinstallieren“. Oder <span class="mono">chrome://apps</span> aufrufen, Rechtsklick auf OFFLINE → „Aus Chrome entfernen“.</li>
         <li><strong>${mac ? "Mac" : "Windows"}:</strong> ${mac ? "Im Ordner „Programme“ (bzw. Programme → Chrome-Apps) OFFLINE in den Papierkorb ziehen." : "Einstellungen → Apps → OFFLINE → Deinstallieren."}</li>
         <li><strong>Safari:</strong> Das Symbol im Dock rechtsklicken → „Aus dem Dock entfernen“, dann im Ordner „Programme“ löschen.</li>
@@ -405,8 +424,25 @@ function zeige(id, html, art) {
 }
 
 // ---------- Karte ----------
-function karteStarten() {
+function kartenPaket() {
+  if (!desktop) return null;
+  return installierteIds().map(installiertesPaket).find((p) => p?.manifest.art === "karte" && p.manifest.dateien.some((d) => d.pfad.endsWith(".pmtiles"))) ?? null;
+}
+
+async function karteStarten() {
   const el = document.getElementById("karte");
+  const kp = kartenPaket();
+  if (el && kp) {
+    try {
+      const wurzel = await client.lokalUrl();
+      if (!wurzel) throw new Error("Lokaler Dateiserver läuft nicht");
+      const { offlineKarte } = await import("./karte.js");
+      await offlineKarte(el, `${wurzel}${encodeURIComponent(kp.ordner.split(/[\\/]/).pop())}/`, kp.manifest);
+      return;
+    } catch (e) {
+      zeige("karte-msg", "Offline-Karte konnte nicht geladen werden: " + esc(String(e?.message ?? e)) + " – zeige Online-Karte.", "err");
+    }
+  }
   if (!el || !window.L) { if (el) el.innerHTML = '<p class="muted" style="padding:1rem">Karte konnte nicht geladen werden.</p>'; return; }
   const map = L.map(el, { minZoom: 6, maxBounds: [[45.8, 9.0], [49.6, 17.6]] }).setView([47.6, 13.6], 7);
   L.tileLayer("https://mapsneu.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png", {
@@ -465,6 +501,7 @@ main.addEventListener("click", (e) => {
   if (b.hasAttribute("data-stick-suchen")) client.stickSuchen().then((f) => { state.funde = f; render(); if (!f.length) zeige("bib-msg", "Kein signiertes Paket auf einem Datenträger gefunden.", "err"); });
   if (b.hasAttribute("data-ordner-waehlen")) client.ordnerWaehlen().then((p) => p && einspielenVonOrdner(p));
   if (b.dataset.stick) einspielenVonOrdner(b.dataset.stick);
+  if (b.dataset.oeffnenZim) zimOeffnen(b.dataset.oeffnenZim);
   if (b.dataset.intervall) { state.abo.intervall = b.dataset.intervall; aboSpeichern(); render(); }
   if (b.hasAttribute("data-katalog")) pruefeUpdates();
   if (b.id === "jetzt") { b.disabled = true; b.textContent = "Prüfe …"; desktop ? updatesJetztDesktop() : pruefeUpdates(); }
@@ -472,7 +509,9 @@ main.addEventListener("click", (e) => {
   if (b.hasAttribute("data-offline-pruefen")) offlinePruefen();
   if (b.hasAttribute("data-app-installieren")) appInstallieren();
   if (b.hasAttribute("data-zuruecksetzen")) zuruecksetzen();
-  if (b.hasAttribute("data-loeschen")) restlosLoeschen();
+  if (b.hasAttribute("data-loeschen")) { state.loeschenOffen = true; render(); document.getElementById("loeschen-wort")?.focus(); }
+  if (b.hasAttribute("data-loeschen-abbrechen")) { state.loeschenOffen = false; render(); }
+  if (b.hasAttribute("data-loeschen-jetzt")) restlosLoeschen(document.getElementById("loeschen-wort")?.value ?? "");
   if (b.hasAttribute("data-speicherort")) client.ordnerWaehlen("Ordner für Pakete wählen (z. B. externe Platte)").then((p) => p && speicherortSetzen(p));
   if (b.hasAttribute("data-speicherort-standard")) speicherortSetzen(null);
 });

@@ -111,6 +111,11 @@ export async function speicherortSetzen(pfad) {
   return wurzel;
 }
 
+export const lokalUrl = () => invoke("lokal_url");
+export const kiwixUrl = () => invoke("kiwix_url");
+export const fensterOeffnen = (url, titel) => invoke("fenster_oeffnen", { url, titel });
+export const allesLoeschen = (bestaetigung) => invoke("alles_loeschen", { bestaetigung });
+
 /** Ereignisse des Hintergrund-Abos (automatische Updates) an die Oberfläche weiterreichen. */
 export function beiAboErgebnis(cb) {
   T.event.listen("abo-ergebnis", async (ev) => { await cacheLaden(); cb(ev.payload); });

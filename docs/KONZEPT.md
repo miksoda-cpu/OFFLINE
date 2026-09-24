@@ -128,6 +128,8 @@ Die Software ist frei (Apache 2.0, wie das Vorbild). Bezahlt wird, was wir **sel
 
 **Zusatz:** vorbespielter USB-Stick/SSD („OFFLINE-Stick“) und Mini-PC als Komplettgerät – Einmalkauf, inklusive 12 Monate Pro.
 
+**Update-Server und Ablage großer Pakete (Entscheidung offen, Stand 24.09.2026):** Vercel liefert Katalog und kleine Textpakete. Für ZIM- und Kartenpakete (0,9–42 GB) braucht es einen Objektspeicher mit Bereichsanfragen und günstigem Datenverkehr. Vorschlag: **Cloudflare R2** (kein Entgelt für ausgehenden Verkehr, 10 GB Speicher frei, danach ca. 0,015 $/GB/Monat) oder **Hetzner Object Storage** (EU, ca. 5 €/Monat für 1 TB Speicher und 1 TB Verkehr inklusive). Die App braucht dafür keine Änderung, nur eine andere Katalog-Basis-URL. Die Pakete selbst werden in GitHub Actions gebaut (Download von kiwix.org bzw. Protomaps, Werkzeug, Signatur) und hochgeladen.
+
 **Anmeldung und Abo über Ghost (The Digioneer):**
 - Das Gratis-Paket gibt es gegen Anmeldung mit Name und E-Mail (Double-Opt-In). Die bestätigte Adresse ist der Filter für ernsthaftes Interesse, der Newsletter ist optional und braucht ein eigenes Häkchen.
 - Anmeldungen werden Mitglieder von The Digioneer mit Label `offline`. Der Newsletter „OFFLINE“ läuft über Ghost.
@@ -149,7 +151,7 @@ Hinweise:
 | **1 – erledigt (24.09.2026)** | Paketformat mit Signatur ([PAKETFORMAT.md](PAKETFORMAT.md)), Werkzeug, Österreich-Paket v1, signierter Katalog; der Web-Prototyp installiert und aktualisiert Pakete nach genau diesem Verfahren | erstes echtes Paket |
 | **2 – in Arbeit (24.09.2026)** | Rust-Kern (`kern/`, gleiche Tests wie das Werkzeug) und Tauri-Hülle (`app/`) mit Import vom USB-Stick; Installer für Windows, macOS, Linux über GitHub Actions ([DESKTOP.md](DESKTOP.md)). Offen: kiwix-serve + Kartendatei als mitgelieferte Programme | Installer Win/Mac/Linux (unsigniert) |
 | **3 – erledigt (24.09.2026)** | Update-Dienst im Rust-Kern: Katalog, fortsetzbare Downloads in Teilen, Delta gegen installierte Version, Hintergrund-Abo mit Zeitfenster; Speicherort auf externer Platte. Update-Server = statische Dateien auf Vercel | Abo funktioniert technisch |
-| **4** | KI-Assistent (llama.cpp + Suche über Inhalte) | lokale KI |
+| **4 – in Arbeit** | Inhalte: kiwix-serve als mitgeliefertes Programm, Offline-Karte (PMTiles), lokaler Dateiserver – fertig. Offen: erste echte Pakete (Wikivoyage, Karte Österreich) und deren Ablageort; KI-Assistent (llama.cpp) folgt | Wikipedia und Karte offline |
 | **5** | Pro: Lizenzschlüssel, Zahlung, Code-Signing (Apple/Windows), Gemeinde-Version | Marktstart |
 
 Offene Punkte:

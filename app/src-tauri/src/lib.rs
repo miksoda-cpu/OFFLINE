@@ -3,6 +3,7 @@
 
 use base64::{engine::general_purpose::STANDARD as B64, Engine};
 use offline_kern::abo::{self, Einstellungen, Verbindung, Zustand as AboZustand};
+use offline_kern::lokalserver::Lokalserver;
 use offline_kern::{aufraeumen, datum, download, einspielen, paket::datei_pfad, paket_pruefen, Auftrag, Einspielergebnis, Fortschritt, Katalog, Manifest, OeffentlicherSchluessel};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -33,6 +34,78 @@ struct Zustand {
     laeuft: Arc<AtomicBool>,
     /// was die Oberfläche zuletzt gemeldet hat: online?, getaktet?, Zeitzonenversatz in Minuten (UTC → lokal)
     verbindung: Mutex<(bool, Option<bool>, i64)>,
+    /// lokaler Dateiserver über dem Paketordner (Karten, Medien)
+    lokal: Mutex<Option<Lokalserver>>,
+    /// laufender kiwix-serve (Wikipedia & Co.)
+    kiwix: Mutex<Option<Kiwix>>,
+}
+
+struct Kiwix {
+    kind: std::process::Child,
+    port: u16,
+    zims: Vec<PathBuf>,
+}
+
+impl Drop for Kiwix {
+    fn drop(&mut self) {
+        let _ = self.kind.kill();
+        let _ = self.kind.wait();
+    }
+}
+
+/// Pfad des mitgelieferten Programms: liegt neben der ausführbaren Datei der App.
+fn sidecar(name: &str) -> Option<PathBuf> {
+    let exe = std::env::current_exe().ok()?;
+    let ordner = exe.parent()?;
+    let kandidaten = if cfg!(windows) { vec![format!("{name}.exe")] } else { vec![name.to_string()] };
+    kandidaten.into_iter().map(|k| ordner.join(k)).find(|p| p.exists())
+}
+
+fn freier_port() -> u16 {
+    std::net::TcpListener::bind("127.0.0.1:0").and_then(|l| l.local_addr()).map(|a| a.port()).unwrap_or(8181)
+}
+
+/// Alle ZIM-Dateien der installierten Pakete.
+fn zim_dateien(wurzel: &Path) -> Vec<PathBuf> {
+    let mut aus = Vec::new();
+    let Ok(e) = std::fs::read_dir(wurzel) else { return aus };
+    for d in e.flatten() {
+        let name = d.file_name().to_string_lossy().to_string();
+        if name.ends_with(".neu") || name.ends_with(".alt") { continue; }
+        let Ok(m) = std::fs::read(d.path().join("paket.json")).and_then(|b| serde_json::from_slice::<Manifest>(&b).map_err(std::io::Error::other)) else { continue };
+        if m.art != "zim" { continue; }
+        for f in &m.dateien {
+            if f.pfad.ends_with(".zim") { aus.push(datei_pfad(&d.path(), &f.pfad)); }
+        }
+    }
+    aus.sort();
+    aus
+}
+
+/// kiwix-serve (neu) starten, wenn sich die ZIM-Liste geändert hat. Ohne ZIMs läuft nichts.
+fn kiwix_abgleichen(z: &Zustand) -> Result<Option<u16>, String> {
+    let zims = zim_dateien(&z.wurzel());
+    let mut k = z.kiwix.lock().map_err(|_| "kiwix gesperrt")?;
+    if let Some(l) = k.as_ref() {
+        if l.zims == zims { return Ok(Some(l.port)); }
+    }
+    *k = None; // stoppt den alten (Drop)
+    if zims.is_empty() { return Ok(None); }
+    let prog = sidecar("kiwix-serve").ok_or("kiwix-serve ist in dieser Installation nicht enthalten")?;
+    let port = freier_port();
+    let mut cmd = std::process::Command::new(prog);
+    cmd.arg("--address").arg("127.0.0.1").arg("--port").arg(port.to_string()).arg("--nolibrarybutton").args(&zims)
+        .stdin(std::process::Stdio::null()).stdout(std::process::Stdio::null()).stderr(std::process::Stdio::null());
+    #[cfg(windows)]
+    { use std::os::windows::process::CommandExt; cmd.creation_flags(0x0800_0000); } // CREATE_NO_WINDOW
+    let kind = cmd.spawn().map_err(|e| format!("kiwix-serve startet nicht: {e}"))?;
+    // kurz warten, bis der Port antwortet
+    for _ in 0..40 {
+        if std::net::TcpStream::connect(("127.0.0.1", port)).is_ok() { break; }
+        std::thread::sleep(Duration::from_millis(100));
+    }
+    *k = Some(Kiwix { kind, port, zims });
+    Ok(Some(port))
 }
 
 impl Zustand {
@@ -289,7 +362,13 @@ fn speicherort_setzen(z: State<Zustand>, pfad: Option<String>) -> Result<String,
         a.speicherort = neu;
     }
     z.abo_speichern();
-    Ok(z.wurzel().display().to_string())
+    let wurzel = z.wurzel();
+    if let Ok(mut l) = z.lokal.lock() {
+        if let Some(alt) = l.take() { alt.stoppen(); }
+        *l = Lokalserver::starten(wurzel.clone()).ok();
+    }
+    *z.kiwix.lock().map_err(|_| "gesperrt")? = None;
+    Ok(wurzel.display().to_string())
 }
 
 fn katalog_holen(z: &Zustand) -> Result<KatalogAntwort, String> {
@@ -394,6 +473,49 @@ fn abo_status(z: State<Zustand>) -> Option<String> {
     abo::warum_nicht(&a.einstellungen, &a.zustand, Verbindung { online, getaktet }, unix_jetzt(), &lokale_hhmm(versatz)).map(String::from)
 }
 
+// ---------- Befehle: Inhalte anzeigen ----------
+
+/// URL des lokalen Dateiservers (Wurzel = Paketordner), z. B. für PMTiles-Karten.
+#[tauri::command]
+fn lokal_url(z: State<Zustand>) -> Option<String> {
+    z.lokal.lock().ok()?.as_ref().map(|l| l.url())
+}
+
+/// URL von kiwix-serve – startet ihn bei Bedarf. None, wenn kein ZIM-Paket installiert ist.
+#[tauri::command]
+fn kiwix_url(z: State<Zustand>) -> Result<Option<String>, String> {
+    Ok(kiwix_abgleichen(&z)?.map(|p| format!("http://127.0.0.1:{p}/")))
+}
+
+/// Eigenes Fenster für Inhalte (kiwix-serve-Seiten). Nur lokale Adressen.
+#[tauri::command]
+fn fenster_oeffnen(app: AppHandle, url: String, titel: String) -> Result<(), String> {
+    if !url.starts_with("http://127.0.0.1:") { return Err("Nur lokale Adressen".into()); }
+    let label = format!("inhalt-{}", url.bytes().fold(0u32, |h, b| h.wrapping_mul(31).wrapping_add(b as u32)));
+    if let Some(w) = app.get_webview_window(&label) { let _ = w.set_focus(); return Ok(()); }
+    let u: tauri::Url = url.parse().map_err(|_| "Adresse ungültig")?;
+    tauri::WebviewWindowBuilder::new(&app, label, tauri::WebviewUrl::External(u))
+        .title(titel).inner_size(1100.0, 780.0).build().map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+/// Alle Daten der App löschen (Pakete, Einstellungen). Die Oberfläche sichert das doppelt ab.
+#[tauri::command]
+fn alles_loeschen(z: State<Zustand>, bestaetigung: String) -> Result<String, String> {
+    if bestaetigung.trim().to_uppercase() != "LÖSCHEN" { return Err("Bestätigung fehlt".into()); }
+    let _s = z.sperre.try_lock().map_err(|_| "Ein anderer Vorgang läuft")?;
+    *z.kiwix.lock().map_err(|_| "gesperrt")? = None;
+    let wurzel = z.wurzel();
+    let _ = std::fs::remove_dir_all(&wurzel);
+    let _ = std::fs::remove_dir_all(z.datenordner.join("pakete"));
+    let _ = std::fs::remove_file(z.abo_datei());
+    if let Ok(mut a) = z.abo.lock() { *a = Abo::default(); }
+    let anleitung = if cfg!(target_os = "windows") { "Einstellungen → Apps → OFFLINE → Deinstallieren." }
+        else if cfg!(target_os = "macos") { "OFFLINE aus dem Ordner „Programme“ in den Papierkorb ziehen." }
+        else { "Paket „offline“ mit dem Paketmanager entfernen oder die AppImage-Datei löschen." };
+    Ok(anleitung.into())
+}
+
 #[tauri::command]
 fn aufraeumen_start(z: State<Zustand>) -> Vec<String> {
     aufraeumen(&z.wurzel()).unwrap_or_default()
@@ -433,11 +555,17 @@ pub fn start() {
                 abbruch: Arc::new(AtomicBool::new(false)),
                 laeuft: Arc::new(AtomicBool::new(false)),
                 verbindung: Mutex::new((false, None, 0)),
+                lokal: Mutex::new(None),
+                kiwix: Mutex::new(None),
             };
             let wurzel = z.wurzel();
             std::fs::create_dir_all(&wurzel)?;
             for m in aufraeumen(&wurzel).unwrap_or_default() {
                 eprintln!("Aufräumen: {m}");
+            }
+            match Lokalserver::starten(wurzel.clone()) {
+                Ok(l) => { if let Ok(mut s) = z.lokal.lock() { *s = Some(l); } }
+                Err(e) => eprintln!("Lokaler Server startet nicht: {e}"),
             }
             app.manage(z);
             abo_schleife(app.handle().clone());
@@ -445,7 +573,8 @@ pub fn start() {
         })
         .invoke_handler(tauri::generate_handler![
             datenordner, installierte, paket_lesen, einspielen_ordner, einspielen_bytes, entfernen, stick_suchen, aufraeumen_start,
-            abo_lesen, abo_schreiben, verbindung_melden, speicherort_setzen, katalog_laden, paket_laden, download_abbrechen, updates_jetzt, abo_status
+            abo_lesen, abo_schreiben, verbindung_melden, speicherort_setzen, katalog_laden, paket_laden, download_abbrechen, updates_jetzt, abo_status,
+            lokal_url, kiwix_url, fenster_oeffnen, alles_loeschen
         ])
         .run(tauri::generate_context!())
         .expect("OFFLINE konnte nicht starten");

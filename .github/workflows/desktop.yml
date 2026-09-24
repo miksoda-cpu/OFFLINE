@@ -57,6 +57,27 @@ jobs:
       - uses: swatinem/rust-cache@v2
         with:
           workspaces: app/src-tauri
+      - name: kiwix-serve als mitgeliefertes Programm holen
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ matrix.name }}" in
+            Windows)               paket=kiwix-tools_win-x86_64.zip;   alt=kiwix-tools_win-i686.zip; triple=x86_64-pc-windows-msvc; ext=.exe ;;
+            "macOS Apple Silicon") paket=kiwix-tools_macos-arm64.tar.gz;  alt=""; triple=aarch64-apple-darwin; ext="" ;;
+            "macOS Intel")         paket=kiwix-tools_macos-x86_64.tar.gz; alt=""; triple=x86_64-apple-darwin;  ext="" ;;
+            Linux)                 paket=kiwix-tools_linux-x86_64.tar.gz; alt=""; triple=x86_64-unknown-linux-gnu; ext="" ;;
+          esac
+          basis=https://download.kiwix.org/release/kiwix-tools
+          mkdir -p app/src-tauri/binaries kiwix && cd kiwix
+          if ! curl -fsSL -o paket "$basis/$paket"; then
+            [ -n "$alt" ] && curl -fsSL -o paket "$basis/$alt"
+          fi
+          case "$paket" in *.zip) unzip -q paket ;; *) tar xzf paket ;; esac
+          bin=$(find . -type f \( -name "kiwix-serve" -o -name "kiwix-serve.exe" \) | head -1)
+          [ -n "$bin" ] || { echo "kiwix-serve nicht gefunden"; exit 1; }
+          cp "$bin" "../app/src-tauri/binaries/kiwix-serve-$triple$ext"
+          chmod +x "../app/src-tauri/binaries/kiwix-serve-$triple$ext"
+          ls -la ../app/src-tauri/binaries
       - run: npm install
         working-directory: app
       - uses: tauri-apps/tauri-action@v0

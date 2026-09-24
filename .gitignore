@@ -2,3 +2,6 @@
 .DS_Store
 node_modules/
 target/
+# Mitgelieferte Programme (kiwix-serve) lädt der Build-Workflow herunter
+app/src-tauri/binaries/*
+!app/src-tauri/binaries/README.md
