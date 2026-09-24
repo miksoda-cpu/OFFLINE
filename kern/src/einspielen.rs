@@ -2,7 +2,7 @@
 //!
 //! Zustände auf der Platte unter `wurzel/`:
 //!   `<id>-<version>/`       installiert und vollständig
-//!   `<id>-<version>.neu/`   Staging – darf jederzeit gelöscht werden
+//!   `<id>-<version>.neu/`   Staging – darf jederzeit gelöscht werden (ein Download setzt dort fort)
 //!   `<id>-<alt>.alt/`       Vorgänger während des Tauschs – wird nach Erfolg gelöscht
 //!
 //! Bricht der Strom mitten drin ab, räumt `aufraeumen()` beim nächsten Start auf.
@@ -39,23 +39,32 @@ pub fn installierte_version(wurzel: &Path, id: &str) -> Option<(String, PathBuf)
     beste
 }
 
+/// Darf diese Version über die installierte? Gleiche Version → nein; ältere nur mit `downgrade_erlaubt`.
+pub fn version_zulaessig(wurzel: &Path, id: &str, version: &str, downgrade_erlaubt: bool) -> Result<Option<(String, PathBuf)>, Fehler> {
+    let bisher = installierte_version(wurzel, id);
+    if let Some((v, _)) = &bisher {
+        match version_vergleich(version, v) {
+            Ordering::Equal => return Err(Fehler(format!("{id} {v} ist bereits installiert"))),
+            Ordering::Less if !downgrade_erlaubt => return Err(Fehler(format!("{id} {v} ist neuer als {version} – kein Downgrade ohne Bestätigung"))),
+            _ => {}
+        }
+    }
+    Ok(bisher)
+}
+
+pub fn staging_ordner(wurzel: &Path, id: &str, version: &str) -> PathBuf {
+    wurzel.join(format!("{id}-{version}.neu"))
+}
+
 /// Kopiert ein geprüftes Paket von `quelle` (USB-Stick, Download-Ordner) nach `wurzel/<id>-<version>/`.
 /// Reihenfolge: Quelle prüfen → nach Staging kopieren → Staging erneut prüfen → Tausch.
 pub fn einspielen(quelle: &Path, wurzel: &Path, bekannte: &[OeffentlicherSchluessel], heute: &str, downgrade_erlaubt: bool) -> Result<Einspielergebnis, Fehler> {
     let g = paket_pruefen(quelle, bekannte, heute)?;
     let m = &g.manifest;
-    let bisher = installierte_version(wurzel, &m.id);
-    if let Some((v, _)) = &bisher {
-        match version_vergleich(&m.version, v) {
-            Ordering::Equal => return Err(Fehler(format!("{} {} ist bereits installiert", m.id, v))),
-            Ordering::Less if !downgrade_erlaubt => return Err(Fehler(format!("{} {} ist neuer als {} – kein Downgrade ohne Bestätigung", m.id, v, m.version))),
-            _ => {}
-        }
-    }
+    version_zulaessig(wurzel, &m.id, &m.version, downgrade_erlaubt)?;
 
     std::fs::create_dir_all(wurzel)?;
-    let ziel = wurzel.join(format!("{}-{}", m.id, m.version));
-    let staging = wurzel.join(format!("{}-{}.neu", m.id, m.version));
+    let staging = staging_ordner(wurzel, &m.id, &m.version);
     if staging.exists() {
         std::fs::remove_dir_all(&staging)?;
     }
@@ -73,11 +82,24 @@ pub fn einspielen(quelle: &Path, wurzel: &Path, bekannte: &[OeffentlicherSchlues
     std::fs::write(staging.join("paket.json"), &g.manifest_bytes)?;
     std::fs::copy(quelle.join("paket.sig"), staging.join("paket.sig"))?;
 
-    // Was jetzt auf der Platte liegt, muss die Prüfung erneut bestehen – sonst nichts anfassen.
-    if let Err(e) = paket_pruefen(&staging, bekannte, heute) {
-        let _ = std::fs::remove_dir_all(&staging);
-        return Err(Fehler(format!("Kopie fehlerhaft, Einspielen abgebrochen: {e}")));
-    }
+    let mut e = abschliessen(&staging, wurzel, bekannte, heute, downgrade_erlaubt)?;
+    e.kopiert_bytes = kopiert;
+    Ok(e)
+}
+
+/// Letzter Schritt für jedes Staging (Kopie vom Stick oder Download): erneut vollständig prüfen, dann atomar tauschen.
+/// Schlägt die Prüfung fehl, wird das Staging gelöscht und der installierte Stand bleibt unangetastet.
+pub fn abschliessen(staging: &Path, wurzel: &Path, bekannte: &[OeffentlicherSchluessel], heute: &str, downgrade_erlaubt: bool) -> Result<Einspielergebnis, Fehler> {
+    let g = match paket_pruefen(staging, bekannte, heute) {
+        Ok(g) => g,
+        Err(e) => {
+            let _ = std::fs::remove_dir_all(staging);
+            return Err(Fehler(format!("Kopie fehlerhaft, Einspielen abgebrochen: {e}")));
+        }
+    };
+    let m = &g.manifest;
+    let bisher = version_zulaessig(wurzel, &m.id, &m.version, downgrade_erlaubt)?;
+    let ziel = wurzel.join(format!("{}-{}", m.id, m.version));
 
     // Atomarer Tausch: alt → .alt, neu → Platz, .alt löschen.
     let alt = bisher.as_ref().map(|(v, p)| (v.clone(), p.clone(), wurzel.join(format!("{}-{}.alt", m.id, v))));
@@ -90,7 +112,7 @@ pub fn einspielen(quelle: &Path, wurzel: &Path, bekannte: &[OeffentlicherSchlues
     if ziel.exists() {
         std::fs::remove_dir_all(&ziel)?;
     }
-    if let Err(e) = std::fs::rename(&staging, &ziel) {
+    if let Err(e) = std::fs::rename(staging, &ziel) {
         if let Some((_, p, a)) = &alt {
             let _ = std::fs::rename(a, p);
         }
@@ -99,19 +121,17 @@ pub fn einspielen(quelle: &Path, wurzel: &Path, bekannte: &[OeffentlicherSchlues
     if let Some((_, _, a)) = &alt {
         let _ = std::fs::remove_dir_all(a);
     }
-    Ok(Einspielergebnis { id: m.id.clone(), version: m.version.clone(), ordner: ziel, ersetzt: bisher.map(|(v, _)| v), kopiert_bytes: kopiert })
+    Ok(Einspielergebnis { id: m.id.clone(), version: m.version.clone(), ordner: ziel, ersetzt: bisher.map(|(v, _)| v), kopiert_bytes: 0 })
 }
 
-/// Beim Start: halbe Zustände auflösen. `.neu` weg; `.alt` zurückbenennen, wenn kein Hauptordner da ist, sonst weg.
+/// Beim Start: halbe Zustände auflösen. `.alt` zurückbenennen, wenn kein Hauptordner da ist, sonst weg.
+/// `.neu` bleibt liegen – ein Download setzt dort fort; `aufraeumen_staging` räumt verwaiste weg.
 pub fn aufraeumen(wurzel: &Path) -> Result<Vec<String>, Fehler> {
     let mut meldungen = Vec::new();
     let Ok(eintraege) = std::fs::read_dir(wurzel) else { return Ok(meldungen) };
     for e in eintraege.flatten() {
         let name = e.file_name().to_string_lossy().to_string();
-        if let Some(basis) = name.strip_suffix(".neu") {
-            std::fs::remove_dir_all(e.path())?;
-            meldungen.push(format!("Unvollständiges Staging entfernt: {basis}"));
-        } else if let Some(basis) = name.strip_suffix(".alt") {
+        if let Some(basis) = name.strip_suffix(".alt") {
             let (id, _) = basis.rsplit_once('-').unwrap_or((basis, ""));
             if installierte_version(wurzel, id).is_none() {
                 std::fs::rename(e.path(), wurzel.join(basis))?;
@@ -120,7 +140,26 @@ pub fn aufraeumen(wurzel: &Path) -> Result<Vec<String>, Fehler> {
                 std::fs::remove_dir_all(e.path())?;
                 meldungen.push(format!("Alter Stand entfernt: {basis}"));
             }
+        } else if let Some(basis) = name.strip_suffix(".neu") {
+            // Staging ohne Manifest ist nichts wert; mit Manifest darf ein Download fortsetzen
+            if !e.path().join("paket.json").exists() {
+                std::fs::remove_dir_all(e.path())?;
+                meldungen.push(format!("Unvollständiges Staging entfernt: {basis}"));
+            }
         }
     }
     Ok(meldungen)
+}
+
+/// Alle Staging-Ordner löschen (z. B. „Downloads verwerfen“).
+pub fn aufraeumen_staging(wurzel: &Path) -> Result<usize, Fehler> {
+    let mut n = 0;
+    let Ok(eintraege) = std::fs::read_dir(wurzel) else { return Ok(0) };
+    for e in eintraege.flatten() {
+        if e.file_name().to_string_lossy().ends_with(".neu") {
+            std::fs::remove_dir_all(e.path())?;
+            n += 1;
+        }
+    }
+    Ok(n)
 }

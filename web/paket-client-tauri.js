@@ -1,26 +1,37 @@
-// Paket-Client für die Desktop-App: gleiche Schnittstelle wie paket-client.js, aber alles, was Pakete prüft
-// oder speichert, macht der Rust-Kern. Die Oberfläche lädt höchstens Bytes und reicht sie weiter.
+// Paket-Client für die Desktop-App: gleiche Schnittstelle wie paket-client.js, aber alles, was Pakete prüft,
+// lädt oder speichert, macht der Rust-Kern (Update-Dienst). Die Oberfläche zeigt nur an.
 
-import * as web from "./paket-client.js";
+import { speicher } from "./paket-client.js";
 import { delta, versionVergleich } from "./paket-kern.js";
 
-export { speicher, ladeKatalog, katalogAusSpeicher, paketUrl, inhalt, sha256Hex } from "./paket-client.js";
+export { speicher, katalogAusSpeicher, paketUrl, inhalt, sha256Hex } from "./paket-client.js";
 export { verfuegbareUpdates };
 
 const T = window.__TAURI__;
 const invoke = (befehl, args) => T.core.invoke(befehl, args);
-const b64 = (bytes) => { let s = ""; for (const b of bytes) s += String.fromCharCode(b); return btoa(s); };
 
 // Zwischenspeicher der installierten Pakete – die Seiten greifen synchron darauf zu.
 const cache = new Map();
+export const istDesktop = true;
 
 export async function init() {
-  cache.clear();
-  for (const p of await invoke("installierte")) cache.set(p.manifest.id, p);
+  await cacheLaden();
+  verbindungMelden();
+  addEventListener("online", verbindungMelden);
+  addEventListener("offline", verbindungMelden);
   return { datenordner: await invoke("datenordner") };
 }
 
-export const istDesktop = true;
+async function cacheLaden() {
+  cache.clear();
+  for (const p of await invoke("installierte")) cache.set(p.manifest.id, p);
+}
+
+function verbindungMelden() {
+  // getaktet: der Browser weiß es meist nicht; null = unbekannt (zählt nicht als getaktet)
+  const getaktet = navigator.connection?.saveData === true ? true : null;
+  invoke("verbindung_melden", { online: navigator.onLine, getaktet, versatzMin: -new Date().getTimezoneOffset() }).catch(() => {});
+}
 
 export function installiertesPaket(id) {
   return cache.get(id) ?? null;
@@ -39,38 +50,30 @@ function verfuegbareUpdates(katalog) {
   return aus;
 }
 
-async function holeBytes(url) {
-  const res = await fetch(url, { cache: "no-cache" });
-  if (!res.ok) throw new Error(`${res.status} beim Laden von ${url}`);
-  return new Uint8Array(await res.arrayBuffer());
+/** Katalog über den Kern laden (Signatur, Rollback-Schutz in Rust); Ergebnis wie im Browser-Client. */
+export async function ladeKatalog() {
+  const r = await invoke("katalog_laden");
+  speicher.set("katalog", { katalog: r.katalog, geladen: r.geladen, schluessel: r.schluessel });
+  return { katalog: r.katalog, veraltet: r.veraltet, schluessel: r.schluessel };
 }
 
-/** Aus dem Katalog laden (nur Textpakete) – Bytes holen, an den Kern übergeben, der prüft und einspielt. */
+/** Paket aus dem Katalog laden – alle Arten, fortsetzbar, Fortschritt über `fortschritt`. */
 export async function installiere(katalog, eintrag, fortschritt = () => {}) {
   if (eintrag.status !== "verfuegbar") throw new Error("Dieses Paket ist noch nicht verfügbar");
-  if (eintrag.art !== "inhalt") throw new Error("Große Pakete kommen mit dem Update-Dienst (Phase 3) – bis dahin vom USB-Stick einspielen");
   const alt = cache.get(eintrag.id) ?? null;
-  const url = web.paketUrl(katalog, eintrag);
-  const manifestBytes = await holeBytes(url + "paket.json");
-  const manifest = JSON.parse(new TextDecoder().decode(manifestBytes));
-  const d = delta(alt?.manifest ?? null, manifest);
-  const dateien = [
-    { pfad: "paket.json", daten: b64(manifestBytes) },
-    { pfad: "paket.sig", daten: b64(await holeBytes(url + "paket.sig")) },
-  ];
-  let geladen = 0;
-  for (const datei of manifest.dateien) {
-    // Unveränderte Dateien nimmt der Kern nicht aus dem alten Ordner – im Zwischenordner muss alles liegen.
-    // Für Textpakete ist das egal (Kilobytes); der Update-Dienst in Phase 3 macht echte Deltas auf der Platte.
-    const bytes = await holeBytes(url + datei.pfad);
-    dateien.push({ pfad: datei.pfad, daten: b64(bytes) });
-    if (d.laden.some((l) => l.pfad === datei.pfad)) geladen += bytes.length;
-    fortschritt({ pfad: datei.pfad, geladen, gesamt: d.bytes });
+  const ab = await T.event.listen("download-fortschritt", (ev) => {
+    const f = ev.payload;
+    if (f.id === eintrag.id) fortschritt({ pfad: f.datei, geladen: f.geladen, gesamt: f.gesamt });
+  });
+  try {
+    const e = await invoke("paket_laden", { id: eintrag.id });
+    const paket = await invoke("paket_lesen", { id: eintrag.id });
+    cache.set(eintrag.id, paket);
+    const d = delta(alt?.manifest ?? null, paket.manifest);
+    return { paket, delta: d, geladen: e.kopiert_bytes };
+  } finally {
+    ab();
   }
-  await invoke("einspielen_bytes", { dateien, downgrade: false });
-  const paket = await invoke("paket_lesen", { id: eintrag.id });
-  cache.set(eintrag.id, paket);
-  return { paket, delta: d, geladen };
 }
 
 export async function entferne(id) {
@@ -80,8 +83,16 @@ export async function entferne(id) {
 
 // ---------- nur Desktop ----------
 
-export async function stickSuchen() {
-  return invoke("stick_suchen");
+export const abbrechen = () => invoke("download_abbrechen");
+export const stickSuchen = () => invoke("stick_suchen");
+export const aboLesen = () => invoke("abo_lesen");
+export const aboSchreiben = (einstellungen) => invoke("abo_schreiben", { einstellungen });
+export const aboStatus = () => invoke("abo_status");
+
+export async function updatesJetzt() {
+  const r = await invoke("updates_jetzt");
+  await cacheLaden();
+  return r;
 }
 
 export async function einspielenOrdner(pfad, downgrade = false) {
@@ -90,6 +101,17 @@ export async function einspielenOrdner(pfad, downgrade = false) {
   return e;
 }
 
-export async function ordnerWaehlen() {
-  return T.dialog.open({ directory: true, multiple: false, title: "Paketordner wählen (mit paket.json)" });
+export async function ordnerWaehlen(titel = "Paketordner wählen (mit paket.json)") {
+  return T.dialog.open({ directory: true, multiple: false, title: titel });
+}
+
+export async function speicherortSetzen(pfad) {
+  const wurzel = await invoke("speicherort_setzen", { pfad });
+  await cacheLaden();
+  return wurzel;
+}
+
+/** Ereignisse des Hintergrund-Abos (automatische Updates) an die Oberfläche weiterreichen. */
+export function beiAboErgebnis(cb) {
+  T.event.listen("abo-ergebnis", async (ev) => { await cacheLaden(); cb(ev.payload); });
 }

@@ -19,4 +19,8 @@ tauri-plugin-opener = "2.5"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 base64 = "0.22"
-offline-kern = { path = "../../kern" }
+offline-kern = { path = "../../kern", default-features = false }
+
+[features]
+default = ["tls"]
+tls = ["offline-kern/tls"]

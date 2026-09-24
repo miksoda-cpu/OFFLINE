@@ -5,17 +5,38 @@ import { versionVergleich } from "./paket-kern.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
+if (desktop) {
+  // Abo-Einstellungen liegen in der App beim Kern (er führt sie im Hintergrund aus)
+  const a = await client.aboLesen();
+  desktop.abo = a;
+  client.beiAboErgebnis((erg) => {
+    state.meldung = erg.fehler.length
+      ? { art: "warn", titel: "Abo", text: `Automatische Prüfung: ${erg.aktualisiert.length} aktualisiert, Fehler: ${esc(erg.fehler.join("; "))}` }
+      : { art: "ok", titel: "Abo", text: erg.aktualisiert.length ? `Automatisch aktualisiert: ${erg.aktualisiert.map((x) => `${esc(x.id)} ${esc(x.version)}`).join(", ")}` : "Automatische Prüfung: alles aktuell." };
+    render();
+  });
+}
 
 const BASISPAKET = "at-basis";
 
 const state = {
   checks: speicher.get("checks", {}),
   abo: speicher.get("abo", { intervall: "woechentlich", nurWlan: true, fenster: true, von: "02:00", bis: "05:00", aktiv: true }),
+  fortschritt: null, // { pfad, geladen, gesamt } während eines Downloads
   bundesland: speicher.get("bundesland", "Wien"),
   notizen: speicher.get("notizen", ""),
   filter: "Alle",
   meldung: null, // { text, art } für die Update-Seite
 };
+
+if (desktop?.abo) {
+  const e = desktop.abo.einstellungen;
+  state.abo = { intervall: e.intervall, nurWlan: e.nur_wlan, fenster: e.fenster, von: e.von, bis: e.bis, aktiv: e.aktiv, katalogUrl: e.katalog_url };
+}
+function aboSpeichern() {
+  speicher.set("abo", state.abo);
+  if (desktop) client.aboSchreiben({ aktiv: state.abo.aktiv, intervall: state.abo.intervall, nur_wlan: state.abo.nurWlan, fenster: state.abo.fenster, von: state.abo.von, bis: state.abo.bis, katalog_url: state.abo.katalogUrl ?? desktop.abo.einstellungen.katalog_url }).catch(() => {});
+}
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const groesse = (b) => b < 1e6 ? `${Math.max(1, Math.round(b / 1e3))} kB` : b < 1e9 ? `${(b / 1e6).toLocaleString("de-AT", { maximumFractionDigits: 1 })} MB` : `${(b / 1e9).toLocaleString("de-AT", { maximumFractionDigits: 1 })} GB`;
@@ -184,9 +205,13 @@ const seiten = {
     const m = state.meldung;
     return `
       ${kopf("Updates & Abo", "Geladen wird nur, wenn du online bist – und nur, was sich geändert hat.", '<button class="btn btn-primary" id="jetzt">Jetzt prüfen</button>')}
+      ${state.fortschritt ? `<div class="card" style="margin-bottom:1rem"><div style="display:flex;justify-content:space-between;gap:1rem;align-items:center"><span><strong>Lädt</strong> <span class="muted mono" style="font-size:.85rem">${esc(state.fortschritt.pfad)}</span></span><span class="muted">${groesse(state.fortschritt.geladen)} / ${groesse(state.fortschritt.gesamt)}</span></div>
+        <div class="progress" style="margin:.5rem 0"><div style="width:${state.fortschritt.gesamt ? Math.min(100, (100 * state.fortschritt.geladen) / state.fortschritt.gesamt) : 0}%"></div></div>
+        ${desktop ? '<button class="btn btn-sm" data-abbrechen>Abbrechen – wird später fortgesetzt</button>' : ""}</div>` : ""}
       <div class="card" id="pruef" style="margin-bottom:1rem">${m ? `<span class="tag ${m.art === "ok" ? "tag-ok" : m.art === "warn" ? "tag-warn" : "tag-pro"}">${esc(m.titel)}</span> ${m.text}` :
         k ? `<span class="muted">Katalog vom ${datum(k.erstellt)}, geladen ${datum(ks.geladen)}, signiert mit Schlüssel <span class="mono">${esc(ks.schluessel)}</span>. ${updates.length ? `<strong>${updates.length} Update${updates.length > 1 ? "s" : ""} verfügbar.</strong>` : "Alle installierten Pakete sind aktuell."}</span>` :
         '<span class="muted">Noch kein Katalog geladen.</span>'}
+        ${desktop?.aboStatus !== undefined ? `<div class="muted" style="margin-top:.5rem;font-size:.9rem">Hintergrund-Abo: ${desktop.aboStatus ? esc(desktop.aboStatus) : "fällig – läuft beim nächsten Takt"}</div>` : ""}
         ${updates.map((u) => `<div style="margin-top:.75rem"><strong>${esc(u.eintrag.titel)}</strong> <span class="muted">${esc(u.installiert)} → ${esc(u.eintrag.version)}</span> <button class="btn btn-sm btn-primary" data-install="${u.eintrag.id}" style="margin-left:.5rem">Aktualisieren</button></div>`).join("")}
       </div>
       <div class="grid grid-2">
@@ -204,6 +229,8 @@ const seiten = {
           <ul class="changelog">${aenderungen.length ? aenderungen.map((a) => `<li><span class="muted mono" style="font-size:.85rem">${datum(a.erstellt)}</span><span><strong>${esc(a.titel)}</strong> <span class="muted">${esc(a.version)}</span><br><span class="muted">${esc(a.aenderungen)}</span></span></li>`).join("") : '<li><span class="muted">Noch nichts – Katalog laden.</span></li>'}</ul>
         </div>
       </div>
+      ${desktop ? `<div class="card" style="margin-top:1rem"><h3>Speicherort</h3><p class="muted" style="margin:0 0 .5rem">Pakete liegen in <span class="mono" style="font-size:.85rem">${esc(desktop.datenordner)}</span>. Für große Pakete (Wikipedia, Karten) kann das eine externe Platte sein.</p>
+        <button class="btn btn-sm" data-speicherort>Ordner wählen …</button> <button class="btn btn-sm" data-speicherort-standard>Standard</button><p class="form-msg" id="ort-msg"></p></div>` : ""}
       <p class="muted" style="margin-top:1rem;font-size:.9rem">So läuft ein Update: Katalog laden → Signatur prüfen → Manifest gegen Katalog und Signatur prüfen → nur geänderte Dateien laden → jede Datei gegen ihre Prüfsumme prüfen → erst dann den alten Stand ersetzen. Details: <a href="https://github.com/miksoda-cpu/OFFLINE/blob/claude/optimistic-hypatia-yymcne/docs/PAKETFORMAT.md" rel="noopener">Paketformat</a>.</p>`;
   },
 };
@@ -235,7 +262,12 @@ async function installiereMitMeldung(id, ziel) {
   const alt = installiertesPaket(id);
   zeige(ziel, `Lade ${esc(eintrag.titel)} …`, "");
   try {
-    const { paket, delta: d, geladen } = await installiere(k, eintrag);
+    const { paket, delta: d, geladen } = await installiere(k, eintrag, (f) => {
+      state.fortschritt = f;
+      const bar = document.querySelector(".progress-dl");
+      if (location.hash === "#updates") render();
+    });
+    state.fortschritt = null;
     const text = alt
       ? `${esc(paket.manifest.titel)} auf ${esc(paket.manifest.version)} aktualisiert – ${groesse(geladen)} geladen (${d.laden.length} von ${paket.manifest.dateien.length} Dateien), Signatur und Prüfsummen geprüft.`
       : `${esc(paket.manifest.titel)} ${esc(paket.manifest.version)} installiert – ${groesse(geladen)}, Signatur und Prüfsummen geprüft.`;
@@ -243,7 +275,9 @@ async function installiereMitMeldung(id, ziel) {
     render();
     zeige(ziel, text, "ok");
   } catch (e) {
-    zeige(ziel, "Abgelehnt: " + esc(e.message), "err");
+    state.fortschritt = null;
+    zeige(ziel, "Abgelehnt: " + esc(String(e?.message ?? e)), "err");
+    if (location.hash === "#updates") { state.meldung = { art: "fehler", titel: "Abgelehnt", text: esc(String(e?.message ?? e)) }; render(); }
   }
 }
 
@@ -257,6 +291,28 @@ async function einspielenVonOrdner(pfad) {
   } catch (err) {
     zeige("bib-msg", "Abgelehnt: " + esc(String(err?.message ?? err)), "err");
   }
+}
+
+async function speicherortSetzen(pfad) {
+  try {
+    desktop.datenordner = await client.speicherortSetzen(pfad);
+    state.meldung = { art: "ok", titel: "Speicherort", text: `Pakete liegen ab jetzt in ${esc(desktop.datenordner)}. Bereits installierte Pakete bleiben am alten Ort.` };
+    render();
+  } catch (e) { zeige("ort-msg", "Abgelehnt: " + esc(String(e?.message ?? e)), "err"); }
+}
+
+async function updatesJetztDesktop() {
+  try {
+    const erg = await client.updatesJetzt();
+    const k = katalogAusSpeicher()?.katalog;
+    state.meldung = erg.fehler.length
+      ? { art: "warn", titel: "Teilweise", text: `${erg.aktualisiert.length} aktualisiert. Fehler: ${esc(erg.fehler.join("; "))}` }
+      : { art: "ok", titel: "Geprüft", text: erg.aktualisiert.length ? `Aktualisiert: ${erg.aktualisiert.map((x) => `${esc(x.id)} ${esc(x.version)} (${groesse(x.kopiert_bytes)} geladen)`).join(", ")}` : `Alle Pakete aktuell.${k ? "" : ""} Nächste Prüfung: ${intervallText()}.` };
+    if (!k) await ladeKatalog().catch(() => {});
+  } catch (e) {
+    state.meldung = { art: "fehler", titel: "Abgelehnt", text: esc(String(e?.message ?? e)) };
+  }
+  render();
 }
 
 function zeige(id, html, art) {
@@ -300,6 +356,7 @@ const menu = document.getElementById("menu");
 
 function render() {
   const route = location.hash.slice(1) || "start";
+  if (desktop && route === "updates") client.aboStatus().then((st) => { if (st !== desktop.aboStatus) { desktop.aboStatus = st; render(); } }).catch(() => {});
   const seite = seiten[route] ? route : "start";
   main.innerHTML = seiten[seite]();
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === seite ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
@@ -312,8 +369,8 @@ function render() {
 main.addEventListener("change", (e) => {
   const t = e.target;
   if (t.dataset.check) { state.checks[t.dataset.check] = t.checked; speicher.set("checks", state.checks); render(); }
-  if (t.dataset.abo) { state.abo[t.dataset.abo] = t.checked; speicher.set("abo", state.abo); render(); }
-  if (t.dataset.zeit) { state.abo[t.dataset.zeit] = t.value; speicher.set("abo", state.abo); }
+  if (t.dataset.abo) { state.abo[t.dataset.abo] = t.checked; aboSpeichern(); render(); }
+  if (t.dataset.zeit) { state.abo[t.dataset.zeit] = t.value; aboSpeichern(); }
   if (t.id === "bl") { state.bundesland = t.value; speicher.set("bundesland", t.value); render(); }
 });
 
@@ -326,9 +383,12 @@ main.addEventListener("click", (e) => {
   if (b.hasAttribute("data-stick-suchen")) client.stickSuchen().then((f) => { state.funde = f; render(); if (!f.length) zeige("bib-msg", "Kein signiertes Paket auf einem Datenträger gefunden.", "err"); });
   if (b.hasAttribute("data-ordner-waehlen")) client.ordnerWaehlen().then((p) => p && einspielenVonOrdner(p));
   if (b.dataset.stick) einspielenVonOrdner(b.dataset.stick);
-  if (b.dataset.intervall) { state.abo.intervall = b.dataset.intervall; speicher.set("abo", state.abo); render(); }
+  if (b.dataset.intervall) { state.abo.intervall = b.dataset.intervall; aboSpeichern(); render(); }
   if (b.hasAttribute("data-katalog")) pruefeUpdates();
-  if (b.id === "jetzt") { b.disabled = true; b.textContent = "Prüfe …"; pruefeUpdates(); }
+  if (b.id === "jetzt") { b.disabled = true; b.textContent = "Prüfe …"; desktop ? updatesJetztDesktop() : pruefeUpdates(); }
+  if (b.hasAttribute("data-abbrechen")) client.abbrechen();
+  if (b.hasAttribute("data-speicherort")) client.ordnerWaehlen("Ordner für Pakete wählen (z. B. externe Platte)").then((p) => p && speicherortSetzen(p));
+  if (b.hasAttribute("data-speicherort-standard")) speicherortSetzen(null);
 });
 
 main.addEventListener("submit", (e) => {

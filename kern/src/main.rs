@@ -1,6 +1,8 @@
 //! Kommandozeile des Kerns – zum Testen und für Skripte. Die Desktop-App ruft dieselben Funktionen direkt auf.
 
-use offline_kern::{aufraeumen, datum, delta, einspielen, paket_pruefen, schluessel_laden, Manifest};
+use offline_kern::{aufraeumen, datum, delta, download, einspielen, paket_pruefen, schluessel_laden, Auftrag, Manifest};
+use std::sync::atomic::AtomicBool;
+use std::sync::Arc;
 use std::path::{Path, PathBuf};
 
 fn schluessel() -> Result<Vec<offline_kern::OeffentlicherSchluessel>, offline_kern::Fehler> {
@@ -43,13 +45,34 @@ fn lauf() -> Result<(), offline_kern::Fehler> {
             let e = einspielen(Path::new(quelle), Path::new(wurzel), &schluessel()?, &heute, downgrade)?;
             println!("Eingespielt: {} {} → {} ({} kopiert{})", e.id, e.version, e.ordner.display(), mb(e.kopiert_bytes), e.ersetzt.map(|v| format!(", ersetzt {v}")).unwrap_or_default());
         }
+        Some("katalog") => {
+            let url = args.get(1).ok_or(offline_kern::Fehler("Verwendung: katalog <katalog-url>".into()))?;
+            let (g, _) = download::katalog_laden(url, &schluessel()?, &heute, &datum::jetzt_iso(), None)?;
+            println!("Katalog vom {} (Schlüssel {}){}", g.katalog.erstellt, g.schluessel, if g.veraltet { " – VERALTET" } else { "" });
+            for p in &g.katalog.pakete {
+                println!("  {:14} {:12} {:>10}  {}  {}", p.id, p.version, mb(p.groesse), p.status, p.titel);
+            }
+        }
+        Some("laden") => {
+            let (Some(url), Some(id), Some(wurzel)) = (args.get(1), args.get(2), args.get(3)) else { return Err(offline_kern::Fehler("Verwendung: laden <katalog-url> <paket-id> <installationsordner>".into())) };
+            let bekannte = schluessel()?;
+            let (g, _) = download::katalog_laden(url, &bekannte, &heute, &datum::jetzt_iso(), None)?;
+            let eintrag = g.katalog.pakete.iter().find(|p| &p.id == id).ok_or(offline_kern::Fehler(format!("{id} nicht im Katalog")))?;
+            let mut zuletzt = 0u64;
+            let mut melde = |f: offline_kern::Fortschritt| {
+                if f.geladen - zuletzt >= 1_000_000 || f.geladen == f.gesamt { eprintln!("  {} {} / {}", f.datei, mb(f.geladen), mb(f.gesamt)); zuletzt = f.geladen; }
+            };
+            let mut a = Auftrag { bekannte: &bekannte, heute: &heute, jetzt_iso: &datum::jetzt_iso(), abbruch: Arc::new(AtomicBool::new(false)), fortschritt: &mut melde };
+            let e = download::paket_laden(&g.katalog.basis, eintrag, Path::new(wurzel), &mut a)?;
+            println!("Geladen und eingespielt: {} {} → {} ({} geladen{})", e.id, e.version, e.ordner.display(), mb(e.kopiert_bytes), e.ersetzt.map(|v| format!(", ersetzt {v}")).unwrap_or_default());
+        }
         Some("aufraeumen") => {
             let wurzel = args.get(1).ok_or(offline_kern::Fehler("Verwendung: aufraeumen <installationsordner>".into()))?;
             for m in aufraeumen(Path::new(wurzel))? {
                 println!("{m}");
             }
         }
-        _ => println!("offline-kern\n\n  pruefen <paketordner>\n  delta <alt/paket.json|-> <neu/paket.json>\n  einspielen <paketordner> <installationsordner> [--downgrade]\n  aufraeumen <installationsordner>"),
+        _ => println!("offline-kern\n\n  pruefen <paketordner>\n  delta <alt/paket.json|-> <neu/paket.json>\n  einspielen <paketordner> <installationsordner> [--downgrade]\n  katalog <katalog-url>\n  laden <katalog-url> <paket-id> <installationsordner>\n  aufraeumen <installationsordner>"),
     }
     Ok(())
 }

@@ -148,7 +148,7 @@ Hinweise:
 | **0 – erledigt** | Konzept, Web-Prototyp (PWA), Vercel-Vorschau | Oberfläche zum Ansehen |
 | **1 – erledigt (24.09.2026)** | Paketformat mit Signatur ([PAKETFORMAT.md](PAKETFORMAT.md)), Werkzeug, Österreich-Paket v1, signierter Katalog; der Web-Prototyp installiert und aktualisiert Pakete nach genau diesem Verfahren | erstes echtes Paket |
 | **2 – in Arbeit (24.09.2026)** | Rust-Kern (`kern/`, gleiche Tests wie das Werkzeug) und Tauri-Hülle (`app/`) mit Import vom USB-Stick; Installer für Windows, macOS, Linux über GitHub Actions ([DESKTOP.md](DESKTOP.md)). Offen: kiwix-serve + Kartendatei als mitgelieferte Programme | Installer Win/Mac/Linux (unsigniert) |
-| **3** | Update-Dienst + Update-Server, Delta-Updates | Abo funktioniert technisch |
+| **3 – erledigt (24.09.2026)** | Update-Dienst im Rust-Kern: Katalog, fortsetzbare Downloads in Teilen, Delta gegen installierte Version, Hintergrund-Abo mit Zeitfenster; Speicherort auf externer Platte. Update-Server = statische Dateien auf Vercel | Abo funktioniert technisch |
 | **4** | KI-Assistent (llama.cpp + Suche über Inhalte) | lokale KI |
 | **5** | Pro: Lizenzschlüssel, Zahlung, Code-Signing (Apple/Windows), Gemeinde-Version | Marktstart |
 

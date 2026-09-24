@@ -2,7 +2,9 @@
 //! Verhält sich exakt wie `werkzeug/paket-lib.mjs`; die Testfälle in `werkzeug/test.mjs` gelten auch hier.
 //! Spezifikation: docs/PAKETFORMAT.md
 
+pub mod abo;
 pub mod datum;
+pub mod download;
 pub mod delta;
 pub mod einspielen;
 pub mod hash;
@@ -12,7 +14,8 @@ pub mod paket;
 pub mod schluessel;
 
 pub use delta::{delta, Delta};
-pub use einspielen::{aufraeumen, einspielen, Einspielergebnis};
+pub use download::{katalog_laden, paket_laden, Auftrag, Fortschritt};
+pub use einspielen::{abschliessen, aufraeumen, aufraeumen_staging, einspielen, Einspielergebnis};
 pub use katalog::{katalog_pruefen, Katalog, KatalogEintrag};
 pub use manifest::{manifest_pruefen_struktur, pfad_gueltig, version_vergleich, Datei, Manifest, FORMAT};
 pub use paket::{paket_pruefen, Geprueft};

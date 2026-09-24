@@ -1,6 +1,6 @@
 # OFFLINE Desktop – Bauen und Ausliefern
 
-Stand: 24. September 2026 · Status: Phase 2, Hülle steht, erste Installer über GitHub Actions
+Stand: 24. September 2026 · Status: Phase 3, Update-Dienst im Kern, Installer über GitHub Actions
 
 ## Aufbau
 
@@ -30,16 +30,31 @@ Datenordner der App (dort liegen die Pakete):
 | macOS | `~/Library/Application Support/at.digioneer.offline/pakete` |
 | Linux | `~/.local/share/at.digioneer.offline/pakete` |
 
-Ein Speicherort auf einer externen Platte (Konzept 2.1) ist für Phase 3 vorgesehen.
+**Speicherort ändern:** Updates & Abo → „Speicherort → Ordner wählen …“. Die App legt dort `OFFLINE-Pakete/` an und liest ab dann nur von dort. Bereits installierte Pakete bleiben am alten Ort (verschieben von Hand oder neu laden). Merkt sich die App in `abo.json` neben dem Paketordner.
+
+## Update-Dienst (Phase 3)
+
+Der Kern (`kern/src/download.rs`, `kern/src/abo.rs`) lädt Pakete selbst – die Oberfläche zeigt nur an:
+
+- **Katalog** vom Update-Server: Signatur, Rollback-Schutz (`erstellt` darf nie kleiner werden), Ablauf.
+- **Paket in Teilen:** Range-Anfragen je Teil, jedes Teil sofort gegen seine Prüfsumme; bei Verbindungsabbruch bis zu 3 Versuche. Dateien ohne Teile werden ab dem Dateiende fortgesetzt und am Ende geprüft.
+- **Fortsetzbar:** Was im Staging-Ordner `<id>-<version>.neu/` schon stimmt, wird nicht noch einmal geladen – nach Abbruch, Absturz oder Stromausfall geht es dort weiter.
+- **Delta:** Unveränderte Dateien und unveränderte Teile großer Dateien kommen aus der installierten Version (Hardlink oder Kopie), nicht aus dem Netz.
+- **Atomarer Tausch** wie beim USB-Import; der alte Stand bleibt bis zur vollständigen Prüfung.
+- **Hintergrund-Abo:** Jede Minute prüft die App, ob nach Intervall (täglich/wöchentlich/monatlich), Zeitfenster (auch über Mitternacht) und Verbindung eine Prüfung fällig ist. Dann werden alle installierten Pakete auf den Katalogstand gebracht; das Ergebnis erscheint unter Updates & Abo.
+- **„Nur im WLAN“:** Ob eine Verbindung getaktet ist, weiß die App nur, wenn das System es meldet (Browser-`saveData`); unbekannt zählt nicht als getaktet. Eine echte Abfrage je Betriebssystem ist offen.
+- Einstellungen und Zustand liegen in `abo.json` (Katalog-URL, Intervall, Fenster, letzte Prüfung, zuletzt gesehener Katalog).
+
+Kommandozeile zum Testen ohne App: `offline-kern katalog <url>` und `offline-kern laden <url> <id> <ordner>`.
 
 ## Was die App in Phase 2 kann
 
 - Startet, räumt halbe Zustände auf (`.neu`, `.alt`), liest alle installierten Pakete und prüft jedes erneut.
 - **Vom USB-Stick einspielen:** „Datenträger durchsuchen“ findet signierte Paketordner auf eingehängten Laufwerken (Windows D: bis Z:, macOS /Volumes, Linux /media, /run/media, /mnt), „Ordner wählen …“ öffnet den Systemdialog. Einspielen = prüfen → Staging → erneut prüfen → atomarer Tausch.
-- Textpakete aus dem Katalog laden (die Oberfläche holt die Bytes, der Kern prüft und spielt ein).
+- Pakete aller Größen aus dem Katalog laden – über den Update-Dienst des Kerns (siehe oben).
 - Zeigt die Inhalte des Österreich-Pakets, Karte (online), Notizen, Abo-Einstellungen.
 
-Noch nicht (Phase 3): eigener Download-Dienst in Rust für große Pakete mit fortsetzbaren Teilen, Zeitfenster und WLAN-Regel; kiwix-serve und Kartendatei als mitgelieferte Programme (Phase 3/4).
+Noch nicht: kiwix-serve und Kartendatei als mitgelieferte Programme (Phase 4), Lizenzschlüssel für Pro-Pakete (Phase 5), Abfrage getakteter Verbindungen je Betriebssystem.
 
 ## Installer bauen – GitHub Actions
 
