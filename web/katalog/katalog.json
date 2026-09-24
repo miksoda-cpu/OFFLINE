@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-09-24T10:27:04Z",
-  "gueltig_bis": "2026-12-23T10:27:04Z",
+  "erstellt": "2026-09-24T12:32:48Z",
+  "gueltig_bis": "2026-12-23T12:32:48Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -13,10 +13,10 @@
       "pro": false,
       "groesse": 7849,
       "app_min": "0.1.0",
-      "erstellt": "2026-09-24T10:27:04Z",
+      "erstellt": "2026-09-24T12:32:47Z",
       "aenderungen": "Erste Ausgabe: Notrufe, Sirenensignale, Blackout-Ablauf, Vorsorge-Checkliste, Bundesländer.",
       "pfad": "at-basis-2026.09.24/",
-      "sha256_manifest": "9107f90ba705d822e049ee4f60859614aa5c31571f3733f8017e5e4fd93ae419",
+      "sha256_manifest": "3787aee62a112ed6573f2117b9b3e45683a572d3507a9841be98ac7311e0f884",
       "status": "verfuegbar"
     },
     {

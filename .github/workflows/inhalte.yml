@@ -1,0 +1,151 @@
+# Baut große Inhaltspakete (ZIM von Kiwix) in GitHub Actions, signiert sie und lädt sie auf den
+# Hetzner Object Storage. Danach wird der Katalog aus allen Paketen im Speicher neu gebaut.
+# Start von Hand: Actions → „Inhaltspakete“ → Run workflow → Paket wählen.
+#
+# Benötigte Secrets (Settings → Secrets and variables → Actions):
+#   OFFLINE_SIGNIERSCHLUESSEL   privater Ed25519-Schlüssel (PEM, PKCS#8) – Gegenstück in schluessel/oeffentlich.json
+#   HETZNER_S3_ENDPOINT         z. B. https://fsn1.your-objectstorage.com
+#   HETZNER_S3_BUCKET           z. B. offline-pakete
+#   HETZNER_S3_ACCESS_KEY / HETZNER_S3_SECRET_KEY
+# Öffentliche Adresse des Buckets: https://<bucket>.<region>.your-objectstorage.com/
+name: Inhaltspakete
+
+on:
+  workflow_dispatch:
+    inputs:
+      paket:
+        description: Welches Paket bauen?
+        type: choice
+        default: wikivoyage-de
+        options: [wikivoyage-de, wiki-de-mini, wiki-de-nopic, nur-katalog]
+      hochladen:
+        description: Auf Hetzner hochladen? (sonst nur bauen und prüfen)
+        type: boolean
+        default: true
+
+jobs:
+  bauen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+
+      - name: Signaturschlüssel bereitstellen
+        env:
+          SCHLUESSEL: ${{ secrets.OFFLINE_SIGNIERSCHLUESSEL }}
+        run: |
+          set -euo pipefail
+          [ -n "$SCHLUESSEL" ] || { echo "Secret OFFLINE_SIGNIERSCHLUESSEL fehlt"; exit 1; }
+          mkdir -p ~/.offline/schluessel && chmod 700 ~/.offline/schluessel
+          printf '%s\n' "$SCHLUESSEL" > ~/.offline/schluessel/offline-ci.key
+          chmod 600 ~/.offline/schluessel/offline-ci.key
+
+      - name: ZIM von Kiwix holen und Paketquelle anlegen
+        if: inputs.paket != 'nur-katalog'
+        run: |
+          set -euo pipefail
+          case "${{ inputs.paket }}" in
+            wikivoyage-de) ordner=wikivoyage; muster='wikivoyage_de_all_maxi_[0-9-]*\.zim'; titel="Wikivoyage Deutsch"; beschr="Reiseführer – auch für jede Region in Österreich. Alle Artikel mit Bildern."; herausgeber="Wikivoyage-Autoren / Kiwix" ;;
+            wiki-de-mini)  ordner=wikipedia;  muster='wikipedia_de_all_mini_[0-9-]*\.zim'; titel="Wikipedia Deutsch · kompakt"; beschr="Einleitungen aller Artikel, ohne Bilder. Ideal für Laptops."; herausgeber="Wikipedia-Autoren / Kiwix" ;;
+            wiki-de-nopic) ordner=wikipedia;  muster='wikipedia_de_all_nopic_[0-9-]*\.zim'; titel="Wikipedia Deutsch · ohne Bilder"; beschr="Alle Artikel vollständig, ohne Bilder."; herausgeber="Wikipedia-Autoren / Kiwix" ;;
+          esac
+          basis="https://download.kiwix.org/zim/$ordner/"
+          datei=$(curl -fsSL "$basis" | grep -o "$muster" | sort -u | tail -1)
+          [ -n "$datei" ] || { echo "Keine ZIM-Datei gefunden für $muster"; exit 1; }
+          echo "Lade $datei"
+          q=quelle/${{ inputs.paket }}
+          mkdir -p "$q/inhalt"
+          curl -fL --retry 5 --retry-delay 10 -o "$q/inhalt/$datei" "$basis$datei"
+          ls -la "$q/inhalt"
+          ausgabe=$(echo "$datei" | grep -o '[0-9]\{4\}-[0-9]\{2\}' | tail -1)
+          cat > "$q/paket.quelle.json" <<EOF
+          {
+            "id": "${{ inputs.paket }}",
+            "titel": "$titel",
+            "beschreibung": "$beschr",
+            "art": "zim",
+            "sprache": "de",
+            "lizenz": "CC BY-SA 4.0",
+            "herausgeber": "$herausgeber",
+            "pro": false,
+            "app_min": "0.1.0",
+            "aenderungen": "Kiwix-Ausgabe $ausgabe ($datei).",
+            "quellen": [
+              { "name": "Kiwix", "url": "https://download.kiwix.org/zim/$ordner/" },
+              { "name": "Wikimedia-Projekte", "url": "https://www.wikimedia.org" }
+            ]
+          }
+          EOF
+
+      - name: Paket bauen und prüfen
+        if: inputs.paket != 'nur-katalog'
+        env:
+          OFFLINE_SCHLUESSEL_NAME: offline-ci
+        run: |
+          set -euo pipefail
+          mkdir -p ausgabe
+          node werkzeug/paket.mjs bauen quelle/${{ inputs.paket }} ausgabe
+          rm -rf quelle
+          node werkzeug/paket.mjs pruefen ausgabe/*/
+          du -sh ausgabe/*
+
+      - name: AWS-CLI für S3-kompatiblen Speicher
+        if: inputs.hochladen
+        run: |
+          aws --version || pip install awscli
+          aws --version
+
+      - name: Paket hochladen
+        if: inputs.hochladen && inputs.paket != 'nur-katalog'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.HETZNER_S3_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.HETZNER_S3_SECRET_KEY }}
+          AWS_DEFAULT_REGION: eu-central-1
+          ENDPOINT: ${{ secrets.HETZNER_S3_ENDPOINT }}
+          BUCKET: ${{ secrets.HETZNER_S3_BUCKET }}
+        run: |
+          set -euo pipefail
+          for o in ausgabe/*/; do
+            name=$(basename "$o")
+            # Dateien zuerst, Manifest + Signatur zuletzt: Wer das Manifest sieht, findet auch die Dateien
+            aws s3 sync "$o/inhalt" "s3://$BUCKET/pakete/$name/inhalt" --endpoint-url "$ENDPOINT" --acl public-read --no-progress
+            aws s3 cp "$o/paket.sig"  "s3://$BUCKET/pakete/$name/paket.sig"  --endpoint-url "$ENDPOINT" --acl public-read --content-type application/json
+            aws s3 cp "$o/paket.json" "s3://$BUCKET/pakete/$name/paket.json" --endpoint-url "$ENDPOINT" --acl public-read --content-type application/json
+          done
+
+      - name: Katalog aus allen Paketen im Speicher neu bauen und hochladen
+        if: inputs.hochladen
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.HETZNER_S3_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.HETZNER_S3_SECRET_KEY }}
+          AWS_DEFAULT_REGION: eu-central-1
+          ENDPOINT: ${{ secrets.HETZNER_S3_ENDPOINT }}
+          BUCKET: ${{ secrets.HETZNER_S3_BUCKET }}
+          OFFLINE_SCHLUESSEL_NAME: offline-ci
+        run: |
+          set -euo pipefail
+          # Textpakete aus dem Repo (at-basis) gehören ebenfalls in den Speicher
+          for o in web/pakete/*/; do
+            name=$(basename "$o")
+            aws s3 sync "$o" "s3://$BUCKET/pakete/$name" --endpoint-url "$ENDPOINT" --acl public-read --no-progress
+          done
+          # Manifeste aller Pakete spiegeln (nur paket.json + paket.sig)
+          mkdir -p spiegel
+          aws s3 sync "s3://$BUCKET/pakete" spiegel --endpoint-url "$ENDPOINT" --exclude "*" --include "*/paket.json" --include "*/paket.sig" --no-progress
+          ls spiegel
+          host=$(echo "$ENDPOINT" | sed 's#https://##')
+          export OFFLINE_BASIS="https://$BUCKET.$host/pakete/"
+          node werkzeug/paket.mjs katalog katalog-neu spiegel/*/ --geplant=pakete/geplant.json --nur-manifest
+          cat katalog-neu/katalog.json | head -40
+          aws s3 cp katalog-neu/katalog.sig  "s3://$BUCKET/katalog/katalog.sig"  --endpoint-url "$ENDPOINT" --acl public-read --content-type application/json --cache-control "max-age=300"
+          aws s3 cp katalog-neu/katalog.json "s3://$BUCKET/katalog/katalog.json" --endpoint-url "$ENDPOINT" --acl public-read --content-type application/json --cache-control "max-age=300"
+          echo "Katalog: https://$BUCKET.$host/katalog/katalog.json"
+
+      - name: Paket als Artefakt (wenn nicht hochgeladen)
+        if: ${{ !inputs.hochladen && inputs.paket != 'nur-katalog' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: paket-${{ inputs.paket }}
+          path: ausgabe/
+          retention-days: 7

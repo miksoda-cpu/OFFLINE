@@ -204,20 +204,35 @@ export async function paketPruefen(ordner, bekannte, { jetzt = new Date() } = {}
 
 // ---------- Katalog ----------
 
-export async function katalogBauen(paketOrdner, { basis, geplant = [], gueltigTage = 90, jetzt = new Date(), bekannte, privat }) {
+/**
+ * `nurManifest`: Ordner enthalten nur paket.json + paket.sig (z. B. vom Server gespiegelt) – dann wird die Signatur
+ * geprüft, aber keine Datei gehasht. Für vollständige Ordner immer die Vollprüfung (Standard).
+ */
+export async function katalogBauen(paketOrdner, { basis, geplant = [], gueltigTage = 90, jetzt = new Date(), bekannte, privat, nurManifest = false }) {
   const pakete = [];
   for (const ordner of paketOrdner) {
-    const p = await paketPruefen(ordner, bekannte, { jetzt });
-    if (!p.ok) throw new Error(`${ordner}: ${p.fehler.join("; ")}`);
-    const m = p.manifest;
+    let m;
     const bytes = await readFile(path.join(ordner, "paket.json"));
+    if (nurManifest && !(await stat(path.join(ordner, "inhalt")).catch(() => null))) {
+      const sig = JSON.parse(await readFile(path.join(ordner, "paket.sig"), "utf8"));
+      const s = pruefeSignatur(bytes, sig, bekannte, { zweck: "pakete", jetzt });
+      if (!s.ok) throw new Error(`${ordner}: Signatur: ${s.grund}`);
+      m = JSON.parse(bytes.toString("utf8"));
+      const f = manifestPruefenStruktur(m);
+      if (f.length) throw new Error(`${ordner}: ${f[0]}`);
+    } else {
+      const p = await paketPruefen(ordner, bekannte, { jetzt });
+      if (!p.ok) throw new Error(`${ordner}: ${p.fehler.join("; ")}`);
+      m = p.manifest;
+    }
     pakete.push({
       id: m.id, version: m.version, titel: m.titel, beschreibung: m.beschreibung, art: m.art, pro: m.pro,
       groesse: m.groesse, app_min: m.app_min, erstellt: m.erstellt, aenderungen: m.aenderungen,
       pfad: `${path.basename(ordner)}/`, sha256_manifest: sha256(bytes), status: "verfuegbar",
     });
   }
-  for (const g of geplant) pakete.push({ ...g, status: "geplant" });
+  const echt = new Set(pakete.map((p) => p.id));
+  for (const g of geplant) if (!echt.has(g.id)) pakete.push({ ...g, status: "geplant" });
   const ids = pakete.map((p) => p.id);
   if (new Set(ids).size !== ids.length) throw new Error("Katalog: doppelte Paket-IDs");
 

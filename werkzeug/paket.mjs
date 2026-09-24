@@ -44,7 +44,7 @@ const befehle = {
     console.log(`Schlüssel ${k.id} erzeugt.\n  privat:     ${pfad}  (nie ins Repository!)\n  öffentlich: ${OEFFENTLICH}`);
   },
 
-  async bauen([quelle, ziel, name = "offline-dev"]) {
+  async bauen([quelle, ziel, name = process.env.OFFLINE_SCHLUESSEL_NAME || "offline-dev"]) {
     if (!quelle || !ziel) throw new Error("Verwendung: bauen <quellordner> <zielwurzel> [schlüsselname]");
     const privat = await privatLaden(name);
     const { ziel: ordner, manifest } = await paketBauen(quelle, ziel, privat);
@@ -71,14 +71,16 @@ const befehle = {
   },
 
   async katalog([ziel, ...rest]) {
-    const name = "offline-dev";
+    const name = process.env.OFFLINE_SCHLUESSEL_NAME || "offline-dev";
     const basis = process.env.OFFLINE_BASIS || "https://offline-liart.vercel.app/pakete/";
     const geplantPfad = rest.find((r) => r.startsWith("--geplant="))?.slice(10);
+    const nurManifest = rest.includes("--nur-manifest");
+    const gueltigTage = Number(rest.find((r) => r.startsWith("--gueltig-tage="))?.slice(15) || 90);
     const ordner = rest.filter((r) => !r.startsWith("--"));
     if (!ziel || ordner.length === 0) throw new Error("Verwendung: katalog <zielordner> <paketordner…> [--geplant=datei.json]");
     const geplant = geplantPfad ? JSON.parse(await readFile(geplantPfad, "utf8")) : [];
     const bekannte = await bekannteLaden();
-    const { katalog, bytes, sig } = await katalogBauen(ordner, { basis, geplant, bekannte, privat: await privatLaden(name) });
+    const { katalog, bytes, sig } = await katalogBauen(ordner, { basis, geplant, bekannte, privat: await privatLaden(name), nurManifest, gueltigTage });
     await mkdir(ziel, { recursive: true });
     await writeFile(path.join(ziel, "katalog.json"), bytes);
     await writeFile(path.join(ziel, "katalog.sig"), JSON.stringify(sig, null, 2) + "\n");
@@ -90,7 +92,7 @@ const befehle = {
 
 const [befehl, ...args] = process.argv.slice(2);
 if (!befehl || !befehle[befehl]) {
-  console.log(`OFFLINE-Paketwerkzeug\n\n  schluessel erzeugen <name>\n  bauen <quelle> <zielwurzel> [schlüssel]\n  pruefen <paketordner>\n  delta <alt/paket.json|-> <neu/paket.json>\n  katalog <ziel> <paketordner…> [--geplant=datei.json]\n`);
+  console.log(`OFFLINE-Paketwerkzeug\n\n  schluessel erzeugen <name>\n  bauen <quelle> <zielwurzel> [schlüssel]\n  pruefen <paketordner>\n  delta <alt/paket.json|-> <neu/paket.json>\n  katalog <ziel> <paketordner…> [--geplant=datei.json] [--nur-manifest] [--gueltig-tage=90]\n`);
   process.exit(befehl ? 1 : 0);
 }
 befehle[befehl](args).catch((e) => { console.error(e.message); process.exit(1); });

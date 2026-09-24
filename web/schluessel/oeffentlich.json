@@ -12,6 +12,18 @@
       "gueltig_ab": "2026-09-24",
       "gueltig_bis": null,
       "bezeichnung": "Entwicklungsschlüssel – wird vor dem Start ersetzt"
+    },
+    {
+      "id": "1504cefc5d5d7e11",
+      "algorithmus": "ed25519",
+      "oeffentlich": "KCzbH5j7Qnh1459a5UztYmNJgo4MHUMrybh9BNkzJ6c=",
+      "zweck": [
+        "pakete",
+        "katalog"
+      ],
+      "gueltig_ab": "2026-09-24",
+      "gueltig_bis": null,
+      "bezeichnung": "Build-Schlüssel GitHub Actions 2026 – Erprobung, wird vor dem Start ersetzt"
     }
   ]
 }
