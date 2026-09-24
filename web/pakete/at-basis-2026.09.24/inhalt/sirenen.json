@@ -1,0 +1,17 @@
+{
+  "einleitung": "Österreich hat ein flächendeckendes Sirenennetz mit über 8.000 Sirenen. Drei Signale sollte jeder kennen.",
+  "signale": [
+    { "name": "Warnung", "muster": "konstant", "dauer": "3 Minuten gleichbleibender Dauerton",
+      "bedeutung": "Eine Gefahr droht.",
+      "tun": "Radio (ORF) oder Fernsehen einschalten, Verhaltensmaßnahmen beachten." },
+    { "name": "Alarm", "muster": "heulend", "dauer": "1 Minute auf- und abschwellender Heulton",
+      "bedeutung": "Die Gefahr ist da.",
+      "tun": "Schützende Räume aufsuchen, Fenster und Türen schließen, Radio/TV einschalten, Anweisungen befolgen." },
+    { "name": "Entwarnung", "muster": "konstant", "dauer": "1 Minute gleichbleibender Dauerton",
+      "bedeutung": "Ende der Gefahr.",
+      "tun": "Weitere Hinweise über Radio/TV beachten." }
+  ],
+  "probe": "Sirenenprobe: jeden Samstag um 12 Uhr ein 15 Sekunden langer Dauerton. Einmal im Jahr, meist am ersten Samstag im Oktober, werden alle Signale österreichweit getestet – dann heulen die Sirenen etwa eine Stunde lang immer wieder.",
+  "feuerwehr": "Der Feuerwehralarm (dreimal 15 Sekunden Dauerton mit Pausen) gilt der Feuerwehr, nicht der Bevölkerung.",
+  "warn_app": "Zusätzlich warnt der Staat über AT-Alert (Cell Broadcast) direkt aufs Handy – ohne App, ohne Anmeldung. Beim Blackout fällt das nach einigen Stunden aus, die Sirenen laufen mit Notstrom weiter."
+}

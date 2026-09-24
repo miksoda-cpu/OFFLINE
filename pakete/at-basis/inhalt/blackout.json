@@ -1,0 +1,14 @@
+{
+  "einleitung": "Ein Blackout ist ein großflächiger, länger dauernder Stromausfall. Mit dem Strom fallen nach und nach Wasser, Heizung, Handynetz, Bankomat, Tankstelle und Supermarkt aus. Das Wichtigste: Ruhe bewahren, Nachbarn helfen, Radio hören.",
+  "ablauf": [
+    { "t": "Die ersten Minuten", "text": "Prüfen, ob nur dein Haus oder die ganze Gegend betroffen ist. Elektrogeräte ausschalten, eine Lampe eingeschaltet lassen – so merkst du, wann der Strom zurück ist. Herd und Bügeleisen ausschalten, sonst droht Brand bei Rückkehr des Stroms." },
+    { "t": "Die ersten Stunden", "text": "Radio einschalten. Kühlschrank geschlossen halten – er hält etwa 24 Stunden, die Tiefkühltruhe 2 bis 3 Tage. Handy sparen: Flugmodus, nur für Notfälle einschalten. Nachbarn, besonders ältere und kranke Menschen, fragen, ob alles in Ordnung ist." },
+    { "t": "Tag 1 bis 3", "text": "Wasser und Lebensmittel einteilen. Die Gemeinde richtet Anlaufstellen ein (oft Feuerwehrhaus, Gemeindeamt, Schule) – im Radio auf Durchsagen achten. Notrufe nur bei echten Notfällen, die Netze sind überlastet. Nicht mit dem Auto fahren, Ampeln und Tankstellen fallen aus." },
+    { "t": "Wenn der Strom zurückkommt", "text": "Geräte nach und nach einschalten, nicht alle gleichzeitig. Lebensmittel im Kühlschrank prüfen, im Zweifel wegwerfen. Leitungswasser erst nach Freigabe trinken. Vorräte wieder auffüllen – es kann Tage dauern, bis Geschäfte wieder voll sind." }
+  ],
+  "merksaetze": [
+    "Kerzen nie unbeaufsichtigt lassen – Brände sind beim Blackout die größte Gefahr.",
+    "Kein Grill, kein Notstromaggregat in der Wohnung – Kohlenmonoxid ist geruchlos und tödlich.",
+    "Der ORF sendet im Krisenfall über Ö3 und die Regionalradios weiter. Ein Batterieradio ist die wichtigste Anschaffung."
+  ]
+}

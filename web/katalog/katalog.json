@@ -1,0 +1,104 @@
+{
+  "format": 1,
+  "erstellt": "2026-09-24T10:27:04Z",
+  "gueltig_bis": "2026-12-23T10:27:04Z",
+  "basis": "https://offline-liart.vercel.app/pakete/",
+  "pakete": [
+    {
+      "id": "at-basis",
+      "version": "2026.09.24",
+      "titel": "Österreich-Paket · Grundversion",
+      "beschreibung": "Notrufe, Sirenensignale, Blackout-Vorsorge, Checkliste und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
+      "art": "inhalt",
+      "pro": false,
+      "groesse": 7849,
+      "app_min": "0.1.0",
+      "erstellt": "2026-09-24T10:27:04Z",
+      "aenderungen": "Erste Ausgabe: Notrufe, Sirenensignale, Blackout-Ablauf, Vorsorge-Checkliste, Bundesländer.",
+      "pfad": "at-basis-2026.09.24/",
+      "sha256_manifest": "9107f90ba705d822e049ee4f60859614aa5c31571f3733f8017e5e4fd93ae419",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "at-pro",
+      "titel": "Österreich-Paket Pro",
+      "beschreibung": "Nach Bundesland: Behördenwege, Anlaufstellen, Landeswarnzentralen, Apotheken, Krankenhäuser. Laufend gepflegt.",
+      "art": "inhalt",
+      "pro": true,
+      "groesse": 400000000,
+      "status": "geplant"
+    },
+    {
+      "id": "karte-at",
+      "titel": "Karte Österreich",
+      "beschreibung": "Ganz Österreich, basemap.at und OpenStreetMap, zoombar bis zur Straße.",
+      "art": "karte",
+      "pro": false,
+      "groesse": 1200000000,
+      "status": "geplant"
+    },
+    {
+      "id": "wiki-de-mini",
+      "titel": "Wikipedia Deutsch · kompakt",
+      "beschreibung": "Einleitungen aller Artikel, ohne Bilder. Ideal für Laptops.",
+      "art": "zim",
+      "pro": false,
+      "groesse": 3100000000,
+      "status": "geplant"
+    },
+    {
+      "id": "wiki-de-nopic",
+      "titel": "Wikipedia Deutsch · ohne Bilder",
+      "beschreibung": "Alle Artikel vollständig, ohne Bilder.",
+      "art": "zim",
+      "pro": false,
+      "groesse": 12500000000,
+      "status": "geplant"
+    },
+    {
+      "id": "wiki-de-maxi",
+      "titel": "Wikipedia Deutsch · komplett",
+      "beschreibung": "Alle Artikel mit Bildern. Braucht eine große Festplatte.",
+      "art": "zim",
+      "pro": false,
+      "groesse": 42000000000,
+      "status": "geplant"
+    },
+    {
+      "id": "wikivoyage-de",
+      "titel": "Wikivoyage Deutsch",
+      "beschreibung": "Reiseführer – auch für jede Region in Österreich.",
+      "art": "zim",
+      "pro": false,
+      "groesse": 900000000,
+      "status": "geplant"
+    },
+    {
+      "id": "ris-bund",
+      "titel": "RIS · Bundesrecht (Auszug)",
+      "beschreibung": "Geltende Fassungen wichtiger Bundesgesetze, wöchentlich aktualisiert.",
+      "art": "inhalt",
+      "pro": true,
+      "groesse": 800000000,
+      "status": "geplant"
+    },
+    {
+      "id": "dwa-ki",
+      "titel": "Kurs: KI-Management",
+      "beschreibung": "digitalworld Academy – kompletter Kurs, offline.",
+      "art": "kurs",
+      "pro": true,
+      "groesse": 2400000000,
+      "status": "geplant"
+    },
+    {
+      "id": "ki-basis",
+      "titel": "KI-Modell Deutsch · Basis",
+      "beschreibung": "Lokales Sprachmodell für Fragen an deine Bibliothek. Ab 8 GB RAM.",
+      "art": "modell",
+      "pro": false,
+      "groesse": 4700000000,
+      "status": "geplant"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "einleitung": "Ziel: 14 Tage ohne Einkaufen, ohne Strom und ohne fließendes Wasser zurechtkommen. Das empfiehlt der Zivilschutzverband für jeden Haushalt.",
+  "gruppen": [
+    { "gruppe": "Wasser & Essen", "punkte": [
+      "Trinkwasser: mindestens 2 Liter pro Person und Tag, Vorrat für 14 Tage",
+      "Haltbare Lebensmittel, die ohne Kühlschrank und ohne Kochen auskommen",
+      "Essen für Haustiere und Babynahrung, falls nötig",
+      "Campingkocher mit Brennstoff – nur im Freien oder bei offenem Fenster verwenden",
+      "Dosenöffner, Feuerzeug, Streichhölzer"
+    ]},
+    { "gruppe": "Licht, Strom & Information", "punkte": [
+      "Radio mit Batterie oder Kurbel – im Krisenfall informiert der ORF",
+      "Taschenlampen oder Stirnlampen und Ersatzbatterien",
+      "Geladene Powerbanks",
+      "Kerzen, Zünder, Feuerlöscher oder Löschdecke",
+      "Warme Decken und Kleidung – die Heizung fällt meist mit dem Strom aus"
+    ]},
+    { "gruppe": "Gesundheit & Hygiene", "punkte": [
+      "Hausapotheke und Erste-Hilfe-Set",
+      "Dauermedikamente für mindestens 14 Tage",
+      "Hygieneartikel, Müllsäcke, Toilettenpapier",
+      "Wasser für die WC-Spülung (Kanister, gefüllte Badewanne)",
+      "Desinfektionsmittel, Handschuhe, Masken"
+    ]},
+    { "gruppe": "Dokumente & Geld", "punkte": [
+      "Bargeld in kleinen Scheinen – Bankomat und Kartenzahlung fallen aus",
+      "Wichtige Dokumente in einer Mappe (auch als Kopie auf USB-Stick)",
+      "Treffpunkt mit Familie vereinbaren, falls das Handynetz ausfällt",
+      "Liste wichtiger Telefonnummern auf Papier",
+      "Volltank oder halbvoller Tank – Tankstellen brauchen Strom"
+    ]}
+  ]
+}

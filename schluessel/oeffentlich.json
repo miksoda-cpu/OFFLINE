@@ -1,0 +1,17 @@
+{
+  "format": 1,
+  "schluessel": [
+    {
+      "id": "705ba930e2596d01",
+      "algorithmus": "ed25519",
+      "oeffentlich": "1dEH+KiTZK58UG+8/xrBFbqJwBBX0CC5UXsasX8+0nA=",
+      "zweck": [
+        "pakete",
+        "katalog"
+      ],
+      "gueltig_ab": "2026-09-24",
+      "gueltig_bis": null,
+      "bezeichnung": "Entwicklungsschlüssel – wird vor dem Start ersetzt"
+    }
+  ]
+}

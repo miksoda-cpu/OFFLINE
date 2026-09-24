@@ -1,0 +1,57 @@
+{
+  "format": 1,
+  "id": "at-basis",
+  "version": "2026.09.24",
+  "titel": "Österreich-Paket · Grundversion",
+  "beschreibung": "Notrufe, Sirenensignale, Blackout-Vorsorge, Checkliste und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
+  "art": "inhalt",
+  "sprache": "de-AT",
+  "lizenz": "CC BY-SA 4.0",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "app_min": "0.1.0",
+  "erstellt": "2026-09-24T10:27:04Z",
+  "aenderungen": "Erste Ausgabe: Notrufe, Sirenensignale, Blackout-Ablauf, Vorsorge-Checkliste, Bundesländer.",
+  "quellen": [
+    {
+      "name": "Österreichischer Zivilschutzverband",
+      "url": "https://zivilschutz.at"
+    },
+    {
+      "name": "oesterreich.gv.at – Notrufnummern",
+      "url": "https://www.oesterreich.gv.at"
+    },
+    {
+      "name": "Bundesministerium für Inneres – Zivilschutz-Warnsystem",
+      "url": "https://www.bmi.gv.at"
+    }
+  ],
+  "dateien": [
+    {
+      "pfad": "inhalt/blackout.json",
+      "sha256": "2877a4231b2f4ec91c11e490cdc9ce9ed30c5ecec4ceb43f86888b5673d08ee2",
+      "groesse": 1830
+    },
+    {
+      "pfad": "inhalt/bundeslaender.json",
+      "sha256": "0dd33ffdcc7a20cda797aca509f715d9d12eaf5b1599afb96733d36d7db22c43",
+      "groesse": 1130
+    },
+    {
+      "pfad": "inhalt/notrufe.json",
+      "sha256": "35c5339cc17d61b9085fac6949263e78536a0419000d07848e2713124bd9d9c3",
+      "groesse": 1778
+    },
+    {
+      "pfad": "inhalt/sirenen.json",
+      "sha256": "83f610ac5f04e005aef4a9a953020b3f983009ccf1e0c514d79b1e2bf25b0739",
+      "groesse": 1417
+    },
+    {
+      "pfad": "inhalt/vorsorge.json",
+      "sha256": "97e3056598574d8532130fed29d9fe7eedbab014c1641f6f41d7c2d3569fcd7e",
+      "groesse": 1694
+    }
+  ],
+  "groesse": 7849
+}

@@ -1,0 +1,17 @@
+{
+  "id": "at-basis",
+  "titel": "Österreich-Paket · Grundversion",
+  "beschreibung": "Notrufe, Sirenensignale, Blackout-Vorsorge, Checkliste und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
+  "art": "inhalt",
+  "sprache": "de-AT",
+  "lizenz": "CC BY-SA 4.0",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "app_min": "0.1.0",
+  "aenderungen": "Erste Ausgabe: Notrufe, Sirenensignale, Blackout-Ablauf, Vorsorge-Checkliste, Bundesländer.",
+  "quellen": [
+    { "name": "Österreichischer Zivilschutzverband", "url": "https://zivilschutz.at" },
+    { "name": "oesterreich.gv.at – Notrufnummern", "url": "https://www.oesterreich.gv.at" },
+    { "name": "Bundesministerium für Inneres – Zivilschutz-Warnsystem", "url": "https://www.bmi.gv.at" }
+  ]
+}

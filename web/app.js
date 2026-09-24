@@ -1,31 +1,29 @@
+// OFFLINE – App-Oberfläche (Prototyp). Alle Inhalte kommen aus signierten Paketen, siehe paket-client.js.
 import {
-  PAKET, NOTRUFE, SIRENEN, SIRENEN_HINWEIS, VORSORGE, BLACKOUT_ABLAUF,
-  BUNDESLAENDER, QUELLEN, PAKETE, AENDERUNGEN,
-} from "./data/inhalte.js";
+  speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates, inhalt,
+} from "./paket-client.js";
+import { versionVergleich } from "./paket-kern.js";
 
-// ---------- Speicher (nur Komfort, darf fehlen) ----------
-const store = {
-  get(key, fallback) {
-    try { const v = localStorage.getItem("offline:" + key); return v === null ? fallback : JSON.parse(v); }
-    catch { return fallback; }
-  },
-  set(key, value) {
-    try { localStorage.setItem("offline:" + key, JSON.stringify(value)); } catch { /* egal */ }
-  },
-};
+const BASISPAKET = "at-basis";
 
 const state = {
-  installiert: new Set(store.get("installiert", PAKETE.filter((p) => p.installiert).map((p) => p.id))),
-  checks: store.get("checks", {}),
-  abo: store.get("abo", { intervall: "woechentlich", nurWlan: true, fenster: true, von: "02:00", bis: "05:00", aktiv: true }),
-  bundesland: store.get("bundesland", "Wien"),
-  notizen: store.get("notizen", ""),
+  checks: speicher.get("checks", {}),
+  abo: speicher.get("abo", { intervall: "woechentlich", nurWlan: true, fenster: true, von: "02:00", bis: "05:00", aktiv: true }),
+  bundesland: speicher.get("bundesland", "Wien"),
+  notizen: speicher.get("notizen", ""),
   filter: "Alle",
+  meldung: null, // { text, art } für die Update-Seite
 };
 
-const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-const gb = (n) => (n < 1 ? `${Math.round(n * 1000)} MB` : `${n.toLocaleString("de-AT", { maximumFractionDigits: 1 })} GB`);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const groesse = (b) => b < 1e6 ? `${Math.max(1, Math.round(b / 1e3))} kB` : b < 1e9 ? `${(b / 1e6).toLocaleString("de-AT", { maximumFractionDigits: 1 })} MB` : `${(b / 1e9).toLocaleString("de-AT", { maximumFractionDigits: 1 })} GB`;
 const datum = (iso) => new Date(iso).toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
+const ARTEN = { inhalt: "Österreich", zim: "Bibliothek", karte: "Karten", modell: "KI", kurs: "Kurse", software: "Software" };
+
+// ---------- Paketinhalt ----------
+const P = () => installiertesPaket(BASISPAKET);
+const D = (name) => inhalt(P(), `inhalt/${name}.json`);
+const katalog = () => katalogAusSpeicher()?.katalog ?? null;
 
 // ---------- Navigation ----------
 const I = {
@@ -45,16 +43,27 @@ const ROUTEN = [
 const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
 document.getElementById("nav").innerHTML = ROUTEN.map(([id, name]) => `<a href="#${id}" data-route="${id}">${icon(id)}${name}</a>`).join("");
 
+const kopf = (titel, text, extra = "") => `<div class="page-head"><div><h1 style="font-size:2rem">${titel}</h1><p>${text}</p></div>${extra}</div>`;
+const fehlt = () => `${kopf("Kein Österreich-Paket", "Dieses Gerät hat noch kein Paket installiert und ist offline.")}
+  <div class="card"><p class="muted">Sobald du online bist, lädt OFFLINE das Österreich-Paket automatisch. Oder du gehst in die Bibliothek und installierst es von Hand.</p><a class="btn btn-primary" href="#bibliothek">Zur Bibliothek</a></div>`;
+
 // ---------- Seiten ----------
 const seiten = {
   start() {
-    const belegt = PAKETE.filter((p) => state.installiert.has(p.id)).reduce((s, p) => s + p.groesse, 0);
+    const p = P();
+    if (!p) return fehlt();
+    const vorsorge = D("vorsorge");
+    const laender = D("bundeslaender")?.laender ?? [];
     const erledigt = Object.values(state.checks).filter(Boolean).length;
-    const gesamt = VORSORGE.reduce((s, g) => s + g.punkte.length, 0);
+    const gesamt = vorsorge.gruppen.reduce((s, g) => s + g.punkte.length, 0);
+    const installierte = speicher.installierte().map(installiertesPaket).filter(Boolean);
+    const belegt = installierte.reduce((s, x) => s + x.manifest.groesse, 0);
+    const k = katalog();
+    const updates = k ? verfuegbareUpdates(k).length : 0;
+    const land = laender.find((l) => l.name === state.bundesland);
     return `
-      <div class="page-head"><div><h1 style="font-size:2rem">Servus.</h1><p>Alles hier funktioniert ohne Internet.</p></div>
-        <div class="field" style="margin:0"><label for="bl">Dein Bundesland</label>
-          <select id="bl">${BUNDESLAENDER.map((b) => `<option ${b === state.bundesland ? "selected" : ""}>${b}</option>`).join("")}</select></div></div>
+      ${kopf("Servus.", "Alles hier funktioniert ohne Internet.", `<div class="field" style="margin:0"><label for="bl">Dein Bundesland</label>
+          <select id="bl">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>`)}
       <div class="grid grid-3">
         <a class="card" href="#notfall" style="text-decoration:none;border-color:var(--accent)">
           <span class="tag tag-pro">Notfall</span><h3 style="margin-top:.6rem">Notrufe & Sirenen</h3>
@@ -63,82 +72,92 @@ const seiten = {
           <span class="tag">${erledigt} / ${gesamt} erledigt</span><h3 style="margin-top:.6rem">Blackout-Vorsorge</h3>
           <div class="progress"><div style="width:${(erledigt / gesamt) * 100}%"></div></div></a>
         <a class="card" href="#updates" style="text-decoration:none">
-          <span class="tag ${state.abo.aktiv ? "tag-ok" : "tag-warn"}">${state.abo.aktiv ? "Abo aktiv" : "Abo pausiert"}</span>
-          <h3 style="margin-top:.6rem">Updates</h3><p class="muted" style="margin:0">${intervallText()} · ${AENDERUNGEN.length} Änderungen im letzten Monat</p></a>
+          <span class="tag ${updates ? "tag-warn" : state.abo.aktiv ? "tag-ok" : "tag-warn"}">${updates ? `${updates} Update${updates > 1 ? "s" : ""} verfügbar` : state.abo.aktiv ? "Abo aktiv" : "Abo pausiert"}</span>
+          <h3 style="margin-top:.6rem">Updates</h3><p class="muted" style="margin:0">${intervallText()} · Paket vom ${datum(p.manifest.erstellt)}</p></a>
       </div>
+      ${land ? `<div class="card" style="margin-top:1rem"><strong>${esc(land.name)}</strong> <span class="muted">· Landeshauptstadt ${esc(land.hauptstadt)} · im Krisenfall informiert <strong>${esc(land.orf_radio)}</strong></span></div>` : ""}
       <h2 style="margin-top:2rem">Installiert</h2>
       <div class="card">
-        <div class="storage"><strong>${gb(belegt)}</strong><div class="progress"><div style="width:${Math.min(100, (belegt / 64) * 100)}%"></div></div><span class="muted">von 64 GB auf „OFFLINE-Stick“</span></div>
-        <ul class="changelog" style="margin-top:.75rem">${PAKETE.filter((p) => state.installiert.has(p.id)).map((p) =>
-          `<li><span class="tag">${esc(p.typ)}</span><span>${esc(p.name)} <span class="muted">· ${gb(p.groesse)}</span></span></li>`).join("")}</ul>
+        <div class="storage"><strong>${groesse(belegt)}</strong><div class="progress"><div style="width:${Math.min(100, (belegt / 64e9) * 100)}%"></div></div><span class="muted">von 64 GB auf „OFFLINE-Stick“</span></div>
+        <ul class="changelog" style="margin-top:.75rem">${installierte.map((x) =>
+          `<li><span class="tag">${esc(ARTEN[x.manifest.art] ?? x.manifest.art)}</span><span>${esc(x.manifest.titel)} <span class="muted">· ${esc(x.manifest.version)} · ${groesse(x.manifest.groesse)} · Signatur geprüft ✓</span></span></li>`).join("")}</ul>
         <a class="btn btn-sm" href="#bibliothek" style="margin-top:.75rem">Pakete verwalten</a>
       </div>`;
   },
 
   notfall() {
-    const welle = {
-      konstant: "M2 22 H298",
-      heulend: "M2 22 " + Array.from({ length: 6 }, (_, i) => `Q${27 + i * 50} ${i % 2 ? 42 : 2} ${52 + i * 50} 22`).join(" "),
-    };
+    const n = D("notrufe"), s = D("sirenen");
+    if (!n || !s) return fehlt();
+    const welle = { konstant: "M2 22 H298", heulend: "M2 22 " + Array.from({ length: 6 }, (_, i) => `Q${27 + i * 50} ${i % 2 ? 42 : 2} ${52 + i * 50} 22`).join(" ") };
     return `
-      <div class="page-head"><div><h1 style="font-size:2rem">Notfall</h1><p>Tippe auf eine Nummer, um anzurufen.</p></div></div>
-      <div class="grid grid-2">${NOTRUFE.map((n) => `
-        <div class="card notruf"><a class="notruf-nr ${n.nr.length > 4 ? "long" : ""}" href="tel:${n.nr.replace(/\s/g, "")}">${esc(n.nr)}</a>
-          <div><h3>${esc(n.name)}</h3><p>${esc(n.info)}</p></div></div>`).join("")}
+      ${kopf("Notfall", "Tippe auf eine Nummer, um anzurufen.")}
+      <div class="grid grid-2">${n.eintraege.map((e) => `
+        <div class="card notruf"><a class="notruf-nr ${e.nr.length > 4 ? "long" : ""}" href="tel:${e.nr.replace(/\s/g, "")}">${esc(e.nr)}</a>
+          <div><h3>${esc(e.name)}</h3><p>${esc(e.info)}</p></div></div>`).join("")}
       </div>
+      <p class="muted" style="margin-top:1rem">${esc(n.hinweis)}</p>
       <h2 style="margin-top:2rem">Sirenensignale</h2>
-      <div class="grid grid-3">${SIRENEN.map((s) => `
-        <div class="card siren"><h3>${esc(s.name)}</h3>
-          <svg viewBox="0 0 300 44" preserveAspectRatio="none" aria-hidden="true"><path d="${welle[s.muster]}"/></svg>
-          <p><strong>${esc(s.dauer)}</strong></p><p class="muted" style="margin:0">${esc(s.tun)}</p></div>`).join("")}
+      <p class="muted">${esc(s.einleitung)}</p>
+      <div class="grid grid-3">${s.signale.map((x) => `
+        <div class="card siren"><h3>${esc(x.name)} <span class="muted" style="font-weight:500;font-size:.9rem">– ${esc(x.bedeutung)}</span></h3>
+          <svg viewBox="0 0 300 44" preserveAspectRatio="none" aria-hidden="true"><path d="${welle[x.muster]}"/></svg>
+          <p><strong>${esc(x.dauer)}</strong></p><p class="muted" style="margin:0">${esc(x.tun)}</p></div>`).join("")}
       </div>
-      <p class="muted" style="margin-top:1rem">${esc(SIRENEN_HINWEIS)}</p>`;
+      <div class="card" style="margin-top:1rem"><p class="muted" style="margin:0 0 .5rem">${esc(s.probe)}</p><p class="muted" style="margin:0 0 .5rem">${esc(s.feuerwehr)}</p><p class="muted" style="margin:0">${esc(s.warn_app)}</p></div>`;
   },
 
   vorsorge() {
-    const gesamt = VORSORGE.reduce((s, g) => s + g.punkte.length, 0);
+    const v = D("vorsorge"), b = D("blackout");
+    if (!v || !b) return fehlt();
+    const gesamt = v.gruppen.reduce((s, g) => s + g.punkte.length, 0);
     const erledigt = Object.values(state.checks).filter(Boolean).length;
     return `
-      <div class="page-head"><div><h1 style="font-size:2rem">Blackout-Vorsorge</h1><p>Deine Checkliste. Wird nur auf diesem Gerät gespeichert.</p></div>
-        <div style="min-width:220px"><div class="muted" style="font-size:.9rem;margin-bottom:.3rem">${erledigt} von ${gesamt} erledigt</div><div class="progress"><div style="width:${(erledigt / gesamt) * 100}%"></div></div></div></div>
-      <div class="grid grid-2">${VORSORGE.map((g, gi) => `
+      ${kopf("Blackout-Vorsorge", esc(v.einleitung), `<div style="min-width:220px"><div class="muted" style="font-size:.9rem;margin-bottom:.3rem">${erledigt} von ${gesamt} erledigt</div><div class="progress"><div style="width:${(erledigt / gesamt) * 100}%"></div></div></div>`)}
+      <div class="grid grid-2">${v.gruppen.map((g, gi) => `
         <div class="card"><h3>${esc(g.gruppe)}</h3><ul class="check">${g.punkte.map((p, pi) => {
           const id = `${gi}-${pi}`;
           return `<li><label><input type="checkbox" data-check="${id}" ${state.checks[id] ? "checked" : ""}><span>${esc(p)}</span></label></li>`;
         }).join("")}</ul></div>`).join("")}
       </div>
       <h2 style="margin-top:2rem">Wenn der Strom ausfällt</h2>
-      <div class="card"><ol class="timeline">${BLACKOUT_ABLAUF.map((s) => `<li><h3>${esc(s.t)}</h3><p class="muted" style="margin:0">${esc(s.text)}</p></li>`).join("")}</ol></div>
-      <p class="muted" style="margin-top:1rem;font-size:.9rem">Weiterführend: ${QUELLEN.slice(0, 2).map((q) => `<a href="${q.url}" rel="noopener">${esc(q.name)}</a>`).join(" · ")}</p>`;
+      <p class="muted">${esc(b.einleitung)}</p>
+      <div class="card"><ol class="timeline">${b.ablauf.map((s) => `<li><h3>${esc(s.t)}</h3><p class="muted" style="margin:0">${esc(s.text)}</p></li>`).join("")}</ol></div>
+      <div class="card" style="margin-top:1rem;border-color:var(--accent)"><ul style="margin:0;padding-left:1.1rem">${b.merksaetze.map((m) => `<li>${esc(m)}</li>`).join("")}</ul></div>
+      <p class="muted" style="margin-top:1rem;font-size:.9rem">Quellen: ${(P()?.manifest.quellen ?? []).map((q) => `<a href="${esc(q.url)}" rel="noopener">${esc(q.name)}</a>`).join(" · ")}</p>`;
   },
 
   bibliothek() {
-    const typen = ["Alle", ...new Set(PAKETE.map((p) => p.typ))];
-    const liste = PAKETE.filter((p) => state.filter === "Alle" || p.typ === state.filter);
+    const k = katalog();
+    if (!k) return `${kopf("Bibliothek", "Der Paketkatalog wurde noch nie geladen.")}<div class="card"><p class="muted">Geh einmal online, dann holt OFFLINE den Katalog und merkt ihn sich.</p><button class="btn btn-primary" data-katalog>Katalog laden</button><p class="form-msg" id="bib-msg"></p></div>`;
+    const typen = ["Alle", ...new Set(k.pakete.map((p) => ARTEN[p.art] ?? p.art))];
+    const liste = k.pakete.filter((p) => state.filter === "Alle" || (ARTEN[p.art] ?? p.art) === state.filter);
     return `
-      <div class="page-head"><div><h1 style="font-size:2rem">Bibliothek</h1><p>Pakete installieren – im Prototyp simuliert, in der App vom USB-Stick oder aus dem Netz.</p></div></div>
-      <div class="filters">${typen.map((t) => `<button data-filter="${t}" aria-pressed="${t === state.filter}">${t}</button>`).join("")}</div>
+      ${kopf("Bibliothek", `Katalog vom ${datum(k.erstellt)} · Signatur geprüft ✓ · Pakete im Browser sind Textpakete, große kommen in die Desktop-App.`)}
+      <div class="filters">${typen.map((t) => `<button data-filter="${esc(t)}" aria-pressed="${t === state.filter}">${esc(t)}</button>`).join("")}</div>
+      <p class="form-msg" id="bib-msg"></p>
       <div class="grid grid-2">${liste.map((p) => {
-        const inst = state.installiert.has(p.id);
+        const inst = installiertesPaket(p.id);
+        const update = inst && p.status === "verfuegbar" && versionVergleich(p.version, inst.manifest.version) > 0;
+        let knopf;
+        if (inst) knopf = `${update ? `<button class="btn btn-sm btn-primary" data-install="${p.id}">Aktualisieren</button> ` : ""}<button class="btn btn-sm" data-remove="${p.id}">Entfernen</button>`;
+        else if (p.status !== "verfuegbar") knopf = `<span class="tag tag-warn">Geplant</span>`;
+        else if (p.pro) knopf = `<button class="btn btn-sm" disabled title="Nur mit Pro">Nur mit Pro</button>`;
+        else if (p.art !== "inhalt") knopf = `<span class="tag">Nur in der Desktop-App</span>`;
+        else knopf = `<button class="btn btn-sm btn-primary" data-install="${p.id}">Installieren</button>`;
         return `<div class="card pkg">
-          <div class="pkg-head"><h3 style="margin:0">${esc(p.name)}</h3>${p.pro ? '<span class="tag tag-pro">Pro</span>' : ""}</div>
-          <p>${esc(p.text)}</p>
-          <div class="pkg-foot"><span class="muted mono" style="font-size:.85rem">${gb(p.groesse)}</span>
-            ${inst ? `<button class="btn btn-sm" data-remove="${p.id}">Entfernen</button>`
-                   : `<button class="btn btn-sm ${p.pro ? "" : "btn-primary"}" data-install="${p.id}" ${p.pro ? "disabled title='Nur mit Pro'" : ""}>${p.pro ? "Nur mit Pro" : "Installieren"}</button>`}
-          </div></div>`;
+          <div class="pkg-head"><h3 style="margin:0">${esc(p.titel)}</h3><span>${p.pro ? '<span class="tag tag-pro">Pro</span> ' : ""}${inst ? `<span class="tag tag-ok">${update ? "Update " + esc(p.version) : "Installiert"}</span>` : ""}</span></div>
+          <p>${esc(p.beschreibung)}</p>
+          <div class="pkg-foot"><span class="muted mono" style="font-size:.85rem">${groesse(p.groesse)}${p.version ? ` · ${esc(p.version)}` : ""}</span><span>${knopf}</span></div></div>`;
       }).join("")}</div>`;
   },
 
   karte() {
-    return `
-      <div class="page-head"><div><h1 style="font-size:2rem">Karte Österreich</h1><p>Im Prototyp live von basemap.at, in der App als Offline-Datei auf deinem Rechner.</p></div></div>
+    return `${kopf("Karte Österreich", "Im Prototyp live von basemap.at, in der App als Offline-Datei auf deinem Rechner.")}
       <div id="karte" role="region" aria-label="Karte von Österreich"></div>`;
   },
 
   ki() {
-    return `
-      <div class="page-head"><div><h1 style="font-size:2rem">KI-Assistent</h1><p>Prototyp: sucht in den installierten Österreich-Inhalten. In der App antwortet ein lokales Sprachmodell.</p></div></div>
+    return `${kopf("KI-Assistent", "Prototyp: sucht im installierten Österreich-Paket. In der App antwortet ein lokales Sprachmodell.")}
       <div class="card"><div class="chat" id="chat">
         <div class="bubble bot">Servus! Frag mich etwas zu Notrufen, Sirenen oder Blackout-Vorsorge – zum Beispiel „Was bedeutet der Heulton?“ oder „Wie viel Wasser brauche ich?“</div></div>
         <form class="chat-form" id="chat-form"><input type="text" id="frage" placeholder="Deine Frage …" autocomplete="off" aria-label="Frage"><button class="btn btn-primary">Fragen</button></form>
@@ -146,20 +165,28 @@ const seiten = {
   },
 
   notizen() {
-    return `
-      <div class="page-head"><div><h1 style="font-size:2rem">Notizen</h1><p>Bleiben auf diesem Gerät. Markdown ist erlaubt.</p></div><span class="muted" id="gespeichert"></span></div>
+    return `${kopf("Notizen", "Bleiben auf diesem Gerät. Markdown ist erlaubt.", '<span class="muted" id="gespeichert"></span>')}
       <textarea id="notizen" rows="18" style="width:100%;resize:vertical" placeholder="z. B. Treffpunkt der Familie, wichtige Nummern, Medikamente …">${esc(state.notizen)}</textarea>`;
   },
 
   updates() {
     const opt = [["taeglich", "Täglich"], ["woechentlich", "Wöchentlich"], ["monatlich", "Monatlich"], ["manuell", "Manuell"]];
+    const ks = katalogAusSpeicher();
+    const k = ks?.katalog;
+    const updates = k ? verfuegbareUpdates(k) : [];
+    const aenderungen = (k?.pakete ?? []).filter((p) => p.aenderungen).sort((a, b) => (a.erstellt < b.erstellt ? 1 : -1));
+    const m = state.meldung;
     return `
-      <div class="page-head"><div><h1 style="font-size:2rem">Updates & Abo</h1><p>Geladen wird nur, wenn du online bist – und nur, was sich geändert hat.</p></div>
-        <button class="btn btn-primary" id="jetzt">Jetzt prüfen</button></div>
+      ${kopf("Updates & Abo", "Geladen wird nur, wenn du online bist – und nur, was sich geändert hat.", '<button class="btn btn-primary" id="jetzt">Jetzt prüfen</button>')}
+      <div class="card" id="pruef" style="margin-bottom:1rem">${m ? `<span class="tag ${m.art === "ok" ? "tag-ok" : m.art === "warn" ? "tag-warn" : "tag-pro"}">${esc(m.titel)}</span> ${m.text}` :
+        k ? `<span class="muted">Katalog vom ${datum(k.erstellt)}, geladen ${datum(ks.geladen)}, signiert mit Schlüssel <span class="mono">${esc(ks.schluessel)}</span>. ${updates.length ? `<strong>${updates.length} Update${updates.length > 1 ? "s" : ""} verfügbar.</strong>` : "Alle installierten Pakete sind aktuell."}</span>` :
+        '<span class="muted">Noch kein Katalog geladen.</span>'}
+        ${updates.map((u) => `<div style="margin-top:.75rem"><strong>${esc(u.eintrag.titel)}</strong> <span class="muted">${esc(u.installiert)} → ${esc(u.eintrag.version)}</span> <button class="btn btn-sm btn-primary" data-install="${u.eintrag.id}" style="margin-left:.5rem">Aktualisieren</button></div>`).join("")}
+      </div>
       <div class="grid grid-2">
         <div class="card">
           <div class="field"><span class="legend">Wie oft?</span>
-            <div class="seg" role="group" aria-label="Intervall">${opt.map(([k, n]) => `<button data-intervall="${k}" aria-pressed="${state.abo.intervall === k}">${n}</button>`).join("")}</div></div>
+            <div class="seg" role="group" aria-label="Intervall">${opt.map(([kk, n]) => `<button data-intervall="${kk}" aria-pressed="${state.abo.intervall === kk}">${n}</button>`).join("")}</div></div>
           <div class="switch"><span><strong>Update-Abo aktiv</strong><br><span class="muted" style="font-size:.9rem">Pausieren, ohne Einstellungen zu verlieren</span></span><input type="checkbox" data-abo="aktiv" ${state.abo.aktiv ? "checked" : ""}></div>
           <div class="switch"><span><strong>Nur im WLAN</strong><br><span class="muted" style="font-size:.9rem">Kein Download über Handy-Hotspot</span></span><input type="checkbox" data-abo="nurWlan" ${state.abo.nurWlan ? "checked" : ""}></div>
           <div class="switch"><span><strong>Zeitfenster</strong><br><span class="muted" style="font-size:.9rem">z. B. nachts, wenn der Rechner nicht gebraucht wird</span></span><input type="checkbox" data-abo="fenster" ${state.abo.fenster ? "checked" : ""}></div>
@@ -168,15 +195,57 @@ const seiten = {
         </div>
         <div class="card">
           <h3>Was ist neu?</h3>
-          <ul class="changelog">${AENDERUNGEN.map((a) => `<li><span class="muted mono" style="font-size:.85rem">${datum(a.datum)}</span><span><strong>${esc(a.paket)}</strong><br><span class="muted">${esc(a.text)}</span></span></li>`).join("")}</ul>
+          <ul class="changelog">${aenderungen.length ? aenderungen.map((a) => `<li><span class="muted mono" style="font-size:.85rem">${datum(a.erstellt)}</span><span><strong>${esc(a.titel)}</strong> <span class="muted">${esc(a.version)}</span><br><span class="muted">${esc(a.aenderungen)}</span></span></li>`).join("") : '<li><span class="muted">Noch nichts – Katalog laden.</span></li>'}</ul>
         </div>
       </div>
-      <div class="card" style="margin-top:1rem" id="pruef"><span class="muted">Installiert: ${esc(PAKET.titel)} · Version <span class="mono">${PAKET.version}</span>. Jedes Paket ist signiert und wird vor dem Einspielen geprüft.</span></div>`;
+      <p class="muted" style="margin-top:1rem;font-size:.9rem">So läuft ein Update: Katalog laden → Signatur prüfen → Manifest gegen Katalog und Signatur prüfen → nur geänderte Dateien laden → jede Datei gegen ihre Prüfsumme prüfen → erst dann den alten Stand ersetzen. Details: <a href="https://github.com/miksoda-cpu/OFFLINE/blob/claude/optimistic-hypatia-yymcne/docs/PAKETFORMAT.md" rel="noopener">Paketformat</a>.</p>`;
   },
 };
 
 function intervallText() {
   return { taeglich: "täglich", woechentlich: "wöchentlich", monatlich: "monatlich", manuell: "manuell" }[state.abo.intervall];
+}
+
+// ---------- Update-Vorgang ----------
+async function pruefeUpdates({ still = false } = {}) {
+  if (!navigator.onLine) { state.meldung = { art: "warn", titel: "Offline", text: "Kein Internet – das Abo prüft beim nächsten Mal, wenn du online bist." }; if (!still) render(); return null; }
+  try {
+    const { katalog: k, veraltet, schluessel } = await ladeKatalog();
+    const updates = verfuegbareUpdates(k);
+    state.meldung = veraltet
+      ? { art: "warn", titel: "Katalog veraltet", text: "Der Katalog ist abgelaufen. Installierte Inhalte funktionieren weiter." }
+      : { art: "ok", titel: "Geprüft", text: `Katalog signiert mit <span class="mono">${esc(schluessel)}</span>. ${updates.length ? `${updates.length} Update${updates.length > 1 ? "s" : ""} verfügbar.` : `Alle Pakete aktuell. Nächste Prüfung: ${intervallText()}.`}` };
+    return k;
+  } catch (e) {
+    state.meldung = { art: "fehler", titel: "Abgelehnt", text: esc(e.message) };
+    return null;
+  } finally { if (!still) render(); }
+}
+
+async function installiereMitMeldung(id, ziel) {
+  const k = katalog() ?? (await pruefeUpdates({ still: true }));
+  const eintrag = k?.pakete.find((p) => p.id === id);
+  if (!eintrag) { zeige(ziel, "Paket nicht im Katalog.", "err"); return; }
+  const alt = installiertesPaket(id);
+  zeige(ziel, `Lade ${esc(eintrag.titel)} …`, "");
+  try {
+    const { paket, delta: d, geladen } = await installiere(k, eintrag);
+    const text = alt
+      ? `${esc(paket.manifest.titel)} auf ${esc(paket.manifest.version)} aktualisiert – ${groesse(geladen)} geladen (${d.laden.length} von ${paket.manifest.dateien.length} Dateien), Signatur und Prüfsummen geprüft.`
+      : `${esc(paket.manifest.titel)} ${esc(paket.manifest.version)} installiert – ${groesse(geladen)}, Signatur und Prüfsummen geprüft.`;
+    state.meldung = { art: "ok", titel: alt ? "Aktualisiert" : "Installiert", text };
+    render();
+    zeige(ziel, text, "ok");
+  } catch (e) {
+    zeige(ziel, "Abgelehnt: " + esc(e.message), "err");
+  }
+}
+
+function zeige(id, html, art) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = html;
+  el.className = "form-msg " + art;
 }
 
 // ---------- Karte ----------
@@ -189,26 +258,30 @@ function karteStarten() {
   }).addTo(map);
 }
 
-// ---------- KI (Prototyp: Stichwortsuche) ----------
+// ---------- KI (Prototyp: Stichwortsuche im Paket) ----------
 function antworte(frage) {
   const f = frage.toLowerCase();
+  const n = D("notrufe"), s = D("sirenen"), v = D("vorsorge"), b = D("blackout");
+  if (!n) return "Kein Österreich-Paket installiert.";
   const treffer = [];
-  for (const n of NOTRUFE) if (f.includes(n.nr) || f.includes(n.name.toLowerCase().split(" ")[0])) treffer.push(`<strong>${n.nr} – ${n.name}:</strong> ${n.info}`);
-  for (const s of SIRENEN) if (f.includes(s.name.toLowerCase()) || (f.includes("heul") && s.muster === "heulend") || (f.includes("sirene") && !treffer.length))
-    treffer.push(`<strong>${s.name}</strong> (${s.dauer}): ${s.tun}`);
-  if (/wasser|trink/.test(f)) treffer.push(VORSORGE[0].punkte[0] + ". Dazu Wasser für die WC-Spülung.");
-  if (/blackout|strom/.test(f)) BLACKOUT_ABLAUF.slice(0, 2).forEach((s) => treffer.push(`<strong>${s.t}:</strong> ${s.text}`));
-  if (/geld|bargeld|bankomat/.test(f)) treffer.push(VORSORGE[3].punkte[0] + ".");
-  if (/rettung|arzt|krank|verletzt/.test(f) && !treffer.length) treffer.push(`<strong>144 – Rettung</strong> im Notfall, <strong>141</strong> für den Ärztenotdienst, <strong>1450</strong> für Beratung.`);
+  for (const e of n.eintraege) if (f.includes(e.nr) || f.includes(e.name.toLowerCase().split(" ")[0])) treffer.push(`<strong>${e.nr} – ${e.name}:</strong> ${e.info}`);
+  for (const x of s.signale) if (f.includes(x.name.toLowerCase()) || (f.includes("heul") && x.muster === "heulend") || (f.includes("sirene") && !treffer.length)) treffer.push(`<strong>${x.name}</strong> (${x.dauer}): ${x.tun}`);
+  if (/wasser|trink/.test(f)) treffer.push(v.gruppen[0].punkte[0] + ". Dazu Wasser für die WC-Spülung.");
+  if (/blackout|strom/.test(f)) b.ablauf.slice(0, 2).forEach((x) => treffer.push(`<strong>${x.t}:</strong> ${x.text}`));
+  if (/geld|bargeld|bankomat/.test(f)) treffer.push(v.gruppen[3].punkte[0] + ".");
+  if (/rettung|arzt|krank|verletzt/.test(f) && !treffer.length) treffer.push("<strong>144 – Rettung</strong> im Notfall, <strong>141</strong> für den Ärztenotdienst, <strong>1450</strong> für Beratung.");
   return treffer.length
-    ? [...new Set(treffer)].slice(0, 4).map(esc).map((t) => t.replace(/&lt;(\/?)strong&gt;/g, "<$1strong>")).join("<br><br>") + '<br><br><span class="muted" style="font-size:.85rem">Quelle: Österreich-Paket</span>'
+    ? [...new Set(treffer)].slice(0, 4).map(esc).map((t) => t.replace(/&lt;(\/?)strong&gt;/g, "<$1strong>")).join("<br><br>") + `<br><br><span class="muted" style="font-size:.85rem">Quelle: ${esc(P().manifest.titel)} ${esc(P().manifest.version)}</span>`
     : "Dazu finde ich im Österreich-Paket nichts. Mit installierter Wikipedia und dem KI-Modell kann ich in der App mehr beantworten.";
 }
 
 // ---------- Rendern & Ereignisse ----------
 const main = document.getElementById("main");
+const sidebar = document.getElementById("sidebar");
+const menu = document.getElementById("menu");
+
 function render() {
-  const route = (location.hash.slice(1) || "start");
+  const route = location.hash.slice(1) || "start";
   const seite = seiten[route] ? route : "start";
   main.innerHTML = seiten[seite]();
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === seite ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
@@ -220,25 +293,21 @@ function render() {
 
 main.addEventListener("change", (e) => {
   const t = e.target;
-  if (t.dataset.check) { state.checks[t.dataset.check] = t.checked; store.set("checks", state.checks); render(); }
-  if (t.dataset.abo) { state.abo[t.dataset.abo] = t.checked; store.set("abo", state.abo); render(); }
-  if (t.dataset.zeit) { state.abo[t.dataset.zeit] = t.value; store.set("abo", state.abo); }
-  if (t.id === "bl") { state.bundesland = t.value; store.set("bundesland", t.value); }
+  if (t.dataset.check) { state.checks[t.dataset.check] = t.checked; speicher.set("checks", state.checks); render(); }
+  if (t.dataset.abo) { state.abo[t.dataset.abo] = t.checked; speicher.set("abo", state.abo); render(); }
+  if (t.dataset.zeit) { state.abo[t.dataset.zeit] = t.value; speicher.set("abo", state.abo); }
+  if (t.id === "bl") { state.bundesland = t.value; speicher.set("bundesland", t.value); render(); }
 });
 
 main.addEventListener("click", (e) => {
   const b = e.target.closest("button");
   if (!b) return;
   if (b.dataset.filter) { state.filter = b.dataset.filter; render(); }
-  if (b.dataset.install) { state.installiert.add(b.dataset.install); store.set("installiert", [...state.installiert]); render(); }
-  if (b.dataset.remove) { state.installiert.delete(b.dataset.remove); store.set("installiert", [...state.installiert]); render(); }
-  if (b.dataset.intervall) { state.abo.intervall = b.dataset.intervall; store.set("abo", state.abo); render(); }
-  if (b.id === "jetzt") {
-    const box = document.getElementById("pruef");
-    if (!navigator.onLine) { box.innerHTML = '<span class="tag tag-warn">Offline</span> Kein Internet – das Abo prüft beim nächsten Mal, wenn du online bist.'; return; }
-    box.innerHTML = '<span class="muted">Prüfe Paketkatalog …</span>';
-    setTimeout(() => { box.innerHTML = `<span class="tag tag-ok">Aktuell</span> Alle installierten Pakete sind auf dem neuesten Stand. Nächste Prüfung: ${intervallText()}.`; }, 900);
-  }
+  if (b.dataset.install) installiereMitMeldung(b.dataset.install, "bib-msg");
+  if (b.dataset.remove) { entferne(b.dataset.remove); render(); }
+  if (b.dataset.intervall) { state.abo.intervall = b.dataset.intervall; speicher.set("abo", state.abo); render(); }
+  if (b.hasAttribute("data-katalog")) pruefeUpdates();
+  if (b.id === "jetzt") { b.disabled = true; b.textContent = "Prüfe …"; pruefeUpdates(); }
 });
 
 main.addEventListener("submit", (e) => {
@@ -247,20 +316,17 @@ main.addEventListener("submit", (e) => {
   const input = document.getElementById("frage");
   const frage = input.value.trim();
   if (!frage) return;
-  const chat = document.getElementById("chat");
-  chat.insertAdjacentHTML("beforeend", `<div class="bubble user">${esc(frage)}</div><div class="bubble bot">${antworte(frage)}</div>`);
+  document.getElementById("chat").insertAdjacentHTML("beforeend", `<div class="bubble user">${esc(frage)}</div><div class="bubble bot">${antworte(frage)}</div>`);
   input.value = "";
 });
 
 main.addEventListener("input", (e) => {
   if (e.target.id !== "notizen") return;
   state.notizen = e.target.value;
-  store.set("notizen", state.notizen);
+  speicher.set("notizen", state.notizen);
   document.getElementById("gespeichert").textContent = "Gespeichert";
 });
 
-const sidebar = document.getElementById("sidebar");
-const menu = document.getElementById("menu");
 menu.addEventListener("click", () => { const open = sidebar.classList.toggle("open"); menu.setAttribute("aria-expanded", String(open)); });
 
 function netz() {
@@ -273,5 +339,20 @@ addEventListener("offline", netz);
 addEventListener("hashchange", render);
 netz();
 render();
+
+// Erster Start: Österreich-Paket automatisch holen, wenn noch keins da ist. Danach still nach Updates sehen.
+(async () => {
+  if (!P()) {
+    if (!navigator.onLine) return;
+    try {
+      const { katalog: k } = await ladeKatalog();
+      const e = k.pakete.find((p) => p.id === BASISPAKET && p.status === "verfuegbar");
+      if (e) { await installiere(k, e); render(); }
+    } catch (err) { console.error("Erstinstallation", err); }
+  } else if (navigator.onLine && state.abo.aktiv) {
+    await pruefeUpdates({ still: true });
+    if (katalog() && verfuegbareUpdates(katalog()).length) render();
+  }
+})();
 
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});

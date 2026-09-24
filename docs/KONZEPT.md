@@ -43,7 +43,7 @@ Ablauf: Installer starten → Speicherort wählen → Pakete vom Stick oder aus 
 - **Bedingungen:** nur wenn online, optional nur im WLAN/ohne getaktete Verbindung, optional Zeitfenster (z. B. 02:00–05:00)
 - **Delta-Updates** für eigene Inhalte (Österreich-Paket, Kurse): Es wird nur übertragen, was sich geändert hat.
 - **Voll-Updates** für ZIM-Pakete (Kiwix veröffentlicht etwa monatlich komplette Dateien) – im Hintergrund, fortsetzbar, mit Prüfsumme; alte Version bleibt bis zum erfolgreichen Tausch erhalten.
-- **Signiert:** Jedes Paket ist mit Ed25519 signiert; die App prüft vor dem Einspielen.
+- **Signiert:** Jedes Paket und der Katalog sind mit Ed25519 signiert; die App prüft vor dem Einspielen. Format und Ablauf: [PAKETFORMAT.md](PAKETFORMAT.md).
 - **Änderungsprotokoll** in Klartext: „Was ist neu?“
 
 Sinnvoller Rhythmus je Inhalt:
@@ -145,8 +145,8 @@ Hinweise:
 
 | Phase | Inhalt | Ergebnis |
 |---|---|---|
-| **0 – jetzt** | Konzept, Web-Prototyp (PWA), Vercel-Vorschau | Oberfläche zum Ansehen |
-| **1** | Österreich-Paket v1 (Inhalte schreiben, Quellen), Paketformat + Signatur | erstes echtes Paket |
+| **0 – erledigt** | Konzept, Web-Prototyp (PWA), Vercel-Vorschau | Oberfläche zum Ansehen |
+| **1 – erledigt (24.09.2026)** | Paketformat mit Signatur ([PAKETFORMAT.md](PAKETFORMAT.md)), Werkzeug, Österreich-Paket v1, signierter Katalog; der Web-Prototyp installiert und aktualisiert Pakete nach genau diesem Verfahren | erstes echtes Paket |
 | **2** | Desktop-App (Tauri) mit kiwix-serve + Karte, Offline-Import vom Stick | Installer Win/Mac/Linux (unsigniert) |
 | **3** | Update-Dienst + Update-Server, Delta-Updates | Abo funktioniert technisch |
 | **4** | KI-Assistent (llama.cpp + Suche über Inhalte) | lokale KI |

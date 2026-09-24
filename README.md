@@ -9,8 +9,22 @@ Ein Projekt von The Digioneer und der digitalworld Academy. Inspiriert von [Proj
 | Ordner | Was |
 |---|---|
 | [`docs/KONZEPT.md`](docs/KONZEPT.md) | Konzept: Architektur, Offline-Installer, Update-Abo, Inhalte und Lizenzen, Frei/Pro, Fahrplan |
+| [`docs/PAKETFORMAT.md`](docs/PAKETFORMAT.md) | Paketformat: signierte Manifeste, Katalog, Delta-Updates, Schlüssel |
+| [`werkzeug/`](werkzeug/) | Paketwerkzeug (Node, keine Abhängigkeiten): Schlüssel, bauen, prüfen, delta, katalog – mit Tests |
+| [`pakete/`](pakete/) | Quellen der Inhaltspakete (Österreich-Paket) |
+| [`schluessel/`](schluessel/) | Öffentliche Signaturschlüssel (derzeit Entwicklungsschlüssel) |
 | [`docs/GHOST-SETUP.md`](docs/GHOST-SETUP.md) | Anmeldung für das Gratis-Paket, Newsletter und Pro-Stufe über Ghost |
 | [`web/`](web/) | Web-Prototyp (PWA): Startseite + App-Oberfläche. Funktioniert nach dem ersten Besuch auch offline im Browser. Wird auf Vercel ausgeliefert. |
+
+## Pakete bauen
+
+```bash
+node werkzeug/paket.mjs schluessel erzeugen offline-dev   # einmal je Rechner; privater Schlüssel landet in ~/.offline/
+./werkzeug/alles-bauen.sh                                 # Pakete → web/pakete, Katalog → web/katalog
+node --test werkzeug/test.mjs
+```
+
+Die Ordner `web/pakete`, `web/katalog`, `web/schluessel` und `web/paket-kern.js` werden vom Build erzeugt und sind eingecheckt, damit Vercel ohne Build-Schritt auskommt. Nach Inhaltsänderungen neu bauen und mit einchecken.
 
 ## Web-Prototyp lokal starten
 
