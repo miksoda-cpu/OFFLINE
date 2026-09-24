@@ -231,6 +231,7 @@ const seiten = {
           <ul class="changelog">${aenderungen.length ? aenderungen.map((a) => `<li><span class="muted mono" style="font-size:.85rem">${datum(a.erstellt)}</span><span><strong>${esc(a.titel)}</strong> <span class="muted">${esc(a.version)}</span><br><span class="muted">${esc(a.aenderungen)}</span></span></li>`).join("") : '<li><span class="muted">Noch nichts – Katalog laden.</span></li>'}</ul>
         </div>
       </div>
+      ${desktop ? appUpdateKarte() : ""}
       ${desktop ? `<div class="card" style="margin-top:1rem"><h3>Speicherort</h3><p class="muted" style="margin:0 0 .5rem">Pakete liegen in <span class="mono" style="font-size:.85rem">${esc(desktop.datenordner)}</span>. Für große Pakete (Wikipedia, Karten) kann das eine externe Platte sein.</p>
         <button class="btn btn-sm" data-speicherort>Ordner wählen …</button> <button class="btn btn-sm" data-speicherort-standard>Standard</button><p class="form-msg" id="ort-msg"></p></div>` : ""}
       <div class="card" style="margin-top:1rem"><h3>Werkzeuge</h3>
@@ -248,6 +249,50 @@ const seiten = {
       <p class="muted" style="margin-top:1rem;font-size:.9rem">So läuft ein Update: Katalog laden → Signatur prüfen → Manifest gegen Katalog und Signatur prüfen → nur geänderte Dateien laden → jede Datei gegen ihre Prüfsumme prüfen → erst dann den alten Stand ersetzen. Details: <a href="https://github.com/miksoda-cpu/OFFLINE/blob/claude/optimistic-hypatia-yymcne/docs/PAKETFORMAT.md" rel="noopener">Paketformat</a>.</p>`;
   },
 };
+
+function appUpdateKarte() {
+  const u = state.appUpdate ?? { status: "" };
+  let inhalt;
+  switch (u.status) {
+    case "pruefe": inhalt = `<span class="muted">Frage den Update-Server …</span>`; break;
+    case "keins": inhalt = `<span class="tag tag-ok">Aktuell</span> <span class="muted">Du hast die neueste Version${u.aktuell ? ` (${esc(u.aktuell)})` : ""}.</span>`; break;
+    case "gefunden": inhalt = `<span class="tag tag-warn">Neue Version ${esc(u.info.version)}</span> <span class="muted">Du hast ${esc(u.info.aktuell)}.${u.info.hinweise ? " " + esc(u.info.hinweise) : ""}</span>
+      <div style="margin-top:.6rem"><button class="btn btn-sm btn-primary" data-app-update-installieren>Version ${esc(u.info.version)} laden und installieren</button></div>`; break;
+    case "laedt": inhalt = `<span class="muted">Lade Version ${esc(u.info.version)} … ${u.fortschritt?.gesamt ? `${groesse(u.fortschritt.geladen)} / ${groesse(u.fortschritt.gesamt)}` : ""}</span>
+      <div class="progress" style="margin:.5rem 0"><div style="width:${u.fortschritt?.gesamt ? Math.min(100, (100 * u.fortschritt.geladen) / u.fortschritt.gesamt) : 0}%"></div></div>`; break;
+    case "fertig": inhalt = `<span class="tag tag-ok">Installiert</span> <span class="muted">Version ${esc(u.info.version)} ist bereit. Signatur geprüft.</span>
+      <div style="margin-top:.6rem"><button class="btn btn-sm btn-primary" data-app-neustart>Jetzt neu starten</button></div>`; break;
+    case "fehler": inhalt = `<span class="tag tag-pro">Fehler</span> <span class="muted">${esc(u.text)}</span>`; break;
+    default: inhalt = `<span class="muted">Die App holt sich neue Versionen selbst – signiert, vom selben Server wie die Pakete.</span>`;
+  }
+  const laeuft = u.status === "pruefe" || u.status === "laedt";
+  return `<div class="card" style="margin-top:1rem"><div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap"><h3 style="margin:0">App-Update</h3>
+    <button class="btn btn-sm" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>
+    <p style="margin:.6rem 0 0" id="app-update-inhalt">${inhalt}</p></div>`;
+}
+
+async function appUpdatePruefen() {
+  state.appUpdate = { status: "pruefe" }; render();
+  try {
+    const info = await client.appUpdatePruefen();
+    state.appUpdate = info ? { status: "gefunden", info } : { status: "keins", aktuell: APP_VERSION };
+  } catch (e) { state.appUpdate = { status: "fehler", text: String(e?.message ?? e) }; }
+  render();
+}
+
+async function appUpdateInstallieren() {
+  const info = state.appUpdate?.info; if (!info) return;
+  state.appUpdate = { status: "laedt", info, fortschritt: null }; render();
+  try {
+    await client.appUpdateInstallieren((f) => {
+      state.appUpdate.fortschritt = f;
+      const el = document.getElementById("app-update-inhalt");
+      if (el && location.hash === "#updates") render();
+    });
+    state.appUpdate = { status: "fertig", info };
+  } catch (e) { state.appUpdate = { status: "fehler", text: String(e?.message ?? e) }; }
+  render();
+}
 
 function intervallText() {
   return { taeglich: "täglich", woechentlich: "wöchentlich", monatlich: "monatlich", manuell: "manuell" }[state.abo.intervall];
@@ -504,6 +549,9 @@ main.addEventListener("click", (e) => {
   if (b.dataset.oeffnenZim) zimOeffnen(b.dataset.oeffnenZim);
   if (b.dataset.intervall) { state.abo.intervall = b.dataset.intervall; aboSpeichern(); render(); }
   if (b.hasAttribute("data-katalog")) pruefeUpdates();
+  if (b.hasAttribute("data-app-update-pruefen")) appUpdatePruefen();
+  if (b.hasAttribute("data-app-update-installieren")) appUpdateInstallieren();
+  if (b.hasAttribute("data-app-neustart")) client.appNeustart();
   if (b.id === "jetzt") { b.disabled = true; b.textContent = "Prüfe …"; desktop ? updatesJetztDesktop() : pruefeUpdates(); }
   if (b.hasAttribute("data-abbrechen")) client.abbrechen();
   if (b.hasAttribute("data-offline-pruefen")) offlinePruefen();
@@ -535,7 +583,7 @@ main.addEventListener("input", (e) => {
 
 menu.addEventListener("click", () => { const open = sidebar.classList.toggle("open"); menu.setAttribute("aria-expanded", String(open)); });
 
-const APP_VERSION = "0.1.0";
+const APP_VERSION = "0.1.1";
 function netz() {
   const on = navigator.onLine;
   document.getElementById("net-dot").className = "dot " + (on ? "on" : "off");

@@ -40,6 +40,17 @@ Die Pakete werden in GitHub Actions gebaut und dort signiert. Dafür braucht der
 - Fünftes Secret: **`OFFLINE_SIGNIERSCHLUESSEL`** – der komplette Inhalt der Datei `OFFLINE-SIGNIERSCHLUESSEL-CI.key` (beginnt mit `-----BEGIN PRIVATE KEY-----`). Die Datei liegt im Scratchpad dieser Sitzung; nach dem Eintragen dort löschen.
 - Das ist ein **Erprobungsschlüssel**. Für den öffentlichen Start wird auf deinem Rechner ohne Netz ein Produktionsschlüssel erzeugt (Spezifikation, Abschnitt „Schlüssel“); dann werden alle Pakete neu signiert und der Erprobungsschlüssel bekommt ein `gueltig_bis`.
 
+## Schritt 3b: Updater-Schlüssel für App-Updates
+
+Die App aktualisiert sich selbst über `app/latest.json` im selben Bucket (siehe DESKTOP.md, „App-Update“). Dafür ein sechstes Secret: **`TAURI_SIGNING_PRIVATE_KEY`** – der komplette Inhalt der Datei `OFFLINE-APP-UPDATE-SCHLUESSEL.txt` (eine Zeile, Base64). Kein Passwort (der Workflow setzt `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` leer). Der öffentliche Teil steht in `app/src-tauri/tauri.conf.json`.
+
+```
+https://<bucket>.<region>.your-objectstorage.com/
+└── app/
+    ├── latest.json               Version, Datum, je Plattform Adresse + Signatur
+    └── 0.1.1/                    Installer (.dmg, .exe, .msi, .AppImage, .deb) und Updater-Dateien (.app.tar.gz, .sig)
+```
+
 ## Schritt 4: Erstes Paket bauen
 
 GitHub → **Actions → Inhaltspakete → Run workflow** → Paket **wikivoyage-de**, „hochladen“ an → Run.
@@ -61,3 +72,4 @@ Der Katalog ist erreichbar unter `https://offline-pakete.fsn1.your-objectstorage
 - [ ] Alle Pakete und den Katalog mit dem Produktionsschlüssel neu signieren und hochladen. Entweder auf dem Redaktionsrechner mit `werkzeug/` oder – wenn weiter in GitHub Actions signiert werden soll – das Secret `OFFLINE_SIGNIERSCHLUESSEL` durch den Produktionsschlüssel ersetzen (dann gilt: GitHub hält den Schlüssel; die Spezifikation empfiehlt Signieren außerhalb der Cloud).
 - [ ] Secret des Build-Schlüssels danach löschen, Schlüssel als abgelaufen markieren.
 - [ ] Code-Signing der Installer (Apple Developer ID, Windows-Zertifikat) – siehe DESKTOP.md.
+- [ ] Updater-Schlüssel (`TAURI_SIGNING_PRIVATE_KEY`) an zwei Orten gesichert – ohne ihn gibt es keine App-Updates mehr.

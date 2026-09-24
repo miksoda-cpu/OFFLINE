@@ -65,6 +65,19 @@ Was noch fehlt: die **echten Pakete** (Wikivoyage/Wikipedia als ZIM, Österreich
 
 Noch nicht: kiwix-serve und Kartendatei als mitgelieferte Programme (Phase 4), Lizenzschlüssel für Pro-Pakete (Phase 5), Abfrage getakteter Verbindungen je Betriebssystem.
 
+## App-Update (die App holt sich neue Versionen selbst)
+
+Unter **Updates & Abo → App-Update → „Nach neuer Version suchen“** fragt die App die Datei `app/latest.json` am Hetzner-Speicher. Gibt es eine neuere Version, lädt sie diese, prüft die Signatur (Tauri-Updater, eigener minisign-Schlüssel, unabhängig vom Paketschlüssel) und tauscht sich aus; danach „Jetzt neu starten“. Windows startet den Installer selbst und beendet die App.
+
+**Eine neue Version veröffentlichen:**
+1. Version an drei Stellen erhöhen: `app/src-tauri/tauri.conf.json`, `app/src-tauri/Cargo.toml`, `APP_VERSION` in `web/app.js`.
+2. Committen, pushen, dann Tag setzen: `git tag v0.1.2 && git push origin v0.1.2`.
+3. Der Workflow baut alle vier Installer, signiert die Updater-Dateien mit dem Secret `TAURI_SIGNING_PRIVATE_KEY`, lädt alles nach `app/<version>/` im Bucket und schreibt `app/latest.json`. Ab dann finden installierte Apps die neue Version.
+
+Ohne das Secret laufen die Builds weiter (mit Warnung), erzeugen aber keine Updater-Dateien; der Tag-Lauf bricht dann im Schritt „Veröffentlichen“ ab.
+
+Der private Updater-Schlüssel liegt **nicht** im Repository. Der öffentliche steht in `tauri.conf.json` unter `plugins.updater.pubkey`. Geht der private verloren, können installierte Apps keine Updates mehr annehmen – dann hilft nur ein neuer Schlüssel und eine manuelle Neuinstallation bei allen. Zwei Kopien an zwei Orten.
+
 ## Installer bauen – GitHub Actions
 
 Der Workflow `.github/workflows/desktop.yml` baut bei jedem Push auf den Entwicklungsbranch (wenn sich `app/`, `kern/`, `web/` oder `schluessel/` ändern) und auf Knopfdruck:

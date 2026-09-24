@@ -113,6 +113,12 @@ export async function speicherortSetzen(pfad) {
 
 export const lokalUrl = () => invoke("lokal_url");
 export const appInfo = () => invoke("app_info");
+export const appUpdatePruefen = () => invoke("app_update_pruefen");
+export async function appUpdateInstallieren(fortschritt = () => {}) {
+  const ab = await T.event.listen("app-update-fortschritt", (ev) => fortschritt(ev.payload));
+  try { return await invoke("app_update_installieren"); } finally { ab(); }
+}
+export const appNeustart = () => invoke("app_neustart");
 export const kiwixUrl = () => invoke("kiwix_url");
 export const fensterOeffnen = (url, titel) => invoke("fenster_oeffnen", { url, titel });
 export const allesLoeschen = (bestaetigung) => invoke("alles_loeschen", { bestaetigung });

@@ -32,15 +32,19 @@ jobs:
           - name: Windows
             os: windows-latest
             args: ""
+            plattform: windows-x86_64
           - name: macOS Apple Silicon
             os: macos-latest
             args: "--target aarch64-apple-darwin"
+            plattform: darwin-aarch64
           - name: macOS Intel
             os: macos-latest
             args: "--target x86_64-apple-darwin"
+            plattform: darwin-x86_64
           - name: Linux
             os: ubuntu-22.04
             args: ""
+            plattform: linux-x86_64
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
@@ -83,13 +87,29 @@ jobs:
           ls -la ../app/src-tauri/binaries
       - run: npm install
         working-directory: app
+      - name: Updater-Signatur vorbereiten
+        id: updater
+        shell: bash
+        env:
+          SCHLUESSEL: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          # Ohne Signaturschlüssel baut Tauri keine Updater-Dateien (sonst bricht der Build ab) – Installer entstehen trotzdem
+          if [ -n "$SCHLUESSEL" ]; then
+            echo "aktiv=ja" >> "$GITHUB_OUTPUT"; echo "args=${{ matrix.args }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::Secret TAURI_SIGNING_PRIVATE_KEY fehlt – App-Update-Dateien werden nicht erzeugt"
+            echo '{"bundle":{"createUpdaterArtifacts":false}}' > app/updater-aus.json
+            echo "aktiv=nein" >> "$GITHUB_OUTPUT"; echo "args=${{ matrix.args }} --config updater-aus.json" >> "$GITHUB_OUTPUT"
+          fi
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ""
         with:
           projectPath: app
           tauriScript: npm run tauri
-          args: ${{ matrix.args }}
+          args: ${{ steps.updater.outputs.args }}
           # Bei Tags v* entsteht ein Release-Entwurf mit allen Installern
           tagName: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
           releaseName: ${{ startsWith(github.ref, 'refs/tags/v') && format('OFFLINE {0}', github.ref_name) || '' }}
@@ -115,14 +135,26 @@ jobs:
           mkdir -p dist
           name="OFFLINE-$(echo '${{ matrix.name }}' | tr ' ' '-')"
           hdiutil create -volname OFFLINE -srcfolder "$app" -ov -format UDZO "dist/$name.dmg"
+          # 5) Updater-Datei aus dem *signierten* Bundle (die von Tauri erzeugte enthält das unsignierte) und mit dem Updater-Schlüssel signieren
+          if [ "${{ steps.updater.outputs.aktiv }}" = "ja" ]; then
+            tgz="dist/OFFLINE-${{ matrix.plattform }}.app.tar.gz"
+            tar czf "$tgz" -C "$(dirname "$app")" "$(basename "$app")"
+            (cd app && npx tauri signer sign -k "$TAURI_SIGNING_PRIVATE_KEY" -p "" "../$tgz")
+            test -s "$tgz.sig"
+          fi
           ls -la dist
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
       - name: Installer als Artefakt (macOS)
         if: runner.os == 'macOS'
         uses: actions/upload-artifact@v5
         with:
           name: OFFLINE-${{ matrix.name }}
           if-no-files-found: error
-          path: dist/*.dmg
+          path: |
+            dist/*.dmg
+            dist/*.app.tar.gz
+            dist/*.app.tar.gz.sig
       - name: Installer als Artefakt (Windows/Linux)
         if: runner.os != 'macOS'
         uses: actions/upload-artifact@v5
@@ -132,5 +164,65 @@ jobs:
           path: |
             app/src-tauri/target/**/release/bundle/msi/*.msi
             app/src-tauri/target/**/release/bundle/nsis/*.exe
+            app/src-tauri/target/**/release/bundle/nsis/*.exe.sig
             app/src-tauri/target/**/release/bundle/appimage/*.AppImage
+            app/src-tauri/target/**/release/bundle/appimage/*.AppImage.sig
             app/src-tauri/target/**/release/bundle/deb/*.deb
+
+  # Bei Tags v*: Installer und Updater-Dateien nach Hetzner (app/<version>/) und latest.json schreiben,
+  # damit installierte Apps die neue Version über „App-Update“ finden.
+  veroeffentlichen:
+    name: Veröffentlichen (App-Update)
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: bauen
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          path: artefakte
+      - name: latest.json bauen und hochladen
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.HETZNER_S3_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.HETZNER_S3_SECRET_KEY }}
+          AWS_DEFAULT_REGION: eu-central-1
+          ENDPOINT: ${{ secrets.HETZNER_S3_ENDPOINT }}
+          BUCKET: ${{ secrets.HETZNER_S3_BUCKET }}
+          VERSION: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          version="${VERSION#v}"
+          host="${ENDPOINT#https://}"
+          basis="https://$BUCKET.$host/app/$version"
+          find artefakte -type f | sort
+          python3 - "$version" "$basis" <<'PY'
+          import sys, json, glob, os, datetime, shutil
+          version, basis = sys.argv[1], sys.argv[2]
+          muster = {
+            "darwin-aarch64": "artefakte/OFFLINE-macOS Apple Silicon/*.app.tar.gz",
+            "darwin-x86_64":  "artefakte/OFFLINE-macOS Intel/*.app.tar.gz",
+            "windows-x86_64": "artefakte/OFFLINE-Windows/**/nsis/*.exe",
+            "linux-x86_64":   "artefakte/OFFLINE-Linux/**/appimage/*.AppImage",
+          }
+          os.makedirs("hochladen", exist_ok=True)
+          plattformen = {}
+          for key, m in muster.items():
+            treffer = [f for f in glob.glob(m, recursive=True) if not f.endswith(".sig")]
+            if not treffer or not os.path.exists(treffer[0] + ".sig"):
+              print(f"::warning::{key}: keine Updater-Datei gefunden ({m})"); continue
+            f = treffer[0]; name = os.path.basename(f)
+            shutil.copy(f, "hochladen/" + name); shutil.copy(f + ".sig", "hochladen/" + name + ".sig")
+            plattformen[key] = {"signature": open(f + ".sig").read().strip(), "url": f"{basis}/{name}"}
+          # Installer für die Download-Seite daneben legen
+          for f in glob.glob("artefakte/**/*", recursive=True):
+            if os.path.isfile(f) and f.split(".")[-1] in ("dmg", "msi", "exe", "AppImage", "deb") and not os.path.exists("hochladen/" + os.path.basename(f)):
+              shutil.copy(f, "hochladen/" + os.path.basename(f))
+          if not plattformen:
+            sys.exit("Keine Updater-Dateien – fehlt das Secret TAURI_SIGNING_PRIVATE_KEY?")
+          latest = {"version": version, "notes": f"OFFLINE {version}", "pub_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "platforms": plattformen}
+          json.dump(latest, open("latest.json", "w"), indent=2)
+          print(json.dumps(latest, indent=2))
+          PY
+          aws --version || pip install awscli
+          aws s3 sync hochladen "s3://$BUCKET/app/$version" --endpoint-url "$ENDPOINT" --acl public-read --no-progress
+          aws s3 cp latest.json "s3://$BUCKET/app/latest.json" --endpoint-url "$ENDPOINT" --acl public-read --content-type application/json --cache-control no-cache
+          echo "App-Update veröffentlicht: https://$BUCKET.$host/app/latest.json"

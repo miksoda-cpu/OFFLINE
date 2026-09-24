@@ -196,6 +196,58 @@ fn unix_jetzt() -> i64 {
 
 // ---------- Befehle: Pakete ----------
 
+// ---------- App-Update (Tauri-Updater; nur mit Feature tls eingebaut) ----------
+
+#[derive(Serialize)]
+pub struct AppUpdate { pub version: String, pub aktuell: String, pub datum: Option<String>, pub hinweise: Option<String> }
+
+#[cfg(feature = "tls")]
+mod app_update {
+    use super::*;
+    use tauri_plugin_updater::UpdaterExt;
+
+    /// Fragt latest.json am Update-Server: gibt es eine neuere, signierte Version?
+    #[tauri::command]
+    pub async fn app_update_pruefen(app: AppHandle) -> Result<Option<AppUpdate>, String> {
+        let u = app.updater().map_err(|e| e.to_string())?;
+        Ok(u.check().await.map_err(|e| e.to_string())?.map(|up| AppUpdate {
+            version: up.version.clone(),
+            aktuell: up.current_version.clone(),
+            datum: up.date.map(|d| d.to_string()),
+            hinweise: up.body.clone(),
+        }))
+    }
+
+    /// Lädt die neue Version, prüft die Signatur und tauscht die App aus. Danach Neustart über `app_neustart`
+    /// (Windows startet den Installer und beendet die App selbst).
+    #[tauri::command]
+    pub async fn app_update_installieren(app: AppHandle) -> Result<String, String> {
+        let u = app.updater().map_err(|e| e.to_string())?;
+        let Some(up) = u.check().await.map_err(|e| e.to_string())? else { return Err("Keine neue Version verfügbar.".into()) };
+        let app2 = app.clone();
+        let mut geladen: u64 = 0;
+        up.download_and_install(
+            move |teil, gesamt| { geladen += teil as u64; let _ = app2.emit("app-update-fortschritt", serde_json::json!({ "geladen": geladen, "gesamt": gesamt })); },
+            || {},
+        ).await.map_err(|e| e.to_string())?;
+        Ok(up.version.clone())
+    }
+}
+
+#[cfg(not(feature = "tls"))]
+mod app_update {
+    use super::*;
+    #[tauri::command]
+    pub async fn app_update_pruefen(_app: AppHandle) -> Result<Option<AppUpdate>, String> { Err("App-Updates sind in diesem Build nicht eingebaut.".into()) }
+    #[tauri::command]
+    pub async fn app_update_installieren(_app: AppHandle) -> Result<String, String> { Err("App-Updates sind in diesem Build nicht eingebaut.".into()) }
+}
+
+#[tauri::command]
+fn app_neustart(app: AppHandle) {
+    app.restart()
+}
+
 #[derive(Serialize)]
 struct AppInfo { version: &'static str, tauri: &'static str, system: &'static str, arch: &'static str }
 
@@ -551,9 +603,12 @@ fn abo_schleife(app: AppHandle) {
 }
 
 pub fn start() {
-    tauri::Builder::default()
+    let builder = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_opener::init());
+    #[cfg(feature = "tls")]
+    let builder = builder.plugin(tauri_plugin_updater::Builder::new().build());
+    builder
         .setup(|app: &mut tauri::App| {
             let datenordner = app.path().app_data_dir().expect("Datenordner");
             std::fs::create_dir_all(&datenordner)?;
@@ -585,7 +640,8 @@ pub fn start() {
         .invoke_handler(tauri::generate_handler![
             datenordner, installierte, paket_lesen, einspielen_ordner, einspielen_bytes, entfernen, stick_suchen, aufraeumen_start,
             abo_lesen, abo_schreiben, verbindung_melden, speicherort_setzen, katalog_laden, paket_laden, download_abbrechen, updates_jetzt, abo_status,
-            lokal_url, kiwix_url, fenster_oeffnen, alles_loeschen, app_info
+            lokal_url, kiwix_url, fenster_oeffnen, alles_loeschen, app_info,
+            app_update::app_update_pruefen, app_update::app_update_installieren, app_neustart
         ])
         .run(tauri::generate_context!())
         .expect("OFFLINE konnte nicht starten");
