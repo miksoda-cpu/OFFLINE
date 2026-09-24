@@ -335,8 +335,11 @@ async function installiereMitMeldung(id, ziel) {
     zeige(ziel, text, "ok");
   } catch (e) {
     state.fortschritt = null;
-    zeige(ziel, "Abgelehnt: " + esc(String(e?.message ?? e)), "err");
-    if (location.hash === "#updates") { state.meldung = { art: "fehler", titel: "Abgelehnt", text: esc(String(e?.message ?? e)) }; render(); }
+    const msg = String(e?.message ?? e);
+    // Ein Abbruch durch den Nutzer ist keine Ablehnung – der Stand bleibt und wird beim nächsten Mal fortgesetzt
+    const abbruch = msg.startsWith("Abgebrochen");
+    zeige(ziel, (abbruch ? "" : "Abgelehnt: ") + esc(msg) + (abbruch ? " Zum Fortsetzen in der Bibliothek noch einmal auf „Installieren“ klicken." : ""), abbruch ? "" : "err");
+    if (location.hash === "#updates") { state.meldung = abbruch ? { art: "warn", titel: "Abgebrochen", text: "Der bisherige Stand bleibt gespeichert. Zum Fortsetzen: Bibliothek → Installieren." } : { art: "fehler", titel: "Abgelehnt", text: esc(msg) }; render(); }
   }
 }
 
