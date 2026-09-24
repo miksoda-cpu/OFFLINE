@@ -2,7 +2,7 @@
 
 > Wissen, das nicht ausfällt. Für Österreich, auf Deutsch, auf jedem PC und Mac.
 
-Stand: 24. September 2026 · Status: Konzept + Web-Prototyp
+Stand: 24. September 2026 · Status: Desktop-App baut auf allen Systemen, Update-Server läuft, Phase 4 in Arbeit
 
 ---
 
@@ -16,6 +16,8 @@ OFFLINE ist ein Offline-Wissens- und Werkzeugpaket für Österreich. Es läuft o
 - **KI-Assistent** – lokales Sprachmodell, das auf die installierten Inhalte zugreift (RAG)
 - **Kurse** – Offline-Kurse der digitalworld Academy
 - **Notizen** – lokal, Markdown
+- **Tresor und Notfallmappe** – verschlüsselter Bereich für Passwörter, Polizzen, Ausweisscans; wir haben keinen Schlüssel ([TRESOR.md](TRESOR.md))
+- **Weitere Ideen** – was ohne Netz sonst noch fehlt, mit Einordnung: [IDEEN.md](IDEEN.md)
 
 Vorbild ist [Project N.O.M.A.D.](https://github.com/Crosstalk-Solutions/project-nomad) von Crosstalk Solutions (Apache 2.0). OFFLINE übernimmt die Idee und einzelne Bausteine, ist aber **eigenständig**, denn es braucht eine andere Architektur (siehe 3.).
 
@@ -153,7 +155,9 @@ Hinweise:
 | **1 – erledigt (24.09.2026)** | Paketformat mit Signatur ([PAKETFORMAT.md](PAKETFORMAT.md)), Werkzeug, Österreich-Paket v1, signierter Katalog; der Web-Prototyp installiert und aktualisiert Pakete nach genau diesem Verfahren | erstes echtes Paket |
 | **2 – in Arbeit (24.09.2026)** | Rust-Kern (`kern/`, gleiche Tests wie das Werkzeug) und Tauri-Hülle (`app/`) mit Import vom USB-Stick; Installer für Windows, macOS, Linux über GitHub Actions ([DESKTOP.md](DESKTOP.md)). Offen: kiwix-serve + Kartendatei als mitgelieferte Programme | Installer Win/Mac/Linux (unsigniert) |
 | **3 – erledigt (24.09.2026)** | Update-Dienst im Rust-Kern: Katalog, fortsetzbare Downloads in Teilen, Delta gegen installierte Version, Hintergrund-Abo mit Zeitfenster; Speicherort auf externer Platte. Update-Server = statische Dateien auf Vercel | Abo funktioniert technisch |
-| **4 – in Arbeit** | Inhalte: kiwix-serve als mitgeliefertes Programm, Offline-Karte (PMTiles), lokaler Dateiserver – fertig. Offen: erste echte Pakete (Wikivoyage, Karte Österreich) und deren Ablageort; KI-Assistent (llama.cpp) folgt | Wikipedia und Karte offline |
+| **4 – in Arbeit** | Inhalte: kiwix-serve als mitgeliefertes Programm, Offline-Karte (PMTiles), lokaler Dateiserver, Update-Server auf Hetzner mit erstem Gigabyte-Paket (Wikivoyage) – fertig. Offen: Gigabyte-Test in der Desktop-App, Karte Österreich als PMTiles | Wikipedia und Karte offline |
+| **4b** | Tresor und Notfallmappe im Rust-Kern ([TRESOR.md](TRESOR.md)); kleine Werkzeuge ohne Netz (Radiofrequenzen, Sonnen- und Mondzeiten, Rechner) | das stärkste Gratis-Argument |
+| **4c** | KI-Assistent (llama.cpp als mitgeliefertes Programm, Modell als Pro-Paket) | Fragen an die eigene Bibliothek |
 | **5** | Pro: Lizenzschlüssel, Zahlung, Code-Signing (Apple/Windows), Gemeinde-Version | Marktstart |
 
 Offene Punkte:
@@ -161,3 +165,4 @@ Offene Punkte:
 - Code-Signing-Zertifikate (Apple Developer ~99 $/Jahr, Windows EV/OV-Zertifikat) – nötig, sonst warnen Windows und macOS beim Installieren.
 - Kooperationsanfragen: Zivilschutzverband, Landeswarnzentralen, Gemeindebund.
 - Rechtliche Prüfung der Vorsorge- und Gesundheitsinhalte (Haftungsausschluss).
+- **Fragen an den Anwalt (aus IDEEN.md und TRESOR.md):** Gesundheitsdaten in der Notfallmappe, die das Gerät nie verlassen – sind wir Verantwortliche nach DSGVO? Gemeinfreie Hörbücher (LibriVox) in Österreich. Abgleich Laptop–Handy nur im lokalen Netz, damit wir keine Plattform im Sinne des DSA werden.
