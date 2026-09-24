@@ -155,7 +155,7 @@ const seiten = {
     const typen = ["Alle", ...new Set(k.pakete.map((p) => ARTEN[p.art] ?? p.art))];
     const liste = k.pakete.filter((p) => state.filter === "Alle" || (ARTEN[p.art] ?? p.art) === state.filter);
     return `
-      ${kopf("Bibliothek", `Katalog vom ${datum(k.erstellt)} · Signatur geprüft ✓ · Pakete im Browser sind Textpakete, große kommen in die Desktop-App.`)}
+      ${kopf("Bibliothek", `Katalog vom ${datum(k.erstellt)} · Signatur geprüft ✓${desktop ? "" : " · Pakete im Browser sind Textpakete, große kommen in die Desktop-App."}`)}
       ${desktop ? `<div class="card" style="margin-bottom:1rem"><h3>Vom USB-Stick oder Ordner einspielen</h3>
         <p class="muted" style="margin:0 0 .75rem">Ohne Internet: Paketordner vom Stick auswählen. Der Kern prüft Signatur und jede Datei, bevor etwas übernommen wird.</p>
         <button class="btn btn-sm btn-primary" data-stick-suchen>Datenträger durchsuchen</button> <button class="btn btn-sm" data-ordner-waehlen>Ordner wählen …</button>
@@ -169,7 +169,7 @@ const seiten = {
         if (inst) knopf = `${update ? `<button class="btn btn-sm btn-primary" data-install="${p.id}">Aktualisieren</button> ` : ""}${desktop && p.art === "zim" ? `<button class="btn btn-sm btn-primary" data-oeffnen-zim="${p.id}">Öffnen</button> ` : ""}${desktop && p.art === "karte" ? `<a class="btn btn-sm btn-primary" href="#karte">Karte öffnen</a> ` : ""}<button class="btn btn-sm" data-remove="${p.id}">Entfernen</button>`;
         else if (p.status !== "verfuegbar") knopf = `<span class="tag tag-warn">Geplant</span>`;
         else if (p.pro) knopf = `<button class="btn btn-sm" disabled title="Nur mit Pro">Nur mit Pro</button>`;
-        else if (p.art !== "inhalt") knopf = `<span class="tag">Nur in der Desktop-App</span>`;
+        else if (!desktop && p.art !== "inhalt") knopf = `<span class="tag">Nur in der Desktop-App</span>`;
         else knopf = `<button class="btn btn-sm btn-primary" data-install="${p.id}">Installieren</button>`;
         return `<div class="card pkg">
           <div class="pkg-head"><h3 style="margin:0">${esc(p.titel)}</h3><span>${p.pro ? '<span class="tag tag-pro">Pro</span> ' : ""}${inst ? `<span class="tag tag-ok">${update ? "Update " + esc(p.version) : "Installiert"}</span>` : ""}</span></div>
@@ -535,15 +535,44 @@ main.addEventListener("input", (e) => {
 
 menu.addEventListener("click", () => { const open = sidebar.classList.toggle("open"); menu.setAttribute("aria-expanded", String(open)); });
 
+const APP_VERSION = "0.1.0";
 function netz() {
   const on = navigator.onLine;
   document.getElementById("net-dot").className = "dot " + (on ? "on" : "off");
   document.getElementById("net-text").textContent = on ? "Online – Abo kann laden" : "Offline – alles verfügbar";
 }
+async function appAngaben() {
+  const el = document.getElementById("app-info");
+  if (!el) return;
+  if (desktop) {
+    try {
+      const i = await client.appInfo();
+      el.textContent = `Desktop-App ${i.version} · ${i.system} ${i.arch} · Tauri ${i.tauri}`;
+      el.title = `Datenordner: ${desktop.datenordner}`;
+      return;
+    } catch {}
+  }
+  const pwa = matchMedia("(display-mode: standalone)").matches;
+  el.textContent = `Web-App ${APP_VERSION} · ${pwa ? "installiert (PWA)" : "im Browser"}`;
+}
+async function neuLaden() {
+  const b = document.getElementById("net-neu");
+  b.disabled = true; b.classList.add("dreht");
+  netz();
+  try {
+    if (navigator.onLine) await ladeKatalog();
+    state.meldung = null;
+  } catch (e) { state.meldung = { art: "fehler", titel: "Abgelehnt", text: esc(String(e?.message ?? e)) }; }
+  await appAngaben();
+  render();
+  b.disabled = false; b.classList.remove("dreht");
+}
+document.getElementById("net-neu").addEventListener("click", neuLaden);
 addEventListener("online", netz);
 addEventListener("offline", netz);
 addEventListener("hashchange", render);
 netz();
+appAngaben();
 render();
 
 // Erster Start: Österreich-Paket automatisch holen, wenn noch keins da ist. Danach still nach Updates sehen.

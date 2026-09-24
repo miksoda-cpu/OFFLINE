@@ -90,7 +90,13 @@ p { margin: 0 0 1em; }
 .nav a:hover { background: var(--surface-2); color: var(--text); }
 .nav a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); }
 .nav svg { width: 18px; height: 18px; flex: none; }
-.status { margin-top: auto; font-size: .85rem; color: var(--muted); display: flex; align-items: center; gap: .5rem; padding: .5rem .75rem; }
+.status { margin-top: auto; font-size: .85rem; color: var(--muted); display: flex; flex-direction: column; gap: .3rem; padding: .5rem .75rem; }
+.status-zeile { display: flex; align-items: center; gap: .5rem; min-width: 0; }
+.status-zeile#app-info { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+.status .neu { margin-left: auto; border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 50%; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+.status .neu:hover { color: var(--text); }
+.status .neu.dreht svg { animation: dreh 1s linear infinite; }
+@keyframes dreh { to { transform: rotate(360deg); } }
 .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
 .dot.on { background: var(--ok); }
 .dot.off { background: var(--warn); }

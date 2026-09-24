@@ -196,6 +196,17 @@ fn unix_jetzt() -> i64 {
 
 // ---------- Befehle: Pakete ----------
 
+#[derive(Serialize)]
+struct AppInfo { version: &'static str, tauri: &'static str, system: &'static str, arch: &'static str }
+
+/// Version und Plattform der App – für die Statuszeile.
+#[tauri::command]
+fn app_info() -> AppInfo {
+    let system = match std::env::consts::OS { "macos" => "macOS", "windows" => "Windows", "linux" => "Linux", s => s };
+    let arch = match std::env::consts::ARCH { "aarch64" => "Apple Silicon", "x86_64" => "x86_64", a => a };
+    AppInfo { version: env!("CARGO_PKG_VERSION"), tauri: tauri::VERSION, system, arch }
+}
+
 #[tauri::command]
 fn datenordner(z: State<Zustand>) -> String {
     z.wurzel().display().to_string()
@@ -574,7 +585,7 @@ pub fn start() {
         .invoke_handler(tauri::generate_handler![
             datenordner, installierte, paket_lesen, einspielen_ordner, einspielen_bytes, entfernen, stick_suchen, aufraeumen_start,
             abo_lesen, abo_schreiben, verbindung_melden, speicherort_setzen, katalog_laden, paket_laden, download_abbrechen, updates_jetzt, abo_status,
-            lokal_url, kiwix_url, fenster_oeffnen, alles_loeschen
+            lokal_url, kiwix_url, fenster_oeffnen, alles_loeschen, app_info
         ])
         .run(tauri::generate_context!())
         .expect("OFFLINE konnte nicht starten");

@@ -112,6 +112,7 @@ export async function speicherortSetzen(pfad) {
 }
 
 export const lokalUrl = () => invoke("lokal_url");
+export const appInfo = () => invoke("app_info");
 export const kiwixUrl = () => invoke("kiwix_url");
 export const fensterOeffnen = (url, titel) => invoke("fenster_oeffnen", { url, titel });
 export const allesLoeschen = (bestaetigung) => invoke("alles_loeschen", { bestaetigung });
