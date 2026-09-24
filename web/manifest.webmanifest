@@ -1,0 +1,11 @@
+{
+  "name": "OFFLINE – Wissen, das nicht ausfällt",
+  "short_name": "OFFLINE",
+  "lang": "de-AT",
+  "start_url": "/app.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f4ef",
+  "theme_color": "#c8102e",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
