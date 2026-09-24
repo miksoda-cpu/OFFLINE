@@ -69,8 +69,11 @@ jobs:
           esac
           basis=https://download.kiwix.org/release/kiwix-tools
           mkdir -p app/src-tauri/binaries kiwix && cd kiwix
-          if ! curl -fsSL -o paket "$basis/$paket"; then
-            [ -n "$alt" ] && curl -fsSL -o paket "$basis/$alt"
+          # Windows-curl (schannel) bricht ab, wenn der Sperrlisten-Server nicht antwortet – daher best-effort + Wiederholungen
+          extra=""; [ "${{ runner.os }}" = "Windows" ] && extra="--ssl-revoke-best-effort"
+          holen() { curl -fsSL $extra --retry 6 --retry-delay 10 --retry-all-errors -o paket "$1"; }
+          if ! holen "$basis/$paket"; then
+            [ -n "$alt" ] && holen "$basis/$alt"
           fi
           case "$paket" in *.zip) unzip -q paket ;; *) tar xzf paket ;; esac
           bin=$(find . -type f \( -name "kiwix-serve" -o -name "kiwix-serve.exe" \) | head -1)
