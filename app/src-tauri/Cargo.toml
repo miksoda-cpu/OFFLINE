@@ -1,6 +1,6 @@
 [package]
 name = "offline-app"
-version = "0.1.2"
+version = "0.1.3"
 description = "OFFLINE – Wissen, das nicht ausfällt"
 authors = ["The Digioneer / digitalworld Academy"]
 edition = "2021"

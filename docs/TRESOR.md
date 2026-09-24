@@ -1,6 +1,6 @@
 # OFFLINE – Tresor und Notfallmappe (Spezifikation, Entwurf 1)
 
-*Stand 24.09.2026. Entwurf aus einer zweiten Sitzung, am selben Tag ins Repository übernommen. Die Spezifikation beschreibt Verhalten und Verfahren; die Umsetzung im Rust-Kern steht im Abschnitt „Einordnung“ am Ende.*
+*Stand 24.09.2026. Entwurf aus einer zweiten Sitzung, am selben Tag ins Repository übernommen und **in Version 0.1.3 umgesetzt** (Kern `kern/src/tresor.rs` mit Tests, Befehle in `app/src-tauri/src/lib.rs`, Seite „Tresor“ in `web/app.js`). Was Version 1 kann und was noch offen ist, steht im Abschnitt „Umsetzung“ am Ende.*
 
 ## Ziel
 
@@ -104,3 +104,17 @@ Antworten auf die offenen Fragen und der Platz im Unterbau:
 - **Gratis oder Pro:** Gratis. Der Tresor ist das stärkste Argument für die App und braucht keinen Speicherplatz auf dem Update-Server. Die spätere Druckansicht und der Abgleich mit dem Handy können Pro sein.
 - **Datenschutz:** Die Gesundheitsdaten der Notfallmappe verlassen das Gerät nie und erreichen keinen Server von uns. Als Zusatzfrage an den Anwalt vorgemerkt (siehe KONZEPT.md, offene Punkte).
 - **Phase:** 4b, nach dem Gigabyte-Test der Bibliothek und vor der KI. Erst der Kern mit Tests (Anlegen, Öffnen, falsches Passwort, Wiederherstellung, Passwortwechsel, manipulierte Datei), dann die Oberfläche.
+
+## Umsetzung (Version 0.1.3, 24.09.2026)
+
+**Drin:**
+- Anlegen mit Passwort (min. 8 Zeichen), Wiederherstellungscode (6 Gruppen zu 5 Zeichen, Alphabet ohne I/L/O/U) einmalig angezeigt, Bestätigung durch Eintippen von vier Gruppen, „Kopieren“ leert die Zwischenablage nach 30 s.
+- Verfahren wie spezifiziert: Argon2id (64 MiB, t=3, Parameter im Kopf gespeichert) → XChaCha20-Poly1305 je Notiz und je Anhang mit eigener Nonce und der Kennung als Zusatzdaten; Tresorschlüssel zweimal verpackt (Passwort, Code). Kisten: `argon2`, `chacha20poly1305`, `zeroize` (RustCrypto), nichts selbst gebaut.
+- Notizen mit Autospeichern, Suche (nur bei offenem Tresor, im Arbeitsspeicher), Vorlage **Notfallmappe** (zehn Abschnitte, nur fehlende werden ergänzt).
+- Anhänge (PDF, JPG, PNG, WebP, HEIC, GIF, TXT bis 25 MB) aus Datei, verschlüsselt abgelegt; Anzeige über Blob-Adressen im Speicher, nie als Datei auf der Platte.
+- Sperren: von Hand, nach 1/5/15 Minuten ohne Eingabe (Wächter im Kern, alle 10 s), beim Minimieren des Fensters, beim Beenden (Schlüssel nur im RAM, `Zeroizing`).
+- Passwort ändern (verlangt das alte), Code erneuern (verlangt das Passwort), Sicherung als Ordner `OFFLINE-Tresor-Sicherung/` auf Stick, Zurückspielen bei gesperrtem Tresor.
+- Manipulation fällt auf (AEAD), umbenannte Dateien fallen auf (Kennung in den Zusatzdaten). Tests: `kern/tests/tresor.rs`.
+- „Restlos löschen“ nimmt den Tresor mit.
+
+**Noch nicht:** Touch ID / Windows Hello, mehrere Tresore, Druckansicht der Notfallmappe, Abgleich mit dem Handy, Sperren im Ruhezustand des Geräts (nur beim Minimieren), Kalibrierung der Argon2-Parameter je Gerät.

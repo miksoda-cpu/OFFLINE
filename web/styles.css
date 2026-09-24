@@ -205,3 +205,23 @@ input[type="time"], select, input[type="text"], input[type="email"], textarea { 
 .form-msg.err { color: var(--accent); }
 .legal { max-width: 46rem; }
 .legal h2 { margin-top: 2rem; font-size: 1.2rem; }
+
+/* Tresor */
+.tresor { display: grid; grid-template-columns: 280px 1fr; gap: 1rem; align-items: start; }
+@media (max-width: 900px) { .tresor { grid-template-columns: 1fr; } }
+.tresor-liste { display: flex; flex-direction: column; gap: 2px; max-height: 60vh; overflow: auto; }
+.tresor-liste button { text-align: left; border: 0; background: none; padding: .55rem .7rem; border-radius: 10px; color: var(--text); cursor: pointer; font: inherit; }
+.tresor-liste button:hover { background: var(--surface-2); }
+.tresor-liste button[aria-current="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+.tresor-liste .muted { display: block; font-size: .8rem; font-weight: 400; }
+.tresor input[type="text"], .tresor input[type="password"], .tresor textarea, .tresor select { width: 100%; box-sizing: border-box; }
+.tresor input[type="password"] { font: inherit; padding: .5rem .7rem; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); }
+.tresor .titel { font-size: 1.2rem; font-weight: 700; }
+.tresor textarea { min-height: 40vh; resize: vertical; font: inherit; line-height: 1.5; }
+.code-anzeige { font-family: var(--mono); font-size: 1.5rem; letter-spacing: .08em; padding: 1rem; border: 2px dashed var(--accent); border-radius: 12px; text-align: center; margin: 1rem 0; user-select: all; }
+.code-gruppen { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; font-family: var(--mono); font-size: 1.1rem; }
+.code-gruppen input { width: 5.5em; text-align: center; font-family: var(--mono); text-transform: uppercase; }
+.anhang { display: flex; align-items: center; gap: .6rem; padding: .5rem 0; border-top: 1px solid var(--line); flex-wrap: wrap; }
+.anhang-vorschau img { max-width: 100%; border-radius: 10px; border: 1px solid var(--line); }
+.anhang-vorschau iframe { width: 100%; height: 60vh; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.warnkasten { background: var(--accent-soft); border-radius: 12px; padding: .8rem 1rem; color: var(--text); }

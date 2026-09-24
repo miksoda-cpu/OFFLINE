@@ -125,6 +125,31 @@ export const fensterOeffnen = (url, titel) => invoke("fenster_oeffnen", { url, t
 export const allesLoeschen = (bestaetigung) => invoke("alles_loeschen", { bestaetigung });
 
 /** Ereignisse des Hintergrund-Abos (automatische Updates) an die Oberfläche weiterreichen. */
+// ---------- Tresor ----------
+export const tresorStatus = () => invoke("tresor_status");
+export const tresorAnlegen = (passwort) => invoke("tresor_anlegen", { passwort });
+export const tresorOeffnen = (passwort) => invoke("tresor_oeffnen", { passwort });
+export const tresorOeffnenCode = (code) => invoke("tresor_oeffnen_code", { code });
+export const tresorSperren = () => invoke("tresor_sperren");
+export const tresorSperreSetzen = (minuten) => invoke("tresor_sperre_setzen", { minuten });
+export const tresorNotizen = () => invoke("tresor_notizen");
+export const tresorNotizSchreiben = (notiz) => invoke("tresor_notiz_schreiben", { notiz });
+export const tresorNotizLoeschen = (id) => invoke("tresor_notiz_loeschen", { id });
+export const tresorNotfallmappe = () => invoke("tresor_notfallmappe");
+export const tresorAnhangAusDatei = (notizId, pfad) => invoke("tresor_anhang_aus_datei", { notizId, pfad });
+export const tresorAnhangLesen = (id) => invoke("tresor_anhang_lesen", { id });
+export const tresorAnhangLoeschen = (notizId, id) => invoke("tresor_anhang_loeschen", { notizId, id });
+export const tresorPasswortAendern = (altes, neues) => invoke("tresor_passwort_aendern", { altes, neues });
+export const tresorCodeErneuern = (passwort) => invoke("tresor_code_erneuern", { passwort });
+export const tresorSichern = (ziel) => invoke("tresor_sichern", { ziel });
+export const tresorZurueckspielen = (quelle) => invoke("tresor_zurueckspielen", { quelle });
+export function beiTresorGesperrt(cb) {
+  T.event.listen("tresor-gesperrt", (ev) => cb(ev.payload));
+}
+export async function dateiWaehlen(titel = "Datei wählen") {
+  return T.dialog.open({ directory: false, multiple: false, title: titel, filters: [{ name: "Scans und Dokumente", extensions: ["pdf", "jpg", "jpeg", "png", "webp", "heic", "gif", "txt"] }] });
+}
+
 export function beiAboErgebnis(cb) {
   T.event.listen("abo-ergebnis", async (ev) => { await cacheLaden(); cb(ev.payload); });
 }

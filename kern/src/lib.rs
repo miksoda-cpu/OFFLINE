@@ -13,6 +13,7 @@ pub mod lokalserver;
 pub mod manifest;
 pub mod paket;
 pub mod schluessel;
+pub mod tresor;
 
 pub use delta::{delta, Delta};
 pub use download::{katalog_laden, paket_laden, Auftrag, Fortschritt};

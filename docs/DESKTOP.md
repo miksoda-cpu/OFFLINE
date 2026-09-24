@@ -1,6 +1,6 @@
 # OFFLINE Desktop – Bauen und Ausliefern
 
-Stand: 24. September 2026 · Status: Phase 4 begonnen – kiwix-serve und Offline-Karte angebunden, echte Inhaltspakete stehen aus
+Stand: 24. September 2026 · Status: Phase 4 erledigt (Wikivoyage 1,3 GB über Hetzner geladen und in der App gelesen), App-Update über den Knopf, Tresor (4b) in 0.1.3
 
 ## Aufbau
 
@@ -64,6 +64,10 @@ Was noch fehlt: die **echten Pakete** (Wikivoyage/Wikipedia als ZIM, Österreich
 - Zeigt die Inhalte des Österreich-Pakets, Karte (online), Notizen, Abo-Einstellungen.
 
 Noch nicht: kiwix-serve und Kartendatei als mitgelieferte Programme (Phase 4), Lizenzschlüssel für Pro-Pakete (Phase 5), Abfrage getakteter Verbindungen je Betriebssystem.
+
+## Tresor (Phase 4b)
+
+Verschlüsselter Bereich unter `<Datenordner>/tresor/` (nicht im Paketordner, also nicht auf der externen Platte). Kern: `kern/src/tresor.rs`, Befehle `tresor_*` in `lib.rs`, Sperrzeit in `abo.json` (`tresor_sperre_min`). Der Schlüssel lebt nur im Arbeitsspeicher der App; ein Wächter-Thread sperrt nach Ablauf. Einzelheiten und Stand: [TRESOR.md](TRESOR.md).
 
 ## App-Update (die App holt sich neue Versionen selbst)
 

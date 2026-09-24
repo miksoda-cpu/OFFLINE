@@ -4,6 +4,7 @@
 use base64::{engine::general_purpose::STANDARD as B64, Engine};
 use offline_kern::abo::{self, Einstellungen, Verbindung, Zustand as AboZustand};
 use offline_kern::lokalserver::Lokalserver;
+use offline_kern::tresor::{self, Anhang, Notiz};
 use offline_kern::{aufraeumen, datum, download, einspielen, paket::datei_pfad, paket_pruefen, Auftrag, Einspielergebnis, Fortschritt, Katalog, Manifest, OeffentlicherSchluessel};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -22,6 +23,9 @@ struct Abo {
     zustand: AboZustand,
     /// abweichender Speicherort (z. B. externe Platte); None = Standard-Datenordner
     speicherort: Option<PathBuf>,
+    /// Tresor sperrt nach so vielen Minuten ohne Eingabe (1, 5, 15); None = 5
+    #[serde(default)]
+    tresor_sperre_min: Option<u32>,
 }
 
 struct Zustand {
@@ -38,6 +42,13 @@ struct Zustand {
     lokal: Mutex<Option<Lokalserver>>,
     /// laufender kiwix-serve (Wikipedia & Co.)
     kiwix: Mutex<Option<Kiwix>>,
+    /// offener Tresor: Schlüssel nur im Arbeitsspeicher, wird beim Sperren überschrieben
+    tresor: Mutex<Option<TresorSitzung>>,
+}
+
+struct TresorSitzung {
+    schluessel: tresor::Schluessel,
+    zuletzt: std::time::Instant,
 }
 
 struct Kiwix {
@@ -195,6 +206,212 @@ fn unix_jetzt() -> i64 {
 }
 
 // ---------- Befehle: Pakete ----------
+
+// ---------- Tresor ----------
+
+const TRESOR_SPERRE_STANDARD: u32 = 5;
+const ANHANG_MAX: u64 = 25 * 1024 * 1024;
+
+#[derive(Serialize)]
+struct TresorStatus { existiert: bool, offen: bool, sperre_min: u32 }
+
+fn tresor_sperre_min(z: &Zustand) -> u32 {
+    z.abo.lock().ok().and_then(|a| a.tresor_sperre_min).unwrap_or(TRESOR_SPERRE_STANDARD).clamp(1, 60)
+}
+
+/// Schlüssel der offenen Sitzung holen und die Aktivität vermerken. Gesperrt → Fehler.
+fn tresor_schluessel(z: &Zustand) -> Result<tresor::Schluessel, String> {
+    let mut t = z.tresor.lock().map_err(|_| "gesperrt")?;
+    let Some(s) = t.as_mut() else { return Err("Der Tresor ist gesperrt".into()) };
+    s.zuletzt = std::time::Instant::now();
+    Ok(s.schluessel.clone())
+}
+
+fn tresor_setzen(z: &Zustand, schluessel: tresor::Schluessel) {
+    if let Ok(mut t) = z.tresor.lock() { *t = Some(TresorSitzung { schluessel, zuletzt: std::time::Instant::now() }); }
+}
+
+/// Sperrt nach Ablauf der eingestellten Zeit ohne Eingabe (Prüfung alle 10 s) und meldet es der Oberfläche.
+fn tresor_waechter(app: AppHandle) {
+    std::thread::spawn(move || loop {
+        std::thread::sleep(Duration::from_secs(10));
+        let z = app.state::<Zustand>();
+        let frist = Duration::from_secs(tresor_sperre_min(&z) as u64 * 60);
+        let gesperrt = {
+            let Ok(mut t) = z.tresor.lock() else { continue };
+            match t.as_ref() {
+                Some(s) if s.zuletzt.elapsed() >= frist => { *t = None; true }
+                _ => false,
+            }
+        };
+        if gesperrt { let _ = app.emit("tresor-gesperrt", "zeit"); }
+    });
+}
+
+#[tauri::command]
+fn tresor_status(z: State<Zustand>) -> TresorStatus {
+    TresorStatus { existiert: tresor::existiert(&z.datenordner), offen: z.tresor.lock().map(|t| t.is_some()).unwrap_or(false), sperre_min: tresor_sperre_min(&z) }
+}
+
+/// Anlegen: gibt den Wiederherstellungscode zurück – die Oberfläche zeigt ihn genau einmal.
+#[tauri::command]
+async fn tresor_anlegen(z: State<'_, Zustand>, passwort: String) -> Result<String, String> {
+    let (code, k) = tresor::anlegen(&z.datenordner, &passwort, &datum::jetzt_iso()).map_err(|e| e.to_string())?;
+    tresor_setzen(&z, k);
+    Ok(code)
+}
+
+#[tauri::command]
+async fn tresor_oeffnen(z: State<'_, Zustand>, passwort: String) -> Result<(), String> {
+    let k = tresor::oeffnen(&z.datenordner, &passwort).map_err(|e| e.to_string())?;
+    tresor_setzen(&z, k);
+    Ok(())
+}
+
+#[tauri::command]
+async fn tresor_oeffnen_code(z: State<'_, Zustand>, code: String) -> Result<(), String> {
+    let k = tresor::oeffnen_mit_code(&z.datenordner, &code).map_err(|e| e.to_string())?;
+    tresor_setzen(&z, k);
+    Ok(())
+}
+
+#[tauri::command]
+fn tresor_sperren(z: State<Zustand>) {
+    if let Ok(mut t) = z.tresor.lock() { *t = None; }
+}
+
+#[tauri::command]
+fn tresor_sperre_setzen(z: State<Zustand>, minuten: u32) -> u32 {
+    let m = minuten.clamp(1, 60);
+    if let Ok(mut a) = z.abo.lock() { a.tresor_sperre_min = Some(m); }
+    z.abo_speichern();
+    m
+}
+
+#[tauri::command]
+fn tresor_notizen(z: State<Zustand>) -> Result<Vec<Notiz>, String> {
+    let k = tresor_schluessel(&z)?;
+    tresor::notizen_lesen(&z.datenordner, &k).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn tresor_notiz_schreiben(z: State<Zustand>, mut notiz: Notiz) -> Result<Notiz, String> {
+    let k = tresor_schluessel(&z)?;
+    if notiz.id.is_empty() { notiz.id = tresor::neue_id(); }
+    notiz.geaendert = datum::jetzt_iso();
+    tresor::notiz_schreiben(&z.datenordner, &k, &notiz).map_err(|e| e.to_string())?;
+    Ok(notiz)
+}
+
+#[tauri::command]
+fn tresor_notiz_loeschen(z: State<Zustand>, id: String) -> Result<(), String> {
+    let k = tresor_schluessel(&z)?;
+    // Anhänge der Notiz mitlöschen
+    if let Ok(alle) = tresor::notizen_lesen(&z.datenordner, &k) {
+        if let Some(n) = alle.iter().find(|n| n.id == id) {
+            for a in &n.anhaenge { let _ = tresor::anhang_loeschen(&z.datenordner, &a.id); }
+        }
+    }
+    tresor::notiz_loeschen(&z.datenordner, &id).map_err(|e| e.to_string())
+}
+
+/// Vorlage Notfallmappe anlegen – nur die Abschnitte, die es noch nicht gibt (nach `reihe`).
+#[tauri::command]
+fn tresor_notfallmappe(z: State<Zustand>) -> Result<Vec<Notiz>, String> {
+    let k = tresor_schluessel(&z)?;
+    let vorhanden: Vec<u32> = tresor::notizen_lesen(&z.datenordner, &k).map_err(|e| e.to_string())?.iter().map(|n| n.reihe).collect();
+    for n in tresor::notfallmappe(&datum::jetzt_iso()) {
+        if vorhanden.contains(&n.reihe) { continue; }
+        tresor::notiz_schreiben(&z.datenordner, &k, &n).map_err(|e| e.to_string())?;
+    }
+    tresor::notizen_lesen(&z.datenordner, &k).map_err(|e| e.to_string())
+}
+
+fn mime_aus_name(name: &str) -> &'static str {
+    match name.rsplit('.').next().map(|e| e.to_ascii_lowercase()).as_deref() {
+        Some("pdf") => "application/pdf",
+        Some("jpg") | Some("jpeg") => "image/jpeg",
+        Some("png") => "image/png",
+        Some("heic") => "image/heic",
+        Some("webp") => "image/webp",
+        Some("gif") => "image/gif",
+        Some("txt") => "text/plain",
+        _ => "application/octet-stream",
+    }
+}
+
+/// Datei (Scan, PDF, Foto) verschlüsselt ablegen und an die Notiz hängen. Der Klartext bleibt, wo er war – das Löschen des Originals ist Sache des Nutzers.
+#[tauri::command]
+fn tresor_anhang_aus_datei(z: State<Zustand>, notiz_id: String, pfad: String) -> Result<Notiz, String> {
+    let k = tresor_schluessel(&z)?;
+    let p = PathBuf::from(&pfad);
+    let md = std::fs::metadata(&p).map_err(|e| format!("Datei nicht lesbar: {e}"))?;
+    if md.len() > ANHANG_MAX { return Err(format!("Datei zu groß (max. {} MB)", ANHANG_MAX / 1024 / 1024)); }
+    let bytes = std::fs::read(&p).map_err(|e| format!("Datei nicht lesbar: {e}"))?;
+    let name = p.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_else(|| "Anhang".into());
+    let mut alle = tresor::notizen_lesen(&z.datenordner, &k).map_err(|e| e.to_string())?;
+    let n = alle.iter_mut().find(|n| n.id == notiz_id).ok_or("Notiz nicht gefunden")?;
+    let id = tresor::neue_id();
+    tresor::anhang_schreiben(&z.datenordner, &k, &id, &bytes).map_err(|e| e.to_string())?;
+    n.anhaenge.push(Anhang { id, typ: mime_aus_name(&name).into(), name, groesse: md.len() });
+    n.geaendert = datum::jetzt_iso();
+    tresor::notiz_schreiben(&z.datenordner, &k, n).map_err(|e| e.to_string())?;
+    Ok(n.clone())
+}
+
+/// Anhang entschlüsselt als Base64 an die Oberfläche – nur für die Anzeige, nie auf die Platte.
+#[tauri::command]
+fn tresor_anhang_lesen(z: State<Zustand>, id: String) -> Result<String, String> {
+    let k = tresor_schluessel(&z)?;
+    let bytes = tresor::anhang_lesen(&z.datenordner, &k, &id).map_err(|e| e.to_string())?;
+    Ok(B64.encode(bytes.as_slice()))
+}
+
+#[tauri::command]
+fn tresor_anhang_loeschen(z: State<Zustand>, notiz_id: String, id: String) -> Result<Notiz, String> {
+    let k = tresor_schluessel(&z)?;
+    let mut alle = tresor::notizen_lesen(&z.datenordner, &k).map_err(|e| e.to_string())?;
+    let n = alle.iter_mut().find(|n| n.id == notiz_id).ok_or("Notiz nicht gefunden")?;
+    n.anhaenge.retain(|a| a.id != id);
+    n.geaendert = datum::jetzt_iso();
+    tresor::notiz_schreiben(&z.datenordner, &k, n).map_err(|e| e.to_string())?;
+    tresor::anhang_loeschen(&z.datenordner, &id).map_err(|e| e.to_string())?;
+    Ok(n.clone())
+}
+
+#[tauri::command]
+async fn tresor_passwort_aendern(z: State<'_, Zustand>, altes: String, neues: String) -> Result<(), String> {
+    // Das alte Passwort wird verlangt, auch wenn der Tresor offen ist – damit niemand am offenen Gerät das Passwort tauscht
+    let k = tresor::oeffnen(&z.datenordner, &altes).map_err(|_| "Das bisherige Passwort stimmt nicht")?;
+    tresor::passwort_aendern(&z.datenordner, &k, &neues).map_err(|e| e.to_string())?;
+    tresor_setzen(&z, k);
+    Ok(())
+}
+
+#[tauri::command]
+async fn tresor_code_erneuern(z: State<'_, Zustand>, passwort: String) -> Result<String, String> {
+    let k = tresor::oeffnen(&z.datenordner, &passwort).map_err(|_| "Das Passwort stimmt nicht")?;
+    let code = tresor::code_erneuern(&z.datenordner, &k).map_err(|e| e.to_string())?;
+    tresor_setzen(&z, k);
+    Ok(code)
+}
+
+/// Sicherung in einen Ordner (z. B. USB-Stick): legt dort `OFFLINE-Tresor-Sicherung/` an. Nur Verschlüsseltes.
+#[tauri::command]
+fn tresor_sichern(z: State<Zustand>, ziel: String) -> Result<String, String> {
+    let ziel = PathBuf::from(ziel).join("OFFLINE-Tresor-Sicherung");
+    tresor::sichern(&z.datenordner, &ziel).map_err(|e| e.to_string())?;
+    Ok(ziel.display().to_string())
+}
+
+/// Sicherung zurückspielen – ersetzt den Tresor auf diesem Gerät. Nur bei gesperrtem Tresor.
+#[tauri::command]
+fn tresor_zurueckspielen(z: State<Zustand>, quelle: String) -> Result<(), String> {
+    if z.tresor.lock().map(|t| t.is_some()).unwrap_or(true) { return Err("Zuerst den Tresor sperren".into()); }
+    let q = PathBuf::from(&quelle);
+    let q = if q.join("tresor.json").exists() { q } else { q.join("OFFLINE-Tresor-Sicherung") };
+    tresor::zurueckspielen(&z.datenordner, &q).map(|_| ()).map_err(|e| e.to_string())
+}
 
 // ---------- Offene Downloads (Staging-Ordner mit Manifest) ----------
 
@@ -606,6 +823,8 @@ fn alles_loeschen(z: State<Zustand>, bestaetigung: String) -> Result<String, Str
     let _ = std::fs::remove_dir_all(&wurzel);
     let _ = std::fs::remove_dir_all(z.datenordner.join("pakete"));
     let _ = std::fs::remove_file(z.abo_datei());
+    if let Ok(mut t) = z.tresor.lock() { *t = None; }
+    let _ = std::fs::remove_dir_all(tresor::ordner(&z.datenordner));
     if let Ok(mut a) = z.abo.lock() { *a = Abo::default(); }
     let anleitung = if cfg!(target_os = "windows") { "Einstellungen → Apps → OFFLINE → Deinstallieren." }
         else if cfg!(target_os = "macos") { "OFFLINE aus dem Ordner „Programme“ in den Papierkorb ziehen." }
@@ -657,6 +876,7 @@ pub fn start() {
                 verbindung: Mutex::new((false, None, 0)),
                 lokal: Mutex::new(None),
                 kiwix: Mutex::new(None),
+                tresor: Mutex::new(None),
             };
             let wurzel = z.wurzel();
             std::fs::create_dir_all(&wurzel)?;
@@ -669,12 +889,16 @@ pub fn start() {
             }
             app.manage(z);
             abo_schleife(app.handle().clone());
+            tresor_waechter(app.handle().clone());
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
             datenordner, installierte, paket_lesen, einspielen_ordner, einspielen_bytes, entfernen, stick_suchen, aufraeumen_start,
             abo_lesen, abo_schreiben, verbindung_melden, speicherort_setzen, katalog_laden, paket_laden, download_abbrechen, updates_jetzt, abo_status,
             lokal_url, kiwix_url, fenster_oeffnen, alles_loeschen, app_info, downloads_offen,
+            tresor_status, tresor_anlegen, tresor_oeffnen, tresor_oeffnen_code, tresor_sperren, tresor_sperre_setzen, tresor_notizen,
+            tresor_notiz_schreiben, tresor_notiz_loeschen, tresor_notfallmappe, tresor_anhang_aus_datei, tresor_anhang_lesen, tresor_anhang_loeschen,
+            tresor_passwort_aendern, tresor_code_erneuern, tresor_sichern, tresor_zurueckspielen,
             app_update::app_update_pruefen, app_update::app_update_installieren, app_neustart
         ])
         .run(tauri::generate_context!())

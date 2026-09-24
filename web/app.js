@@ -24,6 +24,7 @@ const state = {
   abo: speicher.get("abo", { intervall: "woechentlich", nurWlan: true, fenster: true, von: "02:00", bis: "05:00", aktiv: true }),
   fortschritt: null, // { pfad, geladen, gesamt } während eines Downloads
   lesen: null, // { url, titel } – Leseansicht für kiwix-serve
+  tresor: { status: null, notizen: [], aktiv: null, suche: "", code: null, codeGruppen: null, vorschau: null, msg: "", einstellungen: false, sperreMin: 5 },
   download: null, // Seitenleiste: { id, titel, status: laedt|unterbrochen|kaputt|fertig, geladen, gesamt, text }
   bundesland: speicher.get("bundesland", "Wien"),
   notizen: speicher.get("notizen", ""),
@@ -59,11 +60,12 @@ const I = {
   karte: '<path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/>',
   ki: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
   notizen: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+  tresor: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
   updates: '<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
 };
 const ROUTEN = [
   ["start", "Übersicht"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["bibliothek", "Bibliothek"],
-  ["karte", "Karte"], ["ki", "KI-Assistent"], ["notizen", "Notizen"], ["updates", "Updates & Abo"],
+  ["karte", "Karte"], ["ki", "KI-Assistent"], ["notizen", "Notizen"], ["tresor", "Tresor"], ["updates", "Updates & Abo"],
 ];
 const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
 document.getElementById("nav").innerHTML = ROUTEN.map(([id, name]) => `<a href="#${id}" data-route="${id}">${icon(id)}${name}</a>`).join("");
@@ -151,6 +153,71 @@ const seiten = {
       <p class="muted" style="margin-top:1rem;font-size:.9rem">Quellen: ${(P()?.manifest.quellen ?? []).map((q) => `<a href="${esc(q.url)}" rel="noopener">${esc(q.name)}</a>`).join(" · ")}</p>`;
   },
 
+  tresor() {
+    const t = state.tresor;
+    const hinweis = `<p class="muted" style="margin:.5rem 0 0">Nur du kennst dieses Passwort. Wir können es nicht zurücksetzen, weil wir keinen Zugang zu deinem Tresor haben. Wenn du Passwort <em>und</em> Wiederherstellungscode verlierst, kann niemand den Inhalt wiederherstellen, auch wir nicht.</p>`;
+    if (!desktop) return `${kopf("Tresor", "Verschlüsselter Bereich für Notfallmappe, Passwörter, PINs und Ausweisscans.")}
+      <div class="card"><p>Der Tresor gibt es nur in der <strong>Desktop-App</strong>: Die Verschlüsselung läuft dort im Rust-Kern, der Schlüssel liegt nie im Browser. Im Web-Prototyp bleibt er deshalb aus.</p><a class="btn btn-primary" href="/#download">Desktop-App holen</a></div>`;
+    if (t.status === null) return `${kopf("Tresor", "Einen Moment …")}`;
+    const msg = `<p class="form-msg ${t.msgArt ?? ""}" id="tresor-msg">${t.msg ?? ""}</p>`;
+
+    if (t.status === "kein") return `${kopf("Tresor", "Verschlüsselter Bereich für Notfallmappe, Passwörter, PINs und Ausweisscans. Verlässt das Gerät nie unverschlüsselt – wir haben keinen Schlüssel.")}
+      <div class="tresor"><div class="card" style="grid-column:1 / -1;max-width:560px">
+        <h3>Tresor anlegen</h3>
+        <label>Passwort (mindestens 8 Zeichen, nicht dasselbe wie für das Gerät)<br><input type="password" id="tresor-pw1" autocomplete="new-password"></label>
+        <label style="display:block;margin-top:.6rem">Noch einmal<br><input type="password" id="tresor-pw2" autocomplete="new-password"></label>
+        ${hinweis}
+        <div style="margin-top:1rem"><button class="btn btn-primary" data-tresor-anlegen>Tresor anlegen</button></div>${msg}
+      </div></div>`;
+
+    if (t.status === "code") return `${kopf("Tresor", "Dein Wiederherstellungscode – er wird nur jetzt angezeigt.")}
+      <div class="tresor"><div class="card" style="grid-column:1 / -1;max-width:640px">
+        <div class="warnkasten"><strong>Druck diesen Code aus oder schreib ihn ab</strong> und leg ihn an einen sicheren Ort, getrennt vom Gerät. Mit ihm kommst du in den Tresor, wenn du das Passwort vergisst. Er wird nur jetzt angezeigt.</div>
+        <div class="code-anzeige">${esc(t.code)}</div>
+        <p class="muted">Zur Sicherheit: Trag vier der sechs Gruppen ein, damit wir wissen, dass du ihn hast.</p>
+        <div class="code-gruppen">${t.code.split("-").map((g, i) => t.codeGruppen.includes(i) ? `<input type="text" data-code-gruppe="${i}" maxlength="5" autocomplete="off" spellcheck="false">` : `<span>${esc(g)}</span>`).join('<span class="muted">–</span>')}</div>
+        <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn-primary" data-tresor-code-ok>Ich habe den Code gesichert</button><button class="btn" data-tresor-code-kopieren>Kopieren (30 s)</button></div>${msg}
+      </div></div>`;
+
+    if (t.status === "gesperrt") return `${kopf("Tresor", "Gesperrt.", '<span class="tag">Gesperrt</span>')}
+      <div class="tresor"><div class="card" style="grid-column:1 / -1;max-width:560px">
+        <label>Passwort<br><input type="password" id="tresor-pw" autocomplete="current-password"></label>
+        <div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn-primary" data-tresor-oeffnen>Öffnen</button><button class="btn" data-tresor-code-modus>${t.codeModus ? "Doch mit Passwort" : "Mit Wiederherstellungscode"}</button></div>
+        ${t.codeModus ? `<label style="display:block;margin-top:1rem">Wiederherstellungscode (6 Gruppen)<br><input type="text" id="tresor-code" autocomplete="off" spellcheck="false" placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"></label><div style="margin-top:.6rem"><button class="btn btn-primary" data-tresor-oeffnen-code>Mit Code öffnen</button> <span class="muted">Danach gleich ein neues Passwort setzen.</span></div>` : ""}
+        ${msg}
+        <details style="margin-top:1.2rem"><summary class="muted">Sicherung zurückspielen</summary><p class="muted">Ersetzt den Tresor auf diesem Gerät durch eine Sicherung (Ordner „OFFLINE-Tresor-Sicherung“ vom Stick). Das Passwort der Sicherung gilt dann.</p><button class="btn btn-sm" data-tresor-zurueckspielen>Sicherung wählen …</button></details>
+      </div></div>`;
+
+    // offen
+    const q = t.suche.trim().toLowerCase();
+    const liste = t.notizen.filter((n) => !q || n.titel.toLowerCase().includes(q) || n.text.toLowerCase().includes(q));
+    const n = t.notizen.find((x) => x.id === t.aktiv) ?? null;
+    const v = t.vorschau;
+    return `${kopf("Tresor", `Offen · sperrt nach ${t.sperreMin} Min. ohne Eingabe, beim Minimieren und beim Beenden.`, '<span style="display:flex;gap:.5rem"><button class="btn btn-sm" data-tresor-einstellungen>Einstellungen</button><button class="btn btn-sm btn-primary" data-tresor-sperren>Sperren</button></span>')}
+      ${t.einstellungen ? `<div class="card" style="margin-bottom:1rem"><h3>Einstellungen</h3>
+        <div class="grid grid-3">
+          <div><label>Automatisch sperren nach<br><select id="tresor-sperre"><option value="1" ${t.sperreMin == 1 ? "selected" : ""}>1 Minute</option><option value="5" ${t.sperreMin == 5 ? "selected" : ""}>5 Minuten</option><option value="15" ${t.sperreMin == 15 ? "selected" : ""}>15 Minuten</option></select></label></div>
+          <div><label>Passwort ändern<br><input type="password" id="tresor-alt" placeholder="bisheriges" autocomplete="current-password"></label><input type="password" id="tresor-neu" placeholder="neues (min. 8)" autocomplete="new-password" style="margin-top:.4rem"><button class="btn btn-sm" data-tresor-pw-aendern style="margin-top:.4rem">Ändern</button></div>
+          <div><label>Neuer Wiederherstellungscode<br><input type="password" id="tresor-pw-code" placeholder="Passwort zur Bestätigung"></label><button class="btn btn-sm" data-tresor-code-neu style="margin-top:.4rem">Code erneuern</button><p class="muted" style="margin:.3rem 0 0;font-size:.85rem">Der alte Code gilt danach nicht mehr.</p></div>
+        </div>
+        <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn-sm" data-tresor-sichern>Sicherung auf Stick oder Ordner …</button><span class="muted" style="align-self:center">Nur Verschlüsseltes wird kopiert.</span></div>${msg}</div>` : ""}
+      <div class="tresor">
+        <div class="card">
+          <input type="text" id="tresor-suche" placeholder="Suchen …" value="${esc(t.suche)}" autocomplete="off">
+          <div style="display:flex;gap:.4rem;margin:.6rem 0;flex-wrap:wrap"><button class="btn btn-sm btn-primary" data-tresor-neu>Neue Notiz</button><button class="btn btn-sm" data-tresor-mappe title="Zehn Abschnitte: Personen, Nummern, Treffpunkte, Dokumente, Versicherungen, Geld, Zugänge, Haus, Tiere, Radio">Notfallmappe anlegen</button></div>
+          <div class="tresor-liste">${liste.length ? liste.map((x) => `<button data-tresor-notiz="${esc(x.id)}" aria-current="${x.id === t.aktiv}">${x.reihe ? `${x.reihe}. ` : ""}${esc(x.titel || "Ohne Titel")}<span class="muted">${x.anhaenge.length ? `${x.anhaenge.length} Anhang${x.anhaenge.length > 1 ? "e" : ""} · ` : ""}${datum(x.geaendert)}</span></button>`).join("") : `<p class="muted" style="padding:.5rem .7rem">${t.notizen.length ? "Nichts gefunden." : "Noch leer. Leg die Notfallmappe an oder eine neue Notiz."}</p>`}</div>
+        </div>
+        <div class="card">${n ? `
+          <input type="text" class="titel" id="tresor-titel" value="${esc(n.titel)}" placeholder="Titel" autocomplete="off">
+          <textarea id="tresor-text" placeholder="Inhalt – bleibt verschlüsselt auf diesem Gerät" style="margin-top:.6rem">${esc(n.text)}</textarea>
+          <div style="display:flex;justify-content:space-between;gap:.5rem;margin-top:.6rem;flex-wrap:wrap"><span class="muted" id="tresor-gespeichert">Geändert ${datum(n.geaendert)}</span><span><button class="btn btn-sm" data-tresor-anhang>Anhang hinzufügen …</button> <button class="btn btn-sm" data-tresor-notiz-loeschen="${esc(n.id)}">Notiz löschen</button></span></div>
+          ${n.anhaenge.length ? `<div style="margin-top:.8rem"><strong>Anhänge</strong>${n.anhaenge.map((a) => `<div class="anhang"><span>${esc(a.name)}</span><span class="muted mono" style="font-size:.8rem">${groesse(a.groesse)}</span><span style="margin-left:auto"><button class="btn btn-sm" data-tresor-anzeigen="${esc(a.id)}">${v?.id === a.id ? "Ausblenden" : "Anzeigen"}</button> <button class="btn btn-sm" data-tresor-anhang-loeschen="${esc(a.id)}">Löschen</button></span></div>`).join("")}</div>` : ""}
+          ${v && n.anhaenge.some((a) => a.id === v.id) ? `<div class="anhang-vorschau" style="margin-top:.8rem">${v.typ.startsWith("image/") ? `<img src="${v.url}" alt="${esc(v.name)}">` : v.typ === "application/pdf" ? `<iframe src="${v.url}" title="${esc(v.name)}"></iframe>` : `<pre style="white-space:pre-wrap">${esc(v.text ?? "")}</pre>`}</div>` : ""}
+          ${t.einstellungen ? "" : msg}` : `<p class="muted">Links eine Notiz wählen oder eine neue anlegen.</p>${t.einstellungen ? "" : msg}`}
+        </div>
+      </div>`;
+  },
+
   lesen() {
     const l = state.lesen;
     if (!l) return `${kopf("Lesen", "Nichts geöffnet.")}<div class="card"><a class="btn btn-primary" href="#bibliothek">Zur Bibliothek</a></div>`;
@@ -204,7 +271,7 @@ const seiten = {
   },
 
   notizen() {
-    return `${kopf("Notizen", "Bleiben auf diesem Gerät. Markdown ist erlaubt.", '<span class="muted" id="gespeichert"></span>')}
+    return `${kopf("Notizen", "Bleiben auf diesem Gerät. Markdown ist erlaubt. Passwörter, PINs und Ausweise gehören in den <a href=\"#tresor\">Tresor</a>.", '<span class="muted" id="gespeichert"></span>')}
       <textarea id="notizen" rows="18" style="width:100%;resize:vertical" placeholder="z. B. Treffpunkt der Familie, wichtige Nummern, Medikamente …">${esc(state.notizen)}</textarea>`;
   },
 
@@ -379,6 +446,125 @@ async function installiereMitMeldung(id, ziel) {
     zeige(ziel, (abbruch ? "" : "Abgelehnt: ") + esc(msg) + (abbruch ? " Zum Fortsetzen in der Bibliothek noch einmal auf „Installieren“ klicken." : ""), abbruch ? "" : "err");
     if (location.hash === "#updates") { state.meldung = abbruch ? { art: "warn", titel: "Abgebrochen", text: "Der bisherige Stand bleibt gespeichert. Zum Fortsetzen: Bibliothek → Installieren." } : { art: "fehler", titel: "Abgelehnt", text: esc(msg) }; render(); }
   }
+}
+
+// ---------- Tresor ----------
+function tresorMeldung(text, art = "") { state.tresor.msg = text; state.tresor.msgArt = art; render(); }
+
+function vorschauFrei() {
+  if (state.tresor.vorschau?.url) URL.revokeObjectURL(state.tresor.vorschau.url);
+  state.tresor.vorschau = null;
+}
+
+async function tresorLaden() {
+  if (!desktop) return;
+  try {
+    const st = await client.tresorStatus();
+    state.tresor.sperreMin = st.sperre_min;
+    if (!st.existiert) state.tresor.status = "kein";
+    else if (!st.offen) { state.tresor.status = "gesperrt"; state.tresor.notizen = []; }
+    else { state.tresor.notizen = await client.tresorNotizen(); state.tresor.status = "offen"; }
+  } catch (e) { state.tresor.status = "gesperrt"; state.tresor.msg = esc(String(e?.message ?? e)); state.tresor.msgArt = "err"; }
+}
+
+function tresorGesperrt(grund) {
+  vorschauFrei();
+  state.tresor = { ...state.tresor, status: "gesperrt", notizen: [], aktiv: null, code: null, einstellungen: false, codeModus: false, msg: grund === "zeit" ? "Automatisch gesperrt – keine Eingabe in der eingestellten Zeit." : "", msgArt: "" };
+  if (location.hash === "#tresor") render();
+}
+
+async function tresorAnlegen() {
+  const a = document.getElementById("tresor-pw1").value, b = document.getElementById("tresor-pw2").value;
+  if (a.length < 8) return tresorMeldung("Mindestens 8 Zeichen.", "err");
+  if (a !== b) return tresorMeldung("Die beiden Passwörter stimmen nicht überein.", "err");
+  tresorMeldung("Lege an – das dauert einen Moment (Schlüssel wird berechnet) …");
+  try {
+    const code = await client.tresorAnlegen(a);
+    const gruppen = [0, 1, 2, 3, 4, 5].sort(() => Math.random() - 0.5).slice(0, 4).sort();
+    state.tresor = { ...state.tresor, status: "code", code, codeGruppen: gruppen, msg: "", msgArt: "" };
+    render();
+  } catch (e) { tresorMeldung(esc(String(e?.message ?? e)), "err"); }
+}
+
+async function tresorCodeBestaetigen() {
+  const t = state.tresor;
+  const gruppen = t.code.split("-");
+  const falsch = [...document.querySelectorAll("[data-code-gruppe]")].filter((i) => i.value.trim().toUpperCase() !== gruppen[+i.dataset.codeGruppe]);
+  if (falsch.length) { falsch.forEach((i) => (i.style.borderColor = "var(--accent)")); return tresorMeldung("Eine Gruppe stimmt nicht – bitte genau abschreiben.", "err"); }
+  state.tresor = { ...t, status: "offen", code: null, codeGruppen: null, notizen: [], msg: "Tresor angelegt. Leg jetzt die Notfallmappe an.", msgArt: "ok" };
+  render();
+}
+
+// Zwischenablage: nach 30 s wieder leeren
+async function kopierenKurz(text) {
+  try { await navigator.clipboard.writeText(text); setTimeout(() => navigator.clipboard.writeText("").catch(() => {}), 30000); return true; } catch { return false; }
+}
+
+async function tresorOeffnen(mitCode) {
+  try {
+    if (mitCode) await client.tresorOeffnenCode(document.getElementById("tresor-code").value);
+    else await client.tresorOeffnen(document.getElementById("tresor-pw").value);
+    state.tresor.msg = mitCode ? "Mit Code geöffnet – setz unter Einstellungen ein neues Passwort." : ""; state.tresor.msgArt = mitCode ? "ok" : "";
+    state.tresor.codeModus = false;
+    state.tresor.einstellungen = !!mitCode;
+    await tresorLaden(); render();
+  } catch (e) { tresorMeldung(esc(String(e?.message ?? e)), "err"); }
+}
+
+let tresorTimer = null;
+function tresorAutoSpeichern() {
+  clearTimeout(tresorTimer);
+  tresorTimer = setTimeout(async () => {
+    const t = state.tresor; const n = t.notizen.find((x) => x.id === t.aktiv); if (!n || t.status !== "offen") return;
+    const titel = document.getElementById("tresor-titel")?.value ?? n.titel, text = document.getElementById("tresor-text")?.value ?? n.text;
+    if (titel === n.titel && text === n.text) return;
+    try {
+      const g = await client.tresorNotizSchreiben({ ...n, titel, text });
+      Object.assign(n, g);
+      const el = document.getElementById("tresor-gespeichert"); if (el) el.textContent = "Gespeichert";
+      const b = document.querySelector(`[data-tresor-notiz="${n.id}"]`); if (b) b.firstChild.textContent = `${n.reihe ? `${n.reihe}. ` : ""}${titel || "Ohne Titel"}`;
+    } catch (e) { tresorMeldung("Nicht gespeichert: " + esc(String(e?.message ?? e)), "err"); }
+  }, 700);
+}
+
+async function tresorAktion(b) {
+  const t = state.tresor;
+  const wert = (id) => document.getElementById(id)?.value ?? "";
+  try {
+    if (b.hasAttribute("data-tresor-anlegen")) return tresorAnlegen();
+    if (b.hasAttribute("data-tresor-code-ok")) return tresorCodeBestaetigen();
+    if (b.hasAttribute("data-tresor-code-kopieren")) return tresorMeldung((await kopierenKurz(t.code)) ? "Kopiert – die Zwischenablage wird in 30 Sekunden geleert." : "Kopieren nicht möglich.", "");
+    if (b.hasAttribute("data-tresor-oeffnen")) return tresorOeffnen(false);
+    if (b.hasAttribute("data-tresor-oeffnen-code")) return tresorOeffnen(true);
+    if (b.hasAttribute("data-tresor-code-modus")) { t.codeModus = !t.codeModus; t.msg = ""; return render(); }
+    if (b.hasAttribute("data-tresor-sperren")) { await client.tresorSperren(); return tresorGesperrt("hand"); }
+    if (b.hasAttribute("data-tresor-einstellungen")) { t.einstellungen = !t.einstellungen; t.msg = ""; return render(); }
+    if (b.hasAttribute("data-tresor-neu")) { const n = await client.tresorNotizSchreiben({ id: "", titel: "", text: "", reihe: 0, geaendert: "", anhaenge: [] }); t.notizen.unshift(n); t.aktiv = n.id; vorschauFrei(); render(); document.getElementById("tresor-titel")?.focus(); return; }
+    if (b.hasAttribute("data-tresor-mappe")) { t.notizen = await client.tresorNotfallmappe(); t.aktiv = t.notizen[0]?.id ?? null; return tresorMeldung("Notfallmappe angelegt – zehn Abschnitte, jedes Feld ist freiwillig.", "ok"); }
+    if (b.dataset.tresorNotiz) { clearTimeout(tresorTimer); t.aktiv = b.dataset.tresorNotiz; vorschauFrei(); t.msg = ""; return render(); }
+    if (b.dataset.tresorNotizLoeschen) { if (!confirm("Diese Notiz samt Anhängen endgültig löschen?")) return; await client.tresorNotizLoeschen(b.dataset.tresorNotizLoeschen); t.notizen = t.notizen.filter((x) => x.id !== b.dataset.tresorNotizLoeschen); t.aktiv = null; vorschauFrei(); return render(); }
+    if (b.hasAttribute("data-tresor-anhang")) {
+      const pfad = await client.dateiWaehlen("Scan oder Dokument in den Tresor legen"); if (!pfad) return;
+      tresorMeldung("Verschlüssele und lege ab …");
+      const n = await client.tresorAnhangAusDatei(t.aktiv, pfad); Object.assign(t.notizen.find((x) => x.id === n.id), n);
+      return tresorMeldung("Anhang abgelegt. Das Original liegt noch dort, wo es war – wenn du es nur im Tresor willst, lösch es dort.", "ok");
+    }
+    if (b.dataset.tresorAnzeigen) {
+      const id = b.dataset.tresorAnzeigen;
+      if (t.vorschau?.id === id) { vorschauFrei(); return render(); }
+      const n = t.notizen.find((x) => x.id === t.aktiv); const a = n.anhaenge.find((x) => x.id === id);
+      const b64 = await client.tresorAnhangLesen(id);
+      const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+      vorschauFrei();
+      t.vorschau = { id, typ: a.typ, name: a.name, url: URL.createObjectURL(new Blob([bytes], { type: a.typ })), text: a.typ.startsWith("text/") ? new TextDecoder().decode(bytes) : null };
+      return render();
+    }
+    if (b.dataset.tresorAnhangLoeschen) { if (!confirm("Anhang endgültig löschen?")) return; const n = await client.tresorAnhangLoeschen(t.aktiv, b.dataset.tresorAnhangLoeschen); Object.assign(t.notizen.find((x) => x.id === n.id), n); vorschauFrei(); return render(); }
+    if (b.hasAttribute("data-tresor-pw-aendern")) { await client.tresorPasswortAendern(wert("tresor-alt"), wert("tresor-neu")); return tresorMeldung("Passwort geändert.", "ok"); }
+    if (b.hasAttribute("data-tresor-code-neu")) { const code = await client.tresorCodeErneuern(wert("tresor-pw-code")); const gruppen = [0, 1, 2, 3, 4, 5].sort(() => Math.random() - 0.5).slice(0, 4).sort(); state.tresor = { ...t, status: "code", code, codeGruppen: gruppen, einstellungen: false, msg: "", msgArt: "" }; return render(); }
+    if (b.hasAttribute("data-tresor-sichern")) { const ziel = await client.ordnerWaehlen("Ordner für die Sicherung wählen (z. B. USB-Stick)"); if (!ziel) return; const wo = await client.tresorSichern(ziel); return tresorMeldung(`Gesichert nach ${esc(wo)}.`, "ok"); }
+    if (b.hasAttribute("data-tresor-zurueckspielen")) { const q = await client.ordnerWaehlen("Ordner „OFFLINE-Tresor-Sicherung“ wählen"); if (!q) return; if (!confirm("Den Tresor auf diesem Gerät durch die Sicherung ersetzen?")) return; await client.tresorZurueckspielen(q); await tresorLaden(); return tresorMeldung("Sicherung zurückgespielt – mit dem Passwort der Sicherung öffnen.", "ok"); }
+  } catch (e) { tresorMeldung(esc(String(e?.message ?? e)), "err"); }
 }
 
 // Inhalte (kiwix-serve) in der App lesen – Leseansicht mit eingebetteter Seite
@@ -587,6 +773,7 @@ function beiKlick(e) {
   if (!b) return;
   if (b.dataset.filter) { state.filter = b.dataset.filter; render(); }
   if (b.dataset.install) installiereMitMeldung(b.dataset.install, "bib-msg");
+  if ([...b.attributes].some((a) => a.name.startsWith("data-tresor"))) return tresorAktion(b);
   if (b.hasAttribute("data-lesen-zurueck")) { try { document.getElementById("lesen-rahmen")?.contentWindow.history.back(); } catch {} }
   if (b.hasAttribute("data-lesen-start")) { const f = document.getElementById("lesen-rahmen"); if (f) f.src = state.lesen.url; }
   if (b.hasAttribute("data-lesen-fenster")) client.fensterOeffnen(state.lesen.url, `OFFLINE – ${state.lesen.titel}`).catch(() => {});
@@ -612,6 +799,20 @@ function beiKlick(e) {
   if (b.hasAttribute("data-speicherort-standard")) speicherortSetzen(null);
 }
 main.addEventListener("click", beiKlick);
+main.addEventListener("input", (e) => {
+  if (e.target.id === "tresor-titel" || e.target.id === "tresor-text") tresorAutoSpeichern();
+  if (e.target.id === "tresor-suche") { state.tresor.suche = e.target.value; const pos = e.target.selectionStart; render(); const s2 = document.getElementById("tresor-suche"); s2?.focus(); s2?.setSelectionRange(pos, pos); }
+});
+main.addEventListener("change", (e) => {
+  if (e.target.id === "tresor-sperre") client.tresorSperreSetzen(+e.target.value).then((m) => { state.tresor.sperreMin = m; render(); }).catch(() => {});
+});
+if (desktop) {
+  client.beiTresorGesperrt(tresorGesperrt);
+  // Beim Minimieren (Fenster unsichtbar) sperren – wie in der Spezifikation
+  document.addEventListener("visibilitychange", () => { if (document.hidden && state.tresor.status === "offen") client.tresorSperren().then(() => tresorGesperrt("hand")).catch(() => {}); });
+  addEventListener("hashchange", () => { if (location.hash === "#tresor") tresorLaden().then(render); });
+  tresorLaden().then(() => { if (location.hash === "#tresor") render(); });
+}
 document.getElementById("download").addEventListener("click", beiKlick);
 
 main.addEventListener("submit", (e) => {
@@ -633,7 +834,7 @@ main.addEventListener("input", (e) => {
 
 menu.addEventListener("click", () => { const open = sidebar.classList.toggle("open"); menu.setAttribute("aria-expanded", String(open)); });
 
-const APP_VERSION = "0.1.2";
+const APP_VERSION = "0.1.3";
 function netz() {
   const on = navigator.onLine;
   document.getElementById("net-dot").className = "dot " + (on ? "on" : "off");
