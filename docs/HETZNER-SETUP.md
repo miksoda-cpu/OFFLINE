@@ -1,6 +1,6 @@
 # Hetzner Object Storage als Update-Server – Einrichtung
 
-Stand: 24. September 2026 · Entscheidung: Hetzner (Ghost liegt bereits dort)
+Stand: 24. September 2026 · Entscheidung: Hetzner (Ghost liegt bereits dort) · **Eingerichtet, erster Lauf erfolgreich** (Wikivoyage Deutsch + Österreich-Paket liegen im Bucket, Katalog öffentlich)
 
 Der Update-Server ist nur ein Speicher für statische Dateien: Paketordner unter `pakete/` und der signierte Katalog unter `katalog/`. Hetzner Object Storage ist S3-kompatibel, unterstützt Bereichsanfragen (für fortsetzbare Downloads) und liefert die Dateien öffentlich aus.
 
@@ -46,9 +46,18 @@ GitHub → **Actions → Inhaltspakete → Run workflow** → Paket **wikivoyage
 
 Der Lauf lädt die aktuelle ZIM-Datei von kiwix.org (ca. 0,9 GB), baut und signiert das Paket, lädt es hoch, spiegelt die Manifeste aller Pakete im Speicher und baut daraus den Katalog neu. Dauer: 10–20 Minuten.
 
-Danach ist der Katalog erreichbar unter `https://<bucket>.<region>.your-objectstorage.com/katalog/katalog.json`. Diese Adresse wird die Voreinstellung der App (`kern/src/abo.rs`, `katalog_url`) – bis dahin zeigt die App auf Vercel und lädt dort nur die Textpakete.
+Der Katalog ist erreichbar unter `https://offline-pakete.fsn1.your-objectstorage.com/katalog/katalog.json` und seit dem 24.09.2026 die Voreinstellung der App (`kern/src/abo.rs`, `katalog_url`). Der Vercel-Katalog bleibt für den Web-Prototyp.
 
 ## Was der Workflow nicht macht
 
 - Er löscht nichts. Alte Paketversionen bleiben im Speicher, bis sie von Hand entfernt werden (Console → Bucket → Ordner löschen). Nur die neueste Version steht im Katalog.
 - Er baut keine Karten (PMTiles). Das kommt als eigener Workflow, sobald die Quelle geklärt ist (Protomaps-Auszug Österreich).
+
+## Pflicht vor dem öffentlichen Start (Checkliste)
+
+- [ ] **Produktionsschlüssel erzeugen** – auf einem Rechner ohne Netz: `node werkzeug/paket.mjs schluessel erzeugen offline-2026` (privater Teil unter `~/.offline/schluessel/`, Passphrase-geschützt sichern, zwei Kopien an zwei Orten).
+- [ ] Öffentlichen Teil in `schluessel/oeffentlich.json` und `web/schluessel/oeffentlich.json` eintragen; Entwicklungs- (`705ba930e2596d01`) und Build-Schlüssel (`1504cefc5d5d7e11`) ein `gueltig_bis` geben.
+- [ ] Desktop-App neu bauen (die Schlüsselliste ist eingebettet) und als Release veröffentlichen, **bevor** neu signierte Pakete hochgeladen werden – sonst lehnen alte Apps sie ab.
+- [ ] Alle Pakete und den Katalog mit dem Produktionsschlüssel neu signieren und hochladen. Entweder auf dem Redaktionsrechner mit `werkzeug/` oder – wenn weiter in GitHub Actions signiert werden soll – das Secret `OFFLINE_SIGNIERSCHLUESSEL` durch den Produktionsschlüssel ersetzen (dann gilt: GitHub hält den Schlüssel; die Spezifikation empfiehlt Signieren außerhalb der Cloud).
+- [ ] Secret des Build-Schlüssels danach löschen, Schlüssel als abgelaufen markieren.
+- [ ] Code-Signing der Installer (Apple Developer ID, Windows-Zertifikat) – siehe DESKTOP.md.

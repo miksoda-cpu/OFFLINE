@@ -19,7 +19,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: http://127.0.0.1:* https://mapsneu.wien.gv.at https://cdnjs.cloudflare.com; worker-src 'self' blob:; child-src 'self' blob:; frame-src http://127.0.0.1:*; connect-src 'self' ipc: http://ipc.localhost http://127.0.0.1:* https://offline-liart.vercel.app https://mapsneu.wien.gv.at"
+      "csp": "default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: http://127.0.0.1:* https://mapsneu.wien.gv.at https://cdnjs.cloudflare.com; worker-src 'self' blob:; child-src 'self' blob:; frame-src http://127.0.0.1:*; connect-src 'self' ipc: http://ipc.localhost http://127.0.0.1:* https://offline-liart.vercel.app https://offline-pakete.fsn1.your-objectstorage.com https://mapsneu.wien.gv.at"
     }
   },
   "bundle": {

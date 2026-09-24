@@ -34,7 +34,7 @@ impl Default for Einstellungen {
             fenster: true,
             von: "02:00".into(),
             bis: "05:00".into(),
-            katalog_url: "https://offline-liart.vercel.app/katalog/katalog.json".into(),
+            katalog_url: "https://offline-pakete.fsn1.your-objectstorage.com/katalog/katalog.json".into(),
         }
     }
 }
