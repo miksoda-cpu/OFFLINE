@@ -30,8 +30,8 @@
       <h1>Wissen, das nicht ausfällt.</h1>
       <p class="lead">Wikipedia, Karten von ganz Österreich, Notfallwissen und ein KI-Assistent – auf deinem PC oder Mac, ohne Internet. Wenn du online bist, hält sich OFFLINE von selbst aktuell.</p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="/app.html">Prototyp ansehen</a>
-        <a class="btn" href="#preise">Frei und Pro</a>
+        <a class="btn btn-primary" href="#gratis">Gratis-Paket holen</a>
+        <a class="btn" href="/app.html">Prototyp ansehen</a>
       </div>
     </section>
 
@@ -63,6 +63,34 @@
       </div>
     </section>
 
+    <section class="section" id="gratis">
+      <div class="grid grid-2" style="align-items:start">
+        <div>
+          <span class="tag tag-ok">Kostenlos</span>
+          <h2 style="margin-top:.6rem">Hol dir das Gratis-Paket</h2>
+          <p class="muted">Melde dich mit deinem Namen und deiner E-Mail-Adresse an. Du bekommst eine Mail mit einem Bestätigungslink – ein Klick, und du landest auf der Download-Seite.</p>
+          <ul class="muted" style="padding-left:1.1rem">
+            <li>OFFLINE-App für Windows, macOS und Linux</li>
+            <li>Österreich-Paket mit Notrufen, Sirenen und Blackout-Vorsorge</li>
+            <li>Karte Österreich und Wikipedia auf Deutsch</li>
+          </ul>
+          <p class="muted" style="font-size:.9rem">Die App ist noch in Arbeit. Wer sich jetzt anmeldet, bekommt als Erstes Bescheid, sobald der Download bereitsteht.</p>
+        </div>
+        <form class="card" id="anmeldung" novalidate>
+          <div class="grid grid-2" style="gap:0 1rem">
+            <div class="field"><label for="vorname">Vorname</label><input type="text" id="vorname" name="vorname" autocomplete="given-name" required minlength="2"></div>
+            <div class="field"><label for="nachname">Nachname</label><input type="text" id="nachname" name="nachname" autocomplete="family-name" required minlength="2"></div>
+          </div>
+          <div class="field"><label for="email">E-Mail-Adresse</label><input type="email" id="email" name="email" autocomplete="email" required></div>
+          <div class="hp" aria-hidden="true"><label for="website">Website</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
+          <label class="consent"><input type="checkbox" id="newsletter" name="newsletter"><span>Ja, ich möchte den <strong>OFFLINE-Newsletter</strong> von The Digioneer erhalten – Updates, neue Pakete, Tipps zur Vorsorge. Abmelden geht jederzeit mit einem Klick.</span></label>
+          <button class="btn btn-primary" type="submit" style="width:100%;margin-top:1rem">Gratis-Paket anfordern</button>
+          <p class="muted" style="font-size:.8rem;margin:.75rem 0 0">Wir speichern Name und E-Mail-Adresse, um dir den Download zu schicken. Mehr in der <a href="/datenschutz.html">Datenschutzerklärung</a>.</p>
+          <p class="form-msg" id="anmeldung-msg" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
     <section class="section" id="preise">
       <h2>Frei und Pro</h2>
       <p class="muted">Die Software ist frei. Bezahlt wird, was wir laufend leisten: Inhalte pflegen, Updates liefern, helfen.</p>
@@ -71,6 +99,7 @@
           <h3>Frei</h3>
           <div class="price">0 €</div>
           <ul>
+            <li>Gegen Anmeldung mit Name und E-Mail</li>
             <li>App und Offline-Installer</li>
             <li>Wikipedia, Karte Österreich</li>
             <li>Österreich-Paket Grundversion</li>
@@ -102,10 +131,12 @@
     </section>
 
     <footer class="site-foot">
+      <p><a href="/datenschutz.html">Datenschutz</a></p>
       <p>OFFLINE ist ein Projekt von The Digioneer und der digitalworld Academy. Inspiriert von Project N.O.M.A.D. (Apache 2.0) – eigenständig und nicht mit Crosstalk Solutions verbunden.</p>
       <p>Kartendaten: basemap.at (CC BY 4.0), © OpenStreetMap-Mitwirkende. Wikipedia-Inhalte: CC BY-SA 4.0.</p>
     </footer>
   </div>
+  <script type="module" src="/anmeldung.js"></script>
   <script>
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
   </script>

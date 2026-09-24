@@ -1,8 +1,8 @@
 // OFFLINE Service Worker: App-Hülle vorab speichern, Kartenkacheln beim Ansehen merken.
-const VERSION = "offline-v1";
+const VERSION = "offline-v2";
 const HUELLE = [
   "/", "/index.html", "/app.html", "/app.js", "/styles.css", "/icon.svg",
-  "/manifest.webmanifest", "/data/inhalte.js",
+  "/manifest.webmanifest", "/data/inhalte.js", "/anmeldung.js", "/datenschutz.html",
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css",
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js",
 ];

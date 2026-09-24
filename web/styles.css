@@ -152,7 +152,7 @@ p { margin: 0 0 1em; }
 .seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
 .switch { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .7rem 0; border-top: 1px solid var(--line); }
 .switch input { width: 2.6rem; height: 1.4rem; accent-color: var(--accent); }
-input[type="time"], select, input[type="text"], textarea { font: inherit; padding: .5rem .7rem; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); }
+input[type="time"], select, input[type="text"], input[type="email"], textarea { font: inherit; padding: .5rem .7rem; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); }
 .changelog { list-style: none; padding: 0; margin: 0; }
 .changelog li { padding: .7rem 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 6.5rem 1fr; gap: .75rem; }
 .changelog li:first-child { border-top: 0; }
@@ -177,3 +177,15 @@ input[type="time"], select, input[type="text"], textarea { font: inherit; paddin
   .changelog li { grid-template-columns: 1fr; gap: .1rem; }
 }
 @media (min-width: 821px) { .topbar { display: none; } }
+
+/* Anmeldung */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.consent { display: flex; gap: .65rem; align-items: flex-start; font-size: .92rem; cursor: pointer; }
+.consent input { width: 1.15rem; height: 1.15rem; margin-top: .2rem; accent-color: var(--accent); flex: none; }
+.field input { width: 100%; }
+.form-msg { margin: .75rem 0 0; font-weight: 600; }
+.form-msg:empty { display: none; }
+.form-msg.ok { color: var(--ok); }
+.form-msg.err { color: var(--accent); }
+.legal { max-width: 46rem; }
+.legal h2 { margin-top: 2rem; font-size: 1.2rem; }

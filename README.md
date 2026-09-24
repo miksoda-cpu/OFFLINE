@@ -9,6 +9,7 @@ Ein Projekt von The Digioneer und der digitalworld Academy. Inspiriert von [Proj
 | Ordner | Was |
 |---|---|
 | [`docs/KONZEPT.md`](docs/KONZEPT.md) | Konzept: Architektur, Offline-Installer, Update-Abo, Inhalte und Lizenzen, Frei/Pro, Fahrplan |
+| [`docs/GHOST-SETUP.md`](docs/GHOST-SETUP.md) | Anmeldung für das Gratis-Paket, Newsletter und Pro-Stufe über Ghost |
 | [`web/`](web/) | Web-Prototyp (PWA): Startseite + App-Oberfläche. Funktioniert nach dem ersten Besuch auch offline im Browser. Wird auf Vercel ausgeliefert. |
 
 ## Web-Prototyp lokal starten

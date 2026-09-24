@@ -117,6 +117,7 @@ Die Software ist frei (Apache 2.0, wie das Vorbild). Bezahlt wird, was wir **sel
 |---|---|---|---|
 | App + Installer | ✅ | ✅ | ✅ |
 | Basis-Inhalte (Wikipedia, Karte AT) | ✅ | ✅ | ✅ |
+| Zugang | Anmeldung mit Name + E-Mail | Ghost-Abo | Vertrag |
 | Updates | manuell | automatisch, Deltas | automatisch, zentral verwaltet |
 | Österreich-Paket | Grundversion | laufend gepflegt, nach Bundesland | + eigene Gemeindeinhalte |
 | Blackout-/Krisenvorsorge-Paket | Checkliste | vollständig, mit Plänen | + Einsatzpläne, Aushänge |
@@ -126,6 +127,12 @@ Die Software ist frei (Apache 2.0, wie das Vorbild). Bezahlt wird, was wir **sel
 | Preisidee | 0 € | 4–6 €/Monat oder 39–49 €/Jahr | ab ~290 €/Jahr je Standort |
 
 **Zusatz:** vorbespielter USB-Stick/SSD („OFFLINE-Stick“) und Mini-PC als Komplettgerät – Einmalkauf, inklusive 12 Monate Pro.
+
+**Anmeldung und Abo über Ghost (The Digioneer):**
+- Das Gratis-Paket gibt es gegen Anmeldung mit Name und E-Mail (Double-Opt-In). Die bestätigte Adresse ist der Filter für ernsthaftes Interesse, der Newsletter ist optional und braucht ein eigenes Häkchen.
+- Anmeldungen werden Mitglieder von The Digioneer mit Label `offline`. Der Newsletter „OFFLINE“ läuft über Ghost.
+- OFFLINE Pro wird eine bezahlte Stufe in Ghost (Stripe). Wer Pro kauft, wird damit auch Leser:in von The Digioneer.
+- Details: [GHOST-SETUP.md](GHOST-SETUP.md)
 
 Hinweise:
 - Name „NOMAD“ und dessen Branding werden nicht verwendet; Apache-Lizenz- und NOTICE-Hinweise bleiben erhalten.
