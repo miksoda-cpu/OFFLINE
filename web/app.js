@@ -23,6 +23,7 @@ const state = {
   checks: speicher.get("checks", {}),
   abo: speicher.get("abo", { intervall: "woechentlich", nurWlan: true, fenster: true, von: "02:00", bis: "05:00", aktiv: true }),
   fortschritt: null, // { pfad, geladen, gesamt } während eines Downloads
+  lesen: null, // { url, titel } – Leseansicht für kiwix-serve
   download: null, // Seitenleiste: { id, titel, status: laedt|unterbrochen|kaputt|fertig, geladen, gesamt, text }
   bundesland: speicher.get("bundesland", "Wien"),
   notizen: speicher.get("notizen", ""),
@@ -148,6 +149,14 @@ const seiten = {
       <div class="card"><ol class="timeline">${b.ablauf.map((s) => `<li><h3>${esc(s.t)}</h3><p class="muted" style="margin:0">${esc(s.text)}</p></li>`).join("")}</ol></div>
       <div class="card" style="margin-top:1rem;border-color:var(--accent)"><ul style="margin:0;padding-left:1.1rem">${b.merksaetze.map((m) => `<li>${esc(m)}</li>`).join("")}</ul></div>
       <p class="muted" style="margin-top:1rem;font-size:.9rem">Quellen: ${(P()?.manifest.quellen ?? []).map((q) => `<a href="${esc(q.url)}" rel="noopener">${esc(q.name)}</a>`).join(" · ")}</p>`;
+  },
+
+  lesen() {
+    const l = state.lesen;
+    if (!l) return `${kopf("Lesen", "Nichts geöffnet.")}<div class="card"><a class="btn btn-primary" href="#bibliothek">Zur Bibliothek</a></div>`;
+    return `<div class="lesen-kopf"><a class="btn btn-sm" href="#bibliothek">‹ Bibliothek</a><strong>${esc(l.titel)}</strong>
+        <span style="margin-left:auto;display:flex;gap:.4rem"><button class="btn btn-sm" data-lesen-zurueck title="Eine Seite zurück">‹</button><button class="btn btn-sm" data-lesen-start title="Zur Startseite der Bibliothek">Start</button><button class="btn btn-sm" data-lesen-fenster>In eigenem Fenster</button></span></div>
+      <iframe id="lesen-rahmen" class="lesen-rahmen" src="${esc(l.url)}" title="${esc(l.titel)}"></iframe>`;
   },
 
   bibliothek() {
@@ -372,13 +381,14 @@ async function installiereMitMeldung(id, ziel) {
   }
 }
 
+// Inhalte (kiwix-serve) in der App lesen – Leseansicht mit eingebetteter Seite
 async function zimOeffnen(id) {
   zeige("bib-msg", "Starte die Bibliothek …", "");
   try {
     const url = await client.kiwixUrl();
     if (!url) throw new Error("Kein Inhaltspaket gefunden");
-    await client.fensterOeffnen(url, `OFFLINE – ${esc(installiertesPaket(id)?.manifest.titel ?? "Bibliothek")}`);
-    zeige("bib-msg", "Geöffnet in einem eigenen Fenster.", "ok");
+    state.lesen = { url, titel: installiertesPaket(id)?.manifest.titel ?? "Bibliothek" };
+    location.hash = "#lesen";
   } catch (e) { zeige("bib-msg", "Konnte nicht öffnen: " + esc(String(e?.message ?? e)), "err"); }
 }
 
@@ -554,8 +564,10 @@ function render() {
   if (desktop && route === "updates") client.aboStatus().then((st) => { if (st !== desktop.aboStatus) { desktop.aboStatus = st; render(); } }).catch(() => {});
   const seite = seiten[route] ? route : "start";
   main.innerHTML = seiten[seite]();
-  document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === seite ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
-  document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)[1]}`;
+  const aktiv = seite === "lesen" ? "bibliothek" : seite;
+  document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
+  main.classList.toggle("main-lesen", seite === "lesen");
+  document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? state.lesen?.titel ?? "Lesen"}`;
   if (seite === "karte") karteStarten();
   sidebar.classList.remove("open");
   menu.setAttribute("aria-expanded", "false");
@@ -575,6 +587,9 @@ function beiKlick(e) {
   if (!b) return;
   if (b.dataset.filter) { state.filter = b.dataset.filter; render(); }
   if (b.dataset.install) installiereMitMeldung(b.dataset.install, "bib-msg");
+  if (b.hasAttribute("data-lesen-zurueck")) { try { document.getElementById("lesen-rahmen")?.contentWindow.history.back(); } catch {} }
+  if (b.hasAttribute("data-lesen-start")) { const f = document.getElementById("lesen-rahmen"); if (f) f.src = state.lesen.url; }
+  if (b.hasAttribute("data-lesen-fenster")) client.fensterOeffnen(state.lesen.url, `OFFLINE – ${state.lesen.titel}`).catch(() => {});
   if (b.dataset.remove) Promise.resolve(entferne(b.dataset.remove)).then(render);
   if (b.hasAttribute("data-stick-suchen")) client.stickSuchen().then((f) => { state.funde = f; render(); if (!f.length) zeige("bib-msg", "Kein signiertes Paket auf einem Datenträger gefunden.", "err"); });
   if (b.hasAttribute("data-ordner-waehlen")) client.ordnerWaehlen().then((p) => p && einspielenVonOrdner(p));
