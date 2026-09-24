@@ -336,6 +336,11 @@ fn mime_aus_name(name: &str) -> &'static str {
         Some("webp") => "image/webp",
         Some("gif") => "image/gif",
         Some("txt") => "text/plain",
+        Some("m4a") => "audio/mp4",
+        Some("mp3") => "audio/mpeg",
+        Some("wav") => "audio/wav",
+        Some("webm") => "audio/webm",
+        Some("ogg") => "audio/ogg",
         _ => "application/octet-stream",
     }
 }
@@ -354,6 +359,22 @@ fn tresor_anhang_aus_datei(z: State<Zustand>, notiz_id: String, pfad: String) ->
     let id = tresor::neue_id();
     tresor::anhang_schreiben(&z.datenordner, &k, &id, &bytes).map_err(|e| e.to_string())?;
     n.anhaenge.push(Anhang { id, typ: mime_aus_name(&name).into(), name, groesse: md.len() });
+    n.geaendert = datum::jetzt_iso();
+    tresor::notiz_schreiben(&z.datenordner, &k, n).map_err(|e| e.to_string())?;
+    Ok(n.clone())
+}
+
+/// Anhang aus Bytes (Sprachaufnahme, Foto aus der Kamera) verschlüsselt ablegen.
+#[tauri::command]
+fn tresor_anhang_bytes(z: State<Zustand>, notiz_id: String, name: String, typ: String, b64: String) -> Result<Notiz, String> {
+    let k = tresor_schluessel(&z)?;
+    let bytes = B64.decode(&b64).map_err(|_| "Daten unlesbar")?;
+    if bytes.len() as u64 > ANHANG_MAX { return Err(format!("Zu groß (max. {} MB)", ANHANG_MAX / 1024 / 1024)); }
+    let mut alle = tresor::notizen_lesen(&z.datenordner, &k).map_err(|e| e.to_string())?;
+    let n = alle.iter_mut().find(|n| n.id == notiz_id).ok_or("Notiz nicht gefunden")?;
+    let id = tresor::neue_id();
+    tresor::anhang_schreiben(&z.datenordner, &k, &id, &bytes).map_err(|e| e.to_string())?;
+    n.anhaenge.push(Anhang { id, name, typ, groesse: bytes.len() as u64 });
     n.geaendert = datum::jetzt_iso();
     tresor::notiz_schreiben(&z.datenordner, &k, n).map_err(|e| e.to_string())?;
     Ok(n.clone())
@@ -411,6 +432,53 @@ fn tresor_zurueckspielen(z: State<Zustand>, quelle: String) -> Result<(), String
     let q = PathBuf::from(&quelle);
     let q = if q.join("tresor.json").exists() { q } else { q.join("OFFLINE-Tresor-Sicherung") };
     tresor::zurueckspielen(&z.datenordner, &q).map(|_| ()).map_err(|e| e.to_string())
+}
+
+// ---------- Anhänge der offenen Notizen (unverschlüsselt, <Datenordner>/notizen/) ----------
+
+fn notiz_anhang_pfad(z: &Zustand, id: &str) -> Result<PathBuf, String> {
+    if id.len() != 32 || !id.bytes().all(|b| b.is_ascii_hexdigit()) { return Err("Ungültige Kennung".into()); }
+    let o = z.datenordner.join("notizen");
+    std::fs::create_dir_all(&o).map_err(|e| e.to_string())?;
+    Ok(o.join(format!("{id}.bin")))
+}
+
+#[derive(Serialize)]
+struct NotizAnhang { id: String, name: String, typ: String, groesse: u64 }
+
+/// Aus Datei (Foto, PDF) – kopiert in den Datenordner der App.
+#[tauri::command]
+fn notiz_anhang_aus_datei(z: State<Zustand>, pfad: String) -> Result<NotizAnhang, String> {
+    let p = PathBuf::from(&pfad);
+    let bytes = std::fs::read(&p).map_err(|e| format!("Datei nicht lesbar: {e}"))?;
+    if bytes.len() as u64 > ANHANG_MAX { return Err(format!("Datei zu groß (max. {} MB)", ANHANG_MAX / 1024 / 1024)); }
+    let name = p.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_else(|| "Anhang".into());
+    let id = tresor::neue_id();
+    std::fs::write(notiz_anhang_pfad(&z, &id)?, &bytes).map_err(|e| e.to_string())?;
+    Ok(NotizAnhang { id, typ: mime_aus_name(&name).into(), name, groesse: bytes.len() as u64 })
+}
+
+/// Aus Bytes (Sprachaufnahme, Kamerafoto).
+#[tauri::command]
+fn notiz_anhang_bytes(z: State<Zustand>, name: String, typ: String, b64: String) -> Result<NotizAnhang, String> {
+    let bytes = B64.decode(&b64).map_err(|_| "Daten unlesbar")?;
+    if bytes.len() as u64 > ANHANG_MAX { return Err(format!("Zu groß (max. {} MB)", ANHANG_MAX / 1024 / 1024)); }
+    let id = tresor::neue_id();
+    std::fs::write(notiz_anhang_pfad(&z, &id)?, &bytes).map_err(|e| e.to_string())?;
+    Ok(NotizAnhang { id, name, typ, groesse: bytes.len() as u64 })
+}
+
+#[tauri::command]
+fn notiz_anhang_lesen(z: State<Zustand>, id: String) -> Result<String, String> {
+    let bytes = std::fs::read(notiz_anhang_pfad(&z, &id)?).map_err(|_| "Anhang fehlt")?;
+    Ok(B64.encode(bytes))
+}
+
+#[tauri::command]
+fn notiz_anhang_loeschen(z: State<Zustand>, id: String) -> Result<(), String> {
+    let p = notiz_anhang_pfad(&z, &id)?;
+    if p.exists() { std::fs::remove_file(p).map_err(|e| e.to_string())?; }
+    Ok(())
 }
 
 // ---------- Offene Downloads (Staging-Ordner mit Manifest) ----------
@@ -825,6 +893,7 @@ fn alles_loeschen(z: State<Zustand>, bestaetigung: String) -> Result<String, Str
     let _ = std::fs::remove_file(z.abo_datei());
     if let Ok(mut t) = z.tresor.lock() { *t = None; }
     let _ = std::fs::remove_dir_all(tresor::ordner(&z.datenordner));
+    let _ = std::fs::remove_dir_all(z.datenordner.join("notizen"));
     if let Ok(mut a) = z.abo.lock() { *a = Abo::default(); }
     let anleitung = if cfg!(target_os = "windows") { "Einstellungen → Apps → OFFLINE → Deinstallieren." }
         else if cfg!(target_os = "macos") { "OFFLINE aus dem Ordner „Programme“ in den Papierkorb ziehen." }
@@ -898,7 +967,8 @@ pub fn start() {
             lokal_url, kiwix_url, fenster_oeffnen, alles_loeschen, app_info, downloads_offen,
             tresor_status, tresor_anlegen, tresor_oeffnen, tresor_oeffnen_code, tresor_sperren, tresor_sperre_setzen, tresor_notizen,
             tresor_notiz_schreiben, tresor_notiz_loeschen, tresor_notfallmappe, tresor_anhang_aus_datei, tresor_anhang_lesen, tresor_anhang_loeschen,
-            tresor_passwort_aendern, tresor_code_erneuern, tresor_sichern, tresor_zurueckspielen,
+            tresor_passwort_aendern, tresor_code_erneuern, tresor_sichern, tresor_zurueckspielen, tresor_anhang_bytes,
+            notiz_anhang_aus_datei, notiz_anhang_bytes, notiz_anhang_lesen, notiz_anhang_loeschen,
             app_update::app_update_pruefen, app_update::app_update_installieren, app_neustart
         ])
         .run(tauri::generate_context!())

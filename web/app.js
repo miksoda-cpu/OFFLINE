@@ -222,9 +222,9 @@ const seiten = {
         <div class="card">${n ? `
           <input type="text" class="titel" id="tresor-titel" value="${esc(n.titel)}" placeholder="Titel" autocomplete="off">
           <textarea id="tresor-text" placeholder="Inhalt – bleibt verschlüsselt auf diesem Gerät" style="margin-top:.6rem">${esc(n.text)}</textarea>
-          <div style="display:flex;justify-content:space-between;gap:.5rem;margin-top:.6rem;flex-wrap:wrap"><span class="muted" id="tresor-gespeichert">Geändert ${datum(n.geaendert)}</span><span><button class="btn btn-sm" data-tresor-anhang>Anhang hinzufügen …</button> <button class="btn btn-sm" data-tresor-notiz-loeschen="${esc(n.id)}">Notiz löschen</button></span></div>
-          ${n.anhaenge.length ? `<div style="margin-top:.8rem"><strong>Anhänge</strong>${n.anhaenge.map((a) => `<div class="anhang"><span>${esc(a.name)}</span><span class="muted mono" style="font-size:.8rem">${groesse(a.groesse)}</span><span style="margin-left:auto"><button class="btn btn-sm" data-tresor-anzeigen="${esc(a.id)}">${v?.id === a.id ? "Ausblenden" : "Anzeigen"}</button> <button class="btn btn-sm" data-tresor-anhang-loeschen="${esc(a.id)}">Löschen</button></span></div>`).join("")}</div>` : ""}
-          ${v && n.anhaenge.some((a) => a.id === v.id) ? `<div class="anhang-vorschau" style="margin-top:.8rem">${v.typ.startsWith("image/") ? `<img src="${v.url}" alt="${esc(v.name)}">` : v.typ === "application/pdf" ? `<iframe src="${v.url}" title="${esc(v.name)}"></iframe>` : `<pre style="white-space:pre-wrap">${esc(v.text ?? "")}</pre>`}</div>` : ""}
+          <div style="display:flex;justify-content:space-between;gap:.5rem;margin-top:.6rem;flex-wrap:wrap"><span class="muted" id="tresor-gespeichert">Geändert ${datum(n.geaendert)}</span><span>${aufnahmeKnopf()} <button class="btn btn-sm" data-tresor-anhang>Foto oder Datei …</button> <button class="btn btn-sm" data-tresor-notiz-loeschen="${esc(n.id)}">Notiz löschen</button></span></div>
+          ${n.anhaenge.length ? `<div style="margin-top:.8rem"><strong>Anhänge</strong>${n.anhaenge.map((a) => anhangZeile(a, v?.id === a.id, "tresor")).join("")}</div>` : ""}
+          ${v && n.anhaenge.some((a) => a.id === v.id) ? `<div class="anhang-vorschau" style="margin-top:.8rem">${vorschauHtml(v)}</div>` : ""}
           ${t.einstellungen ? "" : msg}` : `<p class="muted">Links eine Notiz wählen oder eine neue anlegen.</p>${t.einstellungen ? "" : msg}`}
         </div>
       </div>`;
@@ -296,7 +296,11 @@ const seiten = {
         <div class="card">${n ? `
           <input type="text" class="titel" id="notiz-titel" value="${esc(n.titel)}" placeholder="Titel" autocomplete="off">
           <textarea id="notiz-text" placeholder="z. B. Treffpunkt der Familie, Einkaufsliste für den Vorrat, Medikamente …" style="margin-top:.6rem">${esc(n.text)}</textarea>
-          <div style="display:flex;justify-content:space-between;gap:.5rem;margin-top:.6rem;flex-wrap:wrap"><span class="muted" id="notiz-gespeichert">Geändert ${datum(n.geaendert)}</span><span>${desktop ? `<button class="btn btn-sm" data-notiz-in-tresor="${esc(n.id)}" title="Verschlüsselt in den Tresor verschieben (Tresor muss offen sein)">In den Tresor</button> ` : ""}<button class="btn btn-sm" data-notiz-loeschen="${esc(n.id)}">Löschen</button></span></div>` : `<p class="muted">Links eine Notiz wählen oder oben „Neue Notiz“.</p>`}</div>
+          <div style="display:flex;justify-content:space-between;gap:.5rem;margin-top:.6rem;flex-wrap:wrap"><span class="muted" id="notiz-gespeichert">Geändert ${datum(n.geaendert)}</span><span>${desktop ? `${aufnahmeKnopf()} <button class="btn btn-sm" data-notiz-anhang>Foto oder Datei …</button> <button class="btn btn-sm" data-notiz-in-tresor="${esc(n.id)}" title="Verschlüsselt in den Tresor verschieben (Tresor muss offen sein)">In den Tresor</button> ` : ""}<button class="btn btn-sm" data-notiz-loeschen="${esc(n.id)}">Löschen</button></span></div>
+          ${(n.anhaenge ?? []).length ? `<div style="margin-top:.8rem"><strong>Anhänge</strong>${n.anhaenge.map((a) => anhangZeile(a, state.notizVorschau?.id === a.id, "notiz")).join("")}</div>` : ""}
+          ${state.notizVorschau && (n.anhaenge ?? []).some((a) => a.id === state.notizVorschau.id) ? `<div class="anhang-vorschau" style="margin-top:.8rem">${vorschauHtml(state.notizVorschau)}</div>` : ""}
+          ${desktop ? "" : `<p class="muted" style="margin-top:.8rem;font-size:.85rem">Diktat und Fotos zu Notizen gibt es in der Desktop-App.</p>`}
+          <p class="form-msg" id="notiz-msg"></p>` : `<p class="muted">Links eine Notiz wählen oder oben „Neue Notiz“.</p>`}</div>
       </div>`;
   },
 
@@ -473,6 +477,48 @@ async function installiereMitMeldung(id, ziel) {
   }
 }
 
+// ---------- Sprachaufnahme (Diktat) – für Notizen und Tresor ----------
+const aufnahme = { rec: null, teile: [], start: 0, timer: null, ziel: null };
+function aufnahmeTyp() {
+  for (const t of ["audio/webm;codecs=opus", "audio/mp4", "audio/webm", "audio/ogg"]) if (window.MediaRecorder?.isTypeSupported?.(t)) return t;
+  return "";
+}
+async function aufnahmeStart(ziel, melde) {
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) { melde("Aufnahme wird von diesem System nicht unterstützt.", "err"); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const typ = aufnahmeTyp();
+    const rec = new MediaRecorder(stream, typ ? { mimeType: typ } : undefined);
+    aufnahme.rec = rec; aufnahme.teile = []; aufnahme.start = Date.now(); aufnahme.ziel = ziel;
+    rec.ondataavailable = (e) => { if (e.data.size) aufnahme.teile.push(e.data); };
+    rec.onstop = async () => {
+      stream.getTracks().forEach((t) => t.stop());
+      clearInterval(aufnahme.timer);
+      const blob = new Blob(aufnahme.teile, { type: rec.mimeType || typ || "audio/webm" });
+      const sek = Math.round((Date.now() - aufnahme.start) / 1000);
+      aufnahme.rec = null;
+      if (!blob.size) { melde("Nichts aufgenommen.", "err"); return; }
+      const b64 = await new Promise((ok) => { const r = new FileReader(); r.onload = () => ok(r.result.split(",")[1]); r.readAsDataURL(blob); });
+      const ext = blob.type.includes("mp4") ? "m4a" : blob.type.includes("ogg") ? "ogg" : "webm";
+      const name = `Diktat ${new Date().toLocaleString("de-AT", { dateStyle: "short", timeStyle: "short" })} (${Math.floor(sek / 60)}:${String(sek % 60).padStart(2, "0")}).${ext}`;
+      try { await ziel.speichern(name, blob.type.split(";")[0], b64); melde("Aufnahme gespeichert.", "ok"); } catch (e) { melde("Nicht gespeichert: " + esc(String(e?.message ?? e)), "err"); }
+    };
+    rec.start(1000);
+    aufnahme.timer = setInterval(() => { const b = document.querySelector("[data-aufnahme]"); if (b) { const sek = Math.round((Date.now() - aufnahme.start) / 1000); b.textContent = `■ Stopp (${Math.floor(sek / 60)}:${String(sek % 60).padStart(2, "0")})`; } }, 500);
+    render();
+  } catch (e) { melde("Kein Zugriff auf das Mikrofon: " + esc(String(e?.message ?? e)), "err"); }
+}
+function aufnahmeStopp() { aufnahme.rec?.state === "recording" && aufnahme.rec.stop(); }
+const aufnahmeKnopf = () => aufnahme.rec ? `<button class="btn btn-sm btn-primary" data-aufnahme>■ Stopp</button>` : `<button class="btn btn-sm" data-aufnahme title="Sprachnotiz aufnehmen">● Diktat aufnehmen</button>`;
+
+// Vorschau eines Anhangs (Bild, Ton, PDF, Text) aus Base64 – nur im Speicher
+function vorschauAus(a, b64) {
+  const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+  return { id: a.id, typ: a.typ, name: a.name, url: URL.createObjectURL(new Blob([bytes], { type: a.typ })), text: a.typ.startsWith("text/") ? new TextDecoder().decode(bytes) : null };
+}
+const vorschauHtml = (v) => v.typ.startsWith("image/") ? `<img src="${v.url}" alt="${esc(v.name)}">` : v.typ.startsWith("audio/") ? `<audio controls src="${v.url}" style="width:100%"></audio>` : v.typ === "application/pdf" ? `<iframe src="${v.url}" title="${esc(v.name)}"></iframe>` : `<pre style="white-space:pre-wrap">${esc(v.text ?? "")}</pre>`;
+const anhangZeile = (a, aktiv, prefix) => `<div class="anhang"><span>${a.typ.startsWith("audio/") ? "🎙 " : a.typ.startsWith("image/") ? "🖼 " : "📄 "}${esc(a.name)}</span><span class="muted mono" style="font-size:.8rem">${groesse(a.groesse)}</span><span style="margin-left:auto"><button class="btn btn-sm" data-${prefix}-anzeigen="${esc(a.id)}">${aktiv ? "Ausblenden" : a.typ.startsWith("audio/") ? "Abspielen" : "Anzeigen"}</button> <button class="btn btn-sm" data-${prefix}-anhang-loeschen="${esc(a.id)}">Löschen</button></span></div>`;
+
 // ---------- Tresor ----------
 function tresorMeldung(text, art = "") { state.tresor.msg = text; state.tresor.msgArt = art; render(); }
 
@@ -568,8 +614,13 @@ async function tresorAktion(b) {
     if (b.hasAttribute("data-tresor-mappe")) { t.notizen = await client.tresorNotfallmappe(); t.aktiv = t.notizen[0]?.id ?? null; return tresorMeldung("Notfallmappe angelegt – zehn Abschnitte, jedes Feld ist freiwillig.", "ok"); }
     if (b.dataset.tresorNotiz) { clearTimeout(tresorTimer); t.aktiv = b.dataset.tresorNotiz; vorschauFrei(); t.msg = ""; return render(); }
     if (b.dataset.tresorNotizLoeschen) { if (!confirm("Diese Notiz samt Anhängen endgültig löschen?")) return; await client.tresorNotizLoeschen(b.dataset.tresorNotizLoeschen); t.notizen = t.notizen.filter((x) => x.id !== b.dataset.tresorNotizLoeschen); t.aktiv = null; vorschauFrei(); return render(); }
+    if (b.hasAttribute("data-aufnahme") && location.hash === "#tresor") {
+      if (aufnahme.rec) return aufnahmeStopp();
+      const notizId = t.aktiv;
+      return aufnahmeStart({ speichern: async (name, typ, b64) => { const n = await client.tresorAnhangBytes(notizId, name, typ, b64); Object.assign(state.tresor.notizen.find((x) => x.id === n.id), n); } }, tresorMeldung);
+    }
     if (b.hasAttribute("data-tresor-anhang")) {
-      const pfad = await client.dateiWaehlen("Scan oder Dokument in den Tresor legen"); if (!pfad) return;
+      const pfad = await client.dateiWaehlen("Foto, Scan oder Dokument in den Tresor legen"); if (!pfad) return;
       tresorMeldung("Verschlüssele und lege ab …");
       const n = await client.tresorAnhangAusDatei(t.aktiv, pfad); Object.assign(t.notizen.find((x) => x.id === n.id), n);
       return tresorMeldung("Anhang abgelegt. Das Original liegt noch dort, wo es war – wenn du es nur im Tresor willst, lösch es dort.", "ok");
@@ -579,9 +630,8 @@ async function tresorAktion(b) {
       if (t.vorschau?.id === id) { vorschauFrei(); return render(); }
       const n = t.notizen.find((x) => x.id === t.aktiv); const a = n.anhaenge.find((x) => x.id === id);
       const b64 = await client.tresorAnhangLesen(id);
-      const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
       vorschauFrei();
-      t.vorschau = { id, typ: a.typ, name: a.name, url: URL.createObjectURL(new Blob([bytes], { type: a.typ })), text: a.typ.startsWith("text/") ? new TextDecoder().decode(bytes) : null };
+      t.vorschau = vorschauAus(a, b64);
       return render();
     }
     if (b.dataset.tresorAnhangLoeschen) { if (!confirm("Anhang endgültig löschen?")) return; const n = await client.tresorAnhangLoeschen(t.aktiv, b.dataset.tresorAnhangLoeschen); Object.assign(t.notizen.find((x) => x.id === n.id), n); vorschauFrei(); return render(); }
@@ -798,8 +848,8 @@ function beiKlick(e) {
   if (!b) return;
   if (b.dataset.filter) { state.filter = b.dataset.filter; render(); }
   if (b.dataset.install) installiereMitMeldung(b.dataset.install, "bib-msg");
-  if ([...b.attributes].some((a) => a.name.startsWith("data-tresor"))) return tresorAktion(b);
-  if ([...b.attributes].some((a) => a.name.startsWith("data-notiz"))) return notizAktion(b);
+  if ([...b.attributes].some((a) => a.name.startsWith("data-tresor")) || (b.hasAttribute("data-aufnahme") && location.hash === "#tresor")) return tresorAktion(b);
+  if ([...b.attributes].some((a) => a.name.startsWith("data-notiz")) || (b.hasAttribute("data-aufnahme") && location.hash === "#notizen")) return notizAktion(b);
   if (b.hasAttribute("data-lesen-zurueck")) { try { document.getElementById("lesen-rahmen")?.contentWindow.history.back(); } catch {} }
   if (b.hasAttribute("data-lesen-start")) { const f = document.getElementById("lesen-rahmen"); if (f) f.src = state.lesen.url; }
   if (b.hasAttribute("data-lesen-fenster")) client.fensterOeffnen(state.lesen.url, `OFFLINE – ${state.lesen.titel}`).catch(() => {});
@@ -864,17 +914,49 @@ main.addEventListener("input", (e) => {
   }
   if (e.target.id === "notiz-suche") { state.notizSuche = e.target.value; const pos = e.target.selectionStart; render(); const s2 = document.getElementById("notiz-suche"); s2?.focus(); s2?.setSelectionRange(pos, pos); }
 });
+function notizMeldung(text, art = "") { zeige("notiz-msg", text, art); }
+function notizVorschauFrei() { if (state.notizVorschau?.url) URL.revokeObjectURL(state.notizVorschau.url); state.notizVorschau = null; }
 async function notizAktion(b) {
+  const n = state.notizbuch.find((x) => x.id === state.notizAktiv);
+  if (b.hasAttribute("data-aufnahme")) {
+    if (aufnahme.rec) return aufnahmeStopp();
+    if (!n) return;
+    return aufnahmeStart({ speichern: async (name, typ, b64) => { const a = await client.notizAnhangBytes(name, typ, b64); (n.anhaenge ??= []).push(a); n.geaendert = new Date().toISOString(); notizbuchSpeichern(); render(); } }, notizMeldung);
+  }
+  if (b.hasAttribute("data-notiz-anhang")) {
+    if (!n) return;
+    const pfad = await client.dateiWaehlen("Foto oder Datei zur Notiz"); if (!pfad) return;
+    try { const a = await client.notizAnhangAusDatei(pfad); (n.anhaenge ??= []).push(a); n.geaendert = new Date().toISOString(); notizbuchSpeichern(); render(); } catch (e) { notizMeldung(esc(String(e?.message ?? e)), "err"); }
+    return;
+  }
+  if (b.dataset.notizAnzeigen) {
+    const id = b.dataset.notizAnzeigen;
+    if (state.notizVorschau?.id === id) { notizVorschauFrei(); return render(); }
+    const a = n?.anhaenge?.find((x) => x.id === id); if (!a) return;
+    try { const b64 = await client.notizAnhangLesen(id); notizVorschauFrei(); state.notizVorschau = vorschauAus(a, b64); render(); } catch (e) { notizMeldung(esc(String(e?.message ?? e)), "err"); }
+    return;
+  }
+  if (b.dataset.notizAnhangLoeschen) {
+    if (!n || !confirm("Anhang löschen?")) return;
+    await client.notizAnhangLoeschen(b.dataset.notizAnhangLoeschen).catch(() => {});
+    n.anhaenge = (n.anhaenge ?? []).filter((x) => x.id !== b.dataset.notizAnhangLoeschen); notizbuchSpeichern(); notizVorschauFrei(); return render();
+  }
   if (b.hasAttribute("data-notiz-neu")) { const n = { id: notizId(), titel: "", text: "", geaendert: new Date().toISOString() }; state.notizbuch.push(n); state.notizAktiv = n.id; notizbuchSpeichern(); render(); document.getElementById("notiz-titel")?.focus(); return; }
-  if (b.dataset.notiz) { state.notizAktiv = b.dataset.notiz; return render(); }
-  if (b.dataset.notizLoeschen) { if (!confirm("Diese Notiz löschen?")) return; state.notizbuch = state.notizbuch.filter((x) => x.id !== b.dataset.notizLoeschen); state.notizAktiv = null; notizbuchSpeichern(); return render(); }
+  if (b.dataset.notiz) { state.notizAktiv = b.dataset.notiz; notizVorschauFrei(); return render(); }
+  if (b.dataset.notizLoeschen) {
+    if (!confirm("Diese Notiz samt Anhängen löschen?")) return;
+    const weg = state.notizbuch.find((x) => x.id === b.dataset.notizLoeschen);
+    for (const a of weg?.anhaenge ?? []) client.notizAnhangLoeschen?.(a.id).catch(() => {});
+    state.notizbuch = state.notizbuch.filter((x) => x.id !== b.dataset.notizLoeschen); state.notizAktiv = null; notizbuchSpeichern(); notizVorschauFrei(); return render();
+  }
   if (b.dataset.notizInTresor) {
     const n = state.notizbuch.find((x) => x.id === b.dataset.notizInTresor); if (!n) return;
     try {
       const st = await client.tresorStatus();
       if (!st.existiert || !st.offen) { alert(st.existiert ? "Bitte zuerst den Tresor öffnen, dann noch einmal „In den Tresor“." : "Bitte zuerst einen Tresor anlegen (Seite „Tresor“)."); return; }
-      await client.tresorNotizSchreiben({ id: "", titel: n.titel, text: n.text, reihe: 0, geaendert: "", anhaenge: [] });
-      state.notizbuch = state.notizbuch.filter((x) => x.id !== n.id); state.notizAktiv = null; notizbuchSpeichern();
+      const neu = await client.tresorNotizSchreiben({ id: "", titel: n.titel, text: n.text, reihe: 0, geaendert: "", anhaenge: [] });
+      for (const a of n.anhaenge ?? []) { const b64 = await client.notizAnhangLesen(a.id); await client.tresorAnhangBytes(neu.id, a.name, a.typ, b64); await client.notizAnhangLoeschen(a.id).catch(() => {}); }
+      state.notizbuch = state.notizbuch.filter((x) => x.id !== n.id); state.notizAktiv = null; notizbuchSpeichern(); notizVorschauFrei();
       state.tresor.status = null; // beim nächsten Öffnen der Tresor-Seite neu laden
       render();
     } catch (e) { alert("Nicht verschoben: " + String(e?.message ?? e)); }

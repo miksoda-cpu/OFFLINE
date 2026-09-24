@@ -138,6 +138,11 @@ export const tresorNotizLoeschen = (id) => invoke("tresor_notiz_loeschen", { id 
 export const tresorNotfallmappe = () => invoke("tresor_notfallmappe");
 export const tresorAnhangAusDatei = (notizId, pfad) => invoke("tresor_anhang_aus_datei", { notizId, pfad });
 export const tresorAnhangLesen = (id) => invoke("tresor_anhang_lesen", { id });
+export const tresorAnhangBytes = (notizId, name, typ, b64) => invoke("tresor_anhang_bytes", { notizId, name, typ, b64 });
+export const notizAnhangAusDatei = (pfad) => invoke("notiz_anhang_aus_datei", { pfad });
+export const notizAnhangBytes = (name, typ, b64) => invoke("notiz_anhang_bytes", { name, typ, b64 });
+export const notizAnhangLesen = (id) => invoke("notiz_anhang_lesen", { id });
+export const notizAnhangLoeschen = (id) => invoke("notiz_anhang_loeschen", { id });
 export const tresorAnhangLoeschen = (notizId, id) => invoke("tresor_anhang_loeschen", { notizId, id });
 export const tresorPasswortAendern = (altes, neues) => invoke("tresor_passwort_aendern", { altes, neues });
 export const tresorCodeErneuern = (passwort) => invoke("tresor_code_erneuern", { passwort });
@@ -147,7 +152,7 @@ export function beiTresorGesperrt(cb) {
   T.event.listen("tresor-gesperrt", (ev) => cb(ev.payload));
 }
 export async function dateiWaehlen(titel = "Datei wählen") {
-  return T.dialog.open({ directory: false, multiple: false, title: titel, filters: [{ name: "Scans und Dokumente", extensions: ["pdf", "jpg", "jpeg", "png", "webp", "heic", "gif", "txt"] }] });
+  return T.dialog.open({ directory: false, multiple: false, title: titel, filters: [{ name: "Fotos, Scans und Dokumente", extensions: ["pdf", "jpg", "jpeg", "png", "webp", "heic", "gif", "txt", "m4a", "mp3", "wav", "webm", "ogg"] }] });
 }
 
 export function beiAboErgebnis(cb) {
