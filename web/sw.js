@@ -1,5 +1,5 @@
 // OFFLINE Service Worker: App-Hülle vorab speichern, Kartenkacheln beim Ansehen merken.
-const VERSION = "offline-v3";
+const VERSION = "offline-v4";
 const HUELLE = [
   "/", "/index.html", "/app.html", "/app.js", "/styles.css", "/icon.svg",
   "/manifest.webmanifest", "/anmeldung.js", "/datenschutz.html", "/paket-kern.js", "/paket-client.js", "/schluessel/oeffentlich.json",
@@ -10,7 +10,11 @@ const KACHELN = "offline-kacheln";
 const MAX_KACHELN = 800;
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(HUELLE)).then(() => self.skipWaiting()));
+  // Eigene Dateien müssen da sein; Fremdes (Kartenbibliothek) darf fehlen, sonst wäre die App in gefilterten Netzen nie offline-fähig.
+  e.waitUntil(caches.open(VERSION).then(async (c) => {
+    await c.addAll(HUELLE.filter((u) => u.startsWith("/")));
+    await Promise.allSettled(HUELLE.filter((u) => !u.startsWith("/")).map((u) => c.add(u)));
+  }).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (e) => {
@@ -51,6 +55,6 @@ self.addEventListener("fetch", (e) => {
         }
         return res;
       })
-      .catch(() => caches.match(req, { ignoreSearch: true }).then((hit) => hit || caches.match("/app.html"))),
+      .catch(() => caches.match(req, { ignoreSearch: true }).then((hit) => hit || (req.mode === "navigate" ? caches.match("/app.html") : Response.error()))),
   );
 });

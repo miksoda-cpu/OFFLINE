@@ -231,6 +231,15 @@ const seiten = {
       </div>
       ${desktop ? `<div class="card" style="margin-top:1rem"><h3>Speicherort</h3><p class="muted" style="margin:0 0 .5rem">Pakete liegen in <span class="mono" style="font-size:.85rem">${esc(desktop.datenordner)}</span>. Für große Pakete (Wikipedia, Karten) kann das eine externe Platte sein.</p>
         <button class="btn btn-sm" data-speicherort>Ordner wählen …</button> <button class="btn btn-sm" data-speicherort-standard>Standard</button><p class="form-msg" id="ort-msg"></p></div>` : ""}
+      ${desktop ? "" : `<div class="card" style="margin-top:1rem"><h3>Werkzeuge</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+          <button class="btn btn-sm btn-primary" data-offline-pruefen>Offline-Bereitschaft prüfen</button>
+          <button class="btn btn-sm" data-app-installieren>Als App installieren</button>
+          <button class="btn btn-sm" data-zuruecksetzen>Alles zurücksetzen</button>
+          <button class="btn btn-sm" data-loeschen style="color:var(--accent);border-color:var(--accent)">Restlos löschen &amp; deinstallieren</button>
+        </div>
+        <p class="muted" style="font-size:.85rem;margin:.6rem 0 0">„Zurücksetzen“ löscht alles und lädt OFFLINE frisch. „Restlos löschen“ entfernt alle Daten und die Offline-Kopie – doppelt gesichert, damit nichts aus Versehen verschwindet.</p>
+        <p class="form-msg" id="werkzeug-msg" role="status" aria-live="polite"></p></div>`}
       <p class="muted" style="margin-top:1rem;font-size:.9rem">So läuft ein Update: Katalog laden → Signatur prüfen → Manifest gegen Katalog und Signatur prüfen → nur geänderte Dateien laden → jede Datei gegen ihre Prüfsumme prüfen → erst dann den alten Stand ersetzen. Details: <a href="https://github.com/miksoda-cpu/OFFLINE/blob/claude/optimistic-hypatia-yymcne/docs/PAKETFORMAT.md" rel="noopener">Paketformat</a>.</p>`;
   },
 };
@@ -315,6 +324,79 @@ async function updatesJetztDesktop() {
   render();
 }
 
+// ---------- Werkzeuge (Browser) ----------
+const HUELLE = ["/app.html", "/app.js", "/styles.css", "/paket-kern.js", "/paket-client.js", "/schluessel/oeffentlich.json", "/icon.svg", "/manifest.webmanifest"];
+let installAufforderung = null;
+addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installAufforderung = e; });
+
+async function offlinePruefen() {
+  zeige("werkzeug-msg", "Prüfe …", "");
+  const fehlt = [];
+  if (!("caches" in window)) { zeige("werkzeug-msg", "Dieser Browser kann die App nicht offline speichern.", "err"); return; }
+  const sw = await navigator.serviceWorker?.getRegistration();
+  if (!sw) fehlt.push("Offline-Dienst (Service Worker) nicht aktiv – Seite einmal neu laden");
+  for (const u of HUELLE) if (!(await caches.match(u, { ignoreSearch: true }))) fehlt.push(u);
+  const paket = P();
+  if (!paket) fehlt.push("Österreich-Paket nicht installiert");
+  if (fehlt.length) {
+    zeige("werkzeug-msg", `Noch nicht bereit. Es fehlt: ${fehlt.map(esc).join(", ")}. Tipp: Seite neu laden, kurz warten, noch einmal prüfen.`, "err");
+  } else {
+    zeige("werkzeug-msg", `Bereit für den Offline-Betrieb: App (${HUELLE.length} Dateien) und ${esc(paket.manifest.titel)} ${esc(paket.manifest.version)} sind auf diesem Gerät gespeichert. Du kannst das Internet abschalten – Notfall, Vorsorge, Bibliothek und Notizen bleiben da. Nur die Karte braucht im Prototyp noch Netz.`, "ok");
+  }
+}
+
+async function appInstallieren() {
+  if (matchMedia("(display-mode: standalone)").matches) { zeige("werkzeug-msg", "OFFLINE läuft bereits als App.", "ok"); return; }
+  if (installAufforderung) {
+    installAufforderung.prompt();
+    const { outcome } = await installAufforderung.userChoice;
+    installAufforderung = null;
+    zeige("werkzeug-msg", outcome === "accepted" ? "Installiert – OFFLINE erscheint jetzt wie ein Programm." : "Abgebrochen. Du kannst es jederzeit wieder versuchen.", outcome === "accepted" ? "ok" : "err");
+    return;
+  }
+  const safari = /safari/i.test(navigator.userAgent) && !/chrome|chromium|crios/i.test(navigator.userAgent);
+  zeige("werkzeug-msg", safari
+    ? "In Safari: Menü „Ablage“ → „Zum Dock hinzufügen“ (Mac) oder Teilen-Symbol → „Zum Home-Bildschirm“ (iPhone/iPad)."
+    : "Chrome: Menü (⋮) → „OFFLINE installieren“ – oder das kleine Installieren-Symbol rechts in der Adressleiste.", "");
+}
+
+async function zuruecksetzen() {
+  if (!confirm("Alle Pakete, Einstellungen, Notizen und die Checkliste auf diesem Gerät löschen und OFFLINE frisch laden?")) return;
+  await allesEntfernen();
+  location.href = "/app.html#start";
+  location.reload();
+}
+
+async function allesEntfernen() {
+  try { localStorage.clear(); sessionStorage.clear(); } catch { /* egal */ }
+  if ("caches" in window) for (const k of await caches.keys()) await caches.delete(k);
+  const regs = (await navigator.serviceWorker?.getRegistrations?.()) ?? [];
+  for (const r of regs) await r.unregister();
+  if (indexedDB?.databases) for (const db of await indexedDB.databases()) if (db.name) indexedDB.deleteDatabase(db.name);
+}
+
+async function restlosLoeschen() {
+  // Sicherung 1: Wort eintippen. Sicherung 2: nochmals bestätigen.
+  const wort = prompt("Das entfernt OFFLINE mit allen Paketen, Notizen und Einstellungen von diesem Gerät.\n\nZur Sicherheit bitte LÖSCHEN eintippen:");
+  if (wort === null) return;
+  if (wort.trim().toUpperCase() !== "LÖSCHEN") { zeige("werkzeug-msg", "Nicht gelöscht – das Wort stimmte nicht.", "err"); return; }
+  if (!confirm("Wirklich alles restlos löschen? Das lässt sich nicht rückgängig machen.")) { zeige("werkzeug-msg", "Abgebrochen – nichts gelöscht.", ""); return; }
+  await allesEntfernen();
+  const mac = /Mac/.test(navigator.platform);
+  document.body.innerHTML = `<div class="wrap" style="padding:3rem 16px;max-width:40rem">
+    <a class="brand" href="/"><span class="brand-flag" aria-hidden="true"></span>OFFLINE</a>
+    <h1 style="font-size:1.8rem;margin-top:1.5rem">Alles gelöscht.</h1>
+    <p class="muted">Pakete, Notizen, Checkliste, Einstellungen und die Offline-Kopie der App sind von diesem Gerät entfernt.</p>
+    <div class="card"><h3>Letzter Schritt: das App-Symbol entfernen</h3>
+      <p class="muted" style="margin:0">Falls du OFFLINE als App installiert hattest, ist noch das Symbol da. Es geht nur von Hand:</p>
+      <ul class="muted" style="padding-left:1.1rem;margin:.5rem 0 0">
+        <li><strong>Chrome:</strong> In der App oben rechts das Menü (⋮) → „OFFLINE deinstallieren“. Oder <span class="mono">chrome://apps</span> aufrufen, Rechtsklick auf OFFLINE → „Aus Chrome entfernen“.</li>
+        <li><strong>${mac ? "Mac" : "Windows"}:</strong> ${mac ? "Im Ordner „Programme“ (bzw. Programme → Chrome-Apps) OFFLINE in den Papierkorb ziehen." : "Einstellungen → Apps → OFFLINE → Deinstallieren."}</li>
+        <li><strong>Safari:</strong> Das Symbol im Dock rechtsklicken → „Aus dem Dock entfernen“, dann im Ordner „Programme“ löschen.</li>
+      </ul></div>
+    <p style="margin-top:1.5rem"><a class="btn" href="/">Zur Startseite</a></p></div>`;
+}
+
 function zeige(id, html, art) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -387,6 +469,10 @@ main.addEventListener("click", (e) => {
   if (b.hasAttribute("data-katalog")) pruefeUpdates();
   if (b.id === "jetzt") { b.disabled = true; b.textContent = "Prüfe …"; desktop ? updatesJetztDesktop() : pruefeUpdates(); }
   if (b.hasAttribute("data-abbrechen")) client.abbrechen();
+  if (b.hasAttribute("data-offline-pruefen")) offlinePruefen();
+  if (b.hasAttribute("data-app-installieren")) appInstallieren();
+  if (b.hasAttribute("data-zuruecksetzen")) zuruecksetzen();
+  if (b.hasAttribute("data-loeschen")) restlosLoeschen();
   if (b.hasAttribute("data-speicherort")) client.ordnerWaehlen("Ordner für Pakete wählen (z. B. externe Platte)").then((p) => p && speicherortSetzen(p));
   if (b.hasAttribute("data-speicherort-standard")) speicherortSetzen(null);
 });
