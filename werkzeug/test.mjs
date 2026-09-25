@@ -140,7 +140,10 @@ test("Katalog: bauen, prüfen, Rollback-Schutz, Ablauf", async () => {
   const q = await quelle({ "a.json": "1" });
   const ziel = await mkdtemp(path.join(os.tmpdir(), "offline-k-"));
   const { ziel: ordner } = await paketBauen(q, ziel, privat);
-  const jetzt = new Date("2026-09-24T12:00:00Z");
+  // relativ zum echten Datum, weil der Testschlüssel ab „heute“ gilt (gueltig_ab)
+  const jetzt = new Date(); jetzt.setUTCHours(12, 0, 0, 0);
+  const morgen = new Date(jetzt.getTime() + 86400000).toISOString();
+  const inEinemJahr = new Date(jetzt.getTime() + 400 * 86400000);
   const { katalog, bytes, sig } = await katalogBauen([ordner], {
     basis: "https://example.org/pakete/", bekannte, privat, jetzt,
     geplant: [{ id: "wiki-de", titel: "Wikipedia", art: "zim", pro: false, groesse: 1 }],
@@ -149,8 +152,8 @@ test("Katalog: bauen, prüfen, Rollback-Schutz, Ablauf", async () => {
   assert.equal(katalog.pakete[0].sha256_manifest, sha256(await readFile(path.join(ordner, "paket.json"))));
   assert.equal(katalog.pakete[1].status, "geplant");
   assert.ok(katalogPruefen(bytes, sig, bekannte, { jetzt }).ok);
-  assert.match(katalogPruefen(bytes, sig, bekannte, { jetzt, zuletztErstellt: "2026-09-25T00:00:00Z" }).grund, /Rollback/);
-  assert.equal(katalogPruefen(bytes, sig, bekannte, { jetzt: new Date("2027-06-01") }).veraltet, true);
+  assert.match(katalogPruefen(bytes, sig, bekannte, { jetzt, zuletztErstellt: morgen }).grund, /Rollback/);
+  assert.equal(katalogPruefen(bytes, sig, bekannte, { jetzt: inEinemJahr }).veraltet, true);
   assert.equal(katalogPruefen(Buffer.from(bytes.toString() + " "), sig, bekannte, { jetzt }).ok, false);
   await assert.rejects(katalogBauen([ordner, ordner], { basis: "x", bekannte, privat, jetzt }), /doppelte/);
   await rm(q, { recursive: true }); await rm(ziel, { recursive: true });
