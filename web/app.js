@@ -1084,7 +1084,7 @@ async function notizAktion(b) {
 
 menu.addEventListener("click", () => { const open = sidebar.classList.toggle("open"); menu.setAttribute("aria-expanded", String(open)); });
 
-const APP_VERSION = "0.1.3";
+const APP_VERSION = "0.1.4";
 function netz() {
   const on = navigator.onLine;
   document.getElementById("net-dot").className = "dot " + (on ? "on" : "off");

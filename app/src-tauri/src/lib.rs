@@ -575,7 +575,7 @@ fn ort_pruefen(ort: &Path) -> Option<String> {
     let s = ort.display().to_string();
     if cfg!(target_os = "macos") {
         if s.starts_with("/Volumes/") { return Some("Die App läuft direkt aus dem Installationsabbild (DMG). Bitte zuerst in den Ordner „Programme“ ziehen, das Abbild auswerfen und von dort starten – sonst kann sie sich nicht aktualisieren.".into()); }
-        if s.contains("/AppTranslocation/") { return Some("macOS führt die App an einem geschützten Zwischenort aus. Bitte mit dem Finder in den Ordner „Programme“ verschieben und von dort starten.".into()); }
+        if s.contains("/AppTranslocation/") { return Some("macOS führt die App an einem geschützten Zwischenort aus (App-Translocation), weil sie noch als Download markiert ist. Einmalig im Terminal: xattr -dr com.apple.quarantine /Applications/OFFLINE.app – dann OFFLINE neu starten.".into()); }
         if s.contains("/Downloads/") { return Some("Die App läuft aus dem Download-Ordner. Bitte in den Ordner „Programme“ verschieben, damit Updates funktionieren.".into()); }
     }
     // Schreibprobe im Ordner des Programms
