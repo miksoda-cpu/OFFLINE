@@ -428,7 +428,9 @@ function appUpdateKarte() {
     case "fehler": inhalt = `<span class="tag tag-pro">Fehler</span> <span class="muted">${esc(u.text)}</span>`; break;
     default: inhalt = `<span class="muted">Die App holt sich neue Versionen selbst – signiert, vom selben Server wie die Pakete.</span>`;
   }
-  const laeuft = u.status === "pruefe" || u.status === "laedt";
+  const ortProblem = desktop?.info?.ort_problem;
+  if (ortProblem) inhalt = `<span class="tag tag-warn">Falscher Ort</span> <span>${esc(ortProblem)}</span><br><span class="muted mono" style="font-size:.8rem">${esc(desktop.info.ort)}</span>`;
+  const laeuft = u.status === "pruefe" || u.status === "laedt" || !!ortProblem;
   return `<div class="card" style="margin-top:1rem"><div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap"><h3 style="margin:0">App-Update</h3>
     <button class="btn btn-sm" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>
     <p style="margin:.6rem 0 0" id="app-update-inhalt">${inhalt}</p></div>`;
@@ -445,6 +447,7 @@ async function appUpdatePruefen() {
 
 async function appUpdateInstallieren() {
   const info = state.appUpdate?.info; if (!info) return;
+  if (desktop?.info?.ort_problem) { state.appUpdate = { status: "fehler", text: desktop.info.ort_problem }; render(); return; }
   state.appUpdate = { status: "laedt", info, fortschritt: null }; render();
   try {
     await client.appUpdateInstallieren((f) => {
@@ -1093,8 +1096,10 @@ async function appAngaben() {
   if (desktop) {
     try {
       const i = await client.appInfo();
+      desktop.info = i;
       el.textContent = `Desktop-App ${i.version} · ${i.system} ${i.arch} · Tauri ${i.tauri}`;
-      el.title = `Datenordner: ${desktop.datenordner}`;
+      el.title = `Programm: ${i.ort}\nDatenordner: ${desktop.datenordner}`;
+      if (i.ort_problem && location.hash === "#updates") render();
       return;
     } catch {}
   }

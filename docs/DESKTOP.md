@@ -80,6 +80,8 @@ Unter **Updates & Abo → App-Update → „Nach neuer Version suchen“** fragt
 
 Ohne das Secret laufen die Builds weiter (mit Warnung), erzeugen aber keine Updater-Dateien; der Tag-Lauf bricht dann im Schritt „Veröffentlichen“ ab.
 
+**macOS: Die App muss im Ordner „Programme“ liegen.** Läuft sie direkt aus dem DMG, aus „Downloads“ oder an einem von macOS zugewiesenen Zwischenort (App-Translocation), kann sie sich nicht selbst austauschen („Read-only file system (os error 30)“). Das DMG enthält deshalb einen Verweis „Programme“ zum Hineinziehen, und die App zeigt unter App-Update einen Hinweis mit dem tatsächlichen Ort, solange sie am falschen Platz läuft.
+
 Der private Updater-Schlüssel liegt **nicht** im Repository. Der öffentliche steht in `tauri.conf.json` unter `plugins.updater.pubkey`. Geht der private verloren, können installierte Apps keine Updates mehr annehmen – dann hilft nur ein neuer Schlüssel und eine manuelle Neuinstallation bei allen. Zwei Kopien an zwei Orten.
 
 ## Installer bauen – GitHub Actions

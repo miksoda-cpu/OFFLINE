@@ -138,7 +138,9 @@ jobs:
           # 4) frisches DMG aus dem signierten Bundle (ein DMG bewahrt Rechte und Struktur – ein ZIP nicht immer)
           mkdir -p dist
           name="OFFLINE-$(echo '${{ matrix.name }}' | tr ' ' '-')"
-          hdiutil create -volname OFFLINE -srcfolder "$app" -ov -format UDZO "dist/$name.dmg"
+          # DMG mit dem Bundle und einem Verweis auf „Programme“, damit man die App hineinzieht statt sie vom Abbild zu starten
+          rm -rf dmg-inhalt && mkdir dmg-inhalt && cp -R "$app" dmg-inhalt/ && ln -s /Applications "dmg-inhalt/Programme"
+          hdiutil create -volname OFFLINE -srcfolder dmg-inhalt -ov -format UDZO "dist/$name.dmg"
           # 5) Updater-Datei aus dem *signierten* Bundle (die von Tauri erzeugte enthält das unsignierte) und mit dem Updater-Schlüssel signieren
           if [ "${{ steps.updater.outputs.aktiv }}" = "ja" ]; then
             tgz="dist/OFFLINE-${{ matrix.plattform }}.app.tar.gz"

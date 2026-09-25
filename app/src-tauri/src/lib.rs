@@ -568,14 +568,34 @@ fn app_neustart(app: AppHandle) {
 }
 
 #[derive(Serialize)]
-struct AppInfo { version: &'static str, tauri: &'static str, system: &'static str, arch: &'static str }
+struct AppInfo { version: &'static str, tauri: &'static str, system: &'static str, arch: &'static str, ort: String, ort_problem: Option<String> }
+
+/// Läuft die App von einem Ort, an dem sie sich nicht selbst aktualisieren kann? (DMG, App-Translocation, Downloads)
+fn ort_pruefen(ort: &Path) -> Option<String> {
+    let s = ort.display().to_string();
+    if cfg!(target_os = "macos") {
+        if s.starts_with("/Volumes/") { return Some("Die App läuft direkt aus dem Installationsabbild (DMG). Bitte zuerst in den Ordner „Programme“ ziehen, das Abbild auswerfen und von dort starten – sonst kann sie sich nicht aktualisieren.".into()); }
+        if s.contains("/AppTranslocation/") { return Some("macOS führt die App an einem geschützten Zwischenort aus. Bitte mit dem Finder in den Ordner „Programme“ verschieben und von dort starten.".into()); }
+        if s.contains("/Downloads/") { return Some("Die App läuft aus dem Download-Ordner. Bitte in den Ordner „Programme“ verschieben, damit Updates funktionieren.".into()); }
+    }
+    // Schreibprobe im Ordner des Programms
+    let ordner = ort.parent().map(Path::to_path_buf).unwrap_or_else(|| ort.to_path_buf());
+    if !cfg!(target_os = "macos") { return None; }
+    match std::fs::metadata(&ordner) { Ok(md) if md.permissions().readonly() => Some("Der Ordner der App ist schreibgeschützt – Updates können dort nicht eingespielt werden.".into()), _ => None }
+}
 
 /// Version und Plattform der App – für die Statuszeile.
 #[tauri::command]
 fn app_info() -> AppInfo {
     let system = match std::env::consts::OS { "macos" => "macOS", "windows" => "Windows", "linux" => "Linux", s => s };
     let arch = match std::env::consts::ARCH { "aarch64" => "Apple Silicon", "x86_64" => "x86_64", a => a };
-    AppInfo { version: env!("CARGO_PKG_VERSION"), tauri: tauri::VERSION, system, arch }
+    let ort = std::env::current_exe().ok().and_then(|p| {
+        // auf macOS das .app-Bundle statt der Binärdatei darin
+        let s = p.display().to_string();
+        s.find(".app/").map(|i| PathBuf::from(&s[..i + 4])).or(Some(p))
+    }).unwrap_or_default();
+    let ort_problem = ort_pruefen(&ort);
+    AppInfo { version: env!("CARGO_PKG_VERSION"), tauri: tauri::VERSION, system, arch, ort: ort.display().to_string(), ort_problem }
 }
 
 #[tauri::command]
