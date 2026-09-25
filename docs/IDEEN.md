@@ -46,7 +46,7 @@ Was davon wohin gehört. „Paket“ heißt: Inhalt kommt signiert über den Kat
 | Idee | Art | Aufwand | Wann |
 |---|---|---|---|
 | Tresor und Notfallmappe | App (Kern + Oberfläche), siehe [TRESOR.md](TRESOR.md) | groß | Phase 4b |
-| Radioseite, Sonnen- und Mondzeiten, Rechner und Einheiten, Kochmaße | App (nur Oberfläche, reine Berechnung oder Text) | klein | Phase 4b, nebenbei |
+| Radioseite, Sonnen- und Mondzeiten, Rechner und Einheiten, Kochmaße | App (nur Oberfläche, reine Berechnung oder Text) | klein | **erledigt 25.09.2026**: Seite „Werkzeuge“ (Radio mit merkbaren Frequenzen je Bundesland, Sonne/Mond nach NOAA-Verfahren für die Landeshauptstadt, Einheiten, Kochmaße, Vorratsrechner) |
 | Kartenspiel-Regeln, Liederbuch, Wörterbuch (Wiktionary-ZIM) | Paket | klein | sobald der Katalog steht, Texte müssen geschrieben werden |
 | Hörbücher (LibriVox) | Paket, Abspielen im Fenster | klein, Rechtsfrage offen | nach Anwaltsantwort |
 | Fotoimport und Familienalbum | App (Kern kopiert Originale in den Datenordner, Oberfläche zeigt Raster) | mittel | Phase 5 |

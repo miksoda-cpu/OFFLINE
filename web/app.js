@@ -35,6 +35,7 @@ const state = {
   abo: speicher.get("abo", { intervall: "woechentlich", nurWlan: true, fenster: true, von: "02:00", bis: "05:00", aktiv: true }),
   fortschritt: null, // { pfad, geladen, gesamt } während eines Downloads
   lesen: null, // { url, titel } – Leseansicht für kiwix-serve
+  werkzeug: { radio: speicher.get("radio", {}), datum: null, rechner: { art: "laenge", von: "km", nach: "m", wert: "1" }, vorrat: { personen: 2, tage: 14 } },
   tresor: { status: null, notizen: [], aktiv: null, suche: "", code: null, codeGruppen: null, vorschau: null, msg: "", einstellungen: false, sperreMin: 5 },
   download: null, // Seitenleiste: { id, titel, status: laedt|unterbrochen|kaputt|fertig, geladen, gesamt, text }
   bundesland: speicher.get("bundesland", "Wien"),
@@ -71,12 +72,13 @@ const I = {
   bibliothek: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>',
   karte: '<path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/>',
   ki: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  werkzeuge: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
   notizen: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
   tresor: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
   updates: '<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
 };
 const ROUTEN = [
-  ["start", "Übersicht"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["bibliothek", "Bibliothek"],
+  ["start", "Übersicht"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
   ["karte", "Karte"], ["ki", "KI-Assistent"], ["notizen", "Notizen"], ["tresor", "Tresor"], ["updates", "Updates & Abo"],
 ];
 const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
@@ -236,6 +238,61 @@ const seiten = {
     return `<div class="lesen-kopf"><a class="btn btn-sm" href="#bibliothek">‹ Bibliothek</a><strong>${esc(l.titel)}</strong>
         <span style="margin-left:auto;display:flex;gap:.4rem"><button class="btn btn-sm" data-lesen-zurueck title="Eine Seite zurück">‹</button><button class="btn btn-sm" data-lesen-start title="Zur Startseite der Bibliothek">Start</button><button class="btn btn-sm" data-lesen-fenster>In eigenem Fenster</button></span></div>
       <iframe id="lesen-rahmen" class="lesen-rahmen" src="${esc(l.url)}" title="${esc(l.titel)}"></iframe>`;
+  },
+
+  werkzeuge() {
+    const w = state.werkzeug;
+    const laender = inhalt(P(), "inhalt/bundeslaender.json")?.laender ?? [];
+    const land = laender.find((l) => l.name === state.bundesland);
+    const koord = HAUPTSTAEDTE[state.bundesland] ?? HAUPTSTAEDTE.Wien;
+    const d = w.datum ? new Date(w.datum + "T12:00:00") : new Date();
+    const sz = sonnenzeiten(koord[0], koord[1], d);
+    const mond = mondphase(d);
+    const r = w.rechner; const art = EINHEITEN[r.art]; const einh = Object.keys(art.e);
+    const von = einh.includes(r.von) ? r.von : einh[0], nach = einh.includes(r.nach) ? r.nach : einh[1];
+    const erg = umrechnen(r.art, parseFloat(String(r.wert).replace(",", ".")), von, nach);
+    const radio = w.radio[state.bundesland] ?? {};
+    const sender = [["oe1", "Ö1"], ["oe2", land?.orf_radio ?? "ORF-Regionalradio"], ["oe3", "Ö3 (Verkehrs- und Krisenfunk)"]];
+    const v = w.vorrat; const wasser = v.personen * v.tage * 2, essen = v.personen * v.tage;
+    return `${kopf("Werkzeuge", "Radio, Sonne und Mond, Rechner – alles ohne Netz.", `<div class="switch" style="border:0;padding:0"><label class="muted" for="bl2">Bundesland</label><select id="bl2">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>`)}
+      <div class="grid grid-2">
+        <div class="card"><h3>📻 Radio im Krisenfall</h3>
+          <p class="muted" style="margin:.3rem 0 .6rem">Fällt Strom und Netz aus, informiert der ORF über Radio – Ö3 ist der Verkehrs- und Krisenfunk, dazu das Landesstudio. Ein <strong>Batterie- oder Kurbelradio</strong> gehört in jede Vorsorge. Die Frequenz hängt vom Sender in deiner Nähe ab: einmal am Radio suchen und hier eintragen, dann steht sie auch ohne Netz da.</p>
+          ${sender.map(([k, name]) => `<div class="switch"><span><strong>${esc(name)}</strong></span><span style="display:flex;align-items:center;gap:.3rem"><input type="text" data-radio="${k}" value="${esc(radio[k] ?? "")}" placeholder="z. B. 99,9" inputmode="decimal" style="width:7.5em;text-align:right" autocomplete="off"> <span class="muted">MHz</span></span></div>`).join("")}
+          <p class="muted" style="margin:.6rem 0 0;font-size:.85rem">Wien: Ö1 92,0 · Radio Wien 89,9 · Ö3 99,9 MHz (Sender Kahlenberg). Digital: DAB+ ist in Ballungsräumen zusätzlich verfügbar, im Blackout aber vom Sendernetz abhängig – UKW bleibt die sicherste Wahl.</p>
+        </div>
+        <div class="card"><h3>☀️ Sonne und Mond</h3>
+          <div class="switch" style="border:0;padding:.2rem 0 .6rem"><label class="muted" for="wz-datum">Tag</label><input type="date" id="wz-datum" value="${esc(w.datum ?? new Date().toISOString().slice(0, 10))}"></div>
+          <div class="grid grid-2" style="gap:.5rem">
+            <div><div class="muted" style="font-size:.85rem">Dämmerung</div><div class="mono">${uhr(sz.daemmerungMorgen)}</div></div>
+            <div><div class="muted" style="font-size:.85rem">Sonnenaufgang</div><div class="mono" style="font-size:1.3rem">${uhr(sz.aufgang)}</div></div>
+            <div><div class="muted" style="font-size:.85rem">Sonnenuntergang</div><div class="mono" style="font-size:1.3rem">${uhr(sz.untergang)}</div></div>
+            <div><div class="muted" style="font-size:.85rem">Dunkel ab</div><div class="mono">${uhr(sz.daemmerungAbend)}</div></div>
+          </div>
+          <p style="margin:.8rem 0 0">${mond.symbol} <strong>${esc(mond.name)}</strong> <span class="muted">· ${mond.beleuchtet} % beleuchtet · Vollmond in ${mond.naechsterVollmond} Tagen, Neumond in ${mond.naechsterNeumond} Tagen</span></p>
+          <p class="muted" style="margin:.5rem 0 0;font-size:.85rem">Berechnet für ${esc(land?.hauptstadt ?? "Wien")}, ohne Internet. Tageslicht: ${sz.aufgang && sz.untergang ? `${Math.round((sz.untergang - sz.aufgang) / 3600000 * 10) / 10} Stunden` : "–"}. Bei Vollmond kann man nachts ohne Lampe gehen – ein Detail, das im Blackout zählt.</p>
+        </div>
+        <div class="card"><h3>🔢 Einheiten umrechnen</h3>
+          <div style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;margin:.4rem 0">
+            <select id="wz-art">${Object.entries(EINHEITEN).map(([k, a]) => `<option value="${k}" ${k === r.art ? "selected" : ""}>${a.name}</option>`).join("")}</select>
+            <input type="text" id="wz-wert" value="${esc(String(r.wert))}" inputmode="decimal" style="width:7em" autocomplete="off">
+            <select id="wz-von">${einh.map((e) => `<option ${e === von ? "selected" : ""}>${esc(e)}</option>`).join("")}</select>
+            <span class="muted">→</span>
+            <select id="wz-nach">${einh.map((e) => `<option ${e === nach ? "selected" : ""}>${esc(e)}</option>`).join("")}</select>
+          </div>
+          <div style="font-size:1.4rem;font-weight:700" id="wz-ergebnis">${zahl(erg)} ${esc(nach)}</div>
+          <details style="margin-top:.8rem"><summary class="muted">Kochmaße</summary><table style="width:100%;margin-top:.4rem;font-size:.9rem;border-collapse:collapse">${KOCHMASSE.map(([a, b]) => `<tr><td style="padding:.2rem 0;border-top:1px solid var(--line)">${esc(a)}</td><td class="mono" style="padding:.2rem 0;border-top:1px solid var(--line);text-align:right">${esc(b)}</td></tr>`).join("")}</table></details>
+        </div>
+        <div class="card"><h3>🥫 Vorratsrechner</h3>
+          <p class="muted" style="margin:.3rem 0 .6rem">Der Zivilschutzverband empfiehlt Vorräte für <strong>14 Tage</strong>: 2 Liter Wasser pro Person und Tag (Trinken und Kochen), dazu haltbare Lebensmittel.</p>
+          <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center"><label>Personen <input type="number" id="wz-personen" min="1" max="20" value="${v.personen}" style="width:4.5em"></label><label>Tage <input type="number" id="wz-tage" min="1" max="60" value="${v.tage}" style="width:4.5em"></label></div>
+          <div class="grid grid-2" style="gap:.5rem;margin-top:.8rem">
+            <div><div class="muted" style="font-size:.85rem">Wasser</div><div class="mono" style="font-size:1.3rem">${wasser} l</div><div class="muted" style="font-size:.8rem">${Math.ceil(wasser / 9)} Kisten à 6 × 1,5 l</div></div>
+            <div><div class="muted" style="font-size:.85rem">Mahlzeiten</div><div class="mono" style="font-size:1.3rem">${essen * 3}</div><div class="muted" style="font-size:.8rem">${essen} Personentage · ca. ${essen * 2000} kcal</div></div>
+          </div>
+          <p class="muted" style="margin:.8rem 0 0;font-size:.85rem">Dazu: Medikamente für 14 Tage, Hygieneartikel, Bargeld in kleinen Scheinen, Taschenlampe, Batterien, Campingkocher. Die Checkliste dazu steht unter <a href="#vorsorge">Vorsorge</a>.</p>
+        </div>
+      </div>`;
   },
 
   bibliothek() {
@@ -476,6 +533,58 @@ async function installiereMitMeldung(id, ziel) {
     if (location.hash === "#updates") { state.meldung = abbruch ? { art: "warn", titel: "Abgebrochen", text: "Der bisherige Stand bleibt gespeichert. Zum Fortsetzen: Bibliothek → Installieren." } : { art: "fehler", titel: "Abgelehnt", text: esc(msg) }; render(); }
   }
 }
+
+// ---------- Werkzeuge ohne Netz: Radio, Sonne & Mond, Rechner ----------
+const HAUPTSTAEDTE = { Wien: [48.21, 16.37], Burgenland: [47.85, 16.52], Kärnten: [46.62, 14.31], Niederösterreich: [48.20, 15.62], Oberösterreich: [48.31, 14.29], Salzburg: [47.80, 13.04], Steiermark: [47.07, 15.44], Tirol: [47.27, 11.40], Vorarlberg: [47.50, 9.75] };
+const RAD = Math.PI / 180;
+// Sonnenauf- und -untergang nach dem NOAA-Verfahren (Genauigkeit ± 1–2 Minuten)
+function sonnenzeiten(lat, lon, d) {
+  // Tage seit J2000 (1.1.2000 12:00 UTC), ganzzahlig für den gewählten Kalendertag
+  const tag = Math.round((Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 12) - Date.UTC(2000, 0, 1, 12)) / 86400000);
+  const berechne = (aufgang, hoehe) => {
+    const jstern = tag + 0.0008 - lon / 360; // mittlerer Sonnenmittag am Ort: östlich früher (UTC)
+    const M = (357.5291 + 0.98560028 * jstern) % 360;
+    const C = 1.9148 * Math.sin(M * RAD) + 0.02 * Math.sin(2 * M * RAD) + 0.0003 * Math.sin(3 * M * RAD);
+    const L = (M + C + 180 + 102.9372) % 360;
+    const transit = 2451545 + jstern + 0.0053 * Math.sin(M * RAD) - 0.0069 * Math.sin(2 * L * RAD);
+    const dekl = Math.asin(Math.sin(L * RAD) * Math.sin(23.4397 * RAD));
+    const cosH = (Math.sin(hoehe * RAD) - Math.sin(lat * RAD) * Math.sin(dekl)) / (Math.cos(lat * RAD) * Math.cos(dekl));
+    if (cosH > 1 || cosH < -1) return null;
+    const H = Math.acos(cosH) / RAD / 360;
+    const jd = transit + (aufgang ? -H : H); // die Länge steckt schon im Sonnenmittag
+    return new Date((jd - 2440587.5) * 86400000);
+  };
+  return { aufgang: berechne(true, -0.833), untergang: berechne(false, -0.833), daemmerungMorgen: berechne(true, -6), daemmerungAbend: berechne(false, -6) };
+}
+function mondphase(d) {
+  const synodisch = 29.530588853;
+  const alter = (((d.getTime() - Date.UTC(2000, 0, 6, 18, 14)) / 86400000) % synodisch + synodisch) % synodisch;
+  const anteil = alter / synodisch;
+  const beleuchtet = Math.round((1 - Math.cos(anteil * 2 * Math.PI)) / 2 * 100);
+  const namen = ["Neumond", "zunehmende Sichel", "erstes Viertel", "zunehmender Mond", "Vollmond", "abnehmender Mond", "letztes Viertel", "abnehmende Sichel"];
+  const symbole = ["🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘"];
+  const i = Math.round(anteil * 8) % 8;
+  return { name: namen[i], symbol: symbole[i], beleuchtet, alter: Math.round(alter), naechsterVollmond: Math.round(((0.5 - anteil + 1) % 1) * synodisch), naechsterNeumond: Math.round(((1 - anteil) % 1) * synodisch) };
+}
+const uhr = (d) => (d ? d.toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit" }) : "–");
+const EINHEITEN = {
+  laenge: { name: "Länge", basis: "m", e: { mm: 0.001, cm: 0.01, m: 1, km: 1000, Zoll: 0.0254, Fuß: 0.3048, Meile: 1609.344, Seemeile: 1852 } },
+  gewicht: { name: "Gewicht", basis: "g", e: { g: 1, dag: 10, kg: 1000, t: 1e6, Unze: 28.3495, Pfund: 453.592 } },
+  volumen: { name: "Volumen", basis: "ml", e: { ml: 1, cl: 10, l: 1000, "TL": 5, "EL": 15, "Tasse (250 ml)": 250, "Cup (US)": 236.6, "Gallone (US)": 3785.41 } },
+  flaeche: { name: "Fläche", basis: "m²", e: { "m²": 1, a: 100, ha: 10000, "km²": 1e6, Joch: 5755 } },
+  temperatur: { name: "Temperatur", basis: "°C", e: { "°C": 1, "°F": 1, K: 1 } },
+};
+function umrechnen(art, wert, von, nach) {
+  if (!Number.isFinite(wert)) return null;
+  if (art === "temperatur") {
+    const c = von === "°C" ? wert : von === "°F" ? (wert - 32) * 5 / 9 : wert - 273.15;
+    return nach === "°C" ? c : nach === "°F" ? c * 9 / 5 + 32 : c + 273.15;
+  }
+  const e = EINHEITEN[art].e;
+  return (wert * e[von]) / e[nach];
+}
+const zahl = (x) => (x === null ? "–" : new Intl.NumberFormat("de-AT", { maximumSignificantDigits: 6 }).format(x));
+const KOCHMASSE = [["1 TL", "5 ml"], ["1 EL", "15 ml"], ["1 Tasse", "250 ml"], ["1 Schuss", "ca. 5 ml"], ["1 Messerspitze", "ca. 0,5 g"], ["1 EL Mehl", "ca. 10 g"], ["1 EL Zucker", "ca. 15 g"], ["1 EL Öl", "ca. 12 g"], ["1 EL Honig", "ca. 20 g"], ["1 Tasse Reis", "ca. 200 g"], ["1 Tasse Mehl", "ca. 130 g"], ["1 Würfel Germ", "42 g = 2 Pkg. Trockengerm"], ["1 Ei (M)", "ca. 55 g"], ["1 Pkg. Backpulver", "ca. 16 g"]];
 
 // ---------- Sprachaufnahme (Diktat) – für Notizen und Tresor ----------
 const aufnahme = { rec: null, teile: [], start: 0, timer: null, ziel: null };
@@ -839,7 +948,12 @@ main.addEventListener("change", (e) => {
   if (t.dataset.check) { state.checks[t.dataset.check] = t.checked; speicher.set("checks", state.checks); render(); }
   if (t.dataset.abo) { state.abo[t.dataset.abo] = t.checked; aboSpeichern(); render(); }
   if (t.dataset.zeit) { state.abo[t.dataset.zeit] = t.value; aboSpeichern(); }
-  if (t.id === "bl") { state.bundesland = t.value; speicher.set("bundesland", t.value); render(); }
+  if (t.id === "bl" || t.id === "bl2") { state.bundesland = t.value; speicher.set("bundesland", t.value); render(); }
+  if (t.id === "wz-datum") { state.werkzeug.datum = t.value || null; render(); }
+  if (t.id === "wz-art") { state.werkzeug.rechner = { ...state.werkzeug.rechner, art: t.value, von: Object.keys(EINHEITEN[t.value].e)[0], nach: Object.keys(EINHEITEN[t.value].e)[1] }; render(); }
+  if (t.id === "wz-von") { state.werkzeug.rechner.von = t.value; render(); }
+  if (t.id === "wz-nach") { state.werkzeug.rechner.nach = t.value; render(); }
+  if (t.id === "wz-personen" || t.id === "wz-tage") { state.werkzeug.vorrat[t.id === "wz-personen" ? "personen" : "tage"] = Math.max(1, +t.value || 1); render(); }
 });
 
 // Klicks in der Hauptfläche und in der Download-Leiste der Seitenleiste
@@ -904,6 +1018,8 @@ main.addEventListener("submit", (e) => {
 function notizbuchSpeichern() { speicher.set("notizbuch", state.notizbuch); }
 let notizTimer = null;
 main.addEventListener("input", (e) => {
+  if (e.target.id === "wz-wert") { state.werkzeug.rechner.wert = e.target.value; const r = state.werkzeug.rechner; const el = document.getElementById("wz-ergebnis"); if (el) el.textContent = `${zahl(umrechnen(r.art, parseFloat(r.wert.replace(",", ".")), r.von, r.nach))} ${r.nach}`; }
+  if (e.target.dataset.radio) { const f = (state.werkzeug.radio[state.bundesland] ??= {}); f[e.target.dataset.radio] = e.target.value.trim(); speicher.set("radio", state.werkzeug.radio); }
   if (e.target.id === "notiz-titel" || e.target.id === "notiz-text") {
     const n = state.notizbuch.find((x) => x.id === state.notizAktiv); if (!n) return;
     n.titel = document.getElementById("notiz-titel").value; n.text = document.getElementById("notiz-text").value; n.geaendert = new Date().toISOString();
