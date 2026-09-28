@@ -29,7 +29,7 @@ const rnd = (n) => Math.floor(Math.random() * n);
 export class Wesen {
   /** @param {{speicher:object, tipps:()=>Array, onLog?:Function}} o */
   constructor(o) {
-    this.sp = o.speicher; this.tippsQuelle = o.tipps;
+    this.sp = o.speicher; this.tippsQuelle = o.tipps; this.onLog = o.onLog;
     this.e = { ...STANDARD, ...(this.sp.get("wesen", {}) || {}) }; this.e.sorten = { ...STANDARD.sorten, ...(this.e.sorten || {}) };
     this.gelernt = this.sp.get("wesen-gelernt", { intervall: 90, gelesen: 0, weitergewischt: 0 });
     this.log = this.sp.get("wesen-log", []);
@@ -175,8 +175,8 @@ export class Wesen {
   buehneHtml() {
     const g = { klein: 144, mittel: 240, gross: 336 }[this.e.groesse] || 240;
     if (!this.mitFigur()) return "";
-    return `<div class="wesen" style="--wb:${g}px"><div class="wesen-buehne"><canvas id="wesen-pixel" width="${B}" height="${H}" role="img" aria-label="${esc(this.e.name)}: ${esc(ZUSTAND_TEXT[this.zustand])}" tabindex="0"></canvas><canvas id="wesen-glut" width="${B}" height="${H}"></canvas>
-      <div class="wesen-blase" id="wesen-blase" role="status" aria-live="polite" hidden></div></div>
+    return `<div class="wesen" style="--wb:${g}px"><div class="wesen-buehne"><canvas id="wesen-pixel" width="${B}" height="${H}" role="img" aria-label="${esc(this.e.name)}: ${esc(ZUSTAND_TEXT[this.zustand])}" tabindex="0"></canvas><canvas id="wesen-glut" width="${B}" height="${H}"></canvas></div>
+      <div class="wesen-blase" id="wesen-blase" role="status" aria-live="polite" hidden></div>
       <div class="wesen-text"><strong>${esc(this.e.name)}</strong> <span class="muted" id="wesen-zustand">${esc(ZUSTAND_TEXT[this.zustand])}</span></div></div>`;
   }
   einbauen() {
@@ -193,7 +193,7 @@ export class Wesen {
     const z = this.zustand; const f = this.frame;
     const grau = this.score < 30;
     const farben = { ...(FELLE[this.e.fell] || FELLE.eisblau) };
-    if (grau) { farben.fell = "#9aa0a6"; farben.bauch = "#c4c8cc"; farben.rand = "#6b7075"; }
+    if (grau) { farben.fell = "#b4bac2"; farben.bauch = "#d6dbe0"; farben.rand = "#7f868f"; }
     const px = (X, Y, col, w = 1, h = 1) => { x.fillStyle = col; x.fillRect(Math.round(X), Math.round(Y), w, h); };
     // Welt: Höhle
     x.fillStyle = "#1c1e23"; x.fillRect(0, 0, B, H);

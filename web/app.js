@@ -66,7 +66,10 @@ const ARTEN = { inhalt: "Österreich", zim: "Bibliothek", karte: "Karten", model
 // ---------- Paketinhalt ----------
 const P = () => installiertesPaket(BASISPAKET);
 const PW = () => installiertesPaket("wir");
-const wesen = new Wesen({ speicher, tipps: () => inhalt(PW(), "inhalt/tipps.json")?.tipps ?? [] });
+const wesen = new Wesen({ speicher, tipps: () => inhalt(PW(), "inhalt/tipps.json")?.tipps ?? [], onLog: () => {
+  const z = document.getElementById("wesen-log-zahl"); if (z) z.textContent = `· ${wesen.log.length}`;
+  const el = document.getElementById("wesen-log"); if (el) el.innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche);
+} });
 
 // Bereit: eine Zahl aus vier Quellen – Checkliste, Notfallmappe, Wissen, Bestätigungen mit Verfall
 function bereit() {
@@ -143,7 +146,7 @@ const seiten = {
         ${b.positionen.map((x) => `<div class="bestaetigung"><span><strong>${esc(x.titel)}</strong><br><span class="muted">${x.status === "gueltig" ? `gültig noch ${x.rest} Tage` : x.status === "verfallen" ? `<span class="tag tag-warn">verfallen</span> seit ${-x.rest} Tagen` : esc(x.hinweis)}</span></span><button class="btn btn-sm ${x.status === "gueltig" ? "" : "btn-primary"}" data-bestaetigen="${x.id}">${x.status === "gueltig" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
       </div>
       ${wesen.aktiv() ? `<details class="card" style="margin-bottom:1rem"><summary><strong>${esc(wesen.e.name)}</strong> <span class="muted">· Einstellungen</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
-      <details class="card" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>Was ${esc(wesen.e.name)} gesagt hat</strong> <span class="muted">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` :
+      <details class="card" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>Was ${esc(wesen.e.name)} gesagt hat</strong> <span class="muted" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` :
       `<details class="card" style="margin-bottom:1rem"><summary><strong>Das Wesen</strong> <span class="muted">· aus</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>`}
       <div class="grid grid-3">
         <a class="card" href="#notfall" style="text-decoration:none;border-color:var(--accent)">
@@ -1139,7 +1142,7 @@ async function notizAktion(b) {
 
 menu.addEventListener("click", () => { const open = sidebar.classList.toggle("open"); menu.setAttribute("aria-expanded", String(open)); });
 
-const APP_VERSION = "0.1.5";
+const APP_VERSION = "0.1.6";
 function netz() {
   const on = navigator.onLine;
   document.getElementById("net-dot").className = "dot " + (on ? "on" : "off");
