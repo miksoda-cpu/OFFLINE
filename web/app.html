@@ -2,7 +2,7 @@
 <html lang="de-AT">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>OFFLINE – Kommandozentrale</title>
   <meta name="description" content="Prototyp der OFFLINE-App: Notrufe, Blackout-Vorsorge, Bibliothek, Karte Österreich, Update-Abo.">
   <meta name="theme-color" content="#c8102e">
@@ -13,10 +13,10 @@
   <link rel="stylesheet" href="/wesen.css">
 </head>
 <body>
-  <div class="proto-banner">Prototyp – so wird die Desktop-App aussehen. <a href="/">Zur Übersicht</a></div>
+  <div class="proto-banner" id="proto-banner">Prototyp – so wird die Desktop-App aussehen. <a href="/">Zur Übersicht</a></div>
   <div class="topbar">
     <a class="brand" href="#start"><span class="brand-flag" aria-hidden="true"></span>OFFLINE</a>
-    <button class="btn btn-sm menu-btn" id="menu" aria-controls="sidebar" aria-expanded="false">Menü</button>
+    <span class="status-zeile" style="gap:.4rem;font-size:.85rem;color:var(--muted)"><span class="dot" id="net-dot-oben"></span><span id="net-text-oben"></span></span>
   </div>
   <div class="app">
     <aside class="sidebar" id="sidebar">
@@ -31,6 +31,9 @@
     </aside>
     <main class="main" id="main" tabindex="-1"></main>
   </div>
+  <nav class="tabbar" id="tabbar" aria-label="Hauptnavigation"></nav>
+  <button class="sheet-hinter" id="sheet-hinter" aria-label="Menü schließen" hidden></button>
+  <button class="menu-btn" id="menu" hidden aria-controls="sidebar" aria-expanded="false">Menü</button>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script type="module" src="/app.js"></script>
 </body>

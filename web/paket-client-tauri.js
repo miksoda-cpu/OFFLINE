@@ -44,6 +44,7 @@ export function installierteIds() {
 function verfuegbareUpdates(katalog) {
   const aus = [];
   for (const [id, p] of cache) {
+    if (!p?.manifest) continue;
     const e = katalog.pakete.find((x) => x.id === id && x.status === "verfuegbar");
     if (e && versionVergleich(e.version, p.manifest.version) > 0) aus.push({ eintrag: e, installiert: p.manifest.version });
   }
@@ -68,6 +69,7 @@ export async function installiere(katalog, eintrag, fortschritt = () => {}) {
   try {
     const e = await invoke("paket_laden", { id: eintrag.id });
     const paket = await invoke("paket_lesen", { id: eintrag.id });
+    if (!paket?.manifest) throw new Error(`Paket ${eintrag.id} nach dem Laden nicht lesbar`);
     cache.set(eintrag.id, paket);
     const d = delta(alt?.manifest ?? null, paket.manifest);
     return { paket, delta: d, geladen: e.kopiert_bytes };
@@ -97,7 +99,8 @@ export async function updatesJetzt() {
 
 export async function einspielenOrdner(pfad, downgrade = false) {
   const e = await invoke("einspielen_ordner", { pfad, downgrade });
-  cache.set(e.id, await invoke("paket_lesen", { id: e.id }));
+  const paket = await invoke("paket_lesen", { id: e.id });
+  if (paket?.manifest) cache.set(e.id, paket);
   return e;
 }
 

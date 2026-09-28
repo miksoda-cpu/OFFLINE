@@ -108,7 +108,12 @@ const ROUTEN = [
 ];
 const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
 document.getElementById("nav").innerHTML = ROUTEN.map(([id, name]) => `<a href="#${id}" data-route="${id}">${icon(id)}${name}</a>`).join("");
+const TABS = ["start", "notfall", "vorsorge", "bibliothek"];
+document.getElementById("tabbar").innerHTML = TABS.map((id) => { const n = ROUTEN.find((r) => r[0] === id)[1]; return `<a href="#${id}" data-route="${id}">${icon(id)}${n}</a>`; }).join("")
+  + `<button type="button" id="tab-mehr" aria-controls="sidebar" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Mehr</button>`;
+if (desktop) document.getElementById("proto-banner")?.remove();
 
+const kachel = (route, farbe, titel, text) => `<a class="kachel kachel-${farbe}" href="#${route}"><span class="kachel-ikon">${icon(route)}</span><svg class="kachel-pfeil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg><span><strong>${titel}</strong><span class="muted">${text}</span></span></a>`;
 const kopf = (titel, text, extra = "") => `<div class="page-head"><div><h1 style="font-size:2rem">${titel}</h1><p>${text}</p></div>${extra}</div>`;
 const fehlt = () => `${kopf("Kein Österreich-Paket", "Dieses Gerät hat noch kein Paket installiert und ist offline.")}
   <div class="card"><p class="muted">Sobald du online bist, lädt OFFLINE das Österreich-Paket automatisch. Oder du gehst in die Bibliothek und installierst es von Hand.</p><a class="btn btn-primary" href="#bibliothek">Zur Bibliothek</a></div>`;
@@ -130,11 +135,11 @@ const seiten = {
     const b = bereit(); wesen.setScore(b); const schritt = naechsterSchritt(b);
     const wl = state.wesenLog;
     return `
-      ${kopf("Servus.", "Alles hier funktioniert ohne Internet.", `<div class="field" style="margin:0"><label for="bl">Dein Bundesland</label>
-          <select id="bl">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>`)}
-      <div class="grid ${wesen.mitFigur() ? "grid-2" : ""}" style="margin-bottom:1rem">
-        ${wesen.mitFigur() ? `<div class="card" id="wesen-karte">${wesen.buehneHtml()}</div>` : ""}
-        <div class="card">
+      <div class="gruss"><div><h1>Servus.</h1><p class="muted">Alles hier funktioniert ohne Internet.</p></div>
+        <select id="bl" aria-label="Dein Bundesland">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>
+      <div class="buehne-kopf" id="wesen-karte">
+        ${wesen.mitFigur() ? wesen.buehneHtml() : ""}
+        <div class="bereit-kopf">
           <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="muted">Bereit</span><span class="muted" style="font-size:.85rem">${b.wert < 30 ? "Anfang" : b.wert < 60 ? "unterwegs" : b.wert < 80 ? "gut" : "bereit"}</span></div>
           <div class="bereit-zahl">${b.wert}</div>
           <div class="progress" style="margin:.4rem 0 .8rem"><div style="width:${b.wert}%"></div></div>
@@ -142,24 +147,20 @@ const seiten = {
           ${b.quellen.map((q) => `<div class="bereit-quelle"><span>${esc(q.name)} <span class="muted">· ${esc(q.text)}</span></span><span class="mono">${q.punkte}/${q.max}</span></div>`).join("")}
         </div>
       </div>
+      <div class="kacheln">
+        ${kachel("notfall", "rose", "Notfall", "112 · 122 · 133 · 144, Sirenen")}
+        ${kachel("vorsorge", "moos", "Vorsorge", `${erledigt} von ${gesamt} erledigt`)}
+        ${kachel("bibliothek", "eisblau", "Bibliothek", `${installierte.length} Paket${installierte.length === 1 ? "" : "e"} am Gerät`)}
+        ${kachel("werkzeuge", "flieder", "Werkzeuge", "Radio, Sonne, Vorrat")}
+      </div>
       <div class="card" style="margin-bottom:1rem"><h3>Bestätigungen</h3><p class="muted" style="margin:.2rem 0 .4rem">Dinge, die verfallen. Einmal bestätigen, dann ist Ruhe, bis es wieder so weit ist.</p>
         ${b.positionen.map((x) => `<div class="bestaetigung"><span><strong>${esc(x.titel)}</strong><br><span class="muted">${x.status === "gueltig" ? `gültig noch ${x.rest} Tage` : x.status === "verfallen" ? `<span class="tag tag-warn">verfallen</span> seit ${-x.rest} Tagen` : esc(x.hinweis)}</span></span><button class="btn btn-sm ${x.status === "gueltig" ? "" : "btn-primary"}" data-bestaetigen="${x.id}">${x.status === "gueltig" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
       </div>
       ${wesen.aktiv() ? `<details class="card" style="margin-bottom:1rem"><summary><strong>${esc(wesen.e.name)}</strong> <span class="muted">· Einstellungen</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
       <details class="card" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>Was ${esc(wesen.e.name)} gesagt hat</strong> <span class="muted" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` :
       `<details class="card" style="margin-bottom:1rem"><summary><strong>Das Wesen</strong> <span class="muted">· aus</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>`}
-      <div class="grid grid-3">
-        <a class="card" href="#notfall" style="text-decoration:none;border-color:var(--accent)">
-          <span class="tag tag-pro">Notfall</span><h3 style="margin-top:.6rem">Notrufe & Sirenen</h3>
-          <p class="muted" style="margin:0">112 · 122 · 133 · 144 und was die Sirenen bedeuten.</p></a>
-        <a class="card" href="#vorsorge" style="text-decoration:none">
-          <span class="tag">${erledigt} / ${gesamt} erledigt</span><h3 style="margin-top:.6rem">Blackout-Vorsorge</h3>
-          <div class="progress"><div style="width:${(erledigt / gesamt) * 100}%"></div></div></a>
-        <a class="card" href="#updates" style="text-decoration:none">
-          <span class="tag ${updates ? "tag-warn" : state.abo.aktiv ? "tag-ok" : "tag-warn"}">${updates ? `${updates} Update${updates > 1 ? "s" : ""} verfügbar` : state.abo.aktiv ? "Abo aktiv" : "Abo pausiert"}</span>
-          <h3 style="margin-top:.6rem">Updates</h3><p class="muted" style="margin:0">${intervallText()} · Paket vom ${datum(p.manifest.erstellt)}</p></a>
-      </div>
-      ${land ? `<div class="card" style="margin-top:1rem"><strong>${esc(land.name)}</strong> <span class="muted">· Landeshauptstadt ${esc(land.hauptstadt)} · im Krisenfall informiert <strong>${esc(land.orf_radio)}</strong></span></div>` : ""}
+      ${updates ? `<a class="card" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted">· ${intervallText()}</span></a>` : ""}
+      ${land ? `<div class="card" style="margin-top:0"><strong>${esc(land.name)}</strong> <span class="muted">· Landeshauptstadt ${esc(land.hauptstadt)} · im Krisenfall informiert <strong>${esc(land.orf_radio)}</strong></span></div>` : ""}
       <h2 style="margin-top:2rem">Installiert</h2>
       <div class="card">
         <div class="storage"><strong>${groesse(belegt)}</strong><div class="progress"><div style="width:${Math.min(100, (belegt / 64e9) * 100)}%"></div></div><span class="muted">${desktop ? esc(desktop.datenordner) : "von 64 GB auf „OFFLINE-Stick“"}</span></div>
@@ -989,6 +990,8 @@ function render() {
   if (seite === "karte") karteStarten();
   sidebar.classList.remove("open");
   menu.setAttribute("aria-expanded", "false");
+  document.getElementById("tab-mehr")?.setAttribute("aria-expanded", "false"); document.getElementById("sheet-hinter").hidden = true;
+  document.querySelectorAll("#tabbar a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
 }
 
 main.addEventListener("change", (e) => {
@@ -1140,13 +1143,18 @@ async function notizAktion(b) {
   }
 }
 
-menu.addEventListener("click", () => { const open = sidebar.classList.toggle("open"); menu.setAttribute("aria-expanded", String(open)); });
+const tabMehr = document.getElementById("tab-mehr"), sheetHinter = document.getElementById("sheet-hinter");
+const blattSetzen = (open) => { sidebar.classList.toggle("open", open); tabMehr.setAttribute("aria-expanded", String(open)); menu.setAttribute("aria-expanded", String(open)); sheetHinter.hidden = !open; };
+menu.addEventListener("click", () => blattSetzen(!sidebar.classList.contains("open")));
+tabMehr.addEventListener("click", () => blattSetzen(!sidebar.classList.contains("open")));
+sheetHinter.addEventListener("click", () => blattSetzen(false));
 
-const APP_VERSION = "0.1.6";
+const APP_VERSION = "0.1.7";
 function netz() {
   const on = navigator.onLine;
   document.getElementById("net-dot").className = "dot " + (on ? "on" : "off");
   document.getElementById("net-text").textContent = on ? "Online – Abo kann laden" : "Offline – alles verfügbar";
+  const d2 = document.getElementById("net-dot-oben"), t2 = document.getElementById("net-text-oben"); if (d2) d2.className = "dot " + (on ? "on" : "off"); if (t2) t2.textContent = on ? "Online" : "Offline";
 }
 async function appAngaben() {
   const el = document.getElementById("app-info");
