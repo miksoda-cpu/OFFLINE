@@ -1,5 +1,5 @@
 {
   "algorithmus": "ed25519",
   "schluessel": "705ba930e2596d01",
-  "signatur": "DwUR14qTXPhvz+ggvswcIevTEVBFWvrheg0/TtGXr5ZKz2bHzZfUQvWX9Ig35wac3FXuni1rT1gPD/xAs0G8DA=="
+  "signatur": "3VhclvZo53sWoxgxqwXtgHkom8HpKHPArB7W0gtak3UOhzfi9j+Q9rlu43Jb0m2qsQHl4Ir2nak3EntdiI5XDw=="
 }

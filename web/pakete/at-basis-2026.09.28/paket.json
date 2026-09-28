@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "at-basis",
-  "version": "2026.09.24",
+  "version": "2026.09.28",
   "titel": "Österreich-Paket · Grundversion",
   "beschreibung": "Notrufe, Sirenensignale, Blackout-Vorsorge, Checkliste und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
   "art": "inhalt",
@@ -10,7 +10,7 @@
   "herausgeber": "The Digioneer / digitalworld Academy",
   "pro": false,
   "app_min": "0.1.0",
-  "erstellt": "2026-09-24T12:32:47Z",
+  "erstellt": "2026-09-28T16:42:57Z",
   "aenderungen": "Erste Ausgabe: Notrufe, Sirenensignale, Blackout-Ablauf, Vorsorge-Checkliste, Bundesländer.",
   "quellen": [
     {

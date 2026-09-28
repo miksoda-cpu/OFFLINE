@@ -17,7 +17,8 @@ OFFLINE ist ein Offline-Wissens- und Werkzeugpaket für Österreich. Es läuft o
 - **Kurse** – Offline-Kurse der digitalworld Academy
 - **Notizen** – lokal, Markdown
 - **Tresor und Notfallmappe** – verschlüsselter Bereich für Passwörter, Polizzen, Ausweisscans; wir haben keinen Schlüssel ([TRESOR.md](TRESOR.md))
-- **Weitere Ideen** – was ohne Netz sonst noch fehlt, mit Einordnung: [IDEEN.md](IDEEN.md)
+- **Bereit und das Wesen** – eine Zahl 0–100 aus vier Quellen mit Verfall, und ein Lumi von unter dem Eis, das Tipps gibt ([WESEN.md](WESEN.md))
+- **Weitere Ideen** – was ohne Netz sonst noch fehlt, mit Einordnung: [IDEEN.md](IDEEN.md), Paketideen und Nutzenversprechen: [PAKETE-IDEEN.md](PAKETE-IDEEN.md)
 
 Vorbild ist [Project N.O.M.A.D.](https://github.com/Crosstalk-Solutions/project-nomad) von Crosstalk Solutions (Apache 2.0). OFFLINE übernimmt die Idee und einzelne Bausteine, ist aber **eigenständig**, denn es braucht eine andere Architektur (siehe 3.).
 
@@ -182,7 +183,7 @@ Hinweise:
 | **2 – in Arbeit (24.09.2026)** | Rust-Kern (`kern/`, gleiche Tests wie das Werkzeug) und Tauri-Hülle (`app/`) mit Import vom USB-Stick; Installer für Windows, macOS, Linux über GitHub Actions ([DESKTOP.md](DESKTOP.md)). Offen: kiwix-serve + Kartendatei als mitgelieferte Programme | Installer Win/Mac/Linux (unsigniert) |
 | **3 – erledigt (24.09.2026)** | Update-Dienst im Rust-Kern: Katalog, fortsetzbare Downloads in Teilen, Delta gegen installierte Version, Hintergrund-Abo mit Zeitfenster; Speicherort auf externer Platte. Update-Server = statische Dateien auf Vercel | Abo funktioniert technisch |
 | **4 – erledigt (24.09.2026)** | Inhalte: kiwix-serve als mitgeliefertes Programm, Leseansicht in der App, Offline-Karte (PMTiles), lokaler Dateiserver, Update-Server auf Hetzner, Wikivoyage 1,3 GB auf dem M5 geladen und gelesen, App-Update über den Knopf (Tauri-Updater, latest.json auf Hetzner). Offen: Karte Österreich als PMTiles-Paket | Wikipedia und Karte offline |
-| **4b – in Arbeit (24.09.2026)** | Tresor und Notfallmappe im Rust-Kern – Version 1 fertig in App 0.1.3 ([TRESOR.md](TRESOR.md)); Bibliothek als Regal mit Herausgeber, Preis und Prüfstatus; kleine Werkzeuge ohne Netz (Seite „Werkzeuge“: Radio, Sonne und Mond, Einheiten, Vorrat – fertig 25.09.2026); Startbild und dunkler Modus nach [DESIGN.md](DESIGN.md) | das stärkste Gratis-Argument |
+| **4b – in Arbeit (28.09.2026)** | Bereit-Anzeige und das Wesen (Paket „wir“, App 0.1.5, siehe [WESEN.md](WESEN.md)); Tresor und Notfallmappe im Rust-Kern – Version 1 fertig in App 0.1.3 ([TRESOR.md](TRESOR.md)); Bibliothek als Regal mit Herausgeber, Preis und Prüfstatus; kleine Werkzeuge ohne Netz (Seite „Werkzeuge“: Radio, Sonne und Mond, Einheiten, Vorrat – fertig 25.09.2026); Startbild und dunkler Modus nach [DESIGN.md](DESIGN.md) | das stärkste Gratis-Argument |
 | **4c** | KI-Assistent (llama.cpp als mitgeliefertes Programm, Modell als Pro-Paket) | Fragen an die eigene Bibliothek |
 | **5** | Pro: offline gültige Lizenzscheine, Zahlung, Herausgeber-Signaturen (Format 2), Code-Signing (Apple/Windows), Gemeinde-Version | Marktstart |
 | **6** | Marktplatz (Ebene 3) nach rechtlicher Prüfung; Handy-Version | Plattform |

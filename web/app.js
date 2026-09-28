@@ -1,5 +1,7 @@
 // OFFLINE – App-Oberfläche (Prototyp). Alle Inhalte kommen aus signierten Paketen, siehe paket-client.js.
 import { versionVergleich } from "./paket-kern.js";
+import { bereitBerechnen, naechsterSchritt, BESTAETIGUNGEN } from "./bereit.js";
+import { Wesen, SORTEN } from "./wesen.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
@@ -32,6 +34,8 @@ const notizId = () => Date.now().toString(36) + Math.random().toString(36).slice
 
 const state = {
   checks: speicher.get("checks", {}),
+  bestaetigungen: speicher.get("bestaetigungen", {}), // id → ISO-Datum der letzten Bestätigung (Bereit-Modul)
+  wesenLog: { filter: "", suche: "" },
   abo: speicher.get("abo", { intervall: "woechentlich", nurWlan: true, fenster: true, von: "02:00", bis: "05:00", aktiv: true }),
   fortschritt: null, // { pfad, geladen, gesamt } während eines Downloads
   lesen: null, // { url, titel } – Leseansicht für kiwix-serve
@@ -61,6 +65,24 @@ const ARTEN = { inhalt: "Österreich", zim: "Bibliothek", karte: "Karten", model
 
 // ---------- Paketinhalt ----------
 const P = () => installiertesPaket(BASISPAKET);
+const PW = () => installiertesPaket("wir");
+const wesen = new Wesen({ speicher, tipps: () => inhalt(PW(), "inhalt/tipps.json")?.tipps ?? [] });
+
+// Bereit: eine Zahl aus vier Quellen – Checkliste, Notfallmappe, Wissen, Bestätigungen mit Verfall
+function bereit() {
+  const vorsorge = D("vorsorge");
+  const gesamt = vorsorge ? vorsorge.gruppen.reduce((n, g) => n + g.punkte.length, 0) : 0;
+  const erledigt = Object.values(state.checks).filter(Boolean).length;
+  const arten = installierteIds().map(installiertesPaket).filter(Boolean).map((x) => x.manifest.art);
+  const notfallmappe = !!desktop && state.tresor.status !== null && state.tresor.status !== "kein";
+  return bereitBerechnen({ erledigt, gesamt, notfallmappe, arten, bestaetigungen: state.bestaetigungen });
+}
+function bestaetigen(id) {
+  state.bestaetigungen[id] = new Date().toISOString();
+  speicher.set("bestaetigungen", state.bestaetigungen);
+  if (BESTAETIGUNGEN.find((b) => b.id === id)?.fest) wesen.fest();
+  render();
+}
 const D = (name) => inhalt(P(), `inhalt/${name}.json`);
 const katalog = () => katalogAusSpeicher()?.katalog ?? null;
 
@@ -102,9 +124,27 @@ const seiten = {
     const k = katalog();
     const updates = k ? verfuegbareUpdates(k).length : 0;
     const land = laender.find((l) => l.name === state.bundesland);
+    const b = bereit(); wesen.setScore(b); const schritt = naechsterSchritt(b);
+    const wl = state.wesenLog;
     return `
       ${kopf("Servus.", "Alles hier funktioniert ohne Internet.", `<div class="field" style="margin:0"><label for="bl">Dein Bundesland</label>
           <select id="bl">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>`)}
+      <div class="grid ${wesen.mitFigur() ? "grid-2" : ""}" style="margin-bottom:1rem">
+        ${wesen.mitFigur() ? `<div class="card" id="wesen-karte">${wesen.buehneHtml()}</div>` : ""}
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="muted">Bereit</span><span class="muted" style="font-size:.85rem">${b.wert < 30 ? "Anfang" : b.wert < 60 ? "unterwegs" : b.wert < 80 ? "gut" : "bereit"}</span></div>
+          <div class="bereit-zahl">${b.wert}</div>
+          <div class="progress" style="margin:.4rem 0 .8rem"><div style="width:${b.wert}%"></div></div>
+          <p style="margin:0 0 .6rem"><a href="${schritt.ziel}">${esc(schritt.text)}</a></p>
+          ${b.quellen.map((q) => `<div class="bereit-quelle"><span>${esc(q.name)} <span class="muted">· ${esc(q.text)}</span></span><span class="mono">${q.punkte}/${q.max}</span></div>`).join("")}
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:1rem"><h3>Bestätigungen</h3><p class="muted" style="margin:.2rem 0 .4rem">Dinge, die verfallen. Einmal bestätigen, dann ist Ruhe, bis es wieder so weit ist.</p>
+        ${b.positionen.map((x) => `<div class="bestaetigung"><span><strong>${esc(x.titel)}</strong><br><span class="muted">${x.status === "gueltig" ? `gültig noch ${x.rest} Tage` : x.status === "verfallen" ? `<span class="tag tag-warn">verfallen</span> seit ${-x.rest} Tagen` : esc(x.hinweis)}</span></span><button class="btn btn-sm ${x.status === "gueltig" ? "" : "btn-primary"}" data-bestaetigen="${x.id}">${x.status === "gueltig" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
+      </div>
+      ${wesen.aktiv() ? `<details class="card" style="margin-bottom:1rem"><summary><strong>${esc(wesen.e.name)}</strong> <span class="muted">· Einstellungen</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
+      <details class="card" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>Was ${esc(wesen.e.name)} gesagt hat</strong> <span class="muted">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` :
+      `<details class="card" style="margin-bottom:1rem"><summary><strong>Das Wesen</strong> <span class="muted">· aus</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>`}
       <div class="grid grid-3">
         <a class="card" href="#notfall" style="text-decoration:none;border-color:var(--accent)">
           <span class="tag tag-pro">Notfall</span><h3 style="margin-top:.6rem">Notrufe & Sirenen</h3>
@@ -937,6 +977,8 @@ function render() {
   if (desktop && route === "updates") client.aboStatus().then((st) => { if (st !== desktop.aboStatus) { desktop.aboStatus = st; render(); } }).catch(() => {});
   const seite = seiten[route] ? route : "start";
   main.innerHTML = seiten[seite]();
+  if (seite === "start") wesen.einbauen(); else wesen.setScore(bereit());
+  wesen.ansicht(seite);
   const aktiv = seite === "lesen" ? "bibliothek" : seite;
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
   main.classList.toggle("main-lesen", seite === "lesen");
@@ -951,6 +993,9 @@ main.addEventListener("change", (e) => {
   if (t.dataset.check) { state.checks[t.dataset.check] = t.checked; speicher.set("checks", state.checks); render(); }
   if (t.dataset.abo) { state.abo[t.dataset.abo] = t.checked; aboSpeichern(); render(); }
   if (t.dataset.zeit) { state.abo[t.dataset.zeit] = t.value; aboSpeichern(); }
+  if (t.dataset.wesen) { wesen.einstellen(t.dataset.wesen, t.type === "checkbox" ? t.checked : t.value); if (t.dataset.wesen !== "name") render(); return; }
+  if (t.dataset.wesenSorte) { wesen.einstellen(t.dataset.wesenSorte, t.checked); return; }
+  if (t.id === "wesen-log-filter") { state.wesenLog.filter = t.value; document.getElementById("wesen-log").innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche); return; }
   if (t.id === "bl" || t.id === "bl2") { state.bundesland = t.value; speicher.set("bundesland", t.value); render(); }
   if (t.id === "wz-datum") { state.werkzeug.datum = t.value || null; render(); }
   if (t.id === "wz-art") { state.werkzeug.rechner = { ...state.werkzeug.rechner, art: t.value, von: Object.keys(EINHEITEN[t.value].e)[0], nach: Object.keys(EINHEITEN[t.value].e)[1] }; render(); }
@@ -964,6 +1009,8 @@ function beiKlick(e) {
   const b = e.target.closest("button");
   if (!b) return;
   if (b.dataset.filter) { state.filter = b.dataset.filter; render(); }
+  if (b.dataset.bestaetigen) return bestaetigen(b.dataset.bestaetigen);
+  if (b.hasAttribute("data-wesen-gelernt-zurueck")) { wesen.gelernt = { intervall: 90, gelesen: 0, weitergewischt: 0 }; wesen.speichern(); return render(); }
   if (b.dataset.install) installiereMitMeldung(b.dataset.install, "bib-msg");
   if ([...b.attributes].some((a) => a.name.startsWith("data-tresor")) || (b.hasAttribute("data-aufnahme") && location.hash === "#tresor")) return tresorAktion(b);
   if ([...b.attributes].some((a) => a.name.startsWith("data-notiz")) || (b.hasAttribute("data-aufnahme") && location.hash === "#notizen")) return notizAktion(b);
@@ -1007,6 +1054,12 @@ if (desktop) {
   tresorLaden().then(() => { if (location.hash === "#tresor") render(); });
 }
 document.getElementById("download").addEventListener("click", beiKlick);
+// Sprechblase, Karte und Log des Wesens (Karte liegt außerhalb von main)
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.hasAttribute("data-wesen-zu")) wesen.tippSchliessen();
+  if (b.dataset.wesenStern) { wesen.stern(b.dataset.wesenStern); const el = document.getElementById("wesen-log"); if (el) el.innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche); }
+});
 
 main.addEventListener("submit", (e) => {
   if (e.target.id !== "chat-form") return;
@@ -1021,6 +1074,8 @@ main.addEventListener("submit", (e) => {
 function notizbuchSpeichern() { speicher.set("notizbuch", state.notizbuch); }
 let notizTimer = null;
 main.addEventListener("input", (e) => {
+  if (e.target.id === "wesen-log-suche") { state.wesenLog.suche = e.target.value; const pos = e.target.selectionStart; document.getElementById("wesen-log").innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche); const s2 = document.getElementById("wesen-log-suche"); s2?.focus(); s2?.setSelectionRange(pos, pos); return; }
+  if (e.target.dataset.wesen === "name") { wesen.einstellen("name", e.target.value); const el = document.querySelector(".wesen-text strong"); if (el) el.textContent = wesen.e.name; return; }
   if (e.target.id === "wz-wert") { state.werkzeug.rechner.wert = e.target.value; const r = state.werkzeug.rechner; const el = document.getElementById("wz-ergebnis"); if (el) el.textContent = `${zahl(umrechnen(r.art, parseFloat(r.wert.replace(",", ".")), r.von, r.nach))} ${r.nach}`; }
   if (e.target.dataset.radio) { const f = (state.werkzeug.radio[state.bundesland] ??= {}); f[e.target.dataset.radio] = e.target.value.trim(); speicher.set("radio", state.werkzeug.radio); }
   if (e.target.id === "notiz-titel" || e.target.id === "notiz-text") {
@@ -1084,7 +1139,7 @@ async function notizAktion(b) {
 
 menu.addEventListener("click", () => { const open = sidebar.classList.toggle("open"); menu.setAttribute("aria-expanded", String(open)); });
 
-const APP_VERSION = "0.1.4";
+const APP_VERSION = "0.1.5";
 function netz() {
   const on = navigator.onLine;
   document.getElementById("net-dot").className = "dot " + (on ? "on" : "off");
@@ -1141,12 +1196,15 @@ async function offeneDownloads() {
 // Erster Start: Österreich-Paket automatisch holen, wenn noch keins da ist. Danach still nach Updates sehen.
 (async () => {
   await offeneDownloads();
-  if (!P()) {
+  if (!P() || !PW()) {
     if (!navigator.onLine) return;
     try {
       const { katalog: k } = await ladeKatalog();
-      const e = k.pakete.find((p) => p.id === BASISPAKET && p.status === "verfuegbar");
-      if (e) { await installiere(k, e); render(); }
+      for (const id of [BASISPAKET, "wir"]) {
+        if (installiertesPaket(id)) continue;
+        const e = k.pakete.find((p) => p.id === id && p.status === "verfuegbar");
+        if (e) { await installiere(k, e); render(); }
+      }
     } catch (err) { console.error("Erstinstallation", err); }
   } else if (navigator.onLine && state.abo.aktiv) {
     await pruefeUpdates({ still: true });

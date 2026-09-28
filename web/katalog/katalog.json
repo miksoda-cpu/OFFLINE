@@ -1,22 +1,37 @@
 {
   "format": 1,
-  "erstellt": "2026-09-24T12:32:48Z",
-  "gueltig_bis": "2026-12-23T12:32:48Z",
+  "erstellt": "2026-09-28T16:42:57Z",
+  "gueltig_bis": "2026-12-27T16:42:57Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
       "id": "at-basis",
-      "version": "2026.09.24",
+      "version": "2026.09.28",
       "titel": "Österreich-Paket · Grundversion",
       "beschreibung": "Notrufe, Sirenensignale, Blackout-Vorsorge, Checkliste und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
       "art": "inhalt",
       "pro": false,
       "groesse": 7849,
       "app_min": "0.1.0",
-      "erstellt": "2026-09-24T12:32:47Z",
+      "erstellt": "2026-09-28T16:42:57Z",
       "aenderungen": "Erste Ausgabe: Notrufe, Sirenensignale, Blackout-Ablauf, Vorsorge-Checkliste, Bundesländer.",
-      "pfad": "at-basis-2026.09.24/",
-      "sha256_manifest": "3787aee62a112ed6573f2117b9b3e45683a572d3507a9841be98ac7311e0f884",
+      "pfad": "at-basis-2026.09.28/",
+      "sha256_manifest": "87dcdf741035975cd6c2bdff09e5a9bfa42d5d305c1c4da41d9985b653345603",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "wir",
+      "version": "2026.09.28",
+      "titel": "Wir · das Wesen und seine Tipps",
+      "beschreibung": "Die Tipps des Wesens von unter dem Eis: wie man sich in OFFLINE zurechtfindet, was die Bereitschaft hebt, und Dinge des Lebens. Nur Text, kein Code – das Wesen selbst ist Teil der App.",
+      "art": "inhalt",
+      "pro": false,
+      "groesse": 9757,
+      "app_min": "0.1.5",
+      "erstellt": "2026-09-28T16:42:57Z",
+      "aenderungen": "Erster Bestand: Starter-Tipps in sieben Sorten (App, Alltag, Wissen, Weisheit, Laune, Heute, Digital). Der volle Bestand von 150 folgt.",
+      "pfad": "wir-2026.09.28/",
+      "sha256_manifest": "9d63f8ec0ad5e1f7b19e2a36a27635770fb4e7f0570c173ab14c66a7c5192958",
       "status": "verfuegbar"
     },
     {
@@ -80,15 +95,6 @@
       "art": "inhalt",
       "pro": true,
       "groesse": 800000000,
-      "status": "geplant"
-    },
-    {
-      "id": "dwa-ki",
-      "titel": "Kurs: KI-Management",
-      "beschreibung": "digitalworld Academy – kompletter Kurs, offline.",
-      "art": "kurs",
-      "pro": true,
-      "groesse": 2400000000,
       "status": "geplant"
     },
     {
