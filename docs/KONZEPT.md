@@ -139,7 +139,7 @@ Die Basis ist nicht nackt: Wikipedia, Karten, Erste Hilfe, Gemeinfreies und die 
 - **Offline gültige Lizenzen:** Ein Kauf wird zu einem signierten Lizenzschein am Gerät, der auch nach Monaten ohne Netz gilt. Ebenfalls Abschnitt 8.
 - **Regal statt Liste:** Die Bibliothek zeigt Pakete als Karten mit sichtbarem Herausgeber, damit die Rolle der NGOs, Verlage und später der Community von Anfang an sichtbar ist. Umsetzung in Phase 4b.
 
-Gestaltung: [DESIGN.md](DESIGN.md).
+Gestaltung: [DESIGN.md](DESIGN.md). Sicherheit und Bedrohungsmodell: [SICHERHEIT.md](SICHERHEIT.md).
 
 | | **Frei** | **Pro** (Abo) | **Gemeinde / Schule / Betrieb** |
 |---|---|---|---|
