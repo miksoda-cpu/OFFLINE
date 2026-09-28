@@ -14,7 +14,8 @@ fn bekannte() -> Vec<OeffentlicherSchluessel> {
 
 /// Das echte Paket aus web/pakete – wenn es existiert (es wird vom Werkzeug gebaut).
 fn echtes_paket() -> Option<PathBuf> {
-    std::fs::read_dir(wurzel().join("web/pakete")).ok()?.flatten().map(|e| e.path()).find(|p| p.join("paket.json").exists())
+    std::fs::read_dir(wurzel().join("web/pakete")).ok()?.flatten().map(|e| e.path())
+        .find(|p| p.file_name().map_or(false, |n| n.to_string_lossy().starts_with("at-basis-")) && p.join("paket.json").exists())
 }
 
 const HEUTE: &str = "2026-09-24";
@@ -155,10 +156,13 @@ fn einspielen_mit_tausch_und_aufraeumen() {
     let b = bekannte();
     let wurzel = temp("install");
 
+    let name = p.file_name().unwrap().to_string_lossy().to_string(); // z. B. at-basis-2026.09.28
+    let version = name.trim_start_matches("at-basis-").to_string();
+
     let e = einspielen(&p, &wurzel, &b, HEUTE, false).unwrap();
     assert_eq!(e.ersetzt, None);
-    assert!(wurzel.join("at-basis-2026.09.24/paket.json").exists());
-    assert!(!wurzel.join("at-basis-2026.09.24.neu").exists());
+    assert!(wurzel.join(format!("{name}/paket.json")).exists());
+    assert!(!wurzel.join(format!("{name}.neu")).exists());
     assert!(paket_pruefen(&e.ordner, &b, HEUTE).is_ok());
 
     // Nochmal dieselbe Version → abgelehnt
@@ -169,14 +173,14 @@ fn einspielen_mit_tausch_und_aufraeumen() {
     kopiere(&p, &kaputt);
     std::fs::write(kaputt.join("inhalt/notrufe.json"), b"x").unwrap();
     assert!(einspielen(&kaputt, &wurzel, &b, HEUTE, true).is_err());
-    assert!(paket_pruefen(&wurzel.join("at-basis-2026.09.24"), &b, HEUTE).is_ok());
+    assert!(paket_pruefen(&wurzel.join(&name), &b, HEUTE).is_ok());
 
     // Halber Zustand nach „Stromausfall“: .alt vorhanden, Hauptordner weg → wiederherstellen
-    std::fs::rename(wurzel.join("at-basis-2026.09.24"), wurzel.join("at-basis-2026.09.24.alt")).unwrap();
-    std::fs::create_dir_all(wurzel.join("at-basis-2026.09.25.neu")).unwrap();
+    std::fs::rename(wurzel.join(&name), wurzel.join(format!("{name}.alt"))).unwrap();
+    std::fs::create_dir_all(wurzel.join("at-basis-2099.01.01.neu")).unwrap();
     let meld = aufraeumen(&wurzel).unwrap();
     assert_eq!(meld.len(), 2, "{meld:?}");
-    assert!(wurzel.join("at-basis-2026.09.24/paket.json").exists());
-    assert!(!wurzel.join("at-basis-2026.09.25.neu").exists());
-    assert_eq!(einspielen::installierte_version(&wurzel, "at-basis").unwrap().0, "2026.09.24");
+    assert!(wurzel.join(format!("{name}/paket.json")).exists());
+    assert!(!wurzel.join("at-basis-2099.01.01.neu").exists());
+    assert_eq!(einspielen::installierte_version(&wurzel, "at-basis").unwrap().0, version);
 }

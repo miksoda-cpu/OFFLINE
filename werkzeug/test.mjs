@@ -156,5 +156,11 @@ test("Katalog: bauen, prüfen, Rollback-Schutz, Ablauf", async () => {
   assert.equal(katalogPruefen(bytes, sig, bekannte, { jetzt: inEinemJahr }).veraltet, true);
   assert.equal(katalogPruefen(Buffer.from(bytes.toString() + " "), sig, bekannte, { jetzt }).ok, false);
   await assert.rejects(katalogBauen([ordner, ordner], { basis: "x", bekannte, privat, jetzt }), /doppelte/);
+  // Zwei Versionen desselben Pakets: die neuere zählt, die ältere fällt weg
+  const alt = JSON.parse(await readFile(path.join(ordner, "paket.json"), "utf8"));
+  const { ziel: neuOrdner } = await paketBauen(q, path.join(ziel, "neu"), privat, { jetzt: new Date(jetzt.getTime() + 864e5) });
+  const zwei = await katalogBauen([ordner, neuOrdner], { basis: "x", bekannte, privat, jetzt });
+  assert.equal(zwei.katalog.pakete.filter((p) => p.id === alt.id).length, 1);
+  assert.ok(zwei.katalog.pakete.find((p) => p.id === alt.id).version > alt.version, "neuere Version zählt");
   await rm(q, { recursive: true }); await rm(ziel, { recursive: true });
 });

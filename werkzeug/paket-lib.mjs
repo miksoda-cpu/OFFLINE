@@ -231,10 +231,17 @@ export async function katalogBauen(paketOrdner, { basis, geplant = [], gueltigTa
       pfad: `${path.basename(ordner)}/`, sha256_manifest: sha256(bytes), status: "verfuegbar",
     });
   }
+  // Liegen mehrere Versionen desselben Pakets vor (z. B. alte Ordner im Speicher), zählt die neueste.
+  // Dieselbe Version zweimal ist ein Fehler.
+  const neueste = new Map();
+  for (const p of pakete) {
+    const v = neueste.get(p.id);
+    if (v && v.version === p.version) throw new Error(`Katalog: doppelte Paket-IDs (${p.id} ${p.version})`);
+    if (!v || p.version > v.version) neueste.set(p.id, p);
+  }
+  pakete.length = 0; pakete.push(...neueste.values());
   const echt = new Set(pakete.map((p) => p.id));
   for (const g of geplant) if (!echt.has(g.id)) pakete.push({ ...g, status: "geplant" });
-  const ids = pakete.map((p) => p.id);
-  if (new Set(ids).size !== ids.length) throw new Error("Katalog: doppelte Paket-IDs");
 
   const katalog = {
     format: FORMAT,
