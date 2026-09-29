@@ -1,8 +1,8 @@
 # OFFLINE – Pflichtenheft für Pakete
 
-*Paket-Kit, Version 1 · Stand 29.09.2026 · gilt für neue Pakete und für jedes Update*
+*Paket-Kit, Version 1 · Stand 29.09.2026, Nachtrag vom selben Tag (Abnahme, Quellen-`id`, Notrufhinweis) · gilt für neue Pakete und für jedes Update*
 
-**Maßgeblich ist diese Fassung.** `paket-kit/PFLICHTENHEFT.md` ist die Kopie für Herausgeber, die ohne das Repo arbeiten. Weichen beide ab, gilt dieses Dokument.
+**Maßgeblich ist diese Fassung.** `paket-kit/PFLICHTENHEFT.md` ist die Kopie für Herausgeber, die ohne das Repo arbeiten. Weichen beide ab, gilt dieses Dokument. Die Kopie wird nachgezogen, sobald das Repo ihre Grundlage ist; bis dahin fehlt ihr der Nachtrag vom 29.09.
 
 Dieses Heft sagt, was ein Paket enthalten muss, damit es in OFFLINE eingebaut werden kann. Wer ein Paket liefert (Redaktion, Entwickler, später Herausgeber am Marktplatz), füllt die Vorlage aus und lässt das Prüfprogramm laufen. Erst wenn das Prüfprogramm keinen Fehler meldet, geht das Paket an den Einbau. Der Einbau prüft noch einmal mit demselben Programm, baut das Paket mit `werkzeug/paket.mjs bauen`, signiert es und nimmt es in den Katalog.
 
@@ -36,7 +36,7 @@ Alles unter `inhalt/` wird signiert und ausgeliefert. Alles außerhalb bleibt be
 | `sprache` | ja | BCP-47, meist `de-AT` |
 | `lizenz` | ja | z. B. `CC BY-SA 4.0`, `gemeinfrei`, `eigene Rechte` |
 | `herausgeber` | ja | wer verantwortet den Inhalt |
-| `quellen` | ja | Liste mit `name` und `url` (url darf leer sein, wenn es keine gibt) |
+| `quellen` | ja | Liste mit `id`, `name` und `url` (url darf leer sein, wenn es keine gibt). `id` ist kurz, `[a-z0-9-]`, eindeutig im Paket und geht unverändert in `paket.json` über. Schritte und Einträge in den Inhalten verweisen mit `quelle: "<id>"` auf sie, damit die Schlüssel nicht nur im Bauskript stehen |
 | `pro` | ja | `true` oder `false` |
 | `preis` | ja | `gratis`, `pro` oder `kauf` |
 | `pruefstatus` | ja | `redaktion`, `herausgeber` oder `community` |
@@ -45,7 +45,7 @@ Alles unter `inhalt/` wird signiert und ausgeliefert. Alles außerhalb bleibt be
 | `alter_ab` | ja | ab welchem Alter das Paket im Kinder-Modus sichtbar ist: `0` für alle, `6`, `10`, `14`, `18` |
 | `kategorie` | ja | eine der Gruppen der Paketseite: `ernstfall`, `wissen`, `jeden-tag`, `du-und-die-deinen`, `unterwegs`, `verbindung`, `miteinander`, `aussehen` |
 | `braucht_netz` | ja | `false`. Ein Paket, das Netz braucht, ist kein OFFLINE-Paket. Ausnahme nur mit Begründung im LIESMICH |
-| `abnahme` | ja | `keine`, oder wer fachlich abgenommen hat bzw. abnehmen muss (`Feuerwehr`, `Rettung`, …) und der Stand (`angefragt`, `erteilt am …`) |
+| `abnahme` | ja | `keine`, oder wer fachlich abgenommen hat bzw. abnehmen muss (`Feuerwehr`, `Rettung`, …) und der Stand (`angefragt`, `erteilt am …`). Dieses Feld führt. Ein Feld `fachlich_abgenommen` in einzelnen Inhalten (etwa im Guide-Format) zeigt höchstens den Stand je Inhalt an und ersetzt `abnahme` nie |
 | `datenversion` | bei `modul` | ganze Zahl, beginnt bei 1. Erhöhen, wenn sich das Format gespeicherter Nutzerdaten ändert (siehe 7) |
 
 ## 3. Die Slideshow `inhalt/vorschau/`
@@ -76,7 +76,7 @@ Regeln: Titel höchstens 50 Zeichen, Text höchstens 160, `alt` (Bildbeschreibun
 2. **Erlaubte Dateitypen:** `.json .md .txt .html .css .js .svg .png .webp .jpg .mp3 .ogg .pdf .zim .pmtiles .gguf`. Alles andere nur mit Begründung.
 3. **Pfade:** nur Kleinbuchstaben, Ziffern, `-`, `_`, `.`, `/`. Keine Leerzeichen, kein `..`, keine versteckten Dateien, keine Verknüpfungen.
 4. **Sprache:** kurze Sätze, ein Gedanke pro Satz, österreichische Begriffe (Jänner, Rettung 144). Keine Werbung, keine Floskeln.
-5. **Notfallinhalte:** Jede Anleitung für den Ernstfall beginnt mit „Ist jemand in Gefahr?" und der Notrufnummer. Sie ist fester Text, keine KI. Ohne Abnahme bleibt sie im Status `angefragt` und die App zeigt das an.
+5. **Notfallinhalte:** Jede Anleitung für den Ernstfall beginnt mit „Ist jemand in Gefahr?" und der Notrufnummer. Dieser Notrufhinweis ist ein Pflichtfeld jeder Notfallanleitung; fehlt er, ist das ein Fehler, kein Hinweis (das Prüfprogramm soll das melden, siehe 8). Sie ist fester Text, keine KI. Ohne Abnahme bleibt sie im Status `angefragt` und die App zeigt das an.
 6. **Barrierefreiheit:** Jeder Text muss vorlesbar sein (kein Text nur in Bildern). Kontrast bei eigener Gestaltung mindestens 4,5 : 1.
 7. **Kinder:** Pakete mit `alter_ab` unter 18 enthalten keine Kontaktmöglichkeit zu Fremden und keine Links nach außen.
 8. **Quellen und Lizenz** stehen vollständig in `paket.quelle.json`. Was nicht gemeinfrei, offen lizenziert oder eigenes Werk ist, kommt nicht hinein.
@@ -126,6 +126,7 @@ Ein Update ist derselbe Weg mit einem Zusatz: `node pruefen.mjs <neu> --vorher <
 | Dateitypen, Pfade, Größen | passen Lizenz und Quellen wirklich |
 | verbotene Aufrufe und externe Adressen | fachliche Abnahme bei Notfallinhalten |
 | Netz- und Kinderregeln, soweit maschinell erkennbar | Kinderregeln im Sinn, nicht nur im Buchstaben |
+| Notrufhinweis in Notfallanleitungen fehlt → Fehler (Regel 4.5; im Programm noch nicht eingebaut) | stimmt die Nummer für die Lage |
 | Update: id, aenderungen, entfernte Dateien, datenversion + Migration | Update: fällt etwas weg, worauf Nutzer bauen |
 
 Das Programm schreibt einen **Prüfbericht** (`PRUEFBERICHT.md`) in den Ordner. Er hat drei Teile: Fehler (muss behoben werden), Hinweise (sollte man ansehen), Für die Redaktion (Liste der manuellen Punkte zum Abhaken). Der Bericht wird mit abgegeben.
