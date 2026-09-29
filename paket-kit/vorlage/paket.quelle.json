@@ -6,7 +6,7 @@
   "sprache": "de-AT",
   "lizenz": "",
   "herausgeber": "",
-  "quellen": [{ "name": "", "url": "" }],
+  "quellen": [{ "id": "", "name": "", "url": "" }],
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",

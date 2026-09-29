@@ -61,10 +61,14 @@ Der Ordnername ist `<id>-<version>`. Er ist nur Konvention; maßgeblich ist das 
 | `titel`, `beschreibung` | ja | Anzeige in der Bibliothek. |
 | `art` | ja | `inhalt` (strukturierte Texte), `zim` (Kiwix), `karte` (PMTiles), `modell` (KI), `kurs`, `software`. |
 | `sprache` | ja | BCP-47, meist `de-AT`. |
-| `lizenz`, `herausgeber`, `quellen` | ja | Namensnennung, wie die Lizenzen es verlangen. |
+| `lizenz`, `herausgeber`, `quellen` | ja | Namensnennung, wie die Lizenzen es verlangen. Einträge in `quellen` tragen `name`, `url` und (ab Paket-Kit) `id`; Inhalte verweisen mit `quelle: "<id>"` darauf. |
 | `pro` | ja | `true`, wenn nur mit Pro-Lizenz. Die App zeigt es an; die Durchsetzung passiert beim Download-Server. |
 | `preis` | nein | `gratis`, `pro` (im Abo enthalten) oder `kauf` (Einzelkauf). Fehlt es, gilt `pro ? "pro" : "gratis"`. Vorbereitung für Ebene 2 und 3, siehe Abschnitt 8. |
 | `pruefstatus` | nein | `redaktion` (von uns geprüft), `herausgeber` (vom Herausgeber verantwortet, von uns freigegeben), `community` (später, Marktplatz). Fehlt es, gilt `redaktion`. Die App zeigt es im Regal an. |
+| `kategorie` | nein | Gruppe auf der Paketseite (`ernstfall`, `wissen`, `jeden-tag`, `du-und-die-deinen`, `unterwegs`, `verbindung`, `miteinander`, `aussehen`). Kommt aus `paket.quelle.json`, siehe `docs/PAKET-KIT.md`. |
+| `alter_ab` | nein | Ab welchem Alter das Paket im Kinder-Modus sichtbar ist (`0`, `6`, `10`, `14`, `18`). Fehlt es, gilt `0`. |
+| `abnahme` | nein | Fachliche Abnahme wie in `paket.quelle.json` (`keine`, oder wer und Stand). |
+| `datenversion` | nur bei `modul` | Formatversion der gespeicherten Nutzerdaten eines Moduls, ab 1. |
 | `app_min` | ja | Kleinste App-Version, die das Paket versteht. |
 | `erstellt` | ja | Zeitpunkt der Erstellung, ISO 8601 UTC. |
 | `aenderungen` | nein | Was ist neu – Klartext für „Was ist neu?“. |

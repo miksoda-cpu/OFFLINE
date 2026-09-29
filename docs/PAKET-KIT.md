@@ -1,12 +1,22 @@
 # OFFLINE – Pflichtenheft für Pakete
 
-*Paket-Kit, Version 1 · Stand 29.09.2026, Nachtrag vom selben Tag (Abnahme, Quellen-`id`, Notrufhinweis) · gilt für neue Pakete und für jedes Update*
+*Paket-Kit, Version 1 · Stand 29.09.2026, mit Nachtrag (Abnahme, Quellen-`id`, Notrufhinweis) und Prüfprogramm im Repo · gilt für neue Pakete und für jedes Update*
 
-**Maßgeblich ist diese Fassung.** `paket-kit/PFLICHTENHEFT.md` ist die Kopie für Herausgeber, die ohne das Repo arbeiten. Weichen beide ab, gilt dieses Dokument. Die Kopie wird nachgezogen, sobald das Repo ihre Grundlage ist; bis dahin fehlt ihr der Nachtrag vom 29.09.
+**Maßgeblich ist diese Fassung.** `paket-kit/PFLICHTENHEFT.md` ist die Kopie für Herausgeber, die ohne das Repo arbeiten. Weichen beide ab, gilt dieses Dokument. Die Kopie ist wortgleich und wird bei jeder Änderung mitgezogen; `werkzeug/test.mjs` prüft das.
 
 Dieses Heft sagt, was ein Paket enthalten muss, damit es in OFFLINE eingebaut werden kann. Wer ein Paket liefert (Redaktion, Entwickler, später Herausgeber am Marktplatz), füllt die Vorlage aus und lässt das Prüfprogramm laufen. Erst wenn das Prüfprogramm keinen Fehler meldet, geht das Paket an den Einbau. Der Einbau prüft noch einmal mit demselben Programm, baut das Paket mit `werkzeug/paket.mjs bauen`, signiert es und nimmt es in den Katalog.
 
 Das technische Format des fertigen, signierten Pakets steht in `docs/PAKETFORMAT.md`. Dieses Heft beschreibt die Stufe davor: den **Quellordner**, den man abgibt.
+
+```mermaid
+flowchart LR
+  A["Vorlage ausfüllen<br/>paket.quelle.json<br/>inhalt/ · vorschau/"] --> B["node pruefen.mjs<br/>&lt;ordner&gt;"]
+  B -->|Fehler| A
+  B -->|grün| C["Abgabe<br/>Ordner + Prüfbericht"]
+  C --> D["Redaktion<br/>manuelle Punkte"]
+  D --> E["Einbau<br/>pruefen · bauen ·<br/>signieren · Katalog"]
+  E --> F["Update<br/>gleicher Weg,<br/>pruefen --vorher"]
+```
 
 ## 1. Was man abgibt
 
@@ -73,10 +83,12 @@ Regeln: Titel höchstens 50 Zeichen, Text höchstens 160, `alt` (Bildbeschreibun
 ## 4. Regeln für alle Inhalte
 
 1. **Kein Netz.** Kein Inhalt lädt etwas nach. Keine Links auf Bilder, Schriften oder Skripte im Internet. Links zum Weiterlesen in Texten sind erlaubt, die App zeigt sie als „braucht Netz".
-2. **Erlaubte Dateitypen:** `.json .md .txt .html .css .js .svg .png .webp .jpg .mp3 .ogg .pdf .zim .pmtiles .gguf`. Alles andere nur mit Begründung.
+2. **Erlaubte Dateitypen:** `.json .md .txt .html .css .js .svg .png .webp .jpg .mp3 .ogg .pdf .zim .pmtiles .gguf`. Alles andere nur mit Begründung. **Code nur in Modulen:** `.js` und Skripte in `.html`/`.svg` (`<script>`, `on…=`-Attribute, `javascript:`) sind nur bei `art = "modul"` und nur unter `inhalt/modul/` erlaubt (`docs/SICHERHEIT.md`, Grundsatz 2).
 3. **Pfade:** nur Kleinbuchstaben, Ziffern, `-`, `_`, `.`, `/`. Keine Leerzeichen, kein `..`, keine versteckten Dateien, keine Verknüpfungen.
 4. **Sprache:** kurze Sätze, ein Gedanke pro Satz, österreichische Begriffe (Jänner, Rettung 144). Keine Werbung, keine Floskeln.
-5. **Notfallinhalte:** Jede Anleitung für den Ernstfall beginnt mit „Ist jemand in Gefahr?" und der Notrufnummer. Dieser Notrufhinweis ist ein Pflichtfeld jeder Notfallanleitung; fehlt er, ist das ein Fehler, kein Hinweis (das Prüfprogramm soll das melden, siehe 8). Sie ist fester Text, keine KI. Ohne Abnahme bleibt sie im Status `angefragt` und die App zeigt das an.
+5. **Notfallinhalte:** Jede Anleitung für den Ernstfall beginnt mit „Ist jemand in Gefahr?" und der Notrufnummer. Dieser Notrufhinweis ist ein Pflichtfeld jeder Notfallanleitung; fehlt er, ist das ein Fehler, kein Hinweis. Sie ist fester Text, keine KI. Ohne Abnahme bleibt sie im Status `angefragt` und die App zeigt das an.
+   - **Feld:** `"notruf": { "frage": "Ist jemand in Gefahr?", "nummer": "144" }` auf oberster Ebene der Anleitung. `frage` wörtlich so, `nummer` drei bis fünf Ziffern.
+   - **Als Notfallanleitung gilt** (so erkennt es das Prüfprogramm): jede JSON-Datei mit `"typ": "guide"` oder `"nachschlage-guide"` in einem Paket der Kategorie `ernstfall`, und jede JSON-Datei mit `"notfall": true`, egal in welcher Kategorie. Anleitungen, die das Programm so nicht erkennt, prüft die Redaktion.
 6. **Barrierefreiheit:** Jeder Text muss vorlesbar sein (kein Text nur in Bildern). Kontrast bei eigener Gestaltung mindestens 4,5 : 1.
 7. **Kinder:** Pakete mit `alter_ab` unter 18 enthalten keine Kontaktmöglichkeit zu Fremden und keine Links nach außen.
 8. **Quellen und Lizenz** stehen vollständig in `paket.quelle.json`. Was nicht gemeinfrei, offen lizenziert oder eigenes Werk ist, kommt nicht hinein.
@@ -126,7 +138,9 @@ Ein Update ist derselbe Weg mit einem Zusatz: `node pruefen.mjs <neu> --vorher <
 | Dateitypen, Pfade, Größen | passen Lizenz und Quellen wirklich |
 | verbotene Aufrufe und externe Adressen | fachliche Abnahme bei Notfallinhalten |
 | Netz- und Kinderregeln, soweit maschinell erkennbar | Kinderregeln im Sinn, nicht nur im Buchstaben |
-| Notrufhinweis in Notfallanleitungen fehlt → Fehler (Regel 4.5; im Programm noch nicht eingebaut) | stimmt die Nummer für die Lage |
+| Notrufhinweis in Notfallanleitungen fehlt → Fehler (Regel 4.5) | stimmt die Nummer für die Lage |
+| `quellen[].id` vorhanden und eindeutig, jeder Verweis `quelle` in den Inhalten trifft eine `id` | stimmt die Quelle für die Aussage |
+| Code nur in Modulen unter `inhalt/modul/`; Module nur mit `pruefstatus: redaktion` | |
 | Update: id, aenderungen, entfernte Dateien, datenversion + Migration | Update: fällt etwas weg, worauf Nutzer bauen |
 
 Das Programm schreibt einen **Prüfbericht** (`PRUEFBERICHT.md`) in den Ordner. Er hat drei Teile: Fehler (muss behoben werden), Hinweise (sollte man ansehen), Für die Redaktion (Liste der manuellen Punkte zum Abhaken). Der Bericht wird mit abgegeben.
@@ -138,6 +152,8 @@ Ordner (oder ZIP davon) mit grünem Prüfbericht an die Redaktion. Einbau durch 
 ```
 node paket-kit/pruefen.mjs <ordner>                    # noch einmal prüfen
 cp -r <ordner> pakete/<id>                             # Quelle ablegen
-node werkzeug/paket.mjs bauen pakete/<id> <ziel>       # bauen und signieren
+node werkzeug/paket.mjs bauen pakete/<id> <ziel> --pruefen   # prüfen, bauen und signieren
 ./werkzeug/alles-bauen.sh                              # Katalog neu
 ```
+
+Bei Modulen prüft `bauen` immer, auch ohne `--pruefen`: Ein Modul mit Fehlern im Prüfbericht wird nicht gebaut (`docs/SICHERHEIT.md`, Module, Bedingung 3). Der Test „Weg aus Abschnitt 9“ in `werkzeug/test.mjs` spielt diesen Ablauf bei jedem Lauf durch.

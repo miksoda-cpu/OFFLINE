@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 // OFFLINE Paket-Kit – Prüfprogramm für Quellordner. Siehe PFLICHTENHEFT.md.
-// Aufruf:  node pruefen.mjs <quellordner> [--vorher <alter-quellordner>]
+// Aufruf:  node pruefen.mjs <quellordner> [--vorher <alter-quellordner>] [--kein-bericht]
 // Node ≥ 20, keine Abhängigkeiten. Schreibt PRUEFBERICHT.md in den Quellordner.
+// Als Modul: import { pruefeQuellordner } from "./pruefen.mjs" (so nutzen es werkzeug/test.mjs und werkzeug/paket.mjs).
 
 import { readFile, writeFile, readdir, lstat } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul"];
 const PREISE = ["gratis", "pro", "kauf"];
@@ -17,6 +19,12 @@ const TYPEN = [".json", ".md", ".txt", ".html", ".css", ".js", ".svg", ".png", "
 const BILDTYPEN = [".svg", ".webp", ".png", ".jpg"];
 const PFAD_OK = /^[a-z0-9._\-/]+$/;
 const ID_OK = /^[a-z0-9-]{2,40}$/;
+const QUELLE_ID_OK = /^[a-z0-9-]{1,40}$/;
+// Notfallanleitungen, die maschinell erkennbar sind (PAKET-KIT.md Regel 4.5): diese Inhaltstypen in einem Paket der
+// Kategorie „ernstfall“, und jeder Inhalt mit "notfall": true.
+const NOTFALL_TYPEN = ["guide", "nachschlage-guide"];
+const NOTRUF_FRAGE = "Ist jemand in Gefahr?";
+const SKRIPT_TYPEN = [".js", ".mjs"];
 const VERBOTEN = [
   [/\bfetch\s*\(/, "fetch()"], [/XMLHttpRequest/, "XMLHttpRequest"], [/\bWebSocket\b/, "WebSocket"],
   [/\bEventSource\b/, "EventSource"], [/sendBeacon/, "sendBeacon"], [/\beval\s*\(/, "eval()"],
@@ -26,7 +34,7 @@ const VERBOTEN = [
   [/@import\s+url\(\s*["']?https?:/i, "externes @import"], [/url\(\s*["']?https?:/i, "externe url() in CSS"],
 ];
 
-const fehler = [], hinweise = [], redaktion = [];
+let fehler, hinweise, redaktion;
 const F = (m) => fehler.push(m), H = (m) => hinweise.push(m), R = (m) => redaktion.push(m);
 
 async function dateien(wurzel, rel = "") {
@@ -62,7 +70,16 @@ async function pruefen(ordner) {
   if (!/^[a-z]{2}(-[A-Z]{2})?$/.test(meta.sprache ?? "")) F("sprache fehlt oder ist kein BCP-47-Kürzel wie de-AT");
   for (const f of ["lizenz", "herausgeber", "aenderungen", "app_min"]) if (!txt(meta[f])) F(`${f} fehlt`);
   if (!Array.isArray(meta.quellen) || meta.quellen.length === 0) F("quellen fehlt oder ist leer");
-  else meta.quellen.forEach((q, i) => { if (!txt(q?.name)) F(`quellen[${i}]: name fehlt`); if (typeof q?.url !== "string") F(`quellen[${i}]: url fehlt (leer ist erlaubt)`); });
+  else {
+    const ids = new Set();
+    meta.quellen.forEach((q, i) => {
+      if (!QUELLE_ID_OK.test(q?.id ?? "")) F(`quellen[${i}]: id fehlt oder ungültig (a–z, 0–9, -)`);
+      else if (ids.has(q.id)) F(`quellen[${i}]: id „${q.id}" doppelt`);
+      else ids.add(q.id);
+      if (!txt(q?.name)) F(`quellen[${i}]: name fehlt`);
+      if (typeof q?.url !== "string") F(`quellen[${i}]: url fehlt (leer ist erlaubt)`);
+    });
+  }
   if (typeof meta.pro !== "boolean") F("pro muss true oder false sein");
   if (!PREISE.includes(meta.preis)) F(`preis ungültig: ${meta.preis}`);
   if (meta.pro === false && meta.preis !== "gratis") F("pro ist false, preis ist aber nicht gratis");
@@ -74,6 +91,7 @@ async function pruefen(ordner) {
   }
   if (!txt(meta.abnahme)) F("abnahme fehlt (\"keine\" oder wer abnimmt und Stand)");
   if (meta.art === "modul" && !(Number.isInteger(meta.datenversion) && meta.datenversion >= 1)) F("datenversion fehlt (ganze Zahl ab 1, Pflicht bei art = modul)");
+  if (meta.art === "modul" && meta.pruefstatus !== "redaktion") F("art = modul: pruefstatus muss redaktion sein (SICHERHEIT.md, Module, Bedingung 2)");
 
   // --- LIESMICH ---
   const lm = path.join(ordner, "LIESMICH.md");
@@ -133,6 +151,34 @@ async function pruefen(ordner) {
     if (/\bJanuar\b/.test(t)) H(`inhalt/${d.rel}: „Januar" – in de-AT „Jänner"`);
   }
 
+  // --- Code nur in Modulen, und dort nur unter modul/ (SICHERHEIT.md, Grundsatz 2 und Bedingung 3) ---
+  for (const d of liste) {
+    const ext = path.extname(d.rel).toLowerCase();
+    const imModul = meta.art === "modul" && d.rel.startsWith("modul/");
+    if (imModul) continue;
+    if (SKRIPT_TYPEN.includes(ext)) F(`inhalt/${d.rel}: Skript außerhalb eines Moduls (Pakete enthalten keinen Code${meta.art === "modul" ? ", außer unter inhalt/modul/" : ""})`);
+    else if ([".html", ".svg"].includes(ext) && /<script\b|\bon[a-z]+\s*=\s*["']|javascript:/i.test(await readFile(path.join(inhalt, d.rel), "utf8"))) {
+      F(`inhalt/${d.rel}: Skript in ${ext} außerhalb eines Moduls`);
+    }
+  }
+
+  // --- Quellen-Verweise und Notrufhinweis in den Inhalten ---
+  const quellenIds = new Set((Array.isArray(meta.quellen) ? meta.quellen : []).map((q) => q?.id).filter(Boolean));
+  for (const d of liste.filter((d) => path.extname(d.rel) === ".json" && !d.rel.startsWith("vorschau/"))) {
+    let j;
+    try { j = JSON.parse(await readFile(path.join(inhalt, d.rel), "utf8")); } catch { F(`inhalt/${d.rel}: kein gültiges JSON`); continue; }
+    for (const q of quellenVerweise(j)) if (!quellenIds.has(q)) F(`inhalt/${d.rel}: verweist auf Quelle „${q}", die in paket.quelle.json → quellen fehlt`);
+    const notfall = j?.notfall === true || (NOTFALL_TYPEN.includes(j?.typ) && meta.kategorie === "ernstfall");
+    if (notfall) {
+      const n = j.notruf;
+      if (!n || typeof n !== "object") F(`inhalt/${d.rel}: Notfallanleitung ohne Notrufhinweis (Feld notruf mit frage und nummer, Regel 4.5)`);
+      else {
+        if (n.frage !== NOTRUF_FRAGE) F(`inhalt/${d.rel}: notruf.frage muss „${NOTRUF_FRAGE}" lauten`);
+        if (!/^\d{3,5}$/.test(n.nummer ?? "")) F(`inhalt/${d.rel}: notruf.nummer fehlt oder ist keine Notrufnummer`);
+      }
+    }
+  }
+
   // --- Modul ---
   if (meta.art === "modul") {
     const modul = liste.filter((d) => d.rel.startsWith("modul/"));
@@ -181,10 +227,25 @@ async function updatePruefen(neu, altOrdner) {
   if (!/^#+\s*Was hat sich geändert/mi.test(lm)) F("Update: LIESMICH.md braucht den Abschnitt „Was hat sich geändert\"");
 }
 
-async function main() {
-  const [ordner, ...rest] = process.argv.slice(2);
-  if (!ordner) { console.error("Verwendung: node pruefen.mjs <quellordner> [--vorher <alter-quellordner>]"); process.exit(2); }
-  const vi = rest.indexOf("--vorher"), vorher = vi >= 0 ? rest[vi + 1] : null;
+/** Alle Werte zu einem Schlüssel „quelle“ (Text oder Liste), beliebig tief. */
+function quellenVerweise(j, aus = []) {
+  if (Array.isArray(j)) for (const x of j) quellenVerweise(x, aus);
+  else if (j && typeof j === "object") {
+    for (const [k, v] of Object.entries(j)) {
+      if (k === "quelle" && typeof v === "string") aus.push(v);
+      else if (k === "quelle" && Array.isArray(v)) aus.push(...v.filter((x) => typeof x === "string"));
+      else quellenVerweise(v, aus);
+    }
+  }
+  return aus;
+}
+
+/**
+ * Prüft einen Quellordner. Gibt { ok, fehler, hinweise, redaktion, bericht, meta } zurück.
+ * `bericht: true` schreibt PRUEFBERICHT.md in den Ordner (Standard wie auf der Kommandozeile).
+ */
+export async function pruefeQuellordner(ordner, { vorher = null, bericht = true } = {}) {
+  fehler = []; hinweise = []; redaktion = [];
   const r = await pruefen(ordner);
   if (vorher) await updatePruefen(r, vorher);
 
@@ -193,10 +254,18 @@ async function main() {
     `**Ergebnis: ${fehler.length ? `${fehler.length} Fehler – nicht einbaufertig` : "keine Fehler – bereit für die Redaktion"}**\n\n` +
     `| | |\n|---|---|\n| Titel | ${m.titel ?? ""} |\n| Art | ${m.art ?? ""} |\n| Kategorie | ${m.kategorie ?? ""} |\n| Alter ab | ${m.alter_ab ?? ""} |\n| Preis | ${m.preis ?? ""} |\n| Dateien | ${r.liste.length}, ${kb(r.summe ?? 0)} |\n\n`;
   const abschnitt = (t, l, z) => `## ${t}\n\n${l.length ? l.map((x) => `${z} ${x}`).join("\n") : "keine"}\n\n`;
-  const bericht = kopf + abschnitt("Fehler", fehler, "-") + abschnitt("Hinweise", hinweise, "-") + abschnitt("Für die Redaktion", redaktion, "- [ ]");
-  await writeFile(path.join(ordner, "PRUEFBERICHT.md"), bericht);
-  console.log(bericht);
-  process.exitCode = fehler.length ? 1 : 0;
+  const text = kopf + abschnitt("Fehler", fehler, "-") + abschnitt("Hinweise", hinweise, "-") + abschnitt("Für die Redaktion", redaktion, "- [ ]");
+  if (bericht) await writeFile(path.join(ordner, "PRUEFBERICHT.md"), text);
+  return { ok: fehler.length === 0, fehler, hinweise, redaktion, bericht: text, meta: r.meta };
 }
 
-main();
+async function main() {
+  const [ordner, ...rest] = process.argv.slice(2);
+  if (!ordner) { console.error("Verwendung: node pruefen.mjs <quellordner> [--vorher <alter-quellordner>] [--kein-bericht]"); process.exit(2); }
+  const vi = rest.indexOf("--vorher"), vorher = vi >= 0 ? rest[vi + 1] : null;
+  const r = await pruefeQuellordner(ordner, { vorher, bericht: !rest.includes("--kein-bericht") });
+  console.log(r.bericht);
+  process.exitCode = r.ok ? 0 : 1;
+}
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();

@@ -6,6 +6,7 @@ import { createReadStream } from "node:fs";
 import { readFile, writeFile, mkdir, readdir, stat, copyFile } from "node:fs/promises";
 import path from "node:path";
 
+import { pruefeQuellordner } from "../paket-kit/pruefen.mjs";
 import { FORMAT, TEILGROESSE_STANDARD, TEILE_AB, ARTEN, ID_MUSTER, pfadGueltig, versionVergleich, manifestPruefenStruktur, delta } from "./kern.mjs";
 export { FORMAT, TEILGROESSE_STANDARD, TEILE_AB, ARTEN, pfadGueltig, versionVergleich, manifestPruefenStruktur, delta };
 
@@ -127,10 +128,16 @@ async function dateienRekursiv(wurzel, rel = "") {
 /**
  * Baut aus einem Quellordner (paket.quelle.json + inhalt/) einen fertigen, signierten Paketordner.
  * Gibt den Zielpfad und das Manifest zurück.
+ * Module (art = "modul") laufen immer erst durch das Prüfprogramm des Paket-Kits (SICHERHEIT.md, Bedingung 3);
+ * mit `pruefen: true` gilt das für jedes Paket.
  */
-export async function paketBauen(quelle, zielWurzel, privat, { jetzt = new Date(), teilgroesse = TEILGROESSE_STANDARD, teileAb = TEILE_AB } = {}) {
+export async function paketBauen(quelle, zielWurzel, privat, { jetzt = new Date(), teilgroesse = TEILGROESSE_STANDARD, teileAb = TEILE_AB, pruefen = false } = {}) {
   const meta = JSON.parse(await readFile(path.join(quelle, "paket.quelle.json"), "utf8"));
   if (!ID_MUSTER.test(meta.id ?? "")) throw new Error("paket.quelle.json: id ungültig");
+  if (pruefen || meta.art === "modul") {
+    const p = await pruefeQuellordner(quelle, { bericht: false });
+    if (!p.ok) throw new Error(`Prüfprogramm meldet ${p.fehler.length} Fehler:\n  ` + p.fehler.join("\n  "));
+  }
   const version = meta.version ?? jetzt.toISOString().slice(0, 10).replaceAll("-", ".");
   const ziel = path.join(zielWurzel, `${meta.id}-${version}`);
   await mkdir(path.join(ziel, "inhalt"), { recursive: true });
@@ -157,6 +164,7 @@ export async function paketBauen(quelle, zielWurzel, privat, { jetzt = new Date(
     lizenz: meta.lizenz,
     herausgeber: meta.herausgeber,
     pro: Boolean(meta.pro),
+    ...angaben(meta),
     app_min: meta.app_min ?? "0.1.0",
     erstellt: jetzt.toISOString().replace(/\.\d{3}Z$/, "Z"),
     aenderungen: meta.aenderungen ?? "",
@@ -171,6 +179,14 @@ export async function paketBauen(quelle, zielWurzel, privat, { jetzt = new Date(
   await writeFile(path.join(ziel, "paket.json"), bytes);
   await writeFile(path.join(ziel, "paket.sig"), JSON.stringify(signiere(bytes, privat), null, 2) + "\n");
   return { ziel, manifest };
+}
+
+/** Angaben aus dem Paket-Kit, die ins Manifest wandern, soweit sie gesetzt sind (PAKETFORMAT.md 2.1). */
+function angaben(meta) {
+  const a = {};
+  for (const k of ["preis", "pruefstatus", "kategorie", "alter_ab", "abnahme"]) if (meta[k] !== undefined) a[k] = meta[k];
+  if (meta.art === "modul" && meta.datenversion !== undefined) a.datenversion = meta.datenversion;
+  return a;
 }
 
 /** Prüft einen Paketordner vollständig – genau die Schritte, die die App vor dem Einspielen macht. */
@@ -227,6 +243,7 @@ export async function katalogBauen(paketOrdner, { basis, geplant = [], gueltigTa
     }
     pakete.push({
       id: m.id, version: m.version, titel: m.titel, beschreibung: m.beschreibung, art: m.art, pro: m.pro,
+      ...Object.fromEntries(["preis", "pruefstatus", "kategorie", "alter_ab"].filter((k) => m[k] !== undefined).map((k) => [k, m[k]])),
       groesse: m.groesse, app_min: m.app_min, erstellt: m.erstellt, aenderungen: m.aenderungen,
       pfad: `${path.basename(ordner)}/`, sha256_manifest: sha256(bytes), status: "verfuegbar",
     });

@@ -6,7 +6,7 @@
   "sprache": "de-AT",
   "lizenz": "eigene Rechte",
   "herausgeber": "The Digioneer",
-  "quellen": [{ "name": "eigene Entwicklung", "url": "" }],
+  "quellen": [{ "id": "eigen", "name": "eigene Entwicklung", "url": "" }],
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",

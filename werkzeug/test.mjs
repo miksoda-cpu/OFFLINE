@@ -164,3 +164,131 @@ test("Katalog: bauen, prüfen, Rollback-Schutz, Ablauf", async () => {
   assert.ok(zwei.katalog.pakete.find((p) => p.id === alt.id).version > alt.version, "neuere Version zählt");
   await rm(q, { recursive: true }); await rm(ziel, { recursive: true });
 });
+
+// ---------- Paket-Kit: Prüfprogramm und der Weg aus PAKET-KIT.md Abschnitt 9 ----------
+
+import { pruefeQuellordner } from "../paket-kit/pruefen.mjs";
+import { cp } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+
+const KIT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "paket-kit");
+
+/** Kopie eines Kit-Ordners in ein Temp-Verzeichnis, damit Tests nichts im Repo verändern. */
+async function kitKopie(rel) {
+  const dir = path.join(await mkdtemp(path.join(os.tmpdir(), "offline-kit-")), path.basename(rel));
+  await cp(path.join(KIT, rel), dir, { recursive: true });
+  return dir;
+}
+
+async function quelleAendern(ordner, f) {
+  const p = path.join(ordner, "paket.quelle.json");
+  const m = JSON.parse(await readFile(p, "utf8"));
+  f(m);
+  await writeFile(p, JSON.stringify(m, null, 2));
+}
+
+test("Paket-Kit: Beispiel Wichteln ist grün", async () => {
+  const r = await pruefeQuellordner(path.join(KIT, "beispiel", "wichteln"), { bericht: false });
+  assert.deepEqual(r.fehler, []);
+});
+
+test("Paket-Kit: Vorlage meldet nur leere Felder und fehlende Bilder", async () => {
+  const r = await pruefeQuellordner(path.join(KIT, "vorlage"), { bericht: false });
+  assert.ok(r.fehler.length > 0, "eine leere Vorlage darf nicht grün sein");
+  for (const f of r.fehler) assert.match(f, /fehlt/, f);
+});
+
+test("Paket-Kit: quellen[].id ist Pflicht, eindeutig, und Verweise müssen passen", async () => {
+  const o = await kitKopie("beispiel/wichteln");
+  await quelleAendern(o, (m) => { m.quellen = [{ name: "ohne id", url: "" }, { id: "a", name: "A", url: "" }, { id: "a", name: "B", url: "" }]; });
+  let r = await pruefeQuellordner(o, { bericht: false });
+  assert.ok(r.fehler.some((f) => /quellen\[0\]: id fehlt/.test(f)));
+  assert.ok(r.fehler.some((f) => /quellen\[2\]: id „a" doppelt/.test(f)));
+
+  await quelleAendern(o, (m) => { m.quellen = [{ id: "eigen", name: "eigene Entwicklung", url: "" }]; });
+  await writeFile(path.join(o, "inhalt", "daten.json"), JSON.stringify({ eintraege: [{ text: "x", quelle: "eigen" }, { text: "y", quelle: "gibts-nicht" }] }));
+  r = await pruefeQuellordner(o, { bericht: false });
+  assert.deepEqual(r.fehler, ["inhalt/daten.json: verweist auf Quelle „gibts-nicht\", die in paket.quelle.json → quellen fehlt"]);
+});
+
+test("Paket-Kit: Notfallanleitung ohne Notrufhinweis ist ein Fehler", async () => {
+  const o = await kitKopie("beispiel/wichteln");
+  await quelleAendern(o, (m) => { m.art = "inhalt"; m.kategorie = "ernstfall"; delete m.datenversion; });
+  await rm(path.join(o, "inhalt", "modul"), { recursive: true });
+  const guide = { typ: "guide", titel: "Blackout", phasen: [] };
+  await writeFile(path.join(o, "inhalt", "guide.json"), JSON.stringify(guide));
+  let r = await pruefeQuellordner(o, { bericht: false });
+  assert.ok(r.fehler.some((f) => /guide.json: Notfallanleitung ohne Notrufhinweis/.test(f)), r.fehler.join("\n"));
+
+  await writeFile(path.join(o, "inhalt", "guide.json"), JSON.stringify({ ...guide, notruf: { frage: "Alles gut?", nummer: "144" } }));
+  r = await pruefeQuellordner(o, { bericht: false });
+  assert.ok(r.fehler.some((f) => /notruf.frage muss/.test(f)));
+
+  await writeFile(path.join(o, "inhalt", "guide.json"), JSON.stringify({ ...guide, notruf: { frage: "Ist jemand in Gefahr?", nummer: "144" } }));
+  r = await pruefeQuellordner(o, { bericht: false });
+  assert.deepEqual(r.fehler, []);
+
+  // auch außerhalb von „ernstfall“, wenn der Inhalt sich selbst als Notfall kennzeichnet
+  await quelleAendern(o, (m) => { m.kategorie = "unterwegs"; });
+  await writeFile(path.join(o, "inhalt", "zecke.json"), JSON.stringify({ typ: "nachschlage-guide", notfall: true }));
+  r = await pruefeQuellordner(o, { bericht: false });
+  assert.ok(r.fehler.some((f) => /zecke.json: Notfallanleitung ohne Notrufhinweis/.test(f)));
+});
+
+test("Paket-Kit: Code nur in Modulen, nur unter modul/, Module nur mit pruefstatus redaktion", async () => {
+  const o = await kitKopie("beispiel/wichteln");
+  await writeFile(path.join(o, "inhalt", "helfer.js"), "1");
+  await writeFile(path.join(o, "inhalt", "seite.html"), "<p onclick=\"x()\">hi</p>");
+  await quelleAendern(o, (m) => { m.pruefstatus = "community"; });
+  const r = await pruefeQuellordner(o, { bericht: false });
+  assert.ok(r.fehler.some((f) => /helfer.js: Skript außerhalb/.test(f)));
+  assert.ok(r.fehler.some((f) => /seite.html: Skript in .html außerhalb/.test(f)));
+  assert.ok(r.fehler.some((f) => /pruefstatus muss redaktion/.test(f)));
+});
+
+test("Paket-Kit: Update-Prüfung mit --vorher", async () => {
+  const alt = await kitKopie("beispiel/wichteln");
+  const neu = await kitKopie("beispiel/wichteln");
+  await quelleAendern(neu, (m) => { m.datenversion = 2; m.alter_ab = 0; });
+  const r = await pruefeQuellordner(neu, { vorher: alt, bericht: false });
+  assert.ok(r.fehler.some((f) => /aenderungen ist unverändert/.test(f)));
+  assert.ok(r.fehler.some((f) => /alter_ab gesunken/.test(f)));
+  assert.ok(r.fehler.some((f) => /migration.js fehlt/.test(f)));
+  assert.ok(r.fehler.some((f) => /Was hat sich geändert/.test(f)));
+});
+
+test("Paket-Kit: Weg aus Abschnitt 9 – prüfen, ablegen, bauen, Manifest mit Kit-Angaben, Katalog", async () => {
+  // Ein Inhaltspaket nach Vorlage: Wichteln ohne Oberfläche reicht als ausgefüllter Quellordner.
+  const abgabe = await kitKopie("beispiel/wichteln");
+  await quelleAendern(abgabe, (m) => { m.id = "kit-probe"; m.art = "inhalt"; delete m.datenversion; });
+  await rm(path.join(abgabe, "inhalt", "modul"), { recursive: true });
+  assert.deepEqual((await pruefeQuellordner(abgabe, { bericht: true })).fehler, []);   // 1. prüfen, Bericht liegt bei
+
+  const repo = await mkdtemp(path.join(os.tmpdir(), "offline-repo-"));
+  const quelleImRepo = path.join(repo, "pakete", "kit-probe");
+  await cp(abgabe, quelleImRepo, { recursive: true });                                 // 2. Quelle ablegen
+  const { ziel: ordner, manifest } = await paketBauen(quelleImRepo, path.join(repo, "web", "pakete"), privat, { pruefen: true }); // 3. bauen, signieren
+  assert.ok((await paketPruefen(ordner, bekannte)).ok);
+  assert.equal(manifest.kategorie, "miteinander");
+  assert.equal(manifest.alter_ab, 6);
+  assert.equal(manifest.preis, "gratis");
+  assert.equal(manifest.pruefstatus, "redaktion");
+  assert.equal(manifest.datenversion, undefined, "datenversion nur bei Modulen");
+  assert.deepEqual(manifest.quellen, [{ id: "eigen", name: "eigene Entwicklung", url: "" }]);
+  assert.ok(!manifest.dateien.some((d) => /PRUEFBERICHT|LIESMICH|paket\.quelle/.test(d.pfad)), "nur inhalt/ wird ausgeliefert");
+  const { katalog } = await katalogBauen([ordner], { basis: "x/", bekannte, privat });  // 4. Katalog
+  assert.equal(katalog.pakete[0].kategorie, "miteinander");
+  await rm(repo, { recursive: true });
+});
+
+test("Paket-Kit: bauen mit --pruefen verweigert ein fehlerhaftes Paket", async () => {
+  const o = await kitKopie("beispiel/wichteln");
+  await quelleAendern(o, (m) => { m.art = "inhalt"; m.titel = ""; delete m.datenversion; });
+  await rm(path.join(o, "inhalt", "modul"), { recursive: true });
+  await assert.rejects(paketBauen(o, await mkdtemp(path.join(os.tmpdir(), "offline-x-")), privat, { pruefen: true }), /Prüfprogramm meldet 1 Fehler:\n  titel fehlt/);
+});
+
+test("Paket-Kit: PFLICHTENHEFT.md ist wortgleich mit docs/PAKET-KIT.md", async () => {
+  const docs = await readFile(path.join(KIT, "..", "docs", "PAKET-KIT.md"), "utf8");
+  assert.equal(await readFile(path.join(KIT, "PFLICHTENHEFT.md"), "utf8"), docs, "nach Änderungen: cp docs/PAKET-KIT.md paket-kit/PFLICHTENHEFT.md");
+});

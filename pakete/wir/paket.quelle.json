@@ -9,6 +9,8 @@
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",
+  "kategorie": "miteinander",
+  "alter_ab": 0,
   "app_min": "0.1.5",
   "aenderungen": "Erster Bestand: Starter-Tipps in sieben Sorten (App, Alltag, Wissen, Weisheit, Laune, Heute, Digital). Der volle Bestand von 150 folgt.",
   "quellen": [

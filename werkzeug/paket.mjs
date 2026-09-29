@@ -44,10 +44,12 @@ const befehle = {
     console.log(`Schlüssel ${k.id} erzeugt.\n  privat:     ${pfad}  (nie ins Repository!)\n  öffentlich: ${OEFFENTLICH}`);
   },
 
-  async bauen([quelle, ziel, name = process.env.OFFLINE_SCHLUESSEL_NAME || "offline-dev"]) {
-    if (!quelle || !ziel) throw new Error("Verwendung: bauen <quellordner> <zielwurzel> [schlüsselname]");
+  async bauen(args) {
+    const pruefen = args.includes("--pruefen");
+    const [quelle, ziel, name = process.env.OFFLINE_SCHLUESSEL_NAME || "offline-dev"] = args.filter((a) => !a.startsWith("--"));
+    if (!quelle || !ziel) throw new Error("Verwendung: bauen <quellordner> <zielwurzel> [schlüsselname] [--pruefen]");
     const privat = await privatLaden(name);
-    const { ziel: ordner, manifest } = await paketBauen(quelle, ziel, privat);
+    const { ziel: ordner, manifest } = await paketBauen(quelle, ziel, privat, { pruefen });
     console.log(`Paket ${manifest.id} ${manifest.version} gebaut → ${ordner}\n  ${manifest.dateien.length} Dateien, ${mb(manifest.groesse)}, signiert mit ${privat.id}`);
   },
 
@@ -92,7 +94,7 @@ const befehle = {
 
 const [befehl, ...args] = process.argv.slice(2);
 if (!befehl || !befehle[befehl]) {
-  console.log(`OFFLINE-Paketwerkzeug\n\n  schluessel erzeugen <name>\n  bauen <quelle> <zielwurzel> [schlüssel]\n  pruefen <paketordner>\n  delta <alt/paket.json|-> <neu/paket.json>\n  katalog <ziel> <paketordner…> [--geplant=datei.json] [--nur-manifest] [--gueltig-tage=90]\n`);
+  console.log(`OFFLINE-Paketwerkzeug\n\n  schluessel erzeugen <name>\n  bauen <quelle> <zielwurzel> [schlüssel] [--pruefen]\n  pruefen <paketordner>\n  delta <alt/paket.json|-> <neu/paket.json>\n  katalog <ziel> <paketordner…> [--geplant=datei.json] [--nur-manifest] [--gueltig-tage=90]\n`);
   process.exit(befehl ? 1 : 0);
 }
 befehle[befehl](args).catch((e) => { console.error(e.message); process.exit(1); });

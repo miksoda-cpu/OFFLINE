@@ -9,6 +9,8 @@
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",
+  "kategorie": "ernstfall",
+  "alter_ab": 0,
   "app_min": "0.1.0",
   "aenderungen": "Erste Ausgabe: Notrufe, Sirenensignale, Blackout-Ablauf, Vorsorge-Checkliste, Bundesländer.",
   "quellen": [
