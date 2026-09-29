@@ -11,6 +11,7 @@ Ein Projekt von The Digioneer und der digitalworld Academy. Inspiriert von [Proj
 | [`docs/KONZEPT.md`](docs/KONZEPT.md) | Konzept: Architektur, Offline-Installer, Update-Abo, Inhalte und Lizenzen, Frei/Pro, Fahrplan |
 | [`docs/PAKETFORMAT.md`](docs/PAKETFORMAT.md) | Paketformat: signierte Manifeste, Katalog, Delta-Updates, Schlüssel |
 | [`docs/PAKET-KIT.md`](docs/PAKET-KIT.md) | Pflichtenheft für Pakete: was ein Quellordner enthalten muss (Angaben, Slideshow, Regeln, Module, Updates, Prüfprogramm) |
+| [`paket-kit/`](paket-kit/) | Werkzeug für Herausgeber: `pruefen.mjs` schreibt den Prüfbericht zu einem Quellordner, dazu Vorlage und Beispiel (Wichteln). Läuft nicht in der App |
 | [`werkzeug/`](werkzeug/) | Paketwerkzeug (Node, keine Abhängigkeiten): Schlüssel, bauen, prüfen, delta, katalog – mit Tests |
 | [`app/`](app/) | Desktop-App (Tauri 2): Hülle um den Kern, Oberfläche aus `web/`. Installer baut [GitHub Actions](.github/workflows/desktop.yml), Anleitung in [`docs/DESKTOP.md`](docs/DESKTOP.md) |
 | [`kern/`](kern/) | Rust-Kern der Desktop-App: Signatur, Prüfsummen, Delta, atomares Einspielen – gleiche Tests wie das Werkzeug (`cargo test`) |
