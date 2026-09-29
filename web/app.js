@@ -1524,4 +1524,9 @@ if (desktop) (async () => {
   }
 })();
 
-if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
+// Service Worker nur im Web-Prototyp. In der Desktop-App liefert der Kern die Dateien; ein Worker aus 0.1.x (Windows)
+// wird abgemeldet (der Kern löscht ihn zusätzlich vor dem Start, siehe lib.rs).
+if ("serviceWorker" in navigator) {
+  if (desktop) navigator.serviceWorker.getRegistrations().then((rs) => rs.forEach((r) => r.unregister())).catch(() => {});
+  else navigator.serviceWorker.register("/sw.js").catch(() => {});
+}

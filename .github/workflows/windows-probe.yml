@@ -115,6 +115,10 @@ jobs:
           node werkzeug/app-probe.mjs alt --app "$(cygpath -w "$(exe)")" --aus probe/b-alt.json || fehler=1
           installieren "$neu"
           node werkzeug/app-probe.mjs neu --app "$(cygpath -w "$(exe)")" --vorher probe/b-alt.json --aus probe/b-neu.json || fehler=1
+          # C: frische Installation der neuen Version, ohne Vorgänger
+          aufraeumen
+          installieren "$neu"
+          node werkzeug/app-probe.mjs module --app "$(cygpath -w "$(exe)")" --boese "$(cygpath -w "$PWD/werkzeug/testmodule/boese")" --quelle "$(cygpath -w "$PWD/redaktion/freigegeben")" --aus probe/c-frisch.json || fehler=1
           exit $fehler
 
       - name: Berichte

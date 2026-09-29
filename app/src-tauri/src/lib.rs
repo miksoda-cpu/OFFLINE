@@ -969,6 +969,13 @@ pub fn start() {
     let builder = builder.plugin(tauri_plugin_updater::Builder::new().build());
     builder
         .setup(|app: &mut tauri::App| {
+            // Unter Windows (http://tauri.localhost) durften Service Worker registriert werden, 0.1.x hat das getan. Ein alter
+            // Worker ließ nach dem Update die neue Seite nicht laden (Windows-Probe 29.09.). Deshalb vor dem ersten Laden
+            // entfernen; localStorage und alle übrigen Daten bleiben. Das Fenster entsteht erst unten („create“: false).
+            #[cfg(windows)]
+            if let Ok(d) = app.path().app_local_data_dir() {
+                let _ = std::fs::remove_dir_all(d.join("EBWebView").join("Default").join("Service Worker"));
+            }
             let datenordner = app.path().app_data_dir().expect("Datenordner");
             std::fs::create_dir_all(&datenordner)?;
             let abo: Abo = std::fs::read(datenordner.join("abo.json")).ok().and_then(|b| serde_json::from_slice(&b).ok()).unwrap_or_default();
@@ -998,6 +1005,9 @@ pub fn start() {
             app.manage(z);
             abo_schleife(app.handle().clone());
             tresor_waechter(app.handle().clone());
+            for f in app.config().app.windows.clone() {
+                tauri::WebviewWindowBuilder::from_config(app.handle(), &f)?.build()?;
+            }
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
