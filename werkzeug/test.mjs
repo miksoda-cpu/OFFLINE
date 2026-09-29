@@ -8,7 +8,7 @@ import path from "node:path";
 import os from "node:os";
 import {
   schluesselErzeugen, privatAusPem, signiere, pruefeSignatur, hashDatei, pfadGueltig, versionVergleich,
-  paketBauen, paketPruefen, delta, katalogBauen, katalogPruefen, sha256,
+  paketBauen, paketPruefen, delta, katalogBauen, katalogPruefen, sha256, manifestSigniertPruefen,
 } from "./paket-lib.mjs";
 
 const k = schluesselErzeugen("Test");
@@ -291,4 +291,96 @@ test("Paket-Kit: bauen mit --pruefen verweigert ein fehlerhaftes Paket", async (
 test("Paket-Kit: PFLICHTENHEFT.md ist wortgleich mit docs/PAKET-KIT.md", async () => {
   const docs = await readFile(path.join(KIT, "..", "docs", "PAKET-KIT.md"), "utf8");
   assert.equal(await readFile(path.join(KIT, "PFLICHTENHEFT.md"), "utf8"), docs, "nach Änderungen: cp docs/PAKET-KIT.md paket-kit/PFLICHTENHEFT.md");
+});
+
+// ---------- Module: Redaktionsschlüssel, Skript-Grenze, Größe (SICHERHEIT.md, Module) ----------
+
+const redaktion = schluesselErzeugen("Redaktion Test", ["module"]);
+const redaktionPrivat = privatAusPem(redaktion.privatPem);
+const mitRedaktion = [k.oeffentlich, redaktion.oeffentlich];
+
+/** Baut ein Paket von Hand, ohne Werkzeug und Prüfprogramm, signiert mit `schl` – so, wie ein Angreifer es liefern könnte. */
+async function rohBauen(dateien, meta, schl) {
+  const ordner = await mkdtemp(path.join(os.tmpdir(), "offline-m-"));
+  const liste = [];
+  for (const [p, inhalt] of Object.entries(dateien)) {
+    const ziel = path.join(ordner, "inhalt", p);
+    await mkdir(path.dirname(ziel), { recursive: true });
+    await writeFile(ziel, inhalt);
+    liste.push({ pfad: `inhalt/${p}`, ...(await hashDatei(ziel)) });
+  }
+  const pj = {
+    format: 1, id: "roh", version: "2026.09.29", titel: "Roh", beschreibung: "Roh", art: "inhalt", sprache: "de-AT", lizenz: "CC0",
+    herausgeber: "Test", pro: false, app_min: "0.1.0", erstellt: "2026-09-29T00:00:00Z", quellen: [], ...meta,
+    dateien: liste, groesse: liste.reduce((s, d) => s + d.groesse, 0),
+  };
+  const bytes = Buffer.from(JSON.stringify(pj, null, 2) + "\n");
+  await writeFile(path.join(ordner, "paket.json"), bytes);
+  await writeFile(path.join(ordner, "paket.sig"), JSON.stringify(signiere(bytes, schl)));
+  return ordner;
+}
+const MODUL = { art: "modul", pruefstatus: "redaktion", datenversion: 1 };
+const OBERFLAECHE = { "modul/index.html": "<script>offline.version</script>" };
+
+test("Module: Wichteln mit dem Redaktionsschlüssel gebaut ist gültig", async () => {
+  const ziel = await mkdtemp(path.join(os.tmpdir(), "offline-w-"));
+  const { ziel: ordner, manifest } = await paketBauen(path.join(KIT, "beispiel", "wichteln"), ziel, redaktionPrivat);
+  assert.equal(manifest.art, "modul");
+  assert.equal(manifest.datenversion, 1);
+  const r = await paketPruefen(ordner, mitRedaktion);
+  assert.ok(r.ok, r.fehler.join("; "));
+  assert.equal(r.schluessel, redaktion.id);
+});
+
+test("Module: mit dem Katalogschlüssel signiert → abgelehnt", async () => {
+  const o = await rohBauen(OBERFLAECHE, MODUL, privat);
+  assert.match((await paketPruefen(o, mitRedaktion)).fehler[0], /Module nur mit dem Redaktionsschlüssel/);
+  // auch ein Schlüssel, der beides dürfte, darf keine Module signieren
+  const beides = schluesselErzeugen("beides", ["module", "katalog", "pakete"]);
+  const o2 = await rohBauen(OBERFLAECHE, MODUL, privatAusPem(beides.privatPem));
+  assert.match((await paketPruefen(o2, [...mitRedaktion, beides.oeffentlich])).fehler[0], /nie mit einem Katalogschlüssel/);
+});
+
+test("Module: Redaktionsschlüssel signiert keine gewöhnlichen Pakete", async () => {
+  const o = await rohBauen({ "a.json": "{}" }, { art: "inhalt" }, redaktionPrivat);
+  assert.match((await paketPruefen(o, mitRedaktion)).fehler[0], /nicht für pakete freigegeben/);
+});
+
+test("Module: pruefstatus, datenversion, index.html sind Pflicht", async () => {
+  for (const [meta, dateien, erwartet] of [
+    [{ ...MODUL, pruefstatus: "community" }, OBERFLAECHE, /pruefstatus redaktion/],
+    [{ ...MODUL, datenversion: 0 }, OBERFLAECHE, /datenversion/],
+    [MODUL, { "modul/app.html": "<p>x</p>" }, /ohne inhalt\/modul\/index.html/],
+  ]) {
+    const o = await rohBauen(dateien, meta, redaktionPrivat);
+    const r = await paketPruefen(o, mitRedaktion);
+    assert.ok(r.fehler.some((f) => erwartet.test(f)), `${erwartet}: ${r.fehler.join("; ")}`);
+  }
+});
+
+test("Module: Skripte außerhalb von inhalt/modul/ → abgelehnt, in jeder Form", async () => {
+  let o = await rohBauen({ ...OBERFLAECHE, "daten/helfer.js": "1" }, MODUL, redaktionPrivat);
+  assert.ok((await paketPruefen(o, mitRedaktion)).fehler.some((f) => /Skript außerhalb von inhalt\/modul\/: inhalt\/daten\/helfer.js/.test(f)));
+  for (const seite of ["<script>alert(1)</script>", "<img src=x onerror=\"x()\">", "<a href=\"javascript:x()\">", "<svg><SCRIPT>1</SCRIPT></svg>"]) {
+    o = await rohBauen({ ...OBERFLAECHE, "seite.html": seite }, MODUL, redaktionPrivat);
+    assert.ok((await paketPruefen(o, mitRedaktion)).fehler.some((f) => /Skript in einer Seite außerhalb/.test(f)), seite);
+  }
+  // gewöhnliche Pakete: überhaupt kein Code
+  o = await rohBauen({ "a.js": "1" }, { art: "inhalt" }, privat);
+  assert.match((await paketPruefen(o, mitRedaktion)).fehler[0], /Pakete enthalten keinen Code/);
+  o = await rohBauen({ "a.html": "<p>harmlos</p>", "b.svg": "<svg><text>on the road = gut</text></svg>" }, { art: "inhalt" }, privat);
+  assert.ok((await paketPruefen(o, mitRedaktion)).ok, "Text ohne Skript bleibt erlaubt");
+});
+
+test("Module: Oberfläche höchstens 2 MB", async () => {
+  const gross = "x".repeat(2 * 1024 * 1024);
+  const o = await rohBauen({ ...OBERFLAECHE, "modul/bild.svg": gross }, MODUL, redaktionPrivat);
+  assert.ok((await paketPruefen(o, mitRedaktion)).fehler.some((f) => /Modul-Oberfläche zu groß/.test(f)));
+});
+
+test("Module: dieselben Regeln schon am Manifest, bevor eine Datei geladen ist", async () => {
+  const o = await rohBauen(OBERFLAECHE, MODUL, privat);
+  const bytes = await readFile(path.join(o, "paket.json"));
+  const sig = JSON.parse(await readFile(path.join(o, "paket.sig"), "utf8"));
+  assert.match(manifestSigniertPruefen(bytes, sig, mitRedaktion).fehler[0], /Redaktionsschlüssel/);
 });

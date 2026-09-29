@@ -59,7 +59,7 @@ Der Ordnername ist `<id>-<version>`. Er ist nur Konvention; maßgeblich ist das 
 | `id` | ja | Kennung: `[a-z0-9-]{2,40}`. Bleibt über alle Versionen gleich. |
 | `version` | ja | Kalenderversion `JJJJ.MM.TT` oder `JJJJ.MM.TT.N`. Vergleich numerisch je Teil. |
 | `titel`, `beschreibung` | ja | Anzeige in der Bibliothek. |
-| `art` | ja | `inhalt` (strukturierte Texte), `zim` (Kiwix), `karte` (PMTiles), `modell` (KI), `kurs`, `software`. |
+| `art` | ja | `inhalt` (strukturierte Texte), `zim` (Kiwix), `karte` (PMTiles), `modell` (KI), `kurs`, `software`, `modul` (Oberfläche in der Sandbox, siehe 2.4). |
 | `sprache` | ja | BCP-47, meist `de-AT`. |
 | `lizenz`, `herausgeber`, `quellen` | ja | Namensnennung, wie die Lizenzen es verlangen. Einträge in `quellen` tragen `name`, `url` und (ab Paket-Kit) `id`; Inhalte verweisen mit `quelle: "<id>"` darauf. |
 | `pro` | ja | `true`, wenn nur mit Pro-Lizenz. Die App zeigt es an; die Durchsetzung passiert beim Download-Server. |
@@ -99,6 +99,17 @@ Regeln:
 4. Jede Datei: Größe und SHA-256 prüfen (bei Teilen: je Teil, damit ein Fehler früh auffällt). Kopieren in einen **Staging-Ordner** `<id>-<version>.neu/`.
 5. Erst wenn alles da ist: bisherigen Ordner nach `<id>-<alt>.alt/` umbenennen, Staging an seinen Platz, dann `.alt` löschen. Bricht der Strom dazwischen ab, findet die App beim Start entweder den alten oder den neuen Ordner vollständig vor – nie einen halben.
 
+### 2.4 Module (`art = "modul"`)
+
+Seit 29.09.2026 (`docs/SICHERHEIT.md`, Abschnitt Module). Zusätzlich zu allem oben gilt, und zwar schon am Manifest, bevor eine Datei geladen wird:
+
+- Signiert mit einem Schlüssel mit Zweck **`module`**, der **nicht** zugleich `katalog` hat (Redaktionsschlüssel). Mit einem Paket- oder Katalogschlüssel signierte Module lehnt die App ab, und der Redaktionsschlüssel signiert keine anderen Pakete.
+- `pruefstatus` ist `redaktion`, `datenversion` ist eine ganze Zahl ab 1, `inhalt/modul/index.html` ist vorhanden.
+- Alle Dateien unter `inhalt/modul/` zusammen höchstens 2 MB.
+- Code nur unter `inhalt/modul/`: Dateien `.js`/`.mjs` anderswo sind ein Fehler. Seiten (`.html`, `.htm`, `.xhtml`, `.svg`) außerhalb von `inhalt/modul/` werden beim Prüfen gelesen und abgelehnt, wenn sie `<script`, ein Ereignis-Attribut (` on…=`) oder `javascript:` enthalten.
+
+Für alle anderen Arten gilt dasselbe noch strenger: gar kein Code, weder als `.js` noch in Seiten.
+
 ## 3. Katalog
 
 Der Katalog ist die Liste aller Pakete, die OFFLINE anbietet. Er wird vom Update-Server geladen und ist genauso signiert wie ein Paket.
@@ -133,6 +144,7 @@ katalog/
 
 ## 4. Schlüssel
 
+- **Zwecke:** `pakete` (gewöhnliche Pakete), `katalog` (den Katalog), `module` (nur Module, siehe 2.4). Ein Schlüssel mit `module` darf nie auch `katalog` haben. Erzeugen: `node werkzeug/paket.mjs schluessel erzeugen offline-redaktion --zweck=module`; `bauen` nimmt für Module von selbst `offline-redaktion`.
 - **Verfahren:** Ed25519. Öffentlicher Schlüssel 32 Bytes, Signatur 64 Bytes. In Rust `ed25519-dalek`, in Node `crypto.sign(null, …)`, im Browser `crypto.subtle` mit `{ name: "Ed25519" }`.
 - **Kennung:** die ersten 8 Bytes von SHA-256 über den rohen öffentlichen Schlüssel, hex (16 Zeichen).
 - **Verteilung:** Die App bringt die öffentlichen Schlüssel mit (`schluessel/oeffentlich.json`). Sie stehen auch unter `web/schluessel/`. Format:

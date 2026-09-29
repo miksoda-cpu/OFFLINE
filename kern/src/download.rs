@@ -11,9 +11,9 @@ use crate::delta::delta;
 use crate::einspielen::{abschliessen, installierte_version, staging_ordner, version_zulaessig, Einspielergebnis};
 use crate::hash::{hash_datei, sha256_hex};
 use crate::katalog::{katalog_pruefen, KatalogEintrag, KatalogGeprueft};
-use crate::manifest::{manifest_pruefen_struktur, Datei, Manifest};
+use crate::manifest::{Datei, Manifest};
 use crate::paket::datei_pfad;
-use crate::schluessel::{pruefe_signatur, OeffentlicherSchluessel, Signatur};
+use crate::schluessel::{OeffentlicherSchluessel, Signatur};
 use crate::Fehler;
 use sha2::{Digest, Sha256};
 use std::io::{Read, Seek, SeekFrom, Write};
@@ -97,11 +97,7 @@ pub fn paket_laden(basis: &str, eintrag: &KatalogEintrag, wurzel: &Path, a: &mut
     }
     let sig_bytes = hole(&agent, &format!("{url}paket.sig"))?;
     let sig: Signatur = serde_json::from_slice(&sig_bytes).map_err(|_| Fehler("paket.sig unlesbar".into()))?;
-    pruefe_signatur(&manifest_bytes, &sig, a.bekannte, "pakete", a.heute).map_err(|e| Fehler(format!("Paket: {e}")))?;
-    let m: Manifest = serde_json::from_slice(&manifest_bytes).map_err(|_| Fehler("paket.json ist kein gültiges JSON".into()))?;
-    if let Some(f) = manifest_pruefen_struktur(&m).first() {
-        return Err(Fehler(format!("Manifest ungültig: {f}")));
-    }
+    let (m, _) = crate::paket::manifest_signiert_pruefen(&manifest_bytes, &sig, a.bekannte, a.heute).map_err(|e| Fehler(format!("Paket: {e}")))?;
     if m.id != eintrag.id || m.version != eintrag.version {
         return Err(Fehler("Manifest gehört zu einem anderen Paket".into()));
     }

@@ -129,6 +129,7 @@ fn m(version: &str, dateien: Vec<Datei>) -> Manifest {
         format: 1, id: "x".into(), version: version.into(), titel: "t".into(), beschreibung: "b".into(), art: "inhalt".into(),
         sprache: "de-AT".into(), lizenz: "l".into(), herausgeber: "h".into(), pro: false, app_min: "0.1.0".into(),
         erstellt: "2026-01-01T00:00:00Z".into(), aenderungen: String::new(), quellen: vec![], dateien, groesse,
+        ..Default::default()
     }
 }
 fn d(pfad: &str, sha: &str, groesse: u64) -> Datei {

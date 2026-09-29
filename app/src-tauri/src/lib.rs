@@ -700,10 +700,8 @@ fn suche(ordner: &Path, tiefe: u8, schluessel: &[OeffentlicherSchluessel], funde
         if let Ok(bytes) = std::fs::read(ordner.join("paket.json")) {
             let sig = std::fs::read(ordner.join("paket.sig")).ok().and_then(|b| serde_json::from_slice(&b).ok());
             if let Some(sig) = sig {
-                if offline_kern::pruefe_signatur(&bytes, &sig, schluessel, "pakete", &datum::heute()).is_ok() {
-                    if let Ok(m) = serde_json::from_slice::<Manifest>(&bytes) {
-                        funde.push(Fund { pfad: ordner.display().to_string(), id: m.id, version: m.version, titel: m.titel, groesse: m.groesse });
-                    }
+                if let Ok((m, _)) = offline_kern::manifest_signiert_pruefen(&bytes, &sig, schluessel, &datum::heute()) {
+                    funde.push(Fund { pfad: ordner.display().to_string(), id: m.id, version: m.version, titel: m.titel, groesse: m.groesse });
                 }
             }
         }

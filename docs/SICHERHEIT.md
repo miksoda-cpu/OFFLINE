@@ -19,15 +19,17 @@ Ein Modul ist ein Paket mit eigener Oberfläche (`inhalt/modul/index.html`). Das
 2. **Eigener Schlüssel und Prüfstatus:** Module werden nur mit einem Herausgeber-Schlüssel der Redaktion signiert, nie mit dem Katalogschlüssel, und tragen `pruefstatus: redaktion`. Community-Module gibt es nicht, bis Format 2 mit Herausgebersignaturen steht.
 3. **Prüfprogramm beim Einbau Pflicht:** `paket-kit/pruefen.mjs` läuft beim Einbau, nicht nur bei der Abgabe, mit der Verbotsliste aus `docs/PAKET-KIT.md` Abschnitt 5. Zusätzlich lehnt der Rust-Kern beim Installieren jedes `modul`-Paket ab, dessen Dateien außerhalb von `inhalt/modul/` Skripte enthalten.
 
+**Umgesetzt (Phase B, 29.09.2026):** Werkzeug (`werkzeug/kern.mjs`, `paket-lib.mjs`) und Rust-Kern (`kern/src/manifest.rs`, `schluessel.rs`, `paket.rs`) prüfen Bedingung 2 und 3 gleich; Tests in `werkzeug/test.mjs` und `kern/tests/module.rs`. Der Redaktionsschlüssel `d9b62d1755ba3744` (Zweck `module`) liegt privat nur auf Miks Mac unter `~/.offline/schluessel/offline-redaktion.key`, nicht in GitHub; eine Sicherungskopie gehört auf einen weggesperrten Stick. Der Web-Prototyp nimmt keine Module an.
+
 **Ein Modul kann nur, was `window.offline` anbietet.** Braucht ein Modul mehr (zum Beispiel Internet), gibt es zwei Wege: eine neue, kleine und geprüfte Funktion in `window.offline` per App-Update, die dann alle Module nutzen dürfen, oder das ganze Modul wird als festes Feature in die App eingebaut. Beides braucht Miks Freigabe. Ein Modul kann sich nichts selbst erlauben.
 
 ## Was ein Paket beim Einspielen durchläuft
 
 | Schritt | Prüfung | Bei Fehler |
 |---|---|---|
-| 1 | Signatur gegen die eingebauten öffentlichen Schlüssel (Zweck, Gültigkeitsfenster) | Abbruch, nichts gelesen |
+| 1 | Signatur gegen die eingebauten öffentlichen Schlüssel (Zweck, Gültigkeitsfenster); der Zweck muss zur Paketart passen (Module nur `module`, alles andere `pakete`) | Abbruch, nichts gelesen |
 | 2 | Struktur: Pflichtfelder, Kennung, Kalenderversion, bekannte Paketart, Mindestversion der App | Abbruch |
-| 3 | Pfade: nur unter `inhalt/`, kein `..`, kein absoluter Pfad, keine Steuerzeichen | Abbruch |
+| 3 | Pfade: nur unter `inhalt/`, kein `..`, kein absoluter Pfad, keine Steuerzeichen; Code (`.js`, Skripte in Seiten) nur in Modulen unter `inhalt/modul/`, Modul-Oberfläche höchstens 2 MB | Abbruch |
 | 4 | Größe und SHA-256 jeder Datei, bei großen Dateien jedes Teilstücks | Abbruch, Teilstück wird neu geladen |
 | 5 | Staging in `<id>-<version>.neu/`, dort erneute Vollprüfung, dann atomarer Tausch; der alte Stand bleibt als `.alt` bis zum Abschluss | halber Zustand wird beim nächsten Start aufgeräumt |
 | 6 | Beim Start jedes installierte Paket erneut prüfen | beschädigtes Paket erscheint nicht, die anderen laufen |

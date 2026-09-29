@@ -5,7 +5,13 @@ use std::cmp::Ordering;
 
 pub const FORMAT: u32 = 1;
 pub const TEILE_AB: u64 = 256 * 1024 * 1024;
-pub const ARTEN: [&str; 6] = ["inhalt", "zim", "karte", "modell", "kurs", "software"];
+pub const ARTEN: [&str; 7] = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul"];
+/// Module (SICHERHEIT.md, Abschnitt Module): Oberfläche nur unter `inhalt/modul/`, höchstens 2 MB,
+/// nur mit dem Redaktionsschlüssel (Zweck „module“) signiert und mit `pruefstatus: redaktion`.
+pub const MODUL_ORDNER: &str = "inhalt/modul/";
+pub const MODUL_GRENZE: u64 = 2 * 1024 * 1024;
+const SKRIPT_ENDUNGEN: [&str; 2] = [".js", ".mjs"];
+const SEITEN_ENDUNGEN: [&str; 4] = [".html", ".htm", ".xhtml", ".svg"];
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Quelle {
@@ -25,7 +31,7 @@ pub struct Datei {
     pub teile: Option<Vec<String>>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Manifest {
     pub format: u32,
     pub id: String,
@@ -37,6 +43,19 @@ pub struct Manifest {
     pub lizenz: String,
     pub herausgeber: String,
     pub pro: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub preis: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pruefstatus: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kategorie: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub alter_ab: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub abnahme: Option<String>,
+    /// Nur bei Modulen: Formatversion der gespeicherten Nutzerdaten, ab 1.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub datenversion: Option<u32>,
     pub app_min: String,
     pub erstellt: String,
     #[serde(default)]
@@ -92,6 +111,61 @@ pub fn version_vergleich(a: &str, b: &str) -> Ordering {
     Ordering::Equal
 }
 
+fn endung(p: &str) -> String {
+    match (p.rfind('.'), p.rfind('/')) {
+        (Some(i), Some(s)) if i > s => p[i..].to_ascii_lowercase(),
+        (Some(i), None) => p[i..].to_ascii_lowercase(),
+        _ => String::new(),
+    }
+}
+
+/// Darf eine Datei an diesem Pfad Code enthalten? Nur in Modulen und nur unter `inhalt/modul/`.
+pub fn code_erlaubt(art: &str, pfad: &str) -> bool {
+    art == "modul" && pfad.starts_with(MODUL_ORDNER)
+}
+
+/// Muss der Inhalt dieser Datei auf Skripte durchsucht werden (Seite außerhalb der Modul-Oberfläche)?
+pub fn braucht_skript_pruefung(art: &str, pfad: &str) -> bool {
+    SEITEN_ENDUNGEN.contains(&endung(pfad).as_str()) && !code_erlaubt(art, pfad)
+}
+
+/// Steht in einer Seite (HTML/SVG) Code? Wie `seiteHatSkript` in werkzeug/kern.mjs:
+/// `<script` als Wort, ein Ereignis-Attribut ` on…=`, oder `javascript:` – ohne Rücksicht auf Groß/klein.
+pub fn seite_hat_skript(text: &str) -> bool {
+    let t = text.to_lowercase();
+    if t.contains("javascript:") {
+        return true;
+    }
+    let b: Vec<char> = t.chars().collect();
+    for (i, _) in t.match_indices("<script") {
+        let danach = t[i + 7..].chars().next();
+        if danach.map_or(true, |c| !(c.is_alphanumeric() || c == '_')) {
+            return true;
+        }
+    }
+    // Ereignis-Attribut: Leerraum, "on", mindestens ein Buchstabe a–z, optional Leerraum, "="
+    let mut i = 0;
+    while i + 2 < b.len() {
+        if b[i].is_whitespace() && b[i + 1] == 'o' && b[i + 2] == 'n' {
+            let mut j = i + 3;
+            let start = j;
+            while j < b.len() && b[j].is_ascii_lowercase() {
+                j += 1;
+            }
+            if j > start {
+                while j < b.len() && b[j].is_whitespace() {
+                    j += 1;
+                }
+                if j < b.len() && b[j] == '=' {
+                    return true;
+                }
+            }
+        }
+        i += 1;
+    }
+    false
+}
+
 /// Strukturprüfung – gleiche Meldungen wie im Node-Werkzeug.
 pub fn manifest_pruefen_struktur(m: &Manifest) -> Vec<String> {
     let mut f = Vec::new();
@@ -144,10 +218,28 @@ pub fn manifest_pruefen_struktur(m: &Manifest) -> Vec<String> {
                 f.push(format!("Teil-Prüfsumme ungültig: {}", d.pfad));
             }
         }
+        if SKRIPT_ENDUNGEN.contains(&endung(&d.pfad).as_str()) && !code_erlaubt(&m.art, &d.pfad) {
+            f.push(if m.art == "modul" { format!("Skript außerhalb von inhalt/modul/: {}", d.pfad) } else { format!("Pakete enthalten keinen Code: {}", d.pfad) });
+        }
         summe = summe.saturating_add(d.groesse);
     }
     if m.groesse != summe {
         f.push(format!("groesse ({}) ist nicht die Summe der Dateien ({summe})", m.groesse));
+    }
+    if m.art == "modul" {
+        if m.pruefstatus.as_deref() != Some("redaktion") {
+            f.push("Module nur mit pruefstatus redaktion".into());
+        }
+        if !m.datenversion.map_or(false, |v| v >= 1) {
+            f.push("Module brauchen datenversion (ganze Zahl ab 1)".into());
+        }
+        if !m.dateien.iter().any(|d| d.pfad == format!("{MODUL_ORDNER}index.html")) {
+            f.push("Modul ohne inhalt/modul/index.html".into());
+        }
+        let oberflaeche: u64 = m.dateien.iter().filter(|d| code_erlaubt("modul", &d.pfad)).map(|d| d.groesse).sum();
+        if oberflaeche > MODUL_GRENZE {
+            f.push(format!("Modul-Oberfläche zu groß ({oberflaeche} Bytes, höchstens {MODUL_GRENZE})"));
+        }
     }
     f
 }
@@ -163,6 +255,16 @@ mod tests {
         }
         for schlecht in ["a.json", "/inhalt/a", "inhalt/../x", "inhalt/./x", "inhalt//x", "inhalt\\x", "inhalt/", "C:inhalt/x", "inhalt/a\nb", ""] {
             assert!(!pfad_gueltig(schlecht), "{schlecht:?}");
+        }
+    }
+
+    #[test]
+    fn skripte_in_seiten() {
+        for ja in ["<script>1</script>", "<SCRIPT src=a>", "<img src=x onerror=\"x()\">", "<a href=\"JavaScript:x()\">", "<p\n onclick = 1>", "<script\n>"] {
+            assert!(seite_hat_skript(ja), "{ja:?}");
+        }
+        for nein in ["<p>harmlos</p>", "<svg><text>on the road = gut</text></svg>", "<scripture>", "Konstruktion=1", "<p>on=</p>"] {
+            assert!(!seite_hat_skript(nein), "{nein:?}");
         }
     }
 

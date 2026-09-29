@@ -115,6 +115,7 @@ fn paket_bauen(server_dir: &Path, k: &Schluessel, version: &str, klein: &[u8], g
             Datei { pfad: "inhalt/tief/gross.bin".into(), groesse: hg.groesse, sha256: hg.sha256, teilgroesse: Some(teilgroesse), teile: Some(hg.teile) },
         ],
         groesse: hk.groesse + hg.groesse,
+        ..Default::default()
     };
     let bytes = serde_json::to_vec_pretty(&m).unwrap();
     std::fs::write(ordner.join("paket.json"), &bytes).unwrap();

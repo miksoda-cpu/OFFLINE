@@ -30,24 +30,31 @@ async function privatLaden(name) {
 }
 
 const befehle = {
-  async schluessel([unter, name = "offline-dev"]) {
-    if (unter !== "erzeugen") throw new Error("Verwendung: schluessel erzeugen <name>");
+  async schluessel(args) {
+    const zweck = args.find((a) => a.startsWith("--zweck="))?.slice(8).split(",") ?? ["pakete", "katalog"];
+    const bezeichnung = args.find((a) => a.startsWith("--bezeichnung="))?.slice(14);
+    const [unter, name = "offline-dev"] = args.filter((a) => !a.startsWith("--"));
+    if (unter !== "erzeugen") throw new Error("Verwendung: schluessel erzeugen <name> [--zweck=pakete,katalog|module] [--bezeichnung=…]");
+    if (zweck.includes("module") && zweck.includes("katalog")) throw new Error("Ein Schlüssel für module darf nie auch den Katalog signieren (SICHERHEIT.md, Module)");
     const pfad = path.join(PRIVAT_ORDNER, `${name}.key`);
     if (existsSync(pfad)) throw new Error(`Gibt es schon: ${pfad}`);
-    const k = schluesselErzeugen(name === "offline-dev" ? "Entwicklungsschlüssel – wird vor dem Start ersetzt" : name);
+    const k = schluesselErzeugen(bezeichnung ?? (name === "offline-dev" ? "Entwicklungsschlüssel – wird vor dem Start ersetzt" : name), zweck);
     await mkdir(PRIVAT_ORDNER, { recursive: true, mode: 0o700 });
     await writeFile(pfad, k.privatPem, { mode: 0o600 });
     const liste = { format: 1, schluessel: await bekannteLaden() };
     liste.schluessel.push(k.oeffentlich);
     await mkdir(path.dirname(OEFFENTLICH), { recursive: true });
     await writeFile(OEFFENTLICH, JSON.stringify(liste, null, 2) + "\n");
-    console.log(`Schlüssel ${k.id} erzeugt.\n  privat:     ${pfad}  (nie ins Repository!)\n  öffentlich: ${OEFFENTLICH}`);
+    console.log(`Schlüssel ${k.id} (${zweck.join(", ")}) erzeugt.\n  privat:     ${pfad}  (nie ins Repository!)\n  öffentlich: ${OEFFENTLICH}`);
   },
 
   async bauen(args) {
     const pruefen = args.includes("--pruefen");
-    const [quelle, ziel, name = process.env.OFFLINE_SCHLUESSEL_NAME || "offline-dev"] = args.filter((a) => !a.startsWith("--"));
+    const [quelle, ziel, nameArg] = args.filter((a) => !a.startsWith("--"));
     if (!quelle || !ziel) throw new Error("Verwendung: bauen <quellordner> <zielwurzel> [schlüsselname] [--pruefen]");
+    // Module signiert nur der Redaktionsschlüssel (Zweck „module“), alles andere der Paketschlüssel.
+    const art = JSON.parse(await readFile(path.join(quelle, "paket.quelle.json"), "utf8")).art;
+    const name = nameArg || (art === "modul" ? process.env.OFFLINE_REDAKTION_NAME || "offline-redaktion" : process.env.OFFLINE_SCHLUESSEL_NAME || "offline-dev");
     const privat = await privatLaden(name);
     const { ziel: ordner, manifest } = await paketBauen(quelle, ziel, privat, { pruefen });
     console.log(`Paket ${manifest.id} ${manifest.version} gebaut → ${ordner}\n  ${manifest.dateien.length} Dateien, ${mb(manifest.groesse)}, signiert mit ${privat.id}`);
@@ -94,7 +101,7 @@ const befehle = {
 
 const [befehl, ...args] = process.argv.slice(2);
 if (!befehl || !befehle[befehl]) {
-  console.log(`OFFLINE-Paketwerkzeug\n\n  schluessel erzeugen <name>\n  bauen <quelle> <zielwurzel> [schlüssel] [--pruefen]\n  pruefen <paketordner>\n  delta <alt/paket.json|-> <neu/paket.json>\n  katalog <ziel> <paketordner…> [--geplant=datei.json] [--nur-manifest] [--gueltig-tage=90]\n`);
+  console.log(`OFFLINE-Paketwerkzeug\n\n  schluessel erzeugen <name> [--zweck=pakete,katalog|module] [--bezeichnung=…]\n  bauen <quelle> <zielwurzel> [schlüssel] [--pruefen]\n  pruefen <paketordner>\n  delta <alt/paket.json|-> <neu/paket.json>\n  katalog <ziel> <paketordner…> [--geplant=datei.json] [--nur-manifest] [--gueltig-tage=90]\n`);
   process.exit(befehl ? 1 : 0);
 }
 befehle[befehl](args).catch((e) => { console.error(e.message); process.exit(1); });

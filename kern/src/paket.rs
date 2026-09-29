@@ -1,8 +1,8 @@
 //! Paketordner prüfen: Signatur → Struktur → Pfade → Größen und Prüfsummen.
 
 use crate::hash::hash_datei;
-use crate::manifest::{manifest_pruefen_struktur, Manifest};
-use crate::schluessel::{pruefe_signatur, OeffentlicherSchluessel, Signatur};
+use crate::manifest::{braucht_skript_pruefung, manifest_pruefen_struktur, seite_hat_skript, Manifest};
+use crate::schluessel::{pruefe_signatur_zwecke, schluessel_passt_zur_art, OeffentlicherSchluessel, Signatur};
 use crate::Fehler;
 use std::path::{Path, PathBuf};
 
@@ -22,6 +22,21 @@ pub fn datei_pfad(ordner: &Path, pfad: &str) -> PathBuf {
     p
 }
 
+/// Zwecke, unter denen ein Paket-Manifest signiert sein darf. Welcher zur Art passt, entscheidet `schluessel_passt_zur_art`.
+pub const PAKET_ZWECKE: [&str; 2] = ["pakete", "module"];
+
+/// Signatur → JSON → Struktur → Schlüssel passt zur Art. Das gilt, bevor irgendeine Datei angefasst wird:
+/// beim Einspielen, beim Download und bei der Suche auf dem Stick. Gibt Manifest und Schlüssel-ID zurück.
+pub fn manifest_signiert_pruefen(bytes: &[u8], sig: &Signatur, bekannte: &[OeffentlicherSchluessel], heute: &str) -> Result<(Manifest, String), Fehler> {
+    let s = pruefe_signatur_zwecke(bytes, sig, bekannte, &PAKET_ZWECKE, heute).map_err(|e| Fehler(format!("Signatur: {e}")))?;
+    let m: Manifest = serde_json::from_slice(bytes).map_err(|_| Fehler("paket.json ist kein gültiges JSON".into()))?;
+    if let Some(f) = manifest_pruefen_struktur(&m).first() {
+        return Err(Fehler(f.clone()));
+    }
+    schluessel_passt_zur_art(&m.art, &s).map_err(|e| Fehler(format!("Signatur: {e}")))?;
+    Ok((m, s.id))
+}
+
 /// Liest Manifest und Signatur, prüft alles. Gibt den ersten Fehler zurück – beim Einspielen zählt nur ja oder nein.
 pub fn paket_pruefen(ordner: &Path, bekannte: &[OeffentlicherSchluessel], heute: &str) -> Result<Geprueft, Fehler> {
     let bytes = std::fs::read(ordner.join("paket.json")).map_err(|_| Fehler("paket.json fehlt".into()))?;
@@ -29,12 +44,7 @@ pub fn paket_pruefen(ordner: &Path, bekannte: &[OeffentlicherSchluessel], heute:
         .ok()
         .and_then(|b| serde_json::from_slice(&b).ok())
         .ok_or_else(|| Fehler("paket.sig fehlt oder unlesbar".into()))?;
-    let schluessel = pruefe_signatur(&bytes, &sig, bekannte, "pakete", heute).map_err(|e| Fehler(format!("Signatur: {e}")))?;
-    let m: Manifest = serde_json::from_slice(&bytes).map_err(|_| Fehler("paket.json ist kein gültiges JSON".into()))?;
-    let fehler = manifest_pruefen_struktur(&m);
-    if let Some(f) = fehler.first() {
-        return Err(Fehler(f.clone()));
-    }
+    let (m, schluessel) = manifest_signiert_pruefen(&bytes, &sig, bekannte, heute)?;
     for d in &m.dateien {
         let p = datei_pfad(ordner, &d.pfad);
         let st = std::fs::metadata(&p).map_err(|_| Fehler(format!("Datei fehlt: {}", d.pfad)))?;
@@ -49,6 +59,9 @@ pub fn paket_pruefen(ordner: &Path, bekannte: &[OeffentlicherSchluessel], heute:
             if teile.iter().zip(h.teile.iter()).any(|(a, b)| a != b) {
                 return Err(Fehler(format!("Teil-Prüfsumme falsch: {}", d.pfad)));
             }
+        }
+        if braucht_skript_pruefung(&m.art, &d.pfad) && seite_hat_skript(&String::from_utf8_lossy(&std::fs::read(&p)?)) {
+            return Err(Fehler(format!("Skript in einer Seite außerhalb von inhalt/modul/: {}", d.pfad)));
         }
     }
     Ok(Geprueft { manifest: m, manifest_bytes: bytes, schluessel })

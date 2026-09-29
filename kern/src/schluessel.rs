@@ -53,6 +53,28 @@ pub fn schluessel_id(roh: &[u8]) -> String {
 /// Prüft `sig` über `bytes` gegen die bekannten Schlüssel. Gibt die Schlüssel-ID zurück.
 /// `heute` ist "JJJJ-MM-TT" und dient dem Gültigkeitsfenster.
 pub fn pruefe_signatur(bytes: &[u8], sig: &Signatur, bekannte: &[OeffentlicherSchluessel], zweck: &str, heute: &str) -> Result<String, Fehler> {
+    pruefe_signatur_zwecke(bytes, sig, bekannte, &[zweck], heute).map(|s| s.id)
+}
+
+/// Passt der Schlüssel, mit dem signiert wurde, zur Paketart? Wie `schluesselPasstZurArt` in werkzeug/kern.mjs.
+/// Module brauchen einen Schlüssel mit Zweck „module“, der nicht zugleich den Katalog signiert;
+/// alle anderen Pakete brauchen Zweck „pakete“.
+pub fn schluessel_passt_zur_art(art: &str, s: &OeffentlicherSchluessel) -> Result<(), Fehler> {
+    let hat = |z: &str| s.zweck.iter().any(|x| x == z);
+    if art == "modul" {
+        if !hat("module") {
+            return Err(Fehler(format!("Module nur mit dem Redaktionsschlüssel (Schlüssel {} hat nicht den Zweck module)", s.id)));
+        }
+        if hat("katalog") {
+            return Err(Fehler(format!("Module nie mit einem Katalogschlüssel (Schlüssel {})", s.id)));
+        }
+        return Ok(());
+    }
+    if hat("pakete") { Ok(()) } else { Err(Fehler(format!("Schlüssel {} nicht für pakete freigegeben", s.id))) }
+}
+
+/// Wie `pruefe_signatur`, aber der Schlüssel muss nur einen der `zwecke` haben. Gibt den Schlüssel zurück.
+pub fn pruefe_signatur_zwecke(bytes: &[u8], sig: &Signatur, bekannte: &[OeffentlicherSchluessel], zwecke: &[&str], heute: &str) -> Result<OeffentlicherSchluessel, Fehler> {
     if sig.algorithmus != "ed25519" {
         return Err(Fehler("Signatur fehlt oder unbekanntes Verfahren".into()));
     }
@@ -63,8 +85,8 @@ pub fn pruefe_signatur(bytes: &[u8], sig: &Signatur, bekannte: &[OeffentlicherSc
     if s.algorithmus != "ed25519" {
         return Err(Fehler(format!("Schlüssel {} hat ein unbekanntes Verfahren", s.id)));
     }
-    if !s.zweck.iter().any(|z| z == zweck) {
-        return Err(Fehler(format!("Schlüssel {} nicht für {zweck} freigegeben", s.id)));
+    if !zwecke.iter().any(|z| s.zweck.iter().any(|x| x == z)) {
+        return Err(Fehler(format!("Schlüssel {} nicht für {} freigegeben", s.id, zwecke.join(" oder "))));
     }
     if let Some(ab) = &s.gueltig_ab {
         if heute < ab.as_str() {
@@ -86,5 +108,5 @@ pub fn pruefe_signatur(bytes: &[u8], sig: &Signatur, bekannte: &[OeffentlicherSc
     let sb: [u8; 64] = sb.try_into().map_err(|_| Fehler("Signatur hat falsche Länge".into()))?;
     vk.verify(bytes, &DalekSignatur::from_bytes(&sb))
         .map_err(|_| Fehler("Signatur passt nicht zum Inhalt".into()))?;
-    Ok(s.id.clone())
+    Ok(s.clone())
 }

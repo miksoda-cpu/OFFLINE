@@ -7,8 +7,11 @@ import { readFile, writeFile, mkdir, readdir, stat, copyFile } from "node:fs/pro
 import path from "node:path";
 
 import { pruefeQuellordner } from "../paket-kit/pruefen.mjs";
-import { FORMAT, TEILGROESSE_STANDARD, TEILE_AB, ARTEN, ID_MUSTER, pfadGueltig, versionVergleich, manifestPruefenStruktur, delta } from "./kern.mjs";
-export { FORMAT, TEILGROESSE_STANDARD, TEILE_AB, ARTEN, pfadGueltig, versionVergleich, manifestPruefenStruktur, delta };
+import { FORMAT, TEILGROESSE_STANDARD, TEILE_AB, ARTEN, ID_MUSTER, pfadGueltig, versionVergleich, manifestPruefenStruktur, delta, schluesselPasstZurArt, brauchtSkriptPruefung, seiteHatSkript } from "./kern.mjs";
+export { FORMAT, TEILGROESSE_STANDARD, TEILE_AB, ARTEN, pfadGueltig, versionVergleich, manifestPruefenStruktur, delta, schluesselPasstZurArt };
+
+// Zwecke, unter denen ein Paket-Manifest signiert sein darf. Welcher davon zur Art passt, entscheidet schluesselPasstZurArt.
+export const PAKET_ZWECKE = ["pakete", "module"];
 
 // ---------- Schlüssel ----------
 
@@ -24,7 +27,7 @@ function rohAusPublicKey(publicKey) {
   return Buffer.from(jwk.x, "base64url");
 }
 
-export function schluesselErzeugen(bezeichnung) {
+export function schluesselErzeugen(bezeichnung, zweck = ["pakete", "katalog"]) {
   const { publicKey, privateKey } = generateKeyPairSync("ed25519");
   const roh = rohAusPublicKey(publicKey);
   return {
@@ -34,7 +37,7 @@ export function schluesselErzeugen(bezeichnung) {
       id: schluesselId(roh),
       algorithmus: "ed25519",
       oeffentlich: b64(roh),
-      zweck: ["pakete", "katalog"],
+      zweck,
       gueltig_ab: new Date().toISOString().slice(0, 10),
       gueltig_bis: null,
       bezeichnung,
@@ -58,12 +61,16 @@ export function signiere(bytes, privat) {
   return { algorithmus: "ed25519", schluessel: id, signatur: b64(sign(null, bytes, key)) };
 }
 
-/** Prüft eine Signatur gegen eine Liste bekannter öffentlicher Schlüssel (Format aus schluessel/oeffentlich.json). */
+/**
+ * Prüft eine Signatur gegen eine Liste bekannter öffentlicher Schlüssel (Format aus schluessel/oeffentlich.json).
+ * `zweck` ist ein Zweck oder eine Liste; der Schlüssel muss mindestens einen davon haben.
+ */
 export function pruefeSignatur(bytes, sig, bekannte, { zweck = "pakete", jetzt = new Date() } = {}) {
   if (!sig || sig.algorithmus !== "ed25519" || typeof sig.signatur !== "string") return { ok: false, grund: "Signatur fehlt oder unbekanntes Verfahren" };
   const s = bekannte.find((k) => k.id === sig.schluessel);
   if (!s) return { ok: false, grund: `Unbekannter Schlüssel ${sig.schluessel}` };
-  if (!s.zweck.includes(zweck)) return { ok: false, grund: `Schlüssel ${s.id} nicht für ${zweck} freigegeben` };
+  const zwecke = [].concat(zweck);
+  if (!zwecke.some((z) => s.zweck.includes(z))) return { ok: false, grund: `Schlüssel ${s.id} nicht für ${zwecke.join(" oder ")} freigegeben` };
   const tag = jetzt.toISOString().slice(0, 10);
   if (s.gueltig_ab && tag < s.gueltig_ab) return { ok: false, grund: `Schlüssel ${s.id} noch nicht gültig` };
   if (s.gueltig_bis && tag > s.gueltig_bis) return { ok: false, grund: `Schlüssel ${s.id} abgelaufen` };
@@ -71,7 +78,7 @@ export function pruefeSignatur(bytes, sig, bekannte, { zweck = "pakete", jetzt =
   try { signatur = Buffer.from(sig.signatur, "base64"); } catch { return { ok: false, grund: "Signatur nicht lesbar" }; }
   if (signatur.length !== 64) return { ok: false, grund: "Signatur hat falsche Länge" };
   const ok = verify(null, bytes, oeffentlichAusRoh(s.oeffentlich), signatur);
-  return ok ? { ok: true, schluessel: s.id } : { ok: false, grund: "Signatur passt nicht zum Inhalt" };
+  return ok ? { ok: true, schluessel: s.id, eintrag: s } : { ok: false, grund: "Signatur passt nicht zum Inhalt" };
 }
 
 // ---------- Prüfsummen ----------
@@ -196,13 +203,9 @@ export async function paketPruefen(ordner, bekannte, { jetzt = new Date() } = {}
   try { bytes = await readFile(path.join(ordner, "paket.json")); } catch { return { ok: false, fehler: ["paket.json fehlt"] }; }
   try { sig = JSON.parse(await readFile(path.join(ordner, "paket.sig"), "utf8")); } catch { return { ok: false, fehler: ["paket.sig fehlt oder unlesbar"] }; }
 
-  const s = pruefeSignatur(bytes, sig, bekannte, { zweck: "pakete", jetzt });
-  if (!s.ok) return { ok: false, fehler: [`Signatur: ${s.grund}`] };
-
-  let m;
-  try { m = JSON.parse(bytes.toString("utf8")); } catch { return { ok: false, fehler: ["paket.json ist kein gültiges JSON"] }; }
-  fehler.push(...manifestPruefenStruktur(m));
-  if (fehler.length) return { ok: false, fehler, manifest: m };
+  const g = manifestSigniertPruefen(bytes, sig, bekannte, { jetzt });
+  if (!g.ok) return { ok: false, fehler: g.fehler, manifest: g.manifest };
+  const { manifest: m, schluessel: s } = g;
 
   for (const d of m.dateien) {
     const p = path.join(ordner, ...d.pfad.split("/"));
@@ -212,8 +215,27 @@ export async function paketPruefen(ordner, bekannte, { jetzt = new Date() } = {}
     const h = await hashDatei(p, d.teilgroesse ?? 0);
     if (h.sha256 !== d.sha256) fehler.push(`Prüfsumme falsch: ${d.pfad}`);
     if (d.teile && d.teile.some((t, i) => t !== h.teile[i])) fehler.push(`Teil-Prüfsumme falsch: ${d.pfad}`);
+    else if (h.sha256 === d.sha256 && brauchtSkriptPruefung(m.art, d.pfad) && seiteHatSkript(await readFile(p, "utf8"))) {
+      fehler.push(`Skript in einer Seite außerhalb von inhalt/modul/: ${d.pfad}`);
+    }
   }
-  return { ok: fehler.length === 0, fehler, manifest: m, schluessel: s.schluessel };
+  return { ok: fehler.length === 0, fehler, manifest: m, schluessel: s };
+}
+
+/**
+ * Signatur → JSON → Struktur → Schlüssel passt zur Art. Genau das prüft die App, bevor sie eine Datei anfasst
+ * (auch beim Download und bei der Suche auf dem Stick). Gibt { ok, manifest, schluessel, fehler } zurück.
+ */
+export function manifestSigniertPruefen(bytes, sig, bekannte, { jetzt = new Date() } = {}) {
+  const s = pruefeSignatur(bytes, sig, bekannte, { zweck: PAKET_ZWECKE, jetzt });
+  if (!s.ok) return { ok: false, fehler: [`Signatur: ${s.grund}`] };
+  let m;
+  try { m = JSON.parse(bytes.toString("utf8")); } catch { return { ok: false, fehler: ["paket.json ist kein gültiges JSON"] }; }
+  const fehler = manifestPruefenStruktur(m);
+  if (fehler.length) return { ok: false, fehler, manifest: m };
+  const art = schluesselPasstZurArt(m.art, s.eintrag);
+  if (art) return { ok: false, fehler: [`Signatur: ${art}`], manifest: m };
+  return { ok: true, fehler: [], manifest: m, schluessel: s.schluessel };
 }
 
 // ---------- Delta ----------
@@ -231,11 +253,9 @@ export async function katalogBauen(paketOrdner, { basis, geplant = [], gueltigTa
     const bytes = await readFile(path.join(ordner, "paket.json"));
     if (nurManifest && !(await stat(path.join(ordner, "inhalt")).catch(() => null))) {
       const sig = JSON.parse(await readFile(path.join(ordner, "paket.sig"), "utf8"));
-      const s = pruefeSignatur(bytes, sig, bekannte, { zweck: "pakete", jetzt });
-      if (!s.ok) throw new Error(`${ordner}: Signatur: ${s.grund}`);
-      m = JSON.parse(bytes.toString("utf8"));
-      const f = manifestPruefenStruktur(m);
-      if (f.length) throw new Error(`${ordner}: ${f[0]}`);
+      const g = manifestSigniertPruefen(bytes, sig, bekannte, { jetzt });
+      if (!g.ok) throw new Error(`${ordner}: ${g.fehler[0]}`);
+      m = g.manifest;
     } else {
       const p = await paketPruefen(ordner, bekannte, { jetzt });
       if (!p.ok) throw new Error(`${ordner}: ${p.fehler.join("; ")}`);

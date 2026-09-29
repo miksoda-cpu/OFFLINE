@@ -5,7 +5,13 @@
 export const FORMAT = 1;
 export const TEILGROESSE_STANDARD = 64 * 1024 * 1024; // 64 MB
 export const TEILE_AB = 256 * 1024 * 1024; // ab 256 MB werden Dateien geteilt
-export const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software"];
+export const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul"];
+// Module (SICHERHEIT.md, Abschnitt Module): Oberfläche nur unter inhalt/modul/, höchstens 2 MB,
+// nur mit dem Redaktionsschlüssel (Zweck „module“) signiert und mit pruefstatus „redaktion“.
+export const MODUL_ORDNER = "inhalt/modul/";
+export const MODUL_GRENZE = 2 * 1024 * 1024;
+export const SKRIPT_ENDUNGEN = [".js", ".mjs"];
+export const SEITEN_ENDUNGEN = [".html", ".htm", ".xhtml", ".svg"];
 export const ID_MUSTER = /^[a-z0-9-]{2,40}$/;
 const VERSION_MUSTER = /^\d{4}\.\d{2}\.\d{2}(\.\d+)?$/;
 
@@ -23,6 +29,34 @@ export function versionVergleich(a, b) {
     if (x !== y) return x < y ? -1 : 1;
   }
   return 0;
+}
+
+const endung = (p) => { const i = p.lastIndexOf("."); return i > p.lastIndexOf("/") ? p.slice(i).toLowerCase() : ""; };
+
+/** Darf eine Datei an diesem Pfad Code enthalten? Nur in Modulen und nur unter inhalt/modul/. */
+export function codeErlaubt(art, pfad) {
+  return art === "modul" && typeof pfad === "string" && pfad.startsWith(MODUL_ORDNER);
+}
+
+/** Steht in einer Seite (HTML/SVG) Code? Grob, aber ohne Fehlalarm bei Text: Skript-Tag, Ereignis-Attribut, javascript:. */
+export function seiteHatSkript(text) {
+  return /<script\b|\son[a-z]+\s*=|javascript:/i.test(text);
+}
+export const brauchtSkriptPruefung = (art, pfad) => SEITEN_ENDUNGEN.includes(endung(pfad)) && !codeErlaubt(art, pfad);
+
+/**
+ * Passt der Schlüssel, mit dem signiert wurde, zur Paketart? Gibt null oder den Fehlertext zurück.
+ * Module brauchen einen Schlüssel mit Zweck „module“, der nicht zugleich den Katalog signiert.
+ * Alle anderen Pakete brauchen Zweck „pakete“.
+ */
+export function schluesselPasstZurArt(art, schluessel) {
+  const z = schluessel?.zweck ?? [];
+  if (art === "modul") {
+    if (!z.includes("module")) return `Module nur mit dem Redaktionsschlüssel (Schlüssel ${schluessel?.id} hat nicht den Zweck module)`;
+    if (z.includes("katalog")) return `Module nie mit einem Katalogschlüssel (Schlüssel ${schluessel.id})`;
+    return null;
+  }
+  return z.includes("pakete") ? null : `Schlüssel ${schluessel?.id} nicht für pakete freigegeben`;
 }
 
 export function manifestPruefenStruktur(m) {
@@ -49,9 +83,19 @@ export function manifestPruefenStruktur(m) {
       else if (d.teile.length !== Math.ceil(d.groesse / d.teilgroesse)) f.push(`Anzahl Teile passt nicht zur Größe: ${d.pfad}`);
       if (!d.teile.every((t) => /^[0-9a-f]{64}$/.test(t))) f.push(`Teil-Prüfsumme ungültig: ${d.pfad}`);
     }
+    if (SKRIPT_ENDUNGEN.includes(endung(d.pfad ?? "")) && !codeErlaubt(m.art, d.pfad)) {
+      f.push(m.art === "modul" ? `Skript außerhalb von inhalt/modul/: ${d.pfad}` : `Pakete enthalten keinen Code: ${d.pfad}`);
+    }
     summe += d.groesse || 0;
   }
   if (m.groesse !== summe) f.push(`groesse (${m.groesse}) ist nicht die Summe der Dateien (${summe})`);
+  if (m.art === "modul") {
+    if (m.pruefstatus !== "redaktion") f.push("Module nur mit pruefstatus redaktion");
+    if (!Number.isInteger(m.datenversion) || m.datenversion < 1) f.push("Module brauchen datenversion (ganze Zahl ab 1)");
+    if (!m.dateien.some((d) => d.pfad === MODUL_ORDNER + "index.html")) f.push("Modul ohne inhalt/modul/index.html");
+    const oberflaeche = m.dateien.filter((d) => codeErlaubt("modul", d.pfad)).reduce((s, d) => s + (d.groesse || 0), 0);
+    if (oberflaeche > MODUL_GRENZE) f.push(`Modul-Oberfläche zu groß (${oberflaeche} Bytes, höchstens ${MODUL_GRENZE})`);
+  }
   return f;
 }
 

@@ -20,8 +20,8 @@ pub use download::{katalog_laden, paket_laden, Auftrag, Fortschritt};
 pub use einspielen::{abschliessen, aufraeumen, aufraeumen_staging, einspielen, Einspielergebnis};
 pub use katalog::{katalog_pruefen, Katalog, KatalogEintrag};
 pub use manifest::{manifest_pruefen_struktur, pfad_gueltig, version_vergleich, Datei, Manifest, FORMAT};
-pub use paket::{paket_pruefen, Geprueft};
-pub use schluessel::{pruefe_signatur, schluessel_laden, OeffentlicherSchluessel, Signatur};
+pub use paket::{manifest_signiert_pruefen, paket_pruefen, Geprueft};
+pub use schluessel::{pruefe_signatur, pruefe_signatur_zwecke, schluessel_laden, schluessel_passt_zur_art, OeffentlicherSchluessel, Signatur};
 
 /// Alle Fehler des Kerns, als Klartext für die Oberfläche.
 #[derive(Debug, Clone, PartialEq, Eq)]
