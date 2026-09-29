@@ -5,21 +5,21 @@ Stand: 28. September 2026 · Status: Entwurf 1, aus der Frage „Wie stellen wir
 ## Grundsätze
 
 1. **Drei Schichten.** Der Motor (Rust-Kern) ist das einzige Teil, das schreibt, prüft, lädt und verschlüsselt. Die Hülle (Oberfläche) zeigt an und reicht Befehle weiter. Pakete sind reine Daten.
-2. **Pakete enthalten nie Code, der in der App läuft.** Erlaubt: JSON-Texte, ZIM-Archive, PMTiles-Karten, KI-Modelle. Kein Skript, keine Erweiterung, keine Oberfläche.
+2. **Pakete enthalten keinen Code, außer Module in der Sandbox.** Erlaubt: JSON-Texte, ZIM-Archive, PMTiles-Karten, KI-Modelle. Kein Skript, keine Erweiterung, keine Oberfläche. Einzige Ausnahme sind Pakete der Art `modul` unter den Bedingungen im Abschnitt „Module“.
 3. **Ausfall vor Fälschung.** Jede Prüfung ist so gebaut, dass ein Angreifer im schlimmsten Fall etwas verhindern, aber nichts unterschieben kann.
 4. **Wir haben keinen Schlüssel zum Tresor.** Was verschlüsselt ist, bleibt es auch für uns.
 
-## Entwurf: Module (`art = "modul"`), gilt erst nach Miks Freigabe
+## Module (`art = "modul"`)
 
-*Stand 29.09.2026. Bis zur Freigabe gilt Grundsatz 2 unverändert: Pakete enthalten nie Code. Hintergrund: `docs/PAKET-KIT.md` Abschnitt 5, Rückmeldung `bill/rueckmeldung/2026-09-29-paket-kit-pflichtenheft.md`.*
+*Gilt seit 29.09.2026, von Mik freigegeben (`bill/erledigt/2026-09-29-freigabe-module-bill-an-code.md`). Hintergrund: `docs/PAKET-KIT.md` Abschnitt 5, Rückmeldung `bill/rueckmeldung/2026-09-29-paket-kit-pflichtenheft.md`. Die Sandbox und `window.offline` sind noch nicht gebaut; bis dahin installiert die App keine Module.*
 
-Ein Modul ist ein Paket mit eigener Oberfläche (`inhalt/modul/index.html`). Das ist Code im Paketkanal. Erlaubt wird es nur, wenn alle drei Bedingungen gelten:
+Ein Modul ist ein Paket mit eigener Oberfläche (`inhalt/modul/index.html`). Das ist Code im Paketkanal. Erlaubt ist es nur, wenn alle drei Bedingungen gelten:
 
 1. **Harte Sandbox in der App:** iframe mit `sandbox` ohne `allow-same-origin`, eigene Content-Security-Policy ohne Netz, kein Zugriff auf Kern, Tresor, Dateien oder die Oberfläche der App. Alles läuft nur über `window.offline` per Nachrichten, und jede Nachricht wird von der App geprüft.
 2. **Eigener Schlüssel und Prüfstatus:** Module werden nur mit einem Herausgeber-Schlüssel der Redaktion signiert, nie mit dem Katalogschlüssel, und tragen `pruefstatus: redaktion`. Community-Module gibt es nicht, bis Format 2 mit Herausgebersignaturen steht.
 3. **Prüfprogramm beim Einbau Pflicht:** `paket-kit/pruefen.mjs` läuft beim Einbau, nicht nur bei der Abgabe, mit der Verbotsliste aus `docs/PAKET-KIT.md` Abschnitt 5. Zusätzlich lehnt der Rust-Kern beim Installieren jedes `modul`-Paket ab, dessen Dateien außerhalb von `inhalt/modul/` Skripte enthalten.
 
-Nach der Freigabe lautet Grundsatz 2: *Pakete enthalten keinen Code, außer Module in der Sandbox.* Ohne Freigabe bleibt Wichteln ein App-Feature, das seine Daten aus einem Paket liest.
+**Ein Modul kann nur, was `window.offline` anbietet.** Braucht ein Modul mehr (zum Beispiel Internet), gibt es zwei Wege: eine neue, kleine und geprüfte Funktion in `window.offline` per App-Update, die dann alle Module nutzen dürfen, oder das ganze Modul wird als festes Feature in die App eingebaut. Beides braucht Miks Freigabe. Ein Modul kann sich nichts selbst erlauben.
 
 ## Was ein Paket beim Einspielen durchläuft
 

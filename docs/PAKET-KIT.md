@@ -2,6 +2,8 @@
 
 *Paket-Kit, Version 1 · Stand 29.09.2026 · gilt für neue Pakete und für jedes Update*
 
+**Maßgeblich ist diese Fassung.** `paket-kit/PFLICHTENHEFT.md` ist die Kopie für Herausgeber, die ohne das Repo arbeiten. Weichen beide ab, gilt dieses Dokument.
+
 Dieses Heft sagt, was ein Paket enthalten muss, damit es in OFFLINE eingebaut werden kann. Wer ein Paket liefert (Redaktion, Entwickler, später Herausgeber am Marktplatz), füllt die Vorlage aus und lässt das Prüfprogramm laufen. Erst wenn das Prüfprogramm keinen Fehler meldet, geht das Paket an den Einbau. Der Einbau prüft noch einmal mit demselben Programm, baut das Paket mit `werkzeug/paket.mjs bauen`, signiert es und nimmt es in den Katalog.
 
 Das technische Format des fertigen, signierten Pakets steht in `docs/PAKETFORMAT.md`. Dieses Heft beschreibt die Stufe davor: den **Quellordner**, den man abgibt.
