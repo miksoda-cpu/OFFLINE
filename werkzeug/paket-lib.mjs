@@ -255,7 +255,8 @@ export async function katalogBauen(paketOrdner, { basis, geplant = [], gueltigTa
   for (const ordner of paketOrdner) {
     let m;
     const bytes = await readFile(path.join(ordner, "paket.json"));
-    if (nurManifest && !(await stat(path.join(ordner, "inhalt")).catch(() => null))) {
+    // Gespiegelt: nur paket.json, paket.sig und höchstens inhalt/vorschau/folien.json (Folien für den Katalog)
+    if (nurManifest && !(await stat(path.join(ordner, "inhalt")).catch(() => null) && (await readdir(path.join(ordner, "inhalt"))).some((e) => e !== "vorschau"))) {
       const sig = JSON.parse(await readFile(path.join(ordner, "paket.sig"), "utf8"));
       const g = manifestSigniertPruefen(bytes, sig, bekannte, { jetzt });
       if (!g.ok) throw new Error(`${ordner}: ${g.fehler[0]}`);
@@ -280,7 +281,7 @@ export async function katalogBauen(paketOrdner, { basis, geplant = [], gueltigTa
   for (const p of pakete) {
     const v = neueste.get(p.id);
     if (v && v.version === p.version) throw new Error(`Katalog: doppelte Paket-IDs (${p.id} ${p.version})`);
-    if (!v || p.version > v.version) neueste.set(p.id, p);
+    if (!v || versionVergleich(p.version, v.version) > 0) neueste.set(p.id, p);
   }
   pakete.length = 0; pakete.push(...neueste.values());
   const echt = new Set(pakete.map((p) => p.id));

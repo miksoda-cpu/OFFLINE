@@ -17,7 +17,15 @@ on:
         description: Welches Paket bauen?
         type: choice
         default: wikivoyage-de
-        options: [wikivoyage-de, wiki-de-mini, wiki-de-nopic, nur-katalog]
+        options: [wikivoyage-de, wiki-de-mini, wiki-de-nopic, textpakete, nur-katalog]
+      version:
+        description: "Nur für textpakete: Version, wenn es heute schon eine Ausgabe gibt (z. B. 2026.09.29.1); leer = Datum"
+        type: string
+        default: ""
+      redaktion:
+        description: Freigegebene Module aus redaktion/freigegeben prüfen und hochladen (nur nach Miks Freigabe)
+        type: boolean
+        default: false
       hochladen:
         description: Auf Hetzner hochladen? (sonst nur bauen und prüfen)
         type: boolean
@@ -42,7 +50,7 @@ jobs:
           chmod 600 ~/.offline/schluessel/offline-ci.key
 
       - name: ZIM von Kiwix holen und Paketquelle anlegen
-        if: inputs.paket != 'nur-katalog'
+        if: inputs.paket != 'nur-katalog' && inputs.paket != 'textpakete'
         run: |
           set -euo pipefail
           case "${{ inputs.paket }}" in
@@ -78,8 +86,34 @@ jobs:
           }
           EOF
 
+      - name: Textpakete aus pakete/ bauen und prüfen (ohne Module und Skins, die baut die Redaktion)
+        if: inputs.paket == 'textpakete'
+        env:
+          OFFLINE_SCHLUESSEL_NAME: offline-ci
+          OFFLINE_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          [ -n "$OFFLINE_VERSION" ] || unset OFFLINE_VERSION
+          mkdir -p ausgabe
+          for q in pakete/*/; do
+            [ -f "$q/paket.quelle.json" ] || continue
+            if grep -qE '"art": *"(modul|skin)"' "$q/paket.quelle.json"; then echo "Übersprungen: $q"; continue; fi
+            node werkzeug/paket.mjs bauen "$q" ausgabe
+          done
+          for o in ausgabe/*/; do node werkzeug/paket.mjs pruefen "$o"; (cd "$o" && sha256sum paket.json); done
+
+      - name: Freigegebene Module prüfen
+        if: inputs.redaktion
+        run: |
+          set -euo pipefail
+          for o in redaktion/freigegeben/*/; do
+            node werkzeug/paket.mjs pruefen "$o"
+            grep -q '"schluessel": "d9b62d1755ba3744"' "$o/paket.sig" || { echo "$o: nicht mit dem Redaktionsschlüssel signiert"; exit 1; }
+            (cd "$o" && sha256sum paket.json)
+          done
+
       - name: Paket bauen und prüfen
-        if: inputs.paket != 'nur-katalog'
+        if: inputs.paket != 'nur-katalog' && inputs.paket != 'textpakete'
         env:
           OFFLINE_SCHLUESSEL_NAME: offline-ci
         run: |
@@ -114,6 +148,23 @@ jobs:
             aws s3 cp "$o/paket.json" "s3://$BUCKET/pakete/$name/paket.json" --endpoint-url "$ENDPOINT" --acl public-read --content-type application/json
           done
 
+      - name: Freigegebene Module hochladen
+        if: inputs.hochladen && inputs.redaktion
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.HETZNER_S3_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.HETZNER_S3_SECRET_KEY }}
+          AWS_DEFAULT_REGION: eu-central-1
+          ENDPOINT: ${{ secrets.HETZNER_S3_ENDPOINT }}
+          BUCKET: ${{ secrets.HETZNER_S3_BUCKET }}
+        run: |
+          set -euo pipefail
+          for o in redaktion/freigegeben/*/; do
+            name=$(basename "$o")
+            aws s3 sync "$o/inhalt" "s3://$BUCKET/pakete/$name/inhalt" --endpoint-url "$ENDPOINT" --acl public-read --no-progress
+            aws s3 cp "$o/paket.sig"  "s3://$BUCKET/pakete/$name/paket.sig"  --endpoint-url "$ENDPOINT" --acl public-read --content-type application/json
+            aws s3 cp "$o/paket.json" "s3://$BUCKET/pakete/$name/paket.json" --endpoint-url "$ENDPOINT" --acl public-read --content-type application/json
+          done
+
       - name: Katalog aus allen Paketen im Speicher neu bauen und hochladen
         if: inputs.hochladen
         env:
@@ -130,9 +181,9 @@ jobs:
             name=$(basename "$o")
             aws s3 sync "$o" "s3://$BUCKET/pakete/$name" --endpoint-url "$ENDPOINT" --acl public-read --no-progress
           done
-          # Manifeste aller Pakete spiegeln (nur paket.json + paket.sig)
+          # Manifeste aller Pakete spiegeln (paket.json, paket.sig und die Folien für den Katalog)
           mkdir -p spiegel
-          aws s3 sync "s3://$BUCKET/pakete" spiegel --endpoint-url "$ENDPOINT" --exclude "*" --include "*/paket.json" --include "*/paket.sig" --no-progress
+          aws s3 sync "s3://$BUCKET/pakete" spiegel --endpoint-url "$ENDPOINT" --exclude "*" --include "*/paket.json" --include "*/paket.sig" --include "*/inhalt/vorschau/folien.json" --no-progress
           ls spiegel
           host=$(echo "$ENDPOINT" | sed 's#https://##')
           export OFFLINE_BASIS="https://$BUCKET.$host/pakete/"
