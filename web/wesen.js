@@ -246,9 +246,10 @@ export class Wesen {
     for (let i = 0; i < kand.length; i++) { r -= gw[i]; if (r <= 0) return kand[i]; }
     return kand[kand.length - 1];
   }
-  zeigeTipp(t) {
+  zeigeTipp(t, nachgedacht = false) {
     if (!t || !this.aktiv()) return;
-    if (t.sorte === "weisheit" && this.mitFigur() && !this.denktBis) { this.denktBis = Date.now() + 1200; this.zeichnen(); setTimeout(() => { this.denktBis = 0; this.zeigeTipp(t); }, 1200); return; }
+    // vor einem Weisheitstipp kurz nachdenken (Mimik-Tafel), dann genau einmal zeigen
+    if (t.sorte === "weisheit" && this.mitFigur() && !nachgedacht) { this.denktBis = Date.now() + 1200; this.zeichnen(); setTimeout(() => { this.denktBis = 0; this.zeigeTipp(t, true); }, 1200); return; }
     this.sprichtBis = Date.now() + 2500;
     this.aktuellerTipp = t; this.tippGezeigtUm = Date.now(); this.sitzung.tipps++;
     this.log.push({ id: t.id, sorte: t.sorte, text: t.text, zeit: new Date().toISOString(), stern: false });
