@@ -94,6 +94,22 @@ NOMAD orchestriert Docker-Container auf Debian. Das ist für Laien auf Windows/M
 
 ---
 
+## 3b. Drei Update-Routinen (Entscheidung 29.09.2026)
+
+Vorbild sind Spiele: täglich ein Ladebalken beim Start, dazwischen stille Korrekturen, selten ein großes Update über den Store. Die Grenze zwischen den Routinen ist eine Frage: **Daten oder Code?**
+
+| Routine | Was | Wie oft | Weg | iOS/iPadOS |
+|---|---|---|---|---|
+| 1. Inhalte | Pakete: Tipps, Bücher, Karten, Kurse, Skins des Wesens (Farben, Pixel, Laute als Dateien) | täglich bis wöchentlich | Abo im Hintergrund; sichtbarer Balken beim Start (offen) | ja |
+| 2. Stille Korrekturen | kleine App-Änderungen: Layout, neue Bedingung im Wortschatz des Wesens, Fehlerbehebung | alle paar Wochen | Updater: beim Start prüfen, leise laden, beim nächsten Start aktiv (heute noch Knopf) | **nein**, Apple verbietet Selbständerung |
+| 3. Große Updates | neue Funktionen: Tresor, Wesen, Karte, KI | alle paar Monate | Installer, App Store | ja, nur so |
+
+Regeln daraus:
+- **Alles, was eine Datei sein kann, wird eine Datei.** Text, Bilder, Farben, Töne, Bedingungen. So bleiben Änderungen in Routine 1.
+- **Der Wortschatz der App wird vorausschauend breit gehalten** (Bedingungen für Tipps, Schema für Skins), damit neue Inhalte selten Code brauchen.
+- **Pakete enthalten nie Code.** Das ist unsere Sicherheitsregel und zugleich Apples Store-Regel (kein Nachladen ausführbaren Codes). Damit ist die App von Anfang an store-tauglich.
+- Auf iPhone und iPad gibt es nur Routine 1 und 3.
+
 ## 4. Inhalte & Lizenzen
 
 | Quelle | Inhalt | Lizenz | Status |
