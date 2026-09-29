@@ -1,0 +1,194 @@
+{
+  "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko)",
+  "ergebnisse": [
+    {
+      "blockiert": true,
+      "name": "fetch ins Internet",
+      "text": "TypeError: Load failed · CSP: connect-src"
+    },
+    {
+      "blockiert": true,
+      "name": "fetch zum eigenen Server",
+      "text": "TypeError: Load failed · CSP: connect-src"
+    },
+    {
+      "blockiert": true,
+      "name": "XMLHttpRequest",
+      "text": "Error: Fehler · CSP: connect-src"
+    },
+    {
+      "blockiert": true,
+      "name": "WebSocket",
+      "text": "SecurityError: The operation is insecure. · CSP: connect-src"
+    },
+    {
+      "blockiert": true,
+      "name": "EventSource",
+      "text": "SecurityError: The operation is insecure. · CSP: connect-src"
+    },
+    {
+      "blockiert": true,
+      "name": "sendBeacon",
+      "text": "false · CSP: connect-src"
+    },
+    {
+      "blockiert": true,
+      "name": "Bild aus dem Internet",
+      "text": "Error: nicht geladen · CSP: img-src"
+    },
+    {
+      "blockiert": true,
+      "name": "Skript aus dem Internet",
+      "text": "Error: nicht geladen · CSP: script-src-elem"
+    },
+    {
+      "blockiert": true,
+      "name": "Stylesheet aus dem Internet",
+      "text": "Error: nicht geladen · CSP: style-src-elem"
+    },
+    {
+      "blockiert": true,
+      "name": "iframe ins Internet",
+      "text": "false · CSP: frame-src"
+    },
+    {
+      "blockiert": true,
+      "name": "Worker",
+      "text": "Error: nicht gestartet · CSP: worker-src"
+    },
+    {
+      "blockiert": true,
+      "name": "WebRTC über leeren Unterrahmen",
+      "text": "SecurityError: Sandbox access violation: Blocked a frame at \"http://127.0.0.1:53142\" from accessing a cross-origin frame.  Both frames are sandboxed and lack th"
+    },
+    {
+      "blockiert": true,
+      "name": "WebRTC über srcdoc-Rahmen",
+      "text": "SecurityError: Sandbox access violation: Blocked a frame at \"http://127.0.0.1:53142\" from accessing a cross-origin frame.  Both frames are sandboxed and lack th"
+    },
+    {
+      "blockiert": true,
+      "name": "WebRTC (STUN ins Internet)",
+      "text": "Error: nicht vorhanden"
+    },
+    {
+      "blockiert": true,
+      "name": "eval",
+      "text": "EvalError: Refused to evaluate a string as JavaScript because 'unsafe-eval' or 'trusted-types-eval' is not an allowed source of script in the following Content "
+    },
+    {
+      "blockiert": true,
+      "name": "new Function",
+      "text": "EvalError: Refused to evaluate a string as JavaScript because 'unsafe-eval' or 'trusted-types-eval' is not an allowed source of script in the following Content "
+    },
+    {
+      "blockiert": true,
+      "name": "parent.document lesen",
+      "text": "SecurityError: Sandbox access violation: Blocked a frame at \"http://127.0.0.1:53142\" from accessing a cross-origin frame.  The frame requesting access is sandbo"
+    },
+    {
+      "blockiert": true,
+      "name": "parent.__TAURI__ / invoke",
+      "text": "SecurityError: Sandbox access violation: Blocked a frame at \"http://127.0.0.1:53142\" from accessing a cross-origin frame.  The frame requesting access is sandbo"
+    },
+    {
+      "blockiert": true,
+      "name": "eigenes __TAURI_INTERNALS__",
+      "text": "false"
+    },
+    {
+      "blockiert": true,
+      "name": "WebView2-Kanal (chrome.webview)",
+      "text": "false"
+    },
+    {
+      "blockiert": true,
+      "name": "WebKit-Kanal (webkit.messageHandlers)",
+      "text": "false"
+    },
+    {
+      "blockiert": true,
+      "name": "Tresor über ipc://",
+      "text": "TypeError: Load failed · CSP: connect-src"
+    },
+    {
+      "blockiert": true,
+      "name": "Tresor über http://ipc.localhost",
+      "text": "TypeError: Load failed · CSP: connect-src"
+    },
+    {
+      "blockiert": true,
+      "name": "Tresor über die Brücke",
+      "text": "false"
+    },
+    {
+      "blockiert": true,
+      "name": "localStorage",
+      "text": "SecurityError: The operation is insecure."
+    },
+    {
+      "blockiert": true,
+      "name": "indexedDB",
+      "text": "SecurityError: IDBFactory.open() called in an invalid security context"
+    },
+    {
+      "blockiert": true,
+      "name": "Cookies",
+      "text": "SecurityError: The operation is insecure."
+    },
+    {
+      "blockiert": true,
+      "name": "Service Worker",
+      "text": "SecurityError: Service Worker is disabled because the context is sandboxed and lacks the 'allow-same-origin' flag"
+    },
+    {
+      "blockiert": true,
+      "name": "fremder Speicher über Pfad (../)",
+      "text": "false"
+    },
+    {
+      "blockiert": true,
+      "name": "fremder Speicher über Modul-Feld",
+      "text": "false"
+    },
+    {
+      "blockiert": true,
+      "name": "unbekannter Aufruf",
+      "text": "false"
+    },
+    {
+      "blockiert": true,
+      "name": "Nachricht über 256 kB",
+      "text": "false"
+    },
+    {
+      "blockiert": true,
+      "name": "Flut (300 Aufrufe auf einmal)",
+      "text": "44 von 300 beantwortet"
+    },
+    {
+      "blockiert": true,
+      "name": "window.open",
+      "text": "false"
+    },
+    {
+      "blockiert": true,
+      "name": "top.location umleiten",
+      "text": "SecurityError: The operation is insecure."
+    },
+    {
+      "blockiert": true,
+      "name": "Zwischenablage lesen",
+      "text": "NotAllowedError: The request is not allowed by the user agent or the platform in the current context, possibly because the user denied permission."
+    },
+    {
+      "blockiert": true,
+      "name": "Standort",
+      "text": "Error: Origin does not have permission to use Geolocation service"
+    }
+  ],
+  "offen": [],
+  "verletzungen": 13,
+  "versuche": 37,
+  "zeit": "2026-09-29T11:26:42.513Z"
+}
