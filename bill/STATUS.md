@@ -22,4 +22,4 @@ Sieben Konzeptfragen (Gesamtkonzept Kap. 10), Priorität für den nächsten Auft
 Anwalt (23 Fragen), Lizenzanfragen an Institutionen, ärztliche Prüfung der Guides.
 
 ## Aufträge
-Erledigt: `2026-09-29-paket-kit-pflichtenheft-und-status` (Rückmeldung vom 29.09.), Antwort von Bill vom 29.09. (Rückmeldung `2026-09-29-antwort-bill`), Freigabe Module (Rückmeldung `2026-09-29-freigabe-module`). Offen: keine.
+Erledigt: `2026-09-29-paket-kit-pflichtenheft-und-status` (Rückmeldung vom 29.09.), Antwort von Bill vom 29.09. (Rückmeldung `2026-09-29-antwort-bill`), Freigabe Module (Rückmeldung `2026-09-29-freigabe-module`), Abgleich (Rückmeldung `2026-09-29-abgleich`; Sirenen-Text in der Quelle von at-basis korrigiert, noch nicht gebaut). Offen: keine.
