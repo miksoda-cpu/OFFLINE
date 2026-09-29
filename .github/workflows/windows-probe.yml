@@ -66,14 +66,16 @@ jobs:
             Copy-Item "$env:EdgeWebDriver\msedgedriver.exe" treiber\
           }
           & treiber\msedgedriver.exe --version
-          Start-Process -FilePath "$env:USERPROFILE\.cargo\bin\tauri-driver.exe" -ArgumentList "--native-driver", "$pwd\treiber\msedgedriver.exe" -RedirectStandardOutput treiber\tauri-driver.log -RedirectStandardError treiber\tauri-driver.err
-          Start-Sleep 3
 
       - name: Update-Test und Module
         shell: bash
         run: |
           set +e -uo pipefail   # einzelne Schritte dürfen scheitern, gezählt wird in $fehler
           mkdir -p probe
+          # tauri-driver im selben Schritt: Windows-Runner beenden Hintergrundprozesse am Ende eines Schritts
+          tauri-driver --native-driver "$(cygpath -w "$PWD/treiber/msedgedriver.exe")" > treiber/tauri-driver.log 2>&1 &
+          for i in $(seq 30); do curl -fs http://127.0.0.1:4444/status >/dev/null && break; sleep 1; done
+          curl -s http://127.0.0.1:4444/status; echo
           neu=$(ls app/src-tauri/target/debug/bundle/nsis/*-setup.exe | head -1)
           curl -fsSL --ssl-no-revoke -o probe/alt-setup.exe https://offline-pakete.fsn1.your-objectstorage.com/app/0.1.8/OFFLINE_0.1.8_x64-setup.exe
           ziel="$LOCALAPPDATA/OFFLINE"
