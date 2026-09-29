@@ -15,6 +15,7 @@
 // Endet mit 0, wenn alles passt, sonst mit 1. Der Bericht (JSON) steht in --aus.
 
 import { writeFile, readFile } from "node:fs/promises";
+import { spawn } from "node:child_process";
 
 const argv = process.argv.slice(2);
 const SCHRITT = argv[0];
@@ -56,8 +57,18 @@ async function bis(f, was, ms = 60_000) {
   throw new Error(`Zeit abgelaufen: ${was}${letzter ? ` (${letzter.message})` : ""}`);
 }
 
+// PROBE_DEBUGGER (z. B. 127.0.0.1:9222): Die App ist mit Debug-Anschluss gebaut; das Skript startet sie selbst und
+// msedgedriver hängt sich an. Sonst startet tauri-driver die App („tauri:options“).
+const DEBUGGER = process.env.PROBE_DEBUGGER;
+let appProzess = null;
 async function starten(app) {
-  const s = await wd("POST", "/session", { capabilities: { alwaysMatch: { "tauri:options": { application: app } } } });
+  let caps = { "tauri:options": { application: app } };
+  if (DEBUGGER) {
+    appProzess = spawn(app, [], { stdio: "ignore", detached: false });
+    await bis(() => fetch(`http://${DEBUGGER}/json/version`).then((r) => r.ok), "Debug-Anschluss der App", 60_000);
+    caps = { browserName: "webview2", "ms:edgeOptions": { debuggerAddress: DEBUGGER } };
+  }
+  const s = await wd("POST", "/session", { capabilities: { alwaysMatch: caps } });
   sid = s.sessionId;
   await bis(() => js("return document.readyState === 'complete' && !!window.__TAURI__ && !!document.querySelector('#main, main')"), "App geladen");
   bericht.werte.agent = await js("return navigator.userAgent");
@@ -179,6 +190,7 @@ if (sid) {
   try { bericht.werte.konsole = await js("return (window.__probeFehler || []).slice(0, 20)"); } catch { /* egal */ }
   await wd("DELETE", `/session/${sid}`).catch(() => {});
 }
+if (appProzess) { appProzess.kill(); await warte(2000); }
 if (bericht.pruefungen.some((p) => !p.ok)) code = 1;
 if (opt("aus")) await writeFile(opt("aus"), JSON.stringify(bericht, null, 2) + "\n");
 console.log(code ? "\nNICHT BESTANDEN" : "\nBestanden");

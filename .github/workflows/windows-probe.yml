@@ -1,10 +1,12 @@
-# Windows-Probe vor einem Release: die echte App unter WebView2, bedient über WebDriver (tauri-driver + msedgedriver).
+# Windows-Probe vor einem Release: die echte App unter WebView2, bedient über WebDriver (msedgedriver).
 #   1. Sandbox-Probe gegen Edge (dieselbe Prüfseite wie in tests.yml, Chromium-Engine von Windows)
-#   2. Update-Test: 0.1.8 von Hetzner installieren, mit Daten füllen, die neue Version darüber installieren
-#      (einmal mit benanntem Wesen, einmal ohne Namen). Bereit darf nicht fallen, Daten bleiben.
+#   2. Update-Test: 0.1.8 (aus dem Quellstand, Commit 2deada3) installieren, mit Daten füllen, die neue Version darüber
+#      installieren – einmal mit benanntem Wesen, einmal ohne Namen. Bereit darf nicht fallen, Daten bleiben.
 #   3. In der neuen App: Sandbox-Probe mit dem bösartigen Testmodul, Wichteln aus redaktion/freigegeben laden, spielen,
 #      inaktiv, löschen.
-# Baut einen Entwickler-Build (Sandbox-Probe gibt es nur dort), signiert nichts, veröffentlicht nichts.
+# Beide Test-Builds sind Entwickler-Builds mit Debug-Anschluss (Port 9222, nur für diese Probe; Tauri setzt eigene
+# WebView2-Argumente, deshalb greift die Umgebungsvariable von tauri-driver nicht). Der Treiber hängt sich an die laufende
+# App. Signiert nichts, veröffentlicht nichts.
 name: Windows-Probe
 
 on:
@@ -14,9 +16,10 @@ jobs:
   probe:
     name: Windows (WebView2)
     runs-on: windows-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v5
+        with: { fetch-depth: 0 }
       - uses: actions/setup-node@v5
         with: { node-version: 22 }
       - uses: dtolnay/rust-toolchain@stable
@@ -25,6 +28,7 @@ jobs:
           workspaces: |
             kern
             app/src-tauri
+            alt/app/src-tauri
 
       - name: Sandbox-Probe gegen Edge
         shell: bash
@@ -32,29 +36,37 @@ jobs:
           cargo build --manifest-path kern/Cargo.toml --bin offline-kern
           CHROME="C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe" node werkzeug/sandbox-probe.mjs --chrome
 
+      - name: Quellstand 0.1.8 daneben legen
+        shell: bash
+        run: git worktree add alt 2deada3
+
       - name: kiwix-serve als mitgeliefertes Programm holen
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p app/src-tauri/binaries kiwix && cd kiwix
+          mkdir -p kiwix && cd kiwix
           holen() { curl -fsSL --ssl-no-revoke --retry 3 --retry-delay 10 --retry-all-errors -o paket "$1"; }
           holen https://download.kiwix.org/release/kiwix-tools/kiwix-tools_win-x86_64.zip || holen https://download.kiwix.org/release/kiwix-tools/kiwix-tools_win-i686.zip
           unzip -q paket
-          cp "$(find . -type f -name kiwix-serve.exe | head -1)" ../app/src-tauri/binaries/kiwix-serve-x86_64-pc-windows-msvc.exe
+          for z in ../app ../alt/app; do mkdir -p $z/src-tauri/binaries; cp "$(find . -type f -name kiwix-serve.exe | head -1)" $z/src-tauri/binaries/kiwix-serve-x86_64-pc-windows-msvc.exe; done
 
-      - name: Entwickler-Build der neuen Version (NSIS)
+      - name: Test-Builds alt (0.1.8) und neu, mit Debug-Anschluss (NSIS)
         shell: bash
-        working-directory: app
         run: |
-          npm install
-          echo '{"bundle":{"createUpdaterArtifacts":false}}' > probe.json
-          npx tauri build --debug --bundles nsis --config probe.json
-          ls src-tauri/target/debug/bundle/nsis/
+          set -euo pipefail
+          for z in alt/app app; do
+            node -e '
+              const fs = require("fs"); const c = JSON.parse(fs.readFileSync(process.argv[1] + "/src-tauri/tauri.conf.json", "utf8"));
+              const w = c.app.windows.map((f) => ({ ...f, additionalBrowserArgs: "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --remote-debugging-port=9222" }));
+              fs.writeFileSync(process.argv[1] + "/probe.json", JSON.stringify({ app: { windows: w }, bundle: { createUpdaterArtifacts: false } }));
+            ' "$z"
+            (cd "$z" && npm install && npx tauri build --debug --bundles nsis --config probe.json)
+          done
+          ls alt/app/src-tauri/target/debug/bundle/nsis/ app/src-tauri/target/debug/bundle/nsis/
 
-      - name: tauri-driver und passender msedgedriver
+      - name: Passender msedgedriver
         shell: pwsh
         run: |
-          cargo install tauri-driver --locked
           $v = (Get-ItemProperty "HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}").pv
           Write-Host "WebView2 $v"
           New-Item -ItemType Directory -Force treiber | Out-Null
@@ -67,29 +79,20 @@ jobs:
           }
           & treiber\msedgedriver.exe --version
 
-      - name: Diagnose – startet WebView2 mit Debug-Port?
-        continue-on-error: true
-        shell: bash
-        run: |
-          app=$(ls app/src-tauri/target/debug/*.exe | grep -v kiwix | head -1); echo "App: $app"
-          WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=--remote-debugging-port=9222 "$app" > diag.log 2>&1 &
-          sleep 25
-          curl -s http://127.0.0.1:9222/json/version || echo "kein Debug-Port"
-          tasklist | grep -i -E "offline|msedgewebview2" | head
-          head -40 diag.log
-          taskkill //F //IM "$(basename "$app")" > /dev/null 2>&1 || true
-
       - name: Update-Test und Module
         shell: bash
+        env:
+          WEBDRIVER_URL: http://127.0.0.1:9515
+          PROBE_DEBUGGER: 127.0.0.1:9222
         run: |
           set +e -uo pipefail   # einzelne Schritte dürfen scheitern, gezählt wird in $fehler
           mkdir -p probe
-          # tauri-driver im selben Schritt: Windows-Runner beenden Hintergrundprozesse am Ende eines Schritts
-          tauri-driver --native-driver "$(cygpath -w "$PWD/treiber/msedgedriver.exe")" > treiber/tauri-driver.log 2>&1 &
-          for i in $(seq 30); do curl -fs http://127.0.0.1:4444/status >/dev/null && break; sleep 1; done
-          curl -s http://127.0.0.1:4444/status; echo
+          # msedgedriver im selben Schritt: Windows-Runner beenden Hintergrundprozesse am Ende eines Schritts
+          treiber/msedgedriver.exe --port=9515 > treiber/msedgedriver.log 2>&1 &
+          for i in $(seq 30); do curl -fs http://127.0.0.1:9515/status >/dev/null && break; sleep 1; done
+          alt=$(ls alt/app/src-tauri/target/debug/bundle/nsis/*-setup.exe | head -1)
           neu=$(ls app/src-tauri/target/debug/bundle/nsis/*-setup.exe | head -1)
-          curl -fsSL --ssl-no-revoke -o probe/alt-setup.exe https://offline-pakete.fsn1.your-objectstorage.com/app/0.1.8/OFFLINE_0.1.8_x64-setup.exe
+          echo "alt: $alt"; echo "neu: $neu"
           ziel="$LOCALAPPDATA/OFFLINE"
           installieren() { taskkill //F //IM offline-app.exe >/dev/null 2>&1 || true; sleep 2; "$1" //S; sleep 5; }
           exe() { find "$ziel" -maxdepth 1 -name "*.exe" ! -iname "uninstall*" ! -iname "kiwix*" | head -1; }
@@ -100,15 +103,15 @@ jobs:
           }
           fehler=0
           # A: benanntes Wesen
-          installieren probe/alt-setup.exe
+          installieren "$alt"
           node werkzeug/app-probe.mjs alt --app "$(cygpath -w "$(exe)")" --name Betty --aus probe/a-alt.json || fehler=1
           installieren "$neu"
           node werkzeug/app-probe.mjs neu --app "$(cygpath -w "$(exe)")" --vorher probe/a-alt.json --aus probe/a-neu.json || fehler=1
-          # Module in der neuen App (Entwickler-Build)
+          # Module in der neuen App
           node werkzeug/app-probe.mjs module --app "$(cygpath -w "$(exe)")" --boese "$(cygpath -w "$PWD/werkzeug/testmodule/boese")" --quelle "$(cygpath -w "$PWD/redaktion/freigegeben")" --aus probe/module.json || fehler=1
           # B: Wesen ohne Namen, frisches Gerät
           aufraeumen
-          installieren probe/alt-setup.exe
+          installieren "$alt"
           node werkzeug/app-probe.mjs alt --app "$(cygpath -w "$(exe)")" --aus probe/b-alt.json || fehler=1
           installieren "$neu"
           node werkzeug/app-probe.mjs neu --app "$(cygpath -w "$(exe)")" --vorher probe/b-alt.json --aus probe/b-neu.json || fehler=1
@@ -121,6 +124,5 @@ jobs:
           name: windows-probe
           path: |
             probe/*.json
-            werkzeug/testmodule/bericht-*.json
+            werkzeug/testmodule/bericht-edge.json
             treiber/*.log
-            treiber/*.err
