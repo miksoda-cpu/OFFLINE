@@ -70,7 +70,21 @@ async function starten(app) {
   }
   const s = await wd("POST", "/session", { capabilities: { alwaysMatch: caps } });
   sid = s.sessionId;
-  await bis(() => js("return document.readyState === 'complete' && !!window.__TAURI__ && !!document.querySelector('#main, main')"), "App geladen");
+  // Beim Anhängen kann der Treiber zuerst ein anderes Ziel erwischen (Hilfsseite, Rahmen): auf das App-Fenster wechseln
+  const geladen = () => js("return document.readyState === 'complete' && !!window.__TAURI__ && !!document.querySelector('#main, main')");
+  try {
+    await bis(async () => {
+      for (const h of await wd("GET", `/session/${sid}/window/handles`)) {
+        await wd("POST", `/session/${sid}/window`, { handle: h });
+        if (await geladen().catch(() => false)) return true;
+      }
+      return false;
+    }, "App geladen");
+  } catch (e) {
+    const ziele = DEBUGGER ? await fetch(`http://${DEBUGGER}/json/list`).then((r) => r.json()).catch(() => []) : [];
+    const hier = await js("return [location.href, document.readyState, typeof window.__TAURI__, document.title, String(window.__fehler || '')].join(' | ')").catch((x) => x.message);
+    throw new Error(`${e.message}. Seite: ${hier}. Ziele: ${JSON.stringify(ziele.map((z) => [z.type, z.url, z.title]))}`);
+  }
   bericht.werte.agent = await js("return navigator.userAgent");
   bericht.werte.app = await invoke("app_info", {}).then((r) => r.ok ?? r.fehler).catch((e) => String(e));
   console.log(`App: ${JSON.stringify(bericht.werte.app)}\n${bericht.werte.agent}`);
