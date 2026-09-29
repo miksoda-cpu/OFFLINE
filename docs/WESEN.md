@@ -11,16 +11,22 @@
 - Keine Telemetrie, keine Push-Nachrichten, kein Netz: Log, Einstellungen, Bestätigungen und das Gelernte liegen nur am Gerät (`localStorage`, Teil von „Restlos löschen“).
 - Töne sind standardmäßig aus; wenn an, drei kurze Sinustöne aus der App, keine Dateien.
 
-**Bereit-Modul (`web/bereit.js`), Version 1, vier Quellen mit Verfall:**
+**Bereit-Modul (`web/bereit.js`), Version 2 (29.09.2026), vier Quellen nach Gesamtkonzept Kapitel 4:**
 
-| Quelle | Punkte | Woraus |
+| Quelle | Gewicht | Positionen |
 |---|---|---|
-| Vorsorge-Checkliste | 0–40 | abgehakte Punkte / alle Punkte |
-| Notfallmappe im Tresor | 0 oder 15 | Tresor angelegt (Desktop) |
-| Wissen ohne Netz | 0–15 | je 5 für Österreich-Paket, ein ZIM, eine Karte |
-| Bestätigungen | 0–30 | fünf Positionen zu 6 Punkten, jede verfällt: Wasser (6 Monate), Lampe und Batterien (12), Medikamente (6), Radio getestet (12), Probeabend (12) |
+| Inhalte | 20 % | Österreich-Paket am Gerät, Paket nicht älter als 6 Monate, Wissen ohne Netz (ZIM), Karte ohne Netz – liest die App selbst |
+| Dinge | 35 % | 18 Punkte der Vorsorge-Checkliste, abgehakt **und** bestätigt; Wasser 12 Monate, Batterien und Radio 24, Medikamente und Powerbanks 6, Tank 3 |
+| Menschen | 25 % | Familiengruppe, Treffpunkt, Nummern auf Papier, Nachbar (je 6 Monate), Anlaufstelle (12), Notfallmappe im Tresor (Desktop, liest die App) |
+| Können | 20 % | Kocher angezündet, Radio getestet, Probeabend (je 12 Monate) |
 
-Verfällt eine Position, sinkt die Zahl sichtbar und das Wesen wird „unruhig“, bis man sie bestätigt. Der Probeabend löst das „Fest“ aus (eine Nacht). Die Gewichte sind ein erster Vorschlag; das Gesamtkonzept (Kapitel 4) kann sie ersetzen, die Berechnung ist an einer Stelle.
+- Innerhalb einer Quelle zählt jede Position mit ihrem Gewicht (Wasser 3, Probeabend 2 …). Gewichte und Fristen stehen nur in `bereit.js`.
+- Nach Ablauf sinkt eine Position über drei Monate langsam auf null und steht als „fällig“ auf der Übersicht (Checklistenpunkte auch auf der Vorsorge-Seite, mit „Erneuert“).
+- Über 95 ohne Probeabend in den letzten drei Monaten: „Das ist verdächtig gut. Wann war dein letzter Probeabend?“
+- Positionen, die es auf einem Gerät nicht gibt (Notfallmappe im Web-Prototyp ohne Tresor), zählen dort nicht mit; 100 bleibt erreichbar.
+- Die Lumi liest nur `wert` und `faellig` (bzw. `verfallen`). Die Stufen 30/60/80 kommen aus `stufe()` in `bereit.js`.
+- Übertragung aus Version 1: Bestätigungen behalten ihr Datum, alte Häkchen gelten ab dem Update. Gespeichert wird unter `bereit-v2`; die Daten von Version 1 bleiben liegen.
+- Tests: `web/bereit.test.mjs` (15 Fälle, auch in der CI). Im Entwickler-Build lässt sich das Datum auf der Übersicht vorstellen.
 
 **Das Wesen (`web/wesen.js`):**
 - Sprite 48 × 36 auf Canvas, ohne Glättung skaliert; der Schein der Leuchtkugeln liegt auf einer zweiten, weichen Ebene. Höhle als Welt: dunkler Stein, Eisband oben, der glimmende Spalt unten, aufsteigender Dampf.

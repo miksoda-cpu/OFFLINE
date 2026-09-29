@@ -2,6 +2,8 @@
 // Grundsätze: Es stirbt nicht, bettelt nicht (keine Push), lügt nicht (der Score steht daneben). Pakete liefern nur Text,
 // Bedingungen sind Daten (kein Code), jeder Tipp wird beim Anzeigen entschärft.
 
+import { stufe } from "./bereit.js";
+
 const B = 48, H = 36; // logische Pixel
 
 export const FELLE = {
@@ -60,7 +62,8 @@ export class Wesen {
     if (this.schlaeft) return (this.zustand = "schlaeft");
     if (this.festBis > jetzt) return (this.zustand = "fest");
     if (this.verfallen.length && this.score >= 30) return (this.zustand = "unruhig");
-    this.zustand = this.score < 30 ? "liegt" : this.score < 60 ? "sitzt" : this.score < 80 || !this.e.baut ? "wandert" : "baut";
+    const st = stufe(this.score); // gemeinsame Stufen aus bereit.js
+    this.zustand = st === "baut" && !this.e.baut ? "wandert" : st;
   }
   fest() { this.festBis = Date.now() + 12 * 3600000; this.sp.set("wesen-fest", new Date(this.festBis).toISOString()); this.ton("fest"); this.zustandBerechnen(); this.zeichnen(); }
   anstupsen() {

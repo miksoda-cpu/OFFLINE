@@ -1,6 +1,6 @@
 // OFFLINE – App-Oberfläche (Prototyp). Alle Inhalte kommen aus signierten Paketen, siehe paket-client.js.
 import { versionVergleich } from "./paket-kern.js";
-import { bereitBerechnen, naechsterSchritt, BESTAETIGUNGEN } from "./bereit.js";
+import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUebertragen, POSITIONEN as BEREIT_POSITIONEN } from "./bereit.js";
 import { Wesen, SORTEN } from "./wesen.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
 
@@ -35,7 +35,7 @@ const notizId = () => Date.now().toString(36) + Math.random().toString(36).slice
 
 const state = {
   checks: speicher.get("checks", {}),
-  bestaetigungen: speicher.get("bestaetigungen", {}), // id → ISO-Datum der letzten Bestätigung (Bereit-Modul)
+  bestaetigt: null, // Bereit Version 2: positionId → ISO-Datum der letzten Bestätigung (siehe bereit.js), unten geladen
   wesenLog: { filter: "", suche: "" },
   abo: speicher.get("abo", { intervall: "woechentlich", nurWlan: true, fenster: true, von: "02:00", bis: "05:00", aktiv: true }),
   fortschritt: null, // { pfad, geladen, gesamt } während eines Downloads
@@ -74,19 +74,23 @@ const wesen = new Wesen({ speicher, tipps: () => inhalt(PW(), "inhalt/tipps.json
   const el = document.getElementById("wesen-log"); if (el) el.innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche);
 } });
 
-// Bereit: eine Zahl aus vier Quellen – Checkliste, Notfallmappe, Wissen, Bestätigungen mit Verfall
+// Bereit, Version 2: vier Quellen nach Gesamtkonzept Kapitel 4, jede Position mit eigenem Verfall (bereit.js).
+// Beim ersten Start nach dem Update werden die Bestätigungen aus Version 1 übernommen; die alten Daten bleiben liegen.
+state.bestaetigt = speicher.get("bereit-v2", null) ?? bereitUebertragen({ checks: state.checks, bestaetigungenV1: speicher.get("bestaetigungen", {}) });
+speicher.set("bereit-v2", state.bestaetigt);
 function bereit() {
-  const vorsorge = D("vorsorge");
-  const gesamt = vorsorge ? vorsorge.gruppen.reduce((n, g) => n + g.punkte.length, 0) : 0;
-  const erledigt = Object.values(state.checks).filter(Boolean).length;
   const arten = installierteIds().map(installiertesPaket).filter(Boolean).map((x) => x.manifest.art);
-  const notfallmappe = !!desktop && state.tresor.status !== null && state.tresor.status !== "kein";
-  return bereitBerechnen({ erledigt, gesamt, notfallmappe, arten, bestaetigungen: state.bestaetigungen });
+  const notfallmappe = desktop ? state.tresor.status !== null && state.tresor.status !== "kein" : undefined; // ohne Tresor zählt sie nicht
+  return bereitBerechnen({ checks: state.checks, bestaetigt: state.bestaetigt, geraet: { paketErstellt: P()?.manifest.erstellt ?? null, arten, notfallmappe } }, testJetzt());
 }
-function bestaetigen(id) {
-  state.bestaetigungen[id] = new Date().toISOString();
-  speicher.set("bestaetigungen", state.bestaetigungen);
-  if (BESTAETIGUNGEN.find((b) => b.id === id)?.fest) wesen.fest();
+// Nur im Entwickler-Build: Datum für die Bereit-Rechnung vorstellen, um Verfall zu prüfen (Übersicht, Testleiste).
+const testJetzt = () => (desktop?.info?.entwickler && speicher.get("test-monate", 0) ? Date.now() + speicher.get("test-monate", 0) * 30.44 * 86400000 : Date.now());
+const testLeiste = () => desktop?.info?.entwickler ? `<div class="card" style="margin-bottom:1rem;border-style:dashed"><strong>Entwickler-Build:</strong> Datum für Bereit ${speicher.get("test-monate", 0) ? `+${speicher.get("test-monate", 0)} Monate` : "heute"}
+  ${[0, 7, 13, 16].map((m) => `<button class="btn btn-sm" data-test-monate="${m}">${m ? `+${m} Monate` : "heute"}</button>`).join(" ")}</div>` : "";
+function bestaetigen(id, ja = true) {
+  if (ja) state.bestaetigt[id] = new Date(testJetzt()).toISOString(); else delete state.bestaetigt[id];
+  speicher.set("bereit-v2", state.bestaetigt);
+  if (ja && BEREIT_POSITIONEN.find((p) => p.id === id)?.fest) wesen.fest();
   render();
 }
 const D = (name) => inhalt(P(), `inhalt/${name}.json`);
@@ -150,14 +154,16 @@ const seiten = {
           ${b.quellen.map((q) => `<div class="bereit-quelle"><span>${esc(q.name)} <span class="muted">· ${esc(q.text)}</span></span><span class="mono">${q.punkte}/${q.max}</span></div>`).join("")}
         </div>
       </div>
+      ${testLeiste()}
       <div class="kacheln">
         ${kachel("notfall", "rose", "Notfall", "112 · 122 · 133 · 144, Sirenen")}
         ${kachel("vorsorge", "moos", "Vorsorge", `${erledigt} von ${gesamt} erledigt`)}
         ${kachel("bibliothek", "eisblau", "Bibliothek", `${installierte.length} Paket${installierte.length === 1 ? "" : "e"} am Gerät`)}
         ${kachel("werkzeuge", "flieder", "Werkzeuge", "Radio, Sonne, Vorrat")}
       </div>
-      <div class="card" style="margin-bottom:1rem"><h3>Bestätigungen</h3><p class="muted" style="margin:.2rem 0 .4rem">Dinge, die verfallen. Einmal bestätigen, dann ist Ruhe, bis es wieder so weit ist.</p>
-        ${b.positionen.map((x) => `<div class="bestaetigung"><span><strong>${esc(x.titel)}</strong><br><span class="muted">${x.status === "gueltig" ? `gültig noch ${x.rest} Tage` : x.status === "verfallen" ? `<span class="tag tag-warn">verfallen</span> seit ${-x.rest} Tagen` : esc(x.hinweis)}</span></span><button class="btn btn-sm ${x.status === "gueltig" ? "" : "btn-primary"}" data-bestaetigen="${x.id}">${x.status === "gueltig" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
+      ${b.hinweis ? `<div class="card" style="margin-bottom:1rem"><strong>${esc(b.hinweis)}</strong></div>` : ""}
+      <div class="card" style="margin-bottom:1rem"><h3>Menschen und Können</h3><p class="muted" style="margin:.2rem 0 .4rem">Dinge, die verfallen. Einmal bestätigen, dann ist Ruhe, bis es wieder so weit ist.${b.faellig.some((x) => x.check) ? " Fällige Punkte der Checkliste stehen darunter." : ""}</p>
+        ${b.positionen.filter((x) => (!x.check && !x.auto) || (x.check && x.stand === "faellig")).map((x) => `<div class="bestaetigung"><span><strong>${esc(x.titel)}</strong><br><span class="muted">${x.stand === "gut" ? `gültig noch ${x.rest} Tage` : x.stand === "faellig" ? `<span class="tag tag-warn">fällig</span> seit ${-x.rest} Tagen` : esc(x.hinweis ?? "")}</span></span><button class="btn btn-sm ${x.stand === "gut" ? "" : "btn-primary"}" data-bestaetigen="${x.id}">${x.stand === "gut" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
       </div>
       ${wesen.aktiv() ? `<details class="card" style="margin-bottom:1rem"><summary><strong>${esc(wesen.e.name)}</strong> <span class="muted">· Einstellungen</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
       <details class="card" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>Was ${esc(wesen.e.name)} gesagt hat</strong> <span class="muted" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` :
@@ -199,12 +205,14 @@ const seiten = {
     if (!v || !b) return fehlt();
     const gesamt = v.gruppen.reduce((s, g) => s + g.punkte.length, 0);
     const erledigt = Object.values(state.checks).filter(Boolean).length;
+    const bereitStand = bereit();
     return `
       ${kopf("Blackout-Vorsorge", esc(v.einleitung), `<div style="min-width:220px"><div class="muted" style="font-size:.9rem;margin-bottom:.3rem">${erledigt} von ${gesamt} erledigt</div><div class="progress"><div style="width:${(erledigt / gesamt) * 100}%"></div></div></div>`)}
       <div class="grid grid-2">${v.gruppen.map((g, gi) => `
         <div class="card"><h3>${esc(g.gruppe)}</h3><ul class="check">${g.punkte.map((p, pi) => {
           const id = `${gi}-${pi}`;
-          return `<li><label><input type="checkbox" data-check="${id}" ${state.checks[id] ? "checked" : ""}><span>${esc(p)}</span></label></li>`;
+          const pos = bereitStand.positionen.find((x) => x.check === id);
+          return `<li><label><input type="checkbox" data-check="${id}" ${state.checks[id] ? "checked" : ""}><span>${esc(p)}${pos?.stand === "faellig" ? ` <span class="tag tag-warn">fällig</span>` : ""}</span></label>${pos?.stand === "faellig" ? ` <button class="btn btn-sm btn-primary" data-bestaetigen="${pos.id}">Erneuert</button>` : ""}</li>`;
         }).join("")}</ul></div>`).join("")}
       </div>
       <h2 style="margin-top:2rem">Wenn der Strom ausfällt</h2>
@@ -1205,7 +1213,7 @@ function render() {
 
 main.addEventListener("change", (e) => {
   const t = e.target;
-  if (t.dataset.check) { state.checks[t.dataset.check] = t.checked; speicher.set("checks", state.checks); render(); }
+  if (t.dataset.check) { state.checks[t.dataset.check] = t.checked; speicher.set("checks", state.checks); return bestaetigen(`c-${t.dataset.check}`, t.checked); }
   if (t.dataset.abo) { state.abo[t.dataset.abo] = t.checked; aboSpeichern(); render(); }
   if (t.dataset.zeit) { state.abo[t.dataset.zeit] = t.value; aboSpeichern(); }
   if (t.dataset.wesen) { wesen.einstellen(t.dataset.wesen, t.type === "checkbox" ? t.checked : t.value); if (t.dataset.wesen !== "name") render(); return; }
@@ -1225,6 +1233,7 @@ function beiKlick(e) {
   if (!b) return;
   if (b.dataset.filter) { state.filter = b.dataset.filter; render(); }
   if (b.dataset.bestaetigen) return bestaetigen(b.dataset.bestaetigen);
+  if (b.dataset.testMonate) { speicher.set("test-monate", Number(b.dataset.testMonate)); return render(); }
   if (b.hasAttribute("data-wesen-gelernt-zurueck")) { wesen.gelernt = { intervall: 90, gelesen: 0, weitergewischt: 0 }; wesen.speichern(); return render(); }
   if (b.dataset.install) installiereMitMeldung(b.dataset.install, "bib-msg");
   if ([...b.attributes].some((a) => a.name.startsWith("data-modul") || a.name === "data-folie")) return modulAktion(b);
