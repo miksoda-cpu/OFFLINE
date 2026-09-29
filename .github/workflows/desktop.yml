@@ -14,6 +14,10 @@ on:
         type: boolean
         default: false
 
+# Bei Tags v* legt tauri-action einen Release-Entwurf an, dafür braucht das Token Schreibrecht auf den Inhalt.
+permissions:
+  contents: write
+
 jobs:
   kern:
     name: Kern-Tests
