@@ -1,8 +1,8 @@
 # Rückmeldung: Die Lumi, standardmäßig aus, mit Namen, Bildern und Tipps
 
-**Von:** Code (lokale Session) · **Datum:** 2026-09-29 · **Auftrag:** `bill/todo/2026-09-29-lumi-einbau.md` · **Commit:** `437b92f`
+**Von:** Code (lokale Session) · **Datum:** 2026-09-29 · **Auftrag:** `bill/erledigt/2026-09-29-lumi-einbau.md` · **Commits:** `437b92f`, Korrektur `72775a4`
 
-**Stand:** gebaut und getestet. Offen ist nur der Durchlauf in der Test-App: Der Bildschirm war nicht erreichbar (macOS meldet einen Aufnahmefehler, vermutlich gesperrt). Der Auftrag bleibt deshalb in `todo`, bis ich den Durchlauf nachgereicht habe. Denselben Ablauf habe ich vollständig im Web-Prototyp gespielt; dort laufen dieselben Dateien (`web/wesen.js`, `web/app.js`).
+**Stand:** gebaut und getestet, im Web-Prototyp vollständig durchgespielt und in der Test-App ergänzt (Nachtrag unten).
 
 ## Ergebnis, Punkt für Punkt
 1. **Standard aus:** Drei Darstellungen, Lumi mit Tipps, nur Tipps, aus (Standard).
@@ -63,3 +63,20 @@
 ## Hinweise
 - **Bestand im Paket:** Das Paket `wir` ist nur in der Quelle geändert, nicht gebaut und nicht veröffentlicht. Bis es neu gebaut ist, zeigt die App die 53 alten Tipps; die mit „ich“ sind dort bereits über `benannt` geregelt.
 - **Handy:** Die Foto-Ansicht funktioniert bei 360 px. Die Bühne ist 240 px breit (Einstellung „Größe“), darunter ist Platz für die Sprechblase. Unter 360 px schrumpft sie mit.
+
+## Nachtrag: Durchlauf in der Test-App (macOS, Entwickler-Build, frische Kopie `at.digioneer.offline.lumitest`)
+
+| Schritt | Ergebnis |
+|---|---|
+| frische Installation | keine Figur, keine Karte, keine Tipps |
+| Datum +7 Monate (Testleiste) | dunkle Karte mit zwei Lichtern, Texte und KI-Satz wie vorgesehen |
+| *Ja, zeig sie mir* | Bild Sprechen, „Oh. Hier oben ist es hell.“, Namensfeld mit Fokus |
+| Satz vorbei, Feld im Fokus | **Zuhören** (Kopf geneigt, aufmerksam) |
+| *Später* | „noch ohne Namen“, Knopf *Namen geben* |
+| Name „Susi“ | „Susi. Das bin ich. Das war neu. Ich mag es.“ |
+| erster Tipp | Tipp der Sorte App, Bild Sprechen |
+| dreimal angestupst | **Zähne**, „grrr“, dann „…tschuldigung. Ich mag das nicht.“ |
+
+**Gefunden und behoben** (`72775a4`): Vor einem Weisheitstipp soll die Lumi 1,2 Sekunden nachdenken. Der Code rief sich danach selbst wieder auf und blieb im Bild **Nachdenken** hängen; der Tipp kam nie. Jetzt denkt sie einmal nach und zeigt den Tipp. Im Browser war das nicht aufgefallen, weil dort keine Tipps kommen, solange die Seite als verborgen gilt.
+
+Freude, Fest, Unruhig, Aus mit Rückfrage und Wiedereinschalten habe ich im Web-Prototyp geprüft (Tabelle oben). In der App habe ich aufgehört, als Mik den Mac wieder benutzte; derselbe Code, kein Unterschied zu erwarten.

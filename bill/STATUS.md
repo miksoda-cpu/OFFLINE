@@ -17,8 +17,13 @@ Desktop 0.1.8 veröffentlicht, 0.2.0 (Module) im Repo, noch nicht veröffentlich
 - Kinder-Modus ab 6, Tagesseite mit Vorratskammer, Roman der Woche, Einstellungen in drei Schichten, „Wohin"
 - Gesamtkonzept: Projektdokument „OFFLINE-Gesamtkonzept" (Fassung 6), noch nicht in `docs/`
 
+- Bereit Version 2 nach Gesamtkonzept Kapitel 4 (Auftrag `2026-09-29-bereit-v2`), mit Übertragung aus Version 1.
+- Lumi standardmäßig aus, Startablauf mit Namen, Foto-Ansicht, 176 Tipps im Paket `wir` (Quelle, nicht gebaut) (Auftrag `2026-09-29-lumi-einbau`).
+- Skins als Paketart, Grundaussehen mit `of`-Klassen, Flechte gebaut in der lokalen Redaktionsablage, **nicht veröffentlicht** (Auftrag `2026-09-29-flechte-als-paket`).
+- Freigabe von Wichteln ist vorbereitet (mit App 0.2.0 zusammen), aber auf Miks Anweisung „Nichts veröffentlichen“ angehalten.
+
 ## Offen bei Code (wartet)
-- `.github/workflows/tests.yml` (Tests und Sandbox-Probe bei jedem Push) liegt fertig, Push braucht das GitHub-Recht `workflow` auf Miks Mac.
+- CI `tests.yml` läuft seit 29.09. bei jedem Push (Werkzeug, Kit, Bereit, Lumi, Kern, Sandbox-Probe).
 - Sandbox-Probe in der App unter Windows und Linux.
 
 ## Offen bei Mik
@@ -28,4 +33,4 @@ Sieben Konzeptfragen (Gesamtkonzept Kap. 10), Priorität für den nächsten Auft
 Anwalt (23 Fragen), Lizenzanfragen an Institutionen, ärztliche Prüfung der Guides.
 
 ## Aufträge
-Erledigt: `2026-09-29-paket-kit-pflichtenheft-und-status` (Rückmeldung vom 29.09.), Antwort von Bill vom 29.09. (Rückmeldung `2026-09-29-antwort-bill`), Freigabe Module (Rückmeldung `2026-09-29-freigabe-module`), Abgleich (Rückmeldung `2026-09-29-abgleich`; Sirenen-Text in der Quelle von at-basis korrigiert, noch nicht gebaut)., `2026-09-29-paket-kit-werkzeug` (Rückmeldungen Phase A–E). Offen: keine.
+Erledigt: `2026-09-29-paket-kit-pflichtenheft-und-status` (Rückmeldung vom 29.09.), Antwort von Bill vom 29.09. (Rückmeldung `2026-09-29-antwort-bill`), Freigabe Module (Rückmeldung `2026-09-29-freigabe-module`), Abgleich (Rückmeldung `2026-09-29-abgleich`; Sirenen-Text in der Quelle von at-basis korrigiert, noch nicht gebaut)., `2026-09-29-paket-kit-werkzeug` (Rückmeldungen Phase A–E), `2026-09-29-bereit-v2`, `2026-09-29-lumi-einbau`, `2026-09-29-flechte-als-paket`. Offen: keine.
