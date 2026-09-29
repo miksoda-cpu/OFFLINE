@@ -15,6 +15,7 @@ use std::time::Duration;
 use tauri::{AppHandle, Emitter, Manager, State};
 
 mod module;
+mod skin;
 
 /// Die öffentlichen Schlüssel werden beim Bauen in die App eingebettet – so verlangt es die Spezifikation.
 const SCHLUESSEL_JSON: &str = include_str!("../../../schluessel/oeffentlich.json");
@@ -1001,7 +1002,8 @@ pub fn start() {
             app_update::app_update_pruefen, app_update::app_update_installieren, app_neustart,
             module::modul_oeffnen, module::modul_schliessen, module::modul_speicher_lesen, module::modul_speicher_schreiben,
             module::module_stand, module::modul_aktiv_setzen, module::modul_loeschen, module::modul_test_oeffnen, module::drucken,
-            module::vorschau_katalog, module::vorschau_ordner, module::vorschau_installiert, module::lokale_pakete
+            module::vorschau_katalog, module::vorschau_ordner, module::vorschau_installiert, module::lokale_pakete,
+            skin::skin_stand, skin::skin_aktivieren, skin::skin_css
         ])
         .run(tauri::generate_context!())
         .expect("OFFLINE konnte nicht starten");

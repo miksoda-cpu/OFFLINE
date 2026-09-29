@@ -8,9 +8,9 @@ rm -rf web/pakete && mkdir -p web/pakete web/katalog web/schluessel
 ORDNER=()
 for q in pakete/*/; do
   [ -f "$q/paket.quelle.json" ] || continue
-  # Module baut und signiert nur die Redaktion mit ihrem Schlüssel (SICHERHEIT.md, Module); in den öffentlichen
+  # Module und Skins baut und signiert nur die Redaktion mit ihrem Schlüssel (SICHERHEIT.md, Module); in den öffentlichen
   # Katalog kommen sie erst nach Miks Freigabe, als fertig signierter Ordner.
-  if grep -q '"art": *"modul"' "$q/paket.quelle.json"; then echo "Übersprungen (Modul): $q"; continue; fi
+  if grep -qE '"art": *"(modul|skin)"' "$q/paket.quelle.json"; then echo "Übersprungen (Modul/Skin, baut die Redaktion): $q"; continue; fi
   out=$(node werkzeug/paket.mjs bauen "$q" web/pakete)
   echo "$out"
   ORDNER+=("$(echo "$out" | head -1 | sed 's/.*→ //')")

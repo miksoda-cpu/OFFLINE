@@ -388,7 +388,7 @@ nächste; Stufen 5 (signierte Lagemeldungen) und 6 (eigene Knoten) brauchen Part
 Finanzierung. | Nachbarschaft | Türzettel, Skills-Tausch, anonymer Bereit-Vergleich | G | mittel | 
 Aussehen 
 Paket Inhalt G/P Aufwand 
-Skin Flechte Standard G fertig 
+Skin Flechte Standard G als Paket gebaut (Art skin, 29.09.2026), lokal geprüft, nicht veröffentlicht 
 Skin Kontrast für schwache Augen G klein 
 Skin Achtziger Wesen im LCD-Ei, 
 monochrom 

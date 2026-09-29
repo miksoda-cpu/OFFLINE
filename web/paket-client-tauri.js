@@ -102,6 +102,10 @@ export const vorschauKatalog = (id) => invoke("vorschau_katalog", { id });
 export const vorschauOrdner = (pfad) => invoke("vorschau_ordner", { pfad });
 export const vorschauInstalliert = (id) => invoke("vorschau_installiert", { id });
 export const lokalePakete = (pfad) => invoke("lokale_pakete", { pfad });
+// Skins (art = "skin"): höchstens einer aktiv, CSS über den Kern (app/src-tauri/src/skin.rs)
+export const skinStand = () => invoke("skin_stand");
+export const skinAktivieren = (id) => invoke("skin_aktivieren", { id });
+export const skinCss = () => invoke("skin_css");
 /** Nach dem Einspielen aus einem Ordner die Liste der installierten Pakete neu lesen. */
 export const neuLesen = () => cacheLaden();
 

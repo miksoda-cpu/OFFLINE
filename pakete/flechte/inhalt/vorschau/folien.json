@@ -1,0 +1,7 @@
+{ "folien": [
+  { "nr": 1, "rolle": "wofuer", "bild": "1.svg", "titel": "Die App im Flechtengewand", "text": "Moos statt Weiß, Wiesenfarben und kleine Flechten am Rand. Notfallseiten bleiben immer schlicht.", "alt": "Blassgrüne Fläche mit dem Satz: Die App im Flechtengewand." },
+  { "nr": 2, "rolle": "aussehen", "bild": "2.webp", "titel": "So sieht die Übersicht aus", "text": "Die Übersicht mit Bereit-Zahl, Kacheln und einer Flechte in der Ecke, hell.", "alt": "Bildschirm der Übersicht im Skin Flechte: grüne Töne, Serifenschrift, ein Apfelzweig mit Eichhörnchen oben rechts." },
+  { "nr": 3, "rolle": "inhalt", "bild": "3.svg", "titel": "Was drin ist", "text": "Farben hell und dunkel, zwei Schriften, 15 Flechtenbilder, 24 Icons. Kein Code, nur Stil.", "alt": "Liste: Farben, Schriften, Flechtenbilder, Icons, kein Code." },
+  { "nr": 4, "rolle": "platz", "bild": "4.svg", "titel": "Rund 4 MB, Handy und Laptop", "text": "Braucht kein Netz und keine KI im Betrieb.", "alt": "Rund 4 MB, Handy und Laptop, ohne KI im Betrieb." },
+  { "nr": 5, "rolle": "herkunft", "bild": "5.svg", "titel": "Herkunft", "text": "Redaktion The Digioneer. Bilder mit KI erzeugt (Meta Muse Image), Schriften OFL, Icons ISC.", "alt": "Herkunft: Redaktion, KI-Bilder, Schriftlizenzen." }
+] }

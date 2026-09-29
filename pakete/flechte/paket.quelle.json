@@ -1,0 +1,25 @@
+{
+  "id": "flechte",
+  "titel": "Flechte · Aussehen",
+  "beschreibung": "Die App im Flechtengewand: Moos statt Weiß, Wiesenfarben, Serifen für Titel und kleine Flechtenbilder am Rand. Hell und dunkel. Notfallseiten bleiben schlicht.",
+  "art": "skin",
+  "sprache": "de-AT",
+  "lizenz": "Bilder: eigene Rechte (KI-generiert, siehe herkunft.md); Schriften: SIL OFL 1.1; Icons: ISC",
+  "herausgeber": "The Digioneer",
+  "quellen": [
+    { "id": "eigen", "name": "Skin Flechte, Session 24.09.2026", "url": "" },
+    { "id": "alegreya", "name": "Alegreya (Huerta Tipográfica), SIL OFL 1.1", "url": "https://github.com/huertatipografica/Alegreya" },
+    { "id": "atkinson", "name": "Atkinson Hyperlegible Next und Mono (Braille Institute), SIL OFL 1.1", "url": "https://www.brailleinstitute.org/freefont/" },
+    { "id": "lucide", "name": "Lucide Icons, ISC", "url": "https://lucide.dev" }
+  ],
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "app_min": "0.2.0",
+  "aenderungen": "Erste Ausgabe als Paket: Farben hell und dunkel, Schriften, 15 Flechtenbilder am Rand.",
+  "alter_ab": 0,
+  "kategorie": "aussehen",
+  "braucht_netz": false,
+  "abnahme": "keine",
+  "ki_generiert": true
+}

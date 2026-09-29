@@ -314,12 +314,12 @@ export class Wesen {
       : `<div class="lumi-buehne" id="lumi-buehne" role="img" tabindex="0" aria-label="${esc(this.anzeigename())}: ${esc(ZUSTAND_TEXT[this.zustand])}"><div class="lumi-figur" id="lumi-figur"><img id="lumi-bild" alt="" src="${MIMIK.ruhe.bild}"><span class="lumi-licht" id="lumi-licht-0" style="background-image:url(${LICHT_BILD})"></span><span class="lumi-licht" id="lumi-licht-1" style="background-image:url(${LICHT_BILD})"></span></div></div>`;
     const frage = !this.benannt() && this.namensfrage
       ? `<form class="lumi-name" data-lumi-name-form><label for="lumi-name-feld"><strong>${esc(TEXTE.namensfrage)}</strong></label>
-          <input id="lumi-name-feld" type="text" maxlength="24" autocomplete="off" placeholder="Max, Horst, Susi …" data-lumi-zuhoeren>
-          <span class="lumi-name-knoepfe"><button type="submit" class="btn btn-sm btn-primary">${esc(TEXTE.namenGeben)}</button> <button type="button" class="btn btn-sm" data-lumi="spaeter">${esc(TEXTE.spaeter)}</button></span></form>`
-      : !this.benannt() ? `<button type="button" class="btn btn-sm" data-lumi="namensfrage">${esc(TEXTE.namenGeben)}</button>` : "";
+          <input class="of-input" id="lumi-name-feld" type="text" maxlength="24" autocomplete="off" placeholder="Max, Horst, Susi …" data-lumi-zuhoeren>
+          <span class="lumi-name-knoepfe"><button type="submit" class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer">${esc(TEXTE.namenGeben)}</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi="spaeter">${esc(TEXTE.spaeter)}</button></span></form>`
+      : !this.benannt() ? `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi="namensfrage">${esc(TEXTE.namenGeben)}</button>` : "";
     return `<div class="wesen" style="--wb:${g}px">${figur}
       <div class="wesen-blase-platz"><div class="wesen-blase" id="wesen-blase" role="status" aria-live="polite" hidden></div></div>
-      <div class="wesen-text"><strong>${esc(this.anzeigename())}</strong> <span class="muted" id="wesen-zustand">${esc(ZUSTAND_TEXT[this.zustand])}</span></div>${frage}</div>`;
+      <div class="wesen-text"><strong>${esc(this.anzeigename())}</strong> <span class="muted of-klein" id="wesen-zustand">${esc(ZUSTAND_TEXT[this.zustand])}</span></div>${frage}</div>`;
   }
   einbauen() {
     clearInterval(this.anim);
@@ -438,31 +438,31 @@ export class Wesen {
     const e = this.e;
     const opt = (v, l, cur) => `<option value="${v}" ${cur === v ? "selected" : ""}>${l}</option>`;
     if (!this.aktiv()) return `<p style="margin:0 0 .6rem">${esc(TEXTE.beschreibung)}</p>
-      <button type="button" class="btn btn-primary" data-lumi="einschalten">Lumi zeigen</button>
-      <p class="muted" style="margin:.6rem 0 0;font-size:.85rem">${esc(TEXTE.einladungHinweis)} ${esc(TEXTE.ki)}${this.benannt() ? ` ${esc(e.name)} und alles, was sie gesagt hat, bleiben gespeichert.` : ""}</p>`;
+      <button type="button" class="btn btn-primary of-btn of-btn--primaer" data-lumi="einschalten">Lumi zeigen</button>
+      <p class="muted of-klein" style="margin:.6rem 0 0;font-size:.85rem">${esc(TEXTE.einladungHinweis)} ${esc(TEXTE.ki)}${this.benannt() ? ` ${esc(e.name)} und alles, was sie gesagt hat, bleiben gespeichert.` : ""}</p>`;
     const aus = this.ausschaltenFrage
-      ? `<div class="lumi-aus-frage" role="group"><p style="margin:0 0 .5rem">${esc(TEXTE.ausschalten(this.benannt() ? e.name : ""))}</p><button type="button" class="btn btn-sm btn-primary" data-lumi="ausschalten">Ausschalten</button> <button type="button" class="btn btn-sm" data-lumi="dochnicht">Doch nicht</button></div>`
-      : `<button type="button" class="btn btn-sm" data-lumi="ausschalten-frage">Lumi ausschalten</button>`;
+      ? `<div class="lumi-aus-frage" role="group"><p style="margin:0 0 .5rem">${esc(TEXTE.ausschalten(this.benannt() ? e.name : ""))}</p><button type="button" class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-lumi="ausschalten">Ausschalten</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi="dochnicht">Doch nicht</button></div>`
+      : `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi="ausschalten-frage">Lumi ausschalten</button>`;
     return `<div class="grid grid-3">
-      <label>Name<br><input type="text" data-wesen="name" value="${esc(e.name)}" maxlength="24" autocomplete="off" placeholder="noch ohne Namen"></label>
-      <label>Darstellung<br><select data-wesen="darstellung">${opt("wesen", "Lumi mit Tipps", e.darstellung)}${opt("tipps", "Nur Tipps", e.darstellung)}</select></label>
-      <label>Figur<br><select data-wesen="figur">${opt("foto", "Foto", e.figur)}${opt("pixel", "Pixel (sparsam)", e.figur)}</select></label>
-      <label>Tipps<br><select data-wesen="takt">${opt("normal", "normal (alle 90 s)", e.takt)}${opt("seltener", "seltener", e.takt)}${opt("aus", "aus", e.takt)}</select></label>
-      <label>Größe<br><select data-wesen="groesse">${opt("klein", "klein", e.groesse)}${opt("mittel", "mittel", e.groesse)}${opt("gross", "groß", e.groesse)}</select></label>
-      <label>Fell (Pixel)<br><select data-wesen="fell">${Object.keys(FELLE).map((k) => opt(k, k[0].toUpperCase() + k.slice(1), e.fell)).join("")}</select></label>
+      <label>Name<br><input class="of-input" type="text" data-wesen="name" value="${esc(e.name)}" maxlength="24" autocomplete="off" placeholder="noch ohne Namen"></label>
+      <label>Darstellung<br><select class="of-select" data-wesen="darstellung">${opt("wesen", "Lumi mit Tipps", e.darstellung)}${opt("tipps", "Nur Tipps", e.darstellung)}</select></label>
+      <label>Figur<br><select class="of-select" data-wesen="figur">${opt("foto", "Foto", e.figur)}${opt("pixel", "Pixel (sparsam)", e.figur)}</select></label>
+      <label>Tipps<br><select class="of-select" data-wesen="takt">${opt("normal", "normal (alle 90 s)", e.takt)}${opt("seltener", "seltener", e.takt)}${opt("aus", "aus", e.takt)}</select></label>
+      <label>Größe<br><select class="of-select" data-wesen="groesse">${opt("klein", "klein", e.groesse)}${opt("mittel", "mittel", e.groesse)}${opt("gross", "groß", e.groesse)}</select></label>
+      <label>Fell (Pixel)<br><select class="of-select" data-wesen="fell">${Object.keys(FELLE).map((k) => opt(k, k[0].toUpperCase() + k.slice(1), e.fell)).join("")}</select></label>
       <div><label><input type="checkbox" data-wesen="laute" ${e.laute ? "checked" : ""}> Laute in Sprechblasen</label><br><label><input type="checkbox" data-wesen="toene" ${e.toene ? "checked" : ""}> drei leise Töne</label><br><label><input type="checkbox" data-wesen="baut" ${e.baut ? "checked" : ""}> baut über 80</label></div>
     </div>
-    <p class="muted" style="margin:.8rem 0 .3rem">Welche Tipps kommen</p>
-    <div style="display:flex;gap:.8rem;flex-wrap:wrap">${Object.entries(SORTEN).map(([k, l]) => `<label><input type="checkbox" data-wesen-sorte="${k}" ${e.sorten[k] ? "checked" : ""}> ${l}${k === "digital" ? ' <span class="muted">(Einstieg in die digitale Welt)</span>' : ""}</label>`).join("")}</div>
-    <p class="muted" style="margin:.8rem 0 0;font-size:.85rem">Gelernt: Tipps alle ${this.gelernt.intervall} s (${this.gelernt.gelesen} gelesen, ${this.gelernt.weitergewischt} weitergewischt). <button class="btn btn-sm" data-wesen-gelernt-zurueck>Zurücksetzen</button></p>
-    <p class="muted" style="margin:.4rem 0 .8rem;font-size:.85rem">${esc(TEXTE.ki)}</p>
+    <p class="muted of-klein" style="margin:.8rem 0 .3rem">Welche Tipps kommen</p>
+    <div style="display:flex;gap:.8rem;flex-wrap:wrap">${Object.entries(SORTEN).map(([k, l]) => `<label><input type="checkbox" data-wesen-sorte="${k}" ${e.sorten[k] ? "checked" : ""}> ${l}${k === "digital" ? ' <span class="muted of-klein">(Einstieg in die digitale Welt)</span>' : ""}</label>`).join("")}</div>
+    <p class="muted of-klein" style="margin:.8rem 0 0;font-size:.85rem">Gelernt: Tipps alle ${this.gelernt.intervall} s (${this.gelernt.gelesen} gelesen, ${this.gelernt.weitergewischt} weitergewischt). <button class="btn btn-sm of-btn of-btn--klein" data-wesen-gelernt-zurueck>Zurücksetzen</button></p>
+    <p class="muted of-klein" style="margin:.4rem 0 .8rem;font-size:.85rem">${esc(TEXTE.ki)}</p>
     ${aus}`;
   }
   logHtml(filter = "", suche = "") {
     const q = suche.trim().toLowerCase();
     const liste = [...this.log].reverse().filter((l) => (!filter || l.sorte === filter) && (!q || l.text.toLowerCase().includes(q)));
-    return `<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem"><select id="wesen-log-filter"><option value="">Alle Sorten</option>${Object.entries(SORTEN).map(([k, l]) => `<option value="${k}" ${filter === k ? "selected" : ""}>${l}</option>`).join("")}</select><input type="text" id="wesen-log-suche" placeholder="Suchen …" value="${esc(suche)}" autocomplete="off"><span class="muted" style="align-self:center">${liste.length} Tipp${liste.length === 1 ? "" : "s"}</span></div>
-      ${liste.length ? `<ul class="wesen-log">${liste.slice(0, 200).map((l) => `<li><button class="wesen-stern ${l.stern ? "an" : ""}" data-wesen-stern="${esc(l.id)}" aria-label="Merken">${l.stern ? "★" : "☆"}</button><span class="wesen-sorte">${esc(SORTEN[l.sorte] ?? l.sorte)}</span> ${esc(l.text)} <span class="muted" style="font-size:.8rem">${new Date(l.zeit).toLocaleString("de-AT", { dateStyle: "short", timeStyle: "short" })}</span></li>`).join("")}</ul>` : `<p class="muted">Noch nichts gesagt.</p>`}`;
+    return `<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem"><select class="of-select" id="wesen-log-filter"><option value="">Alle Sorten</option>${Object.entries(SORTEN).map(([k, l]) => `<option value="${k}" ${filter === k ? "selected" : ""}>${l}</option>`).join("")}</select><input class="of-input" type="text" id="wesen-log-suche" placeholder="Suchen …" value="${esc(suche)}" autocomplete="off"><span class="muted of-klein" style="align-self:center">${liste.length} Tipp${liste.length === 1 ? "" : "s"}</span></div>
+      ${liste.length ? `<ul class="wesen-log">${liste.slice(0, 200).map((l) => `<li><button class="wesen-stern ${l.stern ? "an" : ""}" data-wesen-stern="${esc(l.id)}" aria-label="Merken">${l.stern ? "★" : "☆"}</button><span class="wesen-sorte">${esc(SORTEN[l.sorte] ?? l.sorte)}</span> ${esc(l.text)} <span class="muted of-klein" style="font-size:.8rem">${new Date(l.zeit).toLocaleString("de-AT", { dateStyle: "short", timeStyle: "short" })}</span></li>`).join("")}</ul>` : `<p class="muted of-klein">Noch nichts gesagt.</p>`}`;
   }
   einstellen(k, v) {
     if (k in STANDARD.sorten) this.e.sorten[k] = v; else this.e[k] = v;

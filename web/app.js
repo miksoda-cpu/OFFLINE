@@ -49,7 +49,7 @@ const state = {
   filter: "Alle",
   meldung: null, // { text, art } für die Update-Seite
   // Module (art = "modul"): Stand je Modul, geladene Vorschauen, gewählte Folie, offener Löschdialog, lokale Quelle, laufendes Modul
-  modul: { stand: {}, vorschau: {}, folie: {}, loeschen: null, lokal: null, offen: null },
+  modul: { stand: {}, vorschau: {}, folie: {}, loeschen: null, lokal: null, offen: null, skin: null },
 };
 
 if (desktop?.abo) {
@@ -85,8 +85,8 @@ function bereit() {
 }
 // Nur im Entwickler-Build: Datum für die Bereit-Rechnung vorstellen, um Verfall zu prüfen (Übersicht, Testleiste).
 const testJetzt = () => (desktop?.info?.entwickler && speicher.get("test-monate", 0) ? Date.now() + speicher.get("test-monate", 0) * 30.44 * 86400000 : Date.now());
-const testLeiste = () => desktop?.info?.entwickler ? `<div class="card" style="margin-bottom:1rem;border-style:dashed"><strong>Entwickler-Build:</strong> Datum für Bereit ${speicher.get("test-monate", 0) ? `+${speicher.get("test-monate", 0)} Monate` : "heute"}
-  ${[0, 7, 13, 16].map((m) => `<button class="btn btn-sm" data-test-monate="${m}">${m ? `+${m} Monate` : "heute"}</button>`).join(" ")}</div>` : "";
+const testLeiste = () => desktop?.info?.entwickler ? `<div class="card of-karte" style="margin-bottom:1rem;border-style:dashed"><strong>Entwickler-Build:</strong> Datum für Bereit ${speicher.get("test-monate", 0) ? `+${speicher.get("test-monate", 0)} Monate` : "heute"}
+  ${[0, 7, 13, 16].map((m) => `<button class="btn btn-sm of-btn of-btn--klein" data-test-monate="${m}">${m ? `+${m} Monate` : "heute"}</button>`).join(" ")}</div>` : "";
 function bestaetigen(id, ja = true) {
   if (ja) state.bestaetigt[id] = new Date(testJetzt()).toISOString(); else delete state.bestaetigt[id];
   speicher.set("bereit-v2", state.bestaetigt);
@@ -120,10 +120,10 @@ document.getElementById("tabbar").innerHTML = TABS.map((id) => { const n = ROUTE
   + `<button type="button" id="tab-mehr" aria-controls="sidebar" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Mehr</button>`;
 if (desktop) document.getElementById("proto-banner")?.remove();
 
-const kachel = (route, farbe, titel, text) => `<a class="kachel kachel-${farbe}" href="#${route}"><span class="kachel-ikon">${icon(route)}</span><svg class="kachel-pfeil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg><span><strong>${titel}</strong><span class="muted">${text}</span></span></a>`;
-const kopf = (titel, text, extra = "") => `<div class="page-head"><div><h1 style="font-size:2rem">${titel}</h1><p>${text}</p></div>${extra}</div>`;
+const kachel = (route, farbe, titel, text) => `<a class="kachel kachel- of-karte of-karte--klick ${farbe}" href="#${route}"><span class="kachel-ikon">${icon(route)}</span><svg class="kachel-pfeil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg><span><strong>${titel}</strong><span class="muted of-klein">${text}</span></span></a>`;
+const kopf = (titel, text, extra = "") => `<div class="page-head of-seitenkopf"><div><h1 style="font-size:2rem">${titel}</h1><p>${text}</p></div>${extra}</div>`;
 const fehlt = () => `${kopf("Kein Österreich-Paket", "Dieses Gerät hat noch kein Paket installiert und ist offline.")}
-  <div class="card"><p class="muted">Sobald du online bist, lädt OFFLINE das Österreich-Paket automatisch. Oder du gehst in die Bibliothek und installierst es von Hand.</p><a class="btn btn-primary" href="#bibliothek">Zur Bibliothek</a></div>`;
+  <div class="card of-karte"><p class="muted of-klein">Sobald du online bist, lädt OFFLINE das Österreich-Paket automatisch. Oder du gehst in die Bibliothek und installierst es von Hand.</p><a class="btn btn-primary of-btn of-btn--primaer" href="#bibliothek">Zur Bibliothek</a></div>`;
 
 // ---------- Seiten ----------
 const seiten = {
@@ -142,22 +142,22 @@ const seiten = {
     const b = bereit(); wesen.setScore(b); const schritt = naechsterSchritt(b);
     const wl = state.wesenLog;
     return `
-      <div class="gruss"><div><h1>Servus.</h1><p class="muted">Alles hier funktioniert ohne Internet.</p></div>
-        <select id="bl" aria-label="Dein Bundesland">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>
+      <div class="gruss of-gruss"><div><h1>Servus.</h1><p class="muted of-klein">Alles hier funktioniert ohne Internet.</p></div>
+        <select class="of-select" id="bl" aria-label="Dein Bundesland">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>
       <div class="buehne-kopf" id="wesen-karte">
         ${wesen.mitFigur() ? wesen.buehneHtml() : ""}
         <div class="bereit-kopf">
-          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="muted">Bereit</span><span class="muted" style="font-size:.85rem">${b.wert < 30 ? "Anfang" : b.wert < 60 ? "unterwegs" : b.wert < 80 ? "gut" : "bereit"}</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="muted of-klein">Bereit</span><span class="muted of-klein" style="font-size:.85rem">${b.wert < 30 ? "Anfang" : b.wert < 60 ? "unterwegs" : b.wert < 80 ? "gut" : "bereit"}</span></div>
           <div class="bereit-zahl">${b.wert}</div>
-          <div class="progress" style="margin:.4rem 0 .8rem"><div style="width:${b.wert}%"></div></div>
+          <div class="progress of-balken" style="margin:.4rem 0 .8rem"><div style="width:${b.wert}%"></div></div>
           <p style="margin:0 0 .6rem"><a href="${schritt.ziel}">${esc(schritt.text)}</a></p>
-          ${b.quellen.map((q) => `<div class="bereit-quelle"><span>${esc(q.name)} <span class="muted">· ${esc(q.text)}</span></span><span class="mono">${q.punkte}/${q.max}</span></div>`).join("")}
+          ${b.quellen.map((q) => `<div class="bereit-quelle"><span>${esc(q.name)} <span class="muted of-klein">· ${esc(q.text)}</span></span><span class="mono of-mono">${q.punkte}/${q.max}</span></div>`).join("")}
         </div>
       </div>
       ${testLeiste()}
-      ${einladungFaellig(wesen.start, wesen.e, testJetzt()) ? `<div class="card lumi-einladung" role="group" aria-label="Einladung"><div class="lumi-zwei-lichter" aria-hidden="true"><span></span><span></span></div>
+      ${einladungFaellig(wesen.start, wesen.e, testJetzt()) ? `<div class="card lumi-einladung of-karte" role="group" aria-label="Einladung"><div class="lumi-zwei-lichter" aria-hidden="true"><span></span><span></span></div>
         <div><strong>${esc(LUMI_TEXTE.einladungTitel)}</strong><p style="margin:.3rem 0 .7rem">${esc(LUMI_TEXTE.einladungFrage)}</p>
-        <button type="button" class="btn btn-primary" data-lumi="einladung-ja">${esc(LUMI_TEXTE.einladungJa)}</button> <button type="button" class="btn" data-lumi="einladung-nein">${esc(LUMI_TEXTE.einladungNein)}</button>
+        <button type="button" class="btn btn-primary of-btn of-btn--primaer" data-lumi="einladung-ja">${esc(LUMI_TEXTE.einladungJa)}</button> <button type="button" class="btn of-btn" data-lumi="einladung-nein">${esc(LUMI_TEXTE.einladungNein)}</button>
         <p class="lumi-einladung-klein">${esc(LUMI_TEXTE.einladungHinweis)} ${esc(LUMI_TEXTE.ki)}</p></div></div>` : ""}
       <div class="kacheln">
         ${kachel("notfall", "rose", "Notfall", "112 · 122 · 133 · 144, Sirenen")}
@@ -165,21 +165,21 @@ const seiten = {
         ${kachel("bibliothek", "eisblau", "Bibliothek", `${installierte.length} Paket${installierte.length === 1 ? "" : "e"} am Gerät`)}
         ${kachel("werkzeuge", "flieder", "Werkzeuge", "Radio, Sonne, Vorrat")}
       </div>
-      ${b.hinweis ? `<div class="card" style="margin-bottom:1rem"><strong>${esc(b.hinweis)}</strong></div>` : ""}
-      <div class="card" style="margin-bottom:1rem"><h3>Menschen und Können</h3><p class="muted" style="margin:.2rem 0 .4rem">Dinge, die verfallen. Einmal bestätigen, dann ist Ruhe, bis es wieder so weit ist.${b.faellig.some((x) => x.check) ? " Fällige Punkte der Checkliste stehen darunter." : ""}</p>
-        ${b.positionen.filter((x) => (!x.check && !x.auto) || (x.check && x.stand === "faellig")).map((x) => `<div class="bestaetigung"><span><strong>${esc(x.titel)}</strong><br><span class="muted">${x.stand === "gut" ? `gültig noch ${x.rest} Tage` : x.stand === "faellig" ? `<span class="tag tag-warn">fällig</span> seit ${-x.rest} Tagen` : esc(x.hinweis ?? "")}</span></span><button class="btn btn-sm ${x.stand === "gut" ? "" : "btn-primary"}" data-bestaetigen="${x.id}">${x.stand === "gut" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
+      ${b.hinweis ? `<div class="card of-karte" style="margin-bottom:1rem"><strong>${esc(b.hinweis)}</strong></div>` : ""}
+      <div class="card of-karte" style="margin-bottom:1rem"><h3>Menschen und Können</h3><p class="muted of-klein" style="margin:.2rem 0 .4rem">Dinge, die verfallen. Einmal bestätigen, dann ist Ruhe, bis es wieder so weit ist.${b.faellig.some((x) => x.check) ? " Fällige Punkte der Checkliste stehen darunter." : ""}</p>
+        ${b.positionen.filter((x) => (!x.check && !x.auto) || (x.check && x.stand === "faellig")).map((x) => `<div class="bestaetigung of-liste__zeile"><span><strong>${esc(x.titel)}</strong><br><span class="muted of-klein">${x.stand === "gut" ? `gültig noch ${x.rest} Tage` : x.stand === "faellig" ? `<span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span> seit ${-x.rest} Tagen` : esc(x.hinweis ?? "")}</span></span><button class="btn btn-sm of-btn of-btn--klein ${x.stand === "gut" ? "" : "btn-primary of-btn--primaer"}" data-bestaetigen="${x.id}">${x.stand === "gut" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
       </div>
-      ${wesen.aktiv() ? `<details class="card" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted">· ${esc(wesen.anzeigename())} · Einstellungen</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
-      <details class="card" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>Was ${esc(wesen.anzeigename())} gesagt hat</strong> <span class="muted" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` :
-      `<details class="card" style="margin-bottom:1rem"><summary><strong>Lumi</strong> <span class="muted">· aus</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>`}
-      ${updates ? `<a class="card" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted">· ${intervallText()}</span></a>` : ""}
-      ${land ? `<div class="card" style="margin-top:0"><strong>${esc(land.name)}</strong> <span class="muted">· Landeshauptstadt ${esc(land.hauptstadt)} · im Krisenfall informiert <strong>${esc(land.orf_radio)}</strong></span></div>` : ""}
+      ${wesen.aktiv() ? `<details class="card of-karte" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted of-klein">· ${esc(wesen.anzeigename())} · Einstellungen</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
+      <details class="card of-karte" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>Was ${esc(wesen.anzeigename())} gesagt hat</strong> <span class="muted of-klein" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` :
+      `<details class="card of-karte" style="margin-bottom:1rem"><summary><strong>Lumi</strong> <span class="muted of-klein">· aus</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>`}
+      ${updates ? `<a class="card of-karte" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn of-plakette of-plakette--warnung">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted of-klein">· ${intervallText()}</span></a>` : ""}
+      ${land ? `<div class="card of-karte" style="margin-top:0"><strong>${esc(land.name)}</strong> <span class="muted of-klein">· Landeshauptstadt ${esc(land.hauptstadt)} · im Krisenfall informiert <strong>${esc(land.orf_radio)}</strong></span></div>` : ""}
       <h2 style="margin-top:2rem">Installiert</h2>
-      <div class="card">
-        <div class="storage"><strong>${groesse(belegt)}</strong><div class="progress"><div style="width:${Math.min(100, (belegt / 64e9) * 100)}%"></div></div><span class="muted">${desktop ? esc(desktop.datenordner) : "von 64 GB auf „OFFLINE-Stick“"}</span></div>
+      <div class="card of-karte">
+        <div class="storage"><strong>${groesse(belegt)}</strong><div class="progress of-balken"><div style="width:${Math.min(100, (belegt / 64e9) * 100)}%"></div></div><span class="muted of-klein">${desktop ? esc(desktop.datenordner) : "von 64 GB auf „OFFLINE-Stick“"}</span></div>
         <ul class="changelog" style="margin-top:.75rem">${installierte.map((x) =>
-          `<li><span class="tag">${esc(ARTEN[x.manifest.art] ?? x.manifest.art)}</span><span>${esc(x.manifest.titel)} <span class="muted">· ${esc(x.manifest.version)} · ${groesse(x.manifest.groesse)} · Signatur geprüft ✓</span></span></li>`).join("")}</ul>
-        <a class="btn btn-sm" href="#bibliothek" style="margin-top:.75rem">Pakete verwalten</a>
+          `<li><span class="tag of-plakette">${esc(ARTEN[x.manifest.art] ?? x.manifest.art)}</span><span>${esc(x.manifest.titel)} <span class="muted of-klein">· ${esc(x.manifest.version)} · ${groesse(x.manifest.groesse)} · Signatur geprüft ✓</span></span></li>`).join("")}</ul>
+        <a class="btn btn-sm of-btn of-btn--klein" href="#bibliothek" style="margin-top:.75rem">Pakete verwalten</a>
       </div>`;
   },
 
@@ -190,18 +190,18 @@ const seiten = {
     return `
       ${kopf("Notfall", "Tippe auf eine Nummer, um anzurufen.")}
       <div class="grid grid-2">${n.eintraege.map((e) => `
-        <div class="card notruf"><a class="notruf-nr ${e.nr.length > 4 ? "long" : ""}" href="tel:${e.nr.replace(/\s/g, "")}">${esc(e.nr)}</a>
+        <div class="card notruf of-karte"><a class="notruf-nr ${e.nr.length > 4 ? "long" : ""}" href="tel:${e.nr.replace(/\s/g, "")}">${esc(e.nr)}</a>
           <div><h3>${esc(e.name)}</h3><p>${esc(e.info)}</p></div></div>`).join("")}
       </div>
-      <p class="muted" style="margin-top:1rem">${esc(n.hinweis)}</p>
+      <p class="muted of-klein" style="margin-top:1rem">${esc(n.hinweis)}</p>
       <h2 style="margin-top:2rem">Sirenensignale</h2>
-      <p class="muted">${esc(s.einleitung)}</p>
+      <p class="muted of-klein">${esc(s.einleitung)}</p>
       <div class="grid grid-3">${s.signale.map((x) => `
-        <div class="card siren"><h3>${esc(x.name)} <span class="muted" style="font-weight:500;font-size:.9rem">– ${esc(x.bedeutung)}</span></h3>
+        <div class="card siren of-karte"><h3>${esc(x.name)} <span class="muted of-klein" style="font-weight:500;font-size:.9rem">– ${esc(x.bedeutung)}</span></h3>
           <svg viewBox="0 0 300 44" preserveAspectRatio="none" aria-hidden="true"><path d="${welle[x.muster]}"/></svg>
-          <p><strong>${esc(x.dauer)}</strong></p><p class="muted" style="margin:0">${esc(x.tun)}</p></div>`).join("")}
+          <p><strong>${esc(x.dauer)}</strong></p><p class="muted of-klein" style="margin:0">${esc(x.tun)}</p></div>`).join("")}
       </div>
-      <div class="card" style="margin-top:1rem"><p class="muted" style="margin:0 0 .5rem">${esc(s.probe)}</p><p class="muted" style="margin:0 0 .5rem">${esc(s.feuerwehr)}</p><p class="muted" style="margin:0">${esc(s.warn_app)}</p></div>`;
+      <div class="card of-karte" style="margin-top:1rem"><p class="muted of-klein" style="margin:0 0 .5rem">${esc(s.probe)}</p><p class="muted of-klein" style="margin:0 0 .5rem">${esc(s.feuerwehr)}</p><p class="muted of-klein" style="margin:0">${esc(s.warn_app)}</p></div>`;
   },
 
   vorsorge() {
@@ -211,54 +211,54 @@ const seiten = {
     const erledigt = Object.values(state.checks).filter(Boolean).length;
     const bereitStand = bereit();
     return `
-      ${kopf("Blackout-Vorsorge", esc(v.einleitung), `<div style="min-width:220px"><div class="muted" style="font-size:.9rem;margin-bottom:.3rem">${erledigt} von ${gesamt} erledigt</div><div class="progress"><div style="width:${(erledigt / gesamt) * 100}%"></div></div></div>`)}
+      ${kopf("Blackout-Vorsorge", esc(v.einleitung), `<div style="min-width:220px"><div class="muted of-klein" style="font-size:.9rem;margin-bottom:.3rem">${erledigt} von ${gesamt} erledigt</div><div class="progress of-balken"><div style="width:${(erledigt / gesamt) * 100}%"></div></div></div>`)}
       <div class="grid grid-2">${v.gruppen.map((g, gi) => `
-        <div class="card"><h3>${esc(g.gruppe)}</h3><ul class="check">${g.punkte.map((p, pi) => {
+        <div class="card of-karte"><h3>${esc(g.gruppe)}</h3><ul class="check">${g.punkte.map((p, pi) => {
           const id = `${gi}-${pi}`;
           const pos = bereitStand.positionen.find((x) => x.check === id);
-          return `<li><label><input type="checkbox" data-check="${id}" ${state.checks[id] ? "checked" : ""}><span>${esc(p)}${pos?.stand === "faellig" ? ` <span class="tag tag-warn">fällig</span>` : ""}</span></label>${pos?.stand === "faellig" ? ` <button class="btn btn-sm btn-primary" data-bestaetigen="${pos.id}">Erneuert</button>` : ""}</li>`;
+          return `<li><label><input type="checkbox" data-check="${id}" ${state.checks[id] ? "checked" : ""}><span>${esc(p)}${pos?.stand === "faellig" ? ` <span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span>` : ""}</span></label>${pos?.stand === "faellig" ? ` <button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-bestaetigen="${pos.id}">Erneuert</button>` : ""}</li>`;
         }).join("")}</ul></div>`).join("")}
       </div>
       <h2 style="margin-top:2rem">Wenn der Strom ausfällt</h2>
-      <p class="muted">${esc(b.einleitung)}</p>
-      <div class="card"><ol class="timeline">${b.ablauf.map((s) => `<li><h3>${esc(s.t)}</h3><p class="muted" style="margin:0">${esc(s.text)}</p></li>`).join("")}</ol></div>
-      <div class="card" style="margin-top:1rem;border-color:var(--accent)"><ul style="margin:0;padding-left:1.1rem">${b.merksaetze.map((m) => `<li>${esc(m)}</li>`).join("")}</ul></div>
-      <p class="muted" style="margin-top:1rem;font-size:.9rem">Quellen: ${(P()?.manifest.quellen ?? []).map((q) => `<a href="${esc(q.url)}" rel="noopener">${esc(q.name)}</a>`).join(" · ")}</p>`;
+      <p class="muted of-klein">${esc(b.einleitung)}</p>
+      <div class="card of-karte"><ol class="timeline">${b.ablauf.map((s) => `<li><h3>${esc(s.t)}</h3><p class="muted of-klein" style="margin:0">${esc(s.text)}</p></li>`).join("")}</ol></div>
+      <div class="card of-karte" style="margin-top:1rem;border-color:var(--accent)"><ul style="margin:0;padding-left:1.1rem">${b.merksaetze.map((m) => `<li>${esc(m)}</li>`).join("")}</ul></div>
+      <p class="muted of-klein" style="margin-top:1rem;font-size:.9rem">Quellen: ${(P()?.manifest.quellen ?? []).map((q) => `<a href="${esc(q.url)}" rel="noopener">${esc(q.name)}</a>`).join(" · ")}</p>`;
   },
 
   tresor() {
     const t = state.tresor;
-    const hinweis = `<p class="muted" style="margin:.5rem 0 0">Nur du kennst dieses Passwort. Wir können es nicht zurücksetzen, weil wir keinen Zugang zu deinem Tresor haben. Wenn du Passwort <em>und</em> Wiederherstellungscode verlierst, kann niemand den Inhalt wiederherstellen, auch wir nicht.</p>`;
+    const hinweis = `<p class="muted of-klein" style="margin:.5rem 0 0">Nur du kennst dieses Passwort. Wir können es nicht zurücksetzen, weil wir keinen Zugang zu deinem Tresor haben. Wenn du Passwort <em>und</em> Wiederherstellungscode verlierst, kann niemand den Inhalt wiederherstellen, auch wir nicht.</p>`;
     if (!desktop) return `${kopf("Tresor", "Verschlüsselter Bereich für Notfallmappe, Passwörter, PINs und Ausweisscans.")}
-      <div class="card"><p>Der Tresor gibt es nur in der <strong>Desktop-App</strong>: Die Verschlüsselung läuft dort im Rust-Kern, der Schlüssel liegt nie im Browser. Im Web-Prototyp bleibt er deshalb aus.</p><a class="btn btn-primary" href="/#download">Desktop-App holen</a></div>`;
+      <div class="card of-karte"><p>Der Tresor gibt es nur in der <strong>Desktop-App</strong>: Die Verschlüsselung läuft dort im Rust-Kern, der Schlüssel liegt nie im Browser. Im Web-Prototyp bleibt er deshalb aus.</p><a class="btn btn-primary of-btn of-btn--primaer" href="/#download">Desktop-App holen</a></div>`;
     if (t.status === null) return `${kopf("Tresor", "Einen Moment …")}`;
-    const msg = `<p class="form-msg ${t.msgArt ?? ""}" id="tresor-msg">${t.msg ?? ""}</p>`;
+    const msg = `<p class="form-msg of-meldung ${t.msgArt ?? ""}" id="tresor-msg">${t.msg ?? ""}</p>`;
 
     if (t.status === "kein") return `${kopf("Tresor", "Verschlüsselter Bereich für Notfallmappe, Passwörter, PINs und Ausweisscans. Verlässt das Gerät nie unverschlüsselt – wir haben keinen Schlüssel.")}
-      <div class="tresor"><div class="card" style="grid-column:1 / -1;max-width:560px">
+      <div class="tresor"><div class="card of-karte" style="grid-column:1 / -1;max-width:560px">
         <h3>Tresor anlegen</h3>
-        <label>Passwort (mindestens 8 Zeichen, nicht dasselbe wie für das Gerät)<br><input type="password" id="tresor-pw1" autocomplete="new-password"></label>
-        <label style="display:block;margin-top:.6rem">Noch einmal<br><input type="password" id="tresor-pw2" autocomplete="new-password"></label>
+        <label>Passwort (mindestens 8 Zeichen, nicht dasselbe wie für das Gerät)<br><input class="of-input" type="password" id="tresor-pw1" autocomplete="new-password"></label>
+        <label style="display:block;margin-top:.6rem">Noch einmal<br><input class="of-input" type="password" id="tresor-pw2" autocomplete="new-password"></label>
         ${hinweis}
-        <div style="margin-top:1rem"><button class="btn btn-primary" data-tresor-anlegen>Tresor anlegen</button></div>${msg}
+        <div style="margin-top:1rem"><button class="btn btn-primary of-btn of-btn--primaer" data-tresor-anlegen>Tresor anlegen</button></div>${msg}
       </div></div>`;
 
     if (t.status === "code") return `${kopf("Tresor", "Dein Wiederherstellungscode – er wird nur jetzt angezeigt.")}
-      <div class="tresor"><div class="card" style="grid-column:1 / -1;max-width:640px">
+      <div class="tresor"><div class="card of-karte" style="grid-column:1 / -1;max-width:640px">
         <div class="warnkasten"><strong>Druck diesen Code aus oder schreib ihn ab</strong> und leg ihn an einen sicheren Ort, getrennt vom Gerät. Mit ihm kommst du in den Tresor, wenn du das Passwort vergisst. Er wird nur jetzt angezeigt.</div>
         <div class="code-anzeige">${esc(t.code)}</div>
-        <p class="muted">Zur Sicherheit: Trag vier der sechs Gruppen ein, damit wir wissen, dass du ihn hast.</p>
-        <div class="code-gruppen">${t.code.split("-").map((g, i) => t.codeGruppen.includes(i) ? `<input type="text" data-code-gruppe="${i}" maxlength="5" autocomplete="off" spellcheck="false">` : `<span>${esc(g)}</span>`).join('<span class="muted">–</span>')}</div>
-        <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn-primary" data-tresor-code-ok>Ich habe den Code gesichert</button><button class="btn" data-tresor-code-kopieren>Kopieren (30 s)</button></div>${msg}
+        <p class="muted of-klein">Zur Sicherheit: Trag vier der sechs Gruppen ein, damit wir wissen, dass du ihn hast.</p>
+        <div class="code-gruppen">${t.code.split("-").map((g, i) => t.codeGruppen.includes(i) ? `<input class="of-input" type="text" data-code-gruppe="${i}" maxlength="5" autocomplete="off" spellcheck="false">` : `<span>${esc(g)}</span>`).join('<span class="muted of-klein">–</span>')}</div>
+        <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn-primary of-btn of-btn--primaer" data-tresor-code-ok>Ich habe den Code gesichert</button><button class="btn of-btn" data-tresor-code-kopieren>Kopieren (30 s)</button></div>${msg}
       </div></div>`;
 
-    if (t.status === "gesperrt") return `${kopf("Tresor", "Gesperrt.", '<span class="tag">Gesperrt</span>')}
-      <div class="tresor"><div class="card" style="grid-column:1 / -1;max-width:560px">
-        <label>Passwort<br><input type="password" id="tresor-pw" autocomplete="current-password"></label>
-        <div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn-primary" data-tresor-oeffnen>Öffnen</button><button class="btn" data-tresor-code-modus>${t.codeModus ? "Doch mit Passwort" : "Mit Wiederherstellungscode"}</button></div>
-        ${t.codeModus ? `<label style="display:block;margin-top:1rem">Wiederherstellungscode (6 Gruppen)<br><input type="text" id="tresor-code" autocomplete="off" spellcheck="false" placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"></label><div style="margin-top:.6rem"><button class="btn btn-primary" data-tresor-oeffnen-code>Mit Code öffnen</button> <span class="muted">Danach gleich ein neues Passwort setzen.</span></div>` : ""}
+    if (t.status === "gesperrt") return `${kopf("Tresor", "Gesperrt.", '<span class="tag of-plakette">Gesperrt</span>')}
+      <div class="tresor"><div class="card of-karte" style="grid-column:1 / -1;max-width:560px">
+        <label>Passwort<br><input class="of-input" type="password" id="tresor-pw" autocomplete="current-password"></label>
+        <div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn-primary of-btn of-btn--primaer" data-tresor-oeffnen>Öffnen</button><button class="btn of-btn" data-tresor-code-modus>${t.codeModus ? "Doch mit Passwort" : "Mit Wiederherstellungscode"}</button></div>
+        ${t.codeModus ? `<label style="display:block;margin-top:1rem">Wiederherstellungscode (6 Gruppen)<br><input class="of-input" type="text" id="tresor-code" autocomplete="off" spellcheck="false" placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX-XXXXX"></label><div style="margin-top:.6rem"><button class="btn btn-primary of-btn of-btn--primaer" data-tresor-oeffnen-code>Mit Code öffnen</button> <span class="muted of-klein">Danach gleich ein neues Passwort setzen.</span></div>` : ""}
         ${msg}
-        <details style="margin-top:1.2rem"><summary class="muted">Sicherung zurückspielen</summary><p class="muted">Ersetzt den Tresor auf diesem Gerät durch eine Sicherung (Ordner „OFFLINE-Tresor-Sicherung“ vom Stick). Das Passwort der Sicherung gilt dann.</p><button class="btn btn-sm" data-tresor-zurueckspielen>Sicherung wählen …</button></details>
+        <details style="margin-top:1.2rem"><summary class="muted of-klein">Sicherung zurückspielen</summary><p class="muted of-klein">Ersetzt den Tresor auf diesem Gerät durch eine Sicherung (Ordner „OFFLINE-Tresor-Sicherung“ vom Stick). Das Passwort der Sicherung gilt dann.</p><button class="btn btn-sm of-btn of-btn--klein" data-tresor-zurueckspielen>Sicherung wählen …</button></details>
       </div></div>`;
 
     // offen
@@ -266,36 +266,36 @@ const seiten = {
     const liste = t.notizen.filter((n) => !q || n.titel.toLowerCase().includes(q) || n.text.toLowerCase().includes(q));
     const n = t.notizen.find((x) => x.id === t.aktiv) ?? null;
     const v = t.vorschau;
-    return `${kopf("Tresor", `Offen · sperrt nach ${t.sperreMin} Min. ohne Eingabe, beim Minimieren und beim Beenden.`, '<span style="display:flex;gap:.5rem"><button class="btn btn-sm" data-tresor-einstellungen>Einstellungen</button><button class="btn btn-sm btn-primary" data-tresor-sperren>Sperren</button></span>')}
-      ${t.einstellungen ? `<div class="card" style="margin-bottom:1rem"><h3>Einstellungen</h3>
+    return `${kopf("Tresor", `Offen · sperrt nach ${t.sperreMin} Min. ohne Eingabe, beim Minimieren und beim Beenden.`, '<span style="display:flex;gap:.5rem"><button class="btn btn-sm of-btn of-btn--klein" data-tresor-einstellungen>Einstellungen</button><button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-tresor-sperren>Sperren</button></span>')}
+      ${t.einstellungen ? `<div class="card of-karte" style="margin-bottom:1rem"><h3>Einstellungen</h3>
         <div class="grid grid-3">
-          <div><label>Automatisch sperren nach<br><select id="tresor-sperre"><option value="1" ${t.sperreMin == 1 ? "selected" : ""}>1 Minute</option><option value="5" ${t.sperreMin == 5 ? "selected" : ""}>5 Minuten</option><option value="15" ${t.sperreMin == 15 ? "selected" : ""}>15 Minuten</option></select></label></div>
-          <div><label>Passwort ändern<br><input type="password" id="tresor-alt" placeholder="bisheriges" autocomplete="current-password"></label><input type="password" id="tresor-neu" placeholder="neues (min. 8)" autocomplete="new-password" style="margin-top:.4rem"><button class="btn btn-sm" data-tresor-pw-aendern style="margin-top:.4rem">Ändern</button></div>
-          <div><label>Neuer Wiederherstellungscode<br><input type="password" id="tresor-pw-code" placeholder="Passwort zur Bestätigung"></label><button class="btn btn-sm" data-tresor-code-neu style="margin-top:.4rem">Code erneuern</button><p class="muted" style="margin:.3rem 0 0;font-size:.85rem">Der alte Code gilt danach nicht mehr.</p></div>
+          <div><label>Automatisch sperren nach<br><select class="of-select" id="tresor-sperre"><option value="1" ${t.sperreMin == 1 ? "selected" : ""}>1 Minute</option><option value="5" ${t.sperreMin == 5 ? "selected" : ""}>5 Minuten</option><option value="15" ${t.sperreMin == 15 ? "selected" : ""}>15 Minuten</option></select></label></div>
+          <div><label>Passwort ändern<br><input class="of-input" type="password" id="tresor-alt" placeholder="bisheriges" autocomplete="current-password"></label><input class="of-input" type="password" id="tresor-neu" placeholder="neues (min. 8)" autocomplete="new-password" style="margin-top:.4rem"><button class="btn btn-sm of-btn of-btn--klein" data-tresor-pw-aendern style="margin-top:.4rem">Ändern</button></div>
+          <div><label>Neuer Wiederherstellungscode<br><input class="of-input" type="password" id="tresor-pw-code" placeholder="Passwort zur Bestätigung"></label><button class="btn btn-sm of-btn of-btn--klein" data-tresor-code-neu style="margin-top:.4rem">Code erneuern</button><p class="muted of-klein" style="margin:.3rem 0 0;font-size:.85rem">Der alte Code gilt danach nicht mehr.</p></div>
         </div>
-        <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn-sm" data-tresor-sichern>Sicherung auf Stick oder Ordner …</button><span class="muted" style="align-self:center">Nur Verschlüsseltes wird kopiert.</span></div>${msg}</div>` : ""}
+        <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn btn-sm of-btn of-btn--klein" data-tresor-sichern>Sicherung auf Stick oder Ordner …</button><span class="muted of-klein" style="align-self:center">Nur Verschlüsseltes wird kopiert.</span></div>${msg}</div>` : ""}
       <div class="tresor">
-        <div class="card">
-          <input type="text" id="tresor-suche" placeholder="Suchen …" value="${esc(t.suche)}" autocomplete="off">
-          <div style="display:flex;gap:.4rem;margin:.6rem 0;flex-wrap:wrap"><button class="btn btn-sm btn-primary" data-tresor-neu>Neue Notiz</button><button class="btn btn-sm" data-tresor-mappe title="Zehn Abschnitte: Personen, Nummern, Treffpunkte, Dokumente, Versicherungen, Geld, Zugänge, Haus, Tiere, Radio">Notfallmappe anlegen</button></div>
-          <div class="tresor-liste">${liste.length ? liste.map((x) => `<button data-tresor-notiz="${esc(x.id)}" aria-current="${x.id === t.aktiv}">${x.reihe ? `${x.reihe}. ` : ""}${esc(x.titel || "Ohne Titel")}<span class="muted">${x.anhaenge.length ? `${x.anhaenge.length} Anhang${x.anhaenge.length > 1 ? "e" : ""} · ` : ""}${datum(x.geaendert)}</span></button>`).join("") : `<p class="muted" style="padding:.5rem .7rem">${t.notizen.length ? "Nichts gefunden." : "Noch leer. Leg die Notfallmappe an oder eine neue Notiz."}</p>`}</div>
+        <div class="card of-karte">
+          <input class="of-input" type="text" id="tresor-suche" placeholder="Suchen …" value="${esc(t.suche)}" autocomplete="off">
+          <div style="display:flex;gap:.4rem;margin:.6rem 0;flex-wrap:wrap"><button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-tresor-neu>Neue Notiz</button><button class="btn btn-sm of-btn of-btn--klein" data-tresor-mappe title="Zehn Abschnitte: Personen, Nummern, Treffpunkte, Dokumente, Versicherungen, Geld, Zugänge, Haus, Tiere, Radio">Notfallmappe anlegen</button></div>
+          <div class="tresor-liste">${liste.length ? liste.map((x) => `<button data-tresor-notiz="${esc(x.id)}" aria-current="${x.id === t.aktiv}">${x.reihe ? `${x.reihe}. ` : ""}${esc(x.titel || "Ohne Titel")}<span class="muted of-klein">${x.anhaenge.length ? `${x.anhaenge.length} Anhang${x.anhaenge.length > 1 ? "e" : ""} · ` : ""}${datum(x.geaendert)}</span></button>`).join("") : `<p class="muted of-klein" style="padding:.5rem .7rem">${t.notizen.length ? "Nichts gefunden." : "Noch leer. Leg die Notfallmappe an oder eine neue Notiz."}</p>`}</div>
         </div>
-        <div class="card">${n ? `
+        <div class="card of-karte">${n ? `
           <input type="text" class="titel" id="tresor-titel" value="${esc(n.titel)}" placeholder="Titel" autocomplete="off">
-          <textarea id="tresor-text" placeholder="Inhalt – bleibt verschlüsselt auf diesem Gerät" style="margin-top:.6rem">${esc(n.text)}</textarea>
-          <div style="display:flex;justify-content:space-between;gap:.5rem;margin-top:.6rem;flex-wrap:wrap"><span class="muted" id="tresor-gespeichert">Geändert ${datum(n.geaendert)}</span><span>${aufnahmeKnopf()} <button class="btn btn-sm" data-tresor-anhang>Foto oder Datei …</button> <button class="btn btn-sm" data-tresor-notiz-loeschen="${esc(n.id)}">Notiz löschen</button></span></div>
+          <textarea class="of-textarea" id="tresor-text" placeholder="Inhalt – bleibt verschlüsselt auf diesem Gerät" style="margin-top:.6rem">${esc(n.text)}</textarea>
+          <div style="display:flex;justify-content:space-between;gap:.5rem;margin-top:.6rem;flex-wrap:wrap"><span class="muted of-klein" id="tresor-gespeichert">Geändert ${datum(n.geaendert)}</span><span>${aufnahmeKnopf()} <button class="btn btn-sm of-btn of-btn--klein" data-tresor-anhang>Foto oder Datei …</button> <button class="btn btn-sm of-btn of-btn--klein" data-tresor-notiz-loeschen="${esc(n.id)}">Notiz löschen</button></span></div>
           ${n.anhaenge.length ? `<div style="margin-top:.8rem"><strong>Anhänge</strong>${n.anhaenge.map((a) => anhangZeile(a, v?.id === a.id, "tresor")).join("")}</div>` : ""}
           ${v && n.anhaenge.some((a) => a.id === v.id) ? `<div class="anhang-vorschau" style="margin-top:.8rem">${vorschauHtml(v)}</div>` : ""}
-          ${t.einstellungen ? "" : msg}` : `<p class="muted">Links eine Notiz wählen oder eine neue anlegen.</p>${t.einstellungen ? "" : msg}`}
+          ${t.einstellungen ? "" : msg}` : `<p class="muted of-klein">Links eine Notiz wählen oder eine neue anlegen.</p>${t.einstellungen ? "" : msg}`}
         </div>
       </div>`;
   },
 
   lesen() {
     const l = state.lesen;
-    if (!l) return `${kopf("Lesen", "Nichts geöffnet.")}<div class="card"><a class="btn btn-primary" href="#bibliothek">Zur Bibliothek</a></div>`;
-    return `<div class="lesen-kopf"><a class="btn btn-sm" href="#bibliothek">‹ Bibliothek</a><strong>${esc(l.titel)}</strong>
-        <span style="margin-left:auto;display:flex;gap:.4rem"><button class="btn btn-sm" data-lesen-zurueck title="Eine Seite zurück">‹</button><button class="btn btn-sm" data-lesen-start title="Zur Startseite der Bibliothek">Start</button><button class="btn btn-sm" data-lesen-fenster>In eigenem Fenster</button></span></div>
+    if (!l) return `${kopf("Lesen", "Nichts geöffnet.")}<div class="card of-karte"><a class="btn btn-primary of-btn of-btn--primaer" href="#bibliothek">Zur Bibliothek</a></div>`;
+    return `<div class="lesen-kopf"><a class="btn btn-sm of-btn of-btn--klein" href="#bibliothek">‹ Bibliothek</a><strong>${esc(l.titel)}</strong>
+        <span style="margin-left:auto;display:flex;gap:.4rem"><button class="btn btn-sm of-btn of-btn--klein" data-lesen-zurueck title="Eine Seite zurück">‹</button><button class="btn btn-sm of-btn of-btn--klein" data-lesen-start title="Zur Startseite der Bibliothek">Start</button><button class="btn btn-sm of-btn of-btn--klein" data-lesen-fenster>In eigenem Fenster</button></span></div>
       <iframe id="lesen-rahmen" class="lesen-rahmen" src="${esc(l.url)}" title="${esc(l.titel)}"></iframe>`;
   },
 
@@ -313,75 +313,75 @@ const seiten = {
     const radio = w.radio[state.bundesland] ?? {};
     const sender = [["oe1", "Ö1"], ["oe2", land?.orf_radio ?? "ORF-Regionalradio"], ["oe3", "Ö3 (Verkehrs- und Krisenfunk)"]];
     const v = w.vorrat; const wasser = v.personen * v.tage * 2, essen = v.personen * v.tage;
-    return `${kopf("Werkzeuge", "Radio, Sonne und Mond, Rechner – alles ohne Netz.", `<div class="switch" style="border:0;padding:0"><label class="muted" for="bl2">Bundesland</label><select id="bl2">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>`)}
+    return `${kopf("Werkzeuge", "Radio, Sonne und Mond, Rechner – alles ohne Netz.", `<div class="switch of-liste__zeile" style="border:0;padding:0"><label class="muted of-klein" for="bl2">Bundesland</label><select class="of-select" id="bl2">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>`)}
       <div class="grid grid-2">
-        <div class="card"><h3>📻 Radio im Krisenfall</h3>
-          <p class="muted" style="margin:.3rem 0 .6rem">Fällt Strom und Netz aus, informiert der ORF über Radio – Ö3 ist der Verkehrs- und Krisenfunk, dazu das Landesstudio. Ein <strong>Batterie- oder Kurbelradio</strong> gehört in jede Vorsorge. Die Frequenz hängt vom Sender in deiner Nähe ab: einmal am Radio suchen und hier eintragen, dann steht sie auch ohne Netz da.</p>
-          ${sender.map(([k, name]) => `<div class="switch"><span><strong>${esc(name)}</strong></span><span style="display:flex;align-items:center;gap:.3rem"><input type="text" data-radio="${k}" value="${esc(radio[k] ?? "")}" placeholder="z. B. 99,9" inputmode="decimal" style="width:7.5em;text-align:right" autocomplete="off"> <span class="muted">MHz</span></span></div>`).join("")}
-          <p class="muted" style="margin:.6rem 0 0;font-size:.85rem">Wien: Ö1 92,0 · Radio Wien 89,9 · Ö3 99,9 MHz (Sender Kahlenberg). Digital: DAB+ ist in Ballungsräumen zusätzlich verfügbar, im Blackout aber vom Sendernetz abhängig – UKW bleibt die sicherste Wahl.</p>
+        <div class="card of-karte"><h3>📻 Radio im Krisenfall</h3>
+          <p class="muted of-klein" style="margin:.3rem 0 .6rem">Fällt Strom und Netz aus, informiert der ORF über Radio – Ö3 ist der Verkehrs- und Krisenfunk, dazu das Landesstudio. Ein <strong>Batterie- oder Kurbelradio</strong> gehört in jede Vorsorge. Die Frequenz hängt vom Sender in deiner Nähe ab: einmal am Radio suchen und hier eintragen, dann steht sie auch ohne Netz da.</p>
+          ${sender.map(([k, name]) => `<div class="switch of-liste__zeile"><span><strong>${esc(name)}</strong></span><span style="display:flex;align-items:center;gap:.3rem"><input class="of-input" type="text" data-radio="${k}" value="${esc(radio[k] ?? "")}" placeholder="z. B. 99,9" inputmode="decimal" style="width:7.5em;text-align:right" autocomplete="off"> <span class="muted of-klein">MHz</span></span></div>`).join("")}
+          <p class="muted of-klein" style="margin:.6rem 0 0;font-size:.85rem">Wien: Ö1 92,0 · Radio Wien 89,9 · Ö3 99,9 MHz (Sender Kahlenberg). Digital: DAB+ ist in Ballungsräumen zusätzlich verfügbar, im Blackout aber vom Sendernetz abhängig – UKW bleibt die sicherste Wahl.</p>
         </div>
-        <div class="card"><h3>☀️ Sonne und Mond</h3>
-          <div class="switch" style="border:0;padding:.2rem 0 .6rem"><label class="muted" for="wz-datum">Tag</label><input type="date" id="wz-datum" value="${esc(w.datum ?? new Date().toISOString().slice(0, 10))}"></div>
+        <div class="card of-karte"><h3>☀️ Sonne und Mond</h3>
+          <div class="switch of-liste__zeile" style="border:0;padding:.2rem 0 .6rem"><label class="muted of-klein" for="wz-datum">Tag</label><input class="of-input" type="date" id="wz-datum" value="${esc(w.datum ?? new Date().toISOString().slice(0, 10))}"></div>
           <div class="grid grid-2" style="gap:.5rem">
-            <div><div class="muted" style="font-size:.85rem">Dämmerung</div><div class="mono">${uhr(sz.daemmerungMorgen)}</div></div>
-            <div><div class="muted" style="font-size:.85rem">Sonnenaufgang</div><div class="mono" style="font-size:1.3rem">${uhr(sz.aufgang)}</div></div>
-            <div><div class="muted" style="font-size:.85rem">Sonnenuntergang</div><div class="mono" style="font-size:1.3rem">${uhr(sz.untergang)}</div></div>
-            <div><div class="muted" style="font-size:.85rem">Dunkel ab</div><div class="mono">${uhr(sz.daemmerungAbend)}</div></div>
+            <div><div class="muted of-klein" style="font-size:.85rem">Dämmerung</div><div class="mono of-mono">${uhr(sz.daemmerungMorgen)}</div></div>
+            <div><div class="muted of-klein" style="font-size:.85rem">Sonnenaufgang</div><div class="mono of-mono" style="font-size:1.3rem">${uhr(sz.aufgang)}</div></div>
+            <div><div class="muted of-klein" style="font-size:.85rem">Sonnenuntergang</div><div class="mono of-mono" style="font-size:1.3rem">${uhr(sz.untergang)}</div></div>
+            <div><div class="muted of-klein" style="font-size:.85rem">Dunkel ab</div><div class="mono of-mono">${uhr(sz.daemmerungAbend)}</div></div>
           </div>
-          <p style="margin:.8rem 0 0">${mond.symbol} <strong>${esc(mond.name)}</strong> <span class="muted">· ${mond.beleuchtet} % beleuchtet · Vollmond in ${mond.naechsterVollmond} Tagen, Neumond in ${mond.naechsterNeumond} Tagen</span></p>
-          <p class="muted" style="margin:.5rem 0 0;font-size:.85rem">Berechnet für ${esc(land?.hauptstadt ?? "Wien")}, ohne Internet. Tageslicht: ${sz.aufgang && sz.untergang ? `${Math.round((sz.untergang - sz.aufgang) / 3600000 * 10) / 10} Stunden` : "–"}. Bei Vollmond kann man nachts ohne Lampe gehen – ein Detail, das im Blackout zählt.</p>
+          <p style="margin:.8rem 0 0">${mond.symbol} <strong>${esc(mond.name)}</strong> <span class="muted of-klein">· ${mond.beleuchtet} % beleuchtet · Vollmond in ${mond.naechsterVollmond} Tagen, Neumond in ${mond.naechsterNeumond} Tagen</span></p>
+          <p class="muted of-klein" style="margin:.5rem 0 0;font-size:.85rem">Berechnet für ${esc(land?.hauptstadt ?? "Wien")}, ohne Internet. Tageslicht: ${sz.aufgang && sz.untergang ? `${Math.round((sz.untergang - sz.aufgang) / 3600000 * 10) / 10} Stunden` : "–"}. Bei Vollmond kann man nachts ohne Lampe gehen – ein Detail, das im Blackout zählt.</p>
         </div>
-        <div class="card"><h3>🔢 Einheiten umrechnen</h3>
+        <div class="card of-karte"><h3>🔢 Einheiten umrechnen</h3>
           <div style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;margin:.4rem 0">
-            <select id="wz-art">${Object.entries(EINHEITEN).map(([k, a]) => `<option value="${k}" ${k === r.art ? "selected" : ""}>${a.name}</option>`).join("")}</select>
-            <input type="text" id="wz-wert" value="${esc(String(r.wert))}" inputmode="decimal" style="width:7em" autocomplete="off">
-            <select id="wz-von">${einh.map((e) => `<option ${e === von ? "selected" : ""}>${esc(e)}</option>`).join("")}</select>
-            <span class="muted">→</span>
-            <select id="wz-nach">${einh.map((e) => `<option ${e === nach ? "selected" : ""}>${esc(e)}</option>`).join("")}</select>
+            <select class="of-select" id="wz-art">${Object.entries(EINHEITEN).map(([k, a]) => `<option value="${k}" ${k === r.art ? "selected" : ""}>${a.name}</option>`).join("")}</select>
+            <input class="of-input" type="text" id="wz-wert" value="${esc(String(r.wert))}" inputmode="decimal" style="width:7em" autocomplete="off">
+            <select class="of-select" id="wz-von">${einh.map((e) => `<option ${e === von ? "selected" : ""}>${esc(e)}</option>`).join("")}</select>
+            <span class="muted of-klein">→</span>
+            <select class="of-select" id="wz-nach">${einh.map((e) => `<option ${e === nach ? "selected" : ""}>${esc(e)}</option>`).join("")}</select>
           </div>
           <div style="font-size:1.4rem;font-weight:700" id="wz-ergebnis">${zahl(erg)} ${esc(nach)}</div>
-          <details style="margin-top:.8rem"><summary class="muted">Kochmaße</summary><table style="width:100%;margin-top:.4rem;font-size:.9rem;border-collapse:collapse">${KOCHMASSE.map(([a, b]) => `<tr><td style="padding:.2rem 0;border-top:1px solid var(--line)">${esc(a)}</td><td class="mono" style="padding:.2rem 0;border-top:1px solid var(--line);text-align:right">${esc(b)}</td></tr>`).join("")}</table></details>
+          <details style="margin-top:.8rem"><summary class="muted of-klein">Kochmaße</summary><table style="width:100%;margin-top:.4rem;font-size:.9rem;border-collapse:collapse">${KOCHMASSE.map(([a, b]) => `<tr><td style="padding:.2rem 0;border-top:1px solid var(--line)">${esc(a)}</td><td class="mono of-mono" style="padding:.2rem 0;border-top:1px solid var(--line);text-align:right">${esc(b)}</td></tr>`).join("")}</table></details>
         </div>
-        <div class="card"><h3>🥫 Vorratsrechner</h3>
-          <p class="muted" style="margin:.3rem 0 .6rem">Der Zivilschutzverband empfiehlt Vorräte für <strong>14 Tage</strong>: 2 Liter Wasser pro Person und Tag (Trinken und Kochen), dazu haltbare Lebensmittel.</p>
-          <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center"><label>Personen <input type="number" id="wz-personen" min="1" max="20" value="${v.personen}" style="width:4.5em"></label><label>Tage <input type="number" id="wz-tage" min="1" max="60" value="${v.tage}" style="width:4.5em"></label></div>
+        <div class="card of-karte"><h3>🥫 Vorratsrechner</h3>
+          <p class="muted of-klein" style="margin:.3rem 0 .6rem">Der Zivilschutzverband empfiehlt Vorräte für <strong>14 Tage</strong>: 2 Liter Wasser pro Person und Tag (Trinken und Kochen), dazu haltbare Lebensmittel.</p>
+          <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center"><label>Personen <input class="of-input" type="number" id="wz-personen" min="1" max="20" value="${v.personen}" style="width:4.5em"></label><label>Tage <input class="of-input" type="number" id="wz-tage" min="1" max="60" value="${v.tage}" style="width:4.5em"></label></div>
           <div class="grid grid-2" style="gap:.5rem;margin-top:.8rem">
-            <div><div class="muted" style="font-size:.85rem">Wasser</div><div class="mono" style="font-size:1.3rem">${wasser} l</div><div class="muted" style="font-size:.8rem">${Math.ceil(wasser / 9)} Kisten à 6 × 1,5 l</div></div>
-            <div><div class="muted" style="font-size:.85rem">Mahlzeiten</div><div class="mono" style="font-size:1.3rem">${essen * 3}</div><div class="muted" style="font-size:.8rem">${essen} Personentage · ca. ${essen * 2000} kcal</div></div>
+            <div><div class="muted of-klein" style="font-size:.85rem">Wasser</div><div class="mono of-mono" style="font-size:1.3rem">${wasser} l</div><div class="muted of-klein" style="font-size:.8rem">${Math.ceil(wasser / 9)} Kisten à 6 × 1,5 l</div></div>
+            <div><div class="muted of-klein" style="font-size:.85rem">Mahlzeiten</div><div class="mono of-mono" style="font-size:1.3rem">${essen * 3}</div><div class="muted of-klein" style="font-size:.8rem">${essen} Personentage · ca. ${essen * 2000} kcal</div></div>
           </div>
-          <p class="muted" style="margin:.8rem 0 0;font-size:.85rem">Dazu: Medikamente für 14 Tage, Hygieneartikel, Bargeld in kleinen Scheinen, Taschenlampe, Batterien, Campingkocher. Die Checkliste dazu steht unter <a href="#vorsorge">Vorsorge</a>.</p>
+          <p class="muted of-klein" style="margin:.8rem 0 0;font-size:.85rem">Dazu: Medikamente für 14 Tage, Hygieneartikel, Bargeld in kleinen Scheinen, Taschenlampe, Batterien, Campingkocher. Die Checkliste dazu steht unter <a href="#vorsorge">Vorsorge</a>.</p>
         </div>
       </div>`;
   },
 
   bibliothek() {
     const k = katalog();
-    if (!k) return `${kopf("Bibliothek", "Der Paketkatalog wurde noch nie geladen.")}<div class="card"><p class="muted">Geh einmal online, dann holt OFFLINE den Katalog und merkt ihn sich.</p><button class="btn btn-primary" data-katalog>Katalog laden</button><p class="form-msg" id="bib-msg"></p></div>`;
+    if (!k) return `${kopf("Bibliothek", "Der Paketkatalog wurde noch nie geladen.")}<div class="card of-karte"><p class="muted of-klein">Geh einmal online, dann holt OFFLINE den Katalog und merkt ihn sich.</p><button class="btn btn-primary of-btn of-btn--primaer" data-katalog>Katalog laden</button><p class="form-msg of-meldung" id="bib-msg"></p></div>`;
     const typen = ["Alle", ...new Set(k.pakete.map((p) => ARTEN[p.art] ?? p.art)), ...(state.modul.lokal?.pakete.length && !k.pakete.some((p) => p.art === "modul") ? [ARTEN.modul] : [])];
     const liste = k.pakete.filter((p) => state.filter === "Alle" || (ARTEN[p.art] ?? p.art) === state.filter);
     return `
       ${kopf("Bibliothek", `Katalog vom ${datum(k.erstellt)} · Signatur geprüft ✓${desktop ? "" : " · Pakete im Browser sind Textpakete, große kommen in die Desktop-App."}`)}
-      ${desktop ? `<div class="card" style="margin-bottom:1rem"><h3>Vom USB-Stick oder Ordner einspielen</h3>
-        <p class="muted" style="margin:0 0 .75rem">Ohne Internet: Paketordner vom Stick auswählen. Der Kern prüft Signatur und jede Datei, bevor etwas übernommen wird.</p>
-        <button class="btn btn-sm btn-primary" data-stick-suchen>Datenträger durchsuchen</button> <button class="btn btn-sm" data-ordner-waehlen>Ordner wählen …</button>
-        <div id="stick-funde" style="margin-top:.75rem">${(state.funde ?? []).map((f) => `<div class="switch"><span><strong>${esc(f.titel)}</strong> <span class="muted">${esc(f.version)} · ${groesse(f.groesse)}</span><br><span class="muted mono" style="font-size:.8rem">${esc(f.pfad)}</span></span><button class="btn btn-sm btn-primary" data-stick="${esc(f.pfad)}">Einspielen</button></div>`).join("")}</div></div>` : ""}
-      <div class="filters">${typen.map((t) => `<button data-filter="${esc(t)}" aria-pressed="${t === state.filter}">${esc(t)}</button>`).join("")}</div>
-      <p class="form-msg" id="bib-msg"></p>
+      ${desktop ? `<div class="card of-karte" style="margin-bottom:1rem"><h3>Vom USB-Stick oder Ordner einspielen</h3>
+        <p class="muted of-klein" style="margin:0 0 .75rem">Ohne Internet: Paketordner vom Stick auswählen. Der Kern prüft Signatur und jede Datei, bevor etwas übernommen wird.</p>
+        <button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-stick-suchen>Datenträger durchsuchen</button> <button class="btn btn-sm of-btn of-btn--klein" data-ordner-waehlen>Ordner wählen …</button>
+        <div id="stick-funde" style="margin-top:.75rem">${(state.funde ?? []).map((f) => `<div class="switch of-liste__zeile"><span><strong>${esc(f.titel)}</strong> <span class="muted of-klein">${esc(f.version)} · ${groesse(f.groesse)}</span><br><span class="muted mono of-klein of-mono" style="font-size:.8rem">${esc(f.pfad)}</span></span><button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-stick="${esc(f.pfad)}">Einspielen</button></div>`).join("")}</div></div>` : ""}
+      <div class="filters of-reiter">${typen.map((t) => `<button data-filter="${esc(t)}" aria-pressed="${t === state.filter}">${esc(t)}</button>`).join("")}</div>
+      <p class="form-msg of-meldung" id="bib-msg"></p>
       ${desktop ? lokaleQuelleHtml() : ""}
       <div class="grid grid-2">${liste.map((p) => {
-        if (p.art === "modul") return modulKarte(p, { art: "katalog" });
+        if (p.art === "modul" || p.art === "skin") return modulKarte(p, { art: "katalog" });
         const inst = installiertesPaket(p.id);
         const update = inst && p.status === "verfuegbar" && versionVergleich(p.version, inst.manifest.version) > 0;
         let knopf;
-        if (inst) knopf = `${update ? `<button class="btn btn-sm btn-primary" data-install="${p.id}">Aktualisieren</button> ` : ""}${desktop && p.art === "zim" ? `<button class="btn btn-sm btn-primary" data-oeffnen-zim="${p.id}">Öffnen</button> ` : ""}${desktop && p.art === "karte" ? `<a class="btn btn-sm btn-primary" href="#karte">Karte öffnen</a> ` : ""}<button class="btn btn-sm" data-remove="${p.id}">Entfernen</button>`;
-        else if (p.status !== "verfuegbar") knopf = `<span class="tag tag-warn">Geplant</span>`;
-        else if (p.pro) knopf = `<button class="btn btn-sm" disabled title="Nur mit Pro">Nur mit Pro</button>`;
-        else if (!desktop && p.art !== "inhalt") knopf = `<span class="tag">Nur in der Desktop-App</span>`;
-        else knopf = `<button class="btn btn-sm btn-primary" data-install="${p.id}">Installieren</button>`;
-        return `<div class="card pkg">
-          <div class="pkg-head"><h3 style="margin:0">${esc(p.titel)}</h3><span>${p.pro ? '<span class="tag tag-pro">Pro</span> ' : ""}${inst ? `<span class="tag tag-ok">${update ? "Update " + esc(p.version) : "Installiert"}</span>` : ""}</span></div>
+        if (inst) knopf = `${update ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${p.id}">Aktualisieren</button> ` : ""}${desktop && p.art === "zim" ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-oeffnen-zim="${p.id}">Öffnen</button> ` : ""}${desktop && p.art === "karte" ? `<a class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" href="#karte">Karte öffnen</a> ` : ""}<button class="btn btn-sm of-btn of-btn--klein" data-remove="${p.id}">Entfernen</button>`;
+        else if (p.status !== "verfuegbar") knopf = `<span class="tag tag-warn of-plakette of-plakette--warnung">Geplant</span>`;
+        else if (p.pro) knopf = `<button class="btn btn-sm of-btn of-btn--klein" disabled title="Nur mit Pro">Nur mit Pro</button>`;
+        else if (!desktop && p.art !== "inhalt") knopf = `<span class="tag of-plakette">Nur in der Desktop-App</span>`;
+        else knopf = `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${p.id}">Installieren</button>`;
+        return `<div class="card pkg of-karte of-paket">
+          <div class="pkg-head"><h3 style="margin:0">${esc(p.titel)}</h3><span>${p.pro ? '<span class="tag tag-pro of-plakette of-plakette--pro">Pro</span> ' : ""}${inst ? `<span class="tag tag-ok of-plakette of-plakette--offline">${update ? "Update " + esc(p.version) : "Installiert"}</span>` : ""}</span></div>
           <p>${esc(p.beschreibung)}</p>
-          <div class="pkg-foot"><span class="muted mono" style="font-size:.85rem">${groesse(p.groesse)}${p.version ? ` · ${esc(p.version)}` : ""}</span><span>${knopf}</span></div></div>`;
+          <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(p.groesse)}${p.version ? ` · ${esc(p.version)}` : ""}</span><span>${knopf}</span></div></div>`;
       }).join("")}</div>`;
   },
 
@@ -389,14 +389,14 @@ const seiten = {
     const kp = kartenPaket();
     return `${kopf("Karte Österreich", kp ? `Offline aus ${esc(kp.manifest.titel)} ${esc(kp.manifest.version)} – kein Internet nötig.` : desktop ? "Noch kein Kartenpaket installiert – solange online von basemap.at. Kartenpaket: Bibliothek → Karten." : "Im Prototyp live von basemap.at, in der App als Offline-Datei auf deinem Rechner.")}
       <div id="karte" role="region" aria-label="Karte von Österreich"></div>
-      <p class="form-msg" id="karte-msg"></p>`;
+      <p class="form-msg of-meldung" id="karte-msg"></p>`;
   },
 
   ki() {
     return `${kopf("KI-Assistent", "Prototyp: sucht im installierten Österreich-Paket. In der App antwortet ein lokales Sprachmodell.")}
-      <div class="card"><div class="chat" id="chat">
+      <div class="card of-karte"><div class="chat" id="chat">
         <div class="bubble bot">Servus! Frag mich etwas zu Notrufen, Sirenen oder Blackout-Vorsorge – zum Beispiel „Was bedeutet der Heulton?“ oder „Wie viel Wasser brauche ich?“</div></div>
-        <form class="chat-form" id="chat-form"><input type="text" id="frage" placeholder="Deine Frage …" autocomplete="off" aria-label="Frage"><button class="btn btn-primary">Fragen</button></form>
+        <form class="chat-form" id="chat-form"><input class="of-input" type="text" id="frage" placeholder="Deine Frage …" autocomplete="off" aria-label="Frage"><button class="btn btn-primary of-btn of-btn--primaer">Fragen</button></form>
       </div>`;
   },
 
@@ -405,20 +405,20 @@ const seiten = {
     const alle = [...state.notizbuch].sort((a, b) => (a.geaendert < b.geaendert ? 1 : -1));
     const liste = alle.filter((n) => !q || n.titel.toLowerCase().includes(q) || n.text.toLowerCase().includes(q));
     const n = state.notizbuch.find((x) => x.id === state.notizAktiv) ?? null;
-    return `${kopf("Notizen", "Bleiben auf diesem Gerät, unverschlüsselt. Passwörter, PINs und Ausweise gehören in den <a href=\"#tresor\">Tresor</a>.", '<button class="btn btn-primary" data-notiz-neu>Neue Notiz</button>')}
+    return `${kopf("Notizen", "Bleiben auf diesem Gerät, unverschlüsselt. Passwörter, PINs und Ausweise gehören in den <a href=\"#tresor\">Tresor</a>.", '<button class="btn btn-primary of-btn of-btn--primaer" data-notiz-neu>Neue Notiz</button>')}
       <div class="notizbuch">
-        <div class="card">
-          <input type="text" id="notiz-suche" placeholder="Suchen …" value="${esc(state.notizSuche)}" autocomplete="off">
-          <div class="tresor-liste" style="margin-top:.6rem">${liste.length ? liste.map((x) => `<button data-notiz="${esc(x.id)}" aria-current="${x.id === state.notizAktiv}">${esc(x.titel || "Ohne Titel")}<span class="muted">${esc(x.text.split("\n")[0].slice(0, 40))}${x.text.length > 40 ? " …" : ""}<br>${datum(x.geaendert)}</span></button>`).join("") : `<p class="muted" style="padding:.5rem .7rem">${state.notizbuch.length ? "Nichts gefunden." : "Noch keine Notiz. Oben rechts „Neue Notiz“."}</p>`}</div>
+        <div class="card of-karte">
+          <input class="of-input" type="text" id="notiz-suche" placeholder="Suchen …" value="${esc(state.notizSuche)}" autocomplete="off">
+          <div class="tresor-liste" style="margin-top:.6rem">${liste.length ? liste.map((x) => `<button data-notiz="${esc(x.id)}" aria-current="${x.id === state.notizAktiv}">${esc(x.titel || "Ohne Titel")}<span class="muted of-klein">${esc(x.text.split("\n")[0].slice(0, 40))}${x.text.length > 40 ? " …" : ""}<br>${datum(x.geaendert)}</span></button>`).join("") : `<p class="muted of-klein" style="padding:.5rem .7rem">${state.notizbuch.length ? "Nichts gefunden." : "Noch keine Notiz. Oben rechts „Neue Notiz“."}</p>`}</div>
         </div>
-        <div class="card">${n ? `
+        <div class="card of-karte">${n ? `
           <input type="text" class="titel" id="notiz-titel" value="${esc(n.titel)}" placeholder="Titel" autocomplete="off">
-          <textarea id="notiz-text" placeholder="z. B. Treffpunkt der Familie, Einkaufsliste für den Vorrat, Medikamente …" style="margin-top:.6rem">${esc(n.text)}</textarea>
-          <div style="display:flex;justify-content:space-between;gap:.5rem;margin-top:.6rem;flex-wrap:wrap"><span class="muted" id="notiz-gespeichert">Geändert ${datum(n.geaendert)}</span><span>${desktop ? `${aufnahmeKnopf()} <button class="btn btn-sm" data-notiz-anhang>Foto oder Datei …</button> <button class="btn btn-sm" data-notiz-in-tresor="${esc(n.id)}" title="Verschlüsselt in den Tresor verschieben (Tresor muss offen sein)">In den Tresor</button> ` : ""}<button class="btn btn-sm" data-notiz-loeschen="${esc(n.id)}">Löschen</button></span></div>
+          <textarea class="of-textarea" id="notiz-text" placeholder="z. B. Treffpunkt der Familie, Einkaufsliste für den Vorrat, Medikamente …" style="margin-top:.6rem">${esc(n.text)}</textarea>
+          <div style="display:flex;justify-content:space-between;gap:.5rem;margin-top:.6rem;flex-wrap:wrap"><span class="muted of-klein" id="notiz-gespeichert">Geändert ${datum(n.geaendert)}</span><span>${desktop ? `${aufnahmeKnopf()} <button class="btn btn-sm of-btn of-btn--klein" data-notiz-anhang>Foto oder Datei …</button> <button class="btn btn-sm of-btn of-btn--klein" data-notiz-in-tresor="${esc(n.id)}" title="Verschlüsselt in den Tresor verschieben (Tresor muss offen sein)">In den Tresor</button> ` : ""}<button class="btn btn-sm of-btn of-btn--klein" data-notiz-loeschen="${esc(n.id)}">Löschen</button></span></div>
           ${(n.anhaenge ?? []).length ? `<div style="margin-top:.8rem"><strong>Anhänge</strong>${n.anhaenge.map((a) => anhangZeile(a, state.notizVorschau?.id === a.id, "notiz")).join("")}</div>` : ""}
           ${state.notizVorschau && (n.anhaenge ?? []).some((a) => a.id === state.notizVorschau.id) ? `<div class="anhang-vorschau" style="margin-top:.8rem">${vorschauHtml(state.notizVorschau)}</div>` : ""}
-          ${desktop ? "" : `<p class="muted" style="margin-top:.8rem;font-size:.85rem">Diktat und Fotos zu Notizen gibt es in der Desktop-App.</p>`}
-          <p class="form-msg" id="notiz-msg"></p>` : `<p class="muted">Links eine Notiz wählen oder oben „Neue Notiz“.</p>`}</div>
+          ${desktop ? "" : `<p class="muted of-klein" style="margin-top:.8rem;font-size:.85rem">Diktat und Fotos zu Notizen gibt es in der Desktop-App.</p>`}
+          <p class="form-msg of-meldung" id="notiz-msg"></p>` : `<p class="muted of-klein">Links eine Notiz wählen oder oben „Neue Notiz“.</p>`}</div>
       </div>`;
   },
 
@@ -430,47 +430,47 @@ const seiten = {
     const aenderungen = (k?.pakete ?? []).filter((p) => p.aenderungen).sort((a, b) => (a.erstellt < b.erstellt ? 1 : -1));
     const m = state.meldung;
     return `
-      ${kopf("Updates & Abo", "Geladen wird nur, wenn du online bist – und nur, was sich geändert hat.", '<button class="btn btn-primary" id="jetzt">Jetzt prüfen</button>')}
-      ${state.fortschritt ? `<div class="card" style="margin-bottom:1rem"><div style="display:flex;justify-content:space-between;gap:1rem;align-items:center"><span><strong>Lädt</strong> <span class="muted mono" style="font-size:.85rem">${esc(state.fortschritt.pfad)}</span></span><span class="muted">${groesse(state.fortschritt.geladen)} / ${groesse(state.fortschritt.gesamt)}</span></div>
-        <div class="progress" style="margin:.5rem 0"><div style="width:${state.fortschritt.gesamt ? Math.min(100, (100 * state.fortschritt.geladen) / state.fortschritt.gesamt) : 0}%"></div></div>
-        ${desktop ? '<button class="btn btn-sm" data-abbrechen>Abbrechen – wird später fortgesetzt</button>' : ""}</div>` : ""}
-      <div class="card" id="pruef" style="margin-bottom:1rem">${m ? `<span class="tag ${m.art === "ok" ? "tag-ok" : m.art === "warn" ? "tag-warn" : "tag-pro"}">${esc(m.titel)}</span> ${m.text}` :
-        k ? `<span class="muted">Katalog vom ${datum(k.erstellt)}, geladen ${datum(ks.geladen)}, signiert mit Schlüssel <span class="mono">${esc(ks.schluessel)}</span>. ${updates.length ? `<strong>${updates.length} Update${updates.length > 1 ? "s" : ""} verfügbar.</strong>` : "Alle installierten Pakete sind aktuell."}</span>` :
-        '<span class="muted">Noch kein Katalog geladen.</span>'}
-        ${desktop?.aboStatus !== undefined ? `<div class="muted" style="margin-top:.5rem;font-size:.9rem">Hintergrund-Abo: ${desktop.aboStatus ? esc(desktop.aboStatus) : "fällig – läuft beim nächsten Takt"}</div>` : ""}
-        ${updates.map((u) => `<div style="margin-top:.75rem"><strong>${esc(u.eintrag.titel)}</strong> <span class="muted">${esc(u.installiert)} → ${esc(u.eintrag.version)}</span> <button class="btn btn-sm btn-primary" data-install="${u.eintrag.id}" style="margin-left:.5rem">Aktualisieren</button></div>`).join("")}
+      ${kopf("Updates & Abo", "Geladen wird nur, wenn du online bist – und nur, was sich geändert hat.", '<button class="btn btn-primary of-btn of-btn--primaer" id="jetzt">Jetzt prüfen</button>')}
+      ${state.fortschritt ? `<div class="card of-karte" style="margin-bottom:1rem"><div style="display:flex;justify-content:space-between;gap:1rem;align-items:center"><span><strong>Lädt</strong> <span class="muted mono of-klein of-mono" style="font-size:.85rem">${esc(state.fortschritt.pfad)}</span></span><span class="muted of-klein">${groesse(state.fortschritt.geladen)} / ${groesse(state.fortschritt.gesamt)}</span></div>
+        <div class="progress of-balken" style="margin:.5rem 0"><div style="width:${state.fortschritt.gesamt ? Math.min(100, (100 * state.fortschritt.geladen) / state.fortschritt.gesamt) : 0}%"></div></div>
+        ${desktop ? '<button class="btn btn-sm of-btn of-btn--klein" data-abbrechen>Abbrechen – wird später fortgesetzt</button>' : ""}</div>` : ""}
+      <div class="card of-karte" id="pruef" style="margin-bottom:1rem">${m ? `<span class="tag of-plakette ${m.art === "ok" ? "tag-ok of-plakette--offline" : m.art === "warn" ? "tag-warn of-plakette--warnung" : "tag-pro"}">${esc(m.titel)}</span> ${m.text}` :
+        k ? `<span class="muted of-klein">Katalog vom ${datum(k.erstellt)}, geladen ${datum(ks.geladen)}, signiert mit Schlüssel <span class="mono of-mono">${esc(ks.schluessel)}</span>. ${updates.length ? `<strong>${updates.length} Update${updates.length > 1 ? "s" : ""} verfügbar.</strong>` : "Alle installierten Pakete sind aktuell."}</span>` :
+        '<span class="muted of-klein">Noch kein Katalog geladen.</span>'}
+        ${desktop?.aboStatus !== undefined ? `<div class="muted of-klein" style="margin-top:.5rem;font-size:.9rem">Hintergrund-Abo: ${desktop.aboStatus ? esc(desktop.aboStatus) : "fällig – läuft beim nächsten Takt"}</div>` : ""}
+        ${updates.map((u) => `<div style="margin-top:.75rem"><strong>${esc(u.eintrag.titel)}</strong> <span class="muted of-klein">${esc(u.installiert)} → ${esc(u.eintrag.version)}</span> <button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${u.eintrag.id}" style="margin-left:.5rem">Aktualisieren</button></div>`).join("")}
       </div>
       <div class="grid grid-2">
-        <div class="card">
+        <div class="card of-karte">
           <div class="field"><span class="legend">Wie oft?</span>
             <div class="seg" role="group" aria-label="Intervall">${opt.map(([kk, n]) => `<button data-intervall="${kk}" aria-pressed="${state.abo.intervall === kk}">${n}</button>`).join("")}</div></div>
-          <div class="switch"><span><strong>Update-Abo aktiv</strong><br><span class="muted" style="font-size:.9rem">Pausieren, ohne Einstellungen zu verlieren</span></span><input type="checkbox" data-abo="aktiv" ${state.abo.aktiv ? "checked" : ""}></div>
-          <div class="switch"><span><strong>Nur im WLAN</strong><br><span class="muted" style="font-size:.9rem">Kein Download über Handy-Hotspot</span></span><input type="checkbox" data-abo="nurWlan" ${state.abo.nurWlan ? "checked" : ""}></div>
-          <div class="switch"><span><strong>Zeitfenster</strong><br><span class="muted" style="font-size:.9rem">z. B. nachts, wenn der Rechner nicht gebraucht wird</span></span><input type="checkbox" data-abo="fenster" ${state.abo.fenster ? "checked" : ""}></div>
+          <div class="switch of-liste__zeile"><span><strong>Update-Abo aktiv</strong><br><span class="muted of-klein" style="font-size:.9rem">Pausieren, ohne Einstellungen zu verlieren</span></span><input type="checkbox" data-abo="aktiv" ${state.abo.aktiv ? "checked" : ""}></div>
+          <div class="switch of-liste__zeile"><span><strong>Nur im WLAN</strong><br><span class="muted of-klein" style="font-size:.9rem">Kein Download über Handy-Hotspot</span></span><input type="checkbox" data-abo="nurWlan" ${state.abo.nurWlan ? "checked" : ""}></div>
+          <div class="switch of-liste__zeile"><span><strong>Zeitfenster</strong><br><span class="muted of-klein" style="font-size:.9rem">z. B. nachts, wenn der Rechner nicht gebraucht wird</span></span><input type="checkbox" data-abo="fenster" ${state.abo.fenster ? "checked" : ""}></div>
           <div style="display:flex;gap:.5rem;align-items:center;${state.abo.fenster ? "" : "opacity:.5"}">
-            <input type="time" data-zeit="von" value="${state.abo.von}" aria-label="von"> bis <input type="time" data-zeit="bis" value="${state.abo.bis}" aria-label="bis"></div>
+            <input class="of-input" type="time" data-zeit="von" value="${state.abo.von}" aria-label="von"> bis <input class="of-input" type="time" data-zeit="bis" value="${state.abo.bis}" aria-label="bis"></div>
         </div>
-        <div class="card">
+        <div class="card of-karte">
           <h3>Was ist neu?</h3>
-          <ul class="changelog">${aenderungen.length ? aenderungen.map((a) => `<li><span class="muted mono" style="font-size:.85rem">${datum(a.erstellt)}</span><span><strong>${esc(a.titel)}</strong> <span class="muted">${esc(a.version)}</span><br><span class="muted">${esc(a.aenderungen)}</span></span></li>`).join("") : '<li><span class="muted">Noch nichts – Katalog laden.</span></li>'}</ul>
+          <ul class="changelog">${aenderungen.length ? aenderungen.map((a) => `<li><span class="muted mono of-klein of-mono" style="font-size:.85rem">${datum(a.erstellt)}</span><span><strong>${esc(a.titel)}</strong> <span class="muted of-klein">${esc(a.version)}</span><br><span class="muted of-klein">${esc(a.aenderungen)}</span></span></li>`).join("") : '<li><span class="muted of-klein">Noch nichts – Katalog laden.</span></li>'}</ul>
         </div>
       </div>
       ${desktop ? appUpdateKarte() : ""}
-      ${desktop ? `<div class="card" style="margin-top:1rem"><h3>Speicherort</h3><p class="muted" style="margin:0 0 .5rem">Pakete liegen in <span class="mono" style="font-size:.85rem">${esc(desktop.datenordner)}</span>. Für große Pakete (Wikipedia, Karten) kann das eine externe Platte sein.</p>
-        <button class="btn btn-sm" data-speicherort>Ordner wählen …</button> <button class="btn btn-sm" data-speicherort-standard>Standard</button><p class="form-msg" id="ort-msg"></p></div>` : ""}
-      <div class="card" style="margin-top:1rem"><h3>Werkzeuge</h3>
+      ${desktop ? `<div class="card of-karte" style="margin-top:1rem"><h3>Speicherort</h3><p class="muted of-klein" style="margin:0 0 .5rem">Pakete liegen in <span class="mono of-mono" style="font-size:.85rem">${esc(desktop.datenordner)}</span>. Für große Pakete (Wikipedia, Karten) kann das eine externe Platte sein.</p>
+        <button class="btn btn-sm of-btn of-btn--klein" data-speicherort>Ordner wählen …</button> <button class="btn btn-sm of-btn of-btn--klein" data-speicherort-standard>Standard</button><p class="form-msg of-meldung" id="ort-msg"></p></div>` : ""}
+      <div class="card of-karte" style="margin-top:1rem"><h3>Werkzeuge</h3>
         <div style="display:flex;flex-wrap:wrap;gap:.5rem">
-          ${desktop ? "" : `<button class="btn btn-sm btn-primary" data-offline-pruefen>Offline-Bereitschaft prüfen</button>
-          <button class="btn btn-sm" data-app-installieren>Als App installieren</button>
-          <button class="btn btn-sm" data-zuruecksetzen>Alles zurücksetzen</button>`}
-          <button class="btn btn-sm" data-loeschen style="color:var(--accent);border-color:var(--accent)">Restlos löschen &amp; deinstallieren</button>
+          ${desktop ? "" : `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-offline-pruefen>Offline-Bereitschaft prüfen</button>
+          <button class="btn btn-sm of-btn of-btn--klein" data-app-installieren>Als App installieren</button>
+          <button class="btn btn-sm of-btn of-btn--klein" data-zuruecksetzen>Alles zurücksetzen</button>`}
+          <button class="btn btn-sm of-btn of-btn--klein" data-loeschen style="color:var(--accent);border-color:var(--accent)">Restlos löschen &amp; deinstallieren</button>
         </div>
-        ${state.loeschenOffen ? `<div class="card" style="margin-top:.75rem;border-color:var(--accent)"><strong>Wirklich alles löschen?</strong>
-          <p class="muted" style="margin:.3rem 0 .6rem">Pakete, Notizen, Checkliste und Einstellungen verschwinden von diesem Gerät. Das lässt sich nicht rückgängig machen. Zur Sicherheit bitte <strong>LÖSCHEN</strong> eintippen:</p>
-          <div style="display:flex;gap:.5rem;flex-wrap:wrap"><input type="text" id="loeschen-wort" autocomplete="off" placeholder="LÖSCHEN" style="min-width:12rem"><button class="btn btn-sm btn-primary" data-loeschen-jetzt>Jetzt löschen</button><button class="btn btn-sm" data-loeschen-abbrechen>Abbrechen</button></div></div>` : ""}
-        <p class="muted" style="font-size:.85rem;margin:.6rem 0 0">${desktop ? "„Restlos löschen“ entfernt alle Pakete und Einstellungen der App – doppelt gesichert. Das Programm selbst deinstallierst du danach über das Betriebssystem." : "„Zurücksetzen“ löscht alles und lädt OFFLINE frisch. „Restlos löschen“ entfernt alle Daten und die Offline-Kopie – doppelt gesichert, damit nichts aus Versehen verschwindet."}</p>
-        <p class="form-msg" id="werkzeug-msg" role="status" aria-live="polite"></p></div>
-      <p class="muted" style="margin-top:1rem;font-size:.9rem">So läuft ein Update: Katalog laden → Signatur prüfen → Manifest gegen Katalog und Signatur prüfen → nur geänderte Dateien laden → jede Datei gegen ihre Prüfsumme prüfen → erst dann den alten Stand ersetzen. Details: <a href="https://github.com/miksoda-cpu/OFFLINE/blob/claude/optimistic-hypatia-yymcne/docs/PAKETFORMAT.md" rel="noopener">Paketformat</a>.</p>`;
+        ${state.loeschenOffen ? `<div class="card of-karte" style="margin-top:.75rem;border-color:var(--accent)"><strong>Wirklich alles löschen?</strong>
+          <p class="muted of-klein" style="margin:.3rem 0 .6rem">Pakete, Notizen, Checkliste und Einstellungen verschwinden von diesem Gerät. Das lässt sich nicht rückgängig machen. Zur Sicherheit bitte <strong>LÖSCHEN</strong> eintippen:</p>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap"><input class="of-input" type="text" id="loeschen-wort" autocomplete="off" placeholder="LÖSCHEN" style="min-width:12rem"><button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-loeschen-jetzt>Jetzt löschen</button><button class="btn btn-sm of-btn of-btn--klein" data-loeschen-abbrechen>Abbrechen</button></div></div>` : ""}
+        <p class="muted of-klein" style="font-size:.85rem;margin:.6rem 0 0">${desktop ? "„Restlos löschen“ entfernt alle Pakete und Einstellungen der App – doppelt gesichert. Das Programm selbst deinstallierst du danach über das Betriebssystem." : "„Zurücksetzen“ löscht alles und lädt OFFLINE frisch. „Restlos löschen“ entfernt alle Daten und die Offline-Kopie – doppelt gesichert, damit nichts aus Versehen verschwindet."}</p>
+        <p class="form-msg of-meldung" id="werkzeug-msg" role="status" aria-live="polite"></p></div>
+      <p class="muted of-klein" style="margin-top:1rem;font-size:.9rem">So läuft ein Update: Katalog laden → Signatur prüfen → Manifest gegen Katalog und Signatur prüfen → nur geänderte Dateien laden → jede Datei gegen ihre Prüfsumme prüfen → erst dann den alten Stand ersetzen. Details: <a href="https://github.com/miksoda-cpu/OFFLINE/blob/claude/optimistic-hypatia-yymcne/docs/PAKETFORMAT.md" rel="noopener">Paketformat</a>.</p>`;
   },
 };
 
@@ -478,22 +478,22 @@ function appUpdateKarte() {
   const u = state.appUpdate ?? { status: "" };
   let inhalt;
   switch (u.status) {
-    case "pruefe": inhalt = `<span class="muted">Frage den Update-Server …</span>`; break;
-    case "keins": inhalt = `<span class="tag tag-ok">Aktuell</span> <span class="muted">Du hast die neueste Version${u.aktuell ? ` (${esc(u.aktuell)})` : ""}.</span>`; break;
-    case "gefunden": inhalt = `<span class="tag tag-warn">Neue Version ${esc(u.info.version)}</span> <span class="muted">Du hast ${esc(u.info.aktuell)}.${u.info.hinweise ? " " + esc(u.info.hinweise) : ""}</span>
-      <div style="margin-top:.6rem"><button class="btn btn-sm btn-primary" data-app-update-installieren>Version ${esc(u.info.version)} laden und installieren</button></div>`; break;
-    case "laedt": inhalt = `<span class="muted">Lade Version ${esc(u.info.version)} … ${u.fortschritt?.gesamt ? `${groesse(u.fortschritt.geladen)} / ${groesse(u.fortschritt.gesamt)}` : ""}</span>
-      <div class="progress" style="margin:.5rem 0"><div style="width:${u.fortschritt?.gesamt ? Math.min(100, (100 * u.fortschritt.geladen) / u.fortschritt.gesamt) : 0}%"></div></div>`; break;
-    case "fertig": inhalt = `<span class="tag tag-ok">Installiert</span> <span class="muted">Version ${esc(u.info.version)} ist bereit. Signatur geprüft.</span>
-      <div style="margin-top:.6rem"><button class="btn btn-sm btn-primary" data-app-neustart>Jetzt neu starten</button></div>`; break;
-    case "fehler": inhalt = `<span class="tag tag-pro">Fehler</span> <span class="muted">${esc(u.text)}</span>`; break;
-    default: inhalt = `<span class="muted">Die App holt sich neue Versionen selbst – signiert, vom selben Server wie die Pakete.</span>`;
+    case "pruefe": inhalt = `<span class="muted of-klein">Frage den Update-Server …</span>`; break;
+    case "keins": inhalt = `<span class="tag tag-ok of-plakette of-plakette--offline">Aktuell</span> <span class="muted of-klein">Du hast die neueste Version${u.aktuell ? ` (${esc(u.aktuell)})` : ""}.</span>`; break;
+    case "gefunden": inhalt = `<span class="tag tag-warn of-plakette of-plakette--warnung">Neue Version ${esc(u.info.version)}</span> <span class="muted of-klein">Du hast ${esc(u.info.aktuell)}.${u.info.hinweise ? " " + esc(u.info.hinweise) : ""}</span>
+      <div style="margin-top:.6rem"><button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-app-update-installieren>Version ${esc(u.info.version)} laden und installieren</button></div>`; break;
+    case "laedt": inhalt = `<span class="muted of-klein">Lade Version ${esc(u.info.version)} … ${u.fortschritt?.gesamt ? `${groesse(u.fortschritt.geladen)} / ${groesse(u.fortschritt.gesamt)}` : ""}</span>
+      <div class="progress of-balken" style="margin:.5rem 0"><div style="width:${u.fortschritt?.gesamt ? Math.min(100, (100 * u.fortschritt.geladen) / u.fortschritt.gesamt) : 0}%"></div></div>`; break;
+    case "fertig": inhalt = `<span class="tag tag-ok of-plakette of-plakette--offline">Installiert</span> <span class="muted of-klein">Version ${esc(u.info.version)} ist bereit. Signatur geprüft.</span>
+      <div style="margin-top:.6rem"><button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-app-neustart>Jetzt neu starten</button></div>`; break;
+    case "fehler": inhalt = `<span class="tag tag-pro of-plakette of-plakette--pro">Fehler</span> <span class="muted of-klein">${esc(u.text)}</span>`; break;
+    default: inhalt = `<span class="muted of-klein">Die App holt sich neue Versionen selbst – signiert, vom selben Server wie die Pakete.</span>`;
   }
   const ortProblem = desktop?.info?.ort_problem;
-  if (ortProblem) inhalt = `<span class="tag tag-warn">Falscher Ort</span> <span>${esc(ortProblem)}</span><br><span class="muted mono" style="font-size:.8rem">${esc(desktop.info.ort)}</span>`;
+  if (ortProblem) inhalt = `<span class="tag tag-warn of-plakette of-plakette--warnung">Falscher Ort</span> <span>${esc(ortProblem)}</span><br><span class="muted mono of-klein of-mono" style="font-size:.8rem">${esc(desktop.info.ort)}</span>`;
   const laeuft = u.status === "pruefe" || u.status === "laedt" || !!ortProblem;
-  return `<div class="card" style="margin-top:1rem"><div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap"><h3 style="margin:0">App-Update</h3>
-    <button class="btn btn-sm" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>
+  return `<div class="card of-karte" style="margin-top:1rem"><div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap"><h3 style="margin:0">App-Update</h3>
+    <button class="btn btn-sm of-btn of-btn--klein" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>
     <p style="margin:.6rem 0 0" id="app-update-inhalt">${inhalt}</p></div>`;
 }
 
@@ -533,7 +533,7 @@ async function pruefeUpdates({ still = false } = {}) {
     const updates = verfuegbareUpdates(k);
     state.meldung = veraltet
       ? { art: "warn", titel: "Katalog veraltet", text: "Der Katalog ist abgelaufen. Installierte Inhalte funktionieren weiter." }
-      : { art: "ok", titel: "Geprüft", text: `Katalog signiert mit <span class="mono">${esc(schluessel)}</span>. ${updates.length ? `${updates.length} Update${updates.length > 1 ? "s" : ""} verfügbar.` : `Alle Pakete aktuell. Nächste Prüfung: ${intervallText()}.`}` };
+      : { art: "ok", titel: "Geprüft", text: `Katalog signiert mit <span class="mono of-mono">${esc(schluessel)}</span>. ${updates.length ? `${updates.length} Update${updates.length > 1 ? "s" : ""} verfügbar.` : `Alle Pakete aktuell. Nächste Prüfung: ${intervallText()}.`}` };
     return k;
   } catch (e) {
     state.meldung = { art: "fehler", titel: "Abgelehnt", text: esc(e.message) };
@@ -549,15 +549,15 @@ function downloadLeiste() {
   const d = state.download;
   if (!d) { el.hidden = true; el.innerHTML = ""; return; }
   const p = d.gesamt ? Math.min(100, (100 * d.geladen) / d.gesamt) : 0;
-  const tag = d.status === "laedt" ? "tag-pro" : d.status === "fertig" ? "tag-ok" : "tag-warn";
+  const tag = d.status === "laedt" ? "tag-pro" : d.status === "fertig" ? "tag-ok of-plakette--offline" : "tag-warn of-plakette--warnung";
   el.hidden = false;
   el.innerHTML = `<span class="dl-titel" title="${esc(d.titel)}">${esc(d.titel)}</span>
-    <div class="dl-zeile"><span class="tag ${tag}">${STATUS_TEXT[d.status]}</span><span class="mono">${d.gesamt ? `${groesse(d.geladen)} / ${groesse(d.gesamt)}` : groesse(d.geladen)}</span></div>
-    ${d.status === "laedt" || d.status === "unterbrochen" ? `<div class="progress"><div style="width:${p}%"></div></div>` : ""}
-    ${d.status === "kaputt" && d.text ? `<div class="muted" style="margin-top:.3rem">${esc(d.text)}</div>` : ""}
-    ${d.status === "unterbrochen" ? `<button class="btn btn-sm btn-primary" data-install="${esc(d.id)}">Fortsetzen</button>` : ""}
-    ${d.status === "kaputt" ? `<button class="btn btn-sm" data-install="${esc(d.id)}">Erneut versuchen</button>` : ""}
-    ${d.status === "laedt" && desktop ? `<button class="btn btn-sm" data-abbrechen>Abbrechen</button>` : ""}`;
+    <div class="dl-zeile"><span class="tag of-plakette ${tag}">${STATUS_TEXT[d.status]}</span><span class="mono of-mono">${d.gesamt ? `${groesse(d.geladen)} / ${groesse(d.gesamt)}` : groesse(d.geladen)}</span></div>
+    ${d.status === "laedt" || d.status === "unterbrochen" ? `<div class="progress of-balken"><div style="width:${p}%"></div></div>` : ""}
+    ${d.status === "kaputt" && d.text ? `<div class="muted of-klein" style="margin-top:.3rem">${esc(d.text)}</div>` : ""}
+    ${d.status === "unterbrochen" ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${esc(d.id)}">Fortsetzen</button>` : ""}
+    ${d.status === "kaputt" ? `<button class="btn btn-sm of-btn of-btn--klein" data-install="${esc(d.id)}">Erneut versuchen</button>` : ""}
+    ${d.status === "laedt" && desktop ? `<button class="btn btn-sm of-btn of-btn--klein" data-abbrechen>Abbrechen</button>` : ""}`;
 }
 
 async function installiereMitMeldung(id, ziel) {
@@ -608,6 +608,26 @@ const darfLaden = (_eintrag) => true;
 async function moduleStandLaden() {
   if (!desktop) return;
   try { state.modul.stand = await client.moduleStand(); } catch { state.modul.stand = {}; }
+  try { state.modul.skin = await client.skinStand(); } catch { state.modul.skin = null; }
+}
+
+// ---------- Skins: höchstens einer aktiv; Notfallseiten zeigen immer das Grundaussehen ----------
+let skinStil = null;
+async function skinAnwenden() {
+  if (!desktop) return;
+  let r = null;
+  try { r = await client.skinCss(); } catch (e) { console.error("Skin", e); }
+  if (!r) { skinStil?.remove(); skinStil = null; return; }
+  if (!skinStil) { skinStil = document.createElement("style"); skinStil.id = "skin-stil"; document.head.appendChild(skinStil); }
+  skinStil.dataset.skin = r.id;
+  skinStil.textContent = r.css;
+  skinFuerSeite();
+}
+function skinFuerSeite() {
+  if (!skinStil) return;
+  const route = location.hash.slice(1) || "start";
+  skinStil.media = route === "notfall" ? "not all" : "all"; // Notfall: immer Grundaussehen
+  document.body.classList.toggle("of-grundaussehen", route === "notfall");
 }
 
 const schieber = ({ an, art, text, attr }) => `<button type="button" role="switch" aria-checked="${an}" class="schieber schieber-${art}" ${attr}><span class="schieber-bahn" aria-hidden="true"><span class="schieber-knopf"></span></span><span class="schieber-text">${text}</span></button>`;
@@ -620,13 +640,13 @@ function sliderSchluessel(id, quelle) {
 function sliderHtml(key, e) {
   const v = state.modul.vorschau[key];
   const folien = Array.isArray(v) && v.length ? v : (e.vorschau?.folien ?? []); // ohne Bilder: die Texte aus dem Katalog
-  if (!folien.length) return v === undefined ? `<div class="slider slider-leer" data-slider="${esc(key)}"><span class="muted">Vorschau wird geladen …</span></div>` : "";
+  if (!folien.length) return v === undefined ? `<div class="slider slider-leer" data-slider="${esc(key)}"><span class="muted of-klein">Vorschau wird geladen …</span></div>` : "";
   const i = Math.min(state.modul.folie[key] ?? 0, folien.length - 1);
   const f = folien[i];
   return `<div class="slider" data-slider="${esc(key)}" role="group" aria-roledescription="Slideshow" aria-label="Vorschau, Folie ${i + 1} von ${folien.length}">
-    <div class="slider-bild">${f.bild_daten ? `<img src="${esc(f.bild_daten)}" alt="${esc(f.alt)}">` : `<span class="muted">${esc(f.alt)}</span>`}</div>
+    <div class="slider-bild">${f.bild_daten ? `<img src="${esc(f.bild_daten)}" alt="${esc(f.alt)}">` : `<span class="muted of-klein">${esc(f.alt)}</span>`}</div>
     <div class="slider-text"><strong>${esc(f.titel)}</strong><span>${esc(f.text)}</span></div>
-    <div class="slider-nav"><button type="button" class="btn btn-sm" data-folie="${esc(key)}" data-richtung="-1" aria-label="Vorherige Folie">‹</button><span class="muted mono">${i + 1} / ${folien.length}</span><button type="button" class="btn btn-sm" data-folie="${esc(key)}" data-richtung="1" aria-label="Nächste Folie">›</button></div>
+    <div class="slider-nav"><button type="button" class="btn btn-sm of-btn of-btn--klein" data-folie="${esc(key)}" data-richtung="-1" aria-label="Vorherige Folie">‹</button><span class="muted mono of-klein of-mono">${i + 1} / ${folien.length}</span><button type="button" class="btn btn-sm of-btn of-btn--klein" data-folie="${esc(key)}" data-richtung="1" aria-label="Nächste Folie">›</button></div>
   </div>`;
 }
 
@@ -634,34 +654,36 @@ function loeschDialog(id) {
   const bytes = state.modul.stand[id]?.daten_bytes ?? 0;
   return `<div class="modul-loeschen" role="group" aria-label="Modul löschen">
     <label for="modul-loeschwort">Zum Löschen das Wort <strong>löschen</strong> eintippen:</label>
-    <input type="text" id="modul-loeschwort" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <input class="of-input" type="text" id="modul-loeschwort" autocomplete="off" autocapitalize="off" spellcheck="false">
     <fieldset><legend>Was passiert mit den gespeicherten Daten${bytes ? ` (${groesse(bytes)})` : ""}?</legend>
       <label><input type="radio" name="modul-daten" value="behalten" checked> behalten – bei einer Neuinstallation sind sie wieder da</label>
       <label><input type="radio" name="modul-daten" value="loeschen"> mitlöschen</label></fieldset>
-    <div class="modul-loeschen-knoepfe"><button type="button" class="btn btn-sm btn-primary" data-modul-loeschen-jetzt="${esc(id)}" disabled>Endgültig löschen</button> <button type="button" class="btn btn-sm" data-modul-loeschen-abbrechen>Abbrechen</button></div>
+    <div class="modul-loeschen-knoepfe"><button type="button" class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-modul-loeschen-jetzt="${esc(id)}" disabled>Endgültig löschen</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-modul-loeschen-abbrechen>Abbrechen</button></div>
   </div>`;
 }
 
 /** Katalogkarte eines Moduls. quelle: { art: "katalog" } oder { art: "ordner", pfad } (lokal, nicht veröffentlicht). */
 function modulKarte(e, quelle) {
   const inst = installiertesPaket(e.id);
-  const aktiv = state.modul.stand[e.id]?.aktiv ?? true;
+  const skin = (inst?.manifest.art ?? e.art) === "skin";
+  const aktiv = skin ? state.modul.skin === e.id : state.modul.stand[e.id]?.aktiv ?? true;
   let steuerung;
-  if (!desktop) steuerung = `<span class="tag">Nur in der Desktop-App</span>`;
+  if (!desktop) steuerung = `<span class="tag of-plakette">Nur in der Desktop-App</span>`;
   else if (inst) {
     const neuer = e.version && versionVergleich(e.version, inst.manifest.version) > 0;
     steuerung = `${schieber({ an: aktiv, art: "aktiv", text: aktiv ? "aktiv" : "inaktiv", attr: `data-modul-aktiv="${esc(e.id)}" aria-label="${esc(e.titel)} ${aktiv ? "aktiv" : "inaktiv"}"` })}
-      <button type="button" class="btn btn-sm btn-primary" data-modul-start="${esc(e.id)}" ${aktiv ? "" : "disabled title=\"Erst aktiv schalten\""}>Öffnen</button>
-      ${neuer ? `<button type="button" class="btn btn-sm" data-modul-laden="${esc(e.id)}" ${quelle.art === "ordner" ? `data-pfad="${esc(quelle.pfad)}"` : ""}>Aktualisieren</button>` : ""}
-      <button type="button" class="btn btn-sm" data-modul-loeschen="${esc(e.id)}">löschen</button>`;
-  } else if (e.status && e.status !== "verfuegbar") steuerung = `<span class="tag tag-warn">Geplant</span>`;
-  else if (!darfLaden(e)) steuerung = `<span class="tag">Nicht freigeschaltet</span>`;
+      ${skin ? "" : `<button type="button" class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-modul-start="${esc(e.id)}" ${aktiv ? "" : "disabled title=\"Erst aktiv schalten\""}>Öffnen</button>`}
+      ${neuer ? `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-modul-laden="${esc(e.id)}" ${quelle.art === "ordner" ? `data-pfad="${esc(quelle.pfad)}"` : ""}>Aktualisieren</button>` : ""}
+      <button type="button" class="btn btn-sm of-btn of-btn--klein" data-modul-loeschen="${esc(e.id)}">löschen</button>`;
+  } else if (e.status && e.status !== "verfuegbar") steuerung = `<span class="tag tag-warn of-plakette of-plakette--warnung">Geplant</span>`;
+  else if (!darfLaden(e)) steuerung = `<span class="tag of-plakette">Nicht freigeschaltet</span>`;
   else steuerung = schieber({ an: false, art: "laden", text: "laden", attr: `data-modul-laden="${esc(e.id)}" ${quelle.art === "ordner" ? `data-pfad="${esc(quelle.pfad)}"` : ""} aria-label="${esc(e.titel)} laden"` });
-  return `<div class="card pkg modul-karte" data-modul-karte="${esc(e.id)}">
-    <div class="pkg-head"><h3 style="margin:0">${esc(e.titel)}</h3><span><span class="tag">Modul</span>${quelle.art === "ordner" ? ' <span class="tag tag-warn">lokal, nicht veröffentlicht</span>' : ""}${inst ? ` <span class="tag ${aktiv ? "tag-ok" : ""}">${aktiv ? "Geladen" : "Inaktiv"}</span>` : ""}</span></div>
+  return `<div class="card pkg modul-karte of-karte of-paket" data-modul-karte="${esc(e.id)}">
+    <div class="pkg-head"><h3 style="margin:0">${esc(e.titel)}</h3><span><span class="tag of-plakette">${skin ? "Skin" : "Modul"}</span>${quelle.art === "ordner" ? ' <span class="tag tag-warn of-plakette of-plakette--warnung">lokal, nicht veröffentlicht</span>' : ""}${inst ? ` <span class="tag of-plakette ${aktiv ? "tag-ok of-plakette--offline" : ""}">${aktiv ? "Geladen" : "Inaktiv"}</span>` : ""}</span></div>
     <p>${esc(e.beschreibung)}</p>
+    ${(inst?.manifest.ki_generiert ?? e.ki_generiert) ? `<p class="muted of-klein" style="margin:-.3rem 0 .5rem"><span class="tag of-plakette">KI</span> Bilder KI-generiert, Herkunft im Paket</p>` : ""}
     ${sliderHtml(sliderSchluessel(e.id, quelle), e)}
-    <div class="pkg-foot"><span class="muted mono" style="font-size:.85rem">${groesse(e.groesse)}${e.version ? ` · ${esc(e.version)}` : ""}${e.alter_ab ? ` · ab ${e.alter_ab} Jahren` : ""}</span><span class="modul-steuerung">${steuerung}</span></div>
+    <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(e.groesse)}${e.version ? ` · ${esc(e.version)}` : ""}${e.alter_ab ? ` · ab ${e.alter_ab} Jahren` : ""}</span><span class="modul-steuerung">${steuerung}</span></div>
     ${state.modul.loeschen === e.id ? loeschDialog(e.id) : ""}
   </div>`;
 }
@@ -670,12 +692,12 @@ function modulKarte(e, quelle) {
 function lokaleQuelleHtml() {
   const l = state.modul.lokal;
   const inKatalog = new Set((katalog()?.pakete ?? []).map((p) => p.id));
-  const karten = (l?.pakete ?? []).filter((p) => p.art === "modul" && !inKatalog.has(p.id) && (state.filter === "Alle" || state.filter === ARTEN.modul));
-  const probe = desktop.info?.entwickler ? ` <button type="button" class="btn btn-sm" data-modul-probe>Sandbox-Probe …</button>` : "";
-  return `<div class="card" style="margin-bottom:1rem"><h3>Lokale Quelle</h3>
-    <p class="muted" style="margin:0 0 .75rem">Module, die noch nicht im Katalog sind (Redaktionsablage). Geladen wird wie vom Stick: Der Kern prüft Signatur, Redaktionsschlüssel und jede Datei.</p>
-    <button type="button" class="btn btn-sm" data-modul-quelle>${l ? "Anderen Ordner wählen …" : "Ordner wählen …"}</button>${l ? ` <span class="muted mono" style="font-size:.8rem">${esc(l.pfad)}</span>` : ""}${probe}
-    ${l && !karten.length ? `<p class="muted" style="margin:.75rem 0 0">Dort liegt kein neues, gültig signiertes Modul.</p>` : ""}
+  const karten = (l?.pakete ?? []).filter((p) => (p.art === "modul" || p.art === "skin") && !inKatalog.has(p.id) && (state.filter === "Alle" || state.filter === ARTEN[p.art]));
+  const probe = desktop.info?.entwickler ? ` <button type="button" class="btn btn-sm of-btn of-btn--klein" data-modul-probe>Sandbox-Probe …</button>` : "";
+  return `<div class="card of-karte" style="margin-bottom:1rem"><h3>Lokale Quelle</h3>
+    <p class="muted of-klein" style="margin:0 0 .75rem">Module und Skins, die noch nicht im Katalog sind (Redaktionsablage). Geladen wird wie vom Stick: Der Kern prüft Signatur, Redaktionsschlüssel und jede Datei.</p>
+    <button type="button" class="btn btn-sm of-btn of-btn--klein" data-modul-quelle>${l ? "Anderen Ordner wählen …" : "Ordner wählen …"}</button>${l ? ` <span class="muted mono of-klein of-mono" style="font-size:.8rem">${esc(l.pfad)}</span>` : ""}${probe}
+    ${l && !karten.length ? `<p class="muted of-klein" style="margin:.75rem 0 0">Dort liegt kein neues, gültig signiertes Modul.</p>` : ""}
     ${karten.length ? `<div class="grid grid-2" style="margin-top:.75rem">${karten.map((p) => modulKarte(p, { art: "ordner", pfad: p.pfad })).join("")}</div>` : ""}
   </div>`;
 }
@@ -723,9 +745,12 @@ async function modulAktion(b) {
     await moduleStandLaden(); return render();
   }
   if (d.modulAktiv) {
-    const an = !(state.modul.stand[d.modulAktiv]?.aktiv ?? true);
-    try { await client.modulAktivSetzen(d.modulAktiv, an); } catch (e) { zeige("bib-msg", esc(String(e?.message ?? e)), "err"); }
-    await moduleStandLaden(); return render();
+    const id = d.modulAktiv;
+    try {
+      if (installiertesPaket(id)?.manifest.art === "skin") { await client.skinAktivieren(state.modul.skin === id ? null : id); await moduleStandLaden(); await skinAnwenden(); }
+      else { await client.modulAktivSetzen(id, !(state.modul.stand[id]?.aktiv ?? true)); await moduleStandLaden(); }
+    } catch (e) { zeige("bib-msg", esc(String(e?.message ?? e)), "err"); }
+    return render();
   }
   if (d.modulStart) { const e = installiertesPaket(d.modulStart); state.modul.offen = { id: d.modulStart, titel: e?.manifest.titel ?? d.modulStart }; location.hash = "#modul"; return; }
   if (d.modulLoeschen) { state.modul.loeschen = d.modulLoeschen; render(); document.getElementById("modul-loeschwort")?.focus(); return; }
@@ -737,7 +762,7 @@ async function modulAktion(b) {
     try {
       await client.modulLoeschen(id, wort, daten);
       state.modul.loeschen = null; delete state.modul.vorschau[`inst:${id}`];
-      await moduleStandLaden(); render();
+      await moduleStandLaden(); await skinAnwenden(); render();
       zeige("bib-msg", `Modul gelöscht${daten ? ", mit seinen Daten" : ", seine Daten bleiben für eine Neuinstallation"}.`, "ok");
     } catch (e) { zeige("bib-msg", esc(String(e?.message ?? e)), "err"); }
     return;
@@ -761,9 +786,9 @@ async function modulAnsichtZeigen() {
   document.title = `OFFLINE – ${o.titel}`;
   if (laufend?.id === o.id) return;
   modulAnsichtVerbergen(true);
-  modulAnsicht.innerHTML = `<div class="modul-kopf"><button type="button" class="btn btn-sm" data-modul-zu>‹ Zurück</button><h1>${esc(o.titel)}</h1><span class="tag" title="Läuft abgeschlossen, ohne Internet. Spricht nur über window.offline mit der App.">Sandbox · ohne Netz</span></div>
+  modulAnsicht.innerHTML = `<div class="modul-kopf"><button type="button" class="btn btn-sm of-btn of-btn--klein" data-modul-zu>‹ Zurück</button><h1>${esc(o.titel)}</h1><span class="tag of-plakette" title="Läuft abgeschlossen, ohne Internet. Spricht nur über window.offline mit der App.">Sandbox · ohne Netz</span></div>
     <div class="modul-wesen" id="modul-wesen" role="status" aria-live="polite" hidden></div>
-    <div class="modul-platz" id="modul-platz"></div><p class="form-msg" id="modul-msg"></p>`;
+    <div class="modul-platz" id="modul-platz"></div><p class="form-msg of-meldung" id="modul-msg"></p>`;
   const id = o.id;
   try {
     const url = o.url ?? (await client.modulOeffnen(id));
@@ -883,7 +908,7 @@ async function aufnahmeStart(ziel, melde) {
   } catch (e) { melde("Kein Zugriff auf das Mikrofon: " + esc(String(e?.message ?? e)), "err"); }
 }
 function aufnahmeStopp() { aufnahme.rec?.state === "recording" && aufnahme.rec.stop(); }
-const aufnahmeKnopf = () => aufnahme.rec ? `<button class="btn btn-sm btn-primary" data-aufnahme>■ Stopp</button>` : `<button class="btn btn-sm" data-aufnahme title="Sprachnotiz aufnehmen">● Diktat aufnehmen</button>`;
+const aufnahmeKnopf = () => aufnahme.rec ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-aufnahme>■ Stopp</button>` : `<button class="btn btn-sm of-btn of-btn--klein" data-aufnahme title="Sprachnotiz aufnehmen">● Diktat aufnehmen</button>`;
 
 // Vorschau eines Anhangs (Bild, Ton, PDF, Text) aus Base64 – nur im Speicher
 function vorschauAus(a, b64) {
@@ -891,7 +916,7 @@ function vorschauAus(a, b64) {
   return { id: a.id, typ: a.typ, name: a.name, url: URL.createObjectURL(new Blob([bytes], { type: a.typ })), text: a.typ.startsWith("text/") ? new TextDecoder().decode(bytes) : null };
 }
 const vorschauHtml = (v) => v.typ.startsWith("image/") ? `<img src="${v.url}" alt="${esc(v.name)}">` : v.typ.startsWith("audio/") ? `<audio controls src="${v.url}" style="width:100%"></audio>` : v.typ === "application/pdf" ? `<iframe src="${v.url}" title="${esc(v.name)}"></iframe>` : `<pre style="white-space:pre-wrap">${esc(v.text ?? "")}</pre>`;
-const anhangZeile = (a, aktiv, prefix) => `<div class="anhang"><span>${a.typ.startsWith("audio/") ? "🎙 " : a.typ.startsWith("image/") ? "🖼 " : "📄 "}${esc(a.name)}</span><span class="muted mono" style="font-size:.8rem">${groesse(a.groesse)}</span><span style="margin-left:auto"><button class="btn btn-sm" data-${prefix}-anzeigen="${esc(a.id)}">${aktiv ? "Ausblenden" : a.typ.startsWith("audio/") ? "Abspielen" : "Anzeigen"}</button> <button class="btn btn-sm" data-${prefix}-anhang-loeschen="${esc(a.id)}">Löschen</button></span></div>`;
+const anhangZeile = (a, aktiv, prefix) => `<div class="anhang"><span>${a.typ.startsWith("audio/") ? "🎙 " : a.typ.startsWith("image/") ? "🖼 " : "📄 "}${esc(a.name)}</span><span class="muted mono of-klein of-mono" style="font-size:.8rem">${groesse(a.groesse)}</span><span style="margin-left:auto"><button class="btn btn-sm of-btn of-btn--klein" data-${prefix}-anzeigen="${esc(a.id)}">${aktiv ? "Ausblenden" : a.typ.startsWith("audio/") ? "Abspielen" : "Anzeigen"}</button> <button class="btn btn-sm of-btn of-btn--klein" data-${prefix}-anhang-loeschen="${esc(a.id)}">Löschen</button></span></div>`;
 
 // ---------- Tresor ----------
 function tresorMeldung(text, art = "") { state.tresor.msg = text; state.tresor.msgArt = art; render(); }
@@ -1124,18 +1149,18 @@ async function restlosLoeschen(wort) {
   await allesEntfernen();
   const mac = /Mac/.test(navigator.platform);
   document.body.innerHTML = `<div class="wrap" style="padding:3rem 16px;max-width:40rem">
-    <a class="brand" href="/"><span class="brand-flag" aria-hidden="true"></span>OFFLINE</a>
+    <a class="brand of-marke" href="/"><span class="brand-flag" aria-hidden="true"></span>OFFLINE</a>
     <h1 style="font-size:1.8rem;margin-top:1.5rem">Alles gelöscht.</h1>
-    <p class="muted">Pakete, Notizen, Checkliste, Einstellungen und die Offline-Kopie der App sind von diesem Gerät entfernt.</p>
-    <div class="card"><h3>Letzter Schritt: ${anleitungDesktop ? "das Programm deinstallieren" : "das App-Symbol entfernen"}</h3>
-      ${anleitungDesktop ? `<p class="muted" style="margin:0">${esc(anleitungDesktop)}</p>` : ""}
-      <p class="muted" style="margin:0;${anleitungDesktop ? "display:none" : ""}">Falls du OFFLINE als App installiert hattest, ist noch das Symbol da. Es geht nur von Hand:</p>
-      <ul class="muted" style="padding-left:1.1rem;margin:.5rem 0 0;${anleitungDesktop ? "display:none" : ""}">
-        <li><strong>Chrome:</strong> In der App oben rechts das Menü (⋮) → „OFFLINE deinstallieren“. Oder <span class="mono">chrome://apps</span> aufrufen, Rechtsklick auf OFFLINE → „Aus Chrome entfernen“.</li>
+    <p class="muted of-klein">Pakete, Notizen, Checkliste, Einstellungen und die Offline-Kopie der App sind von diesem Gerät entfernt.</p>
+    <div class="card of-karte"><h3>Letzter Schritt: ${anleitungDesktop ? "das Programm deinstallieren" : "das App-Symbol entfernen"}</h3>
+      ${anleitungDesktop ? `<p class="muted of-klein" style="margin:0">${esc(anleitungDesktop)}</p>` : ""}
+      <p class="muted of-klein" style="margin:0;${anleitungDesktop ? "display:none" : ""}">Falls du OFFLINE als App installiert hattest, ist noch das Symbol da. Es geht nur von Hand:</p>
+      <ul class="muted of-klein" style="padding-left:1.1rem;margin:.5rem 0 0;${anleitungDesktop ? "display:none" : ""}">
+        <li><strong>Chrome:</strong> In der App oben rechts das Menü (⋮) → „OFFLINE deinstallieren“. Oder <span class="mono of-mono">chrome://apps</span> aufrufen, Rechtsklick auf OFFLINE → „Aus Chrome entfernen“.</li>
         <li><strong>${mac ? "Mac" : "Windows"}:</strong> ${mac ? "Im Ordner „Programme“ (bzw. Programme → Chrome-Apps) OFFLINE in den Papierkorb ziehen." : "Einstellungen → Apps → OFFLINE → Deinstallieren."}</li>
         <li><strong>Safari:</strong> Das Symbol im Dock rechtsklicken → „Aus dem Dock entfernen“, dann im Ordner „Programme“ löschen.</li>
       </ul></div>
-    <p style="margin-top:1.5rem"><a class="btn" href="/">Zur Startseite</a></p></div>`;
+    <p style="margin-top:1.5rem"><a class="btn of-btn" href="/">Zur Startseite</a></p></div>`;
 }
 
 function zeige(id, html, art) {
@@ -1165,7 +1190,7 @@ async function karteStarten() {
       zeige("karte-msg", "Offline-Karte konnte nicht geladen werden: " + esc(String(e?.message ?? e)) + " – zeige Online-Karte.", "err");
     }
   }
-  if (!el || !window.L) { if (el) el.innerHTML = '<p class="muted" style="padding:1rem">Karte konnte nicht geladen werden.</p>'; return; }
+  if (!el || !window.L) { if (el) el.innerHTML = '<p class="muted of-klein" style="padding:1rem">Karte konnte nicht geladen werden.</p>'; return; }
   const map = L.map(el, { minZoom: 6, maxBounds: [[45.8, 9.0], [49.6, 17.6]] }).setView([47.6, 13.6], 7);
   L.tileLayer("https://mapsneu.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png", {
     maxZoom: 19, attribution: 'Grundkarte: <a href="https://basemap.at">basemap.at</a> (CC BY 4.0)',
@@ -1185,7 +1210,7 @@ function antworte(frage) {
   if (/geld|bargeld|bankomat/.test(f)) treffer.push(v.gruppen[3].punkte[0] + ".");
   if (/rettung|arzt|krank|verletzt/.test(f) && !treffer.length) treffer.push("<strong>144 – Rettung</strong> im Notfall, <strong>141</strong> für den Ärztenotdienst, <strong>1450</strong> für Beratung.");
   return treffer.length
-    ? [...new Set(treffer)].slice(0, 4).map(esc).map((t) => t.replace(/&lt;(\/?)strong&gt;/g, "<$1strong>")).join("<br><br>") + `<br><br><span class="muted" style="font-size:.85rem">Quelle: ${esc(P().manifest.titel)} ${esc(P().manifest.version)}</span>`
+    ? [...new Set(treffer)].slice(0, 4).map(esc).map((t) => t.replace(/&lt;(\/?)strong&gt;/g, "<$1strong>")).join("<br><br>") + `<br><br><span class="muted of-klein" style="font-size:.85rem">Quelle: ${esc(P().manifest.titel)} ${esc(P().manifest.version)}</span>`
     : "Dazu finde ich im Österreich-Paket nichts. Mit installierter Wikipedia und dem KI-Modell kann ich in der App mehr beantworten.";
 }
 
@@ -1209,6 +1234,7 @@ function render() {
   document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? state.lesen?.titel ?? "Lesen"}`;
   if (seite === "karte") karteStarten();
   if (seite === "bibliothek") vorschauenNachladen();
+  skinFuerSeite();
   sidebar.classList.remove("open");
   menu.setAttribute("aria-expanded", "false");
   document.getElementById("tab-mehr")?.setAttribute("aria-expanded", "false"); document.getElementById("sheet-hinter").hidden = true;
@@ -1452,6 +1478,7 @@ async function offeneDownloads() {
 // Module: Stand (aktiv/inaktiv, Daten) und die zuletzt gewählte lokale Quelle
 if (desktop) (async () => {
   await moduleStandLaden();
+  await skinAnwenden();
   const q = speicher.get("modul-quelle", null);
   if (q) await lokaleQuelleLaden(q);
   if (location.hash === "#bibliothek") render();

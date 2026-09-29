@@ -35,6 +35,8 @@ pub struct KatalogEintrag {
     pub kategorie: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub alter_ab: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ki_generiert: Option<bool>,
     /// Slideshow für die Paketseite (Folien und Prüfsummen der Bilder), siehe vorschau.rs
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub vorschau: Option<crate::vorschau::Vorschau>,

@@ -37,7 +37,7 @@ Ein Modul ist ein Paket mit eigener Oberfläche (`inhalt/modul/index.html`). Das
 |---|---|---|
 | 1 | Signatur gegen die eingebauten öffentlichen Schlüssel (Zweck, Gültigkeitsfenster); der Zweck muss zur Paketart passen (Module nur `module`, alles andere `pakete`) | Abbruch, nichts gelesen |
 | 2 | Struktur: Pflichtfelder, Kennung, Kalenderversion, bekannte Paketart, Mindestversion der App | Abbruch |
-| 3 | Pfade: nur unter `inhalt/`, kein `..`, kein absoluter Pfad, keine Steuerzeichen; Code (`.js`, Skripte in Seiten) nur in Modulen unter `inhalt/modul/`, Modul-Oberfläche höchstens 2 MB | Abbruch |
+| 3 | Pfade: nur unter `inhalt/`, kein `..`, kein absoluter Pfad, keine Steuerzeichen; Code (`.js`, Skripte in Seiten) nur in Modulen unter `inhalt/modul/`, Modul-Oberfläche höchstens 2 MB; CSS ohne `@import`, ohne `url()` nach außen, ohne `expression()` und Escapes; Skins nur unter `inhalt/skin/`, höchstens 20 MB | Abbruch |
 | 4 | Größe und SHA-256 jeder Datei, bei großen Dateien jedes Teilstücks | Abbruch, Teilstück wird neu geladen |
 | 5 | Staging in `<id>-<version>.neu/`, dort erneute Vollprüfung, dann atomarer Tausch; der alte Stand bleibt als `.alt` bis zum Abschluss | halber Zustand wird beim nächsten Start aufgeräumt |
 | 6 | Beim Start jedes installierte Paket erneut prüfen | beschädigtes Paket erscheint nicht, die anderen laufen |

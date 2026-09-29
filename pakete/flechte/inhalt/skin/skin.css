@@ -1,0 +1,353 @@
+/* ==========================================================================
+   OFFLINE – Skin „Flechte“  ·  Version 1 · 24.09.2026
+   Alles lokal: Schriften, Icons und Bilder liegen neben dieser Datei.
+   Einbinden:  <link rel="stylesheet" href="skin/skin.css">
+   Icons:      <svg class="of-icon"><use href="skin/icons.svg#i-download"/></svg>
+   Präfix:     alle Klassen beginnen mit of-, alle Variablen mit --of-
+   ========================================================================== */
+
+/* ---------- Schriften (SIL Open Font License, siehe fonts/ofl-*.txt) ---------- */
+@font-face { font-family: "Alegreya"; src: url("fonts/alegreya-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Alegreya"; src: url("fonts/alegreya-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Alegreya"; src: url("fonts/alegreya-500-italic.woff2") format("woff2"); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: "Atkinson Next"; src: url("fonts/atkinson-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Atkinson Next"; src: url("fonts/atkinson-400-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Atkinson Next"; src: url("fonts/atkinson-600.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Atkinson Next"; src: url("fonts/atkinson-700.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Atkinson Mono"; src: url("fonts/atkinson-mono-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+
+/* ---------- Tokens: hell (Grundfassung) ---------- */
+:root {
+  /* Flächen: blasses Flechtengrün statt Weiß */
+  --of-grund:        #EDEFE4;
+  --of-flaeche:      #F8F9F2;
+  --of-flaeche-2:    #E3E7D8;
+  --of-linie:        #CDD4C1;
+  --of-linie-stark:  #A9B39C;
+
+  /* Schrift */
+  --of-tinte:        #1D2820;
+  --of-tinte-2:      #4E5E51;
+  --of-tinte-3:      #7A8779;
+
+  /* Akzent Moos, dazu die Wiesenfarben aus den Bildern */
+  --of-moos:         #3F6B34;
+  --of-moos-hover:   #335A2A;
+  --of-moos-zart:    #DCE8D2;
+  --of-auf-moos:     #FFFFFF;
+
+  --of-mohn:         #B8392A;   /* Notfall, Löschen */
+  --of-auf-mohn:     #FFFFFF;
+  --of-mohn-zart:    #F6DDD7;
+  --of-kornblume:    #3858A0;   /* Info, Links */
+  --of-kornblume-zart:#DDE4F4;
+  --of-hahnenfuss:   #9A6A07;   /* Warnung (Text) */
+  --of-hahnenfuss-flaeche:#E8B83E;
+  --of-hahnenfuss-zart:#F7ECCB;
+  --of-ziegel:       #A5532F;   /* Pro, Premium */
+  --of-ziegel-zart:  #F2E0D6;
+
+  /* Schrift-Familien */
+  --of-font-titel: "Alegreya", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --of-font-text:  "Atkinson Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --of-font-mono:  "Atkinson Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Schriftgrößen (Stufe 1.2, Basis 16 px) */
+  --of-t-xs: 0.8125rem;  /* 13 */
+  --of-t-s:  0.875rem;   /* 14 */
+  --of-t-m:  1rem;       /* 16 */
+  --of-t-l:  1.1875rem;  /* 19 */
+  --of-t-xl: 1.4375rem;  /* 23 */
+  --of-t-2xl:1.75rem;    /* 28 */
+  --of-t-3xl:2.25rem;    /* 36 */
+
+  /* Abstände (4er-Raster) */
+  --of-a-1: 4px;  --of-a-2: 8px;  --of-a-3: 12px; --of-a-4: 16px;
+  --of-a-5: 24px; --of-a-6: 32px; --of-a-7: 48px; --of-a-8: 64px;
+
+  /* Formen: bewusst unregelmäßig wie Flechtenränder */
+  --of-r-s: 6px;
+  --of-r-m: 10px;
+  --of-r-l: 16px;
+  --of-r-knopf: 12px 14px 12px 10px;
+  --of-r-karte: 18px 14px 20px 12px;
+
+  --of-schatten: 0 1px 0 rgba(29,40,32,.04), 0 6px 18px -8px rgba(29,40,32,.18);
+  --of-fokus: 0 0 0 3px var(--of-flaeche), 0 0 0 5px var(--of-kornblume);
+
+  --of-tempo: 160ms;
+  --of-bild-deckkraft: 1;
+  --of-bild-mischung: normal;
+
+  color-scheme: light;
+}
+
+/* ---------- Tokens: dunkel („Waldnacht“) ---------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --of-grund: #131A15; --of-flaeche: #1B241D; --of-flaeche-2: #243026;
+    --of-linie: #2F3C31; --of-linie-stark: #445446;
+    --of-tinte: #E6EBDD; --of-tinte-2: #AAB6A7; --of-tinte-3: #7E8B7D;
+    --of-moos: #8CBF6C; --of-moos-hover: #A2CF86; --of-moos-zart: #25371F; --of-auf-moos: #102010;
+    --of-mohn: #EE7361; --of-auf-mohn: #2A0D08; --of-mohn-zart: #3B1F1A;
+    --of-kornblume: #8EA9EA; --of-kornblume-zart: #1D2740;
+    --of-hahnenfuss: #EEC45E; --of-hahnenfuss-flaeche: #EEC45E; --of-hahnenfuss-zart: #342A12;
+    --of-ziegel: #E39A74; --of-ziegel-zart: #3A2519;
+    --of-schatten: 0 1px 0 rgba(0,0,0,.3), 0 8px 22px -10px rgba(0,0,0,.6);
+    --of-bild-deckkraft: .9;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --of-grund: #131A15; --of-flaeche: #1B241D; --of-flaeche-2: #243026;
+  --of-linie: #2F3C31; --of-linie-stark: #445446;
+  --of-tinte: #E6EBDD; --of-tinte-2: #AAB6A7; --of-tinte-3: #7E8B7D;
+  --of-moos: #8CBF6C; --of-moos-hover: #A2CF86; --of-moos-zart: #25371F; --of-auf-moos: #102010;
+  --of-mohn: #EE7361; --of-auf-mohn: #2A0D08; --of-mohn-zart: #3B1F1A;
+  --of-kornblume: #8EA9EA; --of-kornblume-zart: #1D2740;
+  --of-hahnenfuss: #EEC45E; --of-hahnenfuss-flaeche: #EEC45E; --of-hahnenfuss-zart: #342A12;
+  --of-ziegel: #E39A74; --of-ziegel-zart: #3A2519;
+  --of-schatten: 0 1px 0 rgba(0,0,0,.3), 0 8px 22px -10px rgba(0,0,0,.6);
+  --of-bild-deckkraft: .9;
+  color-scheme: dark;
+}
+
+/* ---------- Grundlage ---------- */
+.of-app {
+  background: var(--of-grund);
+  color: var(--of-tinte);
+  font-family: var(--of-font-text);
+  font-size: var(--of-t-m);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.of-app *, .of-app *::before, .of-app *::after { box-sizing: border-box; }
+.of-app :focus-visible { outline: none; box-shadow: var(--of-fokus); }
+
+.of-h1, .of-h2, .of-h3 { font-family: var(--of-font-titel); font-weight: 700; line-height: 1.15; margin: 0; text-wrap: balance; letter-spacing: -0.005em; }
+.of-h1 { font-size: var(--of-t-3xl); }
+.of-h2 { font-size: var(--of-t-2xl); }
+.of-h3 { font-size: var(--of-t-xl); font-weight: 500; }
+.of-lead { font-size: var(--of-t-l); color: var(--of-tinte-2); max-width: 60ch; margin: 0; }
+.of-text { max-width: 65ch; margin: 0; }
+.of-klein { font-size: var(--of-t-s); color: var(--of-tinte-2); }
+.of-marke { font-size: var(--of-t-xs); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--of-tinte-3); }
+.of-mono { font-family: var(--of-font-mono); font-size: .92em; font-variant-numeric: tabular-nums; }
+.of-link { color: var(--of-kornblume); text-decoration: underline; text-underline-offset: .18em; text-decoration-thickness: 1px; }
+.of-link:hover { text-decoration-thickness: 2px; }
+
+.of-icon { width: 1.25em; height: 1.25em; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; vertical-align: -0.2em; }
+
+/* ---------- Knöpfe ---------- */
+.of-btn {
+  --b-bg: var(--of-flaeche); --b-fg: var(--of-tinte); --b-rand: var(--of-linie-stark); --b-hover: var(--of-flaeche-2);
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--of-a-2);
+  min-height: 44px; padding: 0 var(--of-a-5);
+  font: 600 var(--of-t-m)/1 var(--of-font-text);
+  color: var(--b-fg); background: var(--b-bg);
+  border: 1.5px solid var(--b-rand); border-radius: var(--of-r-knopf);
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: background var(--of-tempo), border-color var(--of-tempo), transform var(--of-tempo);
+}
+.of-btn:hover { background: var(--b-hover); }
+.of-btn:active { transform: translateY(1px); }
+.of-btn[disabled], .of-btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; transform: none; }
+
+.of-btn--primaer { --b-bg: var(--of-moos); --b-fg: var(--of-auf-moos); --b-rand: var(--of-moos); --b-hover: var(--of-moos-hover); }
+.of-btn--notfall { --b-bg: var(--of-mohn); --b-fg: var(--of-auf-mohn); --b-rand: var(--of-mohn); --b-hover: var(--of-mohn); }
+.of-btn--notfall:hover { filter: brightness(1.08); }
+.of-btn--leise { --b-bg: transparent; --b-rand: transparent; --b-hover: var(--of-flaeche-2); --b-fg: var(--of-moos); }
+.of-btn--pro { --b-bg: var(--of-ziegel-zart); --b-fg: var(--of-ziegel); --b-rand: var(--of-ziegel); --b-hover: var(--of-ziegel-zart); }
+
+.of-btn--klein { min-height: 34px; padding: 0 var(--of-a-3); font-size: var(--of-t-s); }
+.of-btn--gross { min-height: 56px; padding: 0 var(--of-a-6); font-size: var(--of-t-l); }
+.of-btn--voll  { width: 100%; white-space: normal; text-align: center; padding-block: 10px; line-height: 1.25; }
+.of-btn--rund  { width: 44px; padding: 0; border-radius: 50%; }
+
+.of-btn[aria-busy="true"] { position: relative; color: transparent; pointer-events: none; }
+.of-btn[aria-busy="true"]::after {
+  content: ""; position: absolute; width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid var(--b-fg); border-right-color: transparent; animation: of-dreh .8s linear infinite;
+}
+@keyframes of-dreh { to { transform: rotate(360deg); } }
+
+.of-btn-gruppe { display: flex; flex-wrap: wrap; gap: var(--of-a-3); align-items: center; }
+
+/* ---------- Formular ---------- */
+.of-feld { display: grid; gap: var(--of-a-1); }
+.of-label { font-weight: 600; font-size: var(--of-t-s); }
+.of-hilfe { font-size: var(--of-t-xs); color: var(--of-tinte-3); }
+.of-fehler { font-size: var(--of-t-xs); color: var(--of-mohn); font-weight: 600; }
+.of-input, .of-select, .of-textarea {
+  width: 100%; min-height: 44px; padding: 10px var(--of-a-3);
+  font: 400 var(--of-t-m)/1.4 var(--of-font-text); color: var(--of-tinte);
+  background: var(--of-flaeche); border: 1.5px solid var(--of-linie-stark); border-radius: var(--of-r-m);
+  transition: border-color var(--of-tempo);
+}
+.of-input::placeholder, .of-textarea::placeholder { color: var(--of-tinte-3); }
+.of-input:hover, .of-select:hover, .of-textarea:hover { border-color: var(--of-tinte-3); }
+.of-input:focus-visible, .of-select:focus-visible, .of-textarea:focus-visible { border-color: var(--of-kornblume); }
+.of-input[aria-invalid="true"] { border-color: var(--of-mohn); }
+.of-textarea { min-height: 120px; resize: vertical; }
+.of-select { appearance: none; padding-right: 40px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--of-tinte-2) 50%), linear-gradient(135deg, var(--of-tinte-2) 50%, transparent 50%);
+  background-position: calc(100% - 20px) 55%, calc(100% - 15px) 55%; background-size: 5px 5px; background-repeat: no-repeat; }
+
+.of-suche { position: relative; }
+.of-suche .of-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--of-tinte-3); pointer-events: none; }
+.of-suche .of-input { padding-left: 42px; border-radius: 22px 20px 22px 18px; }
+
+.of-wahl { display: inline-flex; align-items: center; gap: var(--of-a-2); cursor: pointer; min-height: 32px; }
+.of-wahl input { width: 20px; height: 20px; margin: 0; accent-color: var(--of-moos); }
+
+.of-schalter { display: inline-flex; align-items: center; gap: var(--of-a-3); cursor: pointer; }
+.of-schalter input { appearance: none; margin: 0; width: 44px; height: 26px; border-radius: 13px; background: var(--of-linie-stark); position: relative; cursor: pointer; transition: background var(--of-tempo); }
+.of-schalter input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--of-flaeche); box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: transform var(--of-tempo); }
+.of-schalter input:checked { background: var(--of-moos); }
+.of-schalter input:checked::after { transform: translateX(18px); }
+
+/* ---------- Karten ---------- */
+.of-karte {
+  background: var(--of-flaeche); border: 1px solid var(--of-linie);
+  border-radius: var(--of-r-karte); padding: var(--of-a-5);
+  display: grid; gap: var(--of-a-3); align-content: start;
+}
+.of-karte--hebt { box-shadow: var(--of-schatten); }
+.of-karte--klick { cursor: pointer; transition: border-color var(--of-tempo), transform var(--of-tempo); }
+.of-karte--klick:hover { border-color: var(--of-moos); transform: translateY(-1px); }
+.of-karte__kopf { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--of-a-3); }
+.of-karte__fuss { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--of-a-3); padding-top: var(--of-a-3); border-top: 1px dashed var(--of-linie); }
+
+/* ---------- Plaketten ---------- */
+.of-plakette {
+  display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px 3px 8px;
+  font-size: var(--of-t-xs); font-weight: 700; line-height: 1.3;
+  border-radius: 999px; background: var(--of-flaeche-2); color: var(--of-tinte-2); white-space: nowrap;
+}
+.of-plakette .of-icon { width: 14px; height: 14px; stroke-width: 2.2; }
+.of-plakette--offline { background: var(--of-moos-zart); color: var(--of-moos); }
+.of-plakette--update  { background: var(--of-kornblume-zart); color: var(--of-kornblume); }
+.of-plakette--pro     { background: var(--of-ziegel-zart); color: var(--of-ziegel); }
+.of-plakette--warnung { background: var(--of-hahnenfuss-zart); color: var(--of-hahnenfuss); }
+.of-plakette--notfall { background: var(--of-mohn-zart); color: var(--of-mohn); }
+
+/* ---------- Hinweise ---------- */
+.of-hinweis {
+  --h-farbe: var(--of-kornblume); --h-grund: var(--of-kornblume-zart);
+  display: grid; grid-template-columns: auto 1fr; gap: var(--of-a-3); align-items: start;
+  padding: var(--of-a-4); border-radius: var(--of-r-m);
+  background: var(--h-grund); color: var(--of-tinte);
+  border: 1px solid color-mix(in srgb, var(--h-farbe) 35%, transparent);
+}
+.of-hinweis > .of-icon { color: var(--h-farbe); width: 22px; height: 22px; margin-top: 1px; }
+.of-hinweis strong { display: block; margin-bottom: 2px; }
+.of-hinweis--erfolg  { --h-farbe: var(--of-moos); --h-grund: var(--of-moos-zart); }
+.of-hinweis--warnung { --h-farbe: var(--of-hahnenfuss); --h-grund: var(--of-hahnenfuss-zart); }
+.of-hinweis--notfall { --h-farbe: var(--of-mohn); --h-grund: var(--of-mohn-zart); border-width: 2px; }
+
+/* ---------- Fortschritt ---------- */
+.of-balken { height: 8px; border-radius: 4px; background: var(--of-flaeche-2); overflow: hidden; }
+.of-balken > span { display: block; height: 100%; width: var(--wert, 0%); background: var(--of-moos); border-radius: inherit; transition: width .4s ease; }
+.of-balken--warnung > span { background: var(--of-hahnenfuss-flaeche); }
+
+/* ---------- Reiter ---------- */
+.of-reiter { display: flex; gap: var(--of-a-1); border-bottom: 1.5px solid var(--of-linie); overflow-x: auto; scrollbar-width: none; }
+.of-reiter button {
+  appearance: none; background: none; border: 0; cursor: pointer;
+  padding: var(--of-a-3) var(--of-a-4); margin-bottom: -1.5px;
+  font: 600 var(--of-t-s)/1 var(--of-font-text); color: var(--of-tinte-2);
+  border-bottom: 3px solid transparent; white-space: nowrap;
+}
+.of-reiter button:hover { color: var(--of-tinte); }
+.of-reiter button[aria-selected="true"] { color: var(--of-moos); border-bottom-color: var(--of-moos); }
+
+/* ---------- Listen ---------- */
+.of-liste { list-style: none; margin: 0; padding: 0; border: 1px solid var(--of-linie); border-radius: var(--of-r-l); background: var(--of-flaeche); overflow: hidden; }
+.of-liste > li { display: flex; align-items: center; gap: var(--of-a-3); padding: var(--of-a-3) var(--of-a-4); min-height: 56px; }
+.of-liste > li + li { border-top: 1px solid var(--of-linie); }
+.of-liste__symbol { width: 36px; height: 36px; flex: none; display: grid; place-items: center; border-radius: 12px 10px 13px 9px; background: var(--of-moos-zart); color: var(--of-moos); }
+.of-liste__text { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.of-liste__text > :first-child { font-weight: 600; }
+.of-liste__text > :last-child { font-size: var(--of-t-s); color: var(--of-tinte-2); }
+.of-liste__rechts { color: var(--of-tinte-3); }
+
+/* ---------- Leiste unten (Handy) und Kopf ---------- */
+.of-kopf { display: flex; align-items: center; gap: var(--of-a-3); padding: var(--of-a-3) var(--of-a-4); background: var(--of-flaeche); border-bottom: 1px solid var(--of-linie); }
+.of-kopf__titel { font-family: var(--of-font-titel); font-weight: 700; font-size: var(--of-t-l); flex: 1; }
+.of-leiste { display: flex; justify-content: space-around; background: var(--of-flaeche); border-top: 1px solid var(--of-linie); padding: var(--of-a-1) var(--of-a-2) calc(var(--of-a-1) + env(safe-area-inset-bottom, 0px)); }
+.of-leiste a, .of-leiste button { appearance: none; background: none; border: 0; cursor: pointer; display: grid; justify-items: center; gap: 2px; padding: var(--of-a-2) var(--of-a-3); min-width: 64px; font: 600 11px/1.2 var(--of-font-text); color: var(--of-tinte-3); text-decoration: none; border-radius: var(--of-r-m); }
+.of-leiste .of-icon { width: 24px; height: 24px; }
+.of-leiste [aria-current="page"] { color: var(--of-moos); background: var(--of-moos-zart); }
+
+/* ---------- Status „offline“ ---------- */
+.of-status { display: inline-flex; align-items: center; gap: 6px; font-size: var(--of-t-xs); font-weight: 700; color: var(--of-moos); }
+.of-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 3px var(--of-moos-zart); }
+
+/* ---------- Dialog und Meldung ---------- */
+.of-dialog { background: var(--of-flaeche); color: var(--of-tinte); border: 1px solid var(--of-linie); border-radius: var(--of-r-karte); box-shadow: 0 24px 60px -20px rgba(0,0,0,.45); padding: var(--of-a-6); max-width: min(440px, calc(100vw - 32px)); display: grid; gap: var(--of-a-4); }
+.of-dialog::backdrop { background: rgba(19,26,21,.55); }
+.of-meldung { display: inline-flex; align-items: center; gap: var(--of-a-3); padding: var(--of-a-3) var(--of-a-4); border-radius: var(--of-r-m); background: var(--of-tinte); color: var(--of-grund); font-weight: 600; font-size: var(--of-t-s); box-shadow: var(--of-schatten); }
+.of-meldung .of-icon { color: var(--of-moos-zart); }
+
+/* ---------- Tresor ---------- */
+.of-tresor { border: 2px solid var(--of-tinte); background: var(--of-flaeche); border-radius: var(--of-r-karte); padding: var(--of-a-5); display: grid; gap: var(--of-a-4); justify-items: start; }
+.of-tresor__schloss { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 50%; background: var(--of-tinte); color: var(--of-grund); }
+.of-pin { display: flex; gap: var(--of-a-2); }
+.of-pin input { width: 48px; height: 56px; text-align: center; font: 700 var(--of-t-xl)/1 var(--of-font-mono); background: var(--of-flaeche-2); border: 1.5px solid var(--of-linie-stark); border-radius: var(--of-r-m); color: var(--of-tinte); }
+
+/* ---------- Leerer Zustand ---------- */
+.of-leer { display: grid; justify-items: center; text-align: center; gap: var(--of-a-3); padding: var(--of-a-6) var(--of-a-4); }
+.of-leer img { width: min(280px, 70%); height: auto; opacity: var(--of-bild-deckkraft); }
+.of-leer .of-text { max-width: 42ch; color: var(--of-tinte-2); }
+
+/* ==========================================================================
+   Flechten: Schmuckbilder, die auf der Oberfläche wachsen
+   Der Behälter braucht position: relative (oder .of-bewachsen).
+   Bilder sind dekorativ: alt="" und aria-hidden="true".
+   ========================================================================== */
+.of-bewachsen { position: relative; isolation: isolate; }
+.of-flechte {
+  position: absolute; z-index: -1; pointer-events: none; user-select: none;
+  height: auto; opacity: var(--of-bild-deckkraft); mix-blend-mode: var(--of-bild-mischung);
+}
+.of-flechte--ol { top: 0; left: 0;   width: clamp(96px, 22%, 220px); }
+.of-flechte--or { top: 0; right: 0;  width: clamp(80px, 18%, 180px); }
+.of-flechte--ul { bottom: 0; left: 0; width: clamp(96px, 22%, 220px); }
+.of-flechte--ur { bottom: 0; right: 0; width: clamp(96px, 22%, 220px); }
+.of-flechte--rand-unten { left: 50%; bottom: 0; transform: translateX(-50%); width: min(720px, 100%); }
+.of-flechte--rand-rechts { top: 10%; right: 0; width: clamp(90px, 16%, 200px); }
+.of-flechte--tupfer { width: clamp(56px, 9vw, 110px); }
+.of-flechte--leise { opacity: calc(var(--of-bild-deckkraft) * .55); }
+
+@media (max-width: 480px) {
+  .of-flechte--or, .of-flechte--rand-rechts { display: none; }
+  .of-h1 { font-size: var(--of-t-2xl); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .of-app *, .of-app *::before, .of-app *::after { transition: none !important; animation: none !important; }
+}
+
+/* ==========================================================================
+   App-Brücke (OFFLINE 0.2.0, 29.09.2026): legt das Grundaussehen der App auf die Flechte.
+   Schnittstelle für Skins (docs/PAKET-KIT.md, Abschnitt 5a): die of-Klassen im Markup und die
+   Grundwerte der App (--bg, --surface, --text, --accent …). Notfallseiten schaltet die App selbst
+   auf das Grundaussehen zurück; dieser Skin muss dafür nichts tun.
+   ========================================================================== */
+.of-app {
+  --bg: var(--of-grund); --surface: var(--of-flaeche); --surface-2: var(--of-flaeche-2);
+  --text: var(--of-tinte); --muted: var(--of-tinte-2); --line: var(--of-linie);
+  --accent: var(--of-moos); --accent-ink: var(--of-auf-moos); --accent-soft: var(--of-moos-zart);
+  --ok: var(--of-moos); --ok-soft: var(--of-moos-zart); --warn: var(--of-hahnenfuss); --warn-soft: var(--of-hahnenfuss-zart);
+  --radius: 18px; --radius-sm: 12px; --shadow: var(--of-schatten);
+  --font: var(--of-font-text); --mono: var(--of-font-mono);
+  --eisblau: #dbe8e6; --flieder: #e6e0ee; --moos: var(--of-moos-zart); --sand: #efe7d2; --rose: var(--of-mohn-zart); --kachel-ink: var(--of-tinte);
+  background: var(--of-grund); color: var(--of-tinte);
+}
+.of-app h1, .of-app h2, .of-app h3, .of-app .of-marke { font-family: var(--of-font-titel); letter-spacing: .01em; }
+.of-app .of-karte { border-radius: var(--of-r-karte); }
+.of-app .of-btn { border-radius: var(--of-r-knopf); }
+/* Flechten wachsen am Rand, nie über Text: Ecken der Inhaltsfläche und der Seitenleiste, leise */
+.of-app .of-inhalt { background-image: url("flechten/ecke-or.webp"); background-repeat: no-repeat; background-position: top right; background-size: min(220px, 30vw) auto; }
+.of-app .of-seitenleiste { background-image: url("flechten/ecke-ul.webp"); background-repeat: no-repeat; background-position: bottom left; background-size: 170px auto; }
+.of-app .of-seitenkopf { background-image: url("flechten/04-rosette.webp"); background-repeat: no-repeat; background-position: right center; background-size: auto 90%; }
+@media (max-width: 720px) { .of-app .of-inhalt { background-size: 120px auto; } .of-app .of-seitenkopf { background-image: none; } }

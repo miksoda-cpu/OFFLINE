@@ -42,7 +42,7 @@ Alles unter `inhalt/` wird signiert und ausgeliefert. Alles außerhalb bleibt be
 | `id` | ja | `[a-z0-9-]{2,40}`, bleibt über alle Versionen gleich |
 | `titel` | ja | höchstens 60 Zeichen |
 | `beschreibung` | ja | ein bis zwei Sätze, höchstens 240 Zeichen |
-| `art` | ja | `inhalt`, `zim`, `karte`, `modell`, `kurs`, `software` oder neu `modul` (Paket mit eigener Oberfläche, siehe 5) |
+| `art` | ja | `inhalt`, `zim`, `karte`, `modell`, `kurs`, `software`, `modul` (Paket mit eigener Oberfläche, siehe 5) oder `skin` (Aussehen, siehe 5a) |
 | `sprache` | ja | BCP-47, meist `de-AT` |
 | `lizenz` | ja | z. B. `CC BY-SA 4.0`, `gemeinfrei`, `eigene Rechte` |
 | `herausgeber` | ja | wer verantwortet den Inhalt |
@@ -56,6 +56,7 @@ Alles unter `inhalt/` wird signiert und ausgeliefert. Alles außerhalb bleibt be
 | `kategorie` | ja | eine der Gruppen der Paketseite: `ernstfall`, `wissen`, `jeden-tag`, `du-und-die-deinen`, `unterwegs`, `verbindung`, `miteinander`, `aussehen` |
 | `braucht_netz` | ja | `false`. Ein Paket, das Netz braucht, ist kein OFFLINE-Paket. Ausnahme nur mit Begründung im LIESMICH |
 | `abnahme` | ja | `keine`, oder wer fachlich abgenommen hat bzw. abnehmen muss (`Feuerwehr`, `Rettung`, …) und der Stand (`angefragt`, `erteilt am …`). Dieses Feld führt. Ein Feld `fachlich_abgenommen` in einzelnen Inhalten (etwa im Guide-Format) zeigt höchstens den Stand je Inhalt an und ersetzt `abnahme` nie |
+| `ki_generiert` | bei `skin`, sonst nein | `true`, wenn Bilder oder andere Inhalte mit KI erzeugt sind. Die Katalogkarte zeigt dann „Bilder KI-generiert, Herkunft im Paket“; die Herkunft (Modell, Datum, Prompts) liegt im Paket |
 | `datenversion` | bei `modul` | ganze Zahl, beginnt bei 1. Erhöhen, wenn sich das Format gespeicherter Nutzerdaten ändert (siehe 7) |
 
 ## 3. Die Slideshow `inhalt/vorschau/`
@@ -83,7 +84,7 @@ Regeln: Titel höchstens 50 Zeichen, Text höchstens 160, `alt` (Bildbeschreibun
 ## 4. Regeln für alle Inhalte
 
 1. **Kein Netz.** Kein Inhalt lädt etwas nach. Keine Links auf Bilder, Schriften oder Skripte im Internet. Links zum Weiterlesen in Texten sind erlaubt, die App zeigt sie als „braucht Netz".
-2. **Erlaubte Dateitypen:** `.json .md .txt .html .css .js .svg .png .webp .jpg .mp3 .ogg .pdf .zim .pmtiles .gguf`. Alles andere nur mit Begründung. **Code nur in Modulen:** `.js` und Skripte in `.html`/`.svg` (`<script>`, `on…=`-Attribute, `javascript:`) sind nur bei `art = "modul"` und nur unter `inhalt/modul/` erlaubt (`docs/SICHERHEIT.md`, Grundsatz 2).
+2. **Erlaubte Dateitypen:** `.json .md .txt .html .css .js .svg .png .webp .jpg .mp3 .ogg .pdf .zim .pmtiles .gguf .woff2 .woff`. Alles andere nur mit Begründung. **Code nur in Modulen:** `.js` und Skripte in `.html`/`.svg` (`<script>`, `on…=`-Attribute, `javascript:`) sind nur bei `art = "modul"` und nur unter `inhalt/modul/` erlaubt (`docs/SICHERHEIT.md`, Grundsatz 2).
 3. **Pfade:** nur Kleinbuchstaben, Ziffern, `-`, `_`, `.`, `/`. Keine Leerzeichen, kein `..`, keine versteckten Dateien, keine Verknüpfungen.
 4. **Sprache:** kurze Sätze, ein Gedanke pro Satz, österreichische Begriffe (Jänner, Rettung 144). Keine Werbung, keine Floskeln.
 5. **Notfallinhalte:** Jede Anleitung für den Ernstfall beginnt mit „Ist jemand in Gefahr?" und der Notrufnummer. Dieser Notrufhinweis ist ein Pflichtfeld jeder Notfallanleitung; fehlt er, ist das ein Fehler, kein Hinweis. Sie ist fester Text, keine KI. Ohne Abnahme bleibt sie im Status `angefragt` und die App zeigt das an.
@@ -115,6 +116,17 @@ Für die Entwicklung im Browser bringt das Modul einen **Ersatz** mit (`if (!win
 4. **Größe:** Oberfläche höchstens 2 MB.
 5. **Handy zuerst:** muss bei 360 Pixel Breite bedienbar sein, Knöpfe mindestens 44 Pixel hoch.
 
+## 5a. Zusätzlich für `art = "skin"` (Aussehen)
+
+Ein Skin ändert, wie die App aussieht, und sonst nichts. Die App hat ohne Skin ein vollständiges, schlichtes Grundaussehen. Es ist höchstens ein Skin aktiv; Notfallseiten zeigen immer das Grundaussehen.
+
+1. **Einstieg:** `inhalt/skin/skin.css`. Alles liegt unter `inhalt/skin/` (dazu die Slideshow unter `inhalt/vorschau/`). Erlaubt sind nur `.css .woff2 .woff .webp .png .jpg .svg .md .txt .json` – Stil, Schriften, Bilder, Lizenzen, Herkunft. Zusammen höchstens 20 MB.
+2. **Kein Code:** keine `.js`, kein HTML, SVG ohne Skript (wie bei allen Paketen außer Modulen).
+3. **CSS-Regeln** (gelten für jede `.css` in jedem Paket außer in Modul-Oberflächen; Prüfprogramm und App prüfen sie): kein `@import`; `url()` nur relativ und im Paket (kein Schema, kein `//`, kein `/` am Anfang, kein `..`; erlaubt ist `data:image/…` und `data:font/…`); kein `expression()`, `javascript:`, `behavior:`, `-moz-binding`; keine Backslash-Escapes.
+4. **Schnittstelle zur App:** die Klassen mit dem Präfix `of-` im Markup (`of-app` am `<body>`, `of-karte`, `of-btn`, `of-btn--primaer`, `of-plakette`, `of-input`, `of-seitenleiste`, `of-inhalt`, `of-seitenkopf` …) und die Grundwerte der App (`--bg`, `--surface`, `--text`, `--muted`, `--line`, `--accent`, `--ok`, `--warn`, `--radius`, `--font` …), die ein Skin auf `.of-app` neu setzen kann. Bilder kommen als Hintergrund über `url()`, nie als Markup.
+5. **Kennzeichnung:** `ki_generiert` ist Pflicht; bei `true` liegt die Herkunft im Paket.
+6. **Signatur:** Skins signiert der Paketschlüssel oder der Redaktionsschlüssel.
+
 ## 6. `LIESMICH.md`
 
 Für die Redaktion, nicht für Nutzer. Pflichtabschnitte: **Was** (zwei Sätze) · **Für wen** · **Wie geprüft** (was hat man selbst ausprobiert, auf welchen Geräten) · **Offene Punkte** · bei Updates: **Was hat sich geändert**.
@@ -141,6 +153,7 @@ Ein Update ist derselbe Weg mit einem Zusatz: `node pruefen.mjs <neu> --vorher <
 | Notrufhinweis in Notfallanleitungen fehlt → Fehler (Regel 4.5) | stimmt die Nummer für die Lage |
 | `quellen[].id` vorhanden und eindeutig, jeder Verweis `quelle` in den Inhalten trifft eine `id` | stimmt die Quelle für die Aussage |
 | Code nur in Modulen unter `inhalt/modul/`; Module nur mit `pruefstatus: redaktion` | |
+| CSS-Regeln (4.2, 5a.3) in jeder `.css`; Skins: Ordner, Dateitypen, 20 MB, `ki_generiert` | Skin hell, dunkel und bei 360 px angesehen |
 | Update: id, aenderungen, entfernte Dateien, datenversion + Migration | Update: fällt etwas weg, worauf Nutzer bauen |
 
 Das Programm schreibt einen **Prüfbericht** (`PRUEFBERICHT.md`) in den Ordner. Er hat drei Teile: Fehler (muss behoben werden), Hinweise (sollte man ansehen), Für die Redaktion (Liste der manuellen Punkte zum Abhaken). Der Bericht wird mit abgegeben.

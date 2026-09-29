@@ -59,7 +59,7 @@ Der Ordnername ist `<id>-<version>`. Er ist nur Konvention; maßgeblich ist das 
 | `id` | ja | Kennung: `[a-z0-9-]{2,40}`. Bleibt über alle Versionen gleich. |
 | `version` | ja | Kalenderversion `JJJJ.MM.TT` oder `JJJJ.MM.TT.N`. Vergleich numerisch je Teil. |
 | `titel`, `beschreibung` | ja | Anzeige in der Bibliothek. |
-| `art` | ja | `inhalt` (strukturierte Texte), `zim` (Kiwix), `karte` (PMTiles), `modell` (KI), `kurs`, `software`, `modul` (Oberfläche in der Sandbox, siehe 2.4). |
+| `art` | ja | `inhalt` (strukturierte Texte), `zim` (Kiwix), `karte` (PMTiles), `modell` (KI), `kurs`, `software`, `modul` (Oberfläche in der Sandbox, siehe 2.4), `skin` (Aussehen: nur `inhalt/skin/` mit Stil, Schriften, Bildern, Einstieg `skin.css`, höchstens 20 MB, signiert mit Paket- oder Redaktionsschlüssel). |
 | `sprache` | ja | BCP-47, meist `de-AT`. |
 | `lizenz`, `herausgeber`, `quellen` | ja | Namensnennung, wie die Lizenzen es verlangen. Einträge in `quellen` tragen `name`, `url` und (ab Paket-Kit) `id`; Inhalte verweisen mit `quelle: "<id>"` darauf. |
 | `pro` | ja | `true`, wenn nur mit Pro-Lizenz. Die App zeigt es an; die Durchsetzung passiert beim Download-Server. |
@@ -108,7 +108,7 @@ Seit 29.09.2026 (`docs/SICHERHEIT.md`, Abschnitt Module). Zusätzlich zu allem o
 - Alle Dateien unter `inhalt/modul/` zusammen höchstens 2 MB.
 - Code nur unter `inhalt/modul/`: Dateien `.js`/`.mjs` anderswo sind ein Fehler. Seiten (`.html`, `.htm`, `.xhtml`, `.svg`) außerhalb von `inhalt/modul/` werden beim Prüfen gelesen und abgelehnt, wenn sie `<script`, ein Ereignis-Attribut (` on…=`) oder `javascript:` enthalten.
 
-Für alle anderen Arten gilt dasselbe noch strenger: gar kein Code, weder als `.js` noch in Seiten.
+Für alle anderen Arten gilt dasselbe noch strenger: gar kein Code, weder als `.js` noch in Seiten. Jede `.css` außerhalb einer Modul-Oberfläche wird gelesen und abgelehnt, wenn sie `@import`, eine `url()` außerhalb des Pakets, `expression()`, `javascript:`, `behavior:`/`-moz-binding` oder Backslash-Escapes enthält.
 
 ## 3. Katalog
 

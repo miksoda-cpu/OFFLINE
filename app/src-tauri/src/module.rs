@@ -224,6 +224,7 @@ pub struct LokalesPaket {
     groesse: u64,
     alter_ab: Option<u32>,
     kategorie: Option<String>,
+    ki_generiert: Option<bool>,
 }
 
 /// Signierte Pakete in einem Ordner (bis zwei Ebenen tief), z. B. die Redaktionsablage mit noch nicht
@@ -233,7 +234,7 @@ pub fn lokale_pakete(z: State<Zustand>, pfad: String) -> Vec<LokalesPaket> {
     fn suche(o: &std::path::Path, tiefe: u8, z: &Zustand, aus: &mut Vec<LokalesPaket>) {
         if let (Ok(bytes), Some(sig)) = (std::fs::read(o.join("paket.json")), std::fs::read(o.join("paket.sig")).ok().and_then(|b| serde_json::from_slice(&b).ok())) {
             if let Ok((m, _)) = offline_kern::manifest_signiert_pruefen(&bytes, &sig, &z.schluessel, &offline_kern::datum::heute()) {
-                aus.push(LokalesPaket { pfad: o.display().to_string(), id: m.id, version: m.version, titel: m.titel, beschreibung: m.beschreibung, art: m.art, groesse: m.groesse, alter_ab: m.alter_ab, kategorie: m.kategorie });
+                aus.push(LokalesPaket { pfad: o.display().to_string(), id: m.id, version: m.version, titel: m.titel, beschreibung: m.beschreibung, art: m.art, groesse: m.groesse, alter_ab: m.alter_ab, kategorie: m.kategorie, ki_generiert: m.ki_generiert });
             }
             return;
         }
