@@ -1,7 +1,7 @@
 {
   "id": "wir",
-  "titel": "Wir · das Wesen und seine Tipps",
-  "beschreibung": "Die Tipps des Wesens von unter dem Eis: wie man sich in OFFLINE zurechtfindet, was die Bereitschaft hebt, und Dinge des Lebens. Nur Text, kein Code – das Wesen selbst ist Teil der App.",
+  "titel": "Wir · die Lumi und ihre Tipps",
+  "beschreibung": "Die Tipps der Lumi von unter dem Eis: wie man sich in OFFLINE zurechtfindet, was die Bereitschaft hebt, und Dinge des Lebens. Nur Text, kein Code – die Lumi selbst ist Teil der App.",
   "art": "inhalt",
   "sprache": "de-AT",
   "lizenz": "CC BY-SA 4.0",
@@ -11,10 +11,16 @@
   "pruefstatus": "redaktion",
   "kategorie": "miteinander",
   "alter_ab": 0,
-  "app_min": "0.1.5",
-  "aenderungen": "Erster Bestand: Starter-Tipps in sieben Sorten (App, Alltag, Wissen, Weisheit, Laune, Heute, Digital). Der volle Bestand von 150 folgt.",
+  "app_min": "0.2.0",
+  "aenderungen": "Voller Bestand: 176 Tipps in sechs Sorten, neue Bedingungen (Wochentag, Stunde, Tag, Alter einer Bestätigung, Zeitumstellung). Tipps, die von sich sprechen, kommen erst, wenn die Lumi einen Namen hat.",
   "quellen": [
-    { "name": "Österreichischer Zivilschutzverband – Vorsorge", "url": "https://zivilschutz.at" },
-    { "name": "OFFLINE – Das Wesen (Konzept, Entwurf 2)", "url": "https://github.com/miksoda-cpu/OFFLINE/blob/main/docs/WESEN.md" }
+    {
+      "name": "Österreichischer Zivilschutzverband – Vorsorge",
+      "url": "https://zivilschutz.at"
+    },
+    {
+      "name": "OFFLINE – Das Wesen (Konzept, Entwurf 2)",
+      "url": "https://github.com/miksoda-cpu/OFFLINE/blob/main/docs/WESEN.md"
+    }
   ]
 }

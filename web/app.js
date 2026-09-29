@@ -1,7 +1,7 @@
 // OFFLINE – App-Oberfläche (Prototyp). Alle Inhalte kommen aus signierten Paketen, siehe paket-client.js.
 import { versionVergleich } from "./paket-kern.js";
 import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUebertragen, POSITIONEN as BEREIT_POSITIONEN } from "./bereit.js";
-import { Wesen, SORTEN } from "./wesen.js";
+import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch } from "./wesen.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
@@ -90,7 +90,7 @@ const testLeiste = () => desktop?.info?.entwickler ? `<div class="card" style="m
 function bestaetigen(id, ja = true) {
   if (ja) state.bestaetigt[id] = new Date(testJetzt()).toISOString(); else delete state.bestaetigt[id];
   speicher.set("bereit-v2", state.bestaetigt);
-  if (ja && BEREIT_POSITIONEN.find((p) => p.id === id)?.fest) wesen.fest();
+  if (ja && BEREIT_POSITIONEN.find((p) => p.id === id)?.fest) wesen.fest(); else if (ja && wesen.aktiv()) wesen.freude();
   render();
 }
 const D = (name) => inhalt(P(), `inhalt/${name}.json`);
@@ -155,6 +155,10 @@ const seiten = {
         </div>
       </div>
       ${testLeiste()}
+      ${einladungFaellig(wesen.start, wesen.e, testJetzt()) ? `<div class="card lumi-einladung" role="group" aria-label="Einladung"><div class="lumi-zwei-lichter" aria-hidden="true"><span></span><span></span></div>
+        <div><strong>${esc(LUMI_TEXTE.einladungTitel)}</strong><p style="margin:.3rem 0 .7rem">${esc(LUMI_TEXTE.einladungFrage)}</p>
+        <button type="button" class="btn btn-primary" data-lumi="einladung-ja">${esc(LUMI_TEXTE.einladungJa)}</button> <button type="button" class="btn" data-lumi="einladung-nein">${esc(LUMI_TEXTE.einladungNein)}</button>
+        <p class="lumi-einladung-klein">${esc(LUMI_TEXTE.einladungHinweis)} ${esc(LUMI_TEXTE.ki)}</p></div></div>` : ""}
       <div class="kacheln">
         ${kachel("notfall", "rose", "Notfall", "112 · 122 · 133 · 144, Sirenen")}
         ${kachel("vorsorge", "moos", "Vorsorge", `${erledigt} von ${gesamt} erledigt`)}
@@ -165,9 +169,9 @@ const seiten = {
       <div class="card" style="margin-bottom:1rem"><h3>Menschen und Können</h3><p class="muted" style="margin:.2rem 0 .4rem">Dinge, die verfallen. Einmal bestätigen, dann ist Ruhe, bis es wieder so weit ist.${b.faellig.some((x) => x.check) ? " Fällige Punkte der Checkliste stehen darunter." : ""}</p>
         ${b.positionen.filter((x) => (!x.check && !x.auto) || (x.check && x.stand === "faellig")).map((x) => `<div class="bestaetigung"><span><strong>${esc(x.titel)}</strong><br><span class="muted">${x.stand === "gut" ? `gültig noch ${x.rest} Tage` : x.stand === "faellig" ? `<span class="tag tag-warn">fällig</span> seit ${-x.rest} Tagen` : esc(x.hinweis ?? "")}</span></span><button class="btn btn-sm ${x.stand === "gut" ? "" : "btn-primary"}" data-bestaetigen="${x.id}">${x.stand === "gut" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
       </div>
-      ${wesen.aktiv() ? `<details class="card" style="margin-bottom:1rem"><summary><strong>${esc(wesen.e.name)}</strong> <span class="muted">· Einstellungen</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
-      <details class="card" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>Was ${esc(wesen.e.name)} gesagt hat</strong> <span class="muted" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` :
-      `<details class="card" style="margin-bottom:1rem"><summary><strong>Das Wesen</strong> <span class="muted">· aus</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>`}
+      ${wesen.aktiv() ? `<details class="card" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted">· ${esc(wesen.anzeigename())} · Einstellungen</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
+      <details class="card" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>Was ${esc(wesen.anzeigename())} gesagt hat</strong> <span class="muted" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` :
+      `<details class="card" style="margin-bottom:1rem"><summary><strong>Lumi</strong> <span class="muted">· aus</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>`}
       ${updates ? `<a class="card" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted">· ${intervallText()}</span></a>` : ""}
       ${land ? `<div class="card" style="margin-top:0"><strong>${esc(land.name)}</strong> <span class="muted">· Landeshauptstadt ${esc(land.hauptstadt)} · im Krisenfall informiert <strong>${esc(land.orf_radio)}</strong></span></div>` : ""}
       <h2 style="margin-top:2rem">Installiert</h2>
@@ -772,10 +776,10 @@ async function modulAnsichtZeigen() {
         try { await client.drucken(); } catch { print(); }
       },
       wesenSagen: async (t) => {
-        if (!wesen.aktiv()) return; // nur, wenn das Wesen eingeschaltet ist
+        if (!wesen.aktiv() || (!wesen.benannt() && !ohneIch(t))) return; // nur eingeschaltet, und ohne Namen kein „ich“
         const el = document.getElementById("modul-wesen");
         if (!el) return;
-        el.textContent = `${wesen.e.name}: „${t}“`; el.hidden = false;
+        el.textContent = `${wesen.anzeigename()}: „${t}“`; el.hidden = false;
         clearTimeout(el._zu); el._zu = setTimeout(() => { el.hidden = true; }, 9000);
       },
     } });
@@ -1233,6 +1237,7 @@ function beiKlick(e) {
   if (!b) return;
   if (b.dataset.filter) { state.filter = b.dataset.filter; render(); }
   if (b.dataset.bestaetigen) return bestaetigen(b.dataset.bestaetigen);
+  if (b.dataset.lumi) return lumiAktion(b.dataset.lumi);
   if (b.dataset.testMonate) { speicher.set("test-monate", Number(b.dataset.testMonate)); return render(); }
   if (b.hasAttribute("data-wesen-gelernt-zurueck")) { wesen.gelernt = { intervall: 90, gelesen: 0, weitergewischt: 0 }; wesen.speichern(); return render(); }
   if (b.dataset.install) installiereMitMeldung(b.dataset.install, "bib-msg");
@@ -1264,6 +1269,25 @@ function beiKlick(e) {
   if (b.hasAttribute("data-speicherort-standard")) speicherortSetzen(null);
 }
 main.addEventListener("click", beiKlick);
+// Lumi: Startablauf (Einladung, Einschalten, Namensgabe, Ausschalten mit Rückfrage), siehe wesen.js
+function lumiAktion(a) {
+  if (a === "einladung-ja") wesen.einladung(true);
+  else if (a === "einladung-nein") wesen.einladung(false);
+  else if (a === "einschalten") wesen.einschalten();
+  else if (a === "ausschalten-frage") wesen.ausschaltenFrage = true;
+  else if (a === "dochnicht") wesen.ausschaltenFrage = false;
+  else if (a === "ausschalten") wesen.ausschalten();
+  else if (a === "spaeter") wesen.spaeter();
+  else if (a === "namensfrage") wesen.namensfrage = true;
+  render();
+  if (a === "namensfrage" || a === "einladung-ja" || a === "einschalten") document.getElementById("lumi-name-feld")?.focus();
+}
+main.addEventListener("submit", (e) => {
+  if (!e.target.matches("[data-lumi-name-form]")) return;
+  e.preventDefault();
+  const n = document.getElementById("lumi-name-feld")?.value ?? "";
+  if (n.trim()) { wesen.namenGeben(n); render(); }
+});
 main.addEventListener("input", (e) => {
   if (e.target.id === "modul-loeschwort") { const k = document.querySelector("[data-modul-loeschen-jetzt]"); if (k) k.disabled = e.target.value.trim().toLowerCase() !== "löschen"; }
   if (e.target.id === "tresor-titel" || e.target.id === "tresor-text") tresorAutoSpeichern();
@@ -1301,7 +1325,7 @@ function notizbuchSpeichern() { speicher.set("notizbuch", state.notizbuch); }
 let notizTimer = null;
 main.addEventListener("input", (e) => {
   if (e.target.id === "wesen-log-suche") { state.wesenLog.suche = e.target.value; const pos = e.target.selectionStart; document.getElementById("wesen-log").innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche); const s2 = document.getElementById("wesen-log-suche"); s2?.focus(); s2?.setSelectionRange(pos, pos); return; }
-  if (e.target.dataset.wesen === "name") { wesen.einstellen("name", e.target.value); const el = document.querySelector(".wesen-text strong"); if (el) el.textContent = wesen.e.name; return; }
+  if (e.target.dataset.wesen === "name") { if (!wesen.benannt()) return; wesen.einstellen("name", e.target.value); const el = document.querySelector(".wesen-text strong"); if (el) el.textContent = wesen.anzeigename(); return; }
   if (e.target.id === "wz-wert") { state.werkzeug.rechner.wert = e.target.value; const r = state.werkzeug.rechner; const el = document.getElementById("wz-ergebnis"); if (el) el.textContent = `${zahl(umrechnen(r.art, parseFloat(r.wert.replace(",", ".")), r.von, r.nach))} ${r.nach}`; }
   if (e.target.dataset.radio) { const f = (state.werkzeug.radio[state.bundesland] ??= {}); f[e.target.dataset.radio] = e.target.value.trim(); speicher.set("radio", state.werkzeug.radio); }
   if (e.target.id === "notiz-titel" || e.target.id === "notiz-text") {
