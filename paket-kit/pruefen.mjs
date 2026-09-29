@@ -30,6 +30,7 @@ const VERBOTEN = [
   [/\bEventSource\b/, "EventSource"], [/sendBeacon/, "sendBeacon"], [/\beval\s*\(/, "eval()"],
   [/new\s+Function\s*\(/, "new Function()"], [/importScripts/, "importScripts"], [/<iframe/i, "<iframe>"],
   [/window\.open\s*\(/, "window.open()"],
+  [/RTCPeerConnection|RTCDataChannel/, "WebRTC (RTCPeerConnection)"],
   [/(?:src|href)\s*=\s*["']?\s*(?:https?:)?\/\//i, "externe Adresse in src/href"],
   [/@import\s+url\(\s*["']?https?:/i, "externes @import"], [/url\(\s*["']?https?:/i, "externe url() in CSS"],
 ];

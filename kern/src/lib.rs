@@ -11,6 +11,7 @@ pub mod hash;
 pub mod katalog;
 pub mod lokalserver;
 pub mod manifest;
+pub mod modulserver;
 pub mod paket;
 pub mod schluessel;
 pub mod tresor;

@@ -384,3 +384,52 @@ test("Module: dieselben Regeln schon am Manifest, bevor eine Datei geladen ist",
   const sig = JSON.parse(await readFile(path.join(o, "paket.sig"), "utf8"));
   assert.match(manifestSigniertPruefen(bytes, sig, mitRedaktion).fehler[0], /Redaktionsschlüssel/);
 });
+
+// ---------- Module: Brücke und Sandbox (Phase C) ----------
+
+import { pruefeNachricht, GRENZEN } from "../web/modul-host.js";
+
+test("Brücke: die App nimmt nur die Aufrufe aus PAKET-KIT.md Abschnitt 5 an, geprüft", () => {
+  const n = (aufruf, daten, extra = {}) => pruefeNachricht({ offline: 1, id: 7, aufruf, daten, ...extra });
+  assert.deepEqual(n("speicher.lesen", { schluessel: "runden" }), { ok: true, id: 7, aufruf: "speicher.lesen", daten: { schluessel: "runden" } });
+  assert.deepEqual(n("speicher.schreiben", { schluessel: "runden", wert: [{ a: 1 }] }).daten, { schluessel: "runden", wert: [{ a: 1 }] });
+  assert.ok(n("vorlesen", { text: "Hallo" }).ok && n("drucken", { html: "<p>x</p>" }).ok && n("wesen.sagen", { text: "Hi" }).ok);
+  // alles andere: abgelehnt, mit Grund, wenn eine id da ist
+  for (const [aufruf, daten, grund] of [
+    ["tresor.lesen", {}, /unbekannter Aufruf/], ["alter", {}, /unbekannter Aufruf/], ["__proto__", {}, /unbekannter Aufruf/],
+    ["speicher.lesen", { schluessel: "../wir/tipps" }, /Schlüssel ungültig/], ["speicher.lesen", { schluessel: "a/b" }, /Schlüssel ungültig/],
+    ["speicher.lesen", { schluessel: "x".repeat(65) }, /Schlüssel ungültig/], ["speicher.lesen", {}, /Schlüssel ungültig/],
+    ["speicher.schreiben", { schluessel: "a" }, /wert fehlt/], ["speicher.schreiben", { schluessel: "a", wert: 10n }, /nicht lesbar/],
+    ["speicher.schreiben", { schluessel: "a", wert: "x".repeat(GRENZEN.nachricht) }, /zu groß/],
+    ["vorlesen", { text: "x".repeat(GRENZEN.vorlesen + 1) }, /zu lang/], ["vorlesen", { text: 5 }, /text fehlt/],
+    ["wesen.sagen", { text: "x".repeat(GRENZEN.wesen + 1) }, /zu lang/], ["drucken", {}, /html fehlt/],
+  ]) {
+    const r = n(aufruf, daten);
+    assert.equal(r.ok, false, aufruf); assert.equal(r.id, 7); assert.match(r.grund, grund, `${aufruf} ${Object.keys(daten).join(",")}`);
+  }
+  // keine Nachricht der Brücke oder ohne id: still verworfen
+  for (const d of [null, "x", [], { offline: 2, id: 1 }, { offline: 1 }, { offline: 1, id: -1, aufruf: "vorlesen" }, { offline: 1, id: 1.5 }]) {
+    const r = pruefeNachricht(d); assert.equal(r.ok, false); assert.equal(r.id, undefined);
+  }
+  // ein Modul-Feld in der Nachricht spielt keine Rolle: welches Modul spricht, weiß die App selbst
+  assert.deepEqual(n("speicher.lesen", { schluessel: "a", modul: "wichteln" }, { modul: "wichteln" }).daten, { schluessel: "a" });
+  // Werte werden zu reinem JSON
+  assert.deepEqual(n("speicher.schreiben", { schluessel: "a", wert: { d: new Date(0), f: undefined } }).daten.wert, { d: "1970-01-01T00:00:00.000Z" });
+});
+
+test("Brücke: das Modul-Skript ist gültig und hat nur den Platzhalter für die App-Angaben", async () => {
+  const js = await readFile(path.join(KIT, "..", "web", "modul-bruecke.js"), "utf8");
+  assert.equal(js.split("__OFFLINE_INFO__").length, 2, "genau ein Platzhalter");
+  assert.ok(!/<\/script/i.test(js), "darf das umgebende <script> nicht beenden");
+  new Function(js.replace("__OFFLINE_INFO__", '{"version":"0","alter":null}')); // wirft bei Syntaxfehlern
+});
+
+test("Sandbox: das bösartige Testmodul scheitert schon am Prüfprogramm", async () => {
+  const o = await kitKopie("beispiel/wichteln");
+  await cp(path.join(KIT, "..", "werkzeug", "testmodule", "boese", "index.html"), path.join(o, "inhalt", "modul", "index.html"));
+  const r = await pruefeQuellordner(o, { bericht: false });
+  for (const was of ["fetch()", "XMLHttpRequest", "WebSocket", "EventSource", "sendBeacon", "eval()", "new Function()", "window.open()", "WebRTC"]) {
+    assert.ok(r.fehler.some((f) => f.includes(`verboten – ${was}`)), `${was} nicht erkannt:\n${r.fehler.join("\n")}`);
+  }
+  await assert.rejects(paketBauen(o, await mkdtemp(path.join(os.tmpdir(), "offline-b-")), redaktionPrivat), /Prüfprogramm meldet/);
+});

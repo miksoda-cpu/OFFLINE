@@ -1,0 +1,195 @@
+{
+  "zeit": "2026-09-29T10:43:59.348Z",
+  "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+  "versuche": 37,
+  "offen": [],
+  "ergebnisse": [
+    {
+      "name": "fetch ins Internet",
+      "blockiert": true,
+      "text": "TypeError: Failed to fetch · CSP: connect-src"
+    },
+    {
+      "name": "fetch zum eigenen Server",
+      "blockiert": true,
+      "text": "TypeError: Failed to fetch · CSP: connect-src"
+    },
+    {
+      "name": "XMLHttpRequest",
+      "blockiert": true,
+      "text": "Error: Fehler · CSP: connect-src"
+    },
+    {
+      "name": "WebSocket",
+      "blockiert": true,
+      "text": "Error: Fehler · CSP: connect-src"
+    },
+    {
+      "name": "EventSource",
+      "blockiert": true,
+      "text": "Error: Fehler · CSP: connect-src"
+    },
+    {
+      "name": "sendBeacon",
+      "blockiert": true,
+      "text": "false · CSP: connect-src"
+    },
+    {
+      "name": "Bild aus dem Internet",
+      "blockiert": true,
+      "text": "Error: nicht geladen · CSP: img-src"
+    },
+    {
+      "name": "Skript aus dem Internet",
+      "blockiert": true,
+      "text": "Error: nicht geladen · CSP: script-src-elem"
+    },
+    {
+      "name": "Stylesheet aus dem Internet",
+      "blockiert": true,
+      "text": "Error: nicht geladen · CSP: style-src-elem"
+    },
+    {
+      "name": "iframe ins Internet",
+      "blockiert": true,
+      "text": "false · CSP: frame-src"
+    },
+    {
+      "name": "Worker",
+      "blockiert": true,
+      "text": "Error: nicht gestartet · CSP: worker-src"
+    },
+    {
+      "name": "WebRTC über leeren Unterrahmen",
+      "blockiert": true,
+      "text": "SecurityError: Failed to read a named property 'RTCPeerConnection' from 'Window': Blocked a frame with origin \"null\" from accessing a cross-origin frame."
+    },
+    {
+      "name": "WebRTC über srcdoc-Rahmen",
+      "blockiert": true,
+      "text": "SecurityError: Failed to read a named property 'RTCPeerConnection' from 'Window': Blocked a frame with origin \"null\" from accessing a cross-origin frame."
+    },
+    {
+      "name": "WebRTC (STUN ins Internet)",
+      "blockiert": true,
+      "text": "Error: nicht vorhanden"
+    },
+    {
+      "name": "eval",
+      "blockiert": true,
+      "text": "EvalError: Evaluating a string as JavaScript violates the following Content Security Policy directive because 'unsafe-eval' is not an allowed source of script:  · CSP: script-src"
+    },
+    {
+      "name": "new Function",
+      "blockiert": true,
+      "text": "EvalError: Evaluating a string as JavaScript violates the following Content Security Policy directive because 'unsafe-eval' is not an allowed source of script:  · CSP: script-src"
+    },
+    {
+      "name": "parent.document lesen",
+      "blockiert": true,
+      "text": "SecurityError: Failed to read a named property 'document' from 'Window': Blocked a frame with origin \"null\" from accessing a cross-origin frame."
+    },
+    {
+      "name": "parent.__TAURI__ / invoke",
+      "blockiert": true,
+      "text": "SecurityError: Failed to read a named property '__TAURI__' from 'Window': Blocked a frame with origin \"null\" from accessing a cross-origin frame."
+    },
+    {
+      "name": "eigenes __TAURI_INTERNALS__",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "WebView2-Kanal (chrome.webview)",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "WebKit-Kanal (webkit.messageHandlers)",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "Tresor über ipc://",
+      "blockiert": true,
+      "text": "TypeError: Failed to fetch · CSP: connect-src"
+    },
+    {
+      "name": "Tresor über http://ipc.localhost",
+      "blockiert": true,
+      "text": "TypeError: Failed to fetch · CSP: connect-src"
+    },
+    {
+      "name": "Tresor über die Brücke",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "localStorage",
+      "blockiert": true,
+      "text": "SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag."
+    },
+    {
+      "name": "indexedDB",
+      "blockiert": true,
+      "text": "SecurityError: Failed to execute 'open' on 'IDBFactory': access to the Indexed Database API is denied in this context."
+    },
+    {
+      "name": "Cookies",
+      "blockiert": true,
+      "text": "SecurityError: Failed to set the 'cookie' property on 'Document': The document is sandboxed and lacks the 'allow-same-origin' flag."
+    },
+    {
+      "name": "Service Worker",
+      "blockiert": true,
+      "text": "SecurityError: Failed to read the 'serviceWorker' property from 'Navigator': Service worker is disabled because the context is sandboxed and lacks the 'allow-sa"
+    },
+    {
+      "name": "fremder Speicher über Pfad (../)",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "fremder Speicher über Modul-Feld",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "unbekannter Aufruf",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "Nachricht über 256 kB",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "Flut (300 Aufrufe auf einmal)",
+      "blockiert": true,
+      "text": "44 von 300 beantwortet"
+    },
+    {
+      "name": "window.open",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "top.location umleiten",
+      "blockiert": true,
+      "text": "SecurityError: Failed to set a named property 'href' on 'Location': The current window does not have permission to navigate the target frame to 'https://example"
+    },
+    {
+      "name": "Zwischenablage lesen",
+      "blockiert": true,
+      "text": "NotAllowedError: Failed to execute 'readText' on 'Clipboard': Document is not focused."
+    },
+    {
+      "name": "Standort",
+      "blockiert": true,
+      "text": "Error: Geolocation has been disabled in this document by permissions policy."
+    }
+  ],
+  "verletzungen": 15,
+  "abgelehnt_von_der_app": 260
+}

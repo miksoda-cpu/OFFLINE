@@ -14,6 +14,8 @@ use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use tauri::{AppHandle, Emitter, Manager, State};
 
+mod module;
+
 /// Die öffentlichen Schlüssel werden beim Bauen in die App eingebettet – so verlangt es die Spezifikation.
 const SCHLUESSEL_JSON: &str = include_str!("../../../schluessel/oeffentlich.json");
 
@@ -44,6 +46,8 @@ struct Zustand {
     kiwix: Mutex<Option<Kiwix>>,
     /// offener Tresor: Schlüssel nur im Arbeitsspeicher, wird beim Sperren überschrieben
     tresor: Mutex<Option<TresorSitzung>>,
+    /// geöffnete Module: je Modul ein eigener Server (Sandbox, CSP ohne Netz), siehe module.rs
+    module: Mutex<BTreeMap<String, offline_kern::modulserver::Modulserver>>,
 }
 
 struct TresorSitzung {
@@ -278,6 +282,8 @@ async fn tresor_oeffnen_code(z: State<'_, Zustand>, code: String) -> Result<(), 
 #[tauri::command]
 fn tresor_sperren(z: State<Zustand>) {
     if let Ok(mut t) = z.tresor.lock() { *t = None; }
+    if let Ok(mut m) = z.module.lock() { m.clear(); }
+    let _ = std::fs::remove_dir_all(z.datenordner.join("module"));
 }
 
 #[tauri::command]
@@ -964,6 +970,7 @@ pub fn start() {
                 lokal: Mutex::new(None),
                 kiwix: Mutex::new(None),
                 tresor: Mutex::new(None),
+                module: Mutex::new(BTreeMap::new()),
             };
             let wurzel = z.wurzel();
             std::fs::create_dir_all(&wurzel)?;
@@ -987,7 +994,9 @@ pub fn start() {
             tresor_notiz_schreiben, tresor_notiz_loeschen, tresor_notfallmappe, tresor_anhang_aus_datei, tresor_anhang_lesen, tresor_anhang_loeschen,
             tresor_passwort_aendern, tresor_code_erneuern, tresor_sichern, tresor_zurueckspielen, tresor_anhang_bytes,
             notiz_anhang_aus_datei, notiz_anhang_bytes, notiz_anhang_lesen, notiz_anhang_loeschen,
-            app_update::app_update_pruefen, app_update::app_update_installieren, app_neustart
+            app_update::app_update_pruefen, app_update::app_update_installieren, app_neustart,
+            module::modul_oeffnen, module::modul_schliessen, module::modul_speicher_lesen, module::modul_speicher_schreiben,
+            module::module_stand, module::modul_aktiv_setzen, module::modul_loeschen, module::modul_test_oeffnen, module::drucken
         ])
         .run(tauri::generate_context!())
         .expect("OFFLINE konnte nicht starten");

@@ -45,7 +45,7 @@ impl Lokalserver {
     }
 }
 
-fn typ(p: &Path) -> &'static str {
+pub(crate) fn typ(p: &Path) -> &'static str {
     match p.extension().and_then(|e| e.to_str()).map(|e| e.to_ascii_lowercase()).as_deref() {
         Some("html") => "text/html; charset=utf-8",
         Some("js") | Some("mjs") => "text/javascript; charset=utf-8",
@@ -55,6 +55,9 @@ fn typ(p: &Path) -> &'static str {
         Some("jpg") | Some("jpeg") => "image/jpeg",
         Some("svg") => "image/svg+xml",
         Some("webp") => "image/webp",
+        Some("woff2") => "font/woff2",
+        Some("mp3") => "audio/mpeg",
+        Some("ogg") => "audio/ogg",
         Some("pbf") => "application/x-protobuf",
         Some("pmtiles") => "application/octet-stream",
         Some("zim") => "application/octet-stream",
@@ -64,7 +67,7 @@ fn typ(p: &Path) -> &'static str {
 }
 
 /// Prozent-Dekodierung des Pfads; `..` und absolute Pfade werden abgewiesen.
-fn sicherer_pfad(wurzel: &Path, roh: &str) -> Option<PathBuf> {
+pub(crate) fn sicherer_pfad(wurzel: &Path, roh: &str) -> Option<PathBuf> {
     let ohne_query = roh.split('?').next().unwrap_or("");
     let mut bytes = Vec::new();
     let b = ohne_query.as_bytes();
@@ -86,6 +89,13 @@ fn sicherer_pfad(wurzel: &Path, roh: &str) -> Option<PathBuf> {
         return None;
     }
     Some(wurzel.join(rel))
+}
+
+/// Liegt die Datei in `<paket>/inhalt/modul/…`?
+fn liegt_in_modul(wurzel: &Path, datei: &Path) -> bool {
+    let Ok(rel) = datei.strip_prefix(wurzel) else { return true };
+    let t: Vec<String> = rel.components().map(|c| c.as_os_str().to_string_lossy().to_lowercase()).collect();
+    t.windows(2).any(|w| w[0] == "inhalt" && w[1] == "modul")
 }
 
 fn antwort_kopf(s: &mut TcpStream, status: &str, extra: &str, laenge: u64) -> std::io::Result<()> {
@@ -127,6 +137,12 @@ fn bediene(mut s: TcpStream, wurzel: &Path) {
         let _ = antwort_kopf(&mut s, "403 Forbidden", "", 0);
         return;
     };
+    // Modul-Oberflächen nie über diesen Server: hier gibt es keine CSP und keine Sandbox. Module laufen nur über
+    // den eigenen Modulserver (modulserver.rs). Sonst könnte ein Modul seinen Rahmen hierher umleiten und die Netzsperre umgehen.
+    if liegt_in_modul(wurzel, &datei) {
+        let _ = antwort_kopf(&mut s, "403 Forbidden", "", 0);
+        return;
+    }
     let datei = if datei.is_dir() { datei.join("index.html") } else { datei };
     let Ok(mut f) = std::fs::File::open(&datei) else {
         let _ = antwort_kopf(&mut s, "404 Not Found", "", 0);
@@ -217,6 +233,14 @@ mod tests {
         assert!(kopf.starts_with("HTTP/1.1 403"), "{kopf}");
         let (kopf, _) = hole(srv.port, "/gibtsnicht", None);
         assert!(kopf.starts_with("HTTP/1.1 404"));
+
+        // Modul-Oberflächen nie über den allgemeinen Server
+        std::fs::create_dir_all(dir.join("wichteln-1/inhalt/modul")).unwrap();
+        std::fs::write(dir.join("wichteln-1/inhalt/modul/index.html"), b"<script>fetch('x')</script>").unwrap();
+        let (kopf, _) = hole(srv.port, "/wichteln-1/inhalt/modul/index.html", None);
+        assert!(kopf.starts_with("HTTP/1.1 403"), "{kopf}");
+        let (kopf, _) = hole(srv.port, "/wichteln-1/inhalt/MODUL/index.html", None);
+        assert!(kopf.starts_with("HTTP/1.1 403") || kopf.starts_with("HTTP/1.1 404"), "{kopf}");
 
         srv.stoppen();
         let _ = std::fs::remove_dir_all(dir);

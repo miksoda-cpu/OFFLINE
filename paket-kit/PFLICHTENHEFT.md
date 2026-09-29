@@ -98,7 +98,7 @@ Regeln: Titel höchstens 50 Zeichen, Text höchstens 160, `alt` (Bildbeschreibun
 Ein Modul ist ein Paket mit eigener Oberfläche, etwa Wichteln, ein Rätsel oder ein Spiel. Es läuft in der App in einem abgeschlossenen Bereich (Sandbox) ohne Netz.
 
 1. **Einstieg:** `inhalt/modul/index.html`. Alles, was es braucht, liegt in `inhalt/modul/`. Keine Bibliotheken aus dem Internet; wer eine braucht, legt sie als Datei dazu, mit Lizenz.
-2. **Verboten** (das Prüfprogramm sucht danach): `fetch`, `XMLHttpRequest`, `WebSocket`, `EventSource`, `sendBeacon`, `eval`, `new Function`, `importScripts`, externe `src=`/`href=`, `<iframe>`, `window.open`.
+2. **Verboten** (das Prüfprogramm sucht danach): `fetch`, `XMLHttpRequest`, `WebSocket`, `EventSource`, `sendBeacon`, `eval`, `new Function`, `importScripts`, externe `src=`/`href=`, `<iframe>`, `window.open`, `RTCPeerConnection`/`RTCDataChannel` (WebRTC geht an der Netzsperre vorbei).
 3. **Schnittstelle zur App:** Das Modul spricht nur über `window.offline` mit der App.
 
 | Aufruf | Was |

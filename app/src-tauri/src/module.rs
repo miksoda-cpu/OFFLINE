@@ -1,0 +1,220 @@
+//! Module (`art = "modul"`) in der Desktop-App: öffnen in der Sandbox, Speicher je Modul, aktiv/inaktiv, löschen.
+//! SICHERHEIT.md, Abschnitt Module. Die Oberfläche (web/modul-host.js) prüft jede Nachricht des Moduls, bevor sie
+//! einen dieser Befehle aufruft; die Modul-Id setzt immer die Oberfläche, nie das Modul.
+
+use super::{paket_aus_ordner, Zustand};
+use offline_kern::{einspielen, modulserver::Modulserver, paket::datei_pfad};
+use serde::{Deserialize, Serialize};
+use serde_json::Value;
+use std::collections::BTreeMap;
+use std::path::PathBuf;
+use tauri::{AppHandle, State};
+
+/// Die Brücke `window.offline`, die in jedes Modul eingefügt wird.
+const BRUECKE: &str = include_str!("../../../web/modul-bruecke.js");
+/// Höchstens so viele Bytes speichert ein Modul (alle Schlüssel zusammen, als JSON).
+pub const SPEICHER_GRENZE: usize = 1024 * 1024;
+
+#[derive(Serialize, Deserialize, Clone, Default)]
+pub struct ModulZustand {
+    pub aktiv: bool,
+}
+
+fn ordner(z: &Zustand) -> PathBuf {
+    z.datenordner.join("module")
+}
+fn daten_datei(z: &Zustand, id: &str) -> PathBuf {
+    ordner(z).join(format!("{id}.json"))
+}
+fn zustand_datei(z: &Zustand) -> PathBuf {
+    ordner(z).join("zustand.json")
+}
+
+fn id_ok(id: &str) -> Result<(), String> {
+    if offline_kern::manifest::id_gueltig(id) { Ok(()) } else { Err("Modul-Id ungültig".into()) }
+}
+
+/// Gleiche Regel wie in web/modul-host.js.
+fn schluessel_ok(k: &str) -> Result<(), String> {
+    let ok = !k.is_empty()
+        && k.len() <= 64
+        && !k.contains("..")
+        && k.bytes().all(|b| b.is_ascii_alphanumeric() || matches!(b, b'_' | b'.' | b'-'))
+        && !k.starts_with('.');
+    if ok { Ok(()) } else { Err("Schlüssel ungültig (a–z, 0–9, _ . -, höchstens 64)".into()) }
+}
+
+fn schreiben_atomar(ziel: &PathBuf, bytes: &[u8]) -> Result<(), String> {
+    std::fs::create_dir_all(ziel.parent().unwrap()).map_err(|e| e.to_string())?;
+    let tmp = ziel.with_extension("json.neu");
+    std::fs::write(&tmp, bytes).map_err(|e| e.to_string())?;
+    std::fs::rename(&tmp, ziel).map_err(|e| e.to_string())
+}
+
+fn zustaende(z: &Zustand) -> BTreeMap<String, ModulZustand> {
+    std::fs::read(zustand_datei(z)).ok().and_then(|b| serde_json::from_slice(&b).ok()).unwrap_or_default()
+}
+
+/// Neu geladene Module sind aktiv, bis man sie ausschaltet.
+fn ist_aktiv(z: &Zustand, id: &str) -> bool {
+    zustaende(z).get(id).map_or(true, |m| m.aktiv)
+}
+
+fn einschub(version: &str) -> String {
+    let info = serde_json::json!({ "version": version, "alter": Value::Null });
+    format!("<script>{}</script>", BRUECKE.replace("__OFFLINE_INFO__", &info.to_string()))
+}
+
+/// Installiertes Modul: Ordner, erneut vollständig geprüft (Signatur, Schlüssel passt zur Art, Prüfsummen).
+fn modul_ordner(z: &Zustand, id: &str) -> Result<PathBuf, String> {
+    id_ok(id)?;
+    let (_, ordner) = einspielen::installierte_version(&z.wurzel(), id).ok_or("Modul ist nicht installiert")?;
+    let p = paket_aus_ordner(&ordner, &z.schluessel)?;
+    if p.manifest.art != "modul" {
+        return Err("Dieses Paket ist kein Modul".into());
+    }
+    Ok(ordner)
+}
+
+/// Startet den Modulserver und gibt die Adresse für den iframe zurück. Ein bereits laufender Server des Moduls wird ersetzt.
+#[tauri::command]
+pub fn modul_oeffnen(app: AppHandle, z: State<Zustand>, id: String) -> Result<String, String> {
+    let ordner = modul_ordner(&z, &id)?;
+    if !ist_aktiv(&z, &id) {
+        return Err("Das Modul ist ausgeschaltet.".into());
+    }
+    let srv = Modulserver::starten(datei_pfad(&ordner, "inhalt/modul"), einschub(&app.package_info().version.to_string())).map_err(|e| e.to_string())?;
+    let url = srv.url();
+    z.module.lock().map_err(|_| "gesperrt")?.insert(id, srv);
+    Ok(url)
+}
+
+#[tauri::command]
+pub fn modul_schliessen(z: State<Zustand>, id: String) {
+    if let Ok(mut m) = z.module.lock() {
+        m.remove(&id); // Drop stoppt den Server
+    }
+}
+
+fn laeuft(z: &Zustand, id: &str) -> Result<(), String> {
+    if z.module.lock().map_err(|_| "gesperrt")?.contains_key(id) { Ok(()) } else { Err("Modul ist nicht geöffnet".into()) }
+}
+
+fn daten_lesen(z: &Zustand, id: &str) -> BTreeMap<String, Value> {
+    std::fs::read(daten_datei(z, id)).ok().and_then(|b| serde_json::from_slice(&b).ok()).unwrap_or_default()
+}
+
+#[tauri::command]
+pub fn modul_speicher_lesen(z: State<Zustand>, id: String, schluessel: String) -> Result<Value, String> {
+    id_ok(&id)?;
+    schluessel_ok(&schluessel)?;
+    laeuft(&z, &id)?;
+    Ok(daten_lesen(&z, &id).remove(&schluessel).unwrap_or(Value::Null))
+}
+
+#[tauri::command]
+pub fn modul_speicher_schreiben(z: State<Zustand>, id: String, schluessel: String, wert: Value) -> Result<(), String> {
+    id_ok(&id)?;
+    schluessel_ok(&schluessel)?;
+    laeuft(&z, &id)?;
+    let mut d = daten_lesen(&z, &id);
+    if wert.is_null() { d.remove(&schluessel); } else { d.insert(schluessel, wert); }
+    let bytes = serde_json::to_vec(&d).map_err(|e| e.to_string())?;
+    if bytes.len() > SPEICHER_GRENZE {
+        return Err("Der Speicher dieses Moduls ist voll (1 MB).".into());
+    }
+    schreiben_atomar(&daten_datei(&z, &id), &bytes)
+}
+
+/// Aktiv/inaktiv je installiertem Modul, dazu, ob es gespeicherte Daten hat.
+#[derive(Serialize)]
+pub struct ModulStand {
+    aktiv: bool,
+    daten_bytes: u64,
+}
+
+#[tauri::command]
+pub fn module_stand(z: State<Zustand>) -> BTreeMap<String, ModulStand> {
+    let zs = zustaende(&z);
+    let mut aus = BTreeMap::new();
+    for p in super::installierte(z.clone()) {
+        if p.manifest.art != "modul" { continue; }
+        let id = p.manifest.id.clone();
+        let daten_bytes = std::fs::metadata(daten_datei(&z, &id)).map(|m| m.len()).unwrap_or(0);
+        aus.insert(id.clone(), ModulStand { aktiv: zs.get(&id).map_or(true, |m| m.aktiv), daten_bytes });
+    }
+    aus
+}
+
+/// Inaktiv: Das Modul wird nicht geladen und läuft nicht (ein offener Server wird gestoppt). Der Speicherplatz bleibt belegt.
+#[tauri::command]
+pub fn modul_aktiv_setzen(z: State<Zustand>, id: String, aktiv: bool) -> Result<(), String> {
+    modul_ordner(&z, &id)?;
+    if !aktiv {
+        if let Ok(mut m) = z.module.lock() { m.remove(&id); }
+    }
+    let mut zs = zustaende(&z);
+    zs.insert(id, ModulZustand { aktiv });
+    schreiben_atomar(&zustand_datei(&z), &serde_json::to_vec_pretty(&zs).map_err(|e| e.to_string())?)
+}
+
+/// Löschen in zwei Schritten: Die Oberfläche verlangt das getippte Wort „löschen“ und reicht es hier durch.
+/// `daten`: auch die gespeicherten Daten des Moduls löschen (sonst bleiben sie für eine spätere Neuinstallation).
+#[tauri::command]
+pub fn modul_loeschen(z: State<Zustand>, id: String, bestaetigung: String, daten: bool) -> Result<(), String> {
+    if bestaetigung.trim().to_lowercase() != "löschen" {
+        return Err("Zum Löschen das Wort „löschen“ eintippen.".into());
+    }
+    id_ok(&id)?;
+    let _s = z.sperre.try_lock().map_err(|_| "Ein anderer Vorgang läuft")?;
+    let (_, paket) = einspielen::installierte_version(&z.wurzel(), &id).ok_or("Modul ist nicht installiert")?;
+    if let Ok(mut m) = z.module.lock() { m.remove(&id); }
+    std::fs::remove_dir_all(paket).map_err(|e| e.to_string())?;
+    let mut zs = zustaende(&z);
+    if zs.remove(&id).is_some() {
+        let _ = schreiben_atomar(&zustand_datei(&z), &serde_json::to_vec_pretty(&zs).unwrap_or_default());
+    }
+    if daten {
+        let _ = std::fs::remove_file(daten_datei(&z, &id));
+    }
+    Ok(())
+}
+
+/// Nur in Entwickler-Builds: einen beliebigen Ordner als Modul öffnen, ohne Signatur – für das bösartige Testmodul
+/// (werkzeug/testmodule/boese). In einer ausgelieferten App gibt es diesen Weg nicht.
+#[tauri::command]
+pub fn modul_test_oeffnen(app: AppHandle, z: State<Zustand>, pfad: String) -> Result<String, String> {
+    if !cfg!(debug_assertions) {
+        return Err("Nur in Entwickler-Builds.".into());
+    }
+    let srv = Modulserver::starten(PathBuf::from(pfad), einschub(&app.package_info().version.to_string())).map_err(|e| e.to_string())?;
+    let url = srv.url();
+    z.module.lock().map_err(|_| "gesperrt")?.insert("modul-test".into(), srv);
+    Ok(url)
+}
+
+/// Druckansicht des Hauptfensters (Druck aus einem Modul: die Oberfläche hat den Text vorher bereinigt).
+#[tauri::command]
+pub fn drucken(fenster: tauri::WebviewWindow) -> Result<(), String> {
+    fenster.print().map_err(|e| e.to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn schluessel_regel_wie_in_der_oberflaeche() {
+        for ok in ["runden", "a", "a.b-c_d", "A9"] { assert!(schluessel_ok(ok).is_ok(), "{ok}"); }
+        for nein in ["", "..", "a..b", ".x", "a/b", "a b", "ä", &"x".repeat(65)] { assert!(schluessel_ok(nein).is_err(), "{nein:?}"); }
+    }
+
+    #[test]
+    fn bruecke_wird_eingesetzt_und_bleibt_ein_skript() {
+        let e = einschub("0.2.0");
+        assert!(e.starts_with("<script>") && e.ends_with("</script>"));
+        assert!(e.contains(r#"{"alter":null,"version":"0.2.0"}"#) || e.contains(r#"{"version":"0.2.0","alter":null}"#), "{e}");
+        assert!(!e.contains("__OFFLINE_INFO__"));
+        assert_eq!(e.matches("</script").count(), 1, "kein vorzeitiges Ende des Skripts");
+    }
+}

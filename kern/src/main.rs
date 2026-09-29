@@ -66,13 +66,24 @@ fn lauf() -> Result<(), offline_kern::Fehler> {
             let e = download::paket_laden(&g.katalog.basis, eintrag, Path::new(wurzel), &mut a)?;
             println!("Geladen und eingespielt: {} {} → {} ({} geladen{})", e.id, e.version, e.ordner.display(), mb(e.kopiert_bytes), e.ersetzt.map(|v| format!(", ersetzt {v}")).unwrap_or_default());
         }
+        Some("modul-probe") => {
+            // Für werkzeug/sandbox-probe.mjs: ein Modul über den echten Modulserver ausliefern, eingebettet von der Prüfseite.
+            let (Some(ordner), Some(bruecke), Some(einbetten)) = (args.get(1), args.get(2), args.get(3)) else {
+                return Err(offline_kern::Fehler("Verwendung: modul-probe <modulordner> <bruecke.js> <erlaubter-einbetter>".into()));
+            };
+            let js = std::fs::read_to_string(bruecke)?.replace("__OFFLINE_INFO__", r#"{"version":"probe","alter":null}"#);
+            let srv = offline_kern::modulserver::Modulserver::starten_mit(PathBuf::from(ordner), format!("<script>{js}</script>"), einbetten)?;
+            println!("{}", srv.url());
+            // läuft, bis stdin geschlossen wird
+            let _ = std::io::Read::read_to_end(&mut std::io::stdin(), &mut Vec::new());
+        }
         Some("aufraeumen") => {
             let wurzel = args.get(1).ok_or(offline_kern::Fehler("Verwendung: aufraeumen <installationsordner>".into()))?;
             for m in aufraeumen(Path::new(wurzel))? {
                 println!("{m}");
             }
         }
-        _ => println!("offline-kern\n\n  pruefen <paketordner>\n  delta <alt/paket.json|-> <neu/paket.json>\n  einspielen <paketordner> <installationsordner> [--downgrade]\n  katalog <katalog-url>\n  laden <katalog-url> <paket-id> <installationsordner>\n  aufraeumen <installationsordner>"),
+        _ => println!("offline-kern\n\n  pruefen <paketordner>\n  delta <alt/paket.json|-> <neu/paket.json>\n  einspielen <paketordner> <installationsordner> [--downgrade]\n  katalog <katalog-url>\n  laden <katalog-url> <paket-id> <installationsordner>\n  aufraeumen <installationsordner>\n  modul-probe <modulordner> <bruecke.js> <erlaubter-einbetter>"),
     }
     Ok(())
 }
