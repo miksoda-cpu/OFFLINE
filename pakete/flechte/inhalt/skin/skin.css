@@ -344,10 +344,10 @@
   background: var(--of-grund); color: var(--of-tinte);
 }
 .of-app h1, .of-app h2, .of-app h3, .of-app .of-marke { font-family: var(--of-font-titel); letter-spacing: .01em; }
-.of-app .of-karte { border-radius: var(--of-r-karte); }
+.of-app .of-karte { border-radius: var(--of-r-karte); display: block; } /* in der App: Karten fließen wie im Grundaussehen, Knöpfe bleiben schmal */
 .of-app .of-btn { border-radius: var(--of-r-knopf); }
 /* Flechten wachsen am Rand, nie über Text: Ecken der Inhaltsfläche und der Seitenleiste, leise */
 .of-app .of-inhalt { background-image: url("flechten/ecke-or.webp"); background-repeat: no-repeat; background-position: top right; background-size: min(220px, 30vw) auto; }
 .of-app .of-seitenleiste { background-image: url("flechten/ecke-ul.webp"); background-repeat: no-repeat; background-position: bottom left; background-size: 170px auto; }
 .of-app .of-seitenkopf { background-image: url("flechten/04-rosette.webp"); background-repeat: no-repeat; background-position: right center; background-size: auto 90%; }
-@media (max-width: 720px) { .of-app .of-inhalt { background-size: 120px auto; } .of-app .of-seitenkopf { background-image: none; } }
+@media (max-width: 720px) { .of-app .of-inhalt, .of-app .of-seitenkopf { background-image: none; } } /* schmal: kein Platz am Rand, also keine Flechte über dem Text */

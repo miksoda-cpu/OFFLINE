@@ -763,7 +763,7 @@ async function modulAktion(b) {
       await client.modulLoeschen(id, wort, daten);
       state.modul.loeschen = null; delete state.modul.vorschau[`inst:${id}`];
       await moduleStandLaden(); await skinAnwenden(); render();
-      zeige("bib-msg", `Modul gelöscht${daten ? ", mit seinen Daten" : ", seine Daten bleiben für eine Neuinstallation"}.`, "ok");
+      zeige("bib-msg", `Gelöscht${daten ? ", mit den gespeicherten Daten" : ", die gespeicherten Daten bleiben für eine Neuinstallation"}.`, "ok");
     } catch (e) { zeige("bib-msg", esc(String(e?.message ?? e)), "err"); }
     return;
   }

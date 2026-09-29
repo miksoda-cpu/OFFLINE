@@ -109,3 +109,19 @@ mod tests {
         assert!(neu.contains("url(data:image/png;base64,AA)"));
     }
 }
+
+#[cfg(test)]
+mod pruefung_echte_css {
+    #[test]
+    fn flechte_css_bleibt_bis_auf_adressen_gleich() {
+        let css = std::fs::read_to_string(concat!(env!("CARGO_MANIFEST_DIR"), "/../../pakete/flechte/inhalt/skin/skin.css")).unwrap();
+        let neu = super::urls_umschreiben(&css, "http://127.0.0.1:1/p/inhalt/skin/");
+        let zurueck = neu.replace("http://127.0.0.1:1/p/inhalt/skin/", "");
+        let ohne = |s: &str| s.replace('"', "").replace('\'', "").replace(' ', "");
+        if ohne(&zurueck) != ohne(&css) {
+            let a = ohne(&css); let b = ohne(&zurueck);
+            let i = a.chars().zip(b.chars()).position(|(x, y)| x != y).unwrap_or(0);
+            panic!("Abweichung bei {i}: …{}… gegen …{}…", &a.chars().skip(i.saturating_sub(40)).take(80).collect::<String>(), &b.chars().skip(i.saturating_sub(40)).take(80).collect::<String>());
+        }
+    }
+}
