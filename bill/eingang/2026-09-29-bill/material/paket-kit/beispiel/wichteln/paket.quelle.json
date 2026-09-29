@@ -1,0 +1,20 @@
+{
+  "id": "wichteln",
+  "titel": "Wichteln und Engerl-Bengerl",
+  "beschreibung": "Auslosen ohne Zettel und ohne Internet: Preisrahmen, Datum, wer sich nicht zieht. Niemand sieht die ganze Liste.",
+  "art": "modul",
+  "sprache": "de-AT",
+  "lizenz": "eigene Rechte",
+  "herausgeber": "The Digioneer",
+  "quellen": [{ "name": "eigene Entwicklung", "url": "" }],
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "app_min": "0.1.0",
+  "aenderungen": "Erste Ausgabe: Wichteln und Engerl-Bengerl, Handy reihum, Zettel zum Drucken.",
+  "alter_ab": 6,
+  "kategorie": "miteinander",
+  "braucht_netz": false,
+  "abnahme": "keine",
+  "datenversion": 1
+}

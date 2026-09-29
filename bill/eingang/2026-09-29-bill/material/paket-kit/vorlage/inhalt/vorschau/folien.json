@@ -1,0 +1,7 @@
+{ "folien": [
+  { "nr": 1, "rolle": "wofuer",   "bild": "1.svg", "titel": "", "text": "", "alt": "" },
+  { "nr": 2, "rolle": "aussehen", "bild": "2.webp", "titel": "", "text": "", "alt": "" },
+  { "nr": 3, "rolle": "inhalt",   "bild": "3.svg", "titel": "", "text": "", "alt": "" },
+  { "nr": 4, "rolle": "platz",    "bild": "4.svg", "titel": "", "text": "", "alt": "" },
+  { "nr": 5, "rolle": "herkunft", "bild": "5.svg", "titel": "", "text": "", "alt": "" }
+] }

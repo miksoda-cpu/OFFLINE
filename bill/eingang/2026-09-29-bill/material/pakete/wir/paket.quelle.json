@@ -1,0 +1,24 @@
+{
+  "id": "wir",
+  "titel": "Wir · Das Wesen und seine Tipps",
+  "beschreibung": "Das Wesen auf der Tagesseite: Tipps zur App, zum Alltag, Wissen für den Ernstfall, Weisheiten von unten und ein paar Launen. Abschaltbar, ohne dass die Bereitschaft aufhört zu rechnen.",
+  "art": "inhalt",
+  "sprache": "de-AT",
+  "lizenz": "CC BY-SA 4.0",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "app_min": "0.1.0",
+  "aenderungen": "Erstbestand: 150 Tipps in fünf Sorten, 15 davon mit Bedingung; dazu 30 Tipps der Sorte Digital, nur aktiv, wenn in den Einstellungen angekreuzt.",
+  "quellen": [
+    {
+      "name": "Österreichischer Zivilschutzverband",
+      "url": "https://zivilschutz.at"
+    },
+    {
+      "name": "Die Helfer Wiens – Blackout",
+      "url": "https://diehelferwiens.wien.gv.at/blackout"
+    }
+  ]
+}
