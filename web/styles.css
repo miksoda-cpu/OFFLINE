@@ -274,3 +274,50 @@ textarea { border-radius: var(--radius-sm) !important; }
   .sheet-hinter[hidden] { display: none; }
   .wesen-toast { bottom: calc(5rem + env(safe-area-inset-bottom)); }
 }
+
+/* ---------- Module: Katalogkarte, Schieber, Slideshow, Löschen, Ansicht in der Sandbox, Druck ---------- */
+.modul-steuerung { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; justify-content: flex-end; }
+.modul-karte .btn, .modul-karte .slider-nav .btn, .modul-kopf .btn { min-height: 44px; min-width: 44px; }
+.schieber { display: inline-flex; align-items: center; gap: .55rem; min-height: 44px; padding: 0 .4rem; background: none; border: 0; color: inherit; font: inherit; font-weight: 600; cursor: pointer; border-radius: 999px; }
+.schieber:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.schieber:disabled { cursor: progress; opacity: .8; }
+.schieber-bahn { position: relative; width: 52px; height: 30px; border-radius: 999px; background: var(--line); transition: background .2s; flex: none; }
+.schieber-knopf { position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgb(0 0 0 / .3); transition: transform .2s; }
+.schieber[aria-checked="true"] .schieber-knopf { transform: translateX(22px); }
+.schieber[aria-checked="true"] .schieber-bahn { background: var(--ok); }
+/* „laden“ ist grün, auch bevor er umgelegt ist: das ist Miks Vorgabe für den Katalog */
+.schieber-laden .schieber-bahn { background: var(--ok-soft); box-shadow: inset 0 0 0 2px var(--ok); }
+.schieber-laden .schieber-text { color: var(--ok); }
+.schieber-laden[aria-checked="true"] .schieber-bahn { background: var(--ok); }
+.slider { border: 1px solid var(--line); border-radius: 10px; padding: .6rem; margin: .5rem 0 .8rem; display: grid; gap: .45rem; }
+.slider-leer { min-height: 3rem; place-items: center; }
+.slider-bild { display: grid; place-items: center; aspect-ratio: 16 / 9; max-height: 320px; background: var(--bg, #f6f6f4); border-radius: 6px; overflow: hidden; }
+.slider-bild img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.slider-text { display: grid; gap: .15rem; }
+.slider-nav { display: flex; justify-content: space-between; align-items: center; }
+.modul-loeschen { border-top: 1px solid var(--line); margin-top: .8rem; padding-top: .8rem; display: grid; gap: .55rem; }
+.modul-loeschen input[type="text"] { min-height: 44px; font-size: 1rem; }
+.modul-loeschen fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: .35rem; }
+.modul-loeschen fieldset label { display: flex; gap: .5rem; align-items: center; min-height: 44px; }
+.modul-loeschen-knoepfe { display: flex; flex-wrap: wrap; gap: .5rem; }
+.modul-loeschen-knoepfe .btn { min-height: 44px; }
+.modul-ansicht { display: flex; flex-direction: column; gap: .6rem; }
+.modul-ansicht[hidden] { display: none; }
+.modul-kopf { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
+.modul-kopf h1 { font-size: 1.4rem; margin: 0; flex: 1; }
+.modul-wesen { background: var(--ok-soft); color: var(--text, inherit); border-radius: 10px; padding: .6rem .8rem; }
+.modul-platz { flex: 1; min-height: 70vh; display: flex; }
+.modul-rahmen { flex: 1; width: 100%; min-height: 70vh; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.druck-bereich { display: none; }
+@media print {
+  body > *:not(#druck-bereich) { display: none !important; }
+  .druck-bereich { display: block; color: #000; background: #fff; font: 12pt/1.4 system-ui, sans-serif; }
+  .druck-bereich .druck { display: grid; grid-template-columns: repeat(auto-fill, minmax(6cm, 1fr)); gap: 4mm; }
+  .druck-bereich .zettel { border: 1.5pt dashed #000; border-radius: 3mm; padding: 4mm; display: grid; gap: 2mm; break-inside: avoid; }
+  .druck-bereich .falz { border-top: 1pt dashed #888; margin: 2mm 0; font-size: 8pt; color: #555; text-align: center; }
+  .druck-bereich .leise { color: #555; }
+}
+@media (max-width: 420px) {
+  .modul-karte .pkg-foot { flex-direction: column; align-items: stretch; gap: .5rem; }
+  .modul-steuerung { justify-content: flex-start; }
+}

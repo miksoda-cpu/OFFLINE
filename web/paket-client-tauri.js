@@ -85,6 +85,26 @@ export async function entferne(id) {
 
 // ---------- nur Desktop ----------
 
+// Module (art = "modul"): Sandbox, Speicher je Modul, aktiv/inaktiv, löschen – siehe app/src-tauri/src/module.rs
+export const moduleStand = () => invoke("module_stand");
+export const modulAktivSetzen = (id, aktiv) => invoke("modul_aktiv_setzen", { id, aktiv });
+export async function modulLoeschen(id, bestaetigung, daten) {
+  await invoke("modul_loeschen", { id, bestaetigung, daten });
+  cache.delete(id);
+}
+export const modulOeffnen = (id) => invoke("modul_oeffnen", { id });
+export const modulSchliessen = (id) => invoke("modul_schliessen", { id });
+export const modulSpeicherLesen = (id, schluessel) => invoke("modul_speicher_lesen", { id, schluessel });
+export const modulSpeicherSchreiben = (id, schluessel, wert) => invoke("modul_speicher_schreiben", { id, schluessel, wert });
+export const modulTestOeffnen = (pfad) => invoke("modul_test_oeffnen", { pfad });
+export const drucken = () => invoke("drucken");
+export const vorschauKatalog = (id) => invoke("vorschau_katalog", { id });
+export const vorschauOrdner = (pfad) => invoke("vorschau_ordner", { pfad });
+export const vorschauInstalliert = (id) => invoke("vorschau_installiert", { id });
+export const lokalePakete = (pfad) => invoke("lokale_pakete", { pfad });
+/** Nach dem Einspielen aus einem Ordner die Liste der installierten Pakete neu lesen. */
+export const neuLesen = () => cacheLaden();
+
 export const abbrechen = () => invoke("download_abbrechen");
 export const stickSuchen = () => invoke("stick_suchen");
 export const aboLesen = () => invoke("abo_lesen");

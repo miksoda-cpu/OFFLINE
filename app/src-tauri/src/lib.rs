@@ -48,6 +48,8 @@ struct Zustand {
     tresor: Mutex<Option<TresorSitzung>>,
     /// geöffnete Module: je Modul ein eigener Server (Sandbox, CSP ohne Netz), siehe module.rs
     module: Mutex<BTreeMap<String, offline_kern::modulserver::Modulserver>>,
+    /// zuletzt geprüfter Katalog (Signatur, Rollback) – Quelle für die Vorschau-Prüfsummen
+    letzter_katalog: Mutex<Option<Katalog>>,
 }
 
 struct TresorSitzung {
@@ -574,7 +576,7 @@ fn app_neustart(app: AppHandle) {
 }
 
 #[derive(Serialize)]
-struct AppInfo { version: &'static str, tauri: &'static str, system: &'static str, arch: &'static str, ort: String, ort_problem: Option<String> }
+struct AppInfo { version: &'static str, tauri: &'static str, system: &'static str, arch: &'static str, ort: String, ort_problem: Option<String>, entwickler: bool }
 
 /// Läuft die App von einem Ort, an dem sie sich nicht selbst aktualisieren kann? (DMG, App-Translocation, Downloads)
 fn ort_pruefen(ort: &Path) -> Option<String> {
@@ -601,7 +603,7 @@ fn app_info() -> AppInfo {
         s.find(".app/").map(|i| PathBuf::from(&s[..i + 4])).or(Some(p))
     }).unwrap_or_default();
     let ort_problem = ort_pruefen(&ort);
-    AppInfo { version: env!("CARGO_PKG_VERSION"), tauri: tauri::VERSION, system, arch, ort: ort.display().to_string(), ort_problem }
+    AppInfo { version: env!("CARGO_PKG_VERSION"), tauri: tauri::VERSION, system, arch, ort: ort.display().to_string(), ort_problem, entwickler: cfg!(debug_assertions) }
 }
 
 #[tauri::command]
@@ -784,6 +786,7 @@ fn katalog_holen(z: &Zustand) -> Result<KatalogAntwort, String> {
         a.zustand.katalog_erstellt = Some(g.katalog.erstellt.clone());
     }
     z.abo_speichern();
+    if let Ok(mut k) = z.letzter_katalog.lock() { *k = Some(g.katalog.clone()); }
     Ok(KatalogAntwort { katalog: g.katalog, schluessel: g.schluessel, veraltet: g.veraltet, geladen: datum::jetzt_iso() })
 }
 
@@ -971,6 +974,7 @@ pub fn start() {
                 kiwix: Mutex::new(None),
                 tresor: Mutex::new(None),
                 module: Mutex::new(BTreeMap::new()),
+                letzter_katalog: Mutex::new(None),
             };
             let wurzel = z.wurzel();
             std::fs::create_dir_all(&wurzel)?;
@@ -996,7 +1000,8 @@ pub fn start() {
             notiz_anhang_aus_datei, notiz_anhang_bytes, notiz_anhang_lesen, notiz_anhang_loeschen,
             app_update::app_update_pruefen, app_update::app_update_installieren, app_neustart,
             module::modul_oeffnen, module::modul_schliessen, module::modul_speicher_lesen, module::modul_speicher_schreiben,
-            module::module_stand, module::modul_aktiv_setzen, module::modul_loeschen, module::modul_test_oeffnen, module::drucken
+            module::module_stand, module::modul_aktiv_setzen, module::modul_loeschen, module::modul_test_oeffnen, module::drucken,
+            module::vorschau_katalog, module::vorschau_ordner, module::vorschau_installiert, module::lokale_pakete
         ])
         .run(tauri::generate_context!())
         .expect("OFFLINE konnte nicht starten");

@@ -2,6 +2,7 @@
 import { versionVergleich } from "./paket-kern.js";
 import { bereitBerechnen, naechsterSchritt, BESTAETIGUNGEN } from "./bereit.js";
 import { Wesen, SORTEN } from "./wesen.js";
+import { ModulRahmen, druckTeil } from "./modul-host.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
@@ -47,6 +48,8 @@ const state = {
   notizAktiv: null, notizSuche: "",
   filter: "Alle",
   meldung: null, // { text, art } für die Update-Seite
+  // Module (art = "modul"): Stand je Modul, geladene Vorschauen, gewählte Folie, offener Löschdialog, lokale Quelle, laufendes Modul
+  modul: { stand: {}, vorschau: {}, folie: {}, loeschen: null, lokal: null, offen: null },
 };
 
 if (desktop?.abo) {
@@ -61,7 +64,7 @@ function aboSpeichern() {
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const groesse = (b) => b < 1e6 ? `${Math.max(1, Math.round(b / 1e3))} kB` : b < 1e9 ? `${(b / 1e6).toLocaleString("de-AT", { maximumFractionDigits: 1 })} MB` : `${(b / 1e9).toLocaleString("de-AT", { maximumFractionDigits: 1 })} GB`;
 const datum = (iso) => new Date(iso).toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
-const ARTEN = { inhalt: "Österreich", zim: "Bibliothek", karte: "Karten", modell: "KI", kurs: "Kurse", software: "Software" };
+const ARTEN = { inhalt: "Österreich", zim: "Bibliothek", karte: "Karten", modell: "KI", kurs: "Kurse", software: "Software", modul: "Module" };
 
 // ---------- Paketinhalt ----------
 const P = () => installiertesPaket(BASISPAKET);
@@ -342,7 +345,7 @@ const seiten = {
   bibliothek() {
     const k = katalog();
     if (!k) return `${kopf("Bibliothek", "Der Paketkatalog wurde noch nie geladen.")}<div class="card"><p class="muted">Geh einmal online, dann holt OFFLINE den Katalog und merkt ihn sich.</p><button class="btn btn-primary" data-katalog>Katalog laden</button><p class="form-msg" id="bib-msg"></p></div>`;
-    const typen = ["Alle", ...new Set(k.pakete.map((p) => ARTEN[p.art] ?? p.art))];
+    const typen = ["Alle", ...new Set(k.pakete.map((p) => ARTEN[p.art] ?? p.art)), ...(state.modul.lokal?.pakete.length && !k.pakete.some((p) => p.art === "modul") ? [ARTEN.modul] : [])];
     const liste = k.pakete.filter((p) => state.filter === "Alle" || (ARTEN[p.art] ?? p.art) === state.filter);
     return `
       ${kopf("Bibliothek", `Katalog vom ${datum(k.erstellt)} · Signatur geprüft ✓${desktop ? "" : " · Pakete im Browser sind Textpakete, große kommen in die Desktop-App."}`)}
@@ -352,7 +355,9 @@ const seiten = {
         <div id="stick-funde" style="margin-top:.75rem">${(state.funde ?? []).map((f) => `<div class="switch"><span><strong>${esc(f.titel)}</strong> <span class="muted">${esc(f.version)} · ${groesse(f.groesse)}</span><br><span class="muted mono" style="font-size:.8rem">${esc(f.pfad)}</span></span><button class="btn btn-sm btn-primary" data-stick="${esc(f.pfad)}">Einspielen</button></div>`).join("")}</div></div>` : ""}
       <div class="filters">${typen.map((t) => `<button data-filter="${esc(t)}" aria-pressed="${t === state.filter}">${esc(t)}</button>`).join("")}</div>
       <p class="form-msg" id="bib-msg"></p>
+      ${desktop ? lokaleQuelleHtml() : ""}
       <div class="grid grid-2">${liste.map((p) => {
+        if (p.art === "modul") return modulKarte(p, { art: "katalog" });
         const inst = installiertesPaket(p.id);
         const update = inst && p.status === "verfuegbar" && versionVergleich(p.version, inst.manifest.version) > 0;
         let knopf;
@@ -580,6 +585,207 @@ async function installiereMitMeldung(id, ziel) {
     if (location.hash === "#updates") { state.meldung = abbruch ? { art: "warn", titel: "Abgebrochen", text: "Der bisherige Stand bleibt gespeichert. Zum Fortsetzen: Bibliothek → Installieren." } : { art: "fehler", titel: "Abgelehnt", text: esc(msg) }; render(); }
   }
 }
+
+// ---------- Module (art = "modul"): Katalogkarte, Schieber, aktiv/inaktiv, löschen, Ansicht in der Sandbox ----------
+// Sicherheit: SICHERHEIT.md, Abschnitt Module. Das Modul läuft in einem eigenen Rahmen (web/modul-host.js) und erreicht
+// die App nur über die geprüfte Brücke; welches Modul spricht, setzt diese Datei selbst.
+
+/** Darf man dieses Modul laden? Heute darf es jeder. Kauf oder Abo (offen) kommen hier davor. */
+const darfLaden = (_eintrag) => true;
+
+async function moduleStandLaden() {
+  if (!desktop) return;
+  try { state.modul.stand = await client.moduleStand(); } catch { state.modul.stand = {}; }
+}
+
+const schieber = ({ an, art, text, attr }) => `<button type="button" role="switch" aria-checked="${an}" class="schieber schieber-${art}" ${attr}><span class="schieber-bahn" aria-hidden="true"><span class="schieber-knopf"></span></span><span class="schieber-text">${text}</span></button>`;
+
+function sliderSchluessel(id, quelle) {
+  if (installiertesPaket(id)) return `inst:${id}`;
+  return quelle.art === "ordner" ? `ordner:${quelle.pfad}` : `katalog:${id}`;
+}
+
+function sliderHtml(key, e) {
+  const v = state.modul.vorschau[key];
+  const folien = Array.isArray(v) && v.length ? v : (e.vorschau?.folien ?? []); // ohne Bilder: die Texte aus dem Katalog
+  if (!folien.length) return v === undefined ? `<div class="slider slider-leer" data-slider="${esc(key)}"><span class="muted">Vorschau wird geladen …</span></div>` : "";
+  const i = Math.min(state.modul.folie[key] ?? 0, folien.length - 1);
+  const f = folien[i];
+  return `<div class="slider" data-slider="${esc(key)}" role="group" aria-roledescription="Slideshow" aria-label="Vorschau, Folie ${i + 1} von ${folien.length}">
+    <div class="slider-bild">${f.bild_daten ? `<img src="${esc(f.bild_daten)}" alt="${esc(f.alt)}">` : `<span class="muted">${esc(f.alt)}</span>`}</div>
+    <div class="slider-text"><strong>${esc(f.titel)}</strong><span>${esc(f.text)}</span></div>
+    <div class="slider-nav"><button type="button" class="btn btn-sm" data-folie="${esc(key)}" data-richtung="-1" aria-label="Vorherige Folie">‹</button><span class="muted mono">${i + 1} / ${folien.length}</span><button type="button" class="btn btn-sm" data-folie="${esc(key)}" data-richtung="1" aria-label="Nächste Folie">›</button></div>
+  </div>`;
+}
+
+function loeschDialog(id) {
+  const bytes = state.modul.stand[id]?.daten_bytes ?? 0;
+  return `<div class="modul-loeschen" role="group" aria-label="Modul löschen">
+    <label for="modul-loeschwort">Zum Löschen das Wort <strong>löschen</strong> eintippen:</label>
+    <input type="text" id="modul-loeschwort" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <fieldset><legend>Was passiert mit den gespeicherten Daten${bytes ? ` (${groesse(bytes)})` : ""}?</legend>
+      <label><input type="radio" name="modul-daten" value="behalten" checked> behalten – bei einer Neuinstallation sind sie wieder da</label>
+      <label><input type="radio" name="modul-daten" value="loeschen"> mitlöschen</label></fieldset>
+    <div class="modul-loeschen-knoepfe"><button type="button" class="btn btn-sm btn-primary" data-modul-loeschen-jetzt="${esc(id)}" disabled>Endgültig löschen</button> <button type="button" class="btn btn-sm" data-modul-loeschen-abbrechen>Abbrechen</button></div>
+  </div>`;
+}
+
+/** Katalogkarte eines Moduls. quelle: { art: "katalog" } oder { art: "ordner", pfad } (lokal, nicht veröffentlicht). */
+function modulKarte(e, quelle) {
+  const inst = installiertesPaket(e.id);
+  const aktiv = state.modul.stand[e.id]?.aktiv ?? true;
+  let steuerung;
+  if (!desktop) steuerung = `<span class="tag">Nur in der Desktop-App</span>`;
+  else if (inst) {
+    const neuer = e.version && versionVergleich(e.version, inst.manifest.version) > 0;
+    steuerung = `${schieber({ an: aktiv, art: "aktiv", text: aktiv ? "aktiv" : "inaktiv", attr: `data-modul-aktiv="${esc(e.id)}" aria-label="${esc(e.titel)} ${aktiv ? "aktiv" : "inaktiv"}"` })}
+      <button type="button" class="btn btn-sm btn-primary" data-modul-start="${esc(e.id)}" ${aktiv ? "" : "disabled title=\"Erst aktiv schalten\""}>Öffnen</button>
+      ${neuer ? `<button type="button" class="btn btn-sm" data-modul-laden="${esc(e.id)}" ${quelle.art === "ordner" ? `data-pfad="${esc(quelle.pfad)}"` : ""}>Aktualisieren</button>` : ""}
+      <button type="button" class="btn btn-sm" data-modul-loeschen="${esc(e.id)}">löschen</button>`;
+  } else if (e.status && e.status !== "verfuegbar") steuerung = `<span class="tag tag-warn">Geplant</span>`;
+  else if (!darfLaden(e)) steuerung = `<span class="tag">Nicht freigeschaltet</span>`;
+  else steuerung = schieber({ an: false, art: "laden", text: "laden", attr: `data-modul-laden="${esc(e.id)}" ${quelle.art === "ordner" ? `data-pfad="${esc(quelle.pfad)}"` : ""} aria-label="${esc(e.titel)} laden"` });
+  return `<div class="card pkg modul-karte" data-modul-karte="${esc(e.id)}">
+    <div class="pkg-head"><h3 style="margin:0">${esc(e.titel)}</h3><span><span class="tag">Modul</span>${quelle.art === "ordner" ? ' <span class="tag tag-warn">lokal, nicht veröffentlicht</span>' : ""}${inst ? ` <span class="tag ${aktiv ? "tag-ok" : ""}">${aktiv ? "Geladen" : "Inaktiv"}</span>` : ""}</span></div>
+    <p>${esc(e.beschreibung)}</p>
+    ${sliderHtml(sliderSchluessel(e.id, quelle), e)}
+    <div class="pkg-foot"><span class="muted mono" style="font-size:.85rem">${groesse(e.groesse)}${e.version ? ` · ${esc(e.version)}` : ""}${e.alter_ab ? ` · ab ${e.alter_ab} Jahren` : ""}</span><span class="modul-steuerung">${steuerung}</span></div>
+    ${state.modul.loeschen === e.id ? loeschDialog(e.id) : ""}
+  </div>`;
+}
+
+/** Lokale Quelle: ein Ordner mit signierten, noch nicht veröffentlichten Paketen (Redaktionsablage). */
+function lokaleQuelleHtml() {
+  const l = state.modul.lokal;
+  const inKatalog = new Set((katalog()?.pakete ?? []).map((p) => p.id));
+  const karten = (l?.pakete ?? []).filter((p) => p.art === "modul" && !inKatalog.has(p.id) && (state.filter === "Alle" || state.filter === ARTEN.modul));
+  const probe = desktop.info?.entwickler ? ` <button type="button" class="btn btn-sm" data-modul-probe>Sandbox-Probe …</button>` : "";
+  return `<div class="card" style="margin-bottom:1rem"><h3>Lokale Quelle</h3>
+    <p class="muted" style="margin:0 0 .75rem">Module, die noch nicht im Katalog sind (Redaktionsablage). Geladen wird wie vom Stick: Der Kern prüft Signatur, Redaktionsschlüssel und jede Datei.</p>
+    <button type="button" class="btn btn-sm" data-modul-quelle>${l ? "Anderen Ordner wählen …" : "Ordner wählen …"}</button>${l ? ` <span class="muted mono" style="font-size:.8rem">${esc(l.pfad)}</span>` : ""}${probe}
+    ${l && !karten.length ? `<p class="muted" style="margin:.75rem 0 0">Dort liegt kein neues, gültig signiertes Modul.</p>` : ""}
+    ${karten.length ? `<div class="grid grid-2" style="margin-top:.75rem">${karten.map((p) => modulKarte(p, { art: "ordner", pfad: p.pfad })).join("")}</div>` : ""}
+  </div>`;
+}
+
+async function lokaleQuelleLaden(pfad) {
+  try { state.modul.lokal = { pfad, pakete: await client.lokalePakete(pfad) }; speicher.set("modul-quelle", pfad); }
+  catch (e) { zeige("bib-msg", "Ordner nicht lesbar: " + esc(String(e?.message ?? e)), "err"); }
+}
+
+/** Vorschaubilder nachladen, ohne die Seite neu aufzubauen: nur der jeweilige Slider wird ersetzt. */
+const vorschauLaeuft = new Set();
+function vorschauenNachladen() {
+  if (!desktop) return;
+  for (const el of main.querySelectorAll("[data-slider]")) {
+    const key = el.dataset.slider;
+    if (key in state.modul.vorschau || vorschauLaeuft.has(key)) continue;
+    vorschauLaeuft.add(key);
+    const [art, ...rest] = key.split(":"); const wert = rest.join(":");
+    const laden = art === "inst" ? client.vorschauInstalliert(wert) : art === "ordner" ? client.vorschauOrdner(wert) : client.vorschauKatalog(wert);
+    laden.then((f) => { state.modul.vorschau[key] = f; }, () => { state.modul.vorschau[key] = []; }).finally(() => { vorschauLaeuft.delete(key); sliderErneuern(key); });
+  }
+}
+function sliderErneuern(key) {
+  for (const el of main.querySelectorAll(`[data-slider="${CSS.escape(key)}"]`)) {
+    const karte = el.closest("[data-modul-karte]");
+    const id = karte?.dataset.modulKarte;
+    const e = katalog()?.pakete.find((p) => p.id === id) ?? state.modul.lokal?.pakete.find((p) => p.id === id) ?? {};
+    const neu = sliderHtml(key, e);
+    if (neu) el.outerHTML = neu; else el.remove();
+  }
+}
+
+async function modulAktion(b) {
+  const d = b.dataset;
+  if (d.folie) {
+    const n = (state.modul.vorschau[d.folie]?.length || 5);
+    state.modul.folie[d.folie] = ((state.modul.folie[d.folie] ?? 0) + Number(d.richtung) + n) % n;
+    return sliderErneuern(d.folie);
+  }
+  if (b.hasAttribute("data-modul-quelle")) { const p = await client.ordnerWaehlen("Ordner mit Modulen wählen"); if (p) { await lokaleQuelleLaden(p); render(); } return; }
+  if (d.modulLaden) {
+    b.setAttribute("aria-checked", "true"); b.disabled = true; b.querySelector(".schieber-text").textContent = "lädt …";
+    if (d.pfad) await einspielenVonOrdner(d.pfad); else await installiereMitMeldung(d.modulLaden, "bib-msg");
+    delete state.modul.vorschau[`katalog:${d.modulLaden}`];
+    await moduleStandLaden(); return render();
+  }
+  if (d.modulAktiv) {
+    const an = !(state.modul.stand[d.modulAktiv]?.aktiv ?? true);
+    try { await client.modulAktivSetzen(d.modulAktiv, an); } catch (e) { zeige("bib-msg", esc(String(e?.message ?? e)), "err"); }
+    await moduleStandLaden(); return render();
+  }
+  if (d.modulStart) { const e = installiertesPaket(d.modulStart); state.modul.offen = { id: d.modulStart, titel: e?.manifest.titel ?? d.modulStart }; location.hash = "#modul"; return; }
+  if (d.modulLoeschen) { state.modul.loeschen = d.modulLoeschen; render(); document.getElementById("modul-loeschwort")?.focus(); return; }
+  if (b.hasAttribute("data-modul-loeschen-abbrechen")) { state.modul.loeschen = null; return render(); }
+  if (d.modulLoeschenJetzt) {
+    const id = d.modulLoeschenJetzt;
+    const wort = document.getElementById("modul-loeschwort")?.value ?? "";
+    const daten = document.querySelector('input[name="modul-daten"]:checked')?.value === "loeschen";
+    try {
+      await client.modulLoeschen(id, wort, daten);
+      state.modul.loeschen = null; delete state.modul.vorschau[`inst:${id}`];
+      await moduleStandLaden(); render();
+      zeige("bib-msg", `Modul gelöscht${daten ? ", mit seinen Daten" : ", seine Daten bleiben für eine Neuinstallation"}.`, "ok");
+    } catch (e) { zeige("bib-msg", esc(String(e?.message ?? e)), "err"); }
+    return;
+  }
+  if (b.hasAttribute("data-modul-probe")) {
+    const p = await client.ordnerWaehlen("Ordner des Testmoduls wählen (werkzeug/testmodule/boese)");
+    if (!p) return;
+    try { state.modul.offen = { id: "modul-test", titel: "Sandbox-Probe", url: await client.modulTestOeffnen(p) }; location.hash = "#modul"; }
+    catch (e) { zeige("bib-msg", esc(String(e?.message ?? e)), "err"); }
+  }
+}
+
+// Die Modulansicht liegt neben <main>, damit ein Neuzeichnen der Seite den laufenden Rahmen nicht neu lädt.
+const modulAnsicht = document.getElementById("modul-ansicht");
+let laufend = null; // { id, rahmen }
+
+async function modulAnsichtZeigen() {
+  const o = state.modul.offen;
+  if (!o || !desktop) { location.hash = "#bibliothek"; return; }
+  main.hidden = true; modulAnsicht.hidden = false;
+  document.title = `OFFLINE – ${o.titel}`;
+  if (laufend?.id === o.id) return;
+  modulAnsichtVerbergen(true);
+  modulAnsicht.innerHTML = `<div class="modul-kopf"><button type="button" class="btn btn-sm" data-modul-zu>‹ Zurück</button><h1>${esc(o.titel)}</h1><span class="tag" title="Läuft abgeschlossen, ohne Internet. Spricht nur über window.offline mit der App.">Sandbox · ohne Netz</span></div>
+    <div class="modul-wesen" id="modul-wesen" role="status" aria-live="polite" hidden></div>
+    <div class="modul-platz" id="modul-platz"></div><p class="form-msg" id="modul-msg"></p>`;
+  const id = o.id;
+  try {
+    const url = o.url ?? (await client.modulOeffnen(id));
+    const rahmen = new ModulRahmen({ url, titel: o.titel, behaelter: document.getElementById("modul-platz"), dienste: {
+      speicherLesen: (k) => client.modulSpeicherLesen(id, k),
+      speicherSchreiben: (k, w) => client.modulSpeicherSchreiben(id, k, w),
+      vorlesen: async (t) => { speechSynthesis.cancel(); speechSynthesis.speak(Object.assign(new SpeechSynthesisUtterance(t), { lang: "de-AT" })); },
+      drucken: async (html) => {
+        document.getElementById("druck-bereich").replaceChildren(druckTeil(html));
+        try { await client.drucken(); } catch { print(); }
+      },
+      wesenSagen: async (t) => {
+        if (!wesen.aktiv()) return; // nur, wenn das Wesen eingeschaltet ist
+        const el = document.getElementById("modul-wesen");
+        if (!el) return;
+        el.textContent = `${wesen.e.name}: „${t}“`; el.hidden = false;
+        clearTimeout(el._zu); el._zu = setTimeout(() => { el.hidden = true; }, 9000);
+      },
+    } });
+    laufend = { id, rahmen };
+  } catch (e) {
+    zeige("modul-msg", esc(String(e?.message ?? e)), "err");
+  }
+}
+
+function modulAnsichtVerbergen(nurRahmen = false) {
+  if (laufend) { laufend.rahmen.schliessen(); client.modulSchliessen(laufend.id).catch(() => {}); laufend = null; }
+  if (nurRahmen) return;
+  modulAnsicht.hidden = true; modulAnsicht.innerHTML = ""; main.hidden = false;
+  document.getElementById("druck-bereich")?.replaceChildren();
+}
+modulAnsicht.addEventListener("click", (e) => {
+  if (e.target.closest("[data-modul-zu]")) { state.modul.offen = null; location.hash = "#bibliothek"; }
+});
 
 // ---------- Werkzeuge ohne Netz: Radio, Sonne & Mond, Rechner ----------
 const HAUPTSTAEDTE = { Wien: [48.21, 16.37], Burgenland: [47.85, 16.52], Kärnten: [46.62, 14.31], Niederösterreich: [48.20, 15.62], Oberösterreich: [48.31, 14.29], Salzburg: [47.80, 13.04], Steiermark: [47.07, 15.44], Tirol: [47.27, 11.40], Vorarlberg: [47.50, 9.75] };
@@ -844,7 +1050,7 @@ async function updatesJetztDesktop() {
 }
 
 // ---------- Werkzeuge (Browser) ----------
-const HUELLE = ["/app.html", "/app.js", "/styles.css", "/paket-kern.js", "/paket-client.js", "/schluessel/oeffentlich.json", "/icon.svg", "/manifest.webmanifest"];
+const HUELLE = ["/app.html", "/app.js", "/styles.css", "/paket-kern.js", "/paket-client.js", "/modul-host.js", "/schluessel/oeffentlich.json", "/icon.svg", "/manifest.webmanifest"];
 let installAufforderung = null;
 addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installAufforderung = e; });
 
@@ -978,6 +1184,8 @@ const menu = document.getElementById("menu");
 
 function render() {
   const route = location.hash.slice(1) || "start";
+  if (route === "modul") { modulAnsichtZeigen(); return; }
+  modulAnsichtVerbergen();
   if (desktop && route === "updates") client.aboStatus().then((st) => { if (st !== desktop.aboStatus) { desktop.aboStatus = st; render(); } }).catch(() => {});
   const seite = seiten[route] ? route : "start";
   main.innerHTML = seiten[seite]();
@@ -988,6 +1196,7 @@ function render() {
   main.classList.toggle("main-lesen", seite === "lesen");
   document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? state.lesen?.titel ?? "Lesen"}`;
   if (seite === "karte") karteStarten();
+  if (seite === "bibliothek") vorschauenNachladen();
   sidebar.classList.remove("open");
   menu.setAttribute("aria-expanded", "false");
   document.getElementById("tab-mehr")?.setAttribute("aria-expanded", "false"); document.getElementById("sheet-hinter").hidden = true;
@@ -1018,6 +1227,7 @@ function beiKlick(e) {
   if (b.dataset.bestaetigen) return bestaetigen(b.dataset.bestaetigen);
   if (b.hasAttribute("data-wesen-gelernt-zurueck")) { wesen.gelernt = { intervall: 90, gelesen: 0, weitergewischt: 0 }; wesen.speichern(); return render(); }
   if (b.dataset.install) installiereMitMeldung(b.dataset.install, "bib-msg");
+  if ([...b.attributes].some((a) => a.name.startsWith("data-modul") || a.name === "data-folie")) return modulAktion(b);
   if ([...b.attributes].some((a) => a.name.startsWith("data-tresor")) || (b.hasAttribute("data-aufnahme") && location.hash === "#tresor")) return tresorAktion(b);
   if ([...b.attributes].some((a) => a.name.startsWith("data-notiz")) || (b.hasAttribute("data-aufnahme") && location.hash === "#notizen")) return notizAktion(b);
   if (b.hasAttribute("data-lesen-zurueck")) { try { document.getElementById("lesen-rahmen")?.contentWindow.history.back(); } catch {} }
@@ -1046,6 +1256,7 @@ function beiKlick(e) {
 }
 main.addEventListener("click", beiKlick);
 main.addEventListener("input", (e) => {
+  if (e.target.id === "modul-loeschwort") { const k = document.querySelector("[data-modul-loeschen-jetzt]"); if (k) k.disabled = e.target.value.trim().toLowerCase() !== "löschen"; }
   if (e.target.id === "tresor-titel" || e.target.id === "tresor-text") tresorAutoSpeichern();
   if (e.target.id === "tresor-suche") { state.tresor.suche = e.target.value; const pos = e.target.selectionStart; render(); const s2 = document.getElementById("tresor-suche"); s2?.focus(); s2?.setSelectionRange(pos, pos); }
 });
@@ -1149,7 +1360,7 @@ menu.addEventListener("click", () => blattSetzen(!sidebar.classList.contains("op
 tabMehr.addEventListener("click", () => blattSetzen(!sidebar.classList.contains("open")));
 sheetHinter.addEventListener("click", () => blattSetzen(false));
 
-const APP_VERSION = "0.1.8";
+const APP_VERSION = "0.2.0";
 function netz() {
   const on = navigator.onLine;
   document.getElementById("net-dot").className = "dot " + (on ? "on" : "off");
@@ -1163,6 +1374,7 @@ async function appAngaben() {
     try {
       const i = await client.appInfo();
       desktop.info = i;
+      if (i.entwickler && location.hash === "#bibliothek") render();
       el.textContent = `Desktop-App ${i.version} · ${i.system} ${i.arch} · Tauri ${i.tauri}`;
       el.title = `Programm: ${i.ort}\nDatenordner: ${desktop.datenordner}`;
       if (i.ort_problem && location.hash === "#updates") render();
@@ -1203,6 +1415,14 @@ async function offeneDownloads() {
   downloadLeiste();
   if (navigator.onLine) installiereMitMeldung(o.id, "bib-msg");
 }
+
+// Module: Stand (aktiv/inaktiv, Daten) und die zuletzt gewählte lokale Quelle
+if (desktop) (async () => {
+  await moduleStandLaden();
+  const q = speicher.get("modul-quelle", null);
+  if (q) await lokaleQuelleLaden(q);
+  if (location.hash === "#bibliothek") render();
+})();
 
 // Erster Start: Österreich-Paket automatisch holen, wenn noch keins da ist. Danach still nach Updates sehen.
 (async () => {

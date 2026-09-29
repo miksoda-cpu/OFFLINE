@@ -164,3 +164,47 @@ fn wichteln_von_node_gebaut_nimmt_der_kern_an() {
     let g = paket_pruefen(&ordner, &bekannte, &heute).expect("Wichteln muss gültig sein");
     assert_eq!((g.manifest.id.as_str(), g.manifest.art.as_str(), g.manifest.pruefstatus.as_deref()), ("wichteln", "modul", Some("redaktion")));
 }
+
+/// Vorschau: Node baut Wichteln und einen Katalog, der Kern liest die Folien aus dem Ordner und über den Katalog
+/// (jedes Bild gegen die Prüfsumme im Katalog). Ein ausgetauschtes Bild fällt auf.
+#[test]
+fn vorschau_aus_ordner_und_katalog() {
+    let wurzel = Path::new(env!("CARGO_MANIFEST_DIR")).join("..");
+    let t = temp("vorschau-node");
+    let skript = r#"
+      import { schluesselErzeugen, privatAusPem, paketBauen, katalogBauen } from "./werkzeug/paket-lib.mjs";
+      import { writeFile } from "node:fs/promises";
+      const [ziel] = process.argv.slice(1);
+      const r = schluesselErzeugen("Redaktion Test", ["module"]);
+      const k = schluesselErzeugen("Katalog Test");
+      const { ziel: ordner } = await paketBauen("paket-kit/beispiel/wichteln", ziel, privatAusPem(r.privatPem));
+      const { bytes } = await katalogBauen([ordner], { basis: ziel + "/", bekannte: [r.oeffentlich, k.oeffentlich], privat: privatAusPem(k.privatPem) });
+      await writeFile(ziel + "/schluessel.json", JSON.stringify({ format: 1, schluessel: [r.oeffentlich, k.oeffentlich] }));
+      await writeFile(ziel + "/katalog.json", bytes);
+      console.log(ordner);
+    "#;
+    let aus = Command::new("node").current_dir(&wurzel).args(["--input-type=module", "-e", skript]).arg(&t).output().expect("node");
+    assert!(aus.status.success(), "node: {}", String::from_utf8_lossy(&aus.stderr));
+    let ordner = PathBuf::from(String::from_utf8_lossy(&aus.stdout).trim());
+    let bekannte = schluessel_laden(&t.join("schluessel.json")).unwrap();
+    let heute = datum::heute();
+
+    let f = vorschau::aus_ordner(&ordner, &bekannte, &heute).expect("Vorschau aus dem Ordner");
+    assert_eq!(f.iter().map(|x| x.folie.rolle.as_str()).collect::<Vec<_>>(), ["wofuer", "aussehen", "inhalt", "platz", "herkunft"]);
+    assert!(f[0].bild_daten.starts_with("data:image/svg+xml;base64,"));
+    assert!(f[1].bild_daten.starts_with("data:image/webp;base64,"));
+
+    let katalog: Katalog = serde_json::from_slice(&std::fs::read(t.join("katalog.json")).unwrap()).unwrap();
+    let e = &katalog.pakete[0];
+    let lesen = |url: &str| std::fs::read(url).map_err(|e| Fehler(e.to_string()));
+    let f2 = vorschau::aus_katalog(&katalog.basis, e, &lesen).expect("Vorschau über den Katalog");
+    assert_eq!(f2.len(), 5);
+    assert_eq!(f2[2].bild_daten, f[2].bild_daten);
+
+    // Bild auf dem „Server“ ausgetauscht → abgelehnt
+    std::fs::write(ordner.join("inhalt/vorschau/3.svg"), b"<svg xmlns='http://www.w3.org/2000/svg'/>").unwrap();
+    let fehler = vorschau::aus_katalog(&katalog.basis, e, &lesen).unwrap_err().0;
+    assert!(fehler.contains("inhalt/vorschau/3.svg passt nicht zum Katalog"), "{fehler}");
+    // und aus dem Ordner schon an der Paketprüfung
+    assert!(vorschau::aus_ordner(&ordner, &bekannte, &heute).is_err());
+}

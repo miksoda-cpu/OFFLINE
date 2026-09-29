@@ -65,6 +65,11 @@ fn kurz(e: &ureq::Error) -> String {
 }
 
 /// Katalog vom Server holen und prüfen. `zuletzt_erstellt` ist das `erstellt` des zuletzt akzeptierten Katalogs.
+/// Eine kleine Datei vom Server holen (z. B. Vorschaubilder). Prüfen muss der Aufrufer.
+pub fn datei_holen(url: &str) -> Result<Vec<u8>, Fehler> {
+    hole(&client(), url)
+}
+
 pub fn katalog_laden(url: &str, bekannte: &[OeffentlicherSchluessel], heute: &str, jetzt_iso: &str, zuletzt_erstellt: Option<&str>) -> Result<(KatalogGeprueft, Vec<u8>), Fehler> {
     let agent = client();
     let bytes = hole(&agent, url)?;

@@ -124,7 +124,7 @@ fn paket_bauen(server_dir: &Path, k: &Schluessel, version: &str, klein: &[u8], g
 }
 
 fn katalog_bauen(server_dir: &Path, k: &Schluessel, adresse: &str, version: &str, sha: &str, erstellt: &str) -> KatalogEintrag {
-    let e = KatalogEintrag { id: "test".into(), version: version.into(), titel: "Test".into(), beschreibung: "b".into(), art: "zim".into(), pro: false, groesse: 0, app_min: "0.1.0".into(), erstellt: erstellt.into(), aenderungen: String::new(), pfad: format!("test-{version}/"), sha256_manifest: sha.into(), status: "verfuegbar".into() };
+    let e = KatalogEintrag { id: "test".into(), version: version.into(), titel: "Test".into(), beschreibung: "b".into(), art: "zim".into(), pro: false, groesse: 0, app_min: "0.1.0".into(), erstellt: erstellt.into(), aenderungen: String::new(), pfad: format!("test-{version}/"), sha256_manifest: sha.into(), status: "verfuegbar".into(), ..Default::default() };
     let kat = Katalog { format: 1, erstellt: erstellt.into(), gueltig_bis: "2099-01-01T00:00:00Z".into(), basis: format!("{adresse}/"), pakete: vec![e.clone()] };
     let bytes = serde_json::to_vec_pretty(&kat).unwrap();
     std::fs::create_dir_all(server_dir.join("katalog")).unwrap();

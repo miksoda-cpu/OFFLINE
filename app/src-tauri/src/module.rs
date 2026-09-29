@@ -180,6 +180,76 @@ pub fn modul_loeschen(z: State<Zustand>, id: String, bestaetigung: String, daten
     Ok(())
 }
 
+// ---------- Vorschau und lokale Quelle ----------
+
+use offline_kern::vorschau::{self, FolieMitBild};
+
+/// Vorschau eines Katalogeintrags: Bilder vom Server, jedes gegen die Prüfsumme im zuletzt geprüften Katalog.
+#[tauri::command]
+pub async fn vorschau_katalog(app: AppHandle, id: String) -> Result<Vec<FolieMitBild>, String> {
+    use tauri::Manager;
+    tauri::async_runtime::spawn_blocking(move || {
+        let z = app.state::<Zustand>();
+        let k = z.letzter_katalog.lock().map_err(|_| "gesperrt")?.clone().ok_or("Katalog noch nicht geprüft")?;
+        let e = k.pakete.iter().find(|p| p.id == id).ok_or("nicht im Katalog")?;
+        vorschau::aus_katalog(&k.basis, e, &offline_kern::download::datei_holen).map_err(|e| e.0)
+    })
+    .await
+    .map_err(|e| e.to_string())?
+}
+
+/// Vorschau eines Paketordners (lokale Quelle, Stick) – das Paket wird dabei vollständig geprüft.
+#[tauri::command]
+pub fn vorschau_ordner(z: State<Zustand>, pfad: String) -> Result<Vec<FolieMitBild>, String> {
+    vorschau::aus_ordner(std::path::Path::new(&pfad), &z.schluessel, &offline_kern::datum::heute()).map_err(|e| e.0)
+}
+
+/// Vorschau eines installierten Pakets.
+#[tauri::command]
+pub fn vorschau_installiert(z: State<Zustand>, id: String) -> Result<Vec<FolieMitBild>, String> {
+    id_ok(&id)?;
+    let (_, ordner) = einspielen::installierte_version(&z.wurzel(), &id).ok_or("nicht installiert")?;
+    vorschau::aus_ordner(&ordner, &z.schluessel, &offline_kern::datum::heute()).map_err(|e| e.0)
+}
+
+/// Ein Paket in einer lokalen Quelle – so, wie die Paketseite es als Katalogkarte zeigt.
+#[derive(Serialize)]
+pub struct LokalesPaket {
+    pfad: String,
+    id: String,
+    version: String,
+    titel: String,
+    beschreibung: String,
+    art: String,
+    groesse: u64,
+    alter_ab: Option<u32>,
+    kategorie: Option<String>,
+}
+
+/// Signierte Pakete in einem Ordner (bis zwei Ebenen tief), z. B. die Redaktionsablage mit noch nicht
+/// veröffentlichten Modulen. Nur Pakete, deren Signatur und Schlüssel zur Art passen; geladen wird wie vom Stick.
+#[tauri::command]
+pub fn lokale_pakete(z: State<Zustand>, pfad: String) -> Vec<LokalesPaket> {
+    fn suche(o: &std::path::Path, tiefe: u8, z: &Zustand, aus: &mut Vec<LokalesPaket>) {
+        if let (Ok(bytes), Some(sig)) = (std::fs::read(o.join("paket.json")), std::fs::read(o.join("paket.sig")).ok().and_then(|b| serde_json::from_slice(&b).ok())) {
+            if let Ok((m, _)) = offline_kern::manifest_signiert_pruefen(&bytes, &sig, &z.schluessel, &offline_kern::datum::heute()) {
+                aus.push(LokalesPaket { pfad: o.display().to_string(), id: m.id, version: m.version, titel: m.titel, beschreibung: m.beschreibung, art: m.art, groesse: m.groesse, alter_ab: m.alter_ab, kategorie: m.kategorie });
+            }
+            return;
+        }
+        if tiefe == 0 { return; }
+        let Ok(e) = std::fs::read_dir(o) else { return };
+        for e in e.flatten() {
+            if e.path().is_dir() && !e.file_name().to_string_lossy().starts_with('.') { suche(&e.path(), tiefe - 1, z, aus); }
+        }
+    }
+    let mut aus = Vec::new();
+    suche(std::path::Path::new(&pfad), 2, &z, &mut aus);
+    aus.sort_by(|a, b| a.id.cmp(&b.id).then(b.version.cmp(&a.version)));
+    aus.dedup_by(|a, b| a.id == b.id); // je Paket die neueste Version
+    aus
+}
+
 /// Nur in Entwickler-Builds: einen beliebigen Ordner als Modul öffnen, ohne Signatur – für das bösartige Testmodul
 /// (werkzeug/testmodule/boese). In einer ausgelieferten App gibt es diesen Weg nicht.
 #[tauri::command]

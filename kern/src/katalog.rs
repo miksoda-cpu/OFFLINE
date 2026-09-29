@@ -5,7 +5,7 @@ use crate::schluessel::{pruefe_signatur, OeffentlicherSchluessel, Signatur};
 use crate::Fehler;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub struct KatalogEintrag {
     pub id: String,
     #[serde(default)]
@@ -27,6 +27,17 @@ pub struct KatalogEintrag {
     #[serde(default)]
     pub sha256_manifest: String,
     pub status: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub preis: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pruefstatus: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kategorie: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub alter_ab: Option<u32>,
+    /// Slideshow für die Paketseite (Folien und Prüfsummen der Bilder), siehe vorschau.rs
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vorschau: Option<crate::vorschau::Vorschau>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]

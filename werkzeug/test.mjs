@@ -433,3 +433,18 @@ test("Sandbox: das bösartige Testmodul scheitert schon am Prüfprogramm", async
   }
   await assert.rejects(paketBauen(o, await mkdtemp(path.join(os.tmpdir(), "offline-b-")), redaktionPrivat), /Prüfprogramm meldet/);
 });
+
+// ---------- Phase D: Vorschau im Katalog ----------
+
+test("Katalog: Module tragen ihre Slideshow mit Prüfsummen der Bilder", async () => {
+  const ziel = await mkdtemp(path.join(os.tmpdir(), "offline-kv-"));
+  const { ziel: ordner, manifest } = await paketBauen(path.join(KIT, "beispiel", "wichteln"), ziel, redaktionPrivat);
+  const { katalog } = await katalogBauen([ordner], { basis: "x/", bekannte: mitRedaktion, privat });
+  const e = katalog.pakete[0];
+  assert.equal(e.art, "modul");
+  assert.equal(e.alter_ab, 6);
+  assert.deepEqual(e.vorschau.folien.map((f) => f.rolle), ["wofuer", "aussehen", "inhalt", "platz", "herkunft"]);
+  assert.equal(e.vorschau.dateien.length, 5);
+  for (const d of e.vorschau.dateien) assert.equal(d.sha256, manifest.dateien.find((x) => x.pfad === d.pfad).sha256);
+  assert.ok(e.vorschau.dateien.reduce((s, d) => s + d.groesse, 0) <= 200 * 1024);
+});

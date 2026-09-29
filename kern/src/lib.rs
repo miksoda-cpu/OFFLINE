@@ -15,6 +15,7 @@ pub mod modulserver;
 pub mod paket;
 pub mod schluessel;
 pub mod tresor;
+pub mod vorschau;
 
 pub use delta::{delta, Delta};
 pub use download::{katalog_laden, paket_laden, Auftrag, Fortschritt};

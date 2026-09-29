@@ -261,9 +261,11 @@ export async function katalogBauen(paketOrdner, { basis, geplant = [], gueltigTa
       if (!p.ok) throw new Error(`${ordner}: ${p.fehler.join("; ")}`);
       m = p.manifest;
     }
+    const vorschau = await vorschauFuerKatalog(ordner, m);
     pakete.push({
       id: m.id, version: m.version, titel: m.titel, beschreibung: m.beschreibung, art: m.art, pro: m.pro,
       ...Object.fromEntries(["preis", "pruefstatus", "kategorie", "alter_ab"].filter((k) => m[k] !== undefined).map((k) => [k, m[k]])),
+      ...(vorschau ? { vorschau } : {}),
       groesse: m.groesse, app_min: m.app_min, erstellt: m.erstellt, aenderungen: m.aenderungen,
       pfad: `${path.basename(ordner)}/`, sha256_manifest: sha256(bytes), status: "verfuegbar",
     });
@@ -289,6 +291,26 @@ export async function katalogBauen(paketOrdner, { basis, geplant = [], gueltigTa
   };
   const bytes = Buffer.from(JSON.stringify(katalog, null, 2) + "\n");
   return { katalog, bytes, sig: signiere(bytes, privat) };
+}
+
+/**
+ * Slideshow für den Katalogeintrag (PAKET-KIT.md Abschnitt 3): Folien aus inhalt/vorschau/folien.json, dazu Pfad,
+ * Größe und Prüfsumme jedes Bildes aus dem signierten Manifest. Damit kann die App die Bilder vor dem Laden des Pakets
+ * zeigen und jedes gegen den signierten Katalog prüfen. Fehlt die Slideshow im Ordner, bleibt das Feld weg.
+ */
+async function vorschauFuerKatalog(ordner, m) {
+  const eintrag = (p) => m.dateien.find((d) => d.pfad === p);
+  if (!eintrag("inhalt/vorschau/folien.json")) return null;
+  let folien;
+  try { folien = JSON.parse(await readFile(path.join(ordner, "inhalt", "vorschau", "folien.json"), "utf8")).folien; } catch { return null; }
+  if (!Array.isArray(folien)) return null;
+  const dateien = [];
+  for (const f of folien) {
+    const d = eintrag(`inhalt/vorschau/${f.bild}`);
+    if (!d) throw new Error(`${m.id}: Vorschaubild ${f.bild} fehlt im Manifest`);
+    dateien.push({ pfad: d.pfad, groesse: d.groesse, sha256: d.sha256 });
+  }
+  return { folien: folien.map(({ nr, rolle, bild, titel, text, alt }) => ({ nr, rolle, bild, titel, text, alt })), dateien };
 }
 
 export function katalogPruefen(bytes, sig, bekannte, { jetzt = new Date(), zuletztErstellt = null } = {}) {
