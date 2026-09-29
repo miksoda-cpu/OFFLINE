@@ -17,11 +17,12 @@ test("Gewichte der Quellen ergeben 100 und stehen wie in Kapitel 4", () => {
   assert.deepEqual(QUELLEN.map((q) => [q.id, q.gewicht]), [["inhalte", 20], ["dinge", 35], ["menschen", 25], ["koennen", 20]]);
 });
 
-test("Fristen aus Kapitel 4: Wasser 12, Batterien 24, Kontakte 6, Können 12", () => {
+test("Fristen aus Kapitel 4: Wasser 12, Batterien 24, Kontakte 6 (Treffpunkt 12), Können 12", () => {
   const f = (id) => POSITIONEN.find((p) => p.id === id).verfall;
   assert.equal(f("c-0-0"), 12);
   assert.equal(f("c-1-1"), 24);
-  for (const id of ["familie", "c-3-2", "c-3-3", "nachbar"]) assert.equal(f(id), 6, id);
+  for (const id of ["familie", "c-3-3", "nachbar"]) assert.equal(f(id), 6, id);
+  for (const id of ["c-3-2", "anlaufstelle"]) assert.equal(f(id), 12, id);
   for (const id of ["kocher", "radio", "probeabend"]) assert.equal(f(id), 12, id);
 });
 
@@ -64,6 +65,14 @@ test("Verfall: voll bis Ablauf, dann langsam auf null über drei Monate", () => 
   assert.equal(halb.stand, "faellig");
   assert.ok(halb.wert > 0.45 && halb.wert < 0.55);
   assert.equal(positionWert(wasser, vor(16), JETZT).wert, 0);
+});
+
+test("Menschen: Treffpunkt und Anlaufstelle 12 Monate, Familiengruppe, Nummern und Nachbar 6 (Festlegung Bill 29.09.)", () => {
+  const frist = Object.fromEntries(POSITIONEN.filter((p) => p.quelle === "menschen" && p.verfall).map((p) => [p.id, p.verfall]));
+  assert.deepEqual(frist, { familie: 6, "c-3-2": 12, "c-3-3": 6, nachbar: 6, anlaufstelle: 12 });
+  const treffpunkt = POSITIONEN.find((p) => p.id === "c-3-2");
+  assert.equal(positionWert(treffpunkt, vor(11), JETZT).wert, 1, "nach 11 Monaten noch voll");
+  assert.equal(positionWert(treffpunkt, vor(13.5), JETZT).stand, "faellig");
 });
 
 test("fällige Positionen werden genannt, älteste zuerst, ohne die automatischen", () => {
@@ -121,4 +130,24 @@ test("Übertragung: niemand verliert beim Update eine gültige Bestätigung", ()
 test("Übertragung überschreibt nichts, was Version 2 schon hat", () => {
   const b = uebertragen({ checks: { "0-0": true }, bestaetigungenV1: { wasser: vor(10) } }, { "c-0-0": vor(1) }, JETZT);
   assert.equal(b["c-0-0"], vor(1));
+});
+
+test("Übergang: der Wert aus Version 1 ist drei Monate lang Untergrenze, dann klingt er über drei Monate aus", async () => {
+  const { sockelWert, wertV1 } = await import("./bereit.js");
+  const alle = Object.fromEntries(["wasser", "licht", "medikamente", "radio", "probeabend"].map((k) => [k, vor(1)]));
+  const v1 = wertV1({ erledigt: 20, gesamt: 20, notfallmappe: true, arten: ["inhalt", "zim", "karte"], bestaetigungenV1: alle }, JETZT);
+  assert.equal(v1, 100);
+  const checks = {}; for (let g = 0; g < 4; g++) for (let p = 0; p < 5; p++) checks[`${g}-${p}`] = true;
+  const daten = { checks, bestaetigt: uebertragen({ checks, bestaetigungenV1: alle }, {}, JETZT), geraet: { paketErstellt: vor(0), arten: ["inhalt", "zim", "karte"], notfallmappe: true } };
+  const ohne = berechne(daten, JETZT);
+  assert.ok(ohne.wert < 100, "ohne Sockel fiele die Zahl (neue Positionen in Version 2)");
+  const mit = berechne({ ...daten, sockel: { wert: v1, am: new Date(JETZT).toISOString() } }, JETZT);
+  assert.equal(mit.wert, 100); assert.equal(mit.sockel, true); assert.equal(mit.eigen, ohne.wert);
+  const am = new Date(JETZT).toISOString(), M = 30.44 * 86400000;
+  assert.equal(sockelWert({ wert: 80, am }, JETZT + 2.9 * M), 80);
+  assert.equal(sockelWert({ wert: 80, am }, JETZT + 4.5 * M), 40);
+  assert.equal(sockelWert({ wert: 80, am }, JETZT + 6.1 * M), 0);
+  assert.equal(sockelWert(null, JETZT), 0);
+  // Wer mehr hat als der Sockel, sieht die eigene Zahl
+  assert.equal(berechne({ ...daten, sockel: { wert: 10, am } }, JETZT).sockel, false);
 });

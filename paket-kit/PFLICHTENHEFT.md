@@ -50,7 +50,7 @@ Alles unter `inhalt/` wird signiert und ausgeliefert. Alles außerhalb bleibt be
 | `pro` | ja | `true` oder `false` |
 | `preis` | ja | `gratis`, `pro` oder `kauf` |
 | `pruefstatus` | ja | `redaktion`, `herausgeber` oder `community` |
-| `app_min` | ja | kleinste App-Version, z. B. `0.1.0` |
+| `app_min` | ja | kleinste App-Version, z. B. `0.1.0`; Module und Skins mindestens `0.2.0`. Ab App 0.2.0 lädt die App kein Paket, dessen `app_min` über ihrer Version liegt. |
 | `aenderungen` | ja | was neu ist, in einem Satz für „Was ist neu?" |
 | `alter_ab` | ja | ab welchem Alter das Paket im Kinder-Modus sichtbar ist: `0` für alle, `6`, `10`, `14`, `18` |
 | `kategorie` | ja | eine der Gruppen der Paketseite: `ernstfall`, `wissen`, `jeden-tag`, `du-und-die-deinen`, `unterwegs`, `verbindung`, `miteinander`, `aussehen` |

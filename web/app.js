@@ -1,13 +1,19 @@
 // OFFLINE – App-Oberfläche (Prototyp). Alle Inhalte kommen aus signierten Paketen, siehe paket-client.js.
 import { versionVergleich } from "./paket-kern.js";
-import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUebertragen, POSITIONEN as BEREIT_POSITIONEN } from "./bereit.js";
+import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUebertragen, wertV1 as bereitWertV1, POSITIONEN as BEREIT_POSITIONEN } from "./bereit.js";
 import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch } from "./wesen.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
-const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates, inhalt, installierteIds } = client;
+const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
+const APP_VERSION = "0.2.0";
+// app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
+const appVersion = () => desktop?.info?.version ?? APP_VERSION;
+const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
+const verfuegbareUpdates = (k) => alleUpdates(k).filter((u) => appPasst(u.eintrag));
+const braucht = (e) => `<span class="tag of-plakette" title="Dieses Paket braucht eine neuere App. Unter Einstellungen → App-Update.">Braucht App ${esc(e.app_min)}</span>`;
 if (desktop) {
   // Abo-Einstellungen liegen in der App beim Kern (er führt sie im Hintergrund aus)
   const a = await client.aboLesen();
@@ -76,12 +82,25 @@ const wesen = new Wesen({ speicher, tipps: () => inhalt(PW(), "inhalt/tipps.json
 
 // Bereit, Version 2: vier Quellen nach Gesamtkonzept Kapitel 4, jede Position mit eigenem Verfall (bereit.js).
 // Beim ersten Start nach dem Update werden die Bestätigungen aus Version 1 übernommen; die alten Daten bleiben liegen.
+// Erster Start mit Version 2 nach einem Update: den Wert aus Version 1 als Sockel merken (bereit.js, sockelWert),
+// sobald Paket und Tresor-Stand bekannt sind (sockelFestlegen).
+if (speicher.get("bereit-v2", null) === null && (Object.values(state.checks).some(Boolean) || Object.keys(speicher.get("bestaetigungen", {})).length)) speicher.set("bereit-sockel-offen", true);
 state.bestaetigt = speicher.get("bereit-v2", null) ?? bereitUebertragen({ checks: state.checks, bestaetigungenV1: speicher.get("bestaetigungen", {}) });
 speicher.set("bereit-v2", state.bestaetigt);
 function bereit() {
   const arten = installierteIds().map(installiertesPaket).filter(Boolean).map((x) => x.manifest.art);
   const notfallmappe = desktop ? state.tresor.status !== null && state.tresor.status !== "kein" : undefined; // ohne Tresor zählt sie nicht
-  return bereitBerechnen({ checks: state.checks, bestaetigt: state.bestaetigt, geraet: { paketErstellt: P()?.manifest.erstellt ?? null, arten, notfallmappe } }, testJetzt());
+  return bereitBerechnen({ checks: state.checks, bestaetigt: state.bestaetigt, geraet: { paketErstellt: P()?.manifest.erstellt ?? null, arten, notfallmappe }, sockel: sockelFestlegen(arten) }, testJetzt());
+}
+/** Sockel aus Version 1: wird einmal festgelegt, sobald der Tresor-Stand bekannt ist; bis dahin vorläufig ohne Notfallmappe. */
+function sockelFestlegen(arten) {
+  if (!speicher.get("bereit-sockel-offen", false)) return speicher.get("bereit-sockel", null);
+  const vorsorge = D("vorsorge");
+  const gesamt = vorsorge ? vorsorge.gruppen.reduce((n, g) => n + g.punkte.length, 0) : 0;
+  const bekannt = !desktop || state.tresor.status !== null;
+  const sockel = { wert: bereitWertV1({ erledigt: Object.values(state.checks).filter(Boolean).length, gesamt, notfallmappe: !!desktop && bekannt && state.tresor.status !== "kein", arten, bestaetigungenV1: speicher.get("bestaetigungen", {}) }), am: new Date().toISOString() };
+  if (bekannt) { speicher.set("bereit-sockel", sockel); speicher.del("bereit-sockel-offen"); }
+  return sockel;
 }
 // Nur im Entwickler-Build: Datum für die Bereit-Rechnung vorstellen, um Verfall zu prüfen (Übersicht, Testleiste).
 const testJetzt = () => (desktop?.info?.entwickler && speicher.get("test-monate", 0) ? Date.now() + speicher.get("test-monate", 0) * 30.44 * 86400000 : Date.now());
@@ -150,6 +169,7 @@ const seiten = {
           <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="muted of-klein">Bereit</span><span class="muted of-klein" style="font-size:.85rem">${b.wert < 30 ? "Anfang" : b.wert < 60 ? "unterwegs" : b.wert < 80 ? "gut" : "bereit"}</span></div>
           <div class="bereit-zahl">${b.wert}</div>
           <div class="progress of-balken" style="margin:.4rem 0 .8rem"><div style="width:${b.wert}%"></div></div>
+          ${b.sockel ? `<p class="muted of-klein" id="bereit-sockel" style="margin:0 0 .4rem">Aus der Vorversion übernommen. Neu sind Familie, Nachbar, Anlaufstelle und Kocher. Bestätigt, trägt sich die Zahl selbst (jetzt ${b.eigen}).</p>` : ""}
           <p style="margin:0 0 .6rem"><a href="${schritt.ziel}">${esc(schritt.text)}</a></p>
           ${b.quellen.map((q) => `<div class="bereit-quelle"><span>${esc(q.name)} <span class="muted of-klein">· ${esc(q.text)}</span></span><span class="mono of-mono">${q.punkte}/${q.max}</span></div>`).join("")}
         </div>
@@ -371,12 +391,13 @@ const seiten = {
       <div class="grid grid-2">${liste.map((p) => {
         if (p.art === "modul" || p.art === "skin") return modulKarte(p, { art: "katalog" });
         const inst = installiertesPaket(p.id);
-        const update = inst && p.status === "verfuegbar" && versionVergleich(p.version, inst.manifest.version) > 0;
+        const update = inst && p.status === "verfuegbar" && versionVergleich(p.version, inst.manifest.version) > 0 && appPasst(p);
         let knopf;
         if (inst) knopf = `${update ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${p.id}">Aktualisieren</button> ` : ""}${desktop && p.art === "zim" ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-oeffnen-zim="${p.id}">Öffnen</button> ` : ""}${desktop && p.art === "karte" ? `<a class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" href="#karte">Karte öffnen</a> ` : ""}<button class="btn btn-sm of-btn of-btn--klein" data-remove="${p.id}">Entfernen</button>`;
         else if (p.status !== "verfuegbar") knopf = `<span class="tag tag-warn of-plakette of-plakette--warnung">Geplant</span>`;
         else if (p.pro) knopf = `<button class="btn btn-sm of-btn of-btn--klein" disabled title="Nur mit Pro">Nur mit Pro</button>`;
         else if (!desktop && p.art !== "inhalt") knopf = `<span class="tag of-plakette">Nur in der Desktop-App</span>`;
+        else if (!appPasst(p)) knopf = braucht(p);
         else knopf = `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${p.id}">Installieren</button>`;
         return `<div class="card pkg of-karte of-paket">
           <div class="pkg-head"><h3 style="margin:0">${esc(p.titel)}</h3><span>${p.pro ? '<span class="tag tag-pro of-plakette of-plakette--pro">Pro</span> ' : ""}${inst ? `<span class="tag tag-ok of-plakette of-plakette--offline">${update ? "Update " + esc(p.version) : "Installiert"}</span>` : ""}</span></div>
@@ -603,7 +624,7 @@ async function installiereMitMeldung(id, ziel) {
 // die App nur über die geprüfte Brücke; welches Modul spricht, setzt diese Datei selbst.
 
 /** Darf man dieses Modul laden? Heute darf es jeder. Kauf oder Abo (offen) kommen hier davor. */
-const darfLaden = (_eintrag) => true;
+const darfLaden = (e) => appPasst(e);
 
 async function moduleStandLaden() {
   if (!desktop) return;
@@ -670,13 +691,13 @@ function modulKarte(e, quelle) {
   let steuerung;
   if (!desktop) steuerung = `<span class="tag of-plakette">Nur in der Desktop-App</span>`;
   else if (inst) {
-    const neuer = e.version && versionVergleich(e.version, inst.manifest.version) > 0;
+    const neuer = e.version && versionVergleich(e.version, inst.manifest.version) > 0 && appPasst(e);
     steuerung = `${schieber({ an: aktiv, art: "aktiv", text: aktiv ? "aktiv" : "inaktiv", attr: `data-modul-aktiv="${esc(e.id)}" aria-label="${esc(e.titel)} ${aktiv ? "aktiv" : "inaktiv"}"` })}
       ${skin ? "" : `<button type="button" class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-modul-start="${esc(e.id)}" ${aktiv ? "" : "disabled title=\"Erst aktiv schalten\""}>Öffnen</button>`}
       ${neuer ? `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-modul-laden="${esc(e.id)}" ${quelle.art === "ordner" ? `data-pfad="${esc(quelle.pfad)}"` : ""}>Aktualisieren</button>` : ""}
       <button type="button" class="btn btn-sm of-btn of-btn--klein" data-modul-loeschen="${esc(e.id)}">löschen</button>`;
   } else if (e.status && e.status !== "verfuegbar") steuerung = `<span class="tag tag-warn of-plakette of-plakette--warnung">Geplant</span>`;
-  else if (!darfLaden(e)) steuerung = `<span class="tag of-plakette">Nicht freigeschaltet</span>`;
+  else if (!darfLaden(e)) steuerung = braucht(e);
   else steuerung = schieber({ an: false, art: "laden", text: "laden", attr: `data-modul-laden="${esc(e.id)}" ${quelle.art === "ordner" ? `data-pfad="${esc(quelle.pfad)}"` : ""} aria-label="${esc(e.titel)} laden"` });
   return `<div class="card pkg modul-karte of-karte of-paket" data-modul-karte="${esc(e.id)}">
     <div class="pkg-head"><h3 style="margin:0">${esc(e.titel)}</h3><span><span class="tag of-plakette">${skin ? "Skin" : "Modul"}</span>${quelle.art === "ordner" ? ' <span class="tag tag-warn of-plakette of-plakette--warnung">lokal, nicht veröffentlicht</span>' : ""}${inst ? ` <span class="tag of-plakette ${aktiv ? "tag-ok of-plakette--offline" : ""}">${aktiv ? "Geladen" : "Inaktiv"}</span>` : ""}</span></div>
@@ -768,7 +789,8 @@ async function modulAktion(b) {
     return;
   }
   if (b.hasAttribute("data-modul-probe")) {
-    const p = await client.ordnerWaehlen("Ordner des Testmoduls wählen (werkzeug/testmodule/boese)");
+    // Automatischer Durchlauf (werkzeug/app-probe.mjs): Ordner vorgegeben statt Dialog, nur im Entwickler-Build
+    const p = (desktop.info?.entwickler && speicher.get("test-ordner", null)) || await client.ordnerWaehlen("Ordner des Testmoduls wählen (werkzeug/testmodule/boese)");
     if (!p) return;
     try { state.modul.offen = { id: "modul-test", titel: "Sandbox-Probe", url: await client.modulTestOeffnen(p) }; location.hash = "#modul"; }
     catch (e) { zeige("bib-msg", esc(String(e?.message ?? e)), "err"); }
@@ -1327,7 +1349,7 @@ if (desktop) {
   // Beim Minimieren (Fenster unsichtbar) sperren – wie in der Spezifikation
   document.addEventListener("visibilitychange", () => { if (document.hidden && state.tresor.status === "offen") client.tresorSperren().then(() => tresorGesperrt("hand")).catch(() => {}); });
   addEventListener("hashchange", () => { if (location.hash === "#tresor") tresorLaden().then(render); });
-  tresorLaden().then(() => { if (location.hash === "#tresor") render(); });
+  tresorLaden().then(() => { if (location.hash === "#tresor" || speicher.get("bereit-sockel-offen", false)) render(); }); // Sockel braucht den Tresor-Stand
 }
 document.getElementById("download").addEventListener("click", beiKlick);
 // Sprechblase, Karte und Log des Wesens (Karte liegt außerhalb von main)
@@ -1419,7 +1441,6 @@ menu.addEventListener("click", () => blattSetzen(!sidebar.classList.contains("op
 tabMehr.addEventListener("click", () => blattSetzen(!sidebar.classList.contains("open")));
 sheetHinter.addEventListener("click", () => blattSetzen(false));
 
-const APP_VERSION = "0.2.0";
 function netz() {
   const on = navigator.onLine;
   document.getElementById("net-dot").className = "dot " + (on ? "on" : "off");
@@ -1494,7 +1515,7 @@ if (desktop) (async () => {
       for (const id of [BASISPAKET, "wir"]) {
         if (installiertesPaket(id)) continue;
         const e = k.pakete.find((p) => p.id === id && p.status === "verfuegbar");
-        if (e) { await installiere(k, e); render(); }
+        if (e && appPasst(e)) { await installiere(k, e); render(); }
       }
     } catch (err) { console.error("Erstinstallation", err); }
   } else if (navigator.onLine && state.abo.aktiv) {

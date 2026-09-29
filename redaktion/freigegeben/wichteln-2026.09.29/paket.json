@@ -1,0 +1,66 @@
+{
+  "format": 1,
+  "id": "wichteln",
+  "version": "2026.09.29",
+  "titel": "Wichteln und Engerl-Bengerl",
+  "beschreibung": "Auslosen ohne Zettel und ohne Internet: Preisrahmen, Datum, wer sich nicht zieht. Niemand sieht die ganze Liste.",
+  "art": "modul",
+  "sprache": "de-AT",
+  "lizenz": "eigene Rechte",
+  "herausgeber": "The Digioneer",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "kategorie": "miteinander",
+  "alter_ab": 6,
+  "abnahme": "keine",
+  "datenversion": 1,
+  "app_min": "0.2.0",
+  "erstellt": "2026-09-29T15:18:05Z",
+  "aenderungen": "Erste Ausgabe: Wichteln und Engerl-Bengerl, Handy reihum, Zettel zum Drucken.",
+  "quellen": [
+    {
+      "id": "eigen",
+      "name": "eigene Entwicklung",
+      "url": ""
+    }
+  ],
+  "dateien": [
+    {
+      "pfad": "inhalt/modul/index.html",
+      "sha256": "63d7d8ee7b512376b1f79a8ca145b2cc8814d5b52fe1ac4cc3d8c320d9deacbd",
+      "groesse": 22607
+    },
+    {
+      "pfad": "inhalt/vorschau/1.svg",
+      "sha256": "5b311438f6bc238c4e470da35db669c2794934e68b280d26c0e4828b2696b924",
+      "groesse": 1775
+    },
+    {
+      "pfad": "inhalt/vorschau/2.webp",
+      "sha256": "82cd926057c2d66555a96e56546a974860cb6fd13dfd97ba7957323bb96a2179",
+      "groesse": 22616
+    },
+    {
+      "pfad": "inhalt/vorschau/3.svg",
+      "sha256": "511dd57067afeda132aea894b4b7ca0caa9771f2a5392e271565ae63f5d42c48",
+      "groesse": 1406
+    },
+    {
+      "pfad": "inhalt/vorschau/4.svg",
+      "sha256": "dc7bd8de25c28145c0d3e45b1fcaf9e1bb95b8793d5ce441091bc89779e0a932",
+      "groesse": 1062
+    },
+    {
+      "pfad": "inhalt/vorschau/5.svg",
+      "sha256": "a8e7e41822526e99aa3d000eac6a2b3f1be188ab1e3faf3f2a6b8a05c4091d03",
+      "groesse": 1058
+    },
+    {
+      "pfad": "inhalt/vorschau/folien.json",
+      "sha256": "9c7162bf2d1a9646ad4796186e9288d03db51ec03de711167ebef6f1f3d25ab3",
+      "groesse": 1275
+    }
+  ],
+  "groesse": 51799
+}

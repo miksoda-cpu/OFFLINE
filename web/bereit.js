@@ -15,7 +15,7 @@ export const QUELLEN = [
 
 // Positionen. `check`: Punkt der Vorsorge-Checkliste im Österreich-Paket (Gruppe-Punkt). `auto`: liest die App vom Gerät.
 // Alle anderen bestätigt man auf der Übersicht. `verfall` in Monaten: so lange zählt eine Bestätigung voll.
-// `gewicht` relativ innerhalb der Quelle (Standard 1). Fristen aus Kapitel 4: Wasser 12, Batterien 24, Kontakte 6, Können 12;
+// `gewicht` relativ innerhalb der Quelle (Standard 1). Fristen aus Kapitel 4: Wasser 12, Batterien 24, Kontakte 6 (Treffpunkt und Anlaufstelle 12, Festlegung Bill 29.09.), Können 12;
 // die übrigen Fristen sind ein Vorschlag (Bereit-Patch der Lumis-Session).
 export const POSITIONEN = [
   // Inhalte: Pakete geladen, Vorrat an Wissen gefüllt
@@ -46,7 +46,7 @@ export const POSITIONEN = [
 
   // Menschen: Familiengruppe, Treffpunkt, Nachbarn, Anlaufstellen, Notfallmappe
   { id: "familie", quelle: "menschen", titel: "Familiengruppe: wer wen im Notfall anruft", verfall: 6, gewicht: 2, hinweis: "Einmal durchsprechen, wer wen erreicht, wenn das Handynetz wackelt." },
-  { id: "c-3-2", check: "3-2", quelle: "menschen", titel: "Treffpunkt mit der Familie vereinbart", verfall: 6, gewicht: 2 },
+  { id: "c-3-2", check: "3-2", quelle: "menschen", titel: "Treffpunkt mit der Familie vereinbart", verfall: 12, gewicht: 2 },
   { id: "c-3-3", check: "3-3", quelle: "menschen", titel: "Wichtige Nummern auf Papier", verfall: 6 },
   { id: "nachbar", quelle: "menschen", titel: "Einen Nachbarn, den ich im Notfall fragen kann", verfall: 6, hinweis: "Einmal anläuten und Nummern tauschen." },
   { id: "anlaufstelle", quelle: "menschen", titel: "Ich weiß, wo die Anlaufstelle meiner Gemeinde ist", verfall: 12, hinweis: "Die Gemeinde nennt sie auf ihrer Seite oder am Amt." },
@@ -89,7 +89,10 @@ export function datumFuer(pos, { checks = {}, bestaetigt = {}, geraet = {} } = {
   return bestaetigt[pos.id] ?? null;
 }
 
-/** Die ganze Rechnung. Gibt { version, wert, quellen, positionen, faellig, verfallen, hinweis } zurück. */
+/**
+ * Die ganze Rechnung. Gibt { version, wert, quellen, positionen, faellig, verfallen, hinweis, sockel } zurück.
+ * `daten.sockel` ({ wert, am }): Übergang von Version 1, siehe sockelWert. `sockel` im Ergebnis ist true, solange er trägt.
+ */
 export function berechne(daten = {}, jetzt = Date.now()) {
   const alle = [];
   const quellen = QUELLEN.map((q) => {
@@ -104,9 +107,36 @@ export function berechne(daten = {}, jetzt = Date.now()) {
     const gut = pos.filter((p) => p.stand === "gut").length;
     return { ...q, name: q.titel, anteil, roh: anteil * q.gewicht, punkte: Math.round(anteil * q.gewicht), max: q.gewicht, text: `${gut} von ${pos.length}`, positionen: pos };
   });
-  const wert = Math.max(0, Math.min(100, Math.round(quellen.reduce((s, q) => s + q.roh, 0))));
+  const eigen = Math.max(0, Math.min(100, Math.round(quellen.reduce((s, q) => s + q.roh, 0))));
+  const boden = sockelWert(daten.sockel, jetzt);
+  const wert = Math.max(eigen, boden);
   const faellig = alle.filter((p) => p.stand === "faellig" && !p.auto).sort((a, b) => a.ablauf - b.ablauf);
-  return { version: VERSION, wert, quellen, positionen: alle, faellig, verfallen: faellig, hinweis: hinweis(wert, daten, jetzt) };
+  return { version: VERSION, wert, eigen, sockel: boden > eigen, quellen, positionen: alle, faellig, verfallen: faellig, hinweis: hinweis(wert, daten, jetzt) };
+}
+
+// Übergang von Version 1: Version 2 zählt Dinge, die es vorher nicht gab (Familiengruppe, Nachbar, Anlaufstelle, Kocher).
+// Damit die Zahl beim Update nicht fällt, gilt der alte Wert nach dem Update drei Monate als Untergrenze und klingt dann
+// über drei Monate aus. Wer in der Zeit die neuen Punkte bestätigt, liegt ohnehin darüber.
+export const SOCKEL_MONATE = 3;
+export function sockelWert(sockel, jetzt = Date.now()) {
+  const t = Date.parse(sockel?.am ?? "");
+  if (!Number.isFinite(t) || !(sockel.wert > 0)) return 0;
+  const alter = (jetzt - t) / MONAT;
+  if (alter <= SOCKEL_MONATE) return Math.min(100, Math.round(sockel.wert));
+  return Math.max(0, Math.round(Math.min(100, sockel.wert) * (1 - (alter - SOCKEL_MONATE) / AUSKLANG_MONATE)));
+}
+
+// Die Rechnung von Version 1 (App bis 0.1.8), nur noch für den Sockel beim Update.
+const V1_BESTAETIGUNGEN = { wasser: 6, licht: 12, medikamente: 6, radio: 12, probeabend: 12 }; // Monate, je 6 Punkte
+export function wertV1({ erledigt = 0, gesamt = 0, notfallmappe = false, arten = [], bestaetigungenV1 = {} } = {}, jetzt = Date.now()) {
+  const liste = gesamt ? Math.round((erledigt / gesamt) * 40) : 0;
+  const wissen = ["inhalt", "zim", "karte"].filter((a) => arten.includes(a)).length * 5;
+  let best = 0;
+  for (const [id, monate] of Object.entries(V1_BESTAETIGUNGEN)) {
+    const t = Date.parse(bestaetigungenV1[id] ?? "");
+    if (Number.isFinite(t) && t + monate * 30.4375 * TAG > jetzt) best += 6;
+  }
+  return Math.max(0, Math.min(100, liste + (notfallmappe ? 15 : 0) + wissen + best));
 }
 
 // „Das ist verdächtig gut“: über 95 ohne Probeabend in den letzten drei Monaten.

@@ -28,7 +28,7 @@
 |---|---|---|
 | Inhalte | 20 % | Österreich-Paket am Gerät, Paket nicht älter als 6 Monate, Wissen ohne Netz (ZIM), Karte ohne Netz – liest die App selbst |
 | Dinge | 35 % | 18 Punkte der Vorsorge-Checkliste, abgehakt **und** bestätigt; Wasser 12 Monate, Batterien und Radio 24, Medikamente und Powerbanks 6, Tank 3 |
-| Menschen | 25 % | Familiengruppe, Treffpunkt, Nummern auf Papier, Nachbar (je 6 Monate), Anlaufstelle (12), Notfallmappe im Tresor (Desktop, liest die App) |
+| Menschen | 25 % | Familiengruppe, Nummern auf Papier, Nachbar (je 6 Monate), Treffpunkt und Anlaufstelle (je 12), Notfallmappe im Tresor (Desktop, liest die App) |
 | Können | 20 % | Kocher angezündet, Radio getestet, Probeabend (je 12 Monate) |
 
 - Innerhalb einer Quelle zählt jede Position mit ihrem Gewicht (Wasser 3, Probeabend 2 …). Gewichte und Fristen stehen nur in `bereit.js`.
@@ -37,7 +37,8 @@
 - Positionen, die es auf einem Gerät nicht gibt (Notfallmappe im Web-Prototyp ohne Tresor), zählen dort nicht mit; 100 bleibt erreichbar.
 - Die Lumi liest nur `wert` und `faellig` (bzw. `verfallen`). Die Stufen 30/60/80 kommen aus `stufe()` in `bereit.js`.
 - Übertragung aus Version 1: Bestätigungen behalten ihr Datum, alte Häkchen gelten ab dem Update. Gespeichert wird unter `bereit-v2`; die Daten von Version 1 bleiben liegen.
-- Tests: `web/bereit.test.mjs` (15 Fälle, auch in der CI). Im Entwickler-Build lässt sich das Datum auf der Übersicht vorstellen.
+- Sockel beim Update (0.2.0): Version 2 zählt Dinge, die es vorher nicht gab (Familiengruppe, Nachbar, Anlaufstelle, Kocher). Damit die Zahl beim Update nicht fällt, rechnet die App beim ersten Start einmal den Wert nach Version 1 aus (`bereit-sockel`). Er gilt drei Monate als Untergrenze und klingt dann über drei Monate aus. Solange er trägt, sagt die Übersicht „Aus der Vorversion übernommen“ und nennt die eigene Zahl. Neuinstallationen haben keinen Sockel.
+- Tests: `web/bereit.test.mjs` (17 Fälle, auch in der CI). Im Entwickler-Build lässt sich das Datum auf der Übersicht vorstellen.
 
 **Das Wesen (`web/wesen.js`):**
 - Sprite 48 × 36 auf Canvas, ohne Glättung skaliert; der Schein der Leuchtkugeln liegt auf einer zweiten, weichen Ebene. Höhle als Welt: dunkler Stein, Eisband oben, der glimmende Spalt unten, aufsteigender Dampf.

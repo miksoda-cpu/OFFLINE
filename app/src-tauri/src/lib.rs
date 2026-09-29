@@ -802,9 +802,17 @@ async fn katalog_laden(app: AppHandle) -> Result<KatalogAntwort, String> {
     .map_err(|e| e.to_string())?
 }
 
+/// `app_min` aus dem Katalog: leer oder höchstens die eigene Version. Apps bis 0.1.8 prüften das nicht.
+fn app_passt(app_min: &str) -> bool {
+    app_min.is_empty() || offline_kern::version_vergleich(env!("CARGO_PKG_VERSION"), app_min) != std::cmp::Ordering::Less
+}
+
 fn paket_holen(app: &AppHandle, z: &Zustand, id: &str) -> Result<Einspielergebnis, String> {
     let k = katalog_holen(z)?;
     let eintrag = k.katalog.pakete.iter().find(|p| p.id == id).ok_or_else(|| format!("{id} ist nicht im Katalog"))?.clone();
+    if !app_passt(&eintrag.app_min) {
+        return Err(format!("{} braucht die App {} oder neuer.", eintrag.titel, eintrag.app_min));
+    }
     z.abbruch.store(false, Ordering::Relaxed);
     let app2 = app.clone();
     let mut melde = move |f: Fortschritt| { let _ = app2.emit("download-fortschritt", &f); };
@@ -846,6 +854,7 @@ fn updates_ausfuehren(app: &AppHandle, z: &Zustand, ausgeloest: &str) -> AboErge
         if e.status != "verfuegbar" { continue; }
         let Some((v, _)) = einspielen::installierte_version(&wurzel, &e.id) else { continue };
         if offline_kern::version_vergleich(&e.version, &v) != std::cmp::Ordering::Greater { continue; }
+        if !app_passt(&e.app_min) { continue; } // bleibt stehen, bis die App aktualisiert ist
         match paket_holen(app, z, &e.id) {
             Ok(r) => erg.aktualisiert.push(r),
             Err(f) => erg.fehler.push(format!("{}: {f}", e.titel)),
@@ -1007,4 +1016,15 @@ pub fn start() {
         ])
         .run(tauri::generate_context!())
         .expect("OFFLINE konnte nicht starten");
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn app_min_wird_beachtet() {
+        assert!(super::app_passt(""));
+        assert!(super::app_passt("0.1.0"));
+        assert!(super::app_passt(env!("CARGO_PKG_VERSION")));
+        assert!(!super::app_passt("99.0.0"));
+    }
 }

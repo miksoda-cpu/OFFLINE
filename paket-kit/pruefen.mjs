@@ -72,6 +72,7 @@ async function dateien(wurzel, rel = "") {
 
 const kb = (n) => `${(n / 1024).toFixed(1)} kB`;
 const txt = (v) => typeof v === "string" && v.trim().length > 0;
+const appMinZuAlt = (v) => { const [a = 0, b = 0] = v.split(".").map(Number); return a === 0 && b < 2; };
 
 async function lesenJson(p, name) {
   try { return JSON.parse(await readFile(p, "utf8")); }
@@ -112,6 +113,7 @@ async function pruefen(ordner) {
   if (!txt(meta.abnahme)) F("abnahme fehlt (\"keine\" oder wer abnimmt und Stand)");
   if (meta.art === "modul" && !(Number.isInteger(meta.datenversion) && meta.datenversion >= 1)) F("datenversion fehlt (ganze Zahl ab 1, Pflicht bei art = modul)");
   if (meta.ki_generiert !== undefined && typeof meta.ki_generiert !== "boolean") F("ki_generiert muss true oder false sein");
+  if ((meta.art === "modul" || meta.art === "skin") && txt(meta.app_min) && appMinZuAlt(meta.app_min)) F(`art = ${meta.art}: app_min muss 0.2.0 oder höher sein (ältere Apps kennen Module und Skins nicht)`);
   if (meta.art === "modul" && meta.pruefstatus !== "redaktion") F("art = modul: pruefstatus muss redaktion sein (SICHERHEIT.md, Module, Bedingung 2)");
 
   // --- LIESMICH ---

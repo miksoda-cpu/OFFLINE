@@ -319,7 +319,7 @@ async function rohBauen(dateien, meta, schl) {
   await writeFile(path.join(ordner, "paket.sig"), JSON.stringify(signiere(bytes, schl)));
   return ordner;
 }
-const MODUL = { art: "modul", pruefstatus: "redaktion", datenversion: 1 };
+const MODUL = { art: "modul", pruefstatus: "redaktion", datenversion: 1, app_min: "0.2.0" };
 const OBERFLAECHE = { "modul/index.html": "<script>offline.version</script>" };
 
 test("Module: Wichteln mit dem Redaktionsschlüssel gebaut ist gültig", async () => {
@@ -330,6 +330,13 @@ test("Module: Wichteln mit dem Redaktionsschlüssel gebaut ist gültig", async (
   const r = await paketPruefen(ordner, mitRedaktion);
   assert.ok(r.ok, r.fehler.join("; "));
   assert.equal(r.schluessel, redaktion.id);
+});
+
+test("Module und Skins brauchen app_min 0.2.0 (ältere Apps kennen die Art nicht)", async () => {
+  const o = await rohBauen(OBERFLAECHE, { ...MODUL, app_min: "0.1.8" }, redaktionPrivat);
+  assert.ok((await paketPruefen(o, mitRedaktion)).fehler.some((f) => /app_min 0.2.0/.test(f)));
+  const ok = await rohBauen(OBERFLAECHE, MODUL, redaktionPrivat);
+  assert.ok(!(await paketPruefen(ok, mitRedaktion)).fehler.some((f) => /app_min/.test(f)));
 });
 
 test("Module: mit dem Katalogschlüssel signiert → abgelehnt", async () => {
@@ -453,7 +460,7 @@ test("Katalog: Module tragen ihre Slideshow mit Prüfsummen der Bilder", async (
 
 import { cssFehler } from "./kern.mjs";
 
-const SKIN_META = { art: "skin", kategorie: "aussehen", ki_generiert: false };
+const SKIN_META = { art: "skin", kategorie: "aussehen", ki_generiert: false, app_min: "0.2.0" };
 const SKIN_GUT = { "skin/skin.css": ".of-app{--of-moos:#3f6b34} @font-face{font-family:A;src:url(\"fonts/a.woff2\")} .of-leer{background:url('flechten/dorf.webp')}", "skin/fonts/a.woff2": "x", "skin/flechten/dorf.webp": "x" };
 
 test("Skins: sauber gebaut und mit Paket- oder Redaktionsschlüssel signiert ist gültig", async () => {

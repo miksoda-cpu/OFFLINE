@@ -127,6 +127,7 @@ export function manifestPruefenStruktur(m) {
     }
     if (summe > SKIN_GRENZE) f.push(`Skin zu groß (${summe} Bytes, höchstens ${SKIN_GRENZE})`);
   }
+  if ((m.art === "modul" || m.art === "skin") && versionVergleich(m.app_min || "0", "0.2.0") < 0) f.push(`${m.art === "modul" ? "Module" : "Skins"} brauchen app_min 0.2.0 oder höher (ältere Apps kennen die Art nicht)`);
   if (m.art === "modul") {
     if (m.pruefstatus !== "redaktion") f.push("Module nur mit pruefstatus redaktion");
     if (!Number.isInteger(m.datenversion) || m.datenversion < 1) f.push("Module brauchen datenversion (ganze Zahl ab 1)");

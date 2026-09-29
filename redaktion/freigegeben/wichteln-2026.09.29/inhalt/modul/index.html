@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="de-AT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wichteln</title>
+<style>
+:root{
+  --bg:#f6f4ef; --flaeche:#ffffff; --flaeche-2:#efece4; --text:#1c1b19; --leise:#5f5b53; --linie:#dcd7cb;
+  --akzent:#c8102e; --akzent-ink:#ffffff; --akzent-weich:#fbe6e9; --gut:#1f7a4d; --gut-weich:#e1f2e8; --moos:#5a7a3a;
+  --r:14px; --schatten:0 1px 2px rgb(0 0 0/.05),0 4px 16px rgb(0 0 0/.04);
+  --kopf:var(--of-schrift-titel,"Alegreya",Georgia,"Times New Roman",serif);
+  --schrift:var(--of-schrift,"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --bg:#0e0f11; --flaeche:#17181b; --flaeche-2:#212326; --text:#ecebe7; --leise:#a3a09a; --linie:#34373c;
+  --akzent:#ff4d63; --akzent-ink:#1a0005; --akzent-weich:#3a1419; --gut:#5fd39a; --gut-weich:#13301f; --moos:#8faa7a;}}
+:root[data-theme="dark"]{color-scheme:dark;
+  --bg:#0e0f11; --flaeche:#17181b; --flaeche-2:#212326; --text:#ecebe7; --leise:#a3a09a; --linie:#34373c;
+  --akzent:#ff4d63; --akzent-ink:#1a0005; --akzent-weich:#3a1419; --gut:#5fd39a; --gut-weich:#13301f; --moos:#8faa7a;}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--schrift);font-size:17px;line-height:1.5}
+.rahmen{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:20px 60px;display:grid;gap:16px}
+h1,h2{font-family:var(--kopf);margin:0;line-height:1.15;text-wrap:balance}
+h1{font-size:2rem} h2{font-size:1.35rem}
+p{margin:0}
+.leise{color:var(--leise);font-size:.92rem}
+.oben{font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--leise);font-weight:600}
+.karte{background:var(--flaeche);border:1px solid var(--linie);border-radius:var(--r);box-shadow:var(--schatten);padding:16px;display:grid;gap:12px}
+label{font-size:.88rem;color:var(--leise);display:block;margin-bottom:4px}
+input,select{font:inherit;width:100%;min-height:44px;padding:8px 12px;border:1px solid var(--linie);border-radius:10px;background:var(--flaeche);color:var(--text)}
+.zeile{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.knopf{font:inherit;min-height:48px;padding:10px 16px;border-radius:12px;border:1px solid var(--linie);background:var(--flaeche-2);color:var(--text);cursor:pointer;font-weight:600}
+.knopf.haupt{background:var(--akzent);border-color:var(--akzent);color:var(--akzent-ink)}
+.knopf.leise{background:transparent;font-weight:500}
+.knopf:disabled{opacity:.45;cursor:not-allowed}
+.knopf:focus-visible,input:focus-visible,select:focus-visible,.name:focus-visible{outline:3px solid var(--akzent);outline-offset:2px}
+.reihe{display:flex;gap:8px;flex-wrap:wrap}
+.reihe>.knopf{flex:1 1 auto}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 6px 6px 12px;border-radius:999px;background:var(--flaeche-2);border:1px solid var(--linie);font-size:.95rem}
+.chip button{border:0;background:transparent;color:var(--leise);font-size:1.1rem;min-width:32px;min-height:32px;cursor:pointer;border-radius:999px}
+.namen{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.name{font:inherit;min-height:64px;border-radius:14px;border:1px solid var(--linie);background:var(--flaeche);color:var(--text);cursor:pointer;font-weight:600;font-size:1.05rem;display:grid;place-items:center;gap:2px;padding:8px}
+.name small{font-weight:400;color:var(--gut);font-size:.8rem}
+.halten{position:relative;overflow:hidden;min-height:72px;font-size:1.1rem}
+.halten .balken{position:absolute;left:0;bottom:0;height:6px;width:0;background:var(--akzent-ink);opacity:.7}
+.geheim{text-align:center;padding:28px 16px;border-radius:var(--r);background:var(--akzent-weich);display:grid;gap:8px}
+.geheim .ziel{font-family:var(--kopf);font-size:2.4rem;font-weight:700;color:var(--akzent)}
+.hinweis{padding:12px 14px;border-radius:12px;background:var(--flaeche-2);font-size:.92rem}
+.hinweis.gut{background:var(--gut-weich);color:var(--gut)}
+.hinweis.warn{background:var(--akzent-weich);color:var(--akzent)}
+.liste{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.liste li{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:10px;background:var(--flaeche-2)}
+.runde{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;border-radius:12px;background:var(--flaeche-2);cursor:pointer;border:1px solid transparent;font:inherit;color:inherit;text-align:left;width:100%;min-height:56px}
+.runde:hover{border-color:var(--linie)}
+.umschalter{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--linie);border-radius:12px;overflow:hidden}
+.umschalter button{font:inherit;min-height:48px;border:0;background:var(--flaeche);color:var(--text);cursor:pointer}
+.umschalter button[aria-pressed="true"]{background:var(--text);color:var(--bg);font-weight:600}
+.druck{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.zettel{border:2px dashed var(--linie);border-radius:10px;padding:12px;background:#fff;color:#1c1b19;display:grid;gap:6px;font-size:.9rem}
+.zettel .falz{border-top:1px dashed #999;margin:6px 0;font-size:.7rem;color:#777;text-align:center}
+.zettel b{font-size:1.2rem}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main class="rahmen" id="app" aria-live="polite"></main>
+
+<script>
+// ---- Ersatz für window.offline, nur für die Entwicklung im Browser (Pflichtenheft 5.3) ----
+if (!window.offline) {
+  const mem = {};
+  window.offline = {
+    version: "vorschau",
+    speicher: {
+      lesen: async (k) => { try { const v = localStorage.getItem("wichteln:" + k); return v ? JSON.parse(v) : (mem[k] ?? null); } catch { return mem[k] ?? null; } },
+      schreiben: async (k, v) => { mem[k] = v; try { localStorage.setItem("wichteln:" + k, JSON.stringify(v)); } catch {} },
+    },
+    vorlesen: (t) => { try { speechSynthesis.speak(Object.assign(new SpeechSynthesisUtterance(t), { lang: "de-AT" })); } catch {} },
+    drucken: (html) => { const d = document.getElementById("druckvorschau"); if (d) { d.innerHTML = html; d.hidden = false; d.scrollIntoView({ behavior: "smooth" }); } },
+    wesen: { sagen: (t) => { const w = document.getElementById("wesen"); if (w) { w.textContent = "Das Wesen: „" + t + "“"; w.hidden = false; } } },
+    alter: () => null,
+  };
+}
+
+// ---- Daten ----
+const IDEEN = {
+  engerl: [
+    "Leg einen Zettel mit einem Kompliment in die Jackentasche.",
+    "Mach einen Tee und stell ihn hin, ohne etwas zu sagen.",
+    "Zeichne etwas und leg es aufs Kopfkissen.",
+    "Räum eine Sache weg, die sonst er oder sie wegräumt.",
+    "Leg ein Stück Schokolade an einen Ort, wo sie es heute findet.",
+    "Schreib drei Dinge auf, die du an ihm oder ihr magst.",
+    "Borg ein Buch aus, von dem du glaubst, dass es gefällt, und leg es hin.",
+  ],
+  bengerl: [
+    "Dreh ein Bild an der Wand ein bisschen schief. Nur ein bisschen.",
+    "Versteck einen Hausschuh. Den linken.",
+    "Leg einen Zettel mit einem Rätsel hin, das nur er oder sie lösen kann. Die Lösung: „Dein Engerl“.",
+    "Leg alle Löffel in der Lade verkehrt herum.",
+    "Klebe einen Zettel „Engerl war hier“ an die Kaffeemaschine.",
+    "Tausch die Zahnbürste mit dem Glas daneben. Den Platz, nicht die Bürste.",
+    "Stell ein Stofftier an einen Ort, wo es zuschaut.",
+  ],
+};
+let runden = [];
+let ansicht = { name: "start" };
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const heute = () => new Date().toISOString().slice(0, 10);
+const datumSchoen = (d) => d ? new Date(d + "T12:00:00").toLocaleDateString("de-AT", { day: "numeric", month: "long", year: "numeric" }) : "";
+const zufall = (n) => { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; };
+async function speichern() { await offline.speicher.schreiben("runden", runden); }
+
+// ---- Auslosen: jeder zieht genau einen, niemand sich selbst, Ausschlüsse beidseitig ----
+function auslosen(namen, ausschluesse, vorher) {
+  const verboten = new Set();
+  for (const [a, b] of ausschluesse) { verboten.add(a + "→" + b); verboten.add(b + "→" + a); }
+  if (vorher) for (const [a, b] of Object.entries(vorher)) verboten.add(a + "→" + b);
+  for (let versuch = 0; versuch < 20000; versuch++) {
+    const z = [...namen];
+    for (let i = z.length - 1; i > 0; i--) { const j = zufall(i + 1); [z[i], z[j]] = [z[j], z[i]]; }
+    let ok = true;
+    for (let i = 0; i < namen.length && ok; i++) if (namen[i] === z[i] || verboten.has(namen[i] + "→" + z[i])) ok = false;
+    if (ok) return Object.fromEntries(namen.map((n, i) => [n, z[i]]));
+  }
+  return null;
+}
+
+// ---- Ansichten ----
+function zeigen(a) { ansicht = a; malen(); window.scrollTo({ top: 0 }); }
+
+function malen() {
+  const app = $("#app");
+  const v = ansicht.name;
+  if (v === "start") app.innerHTML = startHtml();
+  if (v === "neu") app.innerHTML = neuHtml();
+  if (v === "runde") app.innerHTML = rundeHtml();
+  if (v === "ziehen") app.innerHTML = ziehenHtml();
+  if (v === "aufloesen") app.innerHTML = aufloesenHtml();
+  binden();
+}
+
+function startHtml() {
+  const liste = runden.length
+    ? `<div class="karte"><h2>Eure Runden</h2>${runden.map((r, i) => `<button class="runde" data-runde="${i}"><span><b>${esc(r.anlass)}</b><br><span class="leise">${r.art === "engerl" ? "Engerl-Bengerl" : "Wichteln"} · ${r.namen.length} Personen · ${datumSchoen(r.datum)}</span></span><span aria-hidden="true">›</span></button>`).join("")}</div>`
+    : `<div class="hinweis">Noch keine Runde. Leg die erste an; das dauert zwei Minuten.</div>`;
+  return `<header><div class="oben">OFFLINE · Miteinander</div><h1>Wichteln</h1><p class="leise">Auslosen ohne Zettel und ohne Internet. Niemand sieht die ganze Liste, auch nicht, wer die Runde anlegt.</p></header>
+  ${liste}
+  <button class="knopf haupt" id="neu">Neue Runde anlegen</button>
+  <p class="leise">Alles bleibt auf diesem Gerät.</p>`;
+}
+
+let entwurf = null;
+function neuEntwurf() {
+  const letzte = runden[runden.length - 1];
+  entwurf = { anlass: "Weihnachten " + new Date().getFullYear(), art: "wichteln", datum: new Date().getFullYear() + "-12-24",
+    von: 10, bis: 20, namen: letzte ? [...letzte.namen] : ["Anna", "Ben", "Clara", "David"], ausschluesse: letzte ? letzte.ausschluesse.map((x) => [...x]) : [["Anna", "Ben"]], nichtWieLetztes: !!letzte };
+}
+
+function neuHtml() {
+  const e = entwurf, letzte = runden[runden.length - 1];
+  const opt = (sel) => e.namen.map((n) => `<option ${n === sel ? "selected" : ""}>${esc(n)}</option>`).join("");
+  return `<header><div class="oben">Neue Runde</div><h1>${e.art === "engerl" ? "Engerl-Bengerl" : "Wichteln"}</h1></header>
+  <div class="karte">
+    <div class="umschalter" role="group" aria-label="Art">
+      <button data-art="wichteln" aria-pressed="${e.art === "wichteln"}">Wichteln</button>
+      <button data-art="engerl" aria-pressed="${e.art === "engerl"}">Engerl-Bengerl</button>
+    </div>
+    <p class="leise">${e.art === "engerl" ? "Eine Woche lang kleine Aufmerksamkeiten und harmlose Streiche. Am Ende wird aufgelöst, und es gibt ein kleines Geschenk." : "Jeder beschenkt genau eine Person. Wer wen, weiß nur der, der schenkt."}</p>
+    <div><label for="anlass">Anlass</label><input id="anlass" value="${esc(e.anlass)}" maxlength="40"></div>
+    <div class="zeile">
+      <div><label for="datum">${e.art === "engerl" ? "Auflösung am" : "Übergabe am"}</label><input id="datum" type="date" value="${e.datum}"></div>
+      <div><label>Preisrahmen in €</label><div class="zeile"><input id="von" type="number" min="0" step="1" value="${e.von}" aria-label="von"><input id="bis" type="number" min="0" step="1" value="${e.bis}" aria-label="bis"></div></div>
+    </div>
+  </div>
+  <div class="karte">
+    <h2>Wer ist dabei</h2>
+    <div class="chips">${e.namen.map((n, i) => `<span class="chip">${esc(n)}<button data-weg="${i}" aria-label="${esc(n)} entfernen">×</button></span>`).join("")}</div>
+    <div class="reihe"><input id="neuername" placeholder="Name" maxlength="24" style="flex:1 1 160px"><button class="knopf" id="dazu">Dazu</button></div>
+    <p class="leise">Mindestens drei. Vornamen reichen.</p>
+  </div>
+  <div class="karte">
+    <h2>Wer zieht sich nicht</h2>
+    <p class="leise">Zum Beispiel Paare oder Geschwister. Gilt in beide Richtungen.</p>
+    <ul class="liste">${e.ausschluesse.map(([a, b], i) => `<li><span>${esc(a)} und ${esc(b)}</span><button class="knopf leise" data-ausweg="${i}" style="min-height:36px;padding:4px 10px">entfernen</button></li>`).join("") || `<li class="leise">keine</li>`}</ul>
+    <div class="zeile"><select id="a1" aria-label="erste Person">${opt(e.namen[0])}</select><select id="a2" aria-label="zweite Person">${opt(e.namen[1])}</select></div>
+    <button class="knopf" id="ausdazu">Ausschluss hinzufügen</button>
+    ${letzte ? `<label style="display:flex;gap:10px;align-items:center;color:var(--text)"><input type="checkbox" id="nwl" style="width:auto;min-height:0" ${e.nichtWieLetztes ? "checked" : ""}> Niemand zieht dieselbe Person wie bei „${esc(letzte.anlass)}“</label>` : ""}
+  </div>
+  <div class="hinweis warn" id="fehler" hidden></div>
+  <div class="reihe"><button class="knopf leise" id="zurueck">Abbrechen</button><button class="knopf haupt" id="los" ${e.namen.length < 3 ? "disabled" : ""}>Auslosen</button></div>`;
+}
+
+function aktuelle() { return runden[ansicht.i]; }
+
+function rundeHtml() {
+  const r = aktuelle(), gesehen = r.gesehen || {};
+  const offen = r.namen.filter((n) => !gesehen[n]).length;
+  let idee = "";
+  if (r.art === "engerl") {
+    const start = new Date(r.datum + "T12:00:00"); start.setDate(start.getDate() - 6);
+    const tag = Math.floor((Date.now() - start) / 864e5);
+    if (tag >= 0 && tag <= 6) idee = `<div class="karte"><div class="oben">Idee für heute, Tag ${tag + 1} von 7</div><p><b>Engerl:</b> ${esc(IDEEN.engerl[tag % 7])}</p><p><b>Bengerl:</b> ${esc(IDEEN.bengerl[tag % 7])}</p><p class="leise">Streiche sind harmlos und machen am Ende beiden Spaß. Sonst sind sie keine.</p></div>`;
+    else if (tag < 0) idee = `<div class="hinweis">Die Engerl-Bengerl-Woche beginnt am ${datumSchoen(start.toISOString().slice(0, 10))}. Dann gibt es hier jeden Tag eine Idee.</div>`;
+  }
+  return `<header><div class="oben">${r.art === "engerl" ? "Engerl-Bengerl" : "Wichteln"} · ${datumSchoen(r.datum)}</div><h1>${esc(r.anlass)}</h1>
+  <p class="leise">Preisrahmen ${r.von}–${r.bis} €. ${offen ? `${offen} von ${r.namen.length} haben ihren Namen noch nicht gesehen.` : "Alle haben ihren Namen gesehen."}</p></header>
+  <div class="karte"><h2>Handy reihum</h2><p class="leise">Gib das Handy weiter. Jeder tippt auf den eigenen Namen, die anderen schauen weg.</p>
+    <div class="namen">${r.namen.map((n) => `<button class="name" data-wer="${esc(n)}">${esc(n)}${gesehen[n] ? "<small>✓ gesehen</small>" : ""}</button>`).join("")}</div>
+  </div>
+  ${idee}
+  <div class="karte"><h2>Oder Zettel</h2><p class="leise">Für alle ohne Handy: je Person ein Zettel zum Falten. Außen der Name, innen, wen man zieht.</p><button class="knopf" id="drucken">Zettel drucken</button></div>
+  <div id="druckvorschau" class="karte" hidden></div>
+  <div class="hinweis" id="wesen" hidden></div>
+  <div class="reihe"><button class="knopf leise" id="zurueck">Alle Runden</button><button class="knopf" id="aufloesen">Auflösen</button></div>
+  <p class="leise">Wer in den Daten des Geräts sucht, findet die Liste. Das ist ein Familienspiel, kein Tresor.</p>`;
+}
+
+function ziehenHtml() {
+  const r = aktuelle(), n = ansicht.wer;
+  if (!ansicht.offen) return `<header><div class="oben">${esc(r.anlass)}</div><h1>Bist du ${esc(n)}?</h1><p class="leise">Dann halte den Knopf gedrückt, bis der Balken voll ist. Alle anderen schauen jetzt weg.</p></header>
+    <button class="knopf haupt halten" id="halten" aria-label="Gedrückt halten, um deinen Namen zu sehen">Gedrückt halten<span class="balken" id="balken"></span></button>
+    <button class="knopf leise" id="zurueckrunde">Das bin ich nicht</button>`;
+  const ziel = r.zuteilung[n];
+  return `<div class="geheim" role="status"><div class="oben">${esc(n)}, du beschenkst</div><div class="ziel">${esc(ziel)}</div>
+    <p>${r.art === "engerl" ? `Eine Woche lang bist du ${esc(ziel)}s Engerl und ab und zu Bengerl. Auflösung am ${datumSchoen(r.datum)}.` : `Übergabe am ${datumSchoen(r.datum)}.`}</p>
+    <p class="leise">Rahmen ${r.von}–${r.bis} €</p></div>
+    <button class="knopf haupt" id="gemerkt">Gemerkt. Verstecken und weitergeben</button>`;
+}
+
+function aufloesenHtml() {
+  const r = aktuelle();
+  if (!ansicht.sicher) return `<header><div class="oben">${esc(r.anlass)}</div><h1>Wirklich auflösen?</h1><p class="leise">Dann sehen alle, wer wen gezogen hat. Das macht man am Ende, wenn die Geschenke übergeben sind.</p></header>
+    <div class="reihe"><button class="knopf leise" id="zurueckrunde">Noch nicht</button><button class="knopf haupt" id="jaaufloesen">Ja, auflösen</button></div>`;
+  return `<header><div class="oben">${esc(r.anlass)}</div><h1>Auflösung</h1></header>
+    <div class="karte"><ul class="liste">${Object.entries(r.zuteilung).map(([a, b]) => `<li><span>${esc(a)}</span><span>→ ${esc(b)}</span></li>`).join("")}</ul></div>
+    <div class="reihe"><button class="knopf leise" id="zurueck">Alle Runden</button><button class="knopf" id="loeschen">Runde löschen</button></div>`;
+}
+
+// ---- Ereignisse ----
+function binden() {
+  const on = (sel, ev, fn) => document.querySelectorAll(sel).forEach((el) => el.addEventListener(ev, fn));
+  on("#neu", "click", () => { neuEntwurf(); zeigen({ name: "neu" }); });
+  on("[data-runde]", "click", (e) => zeigen({ name: "runde", i: +e.currentTarget.dataset.runde }));
+  on("#zurueck", "click", () => zeigen({ name: "start" }));
+  on("#zurueckrunde", "click", () => zeigen({ name: "runde", i: ansicht.i }));
+
+  if (ansicht.name === "neu") {
+    const felder = () => { entwurf.anlass = $("#anlass").value.trim() || "Wichteln"; entwurf.datum = $("#datum").value || heute();
+      entwurf.von = Math.max(0, +$("#von").value || 0); entwurf.bis = Math.max(entwurf.von, +$("#bis").value || 0); if ($("#nwl")) entwurf.nichtWieLetztes = $("#nwl").checked; };
+    on("[data-art]", "click", (e) => { felder(); entwurf.art = e.currentTarget.dataset.art; malen(); });
+    on("[data-weg]", "click", (e) => { felder(); const n = entwurf.namen.splice(+e.currentTarget.dataset.weg, 1)[0]; entwurf.ausschluesse = entwurf.ausschluesse.filter((p) => !p.includes(n)); malen(); });
+    const dazu = () => { felder(); const n = $("#neuername").value.trim(); if (n && !entwurf.namen.includes(n)) entwurf.namen.push(n); malen(); $("#neuername").focus(); };
+    on("#dazu", "click", dazu);
+    on("#neuername", "keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); dazu(); } });
+    on("[data-ausweg]", "click", (e) => { felder(); entwurf.ausschluesse.splice(+e.currentTarget.dataset.ausweg, 1); malen(); });
+    on("#ausdazu", "click", () => { felder(); const a = $("#a1").value, b = $("#a2").value;
+      if (a !== b && !entwurf.ausschluesse.some(([x, y]) => (x === a && y === b) || (x === b && y === a))) entwurf.ausschluesse.push([a, b]); malen(); });
+    on("#los", "click", async () => {
+      felder();
+      const letzte = runden[runden.length - 1];
+      const z = auslosen(entwurf.namen, entwurf.ausschluesse, entwurf.nichtWieLetztes && letzte ? letzte.zuteilung : null);
+      if (!z) { const f = $("#fehler"); f.hidden = false; f.textContent = "Mit diesen Ausschlüssen geht es nicht auf. Nimm einen Ausschluss weg oder hol noch jemanden dazu."; return; }
+      runden.push({ ...entwurf, zuteilung: z, gesehen: {}, angelegt: new Date().toISOString() });
+      await speichern();
+      zeigen({ name: "runde", i: runden.length - 1 });
+      offline.wesen.sagen(entwurf.art === "engerl" ? "Engerl und Bengerl. Bei uns unten gibt es nur Engerl. Die Bengerl habt ihr erfunden. Gute Erfindung." : "Ausgelost. Ich weiß auch nicht, wer wen hat. Ich habe weggeschaut.");
+    });
+  }
+
+  if (ansicht.name === "runde") {
+    on("[data-wer]", "click", (e) => zeigen({ name: "ziehen", i: ansicht.i, wer: e.currentTarget.dataset.wer, offen: false }));
+    on("#aufloesen", "click", () => zeigen({ name: "aufloesen", i: ansicht.i, sicher: false }));
+    on("#drucken", "click", () => {
+      const r = aktuelle();
+      offline.drucken(`<h2>Zettel zum Ausschneiden</h2><p class="leise">Entlang der Linie falten, sodass innen verdeckt ist.</p><div class="druck">${r.namen.map((n) =>
+        `<div class="zettel"><span>Für</span><b>${esc(n)}</b><span>${esc(r.anlass)}</span><div class="falz">hier falten</div><span>Du beschenkst</span><b>${esc(r.zuteilung[n])}</b><span>${r.von}–${r.bis} € · ${datumSchoen(r.datum)}</span></div>`).join("")}</div>`);
+    });
+  }
+
+  if (ansicht.name === "ziehen" && !ansicht.offen) {
+    const k = $("#halten"), b = $("#balken"); let t = null, start = 0;
+    const los = (e) => { e.preventDefault(); start = performance.now();
+      const schritt = () => { const p = Math.min(1, (performance.now() - start) / 900); b.style.width = p * 100 + "%"; if (p >= 1) { ansicht.offen = true; malen(); } else t = requestAnimationFrame(schritt); };
+      t = requestAnimationFrame(schritt); };
+    const stopp = () => { cancelAnimationFrame(t); if (!ansicht.offen) b.style.width = "0"; };
+    k.addEventListener("pointerdown", los); k.addEventListener("pointerup", stopp); k.addEventListener("pointerleave", stopp); k.addEventListener("pointercancel", stopp);
+    k.addEventListener("keydown", (e) => { if ((e.key === " " || e.key === "Enter") && !e.repeat) los(e); });
+    k.addEventListener("keyup", stopp);
+  }
+  if (ansicht.name === "ziehen" && ansicht.offen) {
+    on("#gemerkt", "click", async () => { const r = aktuelle(); r.gesehen = r.gesehen || {}; r.gesehen[ansicht.wer] = true; await speichern(); zeigen({ name: "runde", i: ansicht.i }); });
+  }
+  if (ansicht.name === "aufloesen") {
+    on("#jaaufloesen", "click", () => { ansicht.sicher = true; malen(); });
+    on("#loeschen", "click", async () => { runden.splice(ansicht.i, 1); await speichern(); zeigen({ name: "start" }); });
+  }
+}
+
+(async () => { runden = (await offline.speicher.lesen("runden")) || []; malen(); })();
+</script>
+</body>
+</html>
