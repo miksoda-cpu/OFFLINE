@@ -1149,7 +1149,7 @@ menu.addEventListener("click", () => blattSetzen(!sidebar.classList.contains("op
 tabMehr.addEventListener("click", () => blattSetzen(!sidebar.classList.contains("open")));
 sheetHinter.addEventListener("click", () => blattSetzen(false));
 
-const APP_VERSION = "0.1.7";
+const APP_VERSION = "0.1.8";
 function netz() {
   const on = navigator.onLine;
   document.getElementById("net-dot").className = "dot " + (on ? "on" : "off");

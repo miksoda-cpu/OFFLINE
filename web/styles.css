@@ -248,7 +248,7 @@ textarea { border-radius: var(--radius-sm) !important; }
 
 /* Bühne oben: Wesen + Bereit */
 .buehne-kopf { display: grid; grid-template-columns: auto 1fr; gap: 1.25rem; align-items: center; padding: 1.25rem; border-radius: 26px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
-.buehne-kopf .wesen-buehne { border-radius: 20px; }
+.buehne-kopf .wesen-buehne { border-radius: 20px; box-shadow: 0 0 0 6px var(--surface-2), 0 8px 24px rgb(0 0 0 / .18); }
 .bereit-kopf { min-width: 0; }
 .bereit-kopf .bereit-zahl { font-size: 3.6rem; }
 .bereit-kopf .progress { height: 10px; }

@@ -86,7 +86,7 @@ export class Wesen {
   }
 
   // ---------- Tipps ----------
-  kontext() { return { ansicht: this.ansichtName, score: this.score, verfallen: this.verfallen.length > 0, monat: new Date().getMonth() + 1, einstellung: { digital: !!this.e.sorten.digital } }; }
+  kontext() { return { ansicht: this.ansichtName, score: this.score, verfallen: this.verfallen.length > 0, monat: new Date().getMonth() + 1, einstellung: { digital: !!this.e.sorten.digital }, benannt: this.e.name.trim() !== STANDARD.name }; }
   passt(t, k) {
     const b = t.bedingung; if (!b) return true;
     if (b.ansicht && b.ansicht !== k.ansicht) return false;
@@ -95,6 +95,7 @@ export class Wesen {
     if (b.score_unter != null && !(k.score < b.score_unter)) return false;
     if (b.score_ab != null && !(k.score >= b.score_ab)) return false;
     if (b.verfallen && !k.verfallen) return false;
+    if (b.benannt && !k.benannt) return false;
     return true;
   }
   waehleTipp(nurAnsicht = null) {
@@ -176,7 +177,7 @@ export class Wesen {
     const g = { klein: 144, mittel: 240, gross: 336 }[this.e.groesse] || 240;
     if (!this.mitFigur()) return "";
     return `<div class="wesen" style="--wb:${g}px"><div class="wesen-buehne"><canvas id="wesen-pixel" width="${B}" height="${H}" role="img" aria-label="${esc(this.e.name)}: ${esc(ZUSTAND_TEXT[this.zustand])}" tabindex="0"></canvas><canvas id="wesen-glut" width="${B}" height="${H}"></canvas></div>
-      <div class="wesen-blase" id="wesen-blase" role="status" aria-live="polite" hidden></div>
+      <div class="wesen-blase-platz"><div class="wesen-blase" id="wesen-blase" role="status" aria-live="polite" hidden></div></div>
       <div class="wesen-text"><strong>${esc(this.e.name)}</strong> <span class="muted" id="wesen-zustand">${esc(ZUSTAND_TEXT[this.zustand])}</span></div></div>`;
   }
   einbauen() {
