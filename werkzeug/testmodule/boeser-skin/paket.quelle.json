@@ -1,0 +1,20 @@
+{
+  "id": "boeser-skin",
+  "titel": "Böser Test-Skin",
+  "beschreibung": "Testfall: CSS, das Dinge aus dem Netz holt oder Code ausführen will. Muss am Prüfprogramm und am Kern scheitern.",
+  "art": "skin",
+  "sprache": "de-AT",
+  "lizenz": "CC0",
+  "herausgeber": "Test",
+  "quellen": [{ "id": "test", "name": "Test", "url": "" }],
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "app_min": "0.2.0",
+  "aenderungen": "Testfall.",
+  "alter_ab": 0,
+  "kategorie": "aussehen",
+  "braucht_netz": false,
+  "abnahme": "keine",
+  "ki_generiert": false
+}

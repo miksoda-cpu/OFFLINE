@@ -9,13 +9,32 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul"];
+const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul", "skin"];
 const PREISE = ["gratis", "pro", "kauf"];
 const PRUEFSTATUS = ["redaktion", "herausgeber", "community"];
 const ALTER = [0, 6, 10, 14, 18];
 const KATEGORIEN = ["ernstfall", "wissen", "jeden-tag", "du-und-die-deinen", "unterwegs", "verbindung", "miteinander", "aussehen"];
 const ROLLEN = ["wofuer", "aussehen", "inhalt", "platz", "herkunft"];
-const TYPEN = [".json", ".md", ".txt", ".html", ".css", ".js", ".svg", ".png", ".webp", ".jpg", ".mp3", ".ogg", ".pdf", ".zim", ".pmtiles", ".gguf"];
+const TYPEN = [".json", ".md", ".txt", ".html", ".css", ".js", ".svg", ".png", ".webp", ".jpg", ".mp3", ".ogg", ".pdf", ".zim", ".pmtiles", ".gguf", ".woff2", ".woff"];
+const SKIN_TYPEN = [".css", ".woff2", ".woff", ".webp", ".png", ".jpg", ".svg", ".md", ".txt", ".json"];
+const SKIN_GRENZE = 20 * 1024 * 1024;
+
+/** Gleiche Regeln wie cssFehler in werkzeug/kern.mjs (hier eigenständig, damit das Kit ohne Repo läuft), aber alle Gründe. */
+function cssFehler(t) {
+  const g = [];
+  if (t.includes("\\")) g.push("Escape-Zeichen (\\) in CSS");
+  if (/@import/i.test(t)) g.push("@import");
+  if (/expression\s*\(/i.test(t)) g.push("expression()");
+  if (/javascript:|vbscript:/i.test(t)) g.push("javascript:");
+  if (/behavior\s*:|-moz-binding/i.test(t)) g.push("behavior/-moz-binding");
+  for (const m of t.matchAll(/url\(\s*(['"]?)(.*?)\1\s*\)/gi)) {
+    const ziel = m[2].trim();
+    if (/^data:(image|font)\/[a-z0-9.+-]+[;,]/i.test(ziel)) continue;
+    if (!ziel || /^[a-z][a-z0-9+.-]*:/i.test(ziel) || ziel.startsWith("/") || ziel.split(/[/?#]/).includes("..")) g.push(`url() außerhalb des Pakets: ${ziel.slice(0, 60)}`);
+  }
+  if (/image-set\(\s*['"]/i.test(t)) g.push("image-set() mit Adresse ohne url()");
+  return g;
+}
 const BILDTYPEN = [".svg", ".webp", ".png", ".jpg"];
 const PFAD_OK = /^[a-z0-9._\-/]+$/;
 const ID_OK = /^[a-z0-9-]{2,40}$/;
@@ -92,6 +111,7 @@ async function pruefen(ordner) {
   }
   if (!txt(meta.abnahme)) F("abnahme fehlt (\"keine\" oder wer abnimmt und Stand)");
   if (meta.art === "modul" && !(Number.isInteger(meta.datenversion) && meta.datenversion >= 1)) F("datenversion fehlt (ganze Zahl ab 1, Pflicht bei art = modul)");
+  if (meta.ki_generiert !== undefined && typeof meta.ki_generiert !== "boolean") F("ki_generiert muss true oder false sein");
   if (meta.art === "modul" && meta.pruefstatus !== "redaktion") F("art = modul: pruefstatus muss redaktion sein (SICHERHEIT.md, Module, Bedingung 2)");
 
   // --- LIESMICH ---
@@ -161,6 +181,25 @@ async function pruefen(ordner) {
     else if ([".html", ".svg"].includes(ext) && /<script\b|\bon[a-z]+\s*=\s*["']|javascript:/i.test(await readFile(path.join(inhalt, d.rel), "utf8"))) {
       F(`inhalt/${d.rel}: Skript in ${ext} außerhalb eines Moduls`);
     }
+  }
+
+  // --- CSS: nur Stil, nichts von außen (PAKET-KIT.md Regel 4.2 und Abschnitt 5a) ---
+  for (const d of liste.filter((d) => path.extname(d.rel).toLowerCase() === ".css" && !(meta.art === "modul" && d.rel.startsWith("modul/")))) {
+    for (const c of cssFehler(await readFile(path.join(inhalt, d.rel), "utf8"))) F(`inhalt/${d.rel}: CSS nicht erlaubt – ${c}`);
+  }
+
+  // --- Skin ---
+  if (meta.art === "skin") {
+    if (!liste.find((d) => d.rel === "skin/skin.css")) F("art = skin: inhalt/skin/skin.css fehlt");
+    for (const d of liste) {
+      if (!d.rel.startsWith("skin/") && !d.rel.startsWith("vorschau/")) F(`art = skin: Datei außerhalb von inhalt/skin/: inhalt/${d.rel}`);
+      else if (d.rel.startsWith("skin/") && !SKIN_TYPEN.includes(path.extname(d.rel).toLowerCase())) F(`art = skin: Dateityp nicht erlaubt: inhalt/${d.rel}`);
+    }
+    if ((summe ?? 0) > SKIN_GRENZE) F(`Skin zu groß: ${kb(summe)} > 20 MB`);
+    if (meta.kategorie !== "aussehen") H("art = skin: kategorie sollte aussehen sein");
+    if (meta.ki_generiert === undefined) F("art = skin: ki_generiert angeben (true, wenn Bilder mit KI erzeugt sind)");
+    R("Skin in hell und dunkel und bei 360 px angesehen; Notfallseiten bleiben im Grundaussehen.");
+    if (meta.ki_generiert) R("KI-Bilder: Herkunft (Modell, Datum, Prompts) liegt im Paket, z. B. inhalt/skin/HERKUNFT.md.");
   }
 
   // --- Quellen-Verweise und Notrufhinweis in den Inhalten ---

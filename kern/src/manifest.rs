@@ -5,13 +5,17 @@ use std::cmp::Ordering;
 
 pub const FORMAT: u32 = 1;
 pub const TEILE_AB: u64 = 256 * 1024 * 1024;
-pub const ARTEN: [&str; 7] = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul"];
+pub const ARTEN: [&str; 8] = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul", "skin"];
 /// Module (SICHERHEIT.md, Abschnitt Module): Oberfläche nur unter `inhalt/modul/`, höchstens 2 MB,
 /// nur mit dem Redaktionsschlüssel (Zweck „module“) signiert und mit `pruefstatus: redaktion`.
 pub const MODUL_ORDNER: &str = "inhalt/modul/";
 pub const MODUL_GRENZE: u64 = 2 * 1024 * 1024;
 const SKRIPT_ENDUNGEN: [&str; 2] = [".js", ".mjs"];
 const SEITEN_ENDUNGEN: [&str; 4] = [".html", ".htm", ".xhtml", ".svg"];
+/// Skins (Aussehen): nur Stil, Schriften, Bilder, Lizenzen, Herkunft – unter `inhalt/skin/`, Einstieg `skin.css`, höchstens 20 MB.
+pub const SKIN_ORDNER: &str = "inhalt/skin/";
+pub const SKIN_GRENZE: u64 = 20 * 1024 * 1024;
+const SKIN_ENDUNGEN: [&str; 10] = [".css", ".woff2", ".woff", ".webp", ".png", ".jpg", ".svg", ".md", ".txt", ".json"];
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Quelle {
@@ -53,6 +57,9 @@ pub struct Manifest {
     pub alter_ab: Option<u32>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub abnahme: Option<String>,
+    /// Bilder oder andere Inhalte sind mit KI erzeugt (Anzeige auf der Katalogkarte).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ki_generiert: Option<bool>,
     /// Nur bei Modulen: Formatversion der gespeicherten Nutzerdaten, ab 1.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub datenversion: Option<u32>,
@@ -166,6 +173,51 @@ pub fn seite_hat_skript(text: &str) -> bool {
     false
 }
 
+/// Muss der Inhalt dieser Datei als CSS geprüft werden? Jede `.css` außerhalb einer Modul-Oberfläche.
+pub fn braucht_css_pruefung(art: &str, pfad: &str) -> bool {
+    endung(pfad) == ".css" && !code_erlaubt(art, pfad)
+}
+
+/// Ist dieses CSS sicher? Wie `cssFehler` in werkzeug/kern.mjs: kein @import, keine url() außerhalb des Pakets,
+/// kein expression(), kein javascript:/behavior:/-moz-binding, keine Escapes. Gibt den Grund zurück.
+pub fn css_fehler(text: &str) -> Option<String> {
+    if text.contains('\\') {
+        return Some("Escape-Zeichen (\\) in CSS".into());
+    }
+    let t = text.to_lowercase();
+    if t.contains("@import") {
+        return Some("@import".into());
+    }
+    let ohne_leer: String = t.chars().filter(|c| !c.is_whitespace()).collect();
+    if ohne_leer.contains("expression(") {
+        return Some("expression()".into());
+    }
+    if t.contains("javascript:") || t.contains("vbscript:") {
+        return Some("javascript:".into());
+    }
+    if ohne_leer.contains("behavior:") || t.contains("-moz-binding") {
+        return Some("behavior/-moz-binding".into());
+    }
+    if ohne_leer.contains("image-set(\"") || ohne_leer.contains("image-set('") {
+        return Some("image-set() mit Adresse ohne url()".into());
+    }
+    let mut rest = text;
+    while let Some(i) = rest.to_lowercase().find("url(") {
+        let nach = &rest[i + 4..];
+        let ende = nach.find(')').unwrap_or(nach.len());
+        let ziel = nach[..ende].trim().trim_matches(|c| c == '"' || c == '\'').trim();
+        let klein = ziel.to_lowercase();
+        let data_ok = klein.starts_with("data:image/") || klein.starts_with("data:font/");
+        let schema = ziel.find(':').map_or(false, |p| p > 0 && ziel[..p].chars().all(|c| c.is_ascii_alphanumeric() || "+.-".contains(c)) && ziel.as_bytes()[0].is_ascii_alphabetic());
+        let raus = ziel.is_empty() || ziel.starts_with('/') || ziel.split(|c| c == '/' || c == '?' || c == '#').any(|t| t == "..");
+        if !data_ok && (schema || raus) {
+            return Some(format!("url() außerhalb des Pakets: {}", ziel.chars().take(60).collect::<String>()));
+        }
+        rest = &nach[ende.min(nach.len())..];
+    }
+    None
+}
+
 /// Strukturprüfung – gleiche Meldungen wie im Node-Werkzeug.
 pub fn manifest_pruefen_struktur(m: &Manifest) -> Vec<String> {
     let mut f = Vec::new();
@@ -226,6 +278,21 @@ pub fn manifest_pruefen_struktur(m: &Manifest) -> Vec<String> {
     if m.groesse != summe {
         f.push(format!("groesse ({}) ist nicht die Summe der Dateien ({summe})", m.groesse));
     }
+    if m.art == "skin" {
+        if !m.dateien.iter().any(|d| d.pfad == format!("{SKIN_ORDNER}skin.css")) {
+            f.push("Skin ohne inhalt/skin/skin.css".into());
+        }
+        for d in &m.dateien {
+            if !d.pfad.starts_with(SKIN_ORDNER) && !d.pfad.starts_with("inhalt/vorschau/") {
+                f.push(format!("Skin: Datei außerhalb von inhalt/skin/: {}", d.pfad));
+            } else if d.pfad.starts_with(SKIN_ORDNER) && !SKIN_ENDUNGEN.contains(&endung(&d.pfad).as_str()) {
+                f.push(format!("Skin: Dateityp nicht erlaubt: {}", d.pfad));
+            }
+        }
+        if summe > SKIN_GRENZE {
+            f.push(format!("Skin zu groß ({summe} Bytes, höchstens {SKIN_GRENZE})"));
+        }
+    }
     if m.art == "modul" {
         if m.pruefstatus.as_deref() != Some("redaktion") {
             f.push("Module nur mit pruefstatus redaktion".into());
@@ -265,6 +332,18 @@ mod tests {
         }
         for nein in ["<p>harmlos</p>", "<svg><text>on the road = gut</text></svg>", "<scripture>", "Konstruktion=1", "<p>on=</p>"] {
             assert!(!seite_hat_skript(nein), "{nein:?}");
+        }
+    }
+
+    #[test]
+    fn css_regeln_wie_im_werkzeug() {
+        assert_eq!(css_fehler("a{b:url(fonts/x.woff2)} c{d:url('flechten/03-dorf.webp')}"), None);
+        assert_eq!(css_fehler("a{b:url(\"data:image/png;base64,AA\")}"), None);
+        for (css, grund) in [("@import url(x.css);", "@import"), ("a{b:url(https://x/y.png)}", "url()"), ("a{b:url(//x/y)}", "url()"), ("a{b:url(/abs)}", "url()"),
+            ("a{b:url(../x)}", "url()"), ("a{b:url(data:text/html,x)}", "url()"), ("a{width:expression (1)}", "expression"), ("a{b:u\\72l(x)}", "Escape"),
+            ("a{behavior: url(x.htc)}", "behavior"), ("a{background:image-set('https://x' 1x)}", "image-set")] {
+            let f = css_fehler(css).unwrap_or_default();
+            assert!(f.contains(grund), "{css}: {f}");
         }
     }
 

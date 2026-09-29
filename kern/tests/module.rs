@@ -208,3 +208,41 @@ fn vorschau_aus_ordner_und_katalog() {
     // und aus dem Ordner schon an der Paketprüfung
     assert!(vorschau::aus_ordner(&ordner, &bekannte, &heute).is_err());
 }
+
+// ---------- Skins (art = "skin"): nur Stil, CSS geprüft, Paket- oder Redaktionsschlüssel ----------
+
+const SKIN_CSS: (&str, &[u8]) = ("skin/skin.css", b".of-app{--of-moos:#3f6b34} @font-face{font-family:A;src:url(\"fonts/a.woff2\")}");
+
+#[test]
+fn skin_mit_paket_oder_redaktionsschluessel_ist_gueltig() {
+    let r = schluessel(1, &["module"]);
+    let k = schluessel(2, &["pakete", "katalog"]);
+    let b = [r.eintrag.clone(), k.eintrag.clone()];
+    for (i, s) in [&r, &k].iter().enumerate() {
+        let o = roh(&format!("skin-gut{i}"), &[SKIN_CSS, ("skin/fonts/a.woff2", b"x"), ("skin/flechten/dorf.webp", b"x")], "skin", None, None, s);
+        assert_eq!(fehler(&o, &b), "ok");
+    }
+    let nur_katalog = schluessel(3, &["katalog"]);
+    let o = roh("skin-katalog", &[SKIN_CSS], "skin", None, None, &nur_katalog);
+    assert!(fehler(&o, &[nur_katalog.eintrag.clone()]).contains("nicht für pakete oder module freigegeben"));
+}
+
+#[test]
+fn skin_mit_verbotenem_css_scheitert_am_kern() {
+    let r = schluessel(1, &["module"]);
+    let b = [r.eintrag.clone()];
+    for (i, css) in ["@import url(https://x/y.css);", ".a{background:url(https://x/y.png)}", ".a{background:url(../../wir/x)}", ".a{width:expression(alert(1))}", ".a{b:u\\72l(x)}"].iter().enumerate() {
+        let o = roh(&format!("skin-boese{i}"), &[("skin/skin.css", css.as_bytes())], "skin", None, None, &r);
+        assert!(fehler(&o, &b).starts_with("CSS nicht erlaubt"), "{css}: {}", fehler(&o, &b));
+    }
+}
+
+#[test]
+fn skin_nur_unter_inhalt_skin_und_ohne_code() {
+    let r = schluessel(1, &["module"]);
+    let b = [r.eintrag.clone()];
+    assert!(fehler(&roh("skin-a", &[("skin/stil.css", b"a{}")], "skin", None, None, &r), &b).contains("ohne inhalt/skin/skin.css"));
+    assert!(fehler(&roh("skin-b", &[SKIN_CSS, ("daten.json", b"{}")], "skin", None, None, &r), &b).contains("außerhalb von inhalt/skin/"));
+    assert!(fehler(&roh("skin-c", &[SKIN_CSS, ("skin/x.js", b"1")], "skin", None, None, &r), &b).contains("Pakete enthalten keinen Code"));
+    assert!(fehler(&roh("skin-d", &[SKIN_CSS, ("skin/icons.svg", b"<svg><script>1</script></svg>")], "skin", None, None, &r), &b).contains("Skript in einer Seite"));
+}

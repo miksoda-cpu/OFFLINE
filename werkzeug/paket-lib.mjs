@@ -7,7 +7,7 @@ import { readFile, writeFile, mkdir, readdir, stat, copyFile } from "node:fs/pro
 import path from "node:path";
 
 import { pruefeQuellordner } from "../paket-kit/pruefen.mjs";
-import { FORMAT, TEILGROESSE_STANDARD, TEILE_AB, ARTEN, ID_MUSTER, pfadGueltig, versionVergleich, manifestPruefenStruktur, delta, schluesselPasstZurArt, brauchtSkriptPruefung, seiteHatSkript } from "./kern.mjs";
+import { FORMAT, TEILGROESSE_STANDARD, TEILE_AB, ARTEN, ID_MUSTER, pfadGueltig, versionVergleich, manifestPruefenStruktur, delta, schluesselPasstZurArt, brauchtSkriptPruefung, seiteHatSkript, brauchtCssPruefung, cssFehler } from "./kern.mjs";
 export { FORMAT, TEILGROESSE_STANDARD, TEILE_AB, ARTEN, pfadGueltig, versionVergleich, manifestPruefenStruktur, delta, schluesselPasstZurArt };
 
 // Zwecke, unter denen ein Paket-Manifest signiert sein darf. Welcher davon zur Art passt, entscheidet schluesselPasstZurArt.
@@ -191,7 +191,7 @@ export async function paketBauen(quelle, zielWurzel, privat, { jetzt = new Date(
 /** Angaben aus dem Paket-Kit, die ins Manifest wandern, soweit sie gesetzt sind (PAKETFORMAT.md 2.1). */
 function angaben(meta) {
   const a = {};
-  for (const k of ["preis", "pruefstatus", "kategorie", "alter_ab", "abnahme"]) if (meta[k] !== undefined) a[k] = meta[k];
+  for (const k of ["preis", "pruefstatus", "kategorie", "alter_ab", "abnahme", "ki_generiert"]) if (meta[k] !== undefined) a[k] = meta[k];
   if (meta.art === "modul" && meta.datenversion !== undefined) a.datenversion = meta.datenversion;
   return a;
 }
@@ -217,6 +217,9 @@ export async function paketPruefen(ordner, bekannte, { jetzt = new Date() } = {}
     if (d.teile && d.teile.some((t, i) => t !== h.teile[i])) fehler.push(`Teil-Prüfsumme falsch: ${d.pfad}`);
     else if (h.sha256 === d.sha256 && brauchtSkriptPruefung(m.art, d.pfad) && seiteHatSkript(await readFile(p, "utf8"))) {
       fehler.push(`Skript in einer Seite außerhalb von inhalt/modul/: ${d.pfad}`);
+    } else if (h.sha256 === d.sha256 && brauchtCssPruefung(m.art, d.pfad)) {
+      const c = cssFehler(await readFile(p, "utf8"));
+      if (c) fehler.push(`CSS nicht erlaubt (${c}): ${d.pfad}`);
     }
   }
   return { ok: fehler.length === 0, fehler, manifest: m, schluessel: s };
@@ -264,7 +267,7 @@ export async function katalogBauen(paketOrdner, { basis, geplant = [], gueltigTa
     const vorschau = await vorschauFuerKatalog(ordner, m);
     pakete.push({
       id: m.id, version: m.version, titel: m.titel, beschreibung: m.beschreibung, art: m.art, pro: m.pro,
-      ...Object.fromEntries(["preis", "pruefstatus", "kategorie", "alter_ab"].filter((k) => m[k] !== undefined).map((k) => [k, m[k]])),
+      ...Object.fromEntries(["preis", "pruefstatus", "kategorie", "alter_ab", "ki_generiert"].filter((k) => m[k] !== undefined).map((k) => [k, m[k]])),
       ...(vorschau ? { vorschau } : {}),
       groesse: m.groesse, app_min: m.app_min, erstellt: m.erstellt, aenderungen: m.aenderungen,
       pfad: `${path.basename(ordner)}/`, sha256_manifest: sha256(bytes), status: "verfuegbar",

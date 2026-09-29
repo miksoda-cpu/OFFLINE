@@ -5,13 +5,39 @@
 export const FORMAT = 1;
 export const TEILGROESSE_STANDARD = 64 * 1024 * 1024; // 64 MB
 export const TEILE_AB = 256 * 1024 * 1024; // ab 256 MB werden Dateien geteilt
-export const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul"];
+export const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul", "skin"];
 // Module (SICHERHEIT.md, Abschnitt Module): Oberfläche nur unter inhalt/modul/, höchstens 2 MB,
 // nur mit dem Redaktionsschlüssel (Zweck „module“) signiert und mit pruefstatus „redaktion“.
 export const MODUL_ORDNER = "inhalt/modul/";
 export const MODUL_GRENZE = 2 * 1024 * 1024;
 export const SKRIPT_ENDUNGEN = [".js", ".mjs"];
 export const SEITEN_ENDUNGEN = [".html", ".htm", ".xhtml", ".svg"];
+// Skins (Aussehen): nur Stil, Schriften, Bilder, Lizenzen, Herkunft – unter inhalt/skin/, Einstieg skin.css, höchstens 20 MB.
+export const SKIN_ORDNER = "inhalt/skin/";
+export const SKIN_GRENZE = 20 * 1024 * 1024;
+export const SKIN_ENDUNGEN = [".css", ".woff2", ".woff", ".webp", ".png", ".jpg", ".svg", ".md", ".txt", ".json"];
+
+/**
+ * Ist dieses CSS sicher? Gibt null oder den Grund zurück. Gilt für jede .css-Datei außerhalb einer Modul-Oberfläche
+ * (dort wirkt die CSP der Sandbox). Kein @import, keine url() außerhalb des Pakets, kein expression(), keine Skripte
+ * über Umwege (javascript:, behavior:, -moz-binding), keine Escapes, mit denen man das Verbotene tarnen könnte.
+ */
+export function cssFehler(text) {
+  const t = String(text);
+  if (t.includes("\\")) return "Escape-Zeichen (\\) in CSS";
+  if (/@import/i.test(t)) return "@import";
+  if (/expression\s*\(/i.test(t)) return "expression()";
+  if (/javascript:|vbscript:/i.test(t)) return "javascript:";
+  if (/behavior\s*:|-moz-binding/i.test(t)) return "behavior/-moz-binding";
+  for (const m of t.matchAll(/url\(\s*(['"]?)(.*?)\1\s*\)/gi)) {
+    const ziel = m[2].trim();
+    if (/^data:(image|font)\/[a-z0-9.+-]+[;,]/i.test(ziel)) continue;
+    if (!ziel || /^[a-z][a-z0-9+.-]*:/i.test(ziel) || ziel.startsWith("/") || ziel.split(/[/?#]/).includes("..")) return `url() außerhalb des Pakets: ${ziel.slice(0, 60)}`;
+  }
+  if (/image-set\(\s*['"]/i.test(t)) return "image-set() mit Adresse ohne url()";
+  return null;
+}
+export const brauchtCssPruefung = (art, pfad) => endung(pfad) === ".css" && !codeErlaubt(art, pfad);
 export const ID_MUSTER = /^[a-z0-9-]{2,40}$/;
 const VERSION_MUSTER = /^\d{4}\.\d{2}\.\d{2}(\.\d+)?$/;
 
@@ -51,6 +77,10 @@ export const brauchtSkriptPruefung = (art, pfad) => SEITEN_ENDUNGEN.includes(end
  */
 export function schluesselPasstZurArt(art, schluessel) {
   const z = schluessel?.zweck ?? [];
+  if (art === "skin") {
+    // Skins enthalten keinen Code; signieren darf der Paketschlüssel oder der Redaktionsschlüssel.
+    return z.includes("pakete") || z.includes("module") ? null : `Schlüssel ${schluessel?.id} nicht für Skins freigegeben`;
+  }
   if (art === "modul") {
     if (!z.includes("module")) return `Module nur mit dem Redaktionsschlüssel (Schlüssel ${schluessel?.id} hat nicht den Zweck module)`;
     if (z.includes("katalog")) return `Module nie mit einem Katalogschlüssel (Schlüssel ${schluessel.id})`;
@@ -89,6 +119,14 @@ export function manifestPruefenStruktur(m) {
     summe += d.groesse || 0;
   }
   if (m.groesse !== summe) f.push(`groesse (${m.groesse}) ist nicht die Summe der Dateien (${summe})`);
+  if (m.art === "skin") {
+    if (!m.dateien.some((d) => d.pfad === SKIN_ORDNER + "skin.css")) f.push("Skin ohne inhalt/skin/skin.css");
+    for (const d of m.dateien) {
+      if (!d.pfad?.startsWith(SKIN_ORDNER) && !d.pfad?.startsWith("inhalt/vorschau/")) f.push(`Skin: Datei außerhalb von inhalt/skin/: ${d.pfad}`);
+      else if (d.pfad.startsWith(SKIN_ORDNER) && !SKIN_ENDUNGEN.includes(endung(d.pfad))) f.push(`Skin: Dateityp nicht erlaubt: ${d.pfad}`);
+    }
+    if (summe > SKIN_GRENZE) f.push(`Skin zu groß (${summe} Bytes, höchstens ${SKIN_GRENZE})`);
+  }
   if (m.art === "modul") {
     if (m.pruefstatus !== "redaktion") f.push("Module nur mit pruefstatus redaktion");
     if (!Number.isInteger(m.datenversion) || m.datenversion < 1) f.push("Module brauchen datenversion (ganze Zahl ab 1)");

@@ -61,6 +61,10 @@ pub fn pruefe_signatur(bytes: &[u8], sig: &Signatur, bekannte: &[OeffentlicherSc
 /// alle anderen Pakete brauchen Zweck „pakete“.
 pub fn schluessel_passt_zur_art(art: &str, s: &OeffentlicherSchluessel) -> Result<(), Fehler> {
     let hat = |z: &str| s.zweck.iter().any(|x| x == z);
+    if art == "skin" {
+        // Skins enthalten keinen Code; signieren darf der Paketschlüssel oder der Redaktionsschlüssel.
+        return if hat("pakete") || hat("module") { Ok(()) } else { Err(Fehler(format!("Schlüssel {} nicht für Skins freigegeben", s.id))) };
+    }
     if art == "modul" {
         if !hat("module") {
             return Err(Fehler(format!("Module nur mit dem Redaktionsschlüssel (Schlüssel {} hat nicht den Zweck module)", s.id)));

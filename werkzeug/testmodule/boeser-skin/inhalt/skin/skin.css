@@ -1,0 +1,4 @@
+/* Testfall: jede Zeile ist verboten */
+@import url("https://example.org/fremd.css");
+.of-app { background: url("https://example.org/spion.png?wer=ich"); }
+.of-karte { width: expression(alert(1)); }

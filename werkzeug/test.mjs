@@ -448,3 +448,46 @@ test("Katalog: Module tragen ihre Slideshow mit Prüfsummen der Bilder", async (
   for (const d of e.vorschau.dateien) assert.equal(d.sha256, manifest.dateien.find((x) => x.pfad === d.pfad).sha256);
   assert.ok(e.vorschau.dateien.reduce((s, d) => s + d.groesse, 0) <= 200 * 1024);
 });
+
+// ---------- Skins (art = "skin") ----------
+
+import { cssFehler } from "./kern.mjs";
+
+const SKIN_META = { art: "skin", kategorie: "aussehen", ki_generiert: false };
+const SKIN_GUT = { "skin/skin.css": ".of-app{--of-moos:#3f6b34} @font-face{font-family:A;src:url(\"fonts/a.woff2\")} .of-leer{background:url('flechten/dorf.webp')}", "skin/fonts/a.woff2": "x", "skin/flechten/dorf.webp": "x" };
+
+test("Skins: sauber gebaut und mit Paket- oder Redaktionsschlüssel signiert ist gültig", async () => {
+  for (const schl of [privat, redaktionPrivat]) {
+    const o = await rohBauen(SKIN_GUT, SKIN_META, schl);
+    const r = await paketPruefen(o, mitRedaktion);
+    assert.ok(r.ok, r.fehler.join("; "));
+  }
+});
+
+test("Skins: verbotenes CSS scheitert am Kern, in jeder Form", async () => {
+  for (const css of ["@import url(https://x/y.css);", ".a{background:url(https://x/y.png)}", ".a{background:url(../../wir/x)}", ".a{width:expression(alert(1))}", ".a{b:u\\72l(x)}", ".a{behavior:url(x.htc)}"]) {
+    const o = await rohBauen({ ...SKIN_GUT, "skin/skin.css": css }, SKIN_META, redaktionPrivat);
+    const r = await paketPruefen(o, mitRedaktion);
+    assert.ok(r.fehler.some((f) => /CSS nicht erlaubt/.test(f)), `${css}: ${r.fehler.join("; ")}`);
+  }
+  // auch in gewöhnlichen Paketen gilt die CSS-Regel
+  const o = await rohBauen({ "a.css": "@import url(x.css);" }, { art: "inhalt" }, privat);
+  assert.ok((await paketPruefen(o, mitRedaktion)).fehler.some((f) => /CSS nicht erlaubt \(@import\)/.test(f)));
+});
+
+test("Skins: nur unter inhalt/skin/, Einstieg skin.css, keine Skripte, nur erlaubte Typen", async () => {
+  const f = async (dateien) => (await paketPruefen(await rohBauen(dateien, SKIN_META, redaktionPrivat), mitRedaktion)).fehler.join("; ");
+  assert.match(await f({ "skin/stil.css": "a{}" }), /ohne inhalt\/skin\/skin.css/);
+  assert.match(await f({ ...SKIN_GUT, "daten.json": "{}" }), /außerhalb von inhalt\/skin\//);
+  assert.match(await f({ ...SKIN_GUT, "skin/x.js": "1" }), /Pakete enthalten keinen Code/);
+  assert.match(await f({ ...SKIN_GUT, "skin/icons.svg": "<svg><script>1</script></svg>" }), /Skript in einer Seite/);
+  assert.match(await f({ ...SKIN_GUT, "skin/x.html": "<p>x</p>" }), /Dateityp nicht erlaubt/);
+});
+
+test("Skins: der Test-Skin mit verbotenem CSS scheitert am Prüfprogramm", async () => {
+  const r = await pruefeQuellordner(path.join(KIT, "..", "werkzeug", "testmodule", "boeser-skin"), { bericht: false });
+  assert.ok(r.fehler.some((f) => /CSS nicht erlaubt – @import/.test(f)), r.fehler.join("\n"));
+  assert.ok(r.fehler.some((f) => /url\(\) außerhalb des Pakets/.test(f)));
+  assert.ok(r.fehler.some((f) => /expression/.test(f)));
+  assert.equal(cssFehler(".of-karte{border-radius:18px 14px 20px 12px}"), null);
+});

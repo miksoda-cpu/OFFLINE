@@ -1,0 +1,7 @@
+{ "folien": [
+  { "nr": 1, "rolle": "wofuer", "bild": "1.svg", "titel": "Wer beschenkt wen?", "text": "Auslosen in Familie und Freundeskreis, ohne Zettel im Hut und ohne Internet. Niemand sieht die ganze Liste.", "alt": "Drei Geschenke in Rot, Grün und Gelb neben der Frage „Wer beschenkt wen?“" },
+  { "nr": 2, "rolle": "aussehen", "bild": "2.webp", "titel": "Handy reihum", "text": "Jeder tippt auf den eigenen Namen, hält gedrückt und sieht nur, wen er beschenkt.", "alt": "Bildschirm der Runde „Weihnachten 2026“ mit vier Namensknöpfen und dem Knopf „Zettel drucken“" },
+  { "nr": 3, "rolle": "inhalt", "bild": "3.svg", "titel": "Was drin ist", "text": "Wichteln und Engerl-Bengerl, Preisrahmen, Datum, Ausschlüsse, Handy reihum oder Zettel zum Drucken.", "alt": "Liste mit sechs Punkten: was das Paket kann" },
+  { "nr": 4, "rolle": "platz", "bild": "4.svg", "titel": "Klein und ohne Netz", "text": "Etwa 50 kB, läuft auf jedem Handy, keine KI. Die Runden bleiben auf dem Gerät.", "alt": "Angaben zu Größe und Geräten" },
+  { "nr": 5, "rolle": "herkunft", "bild": "5.svg", "titel": "Von The Digioneer", "text": "Eigene Entwicklung, von der Redaktion geprüft, gratis, ab 6 Jahren.", "alt": "Angaben zu Herausgeber, Prüfung, Preis und Alter" }
+] }

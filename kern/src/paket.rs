@@ -1,7 +1,7 @@
 //! Paketordner prüfen: Signatur → Struktur → Pfade → Größen und Prüfsummen.
 
 use crate::hash::hash_datei;
-use crate::manifest::{braucht_skript_pruefung, manifest_pruefen_struktur, seite_hat_skript, Manifest};
+use crate::manifest::{braucht_css_pruefung, braucht_skript_pruefung, css_fehler, manifest_pruefen_struktur, seite_hat_skript, Manifest};
 use crate::schluessel::{pruefe_signatur_zwecke, schluessel_passt_zur_art, OeffentlicherSchluessel, Signatur};
 use crate::Fehler;
 use std::path::{Path, PathBuf};
@@ -62,6 +62,11 @@ pub fn paket_pruefen(ordner: &Path, bekannte: &[OeffentlicherSchluessel], heute:
         }
         if braucht_skript_pruefung(&m.art, &d.pfad) && seite_hat_skript(&String::from_utf8_lossy(&std::fs::read(&p)?)) {
             return Err(Fehler(format!("Skript in einer Seite außerhalb von inhalt/modul/: {}", d.pfad)));
+        }
+        if braucht_css_pruefung(&m.art, &d.pfad) {
+            if let Some(grund) = css_fehler(&String::from_utf8_lossy(&std::fs::read(&p)?)) {
+                return Err(Fehler(format!("CSS nicht erlaubt ({grund}): {}", d.pfad)));
+            }
         }
     }
     Ok(Geprueft { manifest: m, manifest_bytes: bytes, schluessel })
