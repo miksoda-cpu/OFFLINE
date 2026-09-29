@@ -1,0 +1,44 @@
+# Tests bei jedem Push: Paketwerkzeug und Paket-Kit (Node), Kern (Rust). Keine Secrets, baut und veröffentlicht nichts.
+name: Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  werkzeug:
+    name: Werkzeug und Paket-Kit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: { node-version: 22 }
+      - run: node --test werkzeug/test.mjs
+      - name: Paket-Kit gegen Beispiel und Vorlage
+        run: |
+          node paket-kit/pruefen.mjs paket-kit/beispiel/wichteln --kein-bericht
+          # Die Vorlage ist absichtlich leer: Sie muss Fehler melden, darf aber nicht abstürzen.
+          set +e; node paket-kit/pruefen.mjs paket-kit/vorlage --kein-bericht > /dev/null; code=$?; set -e
+          [ "$code" = "1" ] || { echo "Vorlage: erwartet Exit 1 (Fehler gemeldet), bekommen $code"; exit 1; }
+
+  kern:
+    name: Kern (Rust)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo test --manifest-path kern/Cargo.toml
+
+  sandbox:
+    name: Modul-Sandbox (Headless-Chrome gegen das bösartige Testmodul)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: { node-version: 22 }
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo build --manifest-path kern/Cargo.toml --bin offline-kern
+      # Google Chrome ist auf den Ubuntu-Runnern vorinstalliert
+      - run: node werkzeug/sandbox-probe.mjs --chrome
+        env: { CHROME: google-chrome }
