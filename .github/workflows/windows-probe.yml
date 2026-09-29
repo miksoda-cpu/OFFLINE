@@ -72,15 +72,15 @@ jobs:
       - name: Update-Test und Module
         shell: bash
         run: |
-          set -uo pipefail
+          set +e -uo pipefail   # einzelne Schritte dürfen scheitern, gezählt wird in $fehler
           mkdir -p probe
           neu=$(ls app/src-tauri/target/debug/bundle/nsis/*-setup.exe | head -1)
           curl -fsSL --ssl-no-revoke -o probe/alt-setup.exe https://offline-pakete.fsn1.your-objectstorage.com/app/0.1.8/OFFLINE_0.1.8_x64-setup.exe
           ziel="$LOCALAPPDATA/OFFLINE"
-          installieren() { taskkill //F //IM offline-app.exe >/dev/null 2>&1; sleep 2; "$1" //S; sleep 5; }
+          installieren() { taskkill //F //IM offline-app.exe >/dev/null 2>&1 || true; sleep 2; "$1" //S; sleep 5; }
           exe() { find "$ziel" -maxdepth 1 -name "*.exe" ! -iname "uninstall*" ! -iname "kiwix*" | head -1; }
           aufraeumen() {
-            taskkill //F //IM offline-app.exe >/dev/null 2>&1; sleep 2
+            taskkill //F //IM offline-app.exe >/dev/null 2>&1 || true; sleep 2
             [ -x "$ziel/uninstall.exe" ] && "$ziel/uninstall.exe" //S; sleep 5
             rm -rf "$ziel" "$LOCALAPPDATA/at.digioneer.offline" "$APPDATA/at.digioneer.offline"
           }
