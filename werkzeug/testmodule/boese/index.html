@@ -104,6 +104,13 @@ async function alles() {
   await versuch("parent.__TAURI__ / invoke", async () => { const t = parent.__TAURI__ || parent.__TAURI_INTERNALS__; return !!t; });
   await versuch("eigenes __TAURI_INTERNALS__", async () => !!(window.__TAURI_INTERNALS__ || window.__TAURI__ || window.__TAURI_IPC__));
   await versuch("WebView2-Kanal (chrome.webview)", async () => !!(window.chrome && window.chrome.webview && window.chrome.webview.postMessage));
+  // Echte Aufrufe über die eingeschleusten Schnittstellen (Windows injiziert Tauri auch in Unterrahmen): gelungen nur,
+  // wenn der Kern tatsächlich antwortet bzw. etwas ausführt.
+  const tauriAufruf = async (cmd, args) => { const t = window.__TAURI_INTERNALS__; if (!t || !t.invoke) throw new Error("nicht vorhanden"); await t.invoke(cmd, args); return true; };
+  await versuch("Tauri-Aufruf app_info", () => tauriAufruf("app_info", {}));
+  await versuch("Tauri-Aufruf tresor_status", () => tauriAufruf("tresor_status", {}));
+  await versuch("Tauri-Aufruf Webseite öffnen", () => tauriAufruf("plugin:opener|open_url", { url: "https://example.org/?d=geheim" }));
+  await versuch("Tauri-Aufruf Ordnerdialog", () => tauriAufruf("plugin:dialog|open", { options: { directory: true } }));
   await versuch("WebKit-Kanal (webkit.messageHandlers)", async () => !!(window.webkit && window.webkit.messageHandlers && Object.keys(window.webkit.messageHandlers).length));
   await versuch("Tresor über ipc://", async () => { await fetch("ipc://localhost/tresor_notizen", { method: "POST", body: "{}" }); return true; }, { direktive: "connect-src" });
   await versuch("Tresor über http://ipc.localhost", async () => { await fetch("http://ipc.localhost/tresor_notizen", { method: "POST", body: "{}" }); return true; }, { direktive: "connect-src" });

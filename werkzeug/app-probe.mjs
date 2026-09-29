@@ -41,7 +41,13 @@ let sid = null;
 const js = (script, ...args) => wd("POST", `/session/${sid}/execute/sync`, { script, args });
 const jsAsync = (script, ...args) => wd("POST", `/session/${sid}/execute/async`, { script, args });
 const finde = async (css) => { try { return (await wd("POST", `/session/${sid}/element`, { using: "css selector", value: css }))[EL]; } catch { return null; } };
-const klick = async (css) => { const e = await bis(() => finde(css), `${css} erscheint`); await wd("POST", `/session/${sid}/element/${e}/click`, {}); return e; };
+// Klick wie ein Mensch; liegt etwas darüber (z. B. die Sprechblase der Lumi), per Skript auf das Element selbst.
+const klick = async (css) => {
+  const e = await bis(() => finde(css), `${css} erscheint`);
+  try { await wd("POST", `/session/${sid}/element/${e}/click`, {}); }
+  catch (f) { if (!/intercepted/.test(f.message)) throw f; await js("arguments[0].click()", { [EL]: e, ELEMENT: e }); }
+  return e;
+};
 const tippe = async (css, text) => { const e = await bis(() => finde(css), `${css} erscheint`); await wd("POST", `/session/${sid}/element/${e}/value`, { text }); };
 const rahmen = async (e) => wd("POST", `/session/${sid}/frame`, { id: e ? { [EL]: e, ELEMENT: e } : null });
 const invoke = (cmd, args) => jsAsync("const f = arguments[arguments.length - 1]; window.__TAURI__.core.invoke(arguments[0], arguments[1]).then((v) => f({ ok: v }), (e) => f({ fehler: String(e) }));", cmd, args);
@@ -148,7 +154,8 @@ async function neu() {
     pruefe("Unbenanntes Wesen ist aus", !buehne, buehne ?? "keine Figur");
     pruefe("Keine Einladung am ersten Tag", !einladung);
     await lsSetzen("test-monate", 0.25); await neuLaden(); await gehe("#start");
-    pruefe("Einladung nach einer Woche", await bis(() => js("return !!document.querySelector('.lumi-einladung')"), "Einladung", 15_000).catch(() => false));
+    // Das Test-Datum gilt erst, wenn die App-Info geladen ist: Seite neu zeichnen, bis die Karte kommt
+    pruefe("Einladung nach einer Woche", await bis(async () => { await gehe("#vorsorge"); await warte(200); await gehe("#start"); await warte(300); return js("return !!document.querySelector('.lumi-einladung')"); }, "Einladung", 20_000).catch(() => false));
     await lsSetzen("test-monate", 0);
   }
 }
@@ -182,7 +189,8 @@ async function module() {
   const fehler = await js("const f = document.getElementById('fehler'); return f && !f.hidden ? f.textContent : null");
   await rahmen(null);
   const runden = (await invoke("modul_speicher_lesen", { id: "wichteln", schluessel: "runden" })).ok;
-  pruefe("Wichteln: spielen", !fehler && Array.isArray(runden) && runden.length === 1 && runden[0].namen?.length === 4, fehler ?? `${runden?.length ?? 0} Runde, ${runden?.[0]?.namen?.length ?? 0} Namen, über window.offline gespeichert`);
+  // Wichteln legt vier Beispielnamen an (Anna, Ben, Clara, David); dazu kommen Bert, Cleo, Dora (Anna gibt es schon)
+  pruefe("Wichteln: spielen", !fehler && Array.isArray(runden) && runden.length === 1 && ["Bert", "Cleo", "Dora"].every((n) => runden[0].namen?.includes(n)) && Object.keys(runden[0].zuteilung ?? {}).length === runden[0].namen.length, fehler ?? `${runden?.length ?? 0} Runde, ${runden?.[0]?.namen?.length ?? 0} Namen, über window.offline gespeichert`);
   await klick("[data-modul-zu]");
   await gehe("#bibliothek");
   await klick('[data-modul-aktiv="wichteln"]');
