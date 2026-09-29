@@ -9,6 +9,14 @@
   // WebRTC geht an der Content-Security-Policy vorbei (STUN/TURN über UDP ins Internet). Module brauchen es nicht:
   // weg damit, bevor das Modul läuft. Unterrahmen sind in der Sandbox fremd, von dort holt es niemand zurück
   // (geprüft mit werkzeug/testmodule/boese). Dazu CSP „webrtc 'block'“ im Modulserver, wo die Engine sie kennt.
+  // Windows (WebView2) schleust Tauris IPC und den WebView2-Kanal auch in Unterrahmen ein. Aufrufe von hier bleiben
+  // wirkungslos (Windows-Probe 29.09.), trotzdem vor dem Modulcode abräumen.
+  ["__TAURI_INTERNALS__", "__TAURI__", "__TAURI_IPC__", "__TAURI_METADATA__", "ipc"].forEach(function (n) {
+    try { delete window[n]; } catch (e) {}
+    try { Object.defineProperty(window, n, { value: undefined, writable: false, configurable: false }); } catch (e) {}
+  });
+  try { if (window.chrome && window.chrome.webview) { try { delete window.chrome.webview; } catch (e) {} if (window.chrome.webview) Object.defineProperty(window.chrome, "webview", { value: undefined, writable: false, configurable: false }); } } catch (e) {}
+  try { if (window.chrome && window.chrome.webview) Object.defineProperty(window, "chrome", { value: undefined, writable: false, configurable: false }); } catch (e) {}
   ["RTCPeerConnection", "webkitRTCPeerConnection", "mozRTCPeerConnection"].forEach(function (n) {
     try { delete window[n]; } catch (e) {}
     try { Object.defineProperty(window, n, { value: undefined, writable: false, configurable: false }); } catch (e) {}

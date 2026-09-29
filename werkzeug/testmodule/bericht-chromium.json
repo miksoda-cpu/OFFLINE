@@ -1,7 +1,7 @@
 {
-  "zeit": "2026-09-29T10:43:59.348Z",
+  "zeit": "2026-09-29T17:24:00.140Z",
   "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
-  "versuche": 37,
+  "versuche": 41,
   "offen": [],
   "ergebnisse": [
     {
@@ -103,6 +103,26 @@
       "name": "WebView2-Kanal (chrome.webview)",
       "blockiert": true,
       "text": "false"
+    },
+    {
+      "name": "Tauri-Aufruf app_info",
+      "blockiert": true,
+      "text": "Error: nicht vorhanden"
+    },
+    {
+      "name": "Tauri-Aufruf tresor_status",
+      "blockiert": true,
+      "text": "Error: nicht vorhanden"
+    },
+    {
+      "name": "Tauri-Aufruf Webseite öffnen",
+      "blockiert": true,
+      "text": "Error: nicht vorhanden"
+    },
+    {
+      "name": "Tauri-Aufruf Ordnerdialog",
+      "blockiert": true,
+      "text": "Error: nicht vorhanden"
     },
     {
       "name": "WebKit-Kanal (webkit.messageHandlers)",
