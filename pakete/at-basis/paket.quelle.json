@@ -12,7 +12,7 @@
   "kategorie": "ernstfall",
   "alter_ab": 0,
   "app_min": "0.1.0",
-  "aenderungen": "Erste Ausgabe: Notrufe, Sirenensignale, Blackout-Ablauf, Vorsorge-Checkliste, Bundesländer.",
+  "aenderungen": "Sirenen: Hinweis zum Blackout korrigiert. Viele Sirenen brauchen Strom.",
   "quellen": [
     {
       "name": "Österreichischer Zivilschutzverband",

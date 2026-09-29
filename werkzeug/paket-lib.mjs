@@ -145,7 +145,8 @@ export async function paketBauen(quelle, zielWurzel, privat, { jetzt = new Date(
     const p = await pruefeQuellordner(quelle, { bericht: false });
     if (!p.ok) throw new Error(`Prüfprogramm meldet ${p.fehler.length} Fehler:\n  ` + p.fehler.join("\n  "));
   }
-  const version = meta.version ?? jetzt.toISOString().slice(0, 10).replaceAll("-", ".");
+  // Version: aus der Quelle, sonst OFFLINE_VERSION (z. B. 2026.09.29.1 für eine zweite Ausgabe am selben Tag), sonst das Datum
+  const version = meta.version ?? process.env.OFFLINE_VERSION ?? jetzt.toISOString().slice(0, 10).replaceAll("-", ".");
   const ziel = path.join(zielWurzel, `${meta.id}-${version}`);
   await mkdir(path.join(ziel, "inhalt"), { recursive: true });
 
