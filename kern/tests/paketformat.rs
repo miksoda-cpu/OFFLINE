@@ -80,13 +80,15 @@ fn manipulationen_fallen_auf() {
     assert_eq!(paket_pruefen(&t, &b, HEUTE).unwrap_err().0, "Datei fehlt: inhalt/sirenen.json");
     kopiere(&p, &t);
 
-    // Schlüssel abgelaufen / unbekannt / falscher Zweck
+    // Schlüssel abgelaufen / unbekannt / falscher Zweck – verändert wird der Schlüssel, der das Paket signiert hat
+    let sig: serde_json::Value = serde_json::from_slice(&std::fs::read(t.join("paket.sig")).unwrap()).unwrap();
+    let i = b.iter().position(|k| k.id == sig["schluessel"].as_str().unwrap()).expect("Schlüssel des Pakets bekannt");
     let mut abgelaufen = b.clone();
-    abgelaufen[0].gueltig_bis = Some("2020-01-01".into());
+    abgelaufen[i].gueltig_bis = Some("2020-01-01".into());
     assert!(paket_pruefen(&t, &abgelaufen, HEUTE).unwrap_err().0.contains("abgelaufen"));
     assert!(paket_pruefen(&t, &[], HEUTE).unwrap_err().0.contains("Unbekannter Schlüssel"));
     let mut nur_katalog = b.clone();
-    nur_katalog[0].zweck = vec!["katalog".into()];
+    nur_katalog[i].zweck = vec!["katalog".into()];
     assert!(paket_pruefen(&t, &nur_katalog, HEUTE).unwrap_err().0.contains("nicht für pakete"));
 }
 

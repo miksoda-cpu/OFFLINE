@@ -16,6 +16,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with: { node-version: 22 }
+      - uses: dtolnay/rust-toolchain@stable
 
       - name: Signaturschlüssel bereitstellen
         env:
@@ -38,6 +39,12 @@ jobs:
           cp werkzeug/kern.mjs web/paket-kern.js
           for o in web/pakete/*/; do node werkzeug/paket.mjs pruefen "$o"; done
           rm -f ~/.offline/schluessel/offline-ci.key
+
+      # Pushes aus einem Workflow lösen keine Tests aus; die Tests, die web/pakete als Prüfstück nehmen, laufen deshalb hier
+      - name: Tests gegen die neuen Pakete
+        run: |
+          node --test werkzeug/test.mjs web/bereit.test.mjs web/wesen.test.mjs
+          cargo test --manifest-path kern/Cargo.toml
 
       - name: Committen, wenn sich etwas geändert hat
         run: |

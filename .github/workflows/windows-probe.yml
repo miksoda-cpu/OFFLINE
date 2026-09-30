@@ -38,7 +38,13 @@ jobs:
 
       - name: Quellstand 0.1.8 daneben legen
         shell: bash
-        run: git worktree add alt 2deada3
+        # Der Cache legt alt/app/src-tauri/target schon an; beiseitelegen, Quellstand holen, zurücklegen
+        run: |
+          set -euo pipefail
+          [ -d alt/app/src-tauri/target ] && mv alt/app/src-tauri/target alt-target || true
+          rm -rf alt
+          git worktree add alt 2deada3
+          [ -d alt-target ] && mv alt-target alt/app/src-tauri/target || true
 
       - name: kiwix-serve als mitgeliefertes Programm holen
         shell: bash
