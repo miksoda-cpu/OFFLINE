@@ -22,6 +22,10 @@ on:
         description: "Nur für textpakete: Version, wenn es heute schon eine Ausgabe gibt (z. B. 2026.09.29.1); leer = Datum"
         type: string
         default: ""
+      nur:
+        description: "Nur für textpakete: nur Quellen, deren Name so beginnt (z. B. tage-); leer = alle"
+        type: string
+        default: ""
       redaktion:
         description: Freigegebene Module aus redaktion/freigegeben prüfen und hochladen (nur nach Miks Freigabe)
         type: boolean
@@ -91,6 +95,7 @@ jobs:
         env:
           OFFLINE_SCHLUESSEL_NAME: offline-ci
           OFFLINE_VERSION: ${{ inputs.version }}
+          NUR: ${{ inputs.nur }}
         run: |
           set -euo pipefail
           [ -n "$OFFLINE_VERSION" ] || unset OFFLINE_VERSION
@@ -98,6 +103,7 @@ jobs:
           for q in pakete/*/; do
             [ -f "$q/paket.quelle.json" ] || continue
             if grep -qE '"art": *"(modul|skin)"' "$q/paket.quelle.json"; then echo "Übersprungen: $q"; continue; fi
+            case "$(basename "$q")" in "$NUR"*) ;; *) echo "Nicht ausgewählt: $q"; continue ;; esac
             node werkzeug/paket.mjs bauen "$q" ausgabe
           done
           for o in ausgabe/*/; do node werkzeug/paket.mjs pruefen "$o"; (cd "$o" && sha256sum paket.json); done

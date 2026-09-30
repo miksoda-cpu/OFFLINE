@@ -71,7 +71,7 @@ function aboSpeichern() {
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const groesse = (b) => b < 1e6 ? `${Math.max(1, Math.round(b / 1e3))} kB` : b < 1e9 ? `${(b / 1e6).toLocaleString("de-AT", { maximumFractionDigits: 1 })} MB` : `${(b / 1e9).toLocaleString("de-AT", { maximumFractionDigits: 1 })} GB`;
 const datum = (iso) => new Date(iso).toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
-const ARTEN = { inhalt: "Österreich", zim: "Bibliothek", karte: "Karten", modell: "KI", kurs: "Kurse", software: "Software", modul: "Module" };
+const ARTEN = { inhalt: "Österreich", zim: "Bibliothek", karte: "Karten", modell: "KI", kurs: "Kurse", software: "Software", tage: "Tage", modul: "Module" };
 
 // ---------- Paketinhalt ----------
 const P = () => installiertesPaket(BASISPAKET);
@@ -107,7 +107,7 @@ function sockelFestlegen(arten) {
 const testJetzt = () => (desktop?.info?.entwickler ? Date.now() + speicher.get("test-monate", 0) * 30.44 * 86400000 + speicher.get("test-tage", 0) * 86400000 : Date.now());
 const testLeiste = () => desktop?.info?.entwickler ? `<div class="card of-karte" style="margin-bottom:1rem;border-style:dashed"><strong>Entwickler-Build:</strong> Datum für Bereit ${speicher.get("test-monate", 0) ? `+${speicher.get("test-monate", 0)} Monate` : "heute"}
   ${[0, 7, 13, 16].map((m) => `<button class="btn btn-sm of-btn of-btn--klein" data-test-monate="${m}">${m ? `+${m} Monate` : "heute"}</button>`).join(" ")}
-  <br><span class="muted of-klein">Tagesseite: ${speicher.get("test-tage", 0) ? `+${speicher.get("test-tage", 0)} Tage` : "heute"}</span> ${[0, 1, 7, 30, 60].map((t) => `<button class="btn btn-sm of-btn of-btn--klein" data-test-tage="${t}">${t ? `+${t} Tage` : "heute"}</button>`).join(" ")}</div>` : "";
+  <br><span class="muted of-klein">Tagesseite: ${speicher.get("test-tage", 0) ? `+${speicher.get("test-tage", 0)} Tage` : "heute"}</span> ${[0, 1, 7, 30, 60, 62].map((t) => `<button class="btn btn-sm of-btn of-btn--klein" data-test-tage="${t}">${t ? `+${t} Tage` : "heute"}</button>`).join(" ")}</div>` : "";
 function bestaetigen(id, ja = true) {
   if (ja) state.bestaetigt[id] = new Date(testJetzt()).toISOString(); else delete state.bestaetigt[id];
   speicher.set("bereit-v2", state.bestaetigt);
@@ -324,7 +324,7 @@ const seiten = {
           : karten.length ? karten.map((k) => tagKarteHtml(k, zustand[k.id])).join("")
           : `<div class="card of-karte tag-leer"><p style="margin:0">${pakete.length ? "Für heute liegt nichts in der Vorratskammer." : "Die Vorratskammer ist noch leer."} ${navigator.onLine ? "OFFLINE holt die nächsten Tage, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."} Alles andere funktioniert weiter.</p></div>`}
       </section>
-      <p class="tag-vorrat muted of-klein">${vorrat ? `Vorrat: noch ${vorrat} ${vorrat === 1 ? "Tag" : "Tage"}` : "Vorrat: leer"}${!navigator.onLine && vorrat ? " · ohne Netz geht es weiter" : ""}</p>`;
+      <p class="tag-vorrat muted of-klein">${vorrat ? `Vorrat: noch ${vorrat} ${vorrat === 1 ? "Tag" : "Tage"}${!navigator.onLine ? " · ohne Netz geht es weiter" : ""}` : `Vorrat: leer. ${navigator.onLine ? "Die nächsten Tage kommen, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."}`}</p>`;
   },
 
   /** Das Kapitel des Tages zum Lesen, mit Vorlesen. */
@@ -1441,6 +1441,8 @@ function render() {
   if (seite !== "kapitel" && state.tag.liest) vorlesenStop();
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
   main.classList.toggle("main-lesen", seite === "lesen");
+  if (seite === "kapitel" && state.tag.seiteVorher !== "kapitel") { window.scrollTo(0, 0); main.scrollTop = 0; } // ein Kapitel beginnt oben
+  state.tag.seiteVorher = seite;
   document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : state.lesen?.titel ?? "Lesen")}`;
   if (seite === "karte") karteStarten();
   if (seite === "bibliothek") vorschauenNachladen();
