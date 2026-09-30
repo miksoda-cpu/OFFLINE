@@ -345,6 +345,780 @@
       "description": "Permission identifier",
       "oneOf": [
         {
+          "description": "Alle Befehle der OFFLINE-App, nur für das App-Fenster\n#### This permission set includes:\n\n- `allow-datenordner`\n- `allow-installierte`\n- `allow-paket-lesen`\n- `allow-einspielen-ordner`\n- `allow-einspielen-bytes`\n- `allow-entfernen`\n- `allow-stick-suchen`\n- `allow-aufraeumen-start`\n- `allow-abo-lesen`\n- `allow-abo-schreiben`\n- `allow-verbindung-melden`\n- `allow-speicherort-setzen`\n- `allow-katalog-laden`\n- `allow-paket-laden`\n- `allow-download-abbrechen`\n- `allow-updates-jetzt`\n- `allow-abo-status`\n- `allow-lokal-url`\n- `allow-kiwix-url`\n- `allow-fenster-oeffnen`\n- `allow-alles-loeschen`\n- `allow-app-info`\n- `allow-downloads-offen`\n- `allow-tresor-status`\n- `allow-tresor-anlegen`\n- `allow-tresor-oeffnen`\n- `allow-tresor-oeffnen-code`\n- `allow-tresor-sperren`\n- `allow-tresor-sperre-setzen`\n- `allow-tresor-notizen`\n- `allow-tresor-notiz-schreiben`\n- `allow-tresor-notiz-loeschen`\n- `allow-tresor-notfallmappe`\n- `allow-tresor-anhang-aus-datei`\n- `allow-tresor-anhang-lesen`\n- `allow-tresor-anhang-loeschen`\n- `allow-tresor-passwort-aendern`\n- `allow-tresor-code-erneuern`\n- `allow-tresor-sichern`\n- `allow-tresor-zurueckspielen`\n- `allow-tresor-anhang-bytes`\n- `allow-notiz-anhang-aus-datei`\n- `allow-notiz-anhang-bytes`\n- `allow-notiz-anhang-lesen`\n- `allow-notiz-anhang-loeschen`\n- `allow-app-update-pruefen`\n- `allow-app-update-installieren`\n- `allow-app-neustart`\n- `allow-modul-oeffnen`\n- `allow-modul-schliessen`\n- `allow-modul-speicher-lesen`\n- `allow-modul-speicher-schreiben`\n- `allow-module-stand`\n- `allow-modul-aktiv-setzen`\n- `allow-modul-loeschen`\n- `allow-modul-test-oeffnen`\n- `allow-drucken`\n- `allow-vorschau-katalog`\n- `allow-vorschau-ordner`\n- `allow-vorschau-installiert`\n- `allow-lokale-pakete`\n- `allow-skin-stand`\n- `allow-skin-aktivieren`\n- `allow-skin-css`",
+          "type": "string",
+          "const": "app-befehle",
+          "markdownDescription": "Alle Befehle der OFFLINE-App, nur für das App-Fenster\n#### This permission set includes:\n\n- `allow-datenordner`\n- `allow-installierte`\n- `allow-paket-lesen`\n- `allow-einspielen-ordner`\n- `allow-einspielen-bytes`\n- `allow-entfernen`\n- `allow-stick-suchen`\n- `allow-aufraeumen-start`\n- `allow-abo-lesen`\n- `allow-abo-schreiben`\n- `allow-verbindung-melden`\n- `allow-speicherort-setzen`\n- `allow-katalog-laden`\n- `allow-paket-laden`\n- `allow-download-abbrechen`\n- `allow-updates-jetzt`\n- `allow-abo-status`\n- `allow-lokal-url`\n- `allow-kiwix-url`\n- `allow-fenster-oeffnen`\n- `allow-alles-loeschen`\n- `allow-app-info`\n- `allow-downloads-offen`\n- `allow-tresor-status`\n- `allow-tresor-anlegen`\n- `allow-tresor-oeffnen`\n- `allow-tresor-oeffnen-code`\n- `allow-tresor-sperren`\n- `allow-tresor-sperre-setzen`\n- `allow-tresor-notizen`\n- `allow-tresor-notiz-schreiben`\n- `allow-tresor-notiz-loeschen`\n- `allow-tresor-notfallmappe`\n- `allow-tresor-anhang-aus-datei`\n- `allow-tresor-anhang-lesen`\n- `allow-tresor-anhang-loeschen`\n- `allow-tresor-passwort-aendern`\n- `allow-tresor-code-erneuern`\n- `allow-tresor-sichern`\n- `allow-tresor-zurueckspielen`\n- `allow-tresor-anhang-bytes`\n- `allow-notiz-anhang-aus-datei`\n- `allow-notiz-anhang-bytes`\n- `allow-notiz-anhang-lesen`\n- `allow-notiz-anhang-loeschen`\n- `allow-app-update-pruefen`\n- `allow-app-update-installieren`\n- `allow-app-neustart`\n- `allow-modul-oeffnen`\n- `allow-modul-schliessen`\n- `allow-modul-speicher-lesen`\n- `allow-modul-speicher-schreiben`\n- `allow-module-stand`\n- `allow-modul-aktiv-setzen`\n- `allow-modul-loeschen`\n- `allow-modul-test-oeffnen`\n- `allow-drucken`\n- `allow-vorschau-katalog`\n- `allow-vorschau-ordner`\n- `allow-vorschau-installiert`\n- `allow-lokale-pakete`\n- `allow-skin-stand`\n- `allow-skin-aktivieren`\n- `allow-skin-css`"
+        },
+        {
+          "description": "Enables the abo_lesen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-abo-lesen",
+          "markdownDescription": "Enables the abo_lesen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the abo_schreiben command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-abo-schreiben",
+          "markdownDescription": "Enables the abo_schreiben command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the abo_status command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-abo-status",
+          "markdownDescription": "Enables the abo_status command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the alles_loeschen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-alles-loeschen",
+          "markdownDescription": "Enables the alles_loeschen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the app_info command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-app-info",
+          "markdownDescription": "Enables the app_info command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the app_neustart command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-app-neustart",
+          "markdownDescription": "Enables the app_neustart command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the app_update_installieren command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-app-update-installieren",
+          "markdownDescription": "Enables the app_update_installieren command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the app_update_pruefen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-app-update-pruefen",
+          "markdownDescription": "Enables the app_update_pruefen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the aufraeumen_start command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-aufraeumen-start",
+          "markdownDescription": "Enables the aufraeumen_start command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the datenordner command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-datenordner",
+          "markdownDescription": "Enables the datenordner command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the download_abbrechen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-download-abbrechen",
+          "markdownDescription": "Enables the download_abbrechen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the downloads_offen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-downloads-offen",
+          "markdownDescription": "Enables the downloads_offen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the drucken command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-drucken",
+          "markdownDescription": "Enables the drucken command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the einspielen_bytes command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-einspielen-bytes",
+          "markdownDescription": "Enables the einspielen_bytes command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the einspielen_ordner command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-einspielen-ordner",
+          "markdownDescription": "Enables the einspielen_ordner command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the entfernen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-entfernen",
+          "markdownDescription": "Enables the entfernen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the fenster_oeffnen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-fenster-oeffnen",
+          "markdownDescription": "Enables the fenster_oeffnen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the installierte command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-installierte",
+          "markdownDescription": "Enables the installierte command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the katalog_laden command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-katalog-laden",
+          "markdownDescription": "Enables the katalog_laden command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the kiwix_url command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-kiwix-url",
+          "markdownDescription": "Enables the kiwix_url command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the lokal_url command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-lokal-url",
+          "markdownDescription": "Enables the lokal_url command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the lokale_pakete command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-lokale-pakete",
+          "markdownDescription": "Enables the lokale_pakete command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the modul_aktiv_setzen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-modul-aktiv-setzen",
+          "markdownDescription": "Enables the modul_aktiv_setzen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the modul_loeschen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-modul-loeschen",
+          "markdownDescription": "Enables the modul_loeschen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the modul_oeffnen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-modul-oeffnen",
+          "markdownDescription": "Enables the modul_oeffnen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the modul_schliessen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-modul-schliessen",
+          "markdownDescription": "Enables the modul_schliessen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the modul_speicher_lesen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-modul-speicher-lesen",
+          "markdownDescription": "Enables the modul_speicher_lesen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the modul_speicher_schreiben command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-modul-speicher-schreiben",
+          "markdownDescription": "Enables the modul_speicher_schreiben command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the modul_test_oeffnen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-modul-test-oeffnen",
+          "markdownDescription": "Enables the modul_test_oeffnen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the module_stand command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-module-stand",
+          "markdownDescription": "Enables the module_stand command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the notiz_anhang_aus_datei command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-notiz-anhang-aus-datei",
+          "markdownDescription": "Enables the notiz_anhang_aus_datei command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the notiz_anhang_bytes command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-notiz-anhang-bytes",
+          "markdownDescription": "Enables the notiz_anhang_bytes command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the notiz_anhang_lesen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-notiz-anhang-lesen",
+          "markdownDescription": "Enables the notiz_anhang_lesen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the notiz_anhang_loeschen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-notiz-anhang-loeschen",
+          "markdownDescription": "Enables the notiz_anhang_loeschen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the paket_laden command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-paket-laden",
+          "markdownDescription": "Enables the paket_laden command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the paket_lesen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-paket-lesen",
+          "markdownDescription": "Enables the paket_lesen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the skin_aktivieren command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-skin-aktivieren",
+          "markdownDescription": "Enables the skin_aktivieren command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the skin_css command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-skin-css",
+          "markdownDescription": "Enables the skin_css command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the skin_stand command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-skin-stand",
+          "markdownDescription": "Enables the skin_stand command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the speicherort_setzen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-speicherort-setzen",
+          "markdownDescription": "Enables the speicherort_setzen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the stick_suchen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-stick-suchen",
+          "markdownDescription": "Enables the stick_suchen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_anhang_aus_datei command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-anhang-aus-datei",
+          "markdownDescription": "Enables the tresor_anhang_aus_datei command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_anhang_bytes command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-anhang-bytes",
+          "markdownDescription": "Enables the tresor_anhang_bytes command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_anhang_lesen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-anhang-lesen",
+          "markdownDescription": "Enables the tresor_anhang_lesen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_anhang_loeschen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-anhang-loeschen",
+          "markdownDescription": "Enables the tresor_anhang_loeschen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_anlegen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-anlegen",
+          "markdownDescription": "Enables the tresor_anlegen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_code_erneuern command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-code-erneuern",
+          "markdownDescription": "Enables the tresor_code_erneuern command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_notfallmappe command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-notfallmappe",
+          "markdownDescription": "Enables the tresor_notfallmappe command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_notiz_loeschen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-notiz-loeschen",
+          "markdownDescription": "Enables the tresor_notiz_loeschen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_notiz_schreiben command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-notiz-schreiben",
+          "markdownDescription": "Enables the tresor_notiz_schreiben command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_notizen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-notizen",
+          "markdownDescription": "Enables the tresor_notizen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_oeffnen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-oeffnen",
+          "markdownDescription": "Enables the tresor_oeffnen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_oeffnen_code command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-oeffnen-code",
+          "markdownDescription": "Enables the tresor_oeffnen_code command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_passwort_aendern command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-passwort-aendern",
+          "markdownDescription": "Enables the tresor_passwort_aendern command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_sichern command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-sichern",
+          "markdownDescription": "Enables the tresor_sichern command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_sperre_setzen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-sperre-setzen",
+          "markdownDescription": "Enables the tresor_sperre_setzen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_sperren command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-sperren",
+          "markdownDescription": "Enables the tresor_sperren command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_status command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-status",
+          "markdownDescription": "Enables the tresor_status command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the tresor_zurueckspielen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-tresor-zurueckspielen",
+          "markdownDescription": "Enables the tresor_zurueckspielen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the updates_jetzt command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-updates-jetzt",
+          "markdownDescription": "Enables the updates_jetzt command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the verbindung_melden command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-verbindung-melden",
+          "markdownDescription": "Enables the verbindung_melden command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the vorschau_installiert command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-vorschau-installiert",
+          "markdownDescription": "Enables the vorschau_installiert command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the vorschau_katalog command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-vorschau-katalog",
+          "markdownDescription": "Enables the vorschau_katalog command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the vorschau_ordner command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-vorschau-ordner",
+          "markdownDescription": "Enables the vorschau_ordner command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the abo_lesen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-abo-lesen",
+          "markdownDescription": "Denies the abo_lesen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the abo_schreiben command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-abo-schreiben",
+          "markdownDescription": "Denies the abo_schreiben command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the abo_status command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-abo-status",
+          "markdownDescription": "Denies the abo_status command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the alles_loeschen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-alles-loeschen",
+          "markdownDescription": "Denies the alles_loeschen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the app_info command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-app-info",
+          "markdownDescription": "Denies the app_info command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the app_neustart command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-app-neustart",
+          "markdownDescription": "Denies the app_neustart command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the app_update_installieren command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-app-update-installieren",
+          "markdownDescription": "Denies the app_update_installieren command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the app_update_pruefen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-app-update-pruefen",
+          "markdownDescription": "Denies the app_update_pruefen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the aufraeumen_start command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-aufraeumen-start",
+          "markdownDescription": "Denies the aufraeumen_start command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the datenordner command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-datenordner",
+          "markdownDescription": "Denies the datenordner command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the download_abbrechen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-download-abbrechen",
+          "markdownDescription": "Denies the download_abbrechen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the downloads_offen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-downloads-offen",
+          "markdownDescription": "Denies the downloads_offen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the drucken command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-drucken",
+          "markdownDescription": "Denies the drucken command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the einspielen_bytes command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-einspielen-bytes",
+          "markdownDescription": "Denies the einspielen_bytes command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the einspielen_ordner command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-einspielen-ordner",
+          "markdownDescription": "Denies the einspielen_ordner command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the entfernen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-entfernen",
+          "markdownDescription": "Denies the entfernen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the fenster_oeffnen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-fenster-oeffnen",
+          "markdownDescription": "Denies the fenster_oeffnen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the installierte command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-installierte",
+          "markdownDescription": "Denies the installierte command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the katalog_laden command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-katalog-laden",
+          "markdownDescription": "Denies the katalog_laden command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the kiwix_url command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-kiwix-url",
+          "markdownDescription": "Denies the kiwix_url command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the lokal_url command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-lokal-url",
+          "markdownDescription": "Denies the lokal_url command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the lokale_pakete command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-lokale-pakete",
+          "markdownDescription": "Denies the lokale_pakete command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the modul_aktiv_setzen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-modul-aktiv-setzen",
+          "markdownDescription": "Denies the modul_aktiv_setzen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the modul_loeschen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-modul-loeschen",
+          "markdownDescription": "Denies the modul_loeschen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the modul_oeffnen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-modul-oeffnen",
+          "markdownDescription": "Denies the modul_oeffnen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the modul_schliessen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-modul-schliessen",
+          "markdownDescription": "Denies the modul_schliessen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the modul_speicher_lesen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-modul-speicher-lesen",
+          "markdownDescription": "Denies the modul_speicher_lesen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the modul_speicher_schreiben command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-modul-speicher-schreiben",
+          "markdownDescription": "Denies the modul_speicher_schreiben command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the modul_test_oeffnen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-modul-test-oeffnen",
+          "markdownDescription": "Denies the modul_test_oeffnen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the module_stand command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-module-stand",
+          "markdownDescription": "Denies the module_stand command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the notiz_anhang_aus_datei command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-notiz-anhang-aus-datei",
+          "markdownDescription": "Denies the notiz_anhang_aus_datei command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the notiz_anhang_bytes command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-notiz-anhang-bytes",
+          "markdownDescription": "Denies the notiz_anhang_bytes command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the notiz_anhang_lesen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-notiz-anhang-lesen",
+          "markdownDescription": "Denies the notiz_anhang_lesen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the notiz_anhang_loeschen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-notiz-anhang-loeschen",
+          "markdownDescription": "Denies the notiz_anhang_loeschen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the paket_laden command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-paket-laden",
+          "markdownDescription": "Denies the paket_laden command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the paket_lesen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-paket-lesen",
+          "markdownDescription": "Denies the paket_lesen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the skin_aktivieren command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-skin-aktivieren",
+          "markdownDescription": "Denies the skin_aktivieren command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the skin_css command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-skin-css",
+          "markdownDescription": "Denies the skin_css command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the skin_stand command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-skin-stand",
+          "markdownDescription": "Denies the skin_stand command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the speicherort_setzen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-speicherort-setzen",
+          "markdownDescription": "Denies the speicherort_setzen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the stick_suchen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-stick-suchen",
+          "markdownDescription": "Denies the stick_suchen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_anhang_aus_datei command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-anhang-aus-datei",
+          "markdownDescription": "Denies the tresor_anhang_aus_datei command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_anhang_bytes command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-anhang-bytes",
+          "markdownDescription": "Denies the tresor_anhang_bytes command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_anhang_lesen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-anhang-lesen",
+          "markdownDescription": "Denies the tresor_anhang_lesen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_anhang_loeschen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-anhang-loeschen",
+          "markdownDescription": "Denies the tresor_anhang_loeschen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_anlegen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-anlegen",
+          "markdownDescription": "Denies the tresor_anlegen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_code_erneuern command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-code-erneuern",
+          "markdownDescription": "Denies the tresor_code_erneuern command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_notfallmappe command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-notfallmappe",
+          "markdownDescription": "Denies the tresor_notfallmappe command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_notiz_loeschen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-notiz-loeschen",
+          "markdownDescription": "Denies the tresor_notiz_loeschen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_notiz_schreiben command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-notiz-schreiben",
+          "markdownDescription": "Denies the tresor_notiz_schreiben command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_notizen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-notizen",
+          "markdownDescription": "Denies the tresor_notizen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_oeffnen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-oeffnen",
+          "markdownDescription": "Denies the tresor_oeffnen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_oeffnen_code command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-oeffnen-code",
+          "markdownDescription": "Denies the tresor_oeffnen_code command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_passwort_aendern command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-passwort-aendern",
+          "markdownDescription": "Denies the tresor_passwort_aendern command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_sichern command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-sichern",
+          "markdownDescription": "Denies the tresor_sichern command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_sperre_setzen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-sperre-setzen",
+          "markdownDescription": "Denies the tresor_sperre_setzen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_sperren command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-sperren",
+          "markdownDescription": "Denies the tresor_sperren command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_status command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-status",
+          "markdownDescription": "Denies the tresor_status command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the tresor_zurueckspielen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-tresor-zurueckspielen",
+          "markdownDescription": "Denies the tresor_zurueckspielen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the updates_jetzt command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-updates-jetzt",
+          "markdownDescription": "Denies the updates_jetzt command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the verbindung_melden command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-verbindung-melden",
+          "markdownDescription": "Denies the verbindung_melden command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the vorschau_installiert command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-vorschau-installiert",
+          "markdownDescription": "Denies the vorschau_installiert command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the vorschau_katalog command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-vorschau-katalog",
+          "markdownDescription": "Denies the vorschau_katalog command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the vorschau_ordner command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-vorschau-ordner",
+          "markdownDescription": "Denies the vorschau_ordner command without any pre-configured scope."
+        },
+        {
           "description": "Default core plugins set.\n#### This default permission set includes:\n\n- `core:path:default`\n- `core:event:default`\n- `core:window:default`\n- `core:webview:default`\n- `core:app:default`\n- `core:image:default`\n- `core:resources:default`\n- `core:menu:default`\n- `core:tray:default`",
           "type": "string",
           "const": "core:default",

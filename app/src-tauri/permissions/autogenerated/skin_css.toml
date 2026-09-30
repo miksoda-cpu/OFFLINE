@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-skin-css"
+description = "Enables the skin_css command without any pre-configured scope."
+commands.allow = ["skin_css"]
+
+[[permission]]
+identifier = "deny-skin-css"
+description = "Denies the skin_css command without any pre-configured scope."
+commands.deny = ["skin_css"]

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-modul-loeschen"
+description = "Enables the modul_loeschen command without any pre-configured scope."
+commands.allow = ["modul_loeschen"]
+
+[[permission]]
+identifier = "deny-modul-loeschen"
+description = "Denies the modul_loeschen command without any pre-configured scope."
+commands.deny = ["modul_loeschen"]

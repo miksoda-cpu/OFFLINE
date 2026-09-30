@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-app-neustart"
+description = "Enables the app_neustart command without any pre-configured scope."
+commands.allow = ["app_neustart"]
+
+[[permission]]
+identifier = "deny-app-neustart"
+description = "Denies the app_neustart command without any pre-configured scope."
+commands.deny = ["app_neustart"]

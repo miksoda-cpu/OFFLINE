@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-abo-schreiben"
+description = "Enables the abo_schreiben command without any pre-configured scope."
+commands.allow = ["abo_schreiben"]
+
+[[permission]]
+identifier = "deny-abo-schreiben"
+description = "Denies the abo_schreiben command without any pre-configured scope."
+commands.deny = ["abo_schreiben"]

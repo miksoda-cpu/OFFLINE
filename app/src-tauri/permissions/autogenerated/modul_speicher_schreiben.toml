@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-modul-speicher-schreiben"
+description = "Enables the modul_speicher_schreiben command without any pre-configured scope."
+commands.allow = ["modul_speicher_schreiben"]
+
+[[permission]]
+identifier = "deny-modul-speicher-schreiben"
+description = "Denies the modul_speicher_schreiben command without any pre-configured scope."
+commands.deny = ["modul_speicher_schreiben"]

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-entfernen"
+description = "Enables the entfernen command without any pre-configured scope."
+commands.allow = ["entfernen"]
+
+[[permission]]
+identifier = "deny-entfernen"
+description = "Denies the entfernen command without any pre-configured scope."
+commands.deny = ["entfernen"]

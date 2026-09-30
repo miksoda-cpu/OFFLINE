@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-fenster-oeffnen"
+description = "Enables the fenster_oeffnen command without any pre-configured scope."
+commands.allow = ["fenster_oeffnen"]
+
+[[permission]]
+identifier = "deny-fenster-oeffnen"
+description = "Denies the fenster_oeffnen command without any pre-configured scope."
+commands.deny = ["fenster_oeffnen"]

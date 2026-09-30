@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-modul-schliessen"
+description = "Enables the modul_schliessen command without any pre-configured scope."
+commands.allow = ["modul_schliessen"]
+
+[[permission]]
+identifier = "deny-modul-schliessen"
+description = "Denies the modul_schliessen command without any pre-configured scope."
+commands.deny = ["modul_schliessen"]

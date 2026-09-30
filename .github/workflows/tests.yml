@@ -1,4 +1,4 @@
-# Tests bei jedem Push: Paketwerkzeug und Paket-Kit (Node), Kern (Rust). Keine Secrets, baut und veröffentlicht nichts.
+# Tests bei jedem Push: Paketwerkzeug und Paket-Kit (Node), Kern (Rust), App-Berechtigungen auf drei Systemen. Keine Secrets, baut und veröffentlicht nichts.
 name: Tests
 
 on:
@@ -43,3 +43,30 @@ jobs:
       # Google Chrome ist auf den Ubuntu-Runnern vorinstalliert
       - run: node werkzeug/sandbox-probe.mjs --chrome
         env: { CHROME: google-chrome }
+
+  app-berechtigungen:
+    name: App-Berechtigungen (${{ matrix.os }})
+    # Dritte Sicherung für Module (SICHERHEIT.md): Tauri-Befehle nur im App-Fenster, der Modulserver bekommt keinen
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: app/src-tauri
+      - name: Linux-Abhängigkeiten
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: Platzhalter für kiwix-serve (wird im Test nicht gestartet)
+        shell: bash
+        run: |
+          t=$(rustc -vV | sed -n 's/^host: //p'); e=""; [ "$RUNNER_OS" = Windows ] && e=.exe
+          mkdir -p app/src-tauri/binaries && touch "app/src-tauri/binaries/kiwix-serve-$t$e"
+      - run: cargo test --manifest-path app/src-tauri/Cargo.toml berechtigungen
+

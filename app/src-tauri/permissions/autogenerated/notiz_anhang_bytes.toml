@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-notiz-anhang-bytes"
+description = "Enables the notiz_anhang_bytes command without any pre-configured scope."
+commands.allow = ["notiz_anhang_bytes"]
+
+[[permission]]
+identifier = "deny-notiz-anhang-bytes"
+description = "Denies the notiz_anhang_bytes command without any pre-configured scope."
+commands.deny = ["notiz_anhang_bytes"]

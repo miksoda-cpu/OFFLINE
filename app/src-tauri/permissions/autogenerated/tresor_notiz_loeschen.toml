@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-tresor-notiz-loeschen"
+description = "Enables the tresor_notiz_loeschen command without any pre-configured scope."
+commands.allow = ["tresor_notiz_loeschen"]
+
+[[permission]]
+identifier = "deny-tresor-notiz-loeschen"
+description = "Denies the tresor_notiz_loeschen command without any pre-configured scope."
+commands.deny = ["tresor_notiz_loeschen"]

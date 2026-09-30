@@ -26,3 +26,7 @@ offline-kern = { path = "../../kern", default-features = false }
 [features]
 default = ["tls"]
 tls = ["offline-kern/tls", "dep:tauri-plugin-updater"]
+
+[dev-dependencies]
+# Mock-Laufzeit für den Berechtigungstest (IPC-Anfragen mit der Adresse des Modulservers)
+tauri = { version = "2.11", features = ["test"] }

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-tresor-notizen"
+description = "Enables the tresor_notizen command without any pre-configured scope."
+commands.allow = ["tresor_notizen"]
+
+[[permission]]
+identifier = "deny-tresor-notizen"
+description = "Denies the tresor_notizen command without any pre-configured scope."
+commands.deny = ["tresor_notizen"]

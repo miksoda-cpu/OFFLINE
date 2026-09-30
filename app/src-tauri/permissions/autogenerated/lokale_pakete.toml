@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-lokale-pakete"
+description = "Enables the lokale_pakete command without any pre-configured scope."
+commands.allow = ["lokale_pakete"]
+
+[[permission]]
+identifier = "deny-lokale-pakete"
+description = "Denies the lokale_pakete command without any pre-configured scope."
+commands.deny = ["lokale_pakete"]

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-tresor-code-erneuern"
+description = "Enables the tresor_code_erneuern command without any pre-configured scope."
+commands.allow = ["tresor_code_erneuern"]
+
+[[permission]]
+identifier = "deny-tresor-code-erneuern"
+description = "Denies the tresor_code_erneuern command without any pre-configured scope."
+commands.deny = ["tresor_code_erneuern"]

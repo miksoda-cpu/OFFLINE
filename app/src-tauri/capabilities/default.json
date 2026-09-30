@@ -1,10 +1,11 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Hauptfenster: Kernbefehle, Ordnerauswahl, Links im Browser öffnen",
+  "description": "Nur das App-Fenster, nur lokale Herkunft (kein remote): App-Befehle, Ordnerauswahl, Links im Browser öffnen. Der Modulserver bekommt nichts.",
   "windows": ["main"],
   "permissions": [
     "core:default",
+    "app-befehle",
     "dialog:allow-open",
     "opener:allow-open-url"
   ]

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-notiz-anhang-lesen"
+description = "Enables the notiz_anhang_lesen command without any pre-configured scope."
+commands.allow = ["notiz_anhang_lesen"]
+
+[[permission]]
+identifier = "deny-notiz-anhang-lesen"
+description = "Denies the notiz_anhang_lesen command without any pre-configured scope."
+commands.deny = ["notiz_anhang_lesen"]

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-aufraeumen-start"
+description = "Enables the aufraeumen_start command without any pre-configured scope."
+commands.allow = ["aufraeumen_start"]
+
+[[permission]]
+identifier = "deny-aufraeumen-start"
+description = "Denies the aufraeumen_start command without any pre-configured scope."
+commands.deny = ["aufraeumen_start"]

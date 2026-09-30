@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-alles-loeschen"
+description = "Enables the alles_loeschen command without any pre-configured scope."
+commands.allow = ["alles_loeschen"]
+
+[[permission]]
+identifier = "deny-alles-loeschen"
+description = "Denies the alles_loeschen command without any pre-configured scope."
+commands.deny = ["alles_loeschen"]

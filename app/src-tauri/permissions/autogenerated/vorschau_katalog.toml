@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-vorschau-katalog"
+description = "Enables the vorschau_katalog command without any pre-configured scope."
+commands.allow = ["vorschau_katalog"]
+
+[[permission]]
+identifier = "deny-vorschau-katalog"
+description = "Denies the vorschau_katalog command without any pre-configured scope."
+commands.deny = ["vorschau_katalog"]

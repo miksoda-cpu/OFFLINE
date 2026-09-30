@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-tresor-notiz-schreiben"
+description = "Enables the tresor_notiz_schreiben command without any pre-configured scope."
+commands.allow = ["tresor_notiz_schreiben"]
+
+[[permission]]
+identifier = "deny-tresor-notiz-schreiben"
+description = "Denies the tresor_notiz_schreiben command without any pre-configured scope."
+commands.deny = ["tresor_notiz_schreiben"]

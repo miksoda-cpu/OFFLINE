@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-tresor-notfallmappe"
+description = "Enables the tresor_notfallmappe command without any pre-configured scope."
+commands.allow = ["tresor_notfallmappe"]
+
+[[permission]]
+identifier = "deny-tresor-notfallmappe"
+description = "Denies the tresor_notfallmappe command without any pre-configured scope."
+commands.deny = ["tresor_notfallmappe"]

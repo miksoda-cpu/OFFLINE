@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-paket-laden"
+description = "Enables the paket_laden command without any pre-configured scope."
+commands.allow = ["paket_laden"]
+
+[[permission]]
+identifier = "deny-paket-laden"
+description = "Denies the paket_laden command without any pre-configured scope."
+commands.deny = ["paket_laden"]

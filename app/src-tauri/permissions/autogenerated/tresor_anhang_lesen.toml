@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-tresor-anhang-lesen"
+description = "Enables the tresor_anhang_lesen command without any pre-configured scope."
+commands.allow = ["tresor_anhang_lesen"]
+
+[[permission]]
+identifier = "deny-tresor-anhang-lesen"
+description = "Denies the tresor_anhang_lesen command without any pre-configured scope."
+commands.deny = ["tresor_anhang_lesen"]

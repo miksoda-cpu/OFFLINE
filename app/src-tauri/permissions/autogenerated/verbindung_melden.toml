@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-verbindung-melden"
+description = "Enables the verbindung_melden command without any pre-configured scope."
+commands.allow = ["verbindung_melden"]
+
+[[permission]]
+identifier = "deny-verbindung-melden"
+description = "Denies the verbindung_melden command without any pre-configured scope."
+commands.deny = ["verbindung_melden"]

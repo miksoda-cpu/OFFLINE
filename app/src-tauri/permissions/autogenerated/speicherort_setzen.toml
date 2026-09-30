@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-speicherort-setzen"
+description = "Enables the speicherort_setzen command without any pre-configured scope."
+commands.allow = ["speicherort_setzen"]
+
+[[permission]]
+identifier = "deny-speicherort-setzen"
+description = "Denies the speicherort_setzen command without any pre-configured scope."
+commands.deny = ["speicherort_setzen"]

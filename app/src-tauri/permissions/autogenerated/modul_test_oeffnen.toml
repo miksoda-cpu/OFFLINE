@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-modul-test-oeffnen"
+description = "Enables the modul_test_oeffnen command without any pre-configured scope."
+commands.allow = ["modul_test_oeffnen"]
+
+[[permission]]
+identifier = "deny-modul-test-oeffnen"
+description = "Denies the modul_test_oeffnen command without any pre-configured scope."
+commands.deny = ["modul_test_oeffnen"]

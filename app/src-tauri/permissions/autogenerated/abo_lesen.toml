@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-abo-lesen"
+description = "Enables the abo_lesen command without any pre-configured scope."
+commands.allow = ["abo_lesen"]
+
+[[permission]]
+identifier = "deny-abo-lesen"
+description = "Denies the abo_lesen command without any pre-configured scope."
+commands.deny = ["abo_lesen"]

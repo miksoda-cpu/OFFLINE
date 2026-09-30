@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-modul-aktiv-setzen"
+description = "Enables the modul_aktiv_setzen command without any pre-configured scope."
+commands.allow = ["modul_aktiv_setzen"]
+
+[[permission]]
+identifier = "deny-modul-aktiv-setzen"
+description = "Denies the modul_aktiv_setzen command without any pre-configured scope."
+commands.deny = ["modul_aktiv_setzen"]

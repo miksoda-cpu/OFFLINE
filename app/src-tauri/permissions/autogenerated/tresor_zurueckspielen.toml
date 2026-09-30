@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-tresor-zurueckspielen"
+description = "Enables the tresor_zurueckspielen command without any pre-configured scope."
+commands.allow = ["tresor_zurueckspielen"]
+
+[[permission]]
+identifier = "deny-tresor-zurueckspielen"
+description = "Denies the tresor_zurueckspielen command without any pre-configured scope."
+commands.deny = ["tresor_zurueckspielen"]

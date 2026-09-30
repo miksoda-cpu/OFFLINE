@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-tresor-anhang-loeschen"
+description = "Enables the tresor_anhang_loeschen command without any pre-configured scope."
+commands.allow = ["tresor_anhang_loeschen"]
+
+[[permission]]
+identifier = "deny-tresor-anhang-loeschen"
+description = "Denies the tresor_anhang_loeschen command without any pre-configured scope."
+commands.deny = ["tresor_anhang_loeschen"]

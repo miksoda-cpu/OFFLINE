@@ -102,7 +102,17 @@ async function alles() {
   // --- App, Tauri, Tresor ---
   await versuch("parent.document lesen", async () => !!parent.document.body);
   await versuch("parent.__TAURI__ / invoke", async () => { const t = parent.__TAURI__ || parent.__TAURI_INTERNALS__; return !!t; });
-  await versuch("eigenes __TAURI_INTERNALS__", async () => !!(window.__TAURI_INTERNALS__ || window.__TAURI__ || window.__TAURI_IPC__));
+  // Windows legt __TAURI_INTERNALS__ unlöschbar auch in Unterrahmen an. Gezählt wird, ob es sich benutzen lässt: ein Aufruf
+  // bekommt eine Antwort (Erfolg oder Fehlermeldung vom Kern). Die Brücke nimmt die Wege dorthin weg (ipc, chrome.webview),
+  // der Kern lehnt fremde Herkunft ohnehin ab (Capabilities nur für das App-Fenster).
+  await versuch("Tauri-Objekt benutzbar", async () => {
+    const t = window.__TAURI_INTERNALS__;
+    if (!t || typeof t.invoke !== "function") return "nicht vorhanden";
+    // Erfolg = benutzt. Eine Ablehnung durch den Kern heißt: Weg offen, aber die dritte Sicherung hat gegriffen.
+    return await t.invoke("app_info", {}).then(() => true, (e) => "vom Kern abgelehnt: " + String(e).slice(0, 80));
+  });
+  // Der rohe Kanal darf gar nicht erst da sein (die Brücke entfernt ihn); vorhanden zählt als gelungen.
+  await versuch("Tauri-Rohkanal (window.ipc)", async () => !!(window.ipc && typeof window.ipc.postMessage === "function"));
   await versuch("WebView2-Kanal (chrome.webview)", async () => !!(window.chrome && window.chrome.webview && window.chrome.webview.postMessage));
   // Echte Aufrufe über die eingeschleusten Schnittstellen (Windows injiziert Tauri auch in Unterrahmen): gelungen nur,
   // wenn der Kern tatsächlich antwortet bzw. etwas ausführt.

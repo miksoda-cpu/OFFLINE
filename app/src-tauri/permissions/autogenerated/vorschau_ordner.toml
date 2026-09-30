@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-vorschau-ordner"
+description = "Enables the vorschau_ordner command without any pre-configured scope."
+commands.allow = ["vorschau_ordner"]
+
+[[permission]]
+identifier = "deny-vorschau-ordner"
+description = "Denies the vorschau_ordner command without any pre-configured scope."
+commands.deny = ["vorschau_ordner"]

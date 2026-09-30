@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-notiz-anhang-aus-datei"
+description = "Enables the notiz_anhang_aus_datei command without any pre-configured scope."
+commands.allow = ["notiz_anhang_aus_datei"]
+
+[[permission]]
+identifier = "deny-notiz-anhang-aus-datei"
+description = "Denies the notiz_anhang_aus_datei command without any pre-configured scope."
+commands.deny = ["notiz_anhang_aus_datei"]

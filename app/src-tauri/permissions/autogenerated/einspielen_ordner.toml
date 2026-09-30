@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-einspielen-ordner"
+description = "Enables the einspielen_ordner command without any pre-configured scope."
+commands.allow = ["einspielen_ordner"]
+
+[[permission]]
+identifier = "deny-einspielen-ordner"
+description = "Denies the einspielen_ordner command without any pre-configured scope."
+commands.deny = ["einspielen_ordner"]

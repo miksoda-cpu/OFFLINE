@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-skin-stand"
+description = "Enables the skin_stand command without any pre-configured scope."
+commands.allow = ["skin_stand"]
+
+[[permission]]
+identifier = "deny-skin-stand"
+description = "Denies the skin_stand command without any pre-configured scope."
+commands.deny = ["skin_stand"]

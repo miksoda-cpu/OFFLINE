@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-katalog-laden"
+description = "Enables the katalog_laden command without any pre-configured scope."
+commands.allow = ["katalog_laden"]
+
+[[permission]]
+identifier = "deny-katalog-laden"
+description = "Denies the katalog_laden command without any pre-configured scope."
+commands.deny = ["katalog_laden"]

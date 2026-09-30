@@ -1038,3 +1038,67 @@ mod tests {
         assert!(!super::app_passt("99.0.0"));
     }
 }
+
+/// Dritte Sicherung für Module (SICHERHEIT.md): Tauri-Befehle gelten nur im App-Fenster bei lokaler Herkunft. Jede Anfrage
+/// mit der Adresse des Modulservers – oder eines anderen Rahmens – lehnt Tauri ab, bevor ein Befehl läuft.
+#[cfg(test)]
+mod berechtigungen {
+    use tauri::ipc::{CallbackFn, InvokeBody};
+    use tauri::test::{get_ipc_response, mock_builder, MockRuntime, INVOKE_KEY};
+    use tauri::webview::InvokeRequest;
+
+    fn fenster() -> (tauri::App<MockRuntime>, tauri::WebviewWindow<MockRuntime>) {
+        let app = mock_builder().invoke_handler(tauri::generate_handler![super::app_info]).build(tauri::generate_context!(test = true)).expect("App");
+        let w = tauri::WebviewWindowBuilder::new(&app, "main", Default::default()).build().expect("Fenster");
+        (app, w)
+    }
+
+    fn anfrage(cmd: &str, url: &str) -> InvokeRequest {
+        InvokeRequest {
+            cmd: cmd.into(), callback: CallbackFn(0), error: CallbackFn(1), url: url.parse().expect("URL"),
+            body: InvokeBody::default(), headers: Default::default(), invoke_key: INVOKE_KEY.into(),
+        }
+    }
+
+    #[test]
+    fn app_fenster_darf() {
+        let (_app, w) = fenster();
+        // Die eigene Herkunft des App-Fensters: Windows (WebView2) http://tauri.localhost, sonst tauri://localhost
+        let eigen = if cfg!(windows) { "http://tauri.localhost/app.html" } else { "tauri://localhost/app.html" };
+        assert!(get_ipc_response(&w, anfrage("app_info", eigen)).is_ok(), "App-Fenster {eigen} muss app_info aufrufen dürfen");
+    }
+
+    #[test]
+    fn modulserver_bekommt_keinen_befehl() {
+        let (_app, w) = fenster();
+        let befehle = ["app_info", "tresor_status", "tresor_notizen", "tresor_notfallmappe", "modul_speicher_lesen", "alles_loeschen",
+            "speicherort_setzen", "app_update_installieren", "plugin:opener|open_url", "plugin:dialog|open", "plugin:event|emit"];
+        for url in ["http://127.0.0.1:43210/geheim-9f2c/index.html", "http://localhost:43210/x/index.html", "https://example.org/", "null://x"] {
+            for cmd in befehle {
+                let r = get_ipc_response(&w, anfrage(cmd, url));
+                assert!(r.is_err(), "{cmd} von {url} muss abgelehnt werden, kam durch");
+            }
+        }
+    }
+
+    #[test]
+    fn befehlsliste_vollstaendig() {
+        // build.rs (App-Manifest), permissions/app.toml und generate_handler! müssen dieselben Befehle nennen
+        let lib = include_str!("lib.rs");
+        let h = &lib[lib.find("generate_handler![").expect("Handler") + 18..];
+        let registriert: std::collections::BTreeSet<&str> = h[..h.find(']').expect("Ende")].split(',')
+            .map(|n| n.trim().rsplit("::").next().unwrap_or("").trim()).filter(|n| !n.is_empty()).collect();
+        assert!(!include_str!("../capabilities/default.json").contains("\"remote\""), "Keine Capability für fremde Adressen");
+        assert_eq!(std::fs::read_dir(concat!(env!("CARGO_MANIFEST_DIR"), "/capabilities")).expect("capabilities").count(), 1, "nur default.json");
+        let build = include_str!("../build.rs");
+        let rechte = include_str!("../permissions/app.toml");
+        for b in &registriert {
+            assert!(build.contains(&format!("\"{b}\"")), "{b} fehlt in build.rs");
+            assert!(rechte.contains(&format!("\"allow-{}\"", b.replace('_', "-"))), "{b} fehlt in permissions/app.toml");
+        }
+        let liste = &build[build.find("&[").expect("Liste") + 2..];
+        let genannt = liste[..liste.find("];").expect("Ende")].split(',').filter(|n| !n.trim().is_empty()).count();
+        assert_eq!(genannt, registriert.len(), "build.rs nennt Befehle, die es nicht gibt");
+    }
+}
+

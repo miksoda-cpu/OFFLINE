@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-tresor-status"
+description = "Enables the tresor_status command without any pre-configured scope."
+commands.allow = ["tresor_status"]
+
+[[permission]]
+identifier = "deny-tresor-status"
+description = "Denies the tresor_status command without any pre-configured scope."
+commands.deny = ["tresor_status"]
