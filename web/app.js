@@ -8,7 +8,7 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.2.0";
+const APP_VERSION = "0.2.1";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -109,7 +109,7 @@ const testLeiste = () => desktop?.info?.entwickler ? `<div class="card of-karte"
 function bestaetigen(id, ja = true) {
   if (ja) state.bestaetigt[id] = new Date(testJetzt()).toISOString(); else delete state.bestaetigt[id];
   speicher.set("bereit-v2", state.bestaetigt);
-  if (ja && BEREIT_POSITIONEN.find((p) => p.id === id)?.fest) wesen.fest(); else if (ja && wesen.aktiv()) wesen.freude();
+  if (ja && BEREIT_POSITIONEN.find((p) => p.id === id)?.fest) wesen.fest(); else if (ja && wesen.mitFigur()) wesen.freude();
   render();
 }
 const D = (name) => inhalt(P(), `inhalt/${name}.json`);
@@ -189,9 +189,8 @@ const seiten = {
       <div class="card of-karte" style="margin-bottom:1rem"><h3>Menschen und Können</h3><p class="muted of-klein" style="margin:.2rem 0 .4rem">Dinge, die verfallen. Einmal bestätigen, dann ist Ruhe, bis es wieder so weit ist.${b.faellig.some((x) => x.check) ? " Fällige Punkte der Checkliste stehen darunter." : ""}</p>
         ${b.positionen.filter((x) => (!x.check && !x.auto) || (x.check && x.stand === "faellig")).map((x) => `<div class="bestaetigung of-liste__zeile"><span><strong>${esc(x.titel)}</strong><br><span class="muted of-klein">${x.stand === "gut" ? `gültig noch ${x.rest} Tage` : x.stand === "faellig" ? `<span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span> seit ${-x.rest} Tagen` : esc(x.hinweis ?? "")}</span></span><button class="btn btn-sm of-btn of-btn--klein ${x.stand === "gut" ? "" : "btn-primary of-btn--primaer"}" data-bestaetigen="${x.id}">${x.stand === "gut" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
       </div>
-      ${wesen.aktiv() ? `<details class="card of-karte" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted of-klein">· ${esc(wesen.anzeigename())} · Einstellungen</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
-      <details class="card of-karte" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>Was ${esc(wesen.anzeigename())} gesagt hat</strong> <span class="muted of-klein" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` :
-      `<details class="card of-karte" style="margin-bottom:1rem"><summary><strong>Lumi</strong> <span class="muted of-klein">· aus</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>`}
+      <details class="card of-karte" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? `${esc(wesen.anzeigename())} · Einstellungen` : wesen.aktiv() ? "Textkarten" : "Tipps aus"}</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
+      ${wesen.aktiv() || wesen.log.length ? `<details class="card of-karte" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>${wesen.mitFigur() ? `Was ${esc(wesen.anzeigename())} gesagt hat` : "Bisherige Tipps"}</strong> <span class="muted of-klein" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` : ""}
       ${updates ? `<a class="card of-karte" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn of-plakette of-plakette--warnung">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted of-klein">· ${intervallText()}</span></a>` : ""}
       ${land ? `<div class="card of-karte" style="margin-top:0"><strong>${esc(land.name)}</strong> <span class="muted of-klein">· Landeshauptstadt ${esc(land.hauptstadt)} · im Krisenfall informiert <strong>${esc(land.orf_radio)}</strong></span></div>` : ""}
       <h2 style="margin-top:2rem">Installiert</h2>
@@ -823,7 +822,7 @@ async function modulAnsichtZeigen() {
         try { await client.drucken(); } catch { print(); }
       },
       wesenSagen: async (t) => {
-        if (!wesen.aktiv() || (!wesen.benannt() && !ohneIch(t))) return; // nur eingeschaltet, und ohne Namen kein „ich“
+        if (!wesen.mitFigur() || (!wesen.benannt() && !ohneIch(t))) return; // nur mit Figur, und ohne Namen kein „ich“
         const el = document.getElementById("modul-wesen");
         if (!el) return;
         el.textContent = `${wesen.anzeigename()}: „${t}“`; el.hidden = false;

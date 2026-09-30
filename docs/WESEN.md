@@ -4,8 +4,15 @@
 
 ## B. Umsetzung (App 0.1.5, 28.09.2026; Lumi und Bereit 2 in 0.2.0, 29.09.2026)
 
+**Nachtrag 0.2.1 (Entscheidungen Mik 29.09. abends, Auftrag `2026-09-29-lumi-nachtrag`):**
+- **Drei Stufen:** *Aus mit Textkarten* (Standard), *Lumi mit Tipps*, *Tipps aus*. Textkarten: keine Figur, Tipps als neutrale Karte unten rechts im selben Takt, nur die Sorten App, Alltag, Wissen, dazu Digital, wenn angekreuzt. *Tipps aus*: ganz still, nur die Bereit-Zahl, keine Einladung. Wahl unter „Lumi“ auf der Übersicht; „Lumi ausschalten“ führt zurück zu den Textkarten.
+- **Von sich erzählen** (Text mit ich/mir/mein oder Bedingung `benannt`) nur bei eingeschalteter und benannter Lumi, nie auf Textkarten.
+- **Übergang:** Aus 0.2.0 werden „aus“ (dort Standard) und „Nur Tipps“ zu Textkarten, die Figur bleibt, wer sie hatte (Einstellungen `version: 3`). Aus 0.1.x: benannt behält die Figur, alle anderen Textkarten.
+- **Einladung** nach einer Woche nur bei Textkarten. „Nein, danke“ heißt laut Startablauf „nie wieder“, ein eigener Knopf „Nicht mehr zeigen“ war deshalb nicht nötig.
+- **Nachts schläft sie:** Mit Figur geht sie zur Schlafenszeit in „Schläft“, auch bei offener App, und gibt keine Tipps. Ein Stups weckt sie für eine Minute, danach schläft sie wieder ein. Ohne Gelerntes 22 bis 6 Uhr. Gelernt: je Abend die letzte Eingabe zwischen 18 und 3 Uhr, Schlafenszeit = Median der letzten 14 Abende plus 30 Minuten (21 bis 1 Uhr), ab 7 Abenden (`wesen-gelernt.abende`).
+
 **Lumi in 0.2.0 (`web/wesen.js`, Tests `web/wesen.test.mjs`):**
-- **Standard aus.** Frische Installation: aus, nach einer Woche einmal die dunkle Karte mit zwei Lichtern („Unter dem Eis wohnt jemand.“, *Ja, zeig sie mir* / *Nein, danke*; nach „Nein“ nie wieder). Einschalten jederzeit unter „Lumi“ auf der Übersicht. Solange sie aus ist: ganz still, keine Tipps.
+- **Standard aus** (seit 0.2.1: aus mit Textkarten, siehe oben). Frische Installation: aus, nach einer Woche einmal die dunkle Karte mit zwei Lichtern („Unter dem Eis wohnt jemand.“, *Ja, zeig sie mir* / *Nein, danke*; nach „Nein“ nie wieder). Einschalten jederzeit unter „Lumi“ auf der Übersicht. Solange sie aus ist: ganz still, keine Tipps.
 - **Übergang:** Wer in 0.1.x einen eigenen Namen vergeben hatte, behält Name und Darstellung. Alle anderen sind nach dem Update aus und bekommen die Karte nach einer Woche.
 - **Startablauf** nach `OFFLINE-Lumi-Startablauf.md` mit den Texten von dort: erster Satz „Oh. Hier oben ist es hell.“, Namensfrage mit *Namen geben* / *Später*, erster Satz mit Namen, Ausschalten mit Rückfrage („… geht schlafen.“ *Ausschalten* / *Doch nicht*), Wiedereinschalten: kurz schlafen, dann „Da bist du ja. Ich hab geschlafen.“ Name, Log und Zustand bleiben.
 - **Kein „ich“ ohne Namen:** Tipps mit ich/mir/mich/mein tragen `benannt`; zusätzlich filtert die App jeden Text, der von sich spricht, solange es keinen Namen gibt – auch Laute beim Anstupsen und `wesen.sagen` aus Modulen.
@@ -252,6 +259,8 @@ Wer OFFLINE zum ersten Mal öffnet, sieht keine Lumi. Eine Lumi zu sehen ist ein
 Das Paket `wir` bleibt installiert, auch wenn die Lumi aus ist; es liefert nur, was eingeschaltet ist. Jede Stufe ist jederzeit umschaltbar, nichts geht verloren: Das Log bleibt, der Name bleibt, die Lumi wacht beim Wiedereinschalten auf, als wäre sie weg gewesen (Zustand „Schläft“), und wirft nichts vor.
 
 **Offen (Mik):** Kommen Tipps ohne Figur („Nur Tipps“), solange die Lumi aus ist, oder ist bei „Aus“ alles still? Vorschlag: still, damit „aus“ wirklich aus ist.
+
+*Entschieden 29.09.2026 abends (Mik, Nachtrag): Standard „aus mit Textkarten“, dazu die Stufe „Tipps aus“; nachts schläft sie. Umsetzung siehe Abschnitt B, Nachtrag 0.2.1.*
 
 | Einstellung | Schicht | Standard |
 |---|---|---|

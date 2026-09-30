@@ -1,7 +1,8 @@
 // Die Lumi – ein Wesen von unter dem antarktischen Eis. Oberfläche und Zustände; die Tipps kommen aus dem Paket „wir“.
 // Grundsätze: Sie stirbt nicht, bettelt nicht (keine Push), lügt nicht (die Bereit-Zahl steht daneben). Pakete liefern nur Text,
 // Bedingungen sind Daten (kein Code), jeder Tipp wird beim Anzeigen entschärft.
-// Standard ist aus (Wesen-Konzept Entwurf 3). Erst mit einem Namen hat die Lumi ein „Ich“; vorher spricht sie nicht von sich.
+// Drei Stufen (Nachtrag 29.09.): Standard „aus mit Textkarten“ (keine Figur, neutrale Tipps), „Lumi mit Tipps“, „Tipps aus“.
+// Erst mit einem Namen und eingeschaltet hat die Lumi ein „Ich“; sonst spricht nichts von sich. Nachts schläft sie.
 // Startablauf und Texte: docs/WESEN.md, Abschnitt A. Bilder: web/lumi/ (Herkunft docs/LUMI-BILDER.md).
 
 import { stufe } from "./bereit.js";
@@ -24,7 +25,7 @@ export const ZUSTAND_TEXT = {
 export const SORTEN = { app: "App", alltag: "Alltag", wissen: "Wissen", weisheit: "Weisheit", laune: "Laune", heute: "Heute", digital: "Digital" };
 
 const STANDARD = {
-  version: 2, darstellung: "aus", name: "", figur: "foto", fell: "eisblau", welt: "hoehle", laute: true, toene: false, takt: "normal",
+  version: 3, darstellung: "karten", name: "", figur: "foto", fell: "eisblau", welt: "hoehle", laute: true, toene: false, takt: "normal",
   sorten: { app: true, alltag: true, wissen: true, weisheit: true, laune: true, heute: true, digital: false }, baut: true, groesse: "mittel",
 };
 
@@ -44,27 +45,35 @@ export const TEXTE = {
   wiederDaOhneNamen: "Oh. Wieder hell hier.",
 };
 
+/** Die drei Stufen der Darstellung. */
+export const DARSTELLUNG = { karten: "Aus mit Textkarten", wesen: "Lumi mit Tipps", aus: "Tipps aus" };
+/** Sorten, die als neutrale Textkarte kommen (Digital nur, wenn angekreuzt). */
+export const KARTEN_SORTEN = ["app", "alltag", "wissen", "digital"];
+
 /** Spricht der Text von sich selbst? Vor der Namensgabe ist das nicht erlaubt. */
 export const ICH = /(^|[^\p{L}])(ich|mir|mich|mein|meine|meinen|meinem|meiner|meines)(?![\p{L}])/iu;
 export const ohneIch = (text) => !ICH.test(String(text ?? ""));
 
 /**
- * Einstellungen laden und Bestand übernehmen. Frisch: aus. Aus 0.1.x (ohne version): Wer der Lumi einen eigenen Namen
- * gegeben hatte, behält Name und Darstellung. Alle anderen sind nach dem Update aus und bekommen später die Einladung.
+ * Einstellungen laden und Bestand übernehmen. Frisch: aus mit Textkarten.
+ * - 0.1.x (ohne version): Wer der Lumi einen eigenen Namen gegeben hatte, behält die Figur; alle anderen bekommen Textkarten.
+ * - 0.2.0 (version 2): „aus“ war dort der Standard und ist jetzt „aus mit Textkarten“ (ersetzt „ganz still“), ebenso
+ *   „Nur Tipps“. Die Figur bleibt, wer sie hatte. Die Einladung kommt weiter nach einer Woche.
  */
 export function lumiEinstellungenLaden(gespeichert) {
   const g = gespeichert && typeof gespeichert === "object" ? gespeichert : null;
   if (!g) return { ...STANDARD, sorten: { ...STANDARD.sorten } };
   const e = { ...STANDARD, ...g, sorten: { ...STANDARD.sorten, ...(g.sorten || {}) } };
-  if (g.version === 2) return e;
+  if (g.version === 3) return { ...e, darstellung: g.darstellung in DARSTELLUNG ? g.darstellung : "karten" };
+  if (g.version === 2) return { ...e, version: 3, darstellung: g.darstellung === "wesen" ? "wesen" : "karten" };
   const name = String(g.name ?? "").trim();
   const benannt = name !== "" && name !== "Das Wesen";
-  return { ...e, version: 2, name: benannt ? name : "", darstellung: benannt ? (g.darstellung || "wesen") : "aus" };
+  return { ...e, version: 3, name: benannt ? name : "", darstellung: benannt && (g.darstellung || "wesen") === "wesen" ? "wesen" : "karten" };
 }
 
-/** Die einmalige Karte mit zwei Lichtern: nur solange die Lumi aus ist, frühestens nach einer Woche, nie nach „Nein, danke“. */
+/** Die einmalige Karte mit zwei Lichtern: nur bei Textkarten (nicht bei „Tipps aus“), frühestens nach einer Woche, nie nach „Nein, danke“. */
 export function einladungFaellig(start, e, jetzt = Date.now()) {
-  if (e.darstellung !== "aus" || !start || start.karte !== "offen") return false;
+  if (e.darstellung !== "karten" || !start || start.karte !== "offen") return false;
   return jetzt - new Date(start.erstStart).getTime() >= 7 * 86400000;
 }
 
@@ -122,12 +131,51 @@ export function passtBedingung(b, k) {
   return true;
 }
 
-/** Welche Tipps kommen in Frage? Ist die Lumi aus, keiner. Ohne Namen keiner, der von sich spricht. */
+/** Erzählt die Lumi im Tipp von sich (sagt „ich“ oder braucht ihren Namen)? */
+export const erzaehltVonSich = (t) => !ohneIch(t?.text) || !!t?.bedingung?.benannt;
+
+/**
+ * Welche Tipps kommen in Frage? „Tipps aus“: keiner. Textkarten: nur App, Alltag, Wissen (Digital, wenn angekreuzt), nichts,
+ * worin die Lumi von sich erzählt. Lumi mit Tipps: alle angekreuzten Sorten; von sich erzählt sie nur mit Namen.
+ */
 export function tippPool(alle, e, k) {
   if (!e || e.darstellung === "aus") return [];
+  const figur = e.darstellung === "wesen";
   return (alle || []).filter((t) => t && typeof t.text === "string" && SORTEN[t.sorte] && e.sorten[t.sorte]
-    && passtBedingung(t.bedingung, k) && (k.benannt || ohneIch(t.text)));
+    && (figur || KARTEN_SORTEN.includes(t.sorte))
+    && passtBedingung(t.bedingung, k) && (!erzaehltVonSich(t) || (figur && k.benannt)));
 }
+
+// ---------- Nachts schläft sie ----------
+// Solange nichts gelernt ist, 22 bis 6 Uhr. Gelernt wird aus den Abenden: je Abend die letzte Eingabe zwischen 18 und 3 Uhr,
+// die Schlafenszeit ist der Median der letzten 14 Abende plus eine halbe Stunde (frühestens 21, spätestens 1 Uhr), ab 7 Abenden.
+export const NACHT = { von: 22 * 60, bis: 6 * 60 };
+const minutenSeitMittag = (d) => ((d.getHours() * 60 + d.getMinutes()) - 12 * 60 + 1440) % 1440;
+export function schlafenszeit(gelernt) {
+  const a = Object.values(gelernt?.abende ?? {}).filter(Number.isFinite);
+  if (a.length < 7) return NACHT.von;
+  const s = [...a].sort((x, y) => x - y); const m = s[Math.floor(s.length / 2)];
+  const seitMittag = Math.min(13 * 60, Math.max(9 * 60, m + 30)); // 21:00 … 01:00
+  return (seitMittag + 12 * 60) % 1440;
+}
+/** Schläft sie jetzt, weil Nacht ist? */
+export function nachtsSchlaf(jetzt, gelernt) {
+  const d = new Date(jetzt); const m = d.getHours() * 60 + d.getMinutes(); const von = schlafenszeit(gelernt);
+  return von > NACHT.bis ? m >= von || m < NACHT.bis : m >= von && m < NACHT.bis;
+}
+/** Merkt die letzte Eingabe des Abends (18 bis 3 Uhr), höchstens 14 Abende. Gibt true zurück, wenn sich etwas geändert hat. */
+export function abendMerken(gelernt, jetzt) {
+  const d = new Date(jetzt); const h = d.getHours();
+  if (h < 18 && h >= 3) return false;
+  const abend = new Date(jetzt - 12 * 3600000).toISOString().slice(0, 10); // der Tag, zu dem der Abend gehört
+  const wert = minutenSeitMittag(d);
+  const a = (gelernt.abende ??= {});
+  if (a[abend] >= wert) return false;
+  a[abend] = wert;
+  for (const alt of Object.keys(a).sort().slice(0, -14)) delete a[alt];
+  return true;
+}
+const WACH_MS = 60000; // ein Stups weckt sie für eine Minute
 const TAKT = { normal: 90, seltener: 180, aus: 0 };
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const rnd = (n) => Math.floor(Math.random() * n);
@@ -140,7 +188,7 @@ export class Wesen {
     this.start = this.sp.get("lumi-start", null) ?? { erstStart: new Date().toISOString(), karte: "offen" };
     this.sp.set("lumi-start", this.start);
     this.positionen = {}; this.sprichtBis = 0; this.denktBis = 0; this.freudeBis = 0; this.hoertZu = false;
-    this.namensfrage = !this.e.name && this.e.darstellung !== "aus"; this.ausschaltenFrage = false;
+    this.namensfrage = !this.e.name && this.e.darstellung === "wesen"; this.ausschaltenFrage = false; this.wachBis = 0;
     this.gelernt = this.sp.get("wesen-gelernt", { intervall: 90, gelesen: 0, weitergewischt: 0 });
     this.log = this.sp.get("wesen-log", []);
     this.score = 0; this.verfallen = []; this.zustand = "sitzt"; this.ansichtName = "start";
@@ -151,12 +199,16 @@ export class Wesen {
     this.schlaeft = zuletzt ? Date.now() - new Date(zuletzt).getTime() > 30 * 86400000 : false;
     this.sp.set("wesen-zuletzt", new Date().toISOString());
     this.festBis = new Date(this.sp.get("wesen-fest", 0) || 0).getTime();
-    addEventListener("pointerdown", () => (this.letzteEingabe = Date.now()), { passive: true });
-    addEventListener("keydown", () => (this.letzteEingabe = Date.now()));
+    const eingabe = () => {
+      this.letzteEingabe = Date.now();
+      if (abendMerken(this.gelernt, this.letzteEingabe) && Date.now() - (this.abendGespeichert ?? 0) > 60000) { this.abendGespeichert = Date.now(); this.sp.set("wesen-gelernt", this.gelernt); }
+    };
+    addEventListener("pointerdown", eingabe, { passive: true });
+    addEventListener("keydown", eingabe);
   }
 
   speichern() { this.sp.set("lumi-start", this.start); this.sp.set("wesen", this.e); this.sp.set("wesen-gelernt", this.gelernt); this.sp.set("wesen-log", this.log.slice(-500)); }
-  aktiv() { return this.e.darstellung !== "aus"; }
+  aktiv() { return this.e.darstellung !== "aus"; } // es kommen Tipps (als Lumi oder als Textkarte)
   mitFigur() { return this.e.darstellung === "wesen"; }
   benannt() { return this.e.name.trim() !== ""; }
   anzeigename() { return this.benannt() ? this.e.name : "Lumi"; }
@@ -183,10 +235,13 @@ export class Wesen {
     this.freude(4000); setTimeout(() => this.sagen(TEXTE.mitNamen(name)), 80); // nach dem Neuzeichnen der Seite
   }
   spaeter() { this.namensfrage = false; this.hoertZu = false; }
-  ausschalten() {
-    this.e.darstellung = "aus"; this.ausschaltenFrage = false; this.speichern(); this.planen();
+  /** Lumi ausschalten: zurück zu den Textkarten. „Tipps aus“ wählt man in den Einstellungen. */
+  ausschalten(stufe = "karten") {
+    this.e.darstellung = stufe; this.ausschaltenFrage = false; this.namensfrage = false; this.speichern(); this.planen();
     this.tippSchliessen();
   }
+  /** Schläft sie gerade, weil Nacht ist (und kein Stups sie kurz geweckt hat)? */
+  nachtruhe(jetzt = Date.now()) { return this.mitFigur() && nachtsSchlaf(jetzt, this.gelernt) && !(this.wachBis > jetzt); }
   freude(ms = 3000) { this.freudeBis = Date.now() + ms; this.zeichnen(); }
   sagen(text) { if (this.benannt() || ohneIch(text)) { this.sprichtBis = Date.now() + 2500; this.sprechblase(text, null, 3500); this.zeichnen(); } }
 
@@ -199,7 +254,7 @@ export class Wesen {
   zustandBerechnen() {
     const jetzt = Date.now();
     if (this.zaehneBis > jetzt) return (this.zustand = "zaehne");
-    if (this.schlaeft) return (this.zustand = "schlaeft");
+    if (this.schlaeft || this.nachtruhe(jetzt)) return (this.zustand = "schlaeft");
     if (this.festBis > jetzt) return (this.zustand = "fest");
     if (this.verfallen.length && this.score >= 30) return (this.zustand = "unruhig");
     const st = stufe(this.score); // gemeinsame Stufen aus bereit.js
@@ -210,6 +265,7 @@ export class Wesen {
     const jetzt = Date.now();
     this.letzteEingabe = jetzt;
     if (this.schlaeft) { this.schlaeft = false; this.zustandBerechnen(); this.laut(this.benannt() ? "…mh? Da bin ich." : "…mh?"); this.zeichnen(); return; }
+    if (this.nachtruhe(jetzt)) { this.wachBis = jetzt + WACH_MS; this.zustandBerechnen(); this.laut("…mh?"); this.zeichnen(); setTimeout(() => { this.zustandBerechnen(); this.zeichnen(); }, WACH_MS + 50); return; }
     this.pokes = this.pokes.filter((t) => jetzt - t < 1200); this.pokes.push(jetzt);
     if (this.pokes.length >= 3) {
       this.pokes = []; this.zaehneBis = jetzt + 1000; this.zustandBerechnen(); this.laut("grrr"); this.ton("zaehne");
@@ -278,6 +334,7 @@ export class Wesen {
     const versuch = () => {
       if (this.sitzung.tipps >= 12 || this.ansichtName === "notfall" || document.hidden) return;
       if (Date.now() - this.letzteEingabe > 120000) return; // Stillstand: pausieren
+      if (this.nachtruhe()) return; // sie schläft
       this.zeigeTipp(this.waehleTipp());
     };
     this.timer = setTimeout(versuch, 3000);
@@ -286,7 +343,7 @@ export class Wesen {
   ansicht(name) {
     const vorher = this.ansichtName; this.ansichtName = name;
     if (name === "start") { const toast = document.getElementById("wesen-toast"); if (toast) { toast.remove(); this.aktuellerTipp = null; } this.planen(); return; }
-    if (!this.aktiv() || name === vorher || this.ansichtTippGezeigt.has(name) || name === "notfall" || this.sitzung.tipps >= 12) return;
+    if (!this.aktiv() || this.nachtruhe() || name === vorher || this.ansichtTippGezeigt.has(name) || name === "notfall" || this.sitzung.tipps >= 12) return;
     const t = this.waehleTipp(name); if (t) { this.ansichtTippGezeigt.add(name); this.zeigeTipp(t); }
   }
   stern(id) { const l = this.log.find((x) => x.id === id && !x.stern) || [...this.log].reverse().find((x) => x.id === id); if (l) { l.stern = !l.stern; this.speichern(); } }
@@ -434,11 +491,18 @@ export class Wesen {
   }
 
   // ---------- Einstellungen und Log (HTML) ----------
-  /** Einstellungen › Lumi. Aus: Beschreibung und Schalter. An: Name, Darstellung, Ausschalten (mit Rückfrage) und der Rest. */
+  /**
+   * Einstellungen › Lumi. Immer die Wahl der drei Stufen. Ohne Figur: Beschreibung, „Lumi zeigen“ und bei Textkarten die
+   * Sorten. Mit Figur: Name, Figur, Ausschalten (mit Rückfrage) und der Rest.
+   */
   einstellungenHtml() {
     const e = this.e;
     const opt = (v, l, cur) => `<option value="${v}" ${cur === v ? "selected" : ""}>${l}</option>`;
-    if (!this.aktiv()) return `<p style="margin:0 0 .6rem">${esc(TEXTE.beschreibung)}</p>
+    const stufen = `<label>Darstellung<br><select class="of-select" data-wesen="darstellung">${Object.entries(DARSTELLUNG).map(([k, l]) => opt(k, l, e.darstellung)).join("")}</select></label>`;
+    if (!this.mitFigur()) return `${stufen}
+      <p class="muted of-klein" style="margin:.4rem 0 .8rem">${e.darstellung === "aus" ? "Ganz still: keine Tipps, nur die Bereit-Zahl." : "Ab und zu ein Tipp als Textkarte, ohne Figur."}</p>
+      ${e.darstellung === "karten" ? `<div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:.8rem">${KARTEN_SORTEN.map((k) => `<label><input type="checkbox" data-wesen-sorte="${k}" ${e.sorten[k] ? "checked" : ""}> ${SORTEN[k]}${k === "digital" ? ' <span class="muted of-klein">(Einstieg in die digitale Welt)</span>' : ""}</label>`).join("")}</div>` : ""}
+      <p style="margin:0 0 .6rem">${esc(TEXTE.beschreibung)}</p>
       <button type="button" class="btn btn-primary of-btn of-btn--primaer" data-lumi="einschalten">Lumi zeigen</button>
       <p class="muted of-klein" style="margin:.6rem 0 0;font-size:.85rem">${esc(TEXTE.einladungHinweis)} ${esc(TEXTE.ki)}${this.benannt() ? ` ${esc(e.name)} und alles, was sie gesagt hat, bleiben gespeichert.` : ""}</p>`;
     const aus = this.ausschaltenFrage
@@ -446,7 +510,7 @@ export class Wesen {
       : `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi="ausschalten-frage">Lumi ausschalten</button>`;
     return `<div class="grid grid-3">
       <label>Name<br><input class="of-input" type="text" data-wesen="name" value="${esc(e.name)}" maxlength="24" autocomplete="off" placeholder="noch ohne Namen"></label>
-      <label>Darstellung<br><select class="of-select" data-wesen="darstellung">${opt("wesen", "Lumi mit Tipps", e.darstellung)}${opt("tipps", "Nur Tipps", e.darstellung)}</select></label>
+      ${stufen}
       <label>Figur<br><select class="of-select" data-wesen="figur">${opt("foto", "Foto", e.figur)}${opt("pixel", "Pixel (sparsam)", e.figur)}</select></label>
       <label>Tipps<br><select class="of-select" data-wesen="takt">${opt("normal", "normal (alle 90 s)", e.takt)}${opt("seltener", "seltener", e.takt)}${opt("aus", "aus", e.takt)}</select></label>
       <label>Größe<br><select class="of-select" data-wesen="groesse">${opt("klein", "klein", e.groesse)}${opt("mittel", "mittel", e.groesse)}${opt("gross", "groß", e.groesse)}</select></label>
@@ -466,8 +530,12 @@ export class Wesen {
       ${liste.length ? `<ul class="wesen-log">${liste.slice(0, 200).map((l) => `<li><button class="wesen-stern ${l.stern ? "an" : ""}" data-wesen-stern="${esc(l.id)}" aria-label="Merken">${l.stern ? "★" : "☆"}</button><span class="wesen-sorte">${esc(SORTEN[l.sorte] ?? l.sorte)}</span> ${esc(l.text)} <span class="muted of-klein" style="font-size:.8rem">${new Date(l.zeit).toLocaleString("de-AT", { dateStyle: "short", timeStyle: "short" })}</span></li>`).join("")}</ul>` : `<p class="muted of-klein">Noch nichts gesagt.</p>`}`;
   }
   einstellen(k, v) {
+    if (k === "darstellung") {
+      if (!(v in DARSTELLUNG) || v === this.e.darstellung) return;
+      return v === "wesen" ? this.einschalten() : this.ausschalten(v);
+    }
     if (k in STANDARD.sorten) this.e.sorten[k] = v; else this.e[k] = v;
     if (k === "name") { const n = String(v).trim().slice(0, 24); if (!n) return; if (!this.benannt()) return this.namenGeben(n); this.e.name = n; }
-    this.speichern(); if (k === "takt" || k === "darstellung") this.planen();
+    this.speichern(); if (k === "takt") this.planen();
   }
 }
