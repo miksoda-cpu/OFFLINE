@@ -5,7 +5,36 @@ use std::cmp::Ordering;
 
 pub const FORMAT: u32 = 1;
 pub const TEILE_AB: u64 = 256 * 1024 * 1024;
-pub const ARTEN: [&str; 8] = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul", "skin"];
+pub const ARTEN: [&str; 9] = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul", "skin", "tage"];
+/// Tagesinhalte (Vorratskammer): nur Daten in inhalt/tage.json, dazu Herkunft und Lizenz als .md/.txt.
+pub const TAGE_DATEI: &str = "inhalt/tage.json";
+pub const TAGE_GRENZE: u64 = 20 * 1024 * 1024;
+const TAGE_ENDUNGEN: [&str; 3] = [".json", ".md", ".txt"];
+
+/// Bereich eines Tagespakets: nach Datum (von/bis, JJJJ-MM-TT) oder nach Tagnummer (Tag 1 = erster Tag auf dem Gerät).
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
+pub struct TageBereich {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub von: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bis: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub von_tag: Option<u32>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bis_tag: Option<u32>,
+}
+
+impl TageBereich {
+    /// Genau eine der beiden Formen, in sich stimmig.
+    pub fn gueltig(&self) -> bool {
+        let datum = |s: &Option<String>| s.as_deref().is_some_and(|d| d.len() == 10 && d.as_bytes()[4] == b'-' && d.as_bytes()[7] == b'-' && d.bytes().enumerate().all(|(i, b)| i == 4 || i == 7 || b.is_ascii_digit()));
+        match (&self.von, &self.bis, self.von_tag, self.bis_tag) {
+            (Some(_), Some(_), None, None) => datum(&self.von) && datum(&self.bis) && self.von <= self.bis,
+            (None, None, Some(a), Some(b)) => a >= 1 && a <= b,
+            _ => false,
+        }
+    }
+}
 /// Module (SICHERHEIT.md, Abschnitt Module): Oberfläche nur unter `inhalt/modul/`, höchstens 2 MB,
 /// nur mit dem Redaktionsschlüssel (Zweck „module“) signiert und mit `pruefstatus: redaktion`.
 pub const MODUL_ORDNER: &str = "inhalt/modul/";
@@ -60,6 +89,9 @@ pub struct Manifest {
     /// Bilder oder andere Inhalte sind mit KI erzeugt (Anzeige auf der Katalogkarte).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub ki_generiert: Option<bool>,
+    /// Nur bei Tagesinhalten: welche Tage das Paket abdeckt.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tage: Option<TageBereich>,
     /// Nur bei Modulen: Formatversion der gespeicherten Nutzerdaten, ab 1.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub datenversion: Option<u32>,
@@ -291,6 +323,22 @@ pub fn manifest_pruefen_struktur(m: &Manifest) -> Vec<String> {
         }
         if summe > SKIN_GRENZE {
             f.push(format!("Skin zu groß ({summe} Bytes, höchstens {SKIN_GRENZE})"));
+        }
+    }
+    if m.art == "tage" {
+        if !m.tage.as_ref().is_some_and(|t| t.gueltig()) {
+            f.push("Tagesinhalte brauchen tage (von/bis als Datum oder von_tag/bis_tag)".into());
+        }
+        if !m.dateien.iter().any(|d| d.pfad == TAGE_DATEI) {
+            f.push("Tagesinhalte ohne inhalt/tage.json".into());
+        }
+        for d in &m.dateien {
+            if !TAGE_ENDUNGEN.contains(&endung(&d.pfad).as_str()) {
+                f.push(format!("Tagesinhalte: Dateityp nicht erlaubt: {}", d.pfad));
+            }
+        }
+        if summe > TAGE_GRENZE {
+            f.push(format!("Tagesinhalte zu groß ({summe} Bytes, höchstens {TAGE_GRENZE})"));
         }
     }
     if m.art == "modul" {

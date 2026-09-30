@@ -187,3 +187,36 @@ fn einspielen_mit_tausch_und_aufraeumen() {
     assert!(!wurzel.join("at-basis-2099.01.01.neu").exists());
     assert_eq!(einspielen::installierte_version(&wurzel, "at-basis").unwrap().0, version);
 }
+
+#[test]
+fn tagesinhalte_nur_daten_mit_bereich() {
+    use offline_kern::manifest::{manifest_pruefen_struktur, TageBereich};
+    let sha = "a".repeat(64);
+    let mut t = m("2026.10.01", vec![d("inhalt/tage.json", &sha, 100), d("inhalt/herkunft.md", &sha, 10)]);
+    t.art = "tage".into();
+    t.id = "tage-2026-10".into();
+    t.tage = Some(TageBereich { von: Some("2026-10-01".into()), bis: Some("2026-10-31".into()), ..Default::default() });
+    assert!(manifest_pruefen_struktur(&t).is_empty(), "{:?}", manifest_pruefen_struktur(&t));
+    // nach Tagnummer
+    t.tage = Some(TageBereich { von_tag: Some(1), bis_tag: Some(60), ..Default::default() });
+    assert!(manifest_pruefen_struktur(&t).is_empty());
+    // ohne Bereich, beides gemischt, verkehrt herum, kein Datum
+    for b in [None,
+        Some(TageBereich { von: Some("2026-10-01".into()), bis: Some("2026-10-31".into()), von_tag: Some(1), bis_tag: Some(2) }),
+        Some(TageBereich { von: Some("2026-10-31".into()), bis: Some("2026-10-01".into()), ..Default::default() }),
+        Some(TageBereich { von: Some("1.10.2026".into()), bis: Some("2026-10-31".into()), ..Default::default() }),
+        Some(TageBereich { von_tag: Some(0), bis_tag: Some(5), ..Default::default() })] {
+        t.tage = b.clone();
+        assert!(manifest_pruefen_struktur(&t).iter().any(|f| f.contains("brauchen tage")), "{b:?}");
+    }
+    t.tage = Some(TageBereich { von_tag: Some(1), bis_tag: Some(60), ..Default::default() });
+    // Keine Bilder, kein Code, und tage.json muss da sein
+    for (pfad, erwartet) in [("inhalt/bild.png", "Dateityp nicht erlaubt"), ("inhalt/x.js", "keinen Code")] {
+        let mut u = t.clone();
+        u.dateien.push(d(pfad, &sha, 1)); u.groesse += 1;
+        assert!(manifest_pruefen_struktur(&u).iter().any(|f| f.contains(erwartet)), "{pfad}");
+    }
+    let mut ohne = t.clone();
+    ohne.dateien.retain(|x| x.pfad != "inhalt/tage.json"); ohne.groesse = 10;
+    assert!(manifest_pruefen_struktur(&ohne).iter().any(|f| f.contains("ohne inhalt/tage.json")));
+}

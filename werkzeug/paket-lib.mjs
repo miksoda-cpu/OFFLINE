@@ -7,6 +7,7 @@ import { readFile, writeFile, mkdir, readdir, stat, copyFile } from "node:fs/pro
 import path from "node:path";
 
 import { pruefeQuellordner } from "../paket-kit/pruefen.mjs";
+import { tageBereichFehler, tageInhaltFehler, TAGE_DATEI } from "../paket-kit/tage-format.mjs";
 import { FORMAT, TEILGROESSE_STANDARD, TEILE_AB, ARTEN, ID_MUSTER, pfadGueltig, versionVergleich, manifestPruefenStruktur, delta, schluesselPasstZurArt, brauchtSkriptPruefung, seiteHatSkript, brauchtCssPruefung, cssFehler } from "./kern.mjs";
 export { FORMAT, TEILGROESSE_STANDARD, TEILE_AB, ARTEN, pfadGueltig, versionVergleich, manifestPruefenStruktur, delta, schluesselPasstZurArt };
 
@@ -181,6 +182,7 @@ export async function paketBauen(quelle, zielWurzel, privat, { jetzt = new Date(
     groesse: dateien.reduce((s, d) => s + d.groesse, 0),
   };
   const fehler = manifestPruefenStruktur(manifest);
+  if (manifest.art === "tage") fehler.push(...await tageInhaltPruefen(ziel, manifest));
   if (fehler.length) throw new Error("Manifest ungültig:\n  " + fehler.join("\n  "));
 
   const bytes = Buffer.from(JSON.stringify(manifest, null, 2) + "\n");
@@ -189,10 +191,20 @@ export async function paketBauen(quelle, zielWurzel, privat, { jetzt = new Date(
   return { ziel, manifest };
 }
 
+/** Tagesinhalte: Bereich und inhalt/tage.json prüfen (paket-kit/tage-format.mjs). */
+export async function tageInhaltPruefen(ordner, m) {
+  const f = tageBereichFehler(m.tage);
+  if (f.length) return f;
+  let daten;
+  try { daten = JSON.parse(await readFile(path.join(ordner, TAGE_DATEI), "utf8")); } catch (e) { return [`${TAGE_DATEI}: ${e.message}`]; }
+  return tageInhaltFehler(daten, m.tage);
+}
+
 /** Angaben aus dem Paket-Kit, die ins Manifest wandern, soweit sie gesetzt sind (PAKETFORMAT.md 2.1). */
 function angaben(meta) {
   const a = {};
   for (const k of ["preis", "pruefstatus", "kategorie", "alter_ab", "abnahme", "ki_generiert"]) if (meta[k] !== undefined) a[k] = meta[k];
+  if (meta.art === "tage" && meta.tage !== undefined) a.tage = meta.tage;
   if (meta.art === "modul" && meta.datenversion !== undefined) a.datenversion = meta.datenversion;
   return a;
 }
@@ -223,6 +235,7 @@ export async function paketPruefen(ordner, bekannte, { jetzt = new Date() } = {}
       if (c) fehler.push(`CSS nicht erlaubt (${c}): ${d.pfad}`);
     }
   }
+  if (m.art === "tage" && !fehler.length) fehler.push(...await tageInhaltPruefen(ordner, m));
   return { ok: fehler.length === 0, fehler, manifest: m, schluessel: s };
 }
 
@@ -269,7 +282,7 @@ export async function katalogBauen(paketOrdner, { basis, geplant = [], gueltigTa
     const vorschau = await vorschauFuerKatalog(ordner, m);
     pakete.push({
       id: m.id, version: m.version, titel: m.titel, beschreibung: m.beschreibung, art: m.art, pro: m.pro,
-      ...Object.fromEntries(["preis", "pruefstatus", "kategorie", "alter_ab", "ki_generiert"].filter((k) => m[k] !== undefined).map((k) => [k, m[k]])),
+      ...Object.fromEntries(["preis", "pruefstatus", "kategorie", "alter_ab", "ki_generiert", "tage"].filter((k) => m[k] !== undefined).map((k) => [k, m[k]])),
       ...(vorschau ? { vorschau } : {}),
       groesse: m.groesse, app_min: m.app_min, erstellt: m.erstellt, aenderungen: m.aenderungen,
       pfad: `${path.basename(ordner)}/`, sha256_manifest: sha256(bytes), status: "verfuegbar",

@@ -5,7 +5,12 @@
 export const FORMAT = 1;
 export const TEILGROESSE_STANDARD = 64 * 1024 * 1024; // 64 MB
 export const TEILE_AB = 256 * 1024 * 1024; // ab 256 MB werden Dateien geteilt
-export const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul", "skin"];
+export const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul", "skin", "tage"];
+// Tagesinhalte (Vorratskammer, PAKET-KIT.md 5b): nur Daten in inhalt/tage.json (dazu Herkunft/Lizenz als .md/.txt),
+// Bereich im Manifest ("tage"), ab App 0.3.0. Den Inhalt prüft paket-kit/tage-format.mjs beim Bauen und im Kit.
+export const TAGE_DATEI = "inhalt/tage.json";
+export const TAGE_GRENZE = 20 * 1024 * 1024;
+export const TAGE_ENDUNGEN = [".json", ".md", ".txt"];
 // Module (SICHERHEIT.md, Abschnitt Module): Oberfläche nur unter inhalt/modul/, höchstens 2 MB,
 // nur mit dem Redaktionsschlüssel (Zweck „module“) signiert und mit pruefstatus „redaktion“.
 export const MODUL_ORDNER = "inhalt/modul/";
@@ -126,6 +131,16 @@ export function manifestPruefenStruktur(m) {
       else if (d.pfad.startsWith(SKIN_ORDNER) && !SKIN_ENDUNGEN.includes(endung(d.pfad))) f.push(`Skin: Dateityp nicht erlaubt: ${d.pfad}`);
     }
     if (summe > SKIN_GRENZE) f.push(`Skin zu groß (${summe} Bytes, höchstens ${SKIN_GRENZE})`);
+  }
+  if (m.art === "tage") {
+    const t = m.tage;
+    const datum = t && typeof t.von === "string" && typeof t.bis === "string" && t.von <= t.bis;
+    const nummer = t && Number.isInteger(t.von_tag) && Number.isInteger(t.bis_tag) && t.von_tag >= 1 && t.von_tag <= t.bis_tag;
+    if (!datum && !nummer) f.push("Tagesinhalte brauchen tage (von/bis als Datum oder von_tag/bis_tag)");
+    if (!m.dateien.some((d) => d.pfad === TAGE_DATEI)) f.push("Tagesinhalte ohne inhalt/tage.json");
+    for (const d of m.dateien) if (!TAGE_ENDUNGEN.includes(endung(d.pfad ?? ""))) f.push(`Tagesinhalte: Dateityp nicht erlaubt: ${d.pfad}`);
+    if (summe > TAGE_GRENZE) f.push(`Tagesinhalte zu groß (${summe} Bytes, höchstens ${TAGE_GRENZE})`);
+    if (versionVergleich(m.app_min || "0", "0.3.0") < 0) f.push("Tagesinhalte brauchen app_min 0.3.0 oder höher");
   }
   if ((m.art === "modul" || m.art === "skin") && versionVergleich(m.app_min || "0", "0.2.0") < 0) f.push(`${m.art === "modul" ? "Module" : "Skins"} brauchen app_min 0.2.0 oder höher (ältere Apps kennen die Art nicht)`);
   if (m.art === "modul") {

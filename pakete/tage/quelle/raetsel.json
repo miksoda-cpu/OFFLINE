@@ -1,0 +1,554 @@
+{
+ "hinweis": "Tagesrätsel, eigene Texte der Redaktion (The Digioneer, 30.09.2026). Bekannte Denkaufgaben sind neu erzählt, keine fremden Rätseltexte übernommen. Lizenz wie das Paket.",
+ "raetsel": [
+  {
+   "id": "r-001",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Welche Zahl kommt als Nächstes? 3, 7, 15, 31, …",
+   "hinweis": "Schau, wie du von einer Zahl zur nächsten kommst: Es ist jedes Mal dieselbe Rechnung.",
+   "loesung": "63",
+   "erklaerung": "Jede Zahl wird verdoppelt und um eins erhöht: 31 · 2 + 1 = 63."
+  },
+  {
+   "id": "r-002",
+   "stufe": "einfach",
+   "art": "alltag",
+   "frage": "Ein Haushalt mit drei Personen will Wasser für 14 Tage lagern, zwei Liter pro Person und Tag. Wie viele 1,5-Liter-Flaschen sind das?",
+   "hinweis": "Rechne zuerst die Liter aus.",
+   "loesung": "56 Flaschen",
+   "erklaerung": "3 · 2 · 14 = 84 Liter. 84 : 1,5 = 56."
+  },
+  {
+   "id": "r-003",
+   "stufe": "einfach",
+   "art": "logik",
+   "frage": "Vorgestern war Donnerstag. Welcher Tag ist übermorgen?",
+   "hinweis": "Finde zuerst heraus, welcher Tag heute ist.",
+   "loesung": "Montag",
+   "erklaerung": "Wenn vorgestern Donnerstag war, ist heute Samstag. Übermorgen ist Montag."
+  },
+  {
+   "id": "r-004",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Stell die Buchstaben von LAMPE um. Heraus kommt ein Baum, der im Süden wächst.",
+   "hinweis": "Er hat große Blätter und steht gern am Strand.",
+   "loesung": "PALME",
+   "erklaerung": "L-A-M-P-E wird zu P-A-L-M-E."
+  },
+  {
+   "id": "r-005",
+   "stufe": "mittel",
+   "art": "logik",
+   "frage": "Im Keller sind drei Lichtschalter, auf dem Dachboden hängt eine Glühbirne. Nur einer der Schalter gehört zu ihr. Du darfst genau einmal auf den Dachboden gehen. Wie findest du den richtigen Schalter?",
+   "hinweis": "Eine Glühbirne gibt nicht nur Licht ab.",
+   "loesung": "Schalter 1 zehn Minuten einschalten, dann aus. Schalter 2 ein. Oben: Brennt die Birne, ist es Schalter 2. Ist sie warm, aber aus, Schalter 1. Ist sie kalt, Schalter 3.",
+   "erklaerung": "Eine alte Glühbirne wird beim Leuchten heiß. Die Wärme verrät den Schalter, der vorher an war."
+  },
+  {
+   "id": "r-006",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Ein Batterieradio läuft mit vier Batterien 20 Stunden lang. Du hast zwölf Batterien. Wie viele Stunden kannst du Radio hören?",
+   "hinweis": "Wie oft passen vier Batterien in zwölf?",
+   "loesung": "60 Stunden",
+   "erklaerung": "Zwölf Batterien sind drei Sätze zu je vier. 3 · 20 = 60 Stunden."
+  },
+  {
+   "id": "r-007",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Welches Wort passt vor alle drei: …licht, …uhr, …schein?",
+   "hinweis": "Sie steht am Himmel, wenn es hell ist.",
+   "loesung": "Sonne",
+   "erklaerung": "Sonnenlicht, Sonnenuhr, Sonnenschein."
+  },
+  {
+   "id": "r-008",
+   "stufe": "mittel",
+   "art": "logik",
+   "frage": "Du hast einen 5-Liter-Krug und einen 3-Liter-Krug, keine Markierungen, dazu einen Wasserhahn. Wie bekommst du genau 4 Liter?",
+   "hinweis": "Fang damit an, den großen Krug zu füllen und den kleinen daraus.",
+   "loesung": "5er füllen, in den 3er gießen (2 bleiben). 3er leeren, die 2 Liter hineingießen. 5er wieder füllen und den 3er auffüllen: Es geht genau 1 Liter hinein, im 5er bleiben 4.",
+   "erklaerung": "Der kleine Krug dient als Maß: Einmal nimmt er 3 Liter, einmal nur 1 Liter auf."
+  },
+  {
+   "id": "r-009",
+   "stufe": "einfach",
+   "art": "logik",
+   "frage": "Anna ist älter als Ben. Ben ist älter als Cilli. Dora ist jünger als Cilli. Wer ist am jüngsten?",
+   "hinweis": "Stell die vier in eine Reihe, von alt nach jung.",
+   "loesung": "Dora",
+   "erklaerung": "Anna, Ben, Cilli, Dora: Jede ist jünger als die vorige."
+  },
+  {
+   "id": "r-010",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Welche Zahl passt nicht in die Reihe? 16, 25, 36, 48, 64",
+   "hinweis": "Die anderen haben etwas gemeinsam, das man mit Malnehmen erklären kann.",
+   "loesung": "48",
+   "erklaerung": "16, 25, 36 und 64 sind Quadratzahlen (4·4, 5·5, 6·6, 8·8). 48 ist keine."
+  },
+  {
+   "id": "r-011",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Aus REGAL wird durch Umstellen der Buchstaben ein Ort, an dem Vorräte liegen. Welcher?",
+   "hinweis": "Firmen haben so etwas, und im Keller vielleicht du auch.",
+   "loesung": "LAGER",
+   "erklaerung": "R-E-G-A-L wird zu L-A-G-E-R."
+  },
+  {
+   "id": "r-012",
+   "stufe": "mittel",
+   "art": "logik",
+   "frage": "Wenn gestern morgen wäre, dann wäre heute Freitag. Welcher Tag ist heute wirklich?",
+   "hinweis": "Tu so, als wäre der echte gestrige Tag erst morgen. Wo stündest du dann?",
+   "loesung": "Sonntag",
+   "erklaerung": "Wäre der echte gestrige Tag »morgen«, stündest du zwei Tage früher als heute. Dieser Tag wäre Freitag, also ist heute Sonntag."
+  },
+  {
+   "id": "r-013",
+   "stufe": "einfach",
+   "art": "logik",
+   "frage": "Ein Bauer hat 17 Schafe. Alle bis auf 9 laufen davon. Wie viele bleiben?",
+   "hinweis": "Lies den Satz langsam.",
+   "loesung": "9",
+   "erklaerung": "»Alle bis auf 9« heißt: 9 laufen nicht davon."
+  },
+  {
+   "id": "r-014",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Anna bekommt doppelt so viel Wasser wie Berta, Berta doppelt so viel wie Clemens. Zusammen sind es 42 Liter. Wie viel bekommt Clemens?",
+   "hinweis": "Zähle, wie viele »Clemens-Teile« es insgesamt sind.",
+   "loesung": "6 Liter",
+   "erklaerung": "Clemens 1 Teil, Berta 2, Anna 4, zusammen 7 Teile. 42 : 7 = 6."
+  },
+  {
+   "id": "r-015",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Welches Wort passt hinter alle drei: Wasser…, Tee…, Blech…?",
+   "hinweis": "Daraus schenkt man ein.",
+   "loesung": "Kanne",
+   "erklaerung": "Wasserkanne, Teekanne, Blechkanne."
+  },
+  {
+   "id": "r-016",
+   "stufe": "mittel",
+   "art": "logik",
+   "frage": "Drei Kisten tragen die Schilder »Äpfel«, »Birnen« und »Gemischt«. Jedes Schild ist falsch. Du darfst aus einer Kiste eine einzige Frucht ziehen, ohne hineinzuschauen. Wie findest du heraus, was in jeder Kiste ist?",
+   "hinweis": "Eine der Kisten kann auf keinen Fall gemischt sein.",
+   "loesung": "Aus der Kiste »Gemischt« ziehen. Ist es ein Apfel, sind dort nur Äpfel. Dann liegen in »Birnen« die gemischten und in »Äpfel« die Birnen (umgekehrt bei einer Birne).",
+   "erklaerung": "Weil das Schild »Gemischt« falsch ist, liegt dort nur eine Sorte. Die übrigen zwei Kisten ergeben sich, weil auch ihre Schilder falsch sein müssen."
+  },
+  {
+   "id": "r-017",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Welche Zahl kommt als Nächstes? 1, 1, 2, 3, 5, 8, …",
+   "hinweis": "Schau auf die beiden Zahlen davor.",
+   "loesung": "13",
+   "erklaerung": "Jede Zahl ist die Summe der zwei davor: 5 + 8 = 13."
+  },
+  {
+   "id": "r-018",
+   "stufe": "einfach",
+   "art": "logik",
+   "frage": "Zwei Mütter und zwei Töchter gehen zum Bäcker. Jede kauft genau ein Brot, trotzdem sind es nur drei Brote. Wie geht das?",
+   "hinweis": "Eine Person kann Mutter und Tochter zugleich sein.",
+   "loesung": "Es sind drei Personen: Großmutter, Mutter und Enkelin.",
+   "erklaerung": "Die Mutter ist die Tochter der Großmutter und zugleich die Mutter der Enkelin."
+  },
+  {
+   "id": "r-019",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Lies LESE rückwärts. Welches Tier kommt heraus?",
+   "hinweis": "Es trägt gern Lasten und ist sprichwörtlich stur.",
+   "loesung": "ESEL",
+   "erklaerung": "L-E-S-E rückwärts ist E-S-E-L."
+  },
+  {
+   "id": "r-020",
+   "stufe": "mittel",
+   "art": "zahlen",
+   "frage": "Zwischen Mittag und Mitternacht: Wie oft liegen Stunden- und Minutenzeiger einer Uhr genau übereinander? Mittag zählt nicht mit, Mitternacht schon.",
+   "hinweis": "Um 1 Uhr decken sie sich noch nicht, erst etwas nach 1:05.",
+   "loesung": "11-mal",
+   "erklaerung": "Der Minutenzeiger überholt den Stundenzeiger in zwölf Stunden elfmal, zuletzt genau um Mitternacht."
+  },
+  {
+   "id": "r-021",
+   "stufe": "einfach",
+   "art": "logik",
+   "frage": "Maria hat vier Brüder. Jeder ihrer Brüder hat genau eine Schwester. Wie viele Kinder sind es?",
+   "hinweis": "Wer ist die Schwester der Brüder?",
+   "loesung": "5",
+   "erklaerung": "Die eine Schwester ist Maria selbst: vier Brüder und Maria."
+  },
+  {
+   "id": "r-022",
+   "stufe": "einfach",
+   "art": "alltag",
+   "frage": "Eine Kerze ist 15 Zentimeter lang und brennt einen Zentimeter pro Stunde. Du zündest sie um 18 Uhr an. Wann geht sie aus?",
+   "hinweis": "Zähle 15 Stunden weiter.",
+   "loesung": "Um 9 Uhr früh",
+   "erklaerung": "18 Uhr plus 15 Stunden ist 9 Uhr am nächsten Morgen."
+  },
+  {
+   "id": "r-023",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Welcher Buchstabe fehlt? J, F, M, A, M, J, J, …",
+   "hinweis": "Denk an einen Kalender.",
+   "loesung": "A",
+   "erklaerung": "Die Anfangsbuchstaben der Monate: Jänner, Februar, März, April, Mai, Juni, Juli, August."
+  },
+  {
+   "id": "r-024",
+   "stufe": "mittel",
+   "art": "logik",
+   "frage": "In der Lade liegen zehn schwarze und zehn blaue Socken durcheinander. Es ist stockdunkel. Wie viele Socken musst du mindestens herausnehmen, damit sicher zwei gleiche dabei sind?",
+   "hinweis": "Es gibt nur zwei Farben.",
+   "loesung": "3",
+   "erklaerung": "Nach zwei Socken können es zwei verschiedene sein. Die dritte passt dann sicher zu einer davon."
+  },
+  {
+   "id": "r-025",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Ein Vater und sein Sohn sind zusammen 36 Jahre alt. Der Vater ist 30 Jahre älter als der Sohn. Wie alt ist der Sohn?",
+   "hinweis": "Zieh die 30 Jahre zuerst ab.",
+   "loesung": "3 Jahre",
+   "erklaerung": "36 − 30 = 6, geteilt durch zwei ist 3. Der Vater ist 33."
+  },
+  {
+   "id": "r-026",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Die erste Silbe ist gefrorenes Wasser, die zweite eine Strecke, auf der etwas fährt. Zusammen: ein Ort für Schlittschuhe.",
+   "hinweis": "Die zweite Silbe gibt es auch mit Schienen.",
+   "loesung": "Eisbahn",
+   "erklaerung": "Eis + Bahn."
+  },
+  {
+   "id": "r-027",
+   "stufe": "einfach",
+   "art": "logik",
+   "frage": "Du stehst im dunklen Zimmer mit einer Kerze, einer Petroleumlampe und dem Holzofen. Du hast ein einziges Zündholz. Was zündest du zuerst an?",
+   "hinweis": "Nimm die Frage wörtlich.",
+   "loesung": "Das Zündholz",
+   "erklaerung": "Ohne brennendes Zündholz brennt sonst nichts."
+  },
+  {
+   "id": "r-028",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Ein Vorrat reicht für zwei Personen sieben Tage. Wie lange reicht er für sieben Personen?",
+   "hinweis": "Rechne in »Personentagen«.",
+   "loesung": "2 Tage",
+   "erklaerung": "2 · 7 = 14 Personentage. 14 : 7 = 2."
+  },
+  {
+   "id": "r-029",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Tausche in HAUS einen Buchstaben, sodass ein kleines Tier entsteht, das gern Käse frisst.",
+   "hinweis": "Nur der erste Buchstabe ändert sich.",
+   "loesung": "MAUS",
+   "erklaerung": "H wird zu M."
+  },
+  {
+   "id": "r-030",
+   "stufe": "mittel",
+   "art": "logik",
+   "frage": "Ein Weg führt zur Hütte, der andere ins Moor. An der Weggabelung stehen zwei Brüder: Einer lügt immer, einer sagt immer die Wahrheit. Du weißt nicht, wer wer ist, und darfst einem eine einzige Frage stellen. Welche?",
+   "hinweis": "Frag nach dem, was der andere sagen würde.",
+   "loesung": "»Welchen Weg würde mir dein Bruder zur Hütte zeigen?« Dann nimmst du den anderen Weg.",
+   "erklaerung": "Beide zeigen dann auf den falschen Weg: der Ehrliche berichtet die Lüge des Bruders, der Lügner verdreht die Wahrheit des Bruders."
+  },
+  {
+   "id": "r-031",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Denk dir eine Zahl. Verdopple sie und zähle 5 dazu. Heraus kommt 27. Welche Zahl war es?",
+   "hinweis": "Geh die Schritte rückwärts.",
+   "loesung": "11",
+   "erklaerung": "27 − 5 = 22, geteilt durch 2 ist 11."
+  },
+  {
+   "id": "r-032",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "KERZE verhält sich zu WACHS wie BROT zu …?",
+   "hinweis": "Woraus ist es gemacht?",
+   "loesung": "Mehl",
+   "erklaerung": "Eine Kerze ist aus Wachs, ein Brot vor allem aus Mehl."
+  },
+  {
+   "id": "r-033",
+   "stufe": "mittel",
+   "art": "zahlen",
+   "frage": "Wie groß ist die Summe aller Zahlen von 1 bis 20?",
+   "hinweis": "Bilde Paare: 1 und 20, 2 und 19 …",
+   "loesung": "210",
+   "erklaerung": "Zehn Paare mit jeweils der Summe 21: 10 · 21 = 210."
+  },
+  {
+   "id": "r-034",
+   "stufe": "einfach",
+   "art": "logik",
+   "frage": "Ein Ziegelstein wiegt ein Kilo und einen halben Ziegelstein. Wie schwer ist ein ganzer Ziegelstein?",
+   "hinweis": "Wenn ein halber Stein plus ein Kilo der ganze ist …",
+   "loesung": "2 Kilo",
+   "erklaerung": "Der halbe Stein wiegt ein Kilo, also der ganze zwei."
+  },
+  {
+   "id": "r-035",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Welcher Buchstabe fehlt? M, D, M, D, F, S, …",
+   "hinweis": "Eine Woche.",
+   "loesung": "S",
+   "erklaerung": "Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag, Sonntag."
+  },
+  {
+   "id": "r-036",
+   "stufe": "mittel",
+   "art": "zahlen",
+   "frage": "Der 1. März ist ein Montag. Welcher Wochentag ist der 1. April?",
+   "hinweis": "Der März hat 31 Tage. Vier volle Wochen sind 28.",
+   "loesung": "Donnerstag",
+   "erklaerung": "31 Tage sind vier Wochen und drei Tage. Drei Tage nach Montag ist Donnerstag."
+  },
+  {
+   "id": "r-037",
+   "stufe": "einfach",
+   "art": "alltag",
+   "frage": "In Österreich heult die Sirene eine Minute lang auf und ab. Was bedeutet das?",
+   "hinweis": "Es ist das dringendste der drei Signale.",
+   "loesung": "Alarm: Schutz suchen, Radio oder Fernsehen einschalten.",
+   "erklaerung": "Drei Minuten Dauerton heißt Warnung, eine Minute auf- und abschwellend heißt Alarm, eine Minute Dauerton heißt Entwarnung."
+  },
+  {
+   "id": "r-038",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Ein Wasserfahrzeug heißt vorwärts und rückwärts gelesen gleich. Welches?",
+   "hinweis": "Man paddelt darin, fünf Buchstaben.",
+   "loesung": "KAJAK",
+   "erklaerung": "K-A-J-A-K bleibt rückwärts K-A-J-A-K."
+  },
+  {
+   "id": "r-039",
+   "stufe": "mittel",
+   "art": "logik",
+   "frage": "Eine Bäuerin will einen Fuchs, eine Gans und einen Sack Getreide über den Fluss bringen. Im Boot hat nur eines davon Platz. Allein gelassen frisst der Fuchs die Gans und die Gans das Getreide. Wie schafft sie es?",
+   "hinweis": "Einmal muss etwas wieder zurückfahren.",
+   "loesung": "Gans hinüber. Zurück, Fuchs hinüber, Gans wieder mit zurück. Getreide hinüber. Zurück, Gans hinüber.",
+   "erklaerung": "Der Fuchs lässt das Getreide in Ruhe. Nur die Gans darf nie mit einem der beiden allein bleiben."
+  },
+  {
+   "id": "r-040",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Zehn Kerzen brennen. Drei bläst du aus. Wie viele Kerzen sind am Ende übrig?",
+   "hinweis": "Was passiert mit denen, die weiterbrennen?",
+   "loesung": "3",
+   "erklaerung": "Die sieben brennenden Kerzen brennen ganz herunter. Übrig bleiben die drei ausgeblasenen."
+  },
+  {
+   "id": "r-041",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Die erste Silbe ist das Gegenteil von Tag, die zweite ein Möbel zum Essen. Zusammen steht es neben dem Bett.",
+   "hinweis": "Dort liegt oft die Taschenlampe.",
+   "loesung": "Nachttisch",
+   "erklaerung": "Nacht + Tisch."
+  },
+  {
+   "id": "r-042",
+   "stufe": "mittel",
+   "art": "zahlen",
+   "frage": "Ein Zug fährt um 8:40 in Wien ab und braucht 2 Stunden 35 Minuten nach Salzburg. Heute hat er 20 Minuten Verspätung. Wann kommt er an?",
+   "hinweis": "Rechne erst die planmäßige Ankunft aus.",
+   "loesung": "Um 11:35",
+   "erklaerung": "8:40 plus 2:35 ist 11:15, plus 20 Minuten Verspätung 11:35."
+  },
+  {
+   "id": "r-043",
+   "stufe": "einfach",
+   "art": "logik",
+   "frage": "Was wird nasser, je mehr es trocknet?",
+   "hinweis": "Es hängt oft im Badezimmer.",
+   "loesung": "Ein Handtuch",
+   "erklaerung": "Je mehr es abtrocknet, desto nasser wird es selbst."
+  },
+  {
+   "id": "r-044",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Welche Zahl kommt als Nächstes? 2, 6, 12, 20, 30, …",
+   "hinweis": "Schau auf die Abstände.",
+   "loesung": "42",
+   "erklaerung": "Die Abstände wachsen um zwei: 4, 6, 8, 10, dann 12. 30 + 12 = 42."
+  },
+  {
+   "id": "r-045",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Welches Wort wird kürzer, wenn man zwei Buchstaben dazugibt?",
+   "hinweis": "Es geht um das Wort selbst, nicht um seine Länge.",
+   "loesung": "»kurz« – daraus wird »kürzer«",
+   "erklaerung": "Mit »-er« wird aus kurz das Wort kürzer."
+  },
+  {
+   "id": "r-046",
+   "stufe": "mittel",
+   "art": "logik",
+   "frage": "Drei Freundinnen: Eva, Fini und Gabi. Eine trinkt Tee, eine Kaffee, eine Kakao. Eva trinkt keinen Kaffee. Fini trinkt weder Kaffee noch Tee. Wer trinkt was?",
+   "hinweis": "Fang bei Fini an.",
+   "loesung": "Fini Kakao, Eva Tee, Gabi Kaffee.",
+   "erklaerung": "Fini bleibt nur Kakao. Eva trinkt keinen Kaffee, also Tee. Für Gabi bleibt Kaffee."
+  },
+  {
+   "id": "r-047",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Im Keller stehen Kisten mit je sechs Flaschen. Vier Kisten sind voll, aus einer fehlen zwei Flaschen. Wie viele Flaschen stehen da?",
+   "hinweis": "Es sind fünf Kisten.",
+   "loesung": "28",
+   "erklaerung": "Vier volle Kisten sind 24, dazu vier Flaschen aus der fünften: 28."
+  },
+  {
+   "id": "r-048",
+   "stufe": "einfach",
+   "art": "logik",
+   "frage": "Was hat Zähne, beißt aber nie?",
+   "hinweis": "Morgens im Badezimmer.",
+   "loesung": "Ein Kamm",
+   "erklaerung": "Die Zinken eines Kamms heißen auch Zähne."
+  },
+  {
+   "id": "r-049",
+   "stufe": "mittel",
+   "art": "zahlen",
+   "frage": "Eine Powerbank hat genug Strom für drei volle Handyladungen. Ein volles Handy hält bei dir zwei Tage. Heute ist das Handy voll. Wie viele Tage kommst du ohne Steckdose aus?",
+   "hinweis": "Die Ladung, die schon im Handy ist, zählt mit.",
+   "loesung": "8 Tage",
+   "erklaerung": "Die jetzige Ladung reicht zwei Tage, jede der drei Powerbank-Ladungen noch einmal zwei: 2 + 3 · 2 = 8."
+  },
+  {
+   "id": "r-051",
+   "stufe": "einfach",
+   "art": "logik",
+   "frage": "Ein Lift fährt vom Erdgeschoß in den 3. Stock in 30 Sekunden. Wie lange braucht er vom Erdgeschoß in den 6. Stock, wenn er gleich schnell fährt und nicht hält?",
+   "hinweis": "Zähle die Stockwerke, die er durchfährt.",
+   "loesung": "60 Sekunden",
+   "erklaerung": "Drei Stockwerke dauern 30 Sekunden, sechs dauern doppelt so lang."
+  },
+  {
+   "id": "r-052",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Welches Wort ist in jedem Wörterbuch falsch geschrieben?",
+   "hinweis": "Nimm die Frage wörtlich.",
+   "loesung": "»falsch«",
+   "erklaerung": "Das Wort »falsch« steht dort eben so: f-a-l-s-c-h."
+  },
+  {
+   "id": "r-053",
+   "stufe": "mittel",
+   "art": "zahlen",
+   "frage": "Du stellst den Wecker um 22 Uhr auf 7 Stunden 45 Minuten später. Wann läutet er?",
+   "hinweis": "Über Mitternacht zählst du einfach weiter.",
+   "loesung": "Um 5:45",
+   "erklaerung": "22 Uhr plus 2 Stunden ist Mitternacht, plus 5 Stunden 45 Minuten ist 5:45."
+  },
+  {
+   "id": "r-054",
+   "stufe": "einfach",
+   "art": "logik",
+   "frage": "Es hat einen Hals, aber keinen Kopf, und trägt manchmal einen Korken. Was ist es?",
+   "hinweis": "Im Kühlschrank steht vielleicht eine.",
+   "loesung": "Eine Flasche",
+   "erklaerung": "Der schmale obere Teil einer Flasche heißt Hals."
+  },
+  {
+   "id": "r-055",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Wie viele Minuten hat ein Tag?",
+   "hinweis": "24 Stunden mal …",
+   "loesung": "1440",
+   "erklaerung": "24 · 60 = 1440."
+  },
+  {
+   "id": "r-056",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Welches Wort passt hinter alle drei: Taschen…, Tisch…, Stirn…?",
+   "hinweis": "Sie macht Licht.",
+   "loesung": "Lampe",
+   "erklaerung": "Taschenlampe, Tischlampe, Stirnlampe."
+  },
+  {
+   "id": "r-057",
+   "stufe": "mittel",
+   "art": "logik",
+   "frage": "Du hast neun gleich aussehende Münzen, eine ist etwas leichter. Mit einer Balkenwaage darfst du zweimal wiegen. Wie findest du die leichte?",
+   "hinweis": "Teile die Münzen in drei Dreiergruppen.",
+   "loesung": "Zwei Dreiergruppen wiegen. Ist eine Seite leichter, liegt sie dort, sonst in der dritten Gruppe. Aus dieser Dreiergruppe zwei Münzen wiegen: Die leichtere ist es, bei Gleichstand die dritte.",
+   "erklaerung": "Jedes Wiegen lässt drei Möglichkeiten offen: links, rechts oder keine der beiden. So schrumpfen neun Münzen auf drei, dann auf eine."
+  },
+  {
+   "id": "r-058",
+   "stufe": "einfach",
+   "art": "alltag",
+   "frage": "Welche Notrufnummer gilt in allen Ländern der EU?",
+   "hinweis": "Drei Ziffern, zwei davon gleich.",
+   "loesung": "112",
+   "erklaerung": "Der Euronotruf 112 funktioniert in der ganzen EU, auch ohne Guthaben."
+  },
+  {
+   "id": "r-059",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Welches Wort passt vor alle drei: …hose, …korb, …tuch?",
+   "hinweis": "Im Sommer am See.",
+   "loesung": "Bade",
+   "erklaerung": "Badehose, Badekorb, Badetuch."
+  },
+  {
+   "id": "r-060",
+   "stufe": "mittel",
+   "art": "zahlen",
+   "frage": "Ein Seil ist 12 Meter lang. Du schneidest es in Stücke zu je 2 Meter. Wie viele Schnitte brauchst du?",
+   "hinweis": "Das letzte Stück entsteht ohne eigenen Schnitt.",
+   "loesung": "5 Schnitte",
+   "erklaerung": "Es werden sechs Stücke. Dafür braucht es einen Schnitt weniger als Stücke."
+  },
+  {
+   "id": "r-061",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Welches Wort passt vor alle drei: …kammer, …keller, …dose?",
+   "hinweis": "Genau darum geht es in dieser App.",
+   "loesung": "Vorrat",
+   "erklaerung": "Vorratskammer, Vorratskeller, Vorratsdose."
+  },
+  {
+   "id": "r-062",
+   "stufe": "mittel",
+   "art": "logik",
+   "frage": "Hans ist doppelt so alt, wie Grete war, als Hans so alt war, wie Grete jetzt ist. Grete ist jetzt 18. Wie alt ist Hans?",
+   "hinweis": "Der Altersunterschied bleibt immer gleich. Nenne ihn d.",
+   "loesung": "24",
+   "erklaerung": "Hans war 18, als Grete 18 − d war. Hans ist jetzt 18 + d = 2 · (18 − d), also 3d = 18, d = 6. Hans ist 24."
+  }
+ ]
+}

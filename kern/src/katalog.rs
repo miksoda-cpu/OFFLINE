@@ -37,6 +37,9 @@ pub struct KatalogEintrag {
     pub alter_ab: Option<u32>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub ki_generiert: Option<bool>,
+    /// Tagesinhalte: welche Tage das Paket abdeckt (die Vorratskammer lädt danach voraus)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tage: Option<crate::manifest::TageBereich>,
     /// Slideshow für die Paketseite (Folien und Prüfsummen der Bilder), siehe vorschau.rs
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub vorschau: Option<crate::vorschau::Vorschau>,

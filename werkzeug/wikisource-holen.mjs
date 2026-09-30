@@ -1,0 +1,75 @@
+#!/usr/bin/env node
+// Holt ein gemeinfreies Werk von de.wikisource.org als reine Absätze (Roman der Woche, Tagesseite).
+//
+//   node werkzeug/wikisource-holen.mjs <Seitentitel> "<Anfang des Textes>" <ziel.json> ["<Beginn des Nachspanns>"]
+//
+// Übernommen wird nur der Werktext: ohne Kopf (Textdaten), Seitenzahlen, Fußnotenzeichen und die Anmerkungen von
+// Wikisource. Zentrierte kurze Zeilen werden zu Überschriften („## …“), Gedichte behalten ihre Zeilen. Die Textdaten
+// (Autor, Vorlage, Verlag, Jahr, Scans, Bearbeitungsstand) kommen als Herkunft mit. Nur Seiten im Stand „fertig“.
+
+import { writeFile } from "node:fs/promises";
+
+const [titel, anfang, ziel, nachspann] = process.argv.slice(2);
+if (!titel || !anfang || !ziel) throw new Error("Verwendung: wikisource-holen.mjs <Seitentitel> \"<Anfang>\" <ziel.json>");
+const UA = { "User-Agent": "OFFLINE-App (github.com/miksoda-cpu/OFFLINE; Redaktion Tagesseite)" };
+const api = (q) => fetch(`https://de.wikisource.org/w/api.php?${q}&format=json&formatversion=2`, { headers: UA }).then((r) => r.json());
+
+const quell = await api(`action=query&prop=revisions&rvprop=content|ids&rvslots=main&titles=${encodeURIComponent(titel)}&redirects=1`);
+const seite = quell.query.pages[0];
+const wikitext = seite.revisions[0].slots.main.content;
+const feld = (k) => (wikitext.match(new RegExp(`\\|${k}=([^\\n]*)`)) || [])[1]?.trim() ?? "";
+if (feld("BEARBEITUNGSSTAND") !== "fertig") throw new Error(`${titel}: Bearbeitungsstand „${feld("BEARBEITUNGSSTAND")}“, nicht „fertig“`);
+const klar = (s) => s.replace(/\[\[(?:[^|\]]*\|)?([^\]]*)\]\]/g, "$1").replace(/\{\{GBS\|([^|}]+)[^}]*\}\}/g, "Google Books $1").replace(/\[\S+ ([^\]]+)\]/g, "$1").replace(/'''?/g, "").trim();
+
+const html = (await api(`action=parse&page=${encodeURIComponent(seite.title)}&prop=text&disableeditsection=1`)).parse.text;
+const entity = (s) => s.replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16))).replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(+d))
+  .replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, "\"").replace(/&#39;/g, "'");
+
+let h = html;
+const ende = h.search(/<h2[^>]*>(?:(?!<\/h2>).)*Anmerkungen/s); if (ende > 0) h = h.slice(0, ende);
+h = h.replace(/<span class="PageNumber"[^>]*>.*?<\/span>/gs, "")      // Seitenzahlen
+  .replace(/<sup[^>]*class="reference"[^>]*>.*?<\/sup>/gs, "")        // Fußnotenzeichen
+  .replace(/<span style="display:none;?">.*?<\/span>/gs, "")
+  .replace(/<table.*?<\/table>/gs, "");                                // Kopf mit Textdaten
+// Gedichte: Zeilen behalten
+h = h.replace(/<div class="poem">(.*?)<\/div>/gs, (_, g) => `\n@@GEDICHT@@${g.replace(/<br\s*\/?>/g, "@@ZEILE@@").replace(/<\/p>\s*<p>/g, "@@ZEILE@@@@ZEILE@@")}@@ENDE@@\n`);
+// Zentrierte Zeilen → Überschrift
+h = h.replace(/<div style="[^"]*text-align:\s*center[^"]*">(.*?)<\/div>/gs, (_, t) => `\n@@UEBER@@${t}\n`);
+h = h.replace(/<br\s*\/?>/g, " ").replace(/<\/(p|div|h\d|li|dd)>/g, "\n").replace(/<[^>]+>/g, "");
+h = entity(h);
+const zeilen = h.split(/\n/).map((z) => z.replace(/[ \t ]+/g, " ").trim()).filter(Boolean);
+const start = zeilen.findIndex((z) => z.replace(/@@\w+@@/g, "").startsWith(anfang));
+if (start < 0) throw new Error(`${titel}: Anfang „${anfang}“ nicht gefunden`);
+// Eine Überschrift direkt vor dem Anfang (z. B. „Erstes Kapitel.“) gehört dazu
+let von = start; while (von > 0 && zeilen[von - 1].startsWith("@@UEBER@@") && zeilen[von - 1].length < 60) von--;
+const absaetze = [];
+for (const z of zeilen.slice(von)) {
+  if (z.startsWith("@@GEDICHT@@")) { absaetze.push(z.replace("@@GEDICHT@@", "").replace("@@ENDE@@", "").split("@@ZEILE@@").map((x) => x.trim()).join("\n").replace(/\n{3,}/g, "\n\n").trim()); continue; }
+  if (z.startsWith("@@UEBER@@")) { const t = z.replace("@@UEBER@@", "").trim(); if (t) absaetze.push(`## ${t}`); continue; }
+  absaetze.push(z.replace(/@@\w+@@/g, ""));
+}
+// Seitengrenzen der Vorlage trennen Absätze mitten im Satz: Endet ein Absatz ohne Satzzeichen, gehört der nächste dazu
+// (bei Trennstrich am Ende ohne Leerzeichen, wenn der nächste klein beginnt).
+for (let i = absaetze.length - 2; i >= 0; i--) {
+  const a = absaetze[i], b = absaetze[i + 1];
+  if (a.startsWith("## ") || b.startsWith("## ") || a.includes("\n") || b.includes("\n")) continue;
+  if (/[.!?:;»«"“”„'’)\]–—]$/.test(a)) continue;
+  absaetze.splice(i, 2, /[-¬]$/.test(a) && /^\p{Ll}/u.test(b) ? a.slice(0, -1) + b : `${a} ${b}`);
+}
+// Nachspann der Vorlage (Druckerei, Druckfehlerliste) abschneiden
+if (nachspann) {
+  const n = absaetze.findIndex((x) => x.replace(/^## /, "").startsWith(nachspann));
+  if (n < 0) throw new Error(`${titel}: Nachspann „${nachspann}“ nicht gefunden`);
+  absaetze.splice(n);
+}
+const woerter = absaetze.join(" ").split(/\s+/).length;
+await writeFile(ziel, JSON.stringify({
+  werk: klar(feld("TITEL")), autor: klar(feld("AUTOR")),
+  quelle: {
+    url: `https://de.wikisource.org/wiki/${encodeURIComponent(seite.title.replaceAll(" ", "_"))}`, revision: seite.revisions[0].revid,
+    herkunft: klar(feld("HERKUNFT")), verlag: klar(feld("VERLAG")), jahr: feld("ERSCHEINUNGSJAHR"), ort: klar(feld("ERSCHEINUNGSORT")),
+    scans: klar(feld("QUELLE")), stand: feld("BEARBEITUNGSSTAND"),
+  },
+  woerter, absaetze,
+}, null, 1) + "\n");
+console.log(`${titel}: ${absaetze.length} Absätze, ${woerter} Wörter → ${ziel}`);

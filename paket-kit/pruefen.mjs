@@ -8,8 +8,9 @@ import { readFile, writeFile, readdir, lstat } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { tageBereichFehler, tageInhaltFehler } from "./tage-format.mjs";
 
-const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul", "skin"];
+const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul", "skin", "tage"];
 const PREISE = ["gratis", "pro", "kauf"];
 const PRUEFSTATUS = ["redaktion", "herausgeber", "community"];
 const ALTER = [0, 6, 10, 14, 18];
@@ -72,6 +73,7 @@ async function dateien(wurzel, rel = "") {
 
 const kb = (n) => `${(n / 1024).toFixed(1)} kB`;
 const txt = (v) => typeof v === "string" && v.trim().length > 0;
+const versionKleiner = (a, b) => { const A = a.split(".").map(Number), B = b.split(".").map(Number); for (let i = 0; i < 3; i++) if ((A[i] || 0) !== (B[i] || 0)) return (A[i] || 0) < (B[i] || 0); return false; };
 const appMinZuAlt = (v) => { const [a = 0, b = 0] = v.split(".").map(Number); return a === 0 && b < 2; };
 
 async function lesenJson(p, name) {
@@ -139,7 +141,7 @@ async function pruefen(ordner) {
 
   // --- Slideshow ---
   const vs = path.join(inhalt, "vorschau", "folien.json");
-  if (!existsSync(vs)) F("inhalt/vorschau/folien.json fehlt");
+  if (!existsSync(vs)) { if (meta.art !== "tage") F("inhalt/vorschau/folien.json fehlt"); } // Tagesinhalte: die Tagesseite ist die Vorschau
   else {
     const v = await lesenJson(vs, "folien.json");
     const folien = v?.folien;
@@ -202,6 +204,20 @@ async function pruefen(ordner) {
     if (meta.ki_generiert === undefined) F("art = skin: ki_generiert angeben (true, wenn Bilder mit KI erzeugt sind)");
     R("Skin in hell und dunkel und bei 360 px angesehen; Notfallseiten bleiben im Grundaussehen.");
     if (meta.ki_generiert) R("KI-Bilder: Herkunft (Modell, Datum, Prompts) liegt im Paket, z. B. inhalt/skin/HERKUNFT.md.");
+  }
+
+  // --- Tagesinhalte (Abschnitt 5b) ---
+  if (meta.art === "tage") {
+    for (const f of tageBereichFehler(meta.tage)) F(`art = tage: ${f}`);
+    if (txt(meta.app_min) && versionKleiner(meta.app_min, "0.3.0")) F("art = tage: app_min muss 0.3.0 oder höher sein (ältere Apps kennen Tagesinhalte nicht)");
+    if (!liste.find((d) => d.rel === "tage.json")) F("art = tage: inhalt/tage.json fehlt");
+    else {
+      let t = null;
+      try { t = JSON.parse(await readFile(path.join(inhalt, "tage.json"), "utf8")); } catch { F("inhalt/tage.json: kein gültiges JSON"); }
+      if (t) for (const f of tageInhaltFehler(t, meta.tage)) F(`inhalt/tage.json: ${f}`);
+    }
+    for (const d of liste) if (!d.rel.startsWith("vorschau/") && ![".json", ".md", ".txt"].includes(path.extname(d.rel).toLowerCase())) F(`art = tage: Dateityp nicht erlaubt: inhalt/${d.rel}`);
+    R("Texte gegengelesen; bei Romanen Autor vor 1956 gestorben und Ausgabe ohne eigene Rechte (Herkunft im Paket).");
   }
 
   // --- Quellen-Verweise und Notrufhinweis in den Inhalten ---
