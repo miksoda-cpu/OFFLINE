@@ -9,7 +9,7 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.3.0";
+const APP_VERSION = "0.3.1";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -325,6 +325,22 @@ const seiten = {
           : `<div class="card of-karte tag-leer"><p style="margin:0">${pakete.length ? "Für heute liegt nichts in der Vorratskammer." : "Die Vorratskammer ist noch leer."} ${navigator.onLine ? "OFFLINE holt die nächsten Tage, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."} Alles andere funktioniert weiter.</p></div>`}
       </section>
       <p class="tag-vorrat muted of-klein">${vorrat ? `Vorrat: noch ${vorrat} ${vorrat === 1 ? "Tag" : "Tage"}${!navigator.onLine ? " · ohne Netz geht es weiter" : ""}` : `Vorrat: leer. ${navigator.onLine ? "Die nächsten Tage kommen, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."}`}</p>`;
+  },
+
+  /** Was ist neu: alle Versionen, neueste oben, in Alltagssprache. */
+  neues() {
+    if (!state.neues) { neuesLaden(); return `${kopf("Was ist neu", "Einen Moment …")}`; }
+    speicher.set("neues-gesehen", appVersion());
+    const v = state.neues.versionen ?? [];
+    const datumText = (d) => new Date(d + "T12:00:00").toLocaleDateString("de-AT", { day: "numeric", month: "long", year: "numeric" });
+    return `<div class="kapitel-kopf"><a class="btn btn-sm of-btn of-btn--klein" href="#updates">‹ Updates &amp; Abo</a></div>
+      <article class="neues-seite">
+        <h1>Was ist neu</h1>
+        <p class="muted">Du hast Version ${esc(appVersion())}.</p>
+        ${state.neues.fehler ? `<p>Die Liste lässt sich gerade nicht lesen.</p>` : ""}
+        ${v.map((x) => `<section class="card of-karte neues-version"><h2>${esc(x.titel ?? `Version ${x.version}`)}</h2><p class="muted of-klein">${esc(datumText(x.datum))}</p>
+          <ul>${x.punkte.map((p) => `<li>${esc(p)}</li>`).join("")}</ul></section>`).join("")}
+      </article>`;
   },
 
   /** Das Kapitel des Tages zum Lesen, mit Vorlesen. */
@@ -659,11 +675,11 @@ const seiten = {
             <input class="of-input" type="time" data-zeit="von" value="${state.abo.von}" aria-label="von"> bis <input class="of-input" type="time" data-zeit="bis" value="${state.abo.bis}" aria-label="bis"></div>
         </div>
         <div class="card of-karte">
-          <h3>Was ist neu?</h3>
+          <h3>Neu in den Paketen</h3>
           <ul class="changelog">${aenderungen.length ? aenderungen.map((a) => `<li><span class="muted mono of-klein of-mono" style="font-size:.85rem">${datum(a.erstellt)}</span><span><strong>${esc(a.titel)}</strong> <span class="muted of-klein">${esc(a.version)}</span><br><span class="muted of-klein">${esc(a.aenderungen)}</span></span></li>`).join("") : '<li><span class="muted of-klein">Noch nichts – Katalog laden.</span></li>'}</ul>
         </div>
       </div>
-      ${desktop ? appUpdateKarte() : ""}
+      ${desktop ? appUpdateKarte() : webAppKarte()}
       ${desktop ? `<div class="card of-karte" style="margin-top:1rem"><h3>Speicherort</h3><p class="muted of-klein" style="margin:0 0 .5rem">Pakete liegen in <span class="mono of-mono" style="font-size:.85rem">${esc(desktop.datenordner)}</span>. Für große Pakete (Wikipedia, Karten) kann das eine externe Platte sein.</p>
         <button class="btn btn-sm of-btn of-btn--klein" data-speicherort>Ordner wählen …</button> <button class="btn btn-sm of-btn of-btn--klein" data-speicherort-standard>Standard</button><p class="form-msg of-meldung" id="ort-msg"></p></div>` : ""}
       <div class="card of-karte" style="margin-top:1rem"><h3>Werkzeuge</h3>
@@ -702,7 +718,25 @@ function appUpdateKarte() {
   const laeuft = u.status === "pruefe" || u.status === "laedt" || !!ortProblem;
   return `<div class="card of-karte" style="margin-top:1rem"><div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap"><h3 style="margin:0">App-Update</h3>
     <button class="btn btn-sm of-btn of-btn--klein" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>
-    <p style="margin:.6rem 0 0" id="app-update-inhalt">${inhalt}</p></div>`;
+    <p style="margin:.6rem 0 0" id="app-update-inhalt">${inhalt}</p>${neuesKnopf()}</div>`;
+}
+/** Web-Version: dieselbe Box ohne Updater (die Seite ist nach dem Neuladen aktuell), mit „Was ist neu“. */
+function webAppKarte() {
+  return `<div class="card of-karte" style="margin-top:1rem"><h3 style="margin:0">App-Update</h3>
+    <p style="margin:.6rem 0 0"><span class="muted of-klein">Web-App ${esc(APP_VERSION)}. Im Browser ist die App nach dem Neuladen der Seite aktuell.</span></p>${neuesKnopf()}</div>`;
+}
+
+// ---------- Was ist neu (web/neues.json, kommt mit der App, ohne Netz lesbar) ----------
+// Kein Aufdrängen: nichts geht von selbst auf. Ein kleiner Punkt am Knopf, bis man die Seite zur aktuellen Version geöffnet hat.
+const neuesUngesehen = () => speicher.get("neues-gesehen", null) !== appVersion();
+function neuesKnopf() {
+  return `<div class="neues-fuss"><a class="btn btn-sm of-btn of-btn--klein neues-knopf" href="#neues">Was ist neu${neuesUngesehen() ? '<span class="neues-punkt" aria-label="neu"></span>' : ""}</a></div>`;
+}
+async function neuesLaden() {
+  if (state.neues) return;
+  try { state.neues = await (await fetch("/neues.json", { cache: "no-cache" })).json(); }
+  catch { state.neues = { versionen: [], fehler: true }; }
+  if (location.hash === "#neues") render();
 }
 
 async function appUpdatePruefen() {
@@ -1437,13 +1471,13 @@ function render() {
   main.innerHTML = seiten[seite]();
   if (seite === "start") wesen.einbauen(); else wesen.setScore(bereit());
   wesen.ansicht(seite);
-  const aktiv = seite === "lesen" ? "bibliothek" : seite === "kapitel" ? "start" : seite;
+  const aktiv = seite === "lesen" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite;
   if (seite !== "kapitel" && state.tag.liest) vorlesenStop();
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
   main.classList.toggle("main-lesen", seite === "lesen");
-  if (seite === "kapitel" && state.tag.seiteVorher !== "kapitel") { window.scrollTo(0, 0); main.scrollTop = 0; } // ein Kapitel beginnt oben
+  if ((seite === "kapitel" || seite === "neues") && state.tag.seiteVorher !== seite) { window.scrollTo(0, 0); main.scrollTop = 0; } // beginnt oben
   state.tag.seiteVorher = seite;
-  document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : state.lesen?.titel ?? "Lesen")}`;
+  document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : state.lesen?.titel ?? "Lesen")}`;
   if (seite === "karte") karteStarten();
   if (seite === "bibliothek") vorschauenNachladen();
   skinFuerSeite();

@@ -153,6 +153,12 @@ async function neu() {
   pruefe("Kein Service Worker mehr", worker === 0, `${worker} Registrierung(en)`);
   const vorrat = await js("return document.querySelector('.tag-vorrat')?.textContent ?? null");
   pruefe("Tagesseite ist der Startbildschirm", /^Vorrat/.test(vorrat ?? "") && !!(await finde("#wesen-karte")), vorrat ?? "keine Tagesseite");
+  // „Was ist neu“: kommt mit der App (ohne Netz), Eintrag der eigenen Version oben
+  const version = bericht.werte.app?.version;
+  await gehe("#neues");
+  const neues = await bis(() => js("return [...document.querySelectorAll('.neues-version h2')].map((h) => h.textContent)"), "Was ist neu", 15_000).catch(() => []);
+  pruefe("Was ist neu", neues[0] === `Version ${version}`, neues.slice(0, 2).join(" · ") || "keine Einträge");
+  await gehe("#start");
   pruefe("Checkliste erhalten", JSON.stringify(checks) === JSON.stringify(vorher.checks), `${Object.keys(checks ?? {}).length} Häkchen`);
   pruefe("Bestätigungen übernommen", v2 && v2["c-0-0"] === vorher.bestaetigungen.wasser && v2.radio === vorher.bestaetigungen.radio && v2.probeabend === vorher.bestaetigungen.probeabend, "Wasser, Radio, Probeabend mit altem Datum");
   const buehne = await js("const b = document.getElementById('lumi-buehne'); return b ? b.getAttribute('aria-label') : null");

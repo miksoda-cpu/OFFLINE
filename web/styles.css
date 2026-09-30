@@ -352,3 +352,14 @@ textarea { border-radius: var(--radius-sm) !important; }
 .tagesplan input[type="checkbox"] { width: 20px; height: 20px; vertical-align: -4px; }
 .tagesplan select { max-width: 100%; min-height: 44px; }
 @media (max-width: 400px) { .kapitel-text { font-size: 1.02rem; } .tag-frage { font-size: 1.08rem; } }
+
+/* Was ist neu (Box App-Update und eigene Seite) */
+.neues-fuss { margin-top: .9rem; padding-top: .8rem; border-top: 1px solid var(--line); }
+.neues-knopf { position: relative; min-height: 44px; }
+.neues-punkt { display: inline-block; width: 8px; height: 8px; margin-left: .45rem; border-radius: 50%; background: var(--accent); vertical-align: middle; }
+.neues-seite { max-width: 40rem; margin: 0 auto; }
+.neues-seite h1 { margin: 0 0 .2rem; }
+.neues-version { margin: 1rem 0; }
+.neues-version h2 { font-size: 1.15rem; margin: 0; }
+.neues-version ul { margin: .6rem 0 0; padding-left: 1.2rem; line-height: 1.55; }
+.neues-version li { margin: 0 0 .45rem; }

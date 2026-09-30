@@ -22,6 +22,7 @@ Anlass: Vercel liefert jeden Push auf den Hauptbranch `claude/optimistic-hypatia
    - die Windows-Probe (`windows-probe.yml`, gestartet mit `--ref <branch>`).
 
    Dann wird der Branch per fast-forward auf den Hauptbranch geführt. Erst danach folgen ein Tag, ein Release, ein Katalog- oder ein Web-Lauf, und die nur mit Miks Freigabe.
+   **Vor jedem Tag:** Die neue Version bekommt ihren Eintrag in `web/neues.json` („Was ist neu“, drei bis sechs Punkte für Nutzer, neueste oben). Der Test `web/neues.test.mjs` schlägt fehl, wenn er fehlt oder die Versionsangaben nicht übereinstimmen.
 3. **Jeder Workflow, der auf den Hauptbranch schreibt, testet vorher selbst.** Er lässt die Tests laufen, die von dem abhängen, was er schreibt, bevor er committet (Beispiel: „Web-Version“ prüft Werkzeug, Web und Kern). Fällt ein Test durch, schreibt er nichts.
 4. Findet ein Test oder die Probe etwas, wird nichts veröffentlicht. Code meldet es in der Rückmeldung, behebt es auf dem Branch und prüft neu.
 

@@ -1,0 +1,56 @@
+{
+  "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
+  "versionen": [
+    {
+      "version": "0.3.1",
+      "datum": "2026-09-30",
+      "punkte": [
+        "Neu: diese Seite. Hier steht nach jedem Update, was sich geändert hat. Du findest sie unter „Updates & Abo“ in der Box „App-Update“.",
+        "Für Dezember liegen 31 neue Rätsel bereit und vier Lesewochen im Advent: „Das kalte Herz“, „Immensee“, Wintermärchen der Brüder Grimm und Kalendergeschichten von Hebel. Ab dem 24. Dezember sind Rätsel und Texte kurz.",
+        "Ein Tipp hat behauptet, ein Treffpunkt sei eingetragen, auch wenn keiner da war. Er und vier ähnliche Tipps kommen jetzt nur noch, wenn das Gesagte stimmt."
+      ]
+    },
+    {
+      "version": "0.3.0",
+      "datum": "2026-09-30",
+      "punkte": [
+        "Die App beginnt mit „Heute“: oben deine Bereit-Zahl, darunter die Karten des Tages, unten, wie viele Tage im Vorrat liegen.",
+        "Jeden Tag ein Rätsel, und jeden Montag beginnt ein neuer Roman, ein Stück pro Tag. Zum Lesen gibt es eine eigene Ansicht, auf Wunsch liest die App vor.",
+        "Wenn alle Karten erledigt oder weggelegt sind, sagt die App: „Das war dein Tag. Bis morgen.“ Kein endloses Weiterscrollen.",
+        "Die Inhalte kommen im Voraus aufs Gerät, 30 Tage lang. Ohne Internet geht es Tag für Tag weiter, bis der Vorrat aufgebraucht ist.",
+        "Unter „Übersicht“ stellst du ein, welche Karten du willst, wann der Tag endet und wie viele Tage die App vorlädt. Alles, was früher auf der Startseite stand, ist jetzt dort."
+      ]
+    },
+    {
+      "version": "0.2.1",
+      "datum": "2026-09-30",
+      "punkte": [
+        "Ohne Lumi bekommst du ab und zu einen kurzen Tipp als Textkarte. Wer es ganz still will, stellt „Tipps aus“ ein.",
+        "Die Lumi schläft nachts. Wer sie anstupst, weckt sie kurz; danach schläft sie weiter.",
+        "Die Web-Version im Browser hat jetzt dieselben Inhalte wie die App."
+      ]
+    },
+    {
+      "version": "0.2.0",
+      "datum": "2026-09-30",
+      "punkte": [
+        "Die Lumi ist am Anfang aus. Wer sie sehen möchte, schaltet sie in den Einstellungen ein und gibt ihr einen Namen.",
+        "Die Bereit-Zahl rechnet genauer: Inhalte, Dinge, Menschen und Können zählen getrennt, und was lange nicht bestätigt wurde, zählt langsam weniger. Beim Update ist deine Zahl nicht gefallen.",
+        "Neu in der Bibliothek: kleine Programme, die ohne Internet laufen. Das erste ist „Wichteln und Engerl-Bengerl“ für die Adventzeit.",
+        "Solche Programme laufen abgeschottet: Sie kommen nicht ins Internet und nicht an deinen Tresor."
+      ]
+    },
+    {
+      "version": "0.1",
+      "datum": "2026-09-29",
+      "titel": "Die ersten Versionen (0.1.0 bis 0.1.8), kurz zusammengefasst",
+      "punkte": [
+        "Das Österreich-Paket mit Notrufnummern, Sirenensignalen, Blackout-Ablauf und Vorsorge-Checkliste, alles ohne Internet.",
+        "Die Bibliothek: Wikivoyage und weitere Inhalte liegen ganz auf deinem Gerät.",
+        "Der Tresor für die Notfallmappe, verschlüsselt, nur mit deinem Passwort zu öffnen.",
+        "Die Bereit-Zahl zeigt, wie gut du vorbereitet bist, und die Karte von Österreich.",
+        "Das Update-Abo holt neue Inhalte und prüft jedes Paket, bevor es auf dein Gerät kommt."
+      ]
+    }
+  ]
+}
