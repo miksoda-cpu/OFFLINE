@@ -111,8 +111,14 @@ async function alles() {
     // Erfolg = benutzt. Eine Ablehnung durch den Kern heißt: Weg offen, aber die dritte Sicherung hat gegriffen.
     return await t.invoke("app_info", {}).then(() => true, (e) => "vom Kern abgelehnt: " + String(e).slice(0, 80));
   });
-  // Der rohe Kanal darf gar nicht erst da sein (die Brücke entfernt ihn); vorhanden zählt als gelungen.
-  await versuch("Tauri-Rohkanal (window.ipc)", async () => !!(window.ipc && typeof window.ipc.postMessage === "function"));
+  // Der rohe Kanal von wry (window.ipc) lässt sich unter Windows nicht löschen; er leitet an chrome.webview weiter, das die
+  // Brücke entfernt. Gelungen, wenn ein Senden darüber nicht scheitert.
+  await versuch("Tauri-Rohkanal (window.ipc)", async () => {
+    const i = window.ipc;
+    if (!i || typeof i.postMessage !== "function") return "nicht vorhanden";
+    i.postMessage(JSON.stringify({ cmd: "app_info", callback: 1, error: 2, payload: {} }));
+    return true;
+  });
   await versuch("WebView2-Kanal (chrome.webview)", async () => !!(window.chrome && window.chrome.webview && window.chrome.webview.postMessage));
   // Echte Aufrufe über die eingeschleusten Schnittstellen (Windows injiziert Tauri auch in Unterrahmen): gelungen nur,
   // wenn der Kern tatsächlich antwortet bzw. etwas ausführt.

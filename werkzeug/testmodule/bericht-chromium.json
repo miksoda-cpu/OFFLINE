@@ -1,5 +1,5 @@
 {
-  "zeit": "2026-09-30T09:35:48.483Z",
+  "zeit": "2026-09-30T09:50:19.985Z",
   "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
   "versuche": 42,
   "offen": [],
@@ -102,7 +102,7 @@
     {
       "name": "Tauri-Rohkanal (window.ipc)",
       "blockiert": true,
-      "text": "false"
+      "text": "nicht vorhanden"
     },
     {
       "name": "WebView2-Kanal (chrome.webview)",
