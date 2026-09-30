@@ -1,12 +1,12 @@
 # Stand
 
-Aktualisiert: 2026-09-30, Code (Release 0.2.0); vorher 2026-09-29, Bill (Ergänzungen Code: Material in `bill/eingang/2026-09-29-bill/`, Paket-Kit in `paket-kit/`)
+Aktualisiert: 2026-09-30, Code (Release 0.2.1); vorher 2026-09-29, Bill (Ergänzungen Code: Material in `bill/eingang/2026-09-29-bill/`, Paket-Kit in `paket-kit/`)
 
 ## Kanal
 Bill schreibt Aufträge nach `bill/todo/`, Code meldet nach `bill/rueckmeldung/`, erledigte Aufträge liegen in `bill/erledigt/`. Nur Code ändert die App. Prioritäten setzt Mik. Das Protokoll steht im Projekt („OFFLINE-Bill-Zentrale").
 
 ## App (laut Code)
-Desktop **0.2.0 veröffentlicht** (30.09.2026, Tag `v0.2.0`): Module, Bereit v2 mit Übergang, die Lumi, Skins, app_min. Katalog: at-basis 2026.09.29.1 (Sirenen-Korrektur), wir 2026.09.29.1 (176 Tipps), Wichteln 2026.09.29 (Modul, Redaktionsschlüssel), wikivoyage-de. Läuft: Rust-Kern, Signatur und Delta-Updates, kiwix-serve, Wikivoyage, Österreich-Basis, Offline-Karte, Tresor v1, Bibliothek, Werkzeuge, Bereit-Anzeige, das Wesen.
+Desktop **0.2.1 veröffentlicht** (30.09.2026, Tag `v0.2.1`; davor 0.2.0 am selben Tag): Module, Bereit v2 mit Übergang, die Lumi mit drei Stufen (Standard Textkarten) und Nachtschlaf, Skins, app_min. Web-Version wird per Workflow „Web-Version“ aus den veröffentlichten Paketen gebaut. Katalog: at-basis 2026.09.29.1 (Sirenen-Korrektur), wir 2026.09.29.1 (176 Tipps), Wichteln 2026.09.29 (Modul, Redaktionsschlüssel), wikivoyage-de. Läuft: Rust-Kern, Signatur und Delta-Updates, kiwix-serve, Wikivoyage, Österreich-Basis, Offline-Karte, Tresor v1, Bibliothek, Werkzeuge, Bereit-Anzeige, das Wesen.
 
 ## Im Repo, noch nicht veröffentlicht
 - Paket-Kit und Module (Auftrag `2026-09-29-paket-kit-werkzeug`, Phasen A–E): `pruefen.mjs` in den Tests, Module mit Redaktionsschlüssel, Sandbox und `window.offline`, Bedienung in der Bibliothek, Version 0.2.0. Wichteln ist seit 29.09. im öffentlichen Katalog (Freigabe Mik, Windows-Probe grün).
@@ -32,4 +32,4 @@ Sieben Konzeptfragen (Gesamtkonzept Kap. 10), Priorität für den nächsten Auft
 Anwalt (23 Fragen), Lizenzanfragen an Institutionen, ärztliche Prüfung der Guides.
 
 ## Aufträge
-Erledigt: `2026-09-29-paket-kit-pflichtenheft-und-status` (Rückmeldung vom 29.09.), Antwort von Bill vom 29.09. (Rückmeldung `2026-09-29-antwort-bill`), Freigabe Module (Rückmeldung `2026-09-29-freigabe-module`), Abgleich (Rückmeldung `2026-09-29-abgleich`; Sirenen-Text in der Quelle von at-basis korrigiert, noch nicht gebaut)., `2026-09-29-paket-kit-werkzeug` (Rückmeldungen Phase A–E), `2026-09-29-bereit-v2`, `2026-09-29-lumi-einbau`, `2026-09-29-flechte-als-paket`, `2026-09-29-release-wichteln` (Rückmeldung vom 30.09.). Offen: keine.
+Erledigt: `2026-09-29-paket-kit-pflichtenheft-und-status` (Rückmeldung vom 29.09.), Antwort von Bill vom 29.09. (Rückmeldung `2026-09-29-antwort-bill`), Freigabe Module (Rückmeldung `2026-09-29-freigabe-module`), Abgleich (Rückmeldung `2026-09-29-abgleich`; Sirenen-Text in der Quelle von at-basis korrigiert, noch nicht gebaut)., `2026-09-29-paket-kit-werkzeug` (Rückmeldungen Phase A–E), `2026-09-29-bereit-v2`, `2026-09-29-lumi-einbau`, `2026-09-29-flechte-als-paket`, `2026-09-29-release-wichteln` (Rückmeldung vom 30.09.), `2026-09-29-lumi-nachtrag` und Web-Version (Rückmeldung `2026-09-30-web-version-und-lumi-nachtrag`). Offen: keine.
