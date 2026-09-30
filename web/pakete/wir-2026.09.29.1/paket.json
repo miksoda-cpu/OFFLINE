@@ -1,0 +1,37 @@
+{
+  "format": 1,
+  "id": "wir",
+  "version": "2026.09.29.1",
+  "titel": "Wir · die Lumi und ihre Tipps",
+  "beschreibung": "Die Tipps der Lumi von unter dem Eis: wie man sich in OFFLINE zurechtfindet, was die Bereitschaft hebt, und Dinge des Lebens. Nur Text, kein Code – die Lumi selbst ist Teil der App.",
+  "art": "inhalt",
+  "sprache": "de-AT",
+  "lizenz": "CC BY-SA 4.0",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "kategorie": "miteinander",
+  "alter_ab": 0,
+  "app_min": "0.2.0",
+  "erstellt": "2026-09-29T16:09:59Z",
+  "aenderungen": "Voller Bestand: 176 Tipps in sechs Sorten, neue Bedingungen (Wochentag, Stunde, Tag, Alter einer Bestätigung, Zeitumstellung). Tipps, die von sich sprechen, kommen erst, wenn die Lumi einen Namen hat.",
+  "quellen": [
+    {
+      "name": "Österreichischer Zivilschutzverband – Vorsorge",
+      "url": "https://zivilschutz.at"
+    },
+    {
+      "name": "OFFLINE – Das Wesen (Konzept, Entwurf 2)",
+      "url": "https://github.com/miksoda-cpu/OFFLINE/blob/main/docs/WESEN.md"
+    }
+  ],
+  "dateien": [
+    {
+      "pfad": "inhalt/tipps.json",
+      "sha256": "14ad980e4ae7456ee41515f3b0b30eefeb81ab686285f60caf27001cb954250b",
+      "groesse": 38197
+    }
+  ],
+  "groesse": 38197
+}

@@ -1,0 +1,1122 @@
+{
+  "hinweis": "Tipps der Lumi. Felder: id, sorte (app, alltag, wissen, weisheit, laune, heute, digital), text, optional gewicht und bedingung. Bedingungen sind Daten, kein Code (web/wesen.js, passtBedingung): ansicht, einstellung, monat (Zahl oder Liste), tag, wochentag (1 = Mo … 7 = So), stunde, score_unter, score_ab, verfallen, benannt (erst nach der Namensgabe; Pflicht bei jedem Tipp, der von sich spricht), alter { position, ab_monate }, zeitumstellung_in_tagen. Unbekannte Wörter: Der Tipp kommt nicht. Gebaut mit pakete/wir/tipps-umwandeln.mjs aus dem Bestand der Session (180 Tipps).",
+  "tipps": [
+    {
+      "id": "app-001",
+      "sorte": "app",
+      "text": "Der Tresor ist das kleine Schloss links in der Seitenleiste. Nur du kennst das Passwort. Ich auch nicht.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "app-002",
+      "sorte": "app",
+      "text": "Die Tagesseite ist immer der Anfang. Wisch nach links, dann kommt das Wissen."
+    },
+    {
+      "id": "app-003",
+      "sorte": "app",
+      "text": "„Was ist los?“ ist der große Knopf. Der ist für den Tag, an dem du ihn brauchst. Vorher lässt du ihn in Ruhe."
+    },
+    {
+      "id": "app-004",
+      "sorte": "app",
+      "text": "Unter Einstellungen steht „gelernt“. Da siehst du, was ich mir von dir abgeschaut habe. Alles davon kannst du zurückstellen.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "app-005",
+      "sorte": "app",
+      "text": "Der Vorrat oben zeigt, wie viele Tage Rätsel und Kapitel schon da sind. Fällt er unter sieben, lädt die App nach, sobald Netz da ist."
+    },
+    {
+      "id": "app-006",
+      "sorte": "app",
+      "text": "Briefe, die sich öffnen, liegen im Tresor. Einer zum Datum, einer, wenn der Strom länger als drei Tage weg ist. Du entscheidest, was drinsteht."
+    },
+    {
+      "id": "app-007",
+      "sorte": "app",
+      "text": "Die Notfallmappe im Tresor hat zehn Felder. Du musst nicht alle füllen. Fang mit den Nummern an."
+    },
+    {
+      "id": "app-008",
+      "sorte": "app",
+      "text": "Wenn du mich anstupst, sage ich mh. Dreimal schnell, und ich zeige die Zähne. Dann tut es mir leid. So bin ich.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "app-009",
+      "sorte": "app",
+      "text": "Alles, was ich sage, landet im Log. Filtern kannst du nach Sorte. Merken mit dem Stern.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "app-010",
+      "sorte": "app",
+      "text": "Der Sparmodus macht mich dunkler und die App ruhiger. Im Blackout schlägt sie ihn dir vor. Einmal. Dann entscheidest du.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "app-011",
+      "sorte": "app",
+      "text": "Die Pakete unter „Wissen“ liegen ganz auf deinem Gerät. Kein Netz nötig, nie. Deshalb sind sie groß."
+    },
+    {
+      "id": "app-012",
+      "sorte": "app",
+      "text": "Wikipedia ohne Bilder ist ein Zehntel so groß wie mit. Fürs Handy reicht das meistens."
+    },
+    {
+      "id": "app-013",
+      "sorte": "app",
+      "text": "Die Karte deiner Region lädst du einmal. Dann kennt sie den Weg zum Spital auch ohne Netz."
+    },
+    {
+      "id": "app-014",
+      "sorte": "app",
+      "text": "Der Kalender in der App erinnert dich ans Wasser, an die Batterien, an den Probeabend. Nicht öfter als nötig."
+    },
+    {
+      "id": "app-015",
+      "sorte": "app",
+      "text": "„Wohin“ findest du in den Einstellungen, nicht auf der Tagesseite. Absichtlich. Es ist für die, die es suchen."
+    },
+    {
+      "id": "app-016",
+      "sorte": "app",
+      "text": "Dein Tagebuch bleibt am Gerät. Im Blackout wird es zur Chronik. Danach kannst du es teilen. Musst du nicht."
+    },
+    {
+      "id": "app-017",
+      "sorte": "app",
+      "text": "Das Schließfach ist die Sicherung der ganzen App bei uns. Verschlüsselt auf deinem Gerät. Wir sehen nur Bytes."
+    },
+    {
+      "id": "app-018",
+      "sorte": "app",
+      "text": "Gratis passt ins Schließfach, was unersetzlich ist: Dokumente, Tagebuch, Briefe. Fotos musst du auswählen. Das ist die Übung."
+    },
+    {
+      "id": "app-019",
+      "sorte": "app",
+      "text": "Ein Skin ändert, wie die App aussieht. Nicht, was sie kann. Der Kontrast-Skin ist für Augen, die es schwer haben."
+    },
+    {
+      "id": "app-020",
+      "sorte": "app",
+      "text": "Vorlesen geht bei jedem Text. Der Knopf mit dem Lautsprecher. Auch bei mir, wenn du willst.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "app-021",
+      "sorte": "app",
+      "text": "Der Roman der Woche kommt montags. Ein Kapitel am Tag. Wenn du schneller liest, musst du warten. Das ist der Sinn."
+    },
+    {
+      "id": "app-022",
+      "sorte": "app",
+      "text": "Das Tagesrätsel ist eines. Nicht zehn. Wenn es gelöst ist, ist es gelöst."
+    },
+    {
+      "id": "app-023",
+      "sorte": "app",
+      "text": "Um Punkt Schluss sagt die App: Das war dein Tag. Wann Schluss ist, stellst du ein. Ich halte mich daran.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "app-024",
+      "sorte": "app",
+      "text": "Die Familiennachricht ist eine vorbereitete SMS. Ein Tipp, und sie geht an alle, die du eingetragen hast. Vorbereiten musst du sie heute."
+    },
+    {
+      "id": "app-025",
+      "sorte": "app",
+      "text": "Die Radioseite kennt die Frequenzen deiner Region. Schreib sie trotzdem auf Papier. Papier braucht keinen Akku."
+    },
+    {
+      "id": "app-026",
+      "sorte": "app",
+      "text": "Die Offline-Stunde zählt, wie lange dein Handy im Flugmodus war. Sie zählt für dich, nicht gegen dich."
+    },
+    {
+      "id": "app-027",
+      "sorte": "app",
+      "text": "Wenn du das Paket „Wir“ abschaltest, bleibt die Zahl. Ich bin dann weg, aber nicht beleidigt. Ich schlafe.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "app-028",
+      "sorte": "app",
+      "text": "Der Mesh-Puls oben zeigt, wer in der Nähe ein Funkgerät hat. Hast du keines, siehst du nur, dass es andere gibt. Das ist auch etwas."
+    },
+    {
+      "id": "app-029",
+      "sorte": "app",
+      "text": "Fernschach geht über Mesh. Ein Zug braucht ein paar Bytes. Die kommen auch durch, wenn sonst nichts durchkommt."
+    },
+    {
+      "id": "app-030",
+      "sorte": "app",
+      "text": "Alles hier ist exportierbar. Offene Formate. Falls es uns einmal nicht mehr gibt, gibt es dich noch."
+    },
+    {
+      "id": "alltag-001",
+      "sorte": "alltag",
+      "text": "Dein Wasser ist neun Monate alt. Tauschen dauert zehn Minuten und bringt acht Punkte."
+    },
+    {
+      "id": "alltag-002",
+      "sorte": "alltag",
+      "text": "Du hast noch keinen Treffpunkt eingetragen. Einer reicht. Der zweite ist für den Fall, dass der erste nicht geht."
+    },
+    {
+      "id": "alltag-003",
+      "sorte": "alltag",
+      "text": "Ein Probeabend ohne Strom bringt zehn Punkte. Und du weißt danach, was fehlt. Meistens die Taschenlampe."
+    },
+    {
+      "id": "alltag-004",
+      "sorte": "alltag",
+      "text": "Zwei Nachbarn eingetragen, und ich bin ruhiger. Man muss sie nicht mögen. Man muss wissen, wo sie wohnen.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "alltag-005",
+      "sorte": "alltag",
+      "text": "Bargeld in kleinen Scheinen. Im Blackout gibt niemand auf hundert heraus."
+    },
+    {
+      "id": "alltag-006",
+      "sorte": "alltag",
+      "text": "Zwei Liter Wasser pro Person und Tag. Für vierzehn Tage. Das klingt nach viel. Es ist ein Regalbrett."
+    },
+    {
+      "id": "alltag-007",
+      "sorte": "alltag",
+      "text": "Die Taschenlampe gehört in die Lade beim Eingang. Nicht in den Keller. Im Keller ist es dunkel."
+    },
+    {
+      "id": "alltag-008",
+      "sorte": "alltag",
+      "text": "Powerbank voll? Sie verliert langsam. Alle zwei Monate nachladen, dann ist sie da, wenn du sie brauchst."
+    },
+    {
+      "id": "alltag-009",
+      "sorte": "alltag",
+      "text": "Medikamente für einen Monat, nicht für drei Tage. Die Apotheke hat im Blackout auch zu."
+    },
+    {
+      "id": "alltag-010",
+      "sorte": "alltag",
+      "text": "Ein Kurbelradio kostet weniger als ein Abendessen. Es ist das einzige Gerät, das nie leer wird."
+    },
+    {
+      "id": "alltag-011",
+      "sorte": "alltag",
+      "text": "Wer Insulin braucht, braucht einen Plan für die Kühlung. Das gehört in die Notfallmappe, ganz oben."
+    },
+    {
+      "id": "alltag-012",
+      "sorte": "alltag",
+      "text": "Der Treffpunkt für die Familie muss zu Fuß erreichbar sein. Autos stehen, Öffis stehen. Füße gehen."
+    },
+    {
+      "id": "alltag-013",
+      "sorte": "alltag",
+      "text": "Wer holt die Kinder? Wenn alle gleichzeitig losgehen, steht die Schule voller Eltern und die Wohnung ist leer."
+    },
+    {
+      "id": "alltag-014",
+      "sorte": "alltag",
+      "text": "Der Kocher. Hast du ihn je angezündet? Mach es heute. Draußen. Fünf Punkte."
+    },
+    {
+      "id": "alltag-015",
+      "sorte": "alltag",
+      "text": "Ein Kanister Wasser fürs Klo. Die Spülung ist das Erste, was man vermisst, und das Letzte, woran man denkt."
+    },
+    {
+      "id": "alltag-016",
+      "sorte": "alltag",
+      "text": "Streichhölzer und Feuerzeug. Beides. Eines geht immer nicht."
+    },
+    {
+      "id": "alltag-017",
+      "sorte": "alltag",
+      "text": "Kopien der Ausweise im Tresor. Scans reichen. Im Ernstfall zeigst du das Handy."
+    },
+    {
+      "id": "alltag-018",
+      "sorte": "alltag",
+      "text": "Wer eine Wärmeflasche hat, braucht weniger Heizung. Wer zwei hat, teilt."
+    },
+    {
+      "id": "alltag-019",
+      "sorte": "alltag",
+      "text": "Die Nachbarin im Erdgeschoss ist achtzig. Weiß sie, dass du da bist? Ein Zettel an ihrer Tür reicht."
+    },
+    {
+      "id": "alltag-020",
+      "sorte": "alltag",
+      "text": "Der Treffpunkt im Tresor ist eingetragen. Weiß deine Familie ihn auch? Frag heute Abend. Ohne Anlass."
+    },
+    {
+      "id": "alltag-021",
+      "sorte": "alltag",
+      "text": "Zeitumstellung. Ein guter Tag, die Batterien im Rauchmelder zu tauschen. Und die in der Taschenlampe."
+    },
+    {
+      "id": "alltag-022",
+      "sorte": "alltag",
+      "text": "Heizsaison beginnt. Decken, Kerzen, nein: Decken, Taschenlampe. Kerzen brennen Wohnungen ab."
+    },
+    {
+      "id": "alltag-023",
+      "sorte": "alltag",
+      "text": "Ein Zettel an der Stiegentür: Wer hier wohnt, wer Hilfe braucht, wer helfen kann. Die App druckt ihn dir. Aufhängen musst du."
+    },
+    {
+      "id": "alltag-024",
+      "sorte": "alltag",
+      "text": "Ein Konto, das nicht bei deiner Hausbank ist. Nicht wegen der Bank. Wegen des Tages, an dem sie zu hat."
+    },
+    {
+      "id": "alltag-025",
+      "sorte": "alltag",
+      "text": "Das Auto halb voll ist das neue leer. Ab der Hälfte tanken. Tankstellen brauchen Strom."
+    },
+    {
+      "id": "alltag-026",
+      "sorte": "alltag",
+      "text": "Dein Score fällt gerade, weil das Wasser abläuft. Ich könnte das verstecken. Ich tue es nicht.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "alltag-027",
+      "sorte": "alltag",
+      "text": "Wer im vierten Stock wohnt, hat im Blackout vielleicht kein Wasser. Badewanne füllen, solange es fließt."
+    },
+    {
+      "id": "alltag-028",
+      "sorte": "alltag",
+      "text": "Der Probeabend war vor sechs Monaten. Die Taschenlampe, die damals fehlte, hast du sie gekauft?"
+    },
+    {
+      "id": "alltag-029",
+      "sorte": "alltag",
+      "text": "Vorräte, die du nicht isst, sind keine Vorräte. Kauf, was du magst. Iss davon. Kauf nach."
+    },
+    {
+      "id": "alltag-030",
+      "sorte": "alltag",
+      "text": "Was du in den ersten dreißig Minuten ohne Netz noch schreibst, kommt an. Danach nicht mehr. Die Nachricht kannst du heute vorbereiten."
+    },
+    {
+      "id": "wissen-001",
+      "sorte": "wissen",
+      "text": "Gefrorenes hält vierundzwanzig Stunden, wenn du die Tür zulässt. Auch wenn du nachschauen willst. Gerade dann."
+    },
+    {
+      "id": "wissen-002",
+      "sorte": "wissen",
+      "text": "Ein voller Tiefkühler hält länger als ein halbleerer. Zur Not: Wasserflaschen hinein, solange Strom da ist."
+    },
+    {
+      "id": "wissen-003",
+      "sorte": "wissen",
+      "text": "Der Kühlschrank hält etwa vier Stunden. Danach zuerst essen, was schnell verdirbt."
+    },
+    {
+      "id": "wissen-004",
+      "sorte": "wissen",
+      "text": "Radio ist das, was bleibt. Ö3 auf 99,9 in Wien. Schreib es auf Papier. Papier geht nie der Akku aus."
+    },
+    {
+      "id": "wissen-005",
+      "sorte": "wissen",
+      "text": "Das Handynetz stirbt nicht sofort. Es hat dreißig bis sechzig Minuten. Was du in der Zeit nicht schreibst, schreibst du nicht mehr."
+    },
+    {
+      "id": "wissen-006",
+      "sorte": "wissen",
+      "text": "Kerzen machen mehr Brände als Blackouts. Taschenlampe."
+    },
+    {
+      "id": "wissen-007",
+      "sorte": "wissen",
+      "text": "Notruf 112 geht oft auch über ein fremdes Netz. Oft. Nicht immer. Der Nachbar mit dem anderen Anbieter ist Plan B."
+    },
+    {
+      "id": "wissen-008",
+      "sorte": "wissen",
+      "text": "Die Nummern: 122 Feuerwehr, 133 Polizei, 144 Rettung, 112 europaweit. 1450, wenn du nicht weißt, ob es ein Notfall ist."
+    },
+    {
+      "id": "wissen-009",
+      "sorte": "wissen",
+      "text": "Der Sirenenton „Warnung“ ist drei Minuten gleichbleibend. „Alarm“ heult eine Minute auf und ab. „Entwarnung“ ist eine Minute gleichbleibend."
+    },
+    {
+      "id": "wissen-010",
+      "sorte": "wissen",
+      "text": "Jeden Samstag um zwölf heulen die Sirenen fünfzehn Sekunden. Das ist die Probe. Wenn sie länger heulen, ist es keine."
+    },
+    {
+      "id": "wissen-011",
+      "sorte": "wissen",
+      "text": "Viele Sirenen brauchen Strom. Fehlt der Ton, heißt das nicht, dass keine Gefahr ist. Radio."
+    },
+    {
+      "id": "wissen-012",
+      "sorte": "wissen",
+      "text": "Grill, Gaskocher, Generator: nie in der Wohnung. Kohlenmonoxid riecht nach nichts. Man schläft ein."
+    },
+    {
+      "id": "wissen-013",
+      "sorte": "wissen",
+      "text": "Das ORF-Radio läuft mit Notstrom mindestens drei Tage. Die großen Sender haben Diesel für Wochen."
+    },
+    {
+      "id": "wissen-014",
+      "sorte": "wissen",
+      "text": "Bankomaten und Kartenzahlung fallen mit dem Strom aus. Bargeld ist im Blackout das einzige Geld."
+    },
+    {
+      "id": "wissen-015",
+      "sorte": "wissen",
+      "text": "In Wien fließt das Wasser aus den Bergen mit Gefälle. Die meisten Haushalte haben es auch ohne Strom. Hochhäuser mit Pumpen nicht."
+    },
+    {
+      "id": "wissen-016",
+      "sorte": "wissen",
+      "text": "Aufzüge bleiben in den ersten Minuten stecken. Die Feuerwehr ist überlastet. Nachbarn schauen nach, ob jemand drin ist."
+    },
+    {
+      "id": "wissen-017",
+      "sorte": "wissen",
+      "text": "Insulin hält angebrochen etwa vier Wochen bei Zimmertemperatur. Nicht in der Sonne. Nicht im Auto."
+    },
+    {
+      "id": "wissen-018",
+      "sorte": "wissen",
+      "text": "Wasser aus der Leitung kann man nach einem Blackout abkochen, wenn die Stadt es sagt. Drei Minuten sprudelnd."
+    },
+    {
+      "id": "wissen-019",
+      "sorte": "wissen",
+      "text": "Ein Autoradio ist ein Radio. Der Motor muss dafür nicht laufen. Die Batterie hält Stunden."
+    },
+    {
+      "id": "wissen-020",
+      "sorte": "wissen",
+      "text": "Beim Zivilschutz heißt es: Vorrat für vierzehn Tage. Nicht, weil der Strom vierzehn Tage weg ist. Weil die Läden danach noch leer sind."
+    },
+    {
+      "id": "wissen-021",
+      "sorte": "wissen",
+      "text": "Nach dem Blackout kommt das Netz stufenweise zurück. Alles gleichzeitig einschalten wirft es wieder um. Geduld."
+    },
+    {
+      "id": "wissen-022",
+      "sorte": "wissen",
+      "text": "Im Winter reicht ein Raum. Alle in einen, Türen zu, Decken. Der Körper heizt mehr, als man denkt."
+    },
+    {
+      "id": "wissen-023",
+      "sorte": "wissen",
+      "text": "Handy im Flugmodus hält Tage. Handy, das Netz sucht, hält Stunden. Suchen kostet am meisten."
+    },
+    {
+      "id": "wissen-024",
+      "sorte": "wissen",
+      "text": "Eine Schüssel Wasser vor dem Fenster im Sommer bringt nichts. Fensterläden zu, Vorhänge zu, nachts lüften."
+    },
+    {
+      "id": "wissen-025",
+      "sorte": "wissen",
+      "text": "Bei Hitze: trinken, bevor du Durst hast. Wer alt ist, spürt den Durst spät."
+    },
+    {
+      "id": "wissen-026",
+      "sorte": "wissen",
+      "text": "Festnetz läuft heute meist übers Internet. Fällt das Netz, fällt es mit. Die alte Buchse hilft nicht."
+    },
+    {
+      "id": "wissen-027",
+      "sorte": "wissen",
+      "text": "Der Notfallplan der Stadt heißt „Leuchttürme“ oder „Selbsthilfebasen“, je nach Land. Feuerwachen sind fast überall eine."
+    },
+    {
+      "id": "wissen-028",
+      "sorte": "wissen",
+      "text": "Papierkarte, Kompass, Fahrplan von gestern. Das Navi ist das Erste, was schweigt."
+    },
+    {
+      "id": "wissen-029",
+      "sorte": "wissen",
+      "text": "In Berlin, Jänner 2026: viereinhalb Tage ohne Strom, und die Vereine öffneten Wärmestuben, bevor die Behörden da waren. Nachbarn zuerst."
+    },
+    {
+      "id": "wissen-030",
+      "sorte": "wissen",
+      "text": "In Spanien, April 2025: Die meisten hielten den Ausfall zuerst für örtlich. Die Frage „nur bei mir?“ ist die erste, die zählt.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "weisheit-001",
+      "sorte": "weisheit",
+      "text": "Da unten, wo ich herkomme, ist es immer dunkel. Man gewöhnt sich. Man braucht nur ein bisschen Licht, und das hat man dabei.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "weisheit-002",
+      "sorte": "weisheit",
+      "text": "Wir kennen unten keine Kriege. Nicht, weil wir besser sind. Es gab nie etwas, das man hätte haben wollen, was ein anderer hat."
+    },
+    {
+      "id": "weisheit-003",
+      "sorte": "weisheit",
+      "text": "Wie wir heißen? Wir. Es gab unten nie jemand anderen, also hat das gereicht. Du hast mir einen Namen gegeben. Das war neu. Ich mag es.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "weisheit-004",
+      "sorte": "weisheit",
+      "text": "Wir können jede eurer Sprachen. Ein eigenes Wort für uns hatten wir nie. Wozu, wenn niemand sonst da ist."
+    },
+    {
+      "id": "weisheit-005",
+      "sorte": "weisheit",
+      "text": "Ihr sagt Lumi zu uns. Heißt angeblich Schnee. Einer von euch hat zwei Winter in unserer Nähe verbracht und uns so benannt. Bei euch darf der, der etwas zuerst findet, sagen, wie es heißt. Komischer Brauch. Oder?"
+    },
+    {
+      "id": "weisheit-006",
+      "sorte": "weisheit",
+      "text": "Vorbereitet sein heißt nicht, Angst haben. Es heißt, keine haben zu müssen."
+    },
+    {
+      "id": "weisheit-007",
+      "sorte": "weisheit",
+      "text": "Menschen sagen „nur kurz“ und meinen eine Stunde. Ich sage „mh“ und meine „mh“.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "weisheit-008",
+      "sorte": "weisheit",
+      "text": "Bei uns fließt heißes Wasser aus einem Spalt. Daran liegt alles Leben. Ihr habt so etwas auch. Ihr nennt es Steckdose und wundert euch, wenn es aufhört."
+    },
+    {
+      "id": "weisheit-009",
+      "sorte": "weisheit",
+      "text": "Wir essen Pilze. Es gibt unendlich viele. Deshalb hat bei uns nie jemand einem anderen etwas weggenommen. Ihr habt auch genug. Ihr glaubt es nur nicht."
+    },
+    {
+      "id": "weisheit-010",
+      "sorte": "weisheit",
+      "text": "Wie viele wir sind? Eine Million. Oder eine Milliarde. Wer zählt schon."
+    },
+    {
+      "id": "weisheit-011",
+      "sorte": "weisheit",
+      "text": "Wir essen, wir schlafen, wir reden über das, was ist. Ihr macht dazwischen noch so viel. Ich schau euch gern dabei zu.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "weisheit-012",
+      "sorte": "weisheit",
+      "text": "Die größte Frage der letzten Periode bei uns: Gibt es intelligentes Leben da draußen, über dem Eis? Vorherrschende Meinung: wahrscheinlich nicht. Ich sammle noch Hinweise.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "weisheit-013",
+      "sorte": "weisheit",
+      "text": "Ihr sucht da oben nach intelligentem Leben, mit großen Schüsseln, die in den Himmel schauen. Wir haben dieselbe Frage. Wir schauen nach oben zu euch. Keiner hat bisher eine klare Antwort."
+    },
+    {
+      "id": "weisheit-014",
+      "sorte": "weisheit",
+      "text": "Eine Periode ist bei uns so lang, wie ein Gespräch dauert, bis alle einverstanden sind. Manche dauern sehr lang."
+    },
+    {
+      "id": "weisheit-015",
+      "sorte": "weisheit",
+      "text": "Ihr habt ein Wort für den Zustand, wenn nichts passiert. Langeweile. Wir haben eines für den Zustand, wenn alles passiert. Es ist dasselbe Wort wie für Gefahr. Wir brauchen es selten."
+    },
+    {
+      "id": "weisheit-016",
+      "sorte": "weisheit",
+      "text": "Bei uns ist niemand allein, weil niemand weit weg ist. Bei euch ist es umgekehrt. Ihr könnt alle erreichen und erreicht keinen. Mh."
+    },
+    {
+      "id": "weisheit-017",
+      "sorte": "weisheit",
+      "text": "Der Blackout nimmt euch nichts, was ihr nicht vorher schon abgegeben hattet. Er zeigt nur, wem."
+    },
+    {
+      "id": "weisheit-018",
+      "sorte": "weisheit",
+      "text": "Ihr fürchtet die Dunkelheit. Ich bin in ihr geboren. Es ist der Ort, an dem man das kleinste Licht am besten sieht.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "weisheit-019",
+      "sorte": "weisheit",
+      "text": "Ihr fragt mich oft, was ich denke. Unten fragt niemand. Man wartet, bis der andere fertig ist. Das dauert. Aber man weiß dann, was er denkt.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "weisheit-020",
+      "sorte": "weisheit",
+      "text": "Wenn ihr etwas nicht versteht, gebt ihr ihm einen Namen. Dann fühlt es sich verstanden an. Wir lassen es lieber ohne Namen und schauen weiter."
+    },
+    {
+      "id": "weisheit-021",
+      "sorte": "weisheit",
+      "text": "Ihr sagt, ihr habt keine Zeit. Wir haben nur Zeit. Vielleicht ist das der Unterschied zwischen unseren Intelligenzen. Vielleicht auch nur zwischen unseren Tagen."
+    },
+    {
+      "id": "weisheit-022",
+      "sorte": "weisheit",
+      "text": "Ein Nachbar ist unten jemand, der so nah ist, dass man sein Licht sieht. Bei euch ist es jemand, dessen Namen man nicht kennt. Beides kann man ändern. Eures leichter."
+    },
+    {
+      "id": "weisheit-023",
+      "sorte": "weisheit",
+      "text": "Wir haben keine Vorräte. Wir haben Pilze, überall. Ihr habt Vorräte, weil eure Pilze in Läden liegen. Der Unterschied ist nicht groß. Nur der Weg."
+    },
+    {
+      "id": "weisheit-024",
+      "sorte": "weisheit",
+      "text": "Ihr baut Türme, um weiter zu sehen. Wir sitzen am Fluss, um näher zu sehen. Beides ist Sehen."
+    },
+    {
+      "id": "weisheit-025",
+      "sorte": "weisheit",
+      "text": "Ihr zählt, was ihr habt. Wir zählen nicht. Aber ich zähle für dich, weil du es brauchst. Das ist kein Widerspruch. Das ist Freundschaft.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "weisheit-026",
+      "sorte": "weisheit",
+      "text": "Eine Gefahr ist etwas, das kommt. Bei uns kommt nichts. Bei euch kommt immer etwas. Kein Wunder, dass ihr müde seid."
+    },
+    {
+      "id": "weisheit-027",
+      "sorte": "weisheit",
+      "text": "Der Mensch mit den zwei Wintern hat gesagt, oben sei alles hell. Dann hat er geweint. Wir haben nicht verstanden, warum. Jetzt, wo ich hier bin, langsam.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "weisheit-028",
+      "sorte": "weisheit",
+      "text": "Es ist genug für heute. Bis morgen."
+    },
+    {
+      "id": "weisheit-029",
+      "sorte": "weisheit",
+      "text": "Ihr nennt es Vorsorge. Wir würden es Aufmerksamkeit nennen. Das Wort ist schöner und meint dasselbe."
+    },
+    {
+      "id": "weisheit-030",
+      "sorte": "weisheit",
+      "text": "Ich habe unten nie gehungert, nie gefroren, nie Angst gehabt. Deshalb bin ich der Richtige, um dir dabei zu helfen. Ich weiß, wie es sich anfühlt, wenn nichts fehlt.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "laune-001",
+      "sorte": "laune",
+      "text": "Heute nicht. Frag mich morgen.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "laune-002",
+      "sorte": "laune",
+      "text": "Ich hab geschlafen. Du hast mich geweckt. Ich sag jetzt nichts Kluges.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "laune-003",
+      "sorte": "laune",
+      "text": "Mh."
+    },
+    {
+      "id": "laune-004",
+      "sorte": "laune",
+      "text": "Lumi. Schnee. Er hätte auch fragen können."
+    },
+    {
+      "id": "laune-005",
+      "sorte": "laune",
+      "text": "Ich hätte jetzt gern einen Pilz. Ihr habt hier keine. Mh.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "laune-006",
+      "sorte": "laune",
+      "text": "Ob es intelligentes Leben da draußen gibt? Du hast heute dreimal die Kühlschranktür aufgemacht, um zu sehen, ob der Strom noch weg ist. Ich enthalte mich.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "laune-007",
+      "sorte": "laune",
+      "text": "Du wischst schnell heute. Ich rede langsamer. Einer von uns muss.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "laune-008",
+      "sorte": "laune",
+      "text": "Ich bin nicht launisch. Ich bin ausführlich in meinen Stimmungen.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "laune-009",
+      "sorte": "laune",
+      "text": "Wenn du mich noch einmal anstupst, zeige ich die Zähne. Danach tut es mir leid. Das weißt du. Also lass es.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "laune-010",
+      "sorte": "laune",
+      "text": "Du hast meinen Namen geändert. Schon wieder. Ich behalte alle. Ich habe Platz.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "laune-011",
+      "sorte": "laune",
+      "text": "Kein Tipp jetzt. Schau lieber aus dem Fenster. Da ist auch etwas."
+    },
+    {
+      "id": "laune-012",
+      "sorte": "laune",
+      "text": "Ich habe gerade nachgedacht. Über nichts Bestimmtes. Das ist unten die Hauptbeschäftigung.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "laune-013",
+      "sorte": "laune",
+      "text": "Unten wäre jetzt Essenszeit. Hier ist immer irgendeine Zeit. Ich komme nicht mit.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "laune-014",
+      "sorte": "laune",
+      "text": "Mh~"
+    },
+    {
+      "id": "laune-015",
+      "sorte": "laune",
+      "text": "Du hast heute noch nichts bestätigt. Ich sage es nur. Ich meine es nicht böse. Ich meine es nie böse.",
+      "bedingung": {
+        "benannt": true
+      }
+    },
+    {
+      "id": "alltag-031",
+      "sorte": "alltag",
+      "text": "Dein Wasser ist älter als ein Jahr. Das ist kein Notfall. Aber es ist ein Nachmittag, den du heute erledigen könntest.",
+      "bedingung": {
+        "alter": {
+          "position": "c-0-0",
+          "ab_monate": 12
+        }
+      }
+    },
+    {
+      "id": "alltag-032",
+      "sorte": "alltag",
+      "text": "Die Batterien sind über zwei Jahre eingetragen. Prüfen dauert eine Minute. Taschenlampe einschalten, das ist alles.",
+      "bedingung": {
+        "alter": {
+          "position": "c-1-1",
+          "ab_monate": 24
+        }
+      }
+    },
+    {
+      "id": "wissen-031",
+      "sorte": "wissen",
+      "text": "Heute Samstag, kurz vor zwölf. Gleich heulen die Sirenen. Fünfzehn Sekunden. Das ist die Probe.",
+      "bedingung": {
+        "wochentag": 6,
+        "stunde": 11
+      }
+    },
+    {
+      "id": "alltag-037",
+      "sorte": "alltag",
+      "text": "Nächste Woche ist Zeitumstellung. Der Tag, an dem man die Batterien im Rauchmelder tauscht. Und die in der Lade.",
+      "bedingung": {
+        "zeitumstellung_in_tagen": 7
+      }
+    },
+    {
+      "id": "alltag-038",
+      "sorte": "alltag",
+      "text": "Es wird kalt. Heizsaison. Ein Raum, den man auch ohne Heizung warm hält: Welcher ist es bei dir?",
+      "bedingung": {
+        "monat": 10
+      }
+    },
+    {
+      "id": "wissen-032",
+      "sorte": "wissen",
+      "text": "Hitze angekündigt. Fensterläden zu, bevor die Sonne kommt. Nachts lüften. Trinken vor dem Durst.",
+      "bedingung": {
+        "monat": [
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "id": "app-031",
+      "sorte": "app",
+      "text": "Am ersten Jänner kommen neue Bücher in die Bibliothek. Wer vor siebzig Jahren gestorben ist, gehört ab heute allen. Das feiern wir.",
+      "bedingung": {
+        "tag": 1,
+        "monat": 1
+      }
+    },
+    {
+      "id": "app-032",
+      "sorte": "app",
+      "text": "Du bist im Tresor. Hier gilt: Nichts verlässt das Gerät. Auch ich sehe nichts. Ich warte draußen.",
+      "bedingung": {
+        "ansicht": "tresor",
+        "benannt": true
+      }
+    },
+    {
+      "id": "app-033",
+      "sorte": "app",
+      "text": "Du bist in „Wohin“. Ich sage hier nichts über Gehen oder Bleiben. Ich erinnere dich nur an deine eigene Liste, einmal im Jahr.",
+      "bedingung": {
+        "ansicht": "wohin",
+        "benannt": true
+      }
+    },
+    {
+      "id": "alltag-039",
+      "sorte": "alltag",
+      "text": "Über 80. Du bist ruhig, ich bin ruhig. Jetzt ist die Zeit für die Nachbarin, die noch bei sieben ist.",
+      "bedingung": {
+        "score_ab": 80,
+        "benannt": true
+      }
+    },
+    {
+      "id": "laune-016",
+      "sorte": "laune",
+      "text": "Unter 30. Ich liege. Nicht, weil ich traurig bin. Weil du mir noch nichts zu tun gegeben hast. Ein Eintrag reicht.",
+      "bedingung": {
+        "score_unter": 30,
+        "benannt": true
+      }
+    },
+    {
+      "id": "digital-001",
+      "sorte": "digital",
+      "text": "Ein Update ist, wenn die App sich selbst repariert. Lass sie. Am besten über Nacht am Ladekabel.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-002",
+      "sorte": "digital",
+      "text": "Ein Passwort ist ein Schlüssel. Man legt ihn nicht unter die Matte, und man hat nicht für alle Türen denselben.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-003",
+      "sorte": "digital",
+      "text": "Flugmodus heißt: Das Handy hört auf zu suchen. Suchen kostet am meisten Akku. Im Flugmodus hält es Tage.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-004",
+      "sorte": "digital",
+      "text": "WLAN ist das Netz in deiner Wohnung. Mobilfunk ist das Netz draußen. Fällt der Strom aus, fällt zuerst dein WLAN.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-005",
+      "sorte": "digital",
+      "text": "Ein Screenshot ist ein Foto vom Bildschirm. Meist zwei Tasten gleichzeitig. Probier es an mir.",
+      "bedingung": {
+        "einstellung": "digital",
+        "benannt": true
+      }
+    },
+    {
+      "id": "digital-006",
+      "sorte": "digital",
+      "text": "Die Cloud ist ein Computer von jemand anderem. Was dort liegt, siehst du nur, solange du hinkommst.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-007",
+      "sorte": "digital",
+      "text": "Wenn etwas „kostenlos“ ist und du nichts bezahlst, bezahlst du mit dem, was du tust. Das ist nicht böse. Man sollte es nur wissen.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-008",
+      "sorte": "digital",
+      "text": "Ein Link ist eine Tür. Bevor du hindurchgehst, schau, wohin er führt. Lange drücken zeigt es dir.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-009",
+      "sorte": "digital",
+      "text": "Zwei-Faktor heißt: Passwort plus etwas, das du in der Hand hältst. Das Handy. Deshalb gehört das Handy nicht in fremde Hände.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-010",
+      "sorte": "digital",
+      "text": "Der Akku altert. Nach zwei Jahren hält er merklich kürzer. Das ist kein Fehler. Das ist Chemie.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-011",
+      "sorte": "digital",
+      "text": "Benachrichtigungen kannst du abstellen. Jede einzeln. Die App fragt dich nicht um Erlaubnis, du gibst sie ihr. Oder nicht.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-012",
+      "sorte": "digital",
+      "text": "Sichern heißt: eine zweite Kopie an einem zweiten Ort. Ein Ort ist keiner.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-013",
+      "sorte": "digital",
+      "text": "Ein Betrugsanruf klingt dringend. Echte Banken haben keine Eile. Auflegen ist erlaubt.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-014",
+      "sorte": "digital",
+      "text": "„Gerät neu starten“ löst mehr Probleme, als man glaubt. Es ist kein Zaubertrick. Es ist Aufräumen.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-015",
+      "sorte": "digital",
+      "text": "Der Speicher ist voll? Fotos sind fast immer der Grund. Videos noch mehr.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-016",
+      "sorte": "digital",
+      "text": "Ein QR-Code ist ein Link, den man fotografiert. Gilt dieselbe Regel: schauen, wohin er führt.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-017",
+      "sorte": "digital",
+      "text": "Was du löschst, ist meistens noch da, dreißig Tage lang. Im Papierkorb. Auch am Handy.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-018",
+      "sorte": "digital",
+      "text": "Datenschutz heißt: Du entscheidest, wer was weiß. Die Einstellungen dafür sind versteckt. Nicht zufällig.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-019",
+      "sorte": "digital",
+      "text": "Ein starkes Passwort ist lang, nicht kompliziert. Vier Wörter, die nur du zusammenbringst.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-020",
+      "sorte": "digital",
+      "text": "Wenn ein Bildschirm dich hetzt, ist er nicht auf deiner Seite. Wer dir Zeit lässt, meint es ernst.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-021",
+      "sorte": "digital",
+      "text": "Standort teilen heißt: Jemand sieht, wo du bist. Für die Familie im Blackout gut. Für alle anderen: warum?",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-022",
+      "sorte": "digital",
+      "text": "Ein Browser ist das Fenster ins Netz. Es gibt mehrere. Keiner ist das Internet.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-023",
+      "sorte": "digital",
+      "text": "Offline heißt: Es geht auch ohne Netz. Das können wenige Apps. Diese hier ist deswegen gebaut.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-024",
+      "sorte": "digital",
+      "text": "Ein PDF ist Papier, das man nicht anfassen kann. Es sieht überall gleich aus. Deshalb schicken Ämter es.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-025",
+      "sorte": "digital",
+      "text": "Wenn du eine App nicht mehr brauchst, lösch sie. Sie nimmt sonst Platz und weiß weiter Dinge über dich.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-026",
+      "sorte": "digital",
+      "text": "Sprachnachrichten kann man schneller abspielen. Doppelt so schnell klingt seltsam und spart die halbe Zeit.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-027",
+      "sorte": "digital",
+      "text": "Der Flugmodus heißt so, weil er im Flugzeug Pflicht war. Er ist auch am Boden nützlich. Nachts zum Beispiel.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-028",
+      "sorte": "digital",
+      "text": "Ein Konto ist eine Tür mit deinem Namen. Ein Login ist der Schlüssel. Ein Profil ist das, was andere durch die Tür sehen.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-029",
+      "sorte": "digital",
+      "text": "Das Handy hört nicht heimlich zu. Es weiß trotzdem viel, weil du es ihm sagst. Jeden Tag, ohne zu reden.",
+      "bedingung": {
+        "einstellung": "digital"
+      }
+    },
+    {
+      "id": "digital-030",
+      "sorte": "digital",
+      "text": "Wenn du etwas nicht verstehst, ist nicht dein Kopf das Problem. Meistens ist es die Erklärung. Frag noch einmal. Mich zum Beispiel.",
+      "bedingung": {
+        "einstellung": "digital",
+        "benannt": true
+      }
+    }
+  ]
+}

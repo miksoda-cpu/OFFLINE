@@ -13,5 +13,5 @@
   ],
   "probe": "Sirenenprobe: jeden Samstag um 12 Uhr ein 15 Sekunden langer Dauerton. Einmal im Jahr, meist am ersten Samstag im Oktober, werden alle Signale österreichweit getestet – dann heulen die Sirenen etwa eine Stunde lang immer wieder.",
   "feuerwehr": "Der Feuerwehralarm (dreimal 15 Sekunden Dauerton mit Pausen) gilt der Feuerwehr, nicht der Bevölkerung.",
-  "warn_app": "Zusätzlich warnt der Staat über AT-Alert (Cell Broadcast) direkt aufs Handy – ohne App, ohne Anmeldung. Beim Blackout fällt das nach einigen Stunden aus, die Sirenen laufen mit Notstrom weiter."
+  "warn_app": "Zusätzlich warnt der Staat über AT-Alert (Cell Broadcast) direkt aufs Handy, ohne App und ohne Anmeldung. Beim Blackout fällt das mit dem Handynetz aus. Auch viele Sirenen brauchen Strom und bleiben dann stumm. Wenn keine Sirene heult, heißt das also nicht, dass keine Gefahr besteht. Radio hören."
 }

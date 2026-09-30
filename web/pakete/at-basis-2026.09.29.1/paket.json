@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "at-basis",
-  "version": "2026.09.28",
+  "version": "2026.09.29.1",
   "titel": "Österreich-Paket · Grundversion",
   "beschreibung": "Notrufe, Sirenensignale, Blackout-Vorsorge, Checkliste und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
   "art": "inhalt",
@@ -9,9 +9,13 @@
   "lizenz": "CC BY-SA 4.0",
   "herausgeber": "The Digioneer / digitalworld Academy",
   "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "kategorie": "ernstfall",
+  "alter_ab": 0,
   "app_min": "0.1.0",
-  "erstellt": "2026-09-28T16:42:57Z",
-  "aenderungen": "Erste Ausgabe: Notrufe, Sirenensignale, Blackout-Ablauf, Vorsorge-Checkliste, Bundesländer.",
+  "erstellt": "2026-09-29T16:09:59Z",
+  "aenderungen": "Sirenen: Hinweis zum Blackout korrigiert. Viele Sirenen brauchen Strom.",
   "quellen": [
     {
       "name": "Österreichischer Zivilschutzverband",
@@ -44,8 +48,8 @@
     },
     {
       "pfad": "inhalt/sirenen.json",
-      "sha256": "83f610ac5f04e005aef4a9a953020b3f983009ccf1e0c514d79b1e2bf25b0739",
-      "groesse": 1417
+      "sha256": "8bcc0eb370b9a2ff0814fd3560c74d373275a7d7f1e58ddbdc3d1b92afd6a036",
+      "groesse": 1521
     },
     {
       "pfad": "inhalt/vorsorge.json",
@@ -53,5 +57,5 @@
       "groesse": 1694
     }
   ],
-  "groesse": 7849
+  "groesse": 7953
 }
