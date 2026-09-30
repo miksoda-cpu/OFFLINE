@@ -178,12 +178,21 @@
     {
       "id": "alltag-001",
       "sorte": "alltag",
-      "text": "Dein Wasser ist neun Monate alt. Tauschen dauert zehn Minuten und bringt acht Punkte."
+      "text": "Dein Wasser ist neun Monate alt. Tauschen dauert zehn Minuten und bringt acht Punkte.",
+      "bedingung": {
+        "alter": {
+          "position": "c-0-0",
+          "ab_monate": 9
+        }
+      }
     },
     {
       "id": "alltag-002",
       "sorte": "alltag",
-      "text": "Du hast noch keinen Treffpunkt eingetragen. Einer reicht. Der zweite ist für den Fall, dass der erste nicht geht."
+      "text": "Du hast noch keinen Treffpunkt eingetragen. Einer reicht. Der zweite ist für den Fall, dass der erste nicht geht.",
+      "bedingung": {
+        "offen": "c-3-2"
+      }
     },
     {
       "id": "alltag-003",
@@ -276,7 +285,13 @@
     {
       "id": "alltag-020",
       "sorte": "alltag",
-      "text": "Der Treffpunkt im Tresor ist eingetragen. Weiß deine Familie ihn auch? Frag heute Abend. Ohne Anlass."
+      "text": "Euer Treffpunkt steht. Weiß ihn wirklich die ganze Familie? Frag heute Abend. Ohne Anlass.",
+      "bedingung": {
+        "alter": {
+          "position": "c-3-2",
+          "ab_monate": 0
+        }
+      }
     },
     {
       "id": "alltag-021",
@@ -308,6 +323,11 @@
       "sorte": "alltag",
       "text": "Dein Score fällt gerade, weil das Wasser abläuft. Ich könnte das verstecken. Ich tue es nicht.",
       "bedingung": {
+        "alter": {
+          "position": "c-0-0",
+          "ab_monate": 12
+        },
+        "verfallen": true,
         "benannt": true
       }
     },
@@ -319,7 +339,13 @@
     {
       "id": "alltag-028",
       "sorte": "alltag",
-      "text": "Der Probeabend war vor sechs Monaten. Die Taschenlampe, die damals fehlte, hast du sie gekauft?"
+      "text": "Der Probeabend war vor sechs Monaten. Die Taschenlampe, die damals fehlte, hast du sie gekauft?",
+      "bedingung": {
+        "alter": {
+          "position": "probeabend",
+          "ab_monate": 6
+        }
+      }
     },
     {
       "id": "alltag-029",

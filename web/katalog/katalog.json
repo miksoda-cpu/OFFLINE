@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-09-30T12:12:42Z",
-  "gueltig_bis": "2026-12-29T12:12:42Z",
+  "erstellt": "2026-09-30T17:28:36Z",
+  "gueltig_bis": "2026-12-29T17:28:36Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -70,8 +70,31 @@
       "status": "verfuegbar"
     },
     {
+      "id": "tage-2026-12",
+      "version": "2026.09.30",
+      "titel": "Tage im Dezember 2026",
+      "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Das kalte Herz, Immensee, Wintermärchen der Brüder Grimm, Kalendergeschichten aus dem Schatzkästlein). Tag für Tag freigeschaltet.",
+      "art": "tage",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "kategorie": "jeden-tag",
+      "alter_ab": 10,
+      "tage": {
+        "von": "2026-12-01",
+        "bis": "2026-12-31"
+      },
+      "groesse": 234301,
+      "app_min": "0.3.0",
+      "erstellt": "2026-09-30T17:03:47Z",
+      "aenderungen": "Erste Ausgabe: 31 Tage.",
+      "pfad": "tage-2026-12-2026.09.30/",
+      "sha256_manifest": "f26aea1467b3f6571f3b173e6c7d65e6167006a77c6c1e7c7e5f22aff2dffb40",
+      "status": "verfuegbar"
+    },
+    {
       "id": "wir",
-      "version": "2026.09.29.1",
+      "version": "2026.09.30",
       "titel": "Wir · die Lumi und ihre Tipps",
       "beschreibung": "Die Tipps der Lumi von unter dem Eis: wie man sich in OFFLINE zurechtfindet, was die Bereitschaft hebt, und Dinge des Lebens. Nur Text, kein Code – die Lumi selbst ist Teil der App.",
       "art": "inhalt",
@@ -80,12 +103,12 @@
       "pruefstatus": "redaktion",
       "kategorie": "miteinander",
       "alter_ab": 0,
-      "groesse": 38197,
+      "groesse": 38705,
       "app_min": "0.2.0",
-      "erstellt": "2026-09-29T16:09:59Z",
-      "aenderungen": "Voller Bestand: 176 Tipps in sechs Sorten, neue Bedingungen (Wochentag, Stunde, Tag, Alter einer Bestätigung, Zeitumstellung). Tipps, die von sich sprechen, kommen erst, wenn die Lumi einen Namen hat.",
-      "pfad": "wir-2026.09.29.1/",
-      "sha256_manifest": "b79f0c2db642663ae726d8c7abd53f3107f39c60c3f370590c9b36441ffb4099",
+      "erstellt": "2026-09-30T17:04:39Z",
+      "aenderungen": "Korrektur: Der Tipp zum Treffpunkt kommt nur noch, wenn ein Treffpunkt ausgemacht ist. Vier weitere Tipps über Wasser, Treffpunkt und Probeabend erscheinen nur, wenn das Gesagte stimmt.",
+      "pfad": "wir-2026.09.30/",
+      "sha256_manifest": "05bb4ce84f7c313ed2ba278e5e5f7e7562626e1ad08d685d7f1b4a5498110e92",
       "status": "verfuegbar"
     },
     {
