@@ -1,15 +1,15 @@
 # Stand
 
-Aktualisiert: 2026-09-29, Bill (Ergänzungen Code: Material in `bill/eingang/2026-09-29-bill/`, Paket-Kit in `paket-kit/`)
+Aktualisiert: 2026-09-30, Code (Release 0.2.0); vorher 2026-09-29, Bill (Ergänzungen Code: Material in `bill/eingang/2026-09-29-bill/`, Paket-Kit in `paket-kit/`)
 
 ## Kanal
 Bill schreibt Aufträge nach `bill/todo/`, Code meldet nach `bill/rueckmeldung/`, erledigte Aufträge liegen in `bill/erledigt/`. Nur Code ändert die App. Prioritäten setzt Mik. Das Protokoll steht im Projekt („OFFLINE-Bill-Zentrale").
 
 ## App (laut Code)
-Desktop 0.1.8 veröffentlicht, 0.2.0 (Module) im Repo, noch nicht veröffentlicht. Paket „wir" 2026.09.29 im Katalog. Läuft: Rust-Kern, Signatur und Delta-Updates, kiwix-serve, Wikivoyage, Österreich-Basis, Offline-Karte, Tresor v1, Bibliothek, Werkzeuge, Bereit-Anzeige, das Wesen.
+Desktop **0.2.0 veröffentlicht** (30.09.2026, Tag `v0.2.0`): Module, Bereit v2 mit Übergang, die Lumi, Skins, app_min. Katalog: at-basis 2026.09.29.1 (Sirenen-Korrektur), wir 2026.09.29.1 (176 Tipps), Wichteln 2026.09.29 (Modul, Redaktionsschlüssel), wikivoyage-de. Läuft: Rust-Kern, Signatur und Delta-Updates, kiwix-serve, Wikivoyage, Österreich-Basis, Offline-Karte, Tresor v1, Bibliothek, Werkzeuge, Bereit-Anzeige, das Wesen.
 
 ## Im Repo, noch nicht veröffentlicht
-- Paket-Kit und Module (Auftrag `2026-09-29-paket-kit-werkzeug`, Phasen A–E): `pruefen.mjs` in den Tests, Module mit Redaktionsschlüssel, Sandbox und `window.offline`, Bedienung in der Bibliothek, Version 0.2.0. Wichteln läuft in der Desktop-App aus der lokalen Quelle; **nicht hochgeladen, nicht im öffentlichen Katalog**, bis Mik es freigibt.
+- Paket-Kit und Module (Auftrag `2026-09-29-paket-kit-werkzeug`, Phasen A–E): `pruefen.mjs` in den Tests, Module mit Redaktionsschlüssel, Sandbox und `window.offline`, Bedienung in der Bibliothek, Version 0.2.0. Wichteln ist seit 29.09. im öffentlichen Katalog (Freigabe Mik, Windows-Probe grün).
 - Redaktionsschlüssel `d9b62d1755ba3744` (nur Module), privat nur auf Miks Mac.
 
 ## Beschlossen, noch nicht im Repo
@@ -20,11 +20,10 @@ Desktop 0.1.8 veröffentlicht, 0.2.0 (Module) im Repo, noch nicht veröffentlich
 - Bereit Version 2 nach Gesamtkonzept Kapitel 4 (Auftrag `2026-09-29-bereit-v2`), mit Übertragung aus Version 1.
 - Lumi standardmäßig aus, Startablauf mit Namen, Foto-Ansicht, 176 Tipps im Paket `wir` (Quelle, nicht gebaut) (Auftrag `2026-09-29-lumi-einbau`).
 - Skins als Paketart, Grundaussehen mit `of`-Klassen, Flechte gebaut in der lokalen Redaktionsablage, **nicht veröffentlicht** (Auftrag `2026-09-29-flechte-als-paket`).
-- Freigabe von Wichteln ist vorbereitet (mit App 0.2.0 zusammen), aber auf Miks Anweisung „Nichts veröffentlichen“ angehalten.
 
 ## Offen bei Code (wartet)
 - CI `tests.yml` läuft seit 29.09. bei jedem Push (Werkzeug, Kit, Bereit, Lumi, Kern, Sandbox-Probe).
-- Sandbox-Probe in der App unter Windows und Linux.
+- Sandbox-Probe in der App: Windows grün (Windows-Probe, 42/42); Linux in der App noch offen (Berechtigungstest läuft auf Linux).
 
 ## Offen bei Mik
 Sieben Konzeptfragen (Gesamtkonzept Kap. 10), Priorität für den nächsten Auftrag.
@@ -33,4 +32,4 @@ Sieben Konzeptfragen (Gesamtkonzept Kap. 10), Priorität für den nächsten Auft
 Anwalt (23 Fragen), Lizenzanfragen an Institutionen, ärztliche Prüfung der Guides.
 
 ## Aufträge
-Erledigt: `2026-09-29-paket-kit-pflichtenheft-und-status` (Rückmeldung vom 29.09.), Antwort von Bill vom 29.09. (Rückmeldung `2026-09-29-antwort-bill`), Freigabe Module (Rückmeldung `2026-09-29-freigabe-module`), Abgleich (Rückmeldung `2026-09-29-abgleich`; Sirenen-Text in der Quelle von at-basis korrigiert, noch nicht gebaut)., `2026-09-29-paket-kit-werkzeug` (Rückmeldungen Phase A–E), `2026-09-29-bereit-v2`, `2026-09-29-lumi-einbau`, `2026-09-29-flechte-als-paket`. Offen: keine.
+Erledigt: `2026-09-29-paket-kit-pflichtenheft-und-status` (Rückmeldung vom 29.09.), Antwort von Bill vom 29.09. (Rückmeldung `2026-09-29-antwort-bill`), Freigabe Module (Rückmeldung `2026-09-29-freigabe-module`), Abgleich (Rückmeldung `2026-09-29-abgleich`; Sirenen-Text in der Quelle von at-basis korrigiert, noch nicht gebaut)., `2026-09-29-paket-kit-werkzeug` (Rückmeldungen Phase A–E), `2026-09-29-bereit-v2`, `2026-09-29-lumi-einbau`, `2026-09-29-flechte-als-paket`, `2026-09-29-release-wichteln` (Rückmeldung vom 30.09.). Offen: keine.
