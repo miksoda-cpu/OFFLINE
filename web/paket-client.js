@@ -129,11 +129,11 @@ export async function ladeManifest(katalog, eintrag) {
 /**
  * Installiert oder aktualisiert ein Paket im Browser-Speicher. Lädt nur, was sich geändert hat (Delta),
  * prüft jede Datei gegen ihre Prüfsumme und ersetzt den alten Stand erst, wenn alles da ist.
- * Nur für art "inhalt" – große Pakete gehören in die Desktop-App.
+ * Nur Textpakete (art "inhalt" und die Tagesinhalte "tage") – große Pakete gehören in die Desktop-App.
  */
 export async function installiere(katalog, eintrag, fortschritt = () => {}) {
   if (eintrag.status !== "verfuegbar") throw new Error("Dieses Paket ist noch nicht verfügbar");
-  if (eintrag.art !== "inhalt") throw new Error("Pakete dieser Größe lassen sich nur in der Desktop-App installieren");
+  if (eintrag.art !== "inhalt" && eintrag.art !== "tage") throw new Error("Pakete dieser Größe lassen sich nur in der Desktop-App installieren");
   const alt = installiertesPaket(eintrag.id);
   const { manifest, url, schluessel } = await ladeManifest(katalog, eintrag);
   const d = delta(alt?.manifest ?? null, manifest);

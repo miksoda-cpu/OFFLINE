@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-node@v5
         with: { node-version: 22 }
       - run: node --test werkzeug/test.mjs
-      - run: node --test web/bereit.test.mjs web/wesen.test.mjs
+      - run: node --test web/bereit.test.mjs web/wesen.test.mjs web/tag.test.mjs
       - name: Paket-Kit gegen Beispiel und Vorlage
         run: |
           node paket-kit/pruefen.mjs paket-kit/beispiel/wichteln --kein-bericht

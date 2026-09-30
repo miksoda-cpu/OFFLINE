@@ -110,6 +110,15 @@ Seit 29.09.2026 (`docs/SICHERHEIT.md`, Abschnitt Module). Zusätzlich zu allem o
 
 Für alle anderen Arten gilt dasselbe noch strenger: gar kein Code, weder als `.js` noch in Seiten. Jede `.css` außerhalb einer Modul-Oberfläche wird gelesen und abgelehnt, wenn sie `@import`, eine `url()` außerhalb des Pakets, `expression()`, `javascript:`, `behavior:`/`-moz-binding` oder Backslash-Escapes enthält.
 
+### 2.5 Tagesinhalte (`art = "tage"`, Vorratskammer der Tagesseite)
+
+Seit 0.3.0 (Auftrag `2026-09-30-tagesseite-vorratskammer`). Tagesinhalte sind reine Daten für die Tagesseite; die App lädt sie im Voraus (Vorratstiefe 7, 30 oder 90 Tage) und schaltet lokal jeden Tag einen frei.
+
+- **Bereich im Manifest:** `"tage": { "von": "2026-10-01", "bis": "2026-10-31" }` (nach Datum) oder `"tage": { "von_tag": 1, "bis_tag": 60 }` (nach Tagnummer, Tag 1 = der erste Tag, an dem die Tagesseite auf dem Gerät lief). Höchstens ein Jahr je Paket. Der Katalog übernimmt den Bereich; danach entscheidet die App, was sie vorlädt.
+- **Inhalt:** `inhalt/tage.json` (Pflicht), dazu nur `.md`/`.txt` (Herkunft, Lizenz). Keine Bilder, kein Code, zusammen höchstens 20 MB. `app_min` mindestens `0.3.0`.
+- **`tage.json`:** `{ "format": 1, "tage": [ { "datum": "JJJJ-MM-TT" | "tag": n, "karten": [ … ] } ] }`, jeder Tag höchstens einmal, je Tag 1 bis 6 Karten. Karten: `raetsel` (frage, loesung, hinweis, erklaerung), `kapitel` (werk, autor, teil, teile, absaetze, quelle mit url und vorlage), `text` (text), `lektion` (titel, absaetze; vorgesehen). Texte sind reiner Text, Absätze mit `## ` sind Überschriften; die App zeigt alles entschärft an.
+- **Prüfung:** Werkzeug und Kit prüfen Bereich und Inhalt (`paket-kit/tage-format.mjs`), der Rust-Kern Bereich, Dateitypen und Größe. Freischaltung und Vorrat rechnet die App nach Kalendertagen des Geräts (`web/tag.js`), nie in 24-Stunden-Schritten.
+
 ## 3. Katalog
 
 Der Katalog ist die Liste aller Pakete, die OFFLINE anbietet. Er wird vom Update-Server geladen und ist genauso signiert wie ein Paket.

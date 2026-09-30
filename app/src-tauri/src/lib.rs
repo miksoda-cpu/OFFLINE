@@ -192,8 +192,9 @@ fn schluessel_laden() -> Vec<OeffentlicherSchluessel> {
 fn paket_aus_ordner(ordner: &Path, schluessel: &[OeffentlicherSchluessel]) -> Result<Paket, String> {
     let g = paket_pruefen(ordner, schluessel, &datum::heute()).map_err(|e| e.0)?;
     let mut inhalt = BTreeMap::new();
-    if g.manifest.art == "inhalt" {
-        for d in &g.manifest.dateien {
+    // Textpakete ganz, Tagespakete nur die Tagesdatei (die Oberfläche braucht sie für die Tagesseite)
+    if g.manifest.art == "inhalt" || g.manifest.art == "tage" {
+        for d in g.manifest.dateien.iter().filter(|d| g.manifest.art == "inhalt" || d.pfad == offline_kern::manifest::TAGE_DATEI) {
             if let Ok(t) = std::fs::read_to_string(datei_pfad(ordner, &d.pfad)) {
                 inhalt.insert(d.pfad.clone(), t);
             }

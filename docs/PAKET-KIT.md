@@ -127,6 +127,16 @@ Ein Skin ändert, wie die App aussieht, und sonst nichts. Die App hat ohne Skin 
 5. **Kennzeichnung:** `ki_generiert` ist Pflicht; bei `true` liegt die Herkunft im Paket.
 6. **Signatur:** Skins signiert der Paketschlüssel oder der Redaktionsschlüssel.
 
+## 5b. Zusätzlich für `art = "tage"` (Tagesinhalte)
+
+Tagesinhalte füllen die Vorratskammer der Tagesseite: Rätsel, Kapitel, Textkarten, später Lektionen. Die App lädt sie im Voraus und schaltet jeden Tag einen frei.
+
+1. **Bereich:** in `paket.quelle.json` das Feld `tage`, entweder `{ "von": "JJJJ-MM-TT", "bis": "JJJJ-MM-TT" }` oder `{ "von_tag": 1, "bis_tag": n }`. Höchstens ein Jahr.
+2. **Inhalt:** `inhalt/tage.json` nach dem Format in `paket-kit/tage-format.mjs` (Tage nach Datum oder Tagnummer, je 1 bis 6 Karten: `raetsel`, `kapitel`, `text`, `lektion`). Dazu nur `.md`/`.txt`. Keine Bilder, kein Code, höchstens 20 MB. `app_min` mindestens `0.3.0`.
+3. **Keine Vorschau-Folien nötig:** Die Tagesseite ist die Vorschau.
+4. **Fremde Texte:** Romane und andere Werke nur, wenn der Autor vor 1956 gestorben ist und die Ausgabe keine eigenen Rechte hat (keine Übersetzung, keine neue Bearbeitung). Quelle und Vorlage je Werk in `inhalt/herkunft.md`. Historische Schreibweisen bleiben, wie sie in der Vorlage stehen.
+5. **Rätsel:** eigene Texte. Bekannte Denkaufgaben neu erzählen, keine fremden Rätseltexte übernehmen. Lösungen nachrechnen.
+
 ## 6. `LIESMICH.md`
 
 Für die Redaktion, nicht für Nutzer. Pflichtabschnitte: **Was** (zwei Sätze) · **Für wen** · **Wie geprüft** (was hat man selbst ausprobiert, auf welchen Geräten) · **Offene Punkte** · bei Updates: **Was hat sich geändert**.

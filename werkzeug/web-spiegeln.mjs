@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Spiegelt die veröffentlichten Textpakete (art = inhalt) aus dem öffentlichen Katalog nach web/pakete/, bytegleich.
+// Spiegelt die veröffentlichten Textpakete (art = inhalt und die Tagesinhalte art = tage) aus dem öffentlichen Katalog nach web/pakete/, bytegleich.
 // Der Web-Prototyp bekommt so genau die Pakete, die auch die App lädt. Signatur des Katalogs, Signatur jedes Manifests
 // und jede Datei werden geprüft; bei einem Fehler bleibt web/pakete/ unverändert.
 //
@@ -26,7 +26,7 @@ const k = katalogPruefen(kBytes, kSig, bekannte);
 if (!k.ok) throw new Error(`Katalog abgelehnt: ${k.grund}`);
 
 await rm(NEU, { recursive: true, force: true });
-const textpakete = k.katalog.pakete.filter((p) => p.status === "verfuegbar" && p.art === "inhalt");
+const textpakete = k.katalog.pakete.filter((p) => p.status === "verfuegbar" && (p.art === "inhalt" || p.art === "tage"));
 for (const p of textpakete) {
   const basis = k.katalog.basis + p.pfad;
   const ordner = path.join(NEU, p.pfad);

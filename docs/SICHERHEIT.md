@@ -5,7 +5,7 @@ Stand: 28. September 2026 · Status: Entwurf 1, aus der Frage „Wie stellen wir
 ## Grundsätze
 
 1. **Drei Schichten.** Der Motor (Rust-Kern) ist das einzige Teil, das schreibt, prüft, lädt und verschlüsselt. Die Hülle (Oberfläche) zeigt an und reicht Befehle weiter. Pakete sind reine Daten.
-2. **Pakete enthalten keinen Code, außer Module in der Sandbox.** Erlaubt: JSON-Texte, ZIM-Archive, PMTiles-Karten, KI-Modelle. Kein Skript, keine Erweiterung, keine Oberfläche. Einzige Ausnahme sind Pakete der Art `modul` unter den Bedingungen im Abschnitt „Module“.
+2. **Pakete enthalten keinen Code, außer Module in der Sandbox.** Tagesinhalte (`art = "tage"`, seit 0.3.0) sind ebenfalls nur Daten: eine JSON-Datei mit Texten, dazu Herkunft als Markdown, keine Bilder. Erlaubt: JSON-Texte, ZIM-Archive, PMTiles-Karten, KI-Modelle. Kein Skript, keine Erweiterung, keine Oberfläche. Einzige Ausnahme sind Pakete der Art `modul` unter den Bedingungen im Abschnitt „Module“.
 3. **Ausfall vor Fälschung.** Jede Prüfung ist so gebaut, dass ein Angreifer im schlimmsten Fall etwas verhindern, aber nichts unterschieben kann.
 4. **Wir haben keinen Schlüssel zum Tresor.** Was verschlüsselt ist, bleibt es auch für uns.
 

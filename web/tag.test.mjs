@@ -50,14 +50,14 @@ test("Zeitzonen: Wien, Auckland, New York, Samoa (+13) – derselbe Augenblick, 
   }
 });
 
-test("Vorrat: lückenlos ab heute; leer ist 0, kein Fehler", () => {
+test("Vorrat: jeder kommende Tag mit Inhalt; leer ist 0, kein Fehler", () => {
   assert.equal(vorratTage([nachDatum], "2026-10-01", "2026-10-01"), 3);
   assert.equal(vorratTage([nachDatum], "2026-10-03", "2026-10-01"), 1);
   assert.equal(vorratTage([nachDatum], "2026-10-04", "2026-10-01"), 0);
   assert.equal(vorratTage([], "2026-10-04", "2026-10-01"), 0);
-  // Lücke beendet den Vorrat
+  assert.equal(vorratTage([nachDatum], "2026-09-30", "2026-09-30"), 3, "heute noch nichts, ab morgen drei Tage");
   const luecke = { ...nachDatum, tage: nachDatum.tage.filter((t) => t.datum !== "2026-10-02") };
-  assert.equal(vorratTage([luecke], "2026-10-01", "2026-10-01"), 1);
+  assert.equal(vorratTage([luecke], "2026-10-01", "2026-10-01"), 2);
   assert.equal(vorratTage([nachNummer], "2026-11-05", "2026-11-05"), 2);
 });
 

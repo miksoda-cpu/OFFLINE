@@ -321,3 +321,34 @@ textarea { border-radius: var(--radius-sm) !important; }
   .modul-karte .pkg-foot { flex-direction: column; align-items: stretch; gap: .5rem; }
   .modul-steuerung { justify-content: flex-start; }
 }
+
+/* Tagesseite (Startbildschirm): endlicher Tag, keine Feeds (Gesamtkonzept Kap. 1, 6a) */
+.tag-karten { display: grid; gap: .9rem; margin: 1rem 0 .6rem; }
+.tag-karte { margin: 0; }
+.tag-art { margin: 0 0 .4rem; font-size: .78rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.tag-frage { font-size: 1.15rem; line-height: 1.45; margin: 0 0 .9rem; }
+.tag-text { font-size: 1.05rem; line-height: 1.55; margin: 0 0 .9rem; }
+.tag-anriss { margin: 0 0 .9rem; line-height: 1.55; }
+.tag-hinweis, .tag-loesung { margin: 0 0 .9rem; padding: .7rem .9rem; border-radius: 12px; background: var(--bg); border: 1px solid var(--line); }
+.tag-knoepfe { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.tag-karte .btn, .tag-schluss .btn, .tag-gelernt .btn, .kapitel-kopf .btn, .kapitel-text .btn { min-height: 44px; min-width: 44px; }
+.tag-karte--fertig { display: flex; justify-content: space-between; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.tag-karte--fertig .tag-art { display: inline; margin: 0 .4rem 0 0; }
+.tag-schluss { text-align: center; padding: 2.2rem 1rem; }
+.tag-schluss-satz { font-size: 1.35rem; line-height: 1.4; margin: 0 0 1.1rem; }
+.tag-leer p { line-height: 1.55; }
+.tag-vorrat { text-align: center; margin: .4rem 0 1.6rem; }
+.kapitel-kopf { display: flex; justify-content: space-between; gap: .5rem; max-width: 38rem; margin: 0 auto 1rem; }
+.kapitel-text { max-width: 38rem; margin: 0 auto; font-size: 1.08rem; line-height: 1.7; }
+.kapitel-text h1 { font-size: 1.7rem; line-height: 1.2; margin: .2rem 0 0; }
+.kapitel-text h2 { font-size: 1.05rem; margin: 2rem 0 .8rem; text-align: center; letter-spacing: .03em; }
+.kapitel-text p { margin: 0 0 1em; hyphens: auto; -webkit-hyphens: auto; }
+.kapitel-text .vers { text-align: center; font-style: italic; }
+.kapitel-text .tag-knoepfe { margin: 2rem 0 1rem; }
+.kapitel-quelle { margin-top: 1.5rem; overflow-wrap: anywhere; }
+.tagesplan fieldset { border: 0; padding: 0; margin: 0 0 .8rem; }
+.tagesplan legend { font-weight: 650; margin-bottom: .4rem; }
+.tagesplan-zeile { display: block; margin: 0 0 .7rem; min-height: 32px; }
+.tagesplan input[type="checkbox"] { width: 20px; height: 20px; vertical-align: -4px; }
+.tagesplan select { max-width: 100%; min-height: 44px; }
+@media (max-width: 400px) { .kapitel-text { font-size: 1.02rem; } .tag-frage { font-size: 1.08rem; } }

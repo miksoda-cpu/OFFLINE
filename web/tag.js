@@ -43,10 +43,10 @@ export function kartenFuer(pakete, datum, start) {
   return aus;
 }
 
-/** Wie viele Tage ab heute (einschließlich) hat der Vorrat noch Inhalte, lückenlos? Höchstens `max`. */
+/** Wie viele Tage ab heute (einschließlich) liegen noch im Vorrat? Gezählt wird jeder kommende Tag mit Inhalt (bis `max`). */
 export function vorratTage(pakete, heute, start, max = 400) {
   let n = 0;
-  while (n < max && kartenFuer(pakete, plusTage(heute, n), start).some((k) => k.art !== "lektion" || k.absaetze)) n++;
+  for (let i = 0; i < max; i++) if (kartenFuer(pakete, plusTage(heute, i), start).some((k) => k.art !== "lektion" || k.absaetze)) n++;
   return n;
 }
 

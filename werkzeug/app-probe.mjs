@@ -145,6 +145,8 @@ async function neu() {
   pruefe("Auch das erste Bild fällt nicht", ersteZahl >= vorher.wert, `erstes Bild ${ersteZahl}`);
   const worker = await jsAsync("const f = arguments[arguments.length - 1]; (navigator.serviceWorker ? navigator.serviceWorker.getRegistrations() : Promise.resolve([])).then((r) => f(r.length), () => f(-1));");
   pruefe("Kein Service Worker mehr", worker === 0, `${worker} Registrierung(en)`);
+  const vorrat = await js("return document.querySelector('.tag-vorrat')?.textContent ?? null");
+  pruefe("Tagesseite ist der Startbildschirm", /^Vorrat/.test(vorrat ?? "") && !!(await finde("#wesen-karte")), vorrat ?? "keine Tagesseite");
   pruefe("Checkliste erhalten", JSON.stringify(checks) === JSON.stringify(vorher.checks), `${Object.keys(checks ?? {}).length} Häkchen`);
   pruefe("Bestätigungen übernommen", v2 && v2["c-0-0"] === vorher.bestaetigungen.wasser && v2.radio === vorher.bestaetigungen.radio && v2.probeabend === vorher.bestaetigungen.probeabend, "Wasser, Radio, Probeabend mit altem Datum");
   const buehne = await js("const b = document.getElementById('lumi-buehne'); return b ? b.getAttribute('aria-label') : null");

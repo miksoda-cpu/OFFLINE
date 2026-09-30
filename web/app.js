@@ -1,14 +1,15 @@
 // OFFLINE – App-Oberfläche (Prototyp). Alle Inhalte kommen aus signierten Paketen, siehe paket-client.js.
 import { versionVergleich } from "./paket-kern.js";
 import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUebertragen, wertV1 as bereitWertV1, POSITIONEN as BEREIT_POSITIONEN } from "./bereit.js";
-import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch } from "./wesen.js";
+import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch, tippPool } from "./wesen.js";
+import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.2.1";
+const APP_VERSION = "0.3.0";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -103,9 +104,10 @@ function sockelFestlegen(arten) {
   return sockel;
 }
 // Nur im Entwickler-Build: Datum für die Bereit-Rechnung vorstellen, um Verfall zu prüfen (Übersicht, Testleiste).
-const testJetzt = () => (desktop?.info?.entwickler && speicher.get("test-monate", 0) ? Date.now() + speicher.get("test-monate", 0) * 30.44 * 86400000 : Date.now());
+const testJetzt = () => (desktop?.info?.entwickler ? Date.now() + speicher.get("test-monate", 0) * 30.44 * 86400000 + speicher.get("test-tage", 0) * 86400000 : Date.now());
 const testLeiste = () => desktop?.info?.entwickler ? `<div class="card of-karte" style="margin-bottom:1rem;border-style:dashed"><strong>Entwickler-Build:</strong> Datum für Bereit ${speicher.get("test-monate", 0) ? `+${speicher.get("test-monate", 0)} Monate` : "heute"}
-  ${[0, 7, 13, 16].map((m) => `<button class="btn btn-sm of-btn of-btn--klein" data-test-monate="${m}">${m ? `+${m} Monate` : "heute"}</button>`).join(" ")}</div>` : "";
+  ${[0, 7, 13, 16].map((m) => `<button class="btn btn-sm of-btn of-btn--klein" data-test-monate="${m}">${m ? `+${m} Monate` : "heute"}</button>`).join(" ")}
+  <br><span class="muted of-klein">Tagesseite: ${speicher.get("test-tage", 0) ? `+${speicher.get("test-tage", 0)} Tage` : "heute"}</span> ${[0, 1, 7, 30, 60].map((t) => `<button class="btn btn-sm of-btn of-btn--klein" data-test-tage="${t}">${t ? `+${t} Tage` : "heute"}</button>`).join(" ")}</div>` : "";
 function bestaetigen(id, ja = true) {
   if (ja) state.bestaetigt[id] = new Date(testJetzt()).toISOString(); else delete state.bestaetigt[id];
   speicher.set("bereit-v2", state.bestaetigt);
@@ -118,6 +120,7 @@ const katalog = () => katalogAusSpeicher()?.katalog ?? null;
 // ---------- Navigation ----------
 const I = {
   start: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  uebersicht: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
   notfall: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
   vorsorge: '<path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/>',
   bibliothek: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>',
@@ -129,7 +132,7 @@ const I = {
   updates: '<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
 };
 const ROUTEN = [
-  ["start", "Übersicht"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
+  ["start", "Heute"], ["uebersicht", "Übersicht"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
   ["karte", "Karte"], ["ki", "KI-Assistent"], ["notizen", "Notizen"], ["tresor", "Tresor"], ["updates", "Updates & Abo"],
 ];
 const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
@@ -144,9 +147,202 @@ const kopf = (titel, text, extra = "") => `<div class="page-head of-seitenkopf">
 const fehlt = () => `${kopf("Kein Österreich-Paket", "Dieses Gerät hat noch kein Paket installiert und ist offline.")}
   <div class="card of-karte"><p class="muted of-klein">Sobald du online bist, lädt OFFLINE das Österreich-Paket automatisch. Oder du gehst in die Bibliothek und installierst es von Hand.</p><a class="btn btn-primary of-btn of-btn--primaer" href="#bibliothek">Zur Bibliothek</a></div>`;
 
+// ---------- Tagesseite und Vorratskammer (Logik in tag.js) ----------
+const heuteDatum = () => datumVon(testJetzt());
+state.tag = { offen: {}, nochmal: false, datum: null, liest: false, lesen: null, schlussGezeigt: null };
+function tagesplan() {
+  const p = speicher.get("tagesplan", null) ?? {};
+  return { ...PLAN_STANDARD, ...p, karten: { ...PLAN_STANDARD.karten, ...(p.karten ?? {}) } };
+}
+function planSpeichern(p) { speicher.set("tagesplan", p); }
+/** Tag 1 der Tagnummern: der erste Tag, an dem die Tagesseite auf diesem Gerät lief. */
+function tagStart() { let t = speicher.get("tag-start", null); if (!t) { t = heuteDatum(); speicher.set("tag-start", t); } return t; }
+function tagesPakete() {
+  return installierteIds().map(installiertesPaket).filter((x) => x?.manifest.art === "tage")
+    .map((x) => ({ id: x.manifest.id, version: x.manifest.version, bereich: x.manifest.tage, tage: inhalt(x, "inhalt/tage.json")?.tage ?? [] }));
+}
+const tagZustand = (datum) => speicher.get(`tag:${datum}`, {});
+/** Status einer Karte für heute merken, dazu der Verlauf (für die gelernte Schicht, 45 Tage). */
+function tagSetzen(karte, status) {
+  const d = heuteDatum(), z = tagZustand(d);
+  if (status) z[karte.id] = status; else delete z[karte.id];
+  speicher.set(`tag:${d}`, z);
+  const v = speicher.get("tag-verlauf", {}), art = karte.art === "text" ? "lumi" : karte.art;
+  v[d] = { ...(v[d] ?? {}) }; if (status) v[d][art] = status; else delete v[d][art];
+  for (const alt of Object.keys(v).sort().slice(0, -45)) { delete v[alt]; speicher.del(`tag:${alt}`); }
+  speicher.set("tag-verlauf", v);
+}
+/** Die Textkarte (oder der Satz der Lumi) des Tages: aus demselben Pool wie die Tipps, fest für den Tag. */
+function textkarteHeute(d) { return textkarteFuer(tippPool(wesen.tippsQuelle(), wesen.e, { ...wesen.kontext(), ansicht: "start", jetzt: testJetzt() }), d); }
+function heutigeKarten() {
+  const d = heuteDatum();
+  return tagesKarten({ karten: kartenFuer(tagesPakete(), d, tagStart()), plan: tagesplan(), lumi: wesen.e.darstellung, textkarte: textkarteHeute(d) });
+}
+/** Gelernte Schicht: einmal am Tag prüfen; ausblenden sichtbar, begründet, rückgängig (Kap. 6). */
+function tagLernenPruefen() {
+  const d = heuteDatum(), g = speicher.get("tag-gelernt", { eingefroren: {}, zurueck: {}, ruheBis: {} });
+  if (g.geprueft === d) return;
+  g.geprueft = d;
+  const gesperrt = { ...(g.eingefroren ?? {}) };
+  for (const [art, bis] of Object.entries(g.ruheBis ?? {})) if (d < bis) gesperrt[art] = true;
+  const v = tagLernen(speicher.get("tag-verlauf", {}), d, tagesplan(), { eingefroren: gesperrt });
+  if (v) { const p = tagesplan(); p.karten[v.art] = false; planSpeichern(p); g.hinweis = { ...v, am: d }; }
+  speicher.set("tag-gelernt", g);
+}
+const ersterAbsatz = (k) => (k.absaetze ?? []).find((a) => !a.startsWith("## ")) ?? "";
+function tagKarteHtml(k, status) {
+  const titel = k.art === "raetsel" ? "Tagesrätsel" : k.art === "kapitel" ? "Roman der Woche" : k.art === "lumi" ? `${esc(wesen.anzeigename())} sagt` : k.art === "text" ? `Textkarte des Tages${k.sorte ? ` · ${esc(SORTEN[k.sorte] ?? k.sorte)}` : ""}` : "Lektion des Tages";
+  if (status) return `<div class="card of-karte tag-karte tag-karte--fertig" data-tag-karte="${esc(k.id)}"><span><span class="tag-art">${titel}</span> ${status === "erledigt" ? `<span class="tag tag-ok of-plakette of-plakette--offline">erledigt</span>` : `<span class="muted of-klein">weggelegt</span>`}</span><button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="zurueck" data-tag-id="${esc(k.id)}">Zurückholen</button></div>`;
+  const o = state.tag.offen[k.id] ?? {};
+  const weg = `<button type="button" class="btn of-btn" data-tag="weg" data-tag-id="${esc(k.id)}">Weglegen</button>`;
+  let inhaltHtml = "", knoepfe = "";
+  if (k.art === "raetsel") {
+    inhaltHtml = `<p class="tag-frage">${esc(k.frage)}</p>${o.hinweis && k.hinweis ? `<p class="tag-hinweis"><strong>Hinweis:</strong> ${esc(k.hinweis)}</p>` : ""}${o.loesung ? `<div class="tag-loesung"><p style="margin:0"><strong>Lösung:</strong> ${esc(k.loesung)}</p>${k.erklaerung ? `<p class="muted of-klein" style="margin:.4rem 0 0">${esc(k.erklaerung)}</p>` : ""}</div>` : ""}`;
+    knoepfe = o.loesung ? `<button type="button" class="btn btn-primary of-btn of-btn--primaer" data-tag="erledigt" data-tag-id="${esc(k.id)}">Erledigt</button>`
+      : `${k.hinweis && !o.hinweis ? `<button type="button" class="btn of-btn" data-tag="hinweis" data-tag-id="${esc(k.id)}">Hinweis</button>` : ""}<button type="button" class="btn btn-primary of-btn of-btn--primaer" data-tag="loesung" data-tag-id="${esc(k.id)}">Lösung zeigen</button>`;
+  } else if (k.art === "kapitel") {
+    const anriss = ersterAbsatz(k);
+    inhaltHtml = `<h3 style="margin:.2rem 0 0">${esc(k.werk)}</h3><p class="muted of-klein" style="margin:.1rem 0 .6rem">${esc(k.autor)} · Teil ${k.teil} von ${k.teile}</p><p class="tag-anriss">${esc(anriss.length > 220 ? anriss.slice(0, 220).replace(/\s\S*$/, "") + " …" : anriss)}</p>`;
+    knoepfe = `<a class="btn btn-primary of-btn of-btn--primaer" href="#kapitel" data-tag-lesen="${esc(k.id)}">Lesen</a>`;
+  } else {
+    inhaltHtml = `<p class="tag-text">${esc(k.text)}</p>`;
+    knoepfe = `<button type="button" class="btn btn-primary of-btn of-btn--primaer" data-tag="erledigt" data-tag-id="${esc(k.id)}">Gelesen</button>`;
+  }
+  return `<article class="card of-karte tag-karte" data-tag-karte="${esc(k.id)}"><p class="tag-art">${titel}${k.art === "raetsel" && k.stufe ? ` <span class="muted of-klein">· ${esc(k.stufe)}</span>` : ""}</p>${inhaltHtml}<div class="tag-knoepfe">${knoepfe} ${weg}</div></article>`;
+}
+/** Einstellungen › Tagesplan (gesetzte Schicht), dazu was gelernt wurde. */
+function tagesplanHtml() {
+  const p = tagesplan(), g = speicher.get("tag-gelernt", {});
+  const eingefroren = Object.keys(g.eingefroren ?? {}).filter((k) => g.eingefroren[k]);
+  return `<details class="card of-karte" style="margin-bottom:1rem" id="tagesplan"><summary><strong>Tagesplan</strong> <span class="muted of-klein">· Karten, Schluss, Vorrat</span></summary>
+    <div style="margin-top:.8rem" class="tagesplan">
+      <fieldset><legend>Welche Karten</legend>${TAG_KARTEN.map((k) => `<label class="tagesplan-zeile"><input type="checkbox" data-tagesplan-karte="${k.id}" ${p.karten[k.id] && !k.spaeter ? "checked" : ""} ${k.spaeter ? "disabled" : ""}> ${esc(k.titel)}${k.spaeter ? ' <span class="muted of-klein">(kommt später)</span>' : ""}</label>`).join("")}</fieldset>
+      <label class="tagesplan-zeile">Schluss: wenn alles erledigt ist, spätestens um<br><select class="of-select" data-tagesplan="schlussUm">${[20, 21, 22, 23].map((h) => `<option value="${h}" ${p.schlussUm === h ? "selected" : ""}>${h} Uhr</option>`).join("")}<option value="" ${p.schlussUm == null ? "selected" : ""}>keine Uhrzeit</option></select></label>
+      <label class="tagesplan-zeile">Vorrat<br><select class="of-select" data-tagesplan="tiefe">${TIEFEN.map((t) => `<option value="${t}" ${p.tiefe === t ? "selected" : ""}>${t} Tage im Voraus laden</option>`).join("")}</select></label>
+      <label class="tagesplan-zeile"><input type="checkbox" data-tagesplan="sparmodus" ${p.sparmodus ? "checked" : ""}> Sparmodus: Tagesseite ohne Bilder</label>
+      ${eingefroren.length ? `<p class="muted of-klein">Fest eingestellt (zweimal zurückgenommen): ${eingefroren.map((a) => esc(TAG_KARTEN.find((k) => k.id === a)?.titel ?? a)).join(", ")}. <button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="gelernt-zuruecksetzen">Gelerntes zurücksetzen</button></p>` : ""}
+    </div></details>`;
+}
+/** Vorratskammer: alte Monate wegräumen, fehlende nach der Vorratstiefe holen (nur Katalog, alles signiert). */
+let vorratLaeuft = false, vorratKatalogGeholt = false;
+async function vorratAuffuellen() {
+  if (vorratLaeuft) return;
+  vorratLaeuft = true;
+  let geaendert = false;
+  try {
+    const d = heuteDatum(), start = tagStart(), plan = tagesplan();
+    for (const x of tagesPakete()) if (bereichVorbei(x.bereich, d, start)) { try { await entferne(x.id); geaendert = true; } catch (e) { console.error("Vorratskammer", x.id, e); } }
+    if (navigator.onLine) {
+      let k = katalog();
+      if (!vorratKatalogGeholt) { try { k = (await ladeKatalog()).katalog; vorratKatalogGeholt = true; } catch (e) { console.error("Vorratskammer: Katalog", e); } }
+      for (const e of vorzuladen(k, tagesPakete(), d, plan.tiefe, start)) {
+        if (!appPasst(e)) continue;
+        try { await installiere(k, e); geaendert = true; } catch (err) { console.error("Vorratskammer", e.id, err); }
+      }
+    }
+  } finally { vorratLaeuft = false; }
+  if (geaendert && (location.hash || "#start") === "#start") render();
+}
+function vorlesenStop() { try { speechSynthesis.cancel(); } catch { /* egal */ } state.tag.liest = false; }
+function tagAktion(b) {
+  const a = b.dataset.tag, id = b.dataset.tagId;
+  const karte = () => heutigeKarten().find((k) => k.id === id) ?? kartenFuer(tagesPakete(), heuteDatum(), tagStart()).find((k) => k.id === id);
+  if (a === "hinweis" || a === "loesung") { state.tag.offen[id] = { ...(state.tag.offen[id] ?? {}), [a]: true }; return render(); }
+  if (a === "erledigt" || a === "weg" || a === "gelesen") { const k = karte(); if (k) tagSetzen(k, a === "weg" ? "weg" : "erledigt"); vorlesenStop(); if (a === "gelesen") { location.hash = "#start"; return; } return render(); }
+  if (a === "zurueck") { const k = karte(); if (k) tagSetzen(k, null); state.tag.nochmal = false; return render(); }
+  if (a === "nochmal") { state.tag.nochmal = true; return render(); }
+  if (a === "vorlesen") {
+    if (state.tag.liest) { vorlesenStop(); return render(); }
+    const k = karte(); if (!k) return;
+    try {
+      speechSynthesis.cancel();
+      const teile = k.absaetze.map((x) => x.replace(/^## /, ""));
+      teile.forEach((t, i) => { const u = new SpeechSynthesisUtterance(t); u.lang = "de-AT"; if (i === teile.length - 1) u.onend = () => { state.tag.liest = false; if (location.hash === "#kapitel") render(); }; speechSynthesis.speak(u); });
+      state.tag.liest = true;
+    } catch { state.tag.liest = false; }
+    return render();
+  }
+  const g = speicher.get("tag-gelernt", { eingefroren: {}, zurueck: {}, ruheBis: {} });
+  if (a === "lern-zurueck" && g.hinweis) {
+    const art = g.hinweis.art, p = tagesplan();
+    p.karten[art] = true; planSpeichern(p);
+    g.zurueck = { ...(g.zurueck ?? {}), [art]: (g.zurueck?.[art] ?? 0) + 1 };
+    if (g.zurueck[art] >= 2) g.eingefroren = { ...(g.eingefroren ?? {}), [art]: true };
+    else g.ruheBis = { ...(g.ruheBis ?? {}), [art]: plusTage(heuteDatum(), 7) };
+    delete g.hinweis; speicher.set("tag-gelernt", g); return render();
+  }
+  if (a === "lern-ok") { delete g.hinweis; speicher.set("tag-gelernt", g); return render(); }
+  if (a === "gelernt-zuruecksetzen") { speicher.set("tag-gelernt", { eingefroren: {}, zurueck: {}, ruheBis: {}, geprueft: heuteDatum() }); return render(); }
+}
+/** Datumswechsel bei offener App und Schluss um die eingestellte Uhrzeit: jede Minute nachsehen. */
+setInterval(() => {
+  const d = heuteDatum();
+  if (d !== state.tag.datum) { const erster = state.tag.datum === null; state.tag = { offen: {}, nochmal: false, datum: d, liest: false, lesen: null, schlussGezeigt: null }; if (!erster) { vorratAuffuellen(); if ((location.hash || "#start") === "#start") render(); } return; }
+  if ((location.hash || "#start") === "#start" && !state.tag.nochmal) {
+    const s = schlussErreicht({ karten: heutigeKarten(), zustand: tagZustand(d), jetzt: testJetzt(), plan: tagesplan() });
+    if (s !== state.tag.schlussGezeigt) render();
+  }
+}, 60000);
+state.tag.datum = heuteDatum();
+
 // ---------- Seiten ----------
 const seiten = {
+  /** Die Tagesseite (Startbildschirm): Bereit und Lumi, die Karten des Tages, der Vorrat. Endlich: „Das war dein Tag.“ */
   start() {
+    const p = P();
+    if (!p) return fehlt();
+    const b = bereit(); wesen.setScore(b); const schritt = naechsterSchritt(b);
+    const plan = tagesplan(), d = heuteDatum();
+    tagLernenPruefen();
+    const karten = heutigeKarten(), zustand = tagZustand(d);
+    const schluss = state.tag.nochmal ? null : schlussErreicht({ karten, zustand, jetzt: testJetzt(), plan });
+    state.tag.schlussGezeigt = schluss;
+    const pakete = tagesPakete(), vorrat = vorratTage(pakete, d, tagStart());
+    const g = speicher.get("tag-gelernt", {});
+    const datumText = new Date(testJetzt()).toLocaleDateString("de-AT", { weekday: "long", day: "numeric", month: "long" });
+    return `
+      <div class="gruss of-gruss"><div><h1>Servus.</h1><p class="muted of-klein">${esc(datumText)}</p></div></div>
+      <div class="buehne-kopf" id="wesen-karte">
+        ${wesen.mitFigur() && !plan.sparmodus ? wesen.buehneHtml() : ""}
+        <div class="bereit-kopf">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="muted of-klein">Bereit</span><span class="muted of-klein" style="font-size:.85rem">${b.wert < 30 ? "Anfang" : b.wert < 60 ? "unterwegs" : b.wert < 80 ? "gut" : "bereit"}</span></div>
+          <div class="bereit-zahl">${b.wert}</div>
+          <div class="progress of-balken" style="margin:.4rem 0 .8rem"><div style="width:${b.wert}%"></div></div>
+          ${b.sockel ? `<p class="muted of-klein" id="bereit-sockel" style="margin:0 0 .4rem">Aus der Vorversion übernommen. Neu sind Familie, Nachbar, Anlaufstelle und Kocher. Bestätigt, trägt sich die Zahl selbst (jetzt ${b.eigen}).</p>` : ""}
+          <p style="margin:0 0 .3rem"><a href="${schritt.ziel}">${esc(schritt.text)}</a></p>
+          <p class="of-klein" style="margin:0"><a href="#uebersicht">Alles zur Bereitschaft</a></p>
+        </div>
+      </div>
+      ${testLeiste()}
+      ${einladungFaellig(wesen.start, wesen.e, testJetzt()) ? `<div class="card lumi-einladung of-karte" role="group" aria-label="Einladung"><div class="lumi-zwei-lichter" aria-hidden="true"><span></span><span></span></div>
+        <div><strong>${esc(LUMI_TEXTE.einladungTitel)}</strong><p style="margin:.3rem 0 .7rem">${esc(LUMI_TEXTE.einladungFrage)}</p>
+        <button type="button" class="btn btn-primary of-btn of-btn--primaer" data-lumi="einladung-ja">${esc(LUMI_TEXTE.einladungJa)}</button> <button type="button" class="btn of-btn" data-lumi="einladung-nein">${esc(LUMI_TEXTE.einladungNein)}</button>
+        <p class="lumi-einladung-klein">${esc(LUMI_TEXTE.einladungHinweis)} ${esc(LUMI_TEXTE.ki)}</p></div></div>` : ""}
+      ${g.hinweis ? `<div class="card of-karte tag-gelernt" role="status"><p style="margin:0 0 .6rem">${esc(g.hinweis.text)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="lern-zurueck">Rückgängig</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="lern-ok">In Ordnung</button></div>` : ""}
+      <section class="tag-karten" aria-label="Heute">
+        ${schluss ? `<div class="card of-karte tag-schluss" role="status"><p class="tag-schluss-satz">${esc(SCHLUSS)}</p>${karten.length ? `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="nochmal">Heute noch einmal ansehen</button>` : ""}</div>`
+          : karten.length ? karten.map((k) => tagKarteHtml(k, zustand[k.id])).join("")
+          : `<div class="card of-karte tag-leer"><p style="margin:0">${pakete.length ? "Für heute liegt nichts in der Vorratskammer." : "Die Vorratskammer ist noch leer."} ${navigator.onLine ? "OFFLINE holt die nächsten Tage, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."} Alles andere funktioniert weiter.</p></div>`}
+      </section>
+      <p class="tag-vorrat muted of-klein">${vorrat ? `Vorrat: noch ${vorrat} ${vorrat === 1 ? "Tag" : "Tage"}` : "Vorrat: leer"}${!navigator.onLine && vorrat ? " · ohne Netz geht es weiter" : ""}</p>`;
+  },
+
+  /** Das Kapitel des Tages zum Lesen, mit Vorlesen. */
+  kapitel() {
+    const k = heutigeKarten().find((x) => x.art === "kapitel") ?? (state.tag.lesen && kartenFuer(tagesPakete(), heuteDatum(), tagStart()).find((x) => x.id === state.tag.lesen));
+    if (!k) return `${kopf("Roman der Woche", "Heute ist kein Kapitel da.")}<a class="btn of-btn" href="#start">Zur Tagesseite</a>`;
+    const status = tagZustand(heuteDatum())[k.id];
+    return `<div class="kapitel-kopf"><a class="btn btn-sm of-btn of-btn--klein" href="#start">‹ Heute</a><button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="vorlesen" data-tag-id="${esc(k.id)}">${state.tag.liest ? "Anhalten" : "Vorlesen"}</button></div>
+      <article class="kapitel-text" lang="de">
+        <p class="tag-art">Roman der Woche · Teil ${k.teil} von ${k.teile}</p>
+        <h1>${esc(k.werk)}</h1><p class="muted">${esc(k.autor)}</p>
+        ${k.absaetze.map((a) => a.startsWith("## ") ? `<h2>${esc(a.slice(3))}</h2>` : a.includes("\n") ? `<p class="vers">${esc(a).replace(/\n/g, "<br>")}</p>` : `<p>${esc(a)}</p>`).join("")}
+        <div class="tag-knoepfe">${status === "erledigt" ? `<span class="tag tag-ok of-plakette of-plakette--offline">Gelesen</span>` : `<button type="button" class="btn btn-primary of-btn of-btn--primaer" data-tag="gelesen" data-tag-id="${esc(k.id)}">Gelesen</button>`} <a class="btn of-btn" href="#start">Zur Tagesseite</a></div>
+        <p class="muted of-klein kapitel-quelle">Vorlage: ${esc(k.quelle.vorlage)}. Text von Wikisource (${esc(k.quelle.url)}). Gemeinfrei.</p>
+      </article>`;
+  },
+
+  uebersicht() {
     const p = P();
     if (!p) return fehlt();
     const vorsorge = D("vorsorge");
@@ -161,24 +357,15 @@ const seiten = {
     const b = bereit(); wesen.setScore(b); const schritt = naechsterSchritt(b);
     const wl = state.wesenLog;
     return `
-      <div class="gruss of-gruss"><div><h1>Servus.</h1><p class="muted of-klein">Alles hier funktioniert ohne Internet.</p></div>
+      <div class="gruss of-gruss"><div><h1>Übersicht</h1><p class="muted of-klein">Alles hier funktioniert ohne Internet.</p></div>
         <select class="of-select" id="bl" aria-label="Dein Bundesland">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>
-      <div class="buehne-kopf" id="wesen-karte">
-        ${wesen.mitFigur() ? wesen.buehneHtml() : ""}
-        <div class="bereit-kopf">
-          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="muted of-klein">Bereit</span><span class="muted of-klein" style="font-size:.85rem">${b.wert < 30 ? "Anfang" : b.wert < 60 ? "unterwegs" : b.wert < 80 ? "gut" : "bereit"}</span></div>
-          <div class="bereit-zahl">${b.wert}</div>
-          <div class="progress of-balken" style="margin:.4rem 0 .8rem"><div style="width:${b.wert}%"></div></div>
-          ${b.sockel ? `<p class="muted of-klein" id="bereit-sockel" style="margin:0 0 .4rem">Aus der Vorversion übernommen. Neu sind Familie, Nachbar, Anlaufstelle und Kocher. Bestätigt, trägt sich die Zahl selbst (jetzt ${b.eigen}).</p>` : ""}
-          <p style="margin:0 0 .6rem"><a href="${schritt.ziel}">${esc(schritt.text)}</a></p>
-          ${b.quellen.map((q) => `<div class="bereit-quelle"><span>${esc(q.name)} <span class="muted of-klein">· ${esc(q.text)}</span></span><span class="mono of-mono">${q.punkte}/${q.max}</span></div>`).join("")}
-        </div>
+      <div class="card of-karte bereit-kopf" style="margin-bottom:1rem">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="muted of-klein">Bereit</span><span class="muted of-klein" style="font-size:.85rem">${b.wert < 30 ? "Anfang" : b.wert < 60 ? "unterwegs" : b.wert < 80 ? "gut" : "bereit"}</span></div>
+        <div class="bereit-zahl">${b.wert}</div>
+        <div class="progress of-balken" style="margin:.4rem 0 .8rem"><div style="width:${b.wert}%"></div></div>
+        <p style="margin:0 0 .6rem"><a href="${schritt.ziel}">${esc(schritt.text)}</a></p>
+        ${b.quellen.map((q) => `<div class="bereit-quelle"><span>${esc(q.name)} <span class="muted of-klein">· ${esc(q.text)}</span></span><span class="mono of-mono">${q.punkte}/${q.max}</span></div>`).join("")}
       </div>
-      ${testLeiste()}
-      ${einladungFaellig(wesen.start, wesen.e, testJetzt()) ? `<div class="card lumi-einladung of-karte" role="group" aria-label="Einladung"><div class="lumi-zwei-lichter" aria-hidden="true"><span></span><span></span></div>
-        <div><strong>${esc(LUMI_TEXTE.einladungTitel)}</strong><p style="margin:.3rem 0 .7rem">${esc(LUMI_TEXTE.einladungFrage)}</p>
-        <button type="button" class="btn btn-primary of-btn of-btn--primaer" data-lumi="einladung-ja">${esc(LUMI_TEXTE.einladungJa)}</button> <button type="button" class="btn of-btn" data-lumi="einladung-nein">${esc(LUMI_TEXTE.einladungNein)}</button>
-        <p class="lumi-einladung-klein">${esc(LUMI_TEXTE.einladungHinweis)} ${esc(LUMI_TEXTE.ki)}</p></div></div>` : ""}
       <div class="kacheln">
         ${kachel("notfall", "rose", "Notfall", "112 · 122 · 133 · 144, Sirenen")}
         ${kachel("vorsorge", "moos", "Vorsorge", `${erledigt} von ${gesamt} erledigt`)}
@@ -189,6 +376,7 @@ const seiten = {
       <div class="card of-karte" style="margin-bottom:1rem"><h3>Menschen und Können</h3><p class="muted of-klein" style="margin:.2rem 0 .4rem">Dinge, die verfallen. Einmal bestätigen, dann ist Ruhe, bis es wieder so weit ist.${b.faellig.some((x) => x.check) ? " Fällige Punkte der Checkliste stehen darunter." : ""}</p>
         ${b.positionen.filter((x) => (!x.check && !x.auto) || (x.check && x.stand === "faellig")).map((x) => `<div class="bestaetigung of-liste__zeile"><span><strong>${esc(x.titel)}</strong><br><span class="muted of-klein">${x.stand === "gut" ? `gültig noch ${x.rest} Tage` : x.stand === "faellig" ? `<span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span> seit ${-x.rest} Tagen` : esc(x.hinweis ?? "")}</span></span><button class="btn btn-sm of-btn of-btn--klein ${x.stand === "gut" ? "" : "btn-primary of-btn--primaer"}" data-bestaetigen="${x.id}">${x.stand === "gut" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
       </div>
+      ${tagesplanHtml()}
       <details class="card of-karte" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? `${esc(wesen.anzeigename())} · Einstellungen` : wesen.aktiv() ? "Textkarten" : "Tipps aus"}</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
       ${wesen.aktiv() || wesen.log.length ? `<details class="card of-karte" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>${wesen.mitFigur() ? `Was ${esc(wesen.anzeigename())} gesagt hat` : "Bisherige Tipps"}</strong> <span class="muted of-klein" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` : ""}
       ${updates ? `<a class="card of-karte" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn of-plakette of-plakette--warnung">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted of-klein">· ${intervallText()}</span></a>` : ""}
@@ -395,7 +583,7 @@ const seiten = {
         if (inst) knopf = `${update ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${p.id}">Aktualisieren</button> ` : ""}${desktop && p.art === "zim" ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-oeffnen-zim="${p.id}">Öffnen</button> ` : ""}${desktop && p.art === "karte" ? `<a class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" href="#karte">Karte öffnen</a> ` : ""}<button class="btn btn-sm of-btn of-btn--klein" data-remove="${p.id}">Entfernen</button>`;
         else if (p.status !== "verfuegbar") knopf = `<span class="tag tag-warn of-plakette of-plakette--warnung">Geplant</span>`;
         else if (p.pro) knopf = `<button class="btn btn-sm of-btn of-btn--klein" disabled title="Nur mit Pro">Nur mit Pro</button>`;
-        else if (!desktop && p.art !== "inhalt") knopf = `<span class="tag of-plakette">Nur in der Desktop-App</span>`;
+        else if (!desktop && p.art !== "inhalt" && p.art !== "tage") knopf = `<span class="tag of-plakette">Nur in der Desktop-App</span>`;
         else if (!appPasst(p)) knopf = braucht(p);
         else knopf = `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${p.id}">Installieren</button>`;
         return `<div class="card pkg of-karte of-paket">
@@ -1249,10 +1437,11 @@ function render() {
   main.innerHTML = seiten[seite]();
   if (seite === "start") wesen.einbauen(); else wesen.setScore(bereit());
   wesen.ansicht(seite);
-  const aktiv = seite === "lesen" ? "bibliothek" : seite;
+  const aktiv = seite === "lesen" ? "bibliothek" : seite === "kapitel" ? "start" : seite;
+  if (seite !== "kapitel" && state.tag.liest) vorlesenStop();
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
   main.classList.toggle("main-lesen", seite === "lesen");
-  document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? state.lesen?.titel ?? "Lesen"}`;
+  document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : state.lesen?.titel ?? "Lesen")}`;
   if (seite === "karte") karteStarten();
   if (seite === "bibliothek") vorschauenNachladen();
   skinFuerSeite();
@@ -1264,6 +1453,12 @@ function render() {
 
 main.addEventListener("change", (e) => {
   const t = e.target;
+  if (t.dataset.tagesplanKarte) { const p = tagesplan(); p.karten[t.dataset.tagesplanKarte] = t.checked; planSpeichern(p); return; }
+  if (t.dataset.tagesplan) {
+    const p = tagesplan(), k = t.dataset.tagesplan;
+    p[k] = k === "sparmodus" ? t.checked : k === "schlussUm" ? (t.value === "" ? null : Number(t.value)) : Number(t.value);
+    planSpeichern(p); if (k === "tiefe") vorratAuffuellen(); return;
+  }
   if (t.dataset.check) { state.checks[t.dataset.check] = t.checked; speicher.set("checks", state.checks); return bestaetigen(`c-${t.dataset.check}`, t.checked); }
   if (t.dataset.abo) { state.abo[t.dataset.abo] = t.checked; aboSpeichern(); render(); }
   if (t.dataset.zeit) { state.abo[t.dataset.zeit] = t.value; aboSpeichern(); }
@@ -1286,6 +1481,8 @@ function beiKlick(e) {
   if (b.dataset.bestaetigen) return bestaetigen(b.dataset.bestaetigen);
   if (b.dataset.lumi) return lumiAktion(b.dataset.lumi);
   if (b.dataset.testMonate) { speicher.set("test-monate", Number(b.dataset.testMonate)); return render(); }
+  if (b.dataset.testTage !== undefined) { speicher.set("test-tage", Number(b.dataset.testTage)); state.tag = { offen: {}, nochmal: false, datum: heuteDatum(), liest: false, lesen: null, schlussGezeigt: null }; vorratAuffuellen(); return render(); }
+  if (b.dataset.tag) return tagAktion(b);
   if (b.hasAttribute("data-wesen-gelernt-zurueck")) { wesen.gelernt = { intervall: 90, gelesen: 0, weitergewischt: 0 }; wesen.speichern(); return render(); }
   if (b.dataset.install) installiereMitMeldung(b.dataset.install, "bib-msg");
   if ([...b.attributes].some((a) => a.name.startsWith("data-modul") || a.name === "data-folie")) return modulAktion(b);
@@ -1316,6 +1513,7 @@ function beiKlick(e) {
   if (b.hasAttribute("data-speicherort-standard")) speicherortSetzen(null);
 }
 main.addEventListener("click", beiKlick);
+main.addEventListener("click", (e) => { const l = e.target.closest("[data-tag-lesen]"); if (l) state.tag.lesen = l.dataset.tagLesen; });
 // Lumi: Startablauf (Einladung, Einschalten, Namensgabe, Ausschalten mit Rückfrage), siehe wesen.js
 function lumiAktion(a) {
   if (a === "einladung-ja") wesen.einladung(true);
@@ -1521,7 +1719,8 @@ if (desktop) (async () => {
     await pruefeUpdates({ still: true });
     if (katalog() && verfuegbareUpdates(katalog()).length) render();
   }
-})();
+})().finally(() => vorratAuffuellen()); // danach die Vorratskammer der Tagesseite
+addEventListener("online", () => vorratAuffuellen());
 
 // Service Worker nur im Web-Prototyp. In der Desktop-App liefert der Kern die Dateien; ein Worker aus 0.1.x (Windows)
 // wird abgemeldet (der Kern löscht ihn zusätzlich vor dem Start, siehe lib.rs).
