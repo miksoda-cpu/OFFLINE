@@ -42,11 +42,17 @@ const js = (script, ...args) => wd("POST", `/session/${sid}/execute/sync`, { scr
 const jsAsync = (script, ...args) => wd("POST", `/session/${sid}/execute/async`, { script, args });
 const finde = async (css) => { try { return (await wd("POST", `/session/${sid}/element`, { using: "css selector", value: css }))[EL]; } catch { return null; } };
 // Klick wie ein Mensch; liegt etwas darüber (z. B. die Sprechblase der Lumi), per Skript auf das Element selbst.
+// Zeichnet die App zwischen Finden und Klicken neu (z. B. wenn ein Paket ankommt), wird das Element neu gesucht.
 const klick = async (css) => {
-  const e = await bis(() => finde(css), `${css} erscheint`);
-  try { await wd("POST", `/session/${sid}/element/${e}/click`, {}); }
-  catch (f) { if (!/intercepted/.test(f.message)) throw f; await js("arguments[0].click()", { [EL]: e, ELEMENT: e }); }
-  return e;
+  for (let versuch = 1; ; versuch++) {
+    const e = await bis(() => finde(css), `${css} erscheint`);
+    try { await wd("POST", `/session/${sid}/element/${e}/click`, {}); return e; }
+    catch (f) {
+      if (/stale element/.test(f.message) && versuch < 4) { await warte(500); continue; }
+      if (!/intercepted/.test(f.message)) throw f;
+      await js("arguments[0].click()", { [EL]: e, ELEMENT: e }); return e;
+    }
+  }
 };
 const tippe = async (css, text) => { const e = await bis(() => finde(css), `${css} erscheint`); await wd("POST", `/session/${sid}/element/${e}/value`, { text }); };
 const rahmen = async (e) => wd("POST", `/session/${sid}/frame`, { id: e ? { [EL]: e, ELEMENT: e } : null });
