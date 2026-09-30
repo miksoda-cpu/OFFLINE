@@ -1,0 +1,50 @@
+# Web-Version: Textpakete aus dem öffentlichen Katalog nach web/pakete/ spiegeln (bytegleich, geprüft) und den Katalog des
+# Web-Prototyps mit dem Paketschlüssel der CI signieren. Der Schlüssel kommt nur aus den Secrets, nie auf einen Rechner.
+# Ergebnis wird auf den Branch committet; von dort liefert Vercel aus. Nur auf Knopfdruck.
+name: Web-Version
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bauen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: { node-version: 22 }
+
+      - name: Signaturschlüssel bereitstellen
+        env:
+          SCHLUESSEL: ${{ secrets.OFFLINE_SIGNIERSCHLUESSEL }}
+        run: |
+          set -euo pipefail
+          [ -n "$SCHLUESSEL" ] || { echo "Secret OFFLINE_SIGNIERSCHLUESSEL fehlt"; exit 1; }
+          mkdir -p ~/.offline/schluessel && chmod 700 ~/.offline/schluessel
+          printf '%s\n' "$SCHLUESSEL" > ~/.offline/schluessel/offline-ci.key
+          chmod 600 ~/.offline/schluessel/offline-ci.key
+
+      - name: Textpakete spiegeln und Web-Katalog bauen
+        env:
+          OFFLINE_SCHLUESSEL_NAME: offline-ci
+        run: |
+          set -euo pipefail
+          node werkzeug/web-spiegeln.mjs
+          node werkzeug/paket.mjs katalog web/katalog web/pakete/*/ --geplant=pakete/geplant.json
+          cp schluessel/oeffentlich.json web/schluessel/oeffentlich.json
+          cp werkzeug/kern.mjs web/paket-kern.js
+          for o in web/pakete/*/; do node werkzeug/paket.mjs pruefen "$o"; done
+          rm -f ~/.offline/schluessel/offline-ci.key
+
+      - name: Committen, wenn sich etwas geändert hat
+        run: |
+          set -euo pipefail
+          git add -A web/pakete web/katalog web/schluessel web/paket-kern.js
+          if git diff --cached --quiet; then echo "Keine Änderung"; exit 0; fi
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Web-Version: Textpakete aus dem Katalog gespiegelt, Web-Katalog neu signiert (Workflow Web-Version)"
+          git push
+          git log --oneline -1
