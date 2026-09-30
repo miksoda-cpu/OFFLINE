@@ -182,3 +182,22 @@ test("Mimik nach der Tafel: Vorrang und „Noch ohne Namen“", () => {
     assert.ok(MIMIK[z]?.bild && MIMIK[z].antennen.length === 2, z);
   }
 });
+
+test("Tipps, die einen Zustand behaupten, kommen nur, wenn er stimmt (Treffpunkt, Wasser, Probeabend; Wort „offen“)", () => {
+  const t = Object.fromEntries(tipps.map((x) => [x.id, x]));
+  const vor = (m) => new Date(Date.parse("2026-09-30T10:00:00") - m * 30.44 * TAG).toISOString();
+  // alltag-020: nur mit bestätigtem Treffpunkt, Text ohne „Tresor“
+  assert.doesNotMatch(t["alltag-020"].text, /Tresor/);
+  assert.equal(passtBedingung(t["alltag-020"].bedingung, k()), false, "ohne Treffpunkt nicht");
+  assert.equal(passtBedingung(t["alltag-020"].bedingung, k({ positionen: { "c-3-2": vor(1) } })), true);
+  // alltag-002 „noch keinen Treffpunkt“: genau umgekehrt
+  assert.equal(passtBedingung(t["alltag-002"].bedingung, k()), true);
+  assert.equal(passtBedingung(t["alltag-002"].bedingung, k({ positionen: { "c-3-2": vor(1) } })), false);
+  // Wasser neun Monate, Probeabend sechs Monate
+  assert.equal(passtBedingung(t["alltag-001"].bedingung, k({ positionen: { "c-0-0": vor(2) } })), false);
+  assert.equal(passtBedingung(t["alltag-001"].bedingung, k({ positionen: { "c-0-0": vor(9.5) } })), true);
+  assert.equal(passtBedingung(t["alltag-028"].bedingung, k()), false);
+  assert.equal(passtBedingung(t["alltag-028"].bedingung, k({ positionen: { probeabend: vor(7) } })), true);
+  assert.equal(passtBedingung(t["alltag-026"].bedingung, k({ positionen: { "c-0-0": vor(13) } })), false, "nur wenn wirklich verfallen");
+  assert.equal(passtBedingung(t["alltag-026"].bedingung, k({ verfallen: true, benannt: true, positionen: { "c-0-0": vor(13) } })), true);
+});

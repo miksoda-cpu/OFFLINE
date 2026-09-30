@@ -1,0 +1,34 @@
+{
+  "id": "tage-2026-12",
+  "titel": "Tage im Dezember 2026",
+  "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Das kalte Herz, Immensee, Wintermärchen der Brüder Grimm, Kalendergeschichten aus dem Schatzkästlein). Tag für Tag freigeschaltet.",
+  "art": "tage",
+  "tage": {
+    "von": "2026-12-01",
+    "bis": "2026-12-31"
+  },
+  "sprache": "de-AT",
+  "lizenz": "Rätsel CC BY-SA 4.0 (eigene Texte); Romane gemeinfrei (Wikisource), Herkunft in inhalt/herkunft.md",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "kategorie": "jeden-tag",
+  "alter_ab": 10,
+  "braucht_netz": false,
+  "abnahme": "Redaktion (Code), 30.09.2026: Rätsel nachgerechnet, Romane gegen die Wikisource-Textdaten geprüft",
+  "app_min": "0.3.0",
+  "aenderungen": "Erste Ausgabe: 31 Tage.",
+  "quellen": [
+    {
+      "id": "redaktion",
+      "name": "Eigene Rätsel der Redaktion",
+      "url": ""
+    },
+    {
+      "id": "wikisource",
+      "name": "Wikisource (gemeinfreie Texte)",
+      "url": "https://de.wikisource.org"
+    }
+  ]
+}

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Erzeugt die Quellen der Tagespakete (art = "tage") aus der Redaktionsablage pakete/tage/quelle/:
-//   raetsel.json            eigene Tagesrätsel, eines pro Tag ab START
-//   romane/*.json           gemeinfreie Werke von Wikisource (werkzeug/wikisource-holen.mjs), je eines pro Woche ab Montag
+//   raetsel*.json           eigene Tagesrätsel, eines pro Tag ab dem jeweiligen Startdatum (RAETSEL)
+//   romane*/*.json          gemeinfreie Werke von Wikisource (werkzeug/wikisource-holen.mjs), je eines pro Woche ab Montag;
+//                           ein Werk kann aus mehreren Seiten bestehen (dateien), eine Sammlung bringt einen Text pro Tag
 // Ergebnis: pakete/tage-JJJJ-MM/ (paket.quelle.json, inhalt/tage.json, inhalt/herkunft.md), ein Paket je Kalendermonat.
 // Gebaut und signiert werden sie wie alle Textpakete (Workflow „Inhaltspakete“, textpakete).
 //
@@ -14,13 +15,24 @@ import { tageBereichFehler, tageInhaltFehler } from "../../paket-kit/tage-format
 
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const PAKETE = path.resolve(HIER, "..");
-const START = "2026-10-01"; // erstes Rätsel
-// Roman der Woche: Reihenfolge und Wochenbeginn (immer ein Montag)
+// Tagesrätsel: Datei und erster Tag
+const RAETSEL = [
+  { datei: "raetsel.json", ab: "2026-10-01" },
+  { datei: "raetsel-12.json", ab: "2026-12-01" },
+];
+// Roman der Woche: Reihenfolge und Wochenbeginn (immer ein Montag). teile: Tage der Woche (Standard 7; kürzer am Monatsende)
 const ROMANE = [
-  { datei: "kleider-machen-leute", ab: "2026-10-05", todesjahr: 1890 },
-  { datei: "die-judenbuche", ab: "2026-10-12", todesjahr: 1848 },
-  { datei: "taugenichts", ab: "2026-10-19", todesjahr: 1857 },
-  { datei: "der-schimmelreiter", ab: "2026-10-26", todesjahr: 1888 },
+  { id: "kleider-machen-leute", ordner: "romane", dateien: ["kleider-machen-leute"], ab: "2026-10-05", todesjahr: 1890 },
+  { id: "die-judenbuche", ordner: "romane", dateien: ["die-judenbuche"], ab: "2026-10-12", todesjahr: 1848 },
+  { id: "taugenichts", ordner: "romane", dateien: ["taugenichts"], ab: "2026-10-19", todesjahr: 1857 },
+  { id: "der-schimmelreiter", ordner: "romane", dateien: ["der-schimmelreiter"], ab: "2026-10-26", todesjahr: 1888 },
+  // Advent 2026 (Auftrag 2026-09-30-dezember-und-tippfix)
+  { id: "das-kalte-herz", ordner: "romane-12", dateien: ["hauff-kalte-herz-1", "hauff-kalte-herz-2"], werk: "Das kalte Herz", ab: "2026-12-07", todesjahr: 1827 },
+  { id: "immensee", ordner: "romane-12", dateien: ["storm-immensee"], ab: "2026-12-14", todesjahr: 1888 },
+  { id: "wintermaerchen", ordner: "romane-12", sammlung: true, werk: "Wintermärchen der Brüder Grimm", autor: "Brüder Grimm", ab: "2026-12-21", todesjahr: 1863,
+    dateien: ["grimm-drei-maennlein", "grimm-frau-holle", "grimm-schneeweisschen", "grimm-sternthaler", "grimm-wichtelmaenner", "grimm-hirtenbueblein", "grimm-goldener-schluessel"] },
+  { id: "kalendergeschichten", ordner: "romane-12", sammlung: true, werk: "Kalendergeschichten aus dem Schatzkästlein", autor: "Johann Peter Hebel", ab: "2026-12-28", todesjahr: 1826,
+    dateien: ["hebel-kannitverstan", "hebel-unverhoftes-wiedersehen", "hebel-kluger-richter", "hebel-weltgebaeude"] },
 ];
 const TEILE = 7;
 
@@ -31,14 +43,16 @@ const wochentag = (datum) => new Date(datum + "T12:00:00Z").getUTCDay(); // 1 = 
  * Teilt ein Werk in sieben Tagesteile, möglichst gleich lang (Wörter). Schnitte an einer Kapitelüberschrift sind billiger
  * als mitten im Kapitel; nach einer Überschrift wird nie geschnitten. Dynamische Programmierung über die Absatzgrenzen.
  */
-function teilen(absaetze) {
-  // Titelzeilen am Anfang weglassen (Titel, Untertitel, Verfasser), Kapitelüberschriften bleiben
+function teilen(absaetze, TEILE) {
+  // Titelzeilen am Anfang weglassen (Titel, Untertitel, Verfasser). Hat das Werk Kapitel (Überschriften im Text), bleibt die
+  // letzte Überschrift vor dem ersten Absatz – das ist die des ersten Kapitels.
   const a = [...absaetze];
-  while (a.length && a[0].startsWith("## ") && !/kapitel/i.test(a[0])) a.shift();
+  const erster = a.findIndex((x) => !x.startsWith("## "));
+  const kapitel = a.slice(erster).some((x) => x.startsWith("## ") && x !== "## * * *");
+  while (a.length && a[0].startsWith("## ") && !(kapitel && !a[1]?.startsWith("## ")) && !/kapitel/i.test(a[0])) a.shift();
   const n = a.length, w = a.map((x) => x.split(/\s+/).length);
   const vor = [0]; for (const x of w) vor.push(vor.at(-1) + x);
   const ziel = vor[n] / TEILE;
-  const kapitel = a.some((x) => /^## .*kapitel/i.test(x));
   const istUeber = (i) => a[i]?.startsWith("## ") && a[i] !== "## * * *";
   // Kosten eines Schnitts vor Absatz i
   const schnitt = (i) => (i === 0 || i === n ? 0 : istUeber(i - 1) ? Infinity : istUeber(i) ? 0 : kapitel ? 0.35 : 0);
@@ -62,23 +76,52 @@ function teilen(absaetze) {
   return teile;
 }
 
-const raetsel = JSON.parse(await readFile(path.join(HIER, "quelle", "raetsel.json"), "utf8")).raetsel;
 const tage = new Map(); // datum → karten
 const karte = (datum, k) => { if (!tage.has(datum)) tage.set(datum, []); tage.get(datum).push(k); };
-raetsel.forEach((r, i) => karte(plus(START, i), { art: "raetsel", id: r.id, stufe: r.stufe, frage: r.frage, hinweis: r.hinweis, loesung: r.loesung, erklaerung: r.erklaerung }));
+const rid = new Set();
+for (const q of RAETSEL) {
+  const raetsel = JSON.parse(await readFile(path.join(HIER, "quelle", q.datei), "utf8")).raetsel;
+  raetsel.forEach((r, i) => {
+    if (rid.has(r.id)) throw new Error(`Rätsel ${r.id} doppelt`);
+    rid.add(r.id);
+    karte(plus(q.ab, i), { art: "raetsel", id: r.id, stufe: r.stufe, frage: r.frage, hinweis: r.hinweis, loesung: r.loesung, erklaerung: r.erklaerung });
+  });
+}
 
 const herkunft = [];
+const vorlageVon = (w) => [w.quelle.herkunft, w.quelle.herausgeber && `hrsg. von ${w.quelle.herausgeber}`, w.quelle.verlag, w.quelle.ort, w.quelle.jahr].filter(Boolean).join(", ").replace(/<br \/>/g, " ").replace(/&nbsp;/g, " ").replace(/\s{2,}/g, " ");
+const titelVon = (w) => w.werk.replace(/^\d+\.\s*/, "").replace(/\.$/, "");
 for (const r of ROMANE) {
-  if (wochentag(r.ab) !== 1) throw new Error(`${r.datei}: ${r.ab} ist kein Montag`);
-  if (r.todesjahr >= 1956) throw new Error(`${r.datei}: Autor nach 1955 gestorben`);
-  const w = JSON.parse(await readFile(path.join(HIER, "quelle", "romane", `${r.datei}.json`), "utf8"));
-  if (w.quelle.stand !== "fertig") throw new Error(`${r.datei}: Wikisource-Stand nicht fertig`);
-  const vorlage = [w.quelle.herkunft, w.quelle.verlag, w.quelle.ort, w.quelle.jahr].filter(Boolean).join(", ");
-  teilen(w.absaetze).forEach((absaetze, i) => karte(plus(r.ab, i), {
-    art: "kapitel", id: `${r.datei}-${i + 1}`, werk: w.werk.replace(/\.$/, ""), autor: w.autor, teil: i + 1, teile: TEILE,
-    absaetze, quelle: { url: w.quelle.url, vorlage, revision: w.quelle.revision },
+  if (wochentag(r.ab) !== 1) throw new Error(`${r.id}: ${r.ab} ist kein Montag`);
+  if (r.todesjahr >= 1956) throw new Error(`${r.id}: Autor nach 1955 gestorben`);
+  const werke = [];
+  for (const d of r.dateien) {
+    const x = JSON.parse(await readFile(path.join(HIER, "quelle", r.ordner, `${d}.json`), "utf8"));
+    if (r.ordner !== "romane") x.absaetze = x.absaetze.map((a) => a.trim()); // Oktober/November bleiben, wie sie veröffentlicht sind
+    werke.push(x);
+  }
+  for (const w of werke) if (w.quelle.stand !== "fertig") throw new Error(`${r.id}: Wikisource-Stand nicht fertig`);
+  const w = werke[0];
+  if (r.sammlung) {
+    // Ein Text pro Tag, mit seinem Titel als Überschrift
+    werke.forEach((x, i) => karte(plus(r.ab, i), {
+      art: "kapitel", id: `${r.id}-${i + 1}`, werk: r.werk, autor: r.autor, teil: i + 1, teile: werke.length,
+      absaetze: [`## ${titelVon(x)}`, ...x.absaetze.filter((a) => !a.startsWith("## "))], quelle: { url: x.quelle.url, vorlage: vorlageVon(x), revision: x.quelle.revision },
+    }));
+    herkunft.push(`- **${r.werk}** – ${r.autor} (gestorben ${r.todesjahr}), Woche ab ${r.ab}, ein Text pro Tag, Wortlaut unverändert:\n${werke.map((x) => `  - ${titelVon(x)}. Vorlage: ${vorlageVon(x)}. Text: Wikisource, ${x.quelle.url} (Version ${x.quelle.revision}, Stand „fertig“).`).join("\n")}\n  Gemeinfrei.`);
+    continue;
+  }
+  // Mehrere Seiten eines Werks: der Titel steht nur einmal
+  const titel = new Set(w.absaetze.filter((a) => a.startsWith("## ")).slice(0, 1));
+  const absaetze = werke.flatMap((x, i) => (i === 0 ? x.absaetze : x.absaetze.filter((a) => !titel.has(a))));
+  const vorlage = vorlageVon(w);
+  const n = r.teile ?? TEILE;
+  teilen(absaetze, n).forEach((abs, i) => karte(plus(r.ab, i), {
+    art: "kapitel", id: `${r.id}-${i + 1}`, werk: r.werk ?? w.werk.replace(/\.$/, ""), autor: w.autor, teil: i + 1, teile: n,
+    absaetze: abs, quelle: { url: w.quelle.url, vorlage, revision: w.quelle.revision },
   }));
-  herkunft.push(`- **${w.werk}** – ${w.autor} (gestorben ${r.todesjahr}). Vorlage: ${vorlage}. Text: Wikisource, ${w.quelle.url} (Version ${w.quelle.revision}, Stand „fertig“, Scans: ${w.quelle.scans}). Gemeinfrei. In sieben Tagesteile geschnitten, Wortlaut unverändert; weggelassen sind Seitenzahlen, Titelseiten, Nachspann und Anmerkungen von Wikisource. Woche ab ${r.ab}.`);
+  const texte = werke.length > 1 ? werke.map((x) => `${x.quelle.url} (Version ${x.quelle.revision})`).join(" und ") : `${w.quelle.url} (Version ${w.quelle.revision}`;
+  herkunft.push(`- **${r.werk ?? w.werk}** – ${w.autor} (gestorben ${r.todesjahr}). Vorlage: ${vorlage}. Text: Wikisource, ${texte}${werke.length > 1 ? ", " : ", "}Stand „fertig“, Scans: ${w.quelle.scans}). Gemeinfrei. In ${n === 7 ? "sieben" : n} Tagesteile geschnitten, Wortlaut unverändert; weggelassen sind Seitenzahlen, Titelseiten, Nachspann und Anmerkungen von Wikisource. Woche ab ${r.ab}.`);
 }
 
 // Ein Paket je Kalendermonat

@@ -106,9 +106,10 @@ function tageBisZeitumstellung(d) {
  * Bedingung eines Tipps gegen den Kontext. Bedingungen sind Daten mit festem Wortschatz (kein Code):
  * ansicht, einstellung, monat (Zahl oder Liste), tag, wochentag (1 = Mo … 7 = So), stunde, score_unter, score_ab,
  * verfallen, benannt, alter { position, ab_monate } (Bereit-Position seit so vielen Monaten nicht bestätigt),
+ * offen (Bereit-Position noch nie bestätigt),
  * zeitumstellung_in_tagen (höchstens so viele Tage bis zur nächsten Zeitumstellung). Unbekannte Wörter: Tipp kommt nicht.
  */
-const WORTSCHATZ = new Set(["ansicht", "einstellung", "monat", "tag", "wochentag", "stunde", "score_unter", "score_ab", "verfallen", "benannt", "alter", "zeitumstellung_in_tagen"]);
+const WORTSCHATZ = new Set(["ansicht", "einstellung", "monat", "tag", "wochentag", "stunde", "score_unter", "score_ab", "verfallen", "benannt", "alter", "offen", "zeitumstellung_in_tagen"]);
 export function passtBedingung(b, k) {
   if (!b) return true;
   if (Object.keys(b).some((w) => !WORTSCHATZ.has(w))) return false;
@@ -127,6 +128,7 @@ export function passtBedingung(b, k) {
     const datum = k.positionen?.[b.alter.position];
     if (!datum || (d.getTime() - new Date(datum).getTime()) / MONAT_MS < b.alter.ab_monate) return false;
   }
+  if (b.offen && k.positionen?.[b.offen]) return false;
   if (b.zeitumstellung_in_tagen != null && tageBisZeitumstellung(d) > b.zeitumstellung_in_tagen) return false;
   return true;
 }

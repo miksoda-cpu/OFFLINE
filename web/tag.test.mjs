@@ -126,3 +126,25 @@ test("Die gebauten Pakete: 61 Tage mit Rätsel ab 1.10.2026, vier Werke zu je si
   for (const k of kapitel.filter((k) => k.teil === 1)) assert.equal(new Date(k.datum + "T12:00:00Z").getUTCDay(), 1, `${k.werk} beginnt an einem Montag`);
   assert.deepEqual([...new Set(kapitel.map((k) => k.werk))], ["Kleider machen Leute", "Die Judenbuche", "Aus dem Leben eines Taugenichts", "Der Schimmelreiter"]);
 });
+
+test("Dezember 2026: 31 Rätsel ohne Wiederholung, Advent ab Montag, ab 24. Dezember ruhig und kurz", async () => {
+  const q = JSON.parse(await readFile(new URL("../pakete/tage-2026-12/paket.quelle.json", import.meta.url), "utf8"));
+  const inhalt = JSON.parse(await readFile(new URL("../pakete/tage-2026-12/inhalt/tage.json", import.meta.url), "utf8"));
+  assert.deepEqual(tageInhaltFehler(inhalt, q.tage), []);
+  assert.deepEqual(q.tage, { von: "2026-12-01", bis: "2026-12-31" });
+  const raetsel = inhalt.tage.map((t) => t.karten.find((k) => k.art === "raetsel"));
+  assert.equal(raetsel.filter(Boolean).length, 31);
+  const alt = [];
+  for (const m of ["2026-10", "2026-11"]) alt.push(...JSON.parse(await readFile(new URL(`../pakete/tage-${m}/inhalt/tage.json`, import.meta.url), "utf8")).tage.flatMap((t) => t.karten));
+  const fragen = new Set(alt.filter((k) => k.art === "raetsel").map((k) => k.frage));
+  for (const r of raetsel) assert.ok(!fragen.has(r.frage), `${r.id} wiederholt ein Rätsel`);
+  for (const t of inhalt.tage.filter((t) => t.datum >= "2026-12-24")) {
+    assert.equal(t.karten.find((k) => k.art === "raetsel").stufe, "einfach", `${t.datum}: Rätsel leicht`);
+    const k = t.karten.find((x) => x.art === "kapitel");
+    const woerter = k.absaetze.join(" ").split(/\s+/).length;
+    assert.ok(woerter <= 1100, `${t.datum}: Lesetext kurz (${woerter} Wörter)`);
+  }
+  const kapitel = inhalt.tage.flatMap((t) => t.karten.filter((k) => k.art === "kapitel").map((k) => ({ ...k, datum: t.datum })));
+  for (const k of kapitel.filter((k) => k.teil === 1)) assert.equal(new Date(k.datum + "T12:00:00Z").getUTCDay(), 1, `${k.werk} beginnt an einem Montag`);
+  assert.deepEqual([...new Set(kapitel.map((k) => k.werk))], ["Das kalte Herz", "Immensee", "Wintermärchen der Brüder Grimm", "Kalendergeschichten aus dem Schatzkästlein"]);
+});

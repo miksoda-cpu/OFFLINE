@@ -12,13 +12,32 @@ import { writeFile } from "node:fs/promises";
 const [titel, anfang, ziel, nachspann] = process.argv.slice(2);
 if (!titel || !anfang || !ziel) throw new Error("Verwendung: wikisource-holen.mjs <Seitentitel> \"<Anfang>\" <ziel.json>");
 const UA = { "User-Agent": "OFFLINE-App (github.com/miksoda-cpu/OFFLINE; Redaktion Tagesseite)" };
-const api = (q) => fetch(`https://de.wikisource.org/w/api.php?${q}&format=json&formatversion=2`, { headers: UA }).then((r) => r.json());
+// Wikisource drosselt bei vielen Abfragen („too many requests“): dann höflich warten und es noch einmal versuchen
+async function api(q) {
+  for (let versuch = 1; ; versuch++) {
+    const t = await fetch(`https://de.wikisource.org/w/api.php?${q}&format=json&formatversion=2`, { headers: UA }).then((r) => r.text());
+    try { return JSON.parse(t); } catch {
+      if (versuch >= 6) throw new Error(`Wikisource antwortet nicht: ${t.slice(0, 80)}`);
+      await new Promise((r) => setTimeout(r, 30000));
+    }
+  }
+}
 
 const quell = await api(`action=query&prop=revisions&rvprop=content|ids&rvslots=main&titles=${encodeURIComponent(titel)}&redirects=1`);
 const seite = quell.query.pages[0];
 const wikitext = seite.revisions[0].slots.main.content;
-const feld = (k) => (wikitext.match(new RegExp(`\\|${k}=([^\\n]*)`)) || [])[1]?.trim() ?? "";
-if (feld("BEARBEITUNGSSTAND") !== "fertig") throw new Error(`${titel}: Bearbeitungsstand „${feld("BEARBEITUNGSSTAND")}“, nicht „fertig“`);
+const feldAus = (text, k) => (text.match(new RegExp(`\\|\\s*${k}\\s*=([^\\n]*)`)) || [])[1]?.trim() ?? "";
+// Seiten mit {{Navigation2}} (Teil eines Sammelbands) tragen nur STATUS; die Textdaten stehen auf der Seite des Bandes (ARTIKEL)
+let kopf = wikitext;
+const nav = /\{\{Navigation2/.test(wikitext);
+if (nav) {
+  const band = feldAus(wikitext, "ARTIKEL").replace(/^\[\[|\]\]$/g, "").split("|")[0];
+  const b = await api(`action=query&prop=revisions&rvprop=content&rvslots=main&titles=${encodeURIComponent(band)}&redirects=1`);
+  kopf = b.query.pages[0].revisions[0].slots.main.content;
+}
+const feld = (k) => (k === "TITEL" && nav ? feldAus(wikitext, "KAPITEL") : feldAus(kopf, k)) || (k === "AUTOR" ? feldAus(wikitext, "AUTOR") : "");
+const stand = nav ? feldAus(wikitext, "STATUS") : feldAus(wikitext, "BEARBEITUNGSSTAND");
+if (stand !== "fertig") throw new Error(`${titel}: Bearbeitungsstand „${stand}“, nicht „fertig“`);
 const klar = (s) => s.replace(/\[\[(?:[^|\]]*\|)?([^\]]*)\]\]/g, "$1").replace(/\{\{GBS\|([^|}]+)[^}]*\}\}/g, "Google Books $1").replace(/\[\S+ ([^\]]+)\]/g, "$1").replace(/'''?/g, "").trim();
 
 const html = (await api(`action=parse&page=${encodeURIComponent(seite.title)}&prop=text&disableeditsection=1`)).parse.text;
@@ -27,7 +46,8 @@ const entity = (s) => s.replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePo
 
 let h = html;
 const ende = h.search(/<h2[^>]*>(?:(?!<\/h2>).)*Anmerkungen/s); if (ende > 0) h = h.slice(0, ende);
-h = h.replace(/<span class="PageNumber"[^>]*>.*?<\/span>/gs, "")      // Seitenzahlen
+h = h.replace(/<ol class="references">.*?<\/ol>/gs, "")             // Fußnoten der Vorlage
+  .replace(/<span class="PageNumber"[^>]*>.*?<\/span>/gs, "")      // Seitenzahlen
   .replace(/<sup[^>]*class="reference"[^>]*>.*?<\/sup>/gs, "")        // Fußnotenzeichen
   .replace(/<span style="display:none;?">.*?<\/span>/gs, "")
   .replace(/<table.*?<\/table>/gs, "");                                // Kopf mit Textdaten
@@ -38,15 +58,16 @@ h = h.replace(/<div style="[^"]*text-align:\s*center[^"]*">(.*?)<\/div>/gs, (_, 
 h = h.replace(/<br\s*\/?>/g, " ").replace(/<\/(p|div|h\d|li|dd)>/g, "\n").replace(/<[^>]+>/g, "");
 h = entity(h);
 const zeilen = h.split(/\n/).map((z) => z.replace(/[ \t ]+/g, " ").trim()).filter(Boolean);
-const start = zeilen.findIndex((z) => z.replace(/@@\w+@@/g, "").startsWith(anfang));
+// „-“: vom Anfang an (Titelzeilen werden später beim Teilen weggelassen)
+const start = anfang === "-" ? 0 : zeilen.findIndex((z) => z.replace(/@@\w+@@/g, "").startsWith(anfang));
 if (start < 0) throw new Error(`${titel}: Anfang „${anfang}“ nicht gefunden`);
 // Eine Überschrift direkt vor dem Anfang (z. B. „Erstes Kapitel.“) gehört dazu
 let von = start; while (von > 0 && zeilen[von - 1].startsWith("@@UEBER@@") && zeilen[von - 1].length < 60) von--;
 const absaetze = [];
-for (const z of zeilen.slice(von)) {
+for (const z of zeilen.slice(von).filter((x) => !x.startsWith("↑"))) {
   if (z.startsWith("@@GEDICHT@@")) { absaetze.push(z.replace("@@GEDICHT@@", "").replace("@@ENDE@@", "").split("@@ZEILE@@").map((x) => x.trim()).join("\n").replace(/\n{3,}/g, "\n\n").trim()); continue; }
   if (z.startsWith("@@UEBER@@")) { const t = z.replace("@@UEBER@@", "").trim(); if (t) absaetze.push(`## ${t}`); continue; }
-  absaetze.push(z.replace(/@@\w+@@/g, ""));
+  absaetze.push(z.replace(/@@\w+@@/g, "").trim());
 }
 // Seitengrenzen der Vorlage trennen Absätze mitten im Satz: Endet ein Absatz ohne Satzzeichen, gehört der nächste dazu
 // (bei Trennstrich am Ende ohne Leerzeichen, wenn der nächste klein beginnt).
@@ -68,7 +89,7 @@ await writeFile(ziel, JSON.stringify({
   quelle: {
     url: `https://de.wikisource.org/wiki/${encodeURIComponent(seite.title.replaceAll(" ", "_"))}`, revision: seite.revisions[0].revid,
     herkunft: klar(feld("HERKUNFT")), verlag: klar(feld("VERLAG")), jahr: feld("ERSCHEINUNGSJAHR"), ort: klar(feld("ERSCHEINUNGSORT")),
-    scans: klar(feld("QUELLE")), stand: feld("BEARBEITUNGSSTAND"),
+    scans: klar(feld("QUELLE")), stand, herausgeber: klar(feld("HERAUSGEBER")), auflage: klar(feld("AUFLAGE")),
   },
   woerter, absaetze,
 }, null, 1) + "\n");
