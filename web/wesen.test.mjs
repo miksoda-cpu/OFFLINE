@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { lumiEinstellungenLaden, einladungFaellig, mimikZustand, passtBedingung, tippPool, ohneIch, TEXTE, DARSTELLUNG, nachtsSchlaf, schlafenszeit, abendMerken, Wesen } from "./wesen.js";
+import { FUNKTIONEN, lumiEinstellungenLaden, einladungFaellig, mimikZustand, passtBedingung, tippPool, ohneIch, TEXTE, DARSTELLUNG, nachtsSchlaf, schlafenszeit, abendMerken, Wesen } from "./wesen.js";
 import { MIMIK } from "./lumi/mimik.js";
 
 const TAG = 86400000;
@@ -133,9 +133,10 @@ test("Kein „ich“ ohne Namen: in den Tipps, im Pool und in den Texten vor der
   assert.ok(ohneIch("Hier oben ist es hell. Micha kommt.") && !ohneIch("Das ist meins? Nein: mein Licht."), "Wortgrenzen");
 });
 
-test("Tipp-Bestand: 176 Tipps, Sorten klein, nur bekannter Wortschatz, app-001 korrigiert", () => {
-  assert.equal(tipps.length, 176);
-  assert.equal(new Set(tipps.map((t) => t.id)).size, 176);
+test("Tipp-Bestand: 175 Tipps (laune-010 gestrichen), Sorten klein, nur bekannter Wortschatz, app-001 korrigiert", () => {
+  assert.equal(tipps.length, 175);
+  assert.equal(new Set(tipps.map((t) => t.id)).size, 175);
+  assert.ok(!tipps.some((t) => t.id === "laune-010"));
   for (const t of tipps) assert.match(t.sorte, /^(app|alltag|wissen|weisheit|laune|heute|digital)$/, t.id);
   const an = { ...lumiEinstellungenLaden(null), darstellung: "wesen" };
   // jede Bedingung ist lesbar: mit passendem Kontext kommt jeder Tipp irgendwann
@@ -200,4 +201,49 @@ test("Tipps, die einen Zustand behaupten, kommen nur, wenn er stimmt (Treffpunkt
   assert.equal(passtBedingung(t["alltag-028"].bedingung, k({ positionen: { probeabend: vor(7) } })), true);
   assert.equal(passtBedingung(t["alltag-026"].bedingung, k({ positionen: { "c-0-0": vor(13) } })), false, "nur wenn wirklich verfallen");
   assert.equal(passtBedingung(t["alltag-026"].bedingung, k({ verfallen: true, benannt: true, positionen: { "c-0-0": vor(13) } })), true);
+});
+
+// Woran man erkennt, dass ein Tipp eine Funktion der App nennt (Grundsatz aus Auftrag 2026-10-01-tipps-und-jaenner).
+// Kommt ein Tipp mit einer neuen Funktion dazu, gehört sie hier dazu.
+const NENNT = {
+  wischen: /\bWisch/, "was-ist-los": /„Was ist los\?“/, gelernt: /„gelernt“/, briefe: /Briefe, die sich öffnen/,
+  "karte-offline": /Karte deiner Region/, kalender: /Kalender in der App/, wohin: /„Wohin“/, tagebuch: /Tagebuch/,
+  schliessfach: /Schließfach/, "skin-kontrast": /Kontrast-Skin/, familiennachricht: /Familiennachricht/,
+  "offline-stunde": /Offline-Stunde/, mesh: /Mesh/, fernschach: /Fernschach/, "neujahr-buecher": /neue Bücher in die Bibliothek/,
+  "zettel-drucken": /App druckt/, fragen: /Frag noch einmal\. Mich/,
+  tagesseite: /Tagesseite/, tagesplan: /Tagesplan/, vorrat: /Der Vorrat/, vorlesen: /[Vv]orlesen|liest dir die App vor/,
+  sparmodus: /Sparmodus/, tresor: /Tresor/, notfallmappe: /Notfallmappe/, bereit: /Bereit/, bibliothek: /Bibliothek/,
+  werkzeuge: /Werkzeuge/, radio: /Frequenz deines/, skins: /\bSkin\b/,
+};
+
+test("Funktionen: Jeder Tipp, der eine Funktion nennt, hat sie in der App oder wartet mit „funktion“ auf sie", () => {
+  let nennungen = 0;
+  for (const t of tipps) for (const [f, muster] of Object.entries(NENNT)) {
+    if (!muster.test(t.text)) continue;
+    nennungen++;
+    const wartet = [].concat(t.bedingung?.funktion ?? []);
+    assert.ok(FUNKTIONEN.has(f) || wartet.includes(f), `${t.id} nennt „${f}“, die App hat sie nicht und der Tipp hat keine funktion-Bedingung`);
+  }
+  assert.ok(nennungen >= 25);
+  // jede funktion-Bedingung nennt eine bekannte Funktion (sonst wartet der Tipp für immer)
+  for (const t of tipps) for (const f of [].concat(t.bedingung?.funktion ?? [])) assert.ok(NENNT[f], `${t.id}: funktion „${f}“ unbekannt`);
+  // Bills Liste vom 1.10.: alle warten auf ihre Funktion und kommen heute nicht
+  const t = Object.fromEntries(tipps.map((x) => [x.id, x]));
+  for (const id of ["app-002", "app-003", "app-006", "app-014", "app-015", "app-016", "app-017", "app-018", "app-019", "app-024", "app-026", "app-028", "app-029", "app-033", "alltag-023"]) {
+    assert.ok(t[id].bedingung?.funktion, id);
+    assert.equal(passtBedingung(t[id].bedingung, k({ ansicht: t[id].bedingung.ansicht, benannt: true })), false, id);
+  }
+  // das Wort selbst: vorhanden → ja, fehlt eine → nein
+  assert.equal(passtBedingung({ funktion: "tresor" }, k()), true);
+  assert.equal(passtBedingung({ funktion: ["tresor", "mesh"] }, k()), false);
+});
+
+test("Keine alten Punktzahlen und keine Behauptungen ohne Wissen (Auftrag 2026-10-01)", () => {
+  const t = Object.fromEntries(tipps.map((x) => [x.id, x]));
+  for (const x of tipps) assert.doesNotMatch(x.text, /\b(acht|zehn|fünf|Fünf)\s+Punkte/, x.id);
+  for (const id of ["alltag-001", "alltag-003", "alltag-014"]) assert.match(t[id].text, /hebt deine Bereit-Zahl/, id);
+  for (const id of ["laune-006", "laune-007", "laune-015", "laune-002", "alltag-004", "alltag-039"]) assert.doesNotMatch(t[id].text, /^Du (hast|wischst)|Zwei Nachbarn eingetragen|noch bei sieben/, id);
+  assert.match(t["app-005"].text, /unten/); assert.doesNotMatch(t["app-005"].text, /unter sieben/);
+  assert.doesNotMatch(t["app-010"].text, /Blackout/);
+  assert.doesNotMatch(t["app-020"].text, /jedem Text/);
 });

@@ -2,6 +2,16 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.3.2",
+      "datum": "2026-10-01",
+      "punkte": [
+        "Für Jänner liegen 31 neue Rätsel bereit und vier Lesewochen: „Der Condor“ von Adalbert Stifter, „Mozart auf der Reise nach Prag“ von Eduard Mörike, „Die schwarze Spinne“ von Jeremias Gotthelf und „Unterm Birnbaum“ von Theodor Fontane.",
+        "Die Tipps sind aufgeräumt: Keiner behauptet mehr etwas über dich, das die App gar nicht wissen kann.",
+        "Tipps über Dinge, die es in der App noch nicht gibt, warten jetzt, bis es sie gibt.",
+        "Wo ein Tipp noch alte Punktzahlen nannte, steht jetzt einfach, dass es deine Bereit-Zahl hebt."
+      ]
+    },
+    {
       "version": "0.3.1",
       "datum": "2026-09-30",
       "punkte": [

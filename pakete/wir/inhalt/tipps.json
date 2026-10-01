@@ -1,5 +1,5 @@
 {
-  "hinweis": "Tipps der Lumi. Felder: id, sorte (app, alltag, wissen, weisheit, laune, heute, digital), text, optional gewicht und bedingung. Bedingungen sind Daten, kein Code (web/wesen.js, passtBedingung): ansicht, einstellung, monat (Zahl oder Liste), tag, wochentag (1 = Mo … 7 = So), stunde, score_unter, score_ab, verfallen, benannt (erst nach der Namensgabe; Pflicht bei jedem Tipp, der von sich spricht), alter { position, ab_monate }, zeitumstellung_in_tagen. Unbekannte Wörter: Der Tipp kommt nicht. Gebaut mit pakete/wir/tipps-umwandeln.mjs aus dem Bestand der Session (180 Tipps).",
+  "hinweis": "Tipps der Lumi. Felder: id, sorte (app, alltag, wissen, weisheit, laune, heute, digital), text, optional gewicht und bedingung. Bedingungen sind Daten, kein Code (web/wesen.js, passtBedingung): ansicht, einstellung, monat (Zahl oder Liste), tag, wochentag (1 = Mo … 7 = So), stunde, score_unter, score_ab, verfallen, benannt (erst nach der Namensgabe; Pflicht bei jedem Tipp, der von sich spricht), alter { position, ab_monate }, offen (Position nie bestätigt), funktion (erst, wenn die App die Funktion hat), zeitumstellung_in_tagen. Unbekannte Wörter: Der Tipp kommt nicht. Gebaut mit pakete/wir/tipps-umwandeln.mjs aus dem Bestand der Session (180 Tipps).",
   "tipps": [
     {
       "id": "app-001",
@@ -12,30 +12,40 @@
     {
       "id": "app-002",
       "sorte": "app",
-      "text": "Die Tagesseite ist immer der Anfang. Wisch nach links, dann kommt das Wissen."
+      "text": "Die Tagesseite ist immer der Anfang. Wisch nach links, dann kommt das Wissen.",
+      "bedingung": {
+        "funktion": "wischen"
+      }
     },
     {
       "id": "app-003",
       "sorte": "app",
-      "text": "„Was ist los?“ ist der große Knopf. Der ist für den Tag, an dem du ihn brauchst. Vorher lässt du ihn in Ruhe."
+      "text": "„Was ist los?“ ist der große Knopf. Der ist für den Tag, an dem du ihn brauchst. Vorher lässt du ihn in Ruhe.",
+      "bedingung": {
+        "funktion": "was-ist-los"
+      }
     },
     {
       "id": "app-004",
       "sorte": "app",
       "text": "Unter Einstellungen steht „gelernt“. Da siehst du, was ich mir von dir abgeschaut habe. Alles davon kannst du zurückstellen.",
       "bedingung": {
+        "funktion": "gelernt",
         "benannt": true
       }
     },
     {
       "id": "app-005",
       "sorte": "app",
-      "text": "Der Vorrat oben zeigt, wie viele Tage Rätsel und Kapitel schon da sind. Fällt er unter sieben, lädt die App nach, sobald Netz da ist."
+      "text": "Der Vorrat unten auf der Tagesseite zeigt, wie viele Tage Rätsel und Kapitel schon da sind. Wie weit die App vorlädt, stellst du im Tagesplan ein. Ohne Netz geht es weiter, bis er leer ist."
     },
     {
       "id": "app-006",
       "sorte": "app",
-      "text": "Briefe, die sich öffnen, liegen im Tresor. Einer zum Datum, einer, wenn der Strom länger als drei Tage weg ist. Du entscheidest, was drinsteht."
+      "text": "Briefe, die sich öffnen, liegen im Tresor. Einer zum Datum, einer, wenn der Strom länger als drei Tage weg ist. Du entscheidest, was drinsteht.",
+      "bedingung": {
+        "funktion": "briefe"
+      }
     },
     {
       "id": "app-007",
@@ -61,7 +71,7 @@
     {
       "id": "app-010",
       "sorte": "app",
-      "text": "Der Sparmodus macht mich dunkler und die App ruhiger. Im Blackout schlägt sie ihn dir vor. Einmal. Dann entscheidest du.",
+      "text": "Der Sparmodus im Tagesplan lässt mich auf der Tagesseite weg. Dann ist es dort ruhiger. Ein Haken, und ich bin wieder da.",
       "bedingung": {
         "benannt": true
       }
@@ -79,45 +89,66 @@
     {
       "id": "app-013",
       "sorte": "app",
-      "text": "Die Karte deiner Region lädst du einmal. Dann kennt sie den Weg zum Spital auch ohne Netz."
+      "text": "Die Karte deiner Region lädst du einmal. Dann kennt sie den Weg zum Spital auch ohne Netz.",
+      "bedingung": {
+        "funktion": "karte-offline"
+      }
     },
     {
       "id": "app-014",
       "sorte": "app",
-      "text": "Der Kalender in der App erinnert dich ans Wasser, an die Batterien, an den Probeabend. Nicht öfter als nötig."
+      "text": "Der Kalender in der App erinnert dich ans Wasser, an die Batterien, an den Probeabend. Nicht öfter als nötig.",
+      "bedingung": {
+        "funktion": "kalender"
+      }
     },
     {
       "id": "app-015",
       "sorte": "app",
-      "text": "„Wohin“ findest du in den Einstellungen, nicht auf der Tagesseite. Absichtlich. Es ist für die, die es suchen."
+      "text": "„Wohin“ findest du in den Einstellungen, nicht auf der Tagesseite. Absichtlich. Es ist für die, die es suchen.",
+      "bedingung": {
+        "funktion": "wohin"
+      }
     },
     {
       "id": "app-016",
       "sorte": "app",
-      "text": "Dein Tagebuch bleibt am Gerät. Im Blackout wird es zur Chronik. Danach kannst du es teilen. Musst du nicht."
+      "text": "Dein Tagebuch bleibt am Gerät. Im Blackout wird es zur Chronik. Danach kannst du es teilen. Musst du nicht.",
+      "bedingung": {
+        "funktion": "tagebuch"
+      }
     },
     {
       "id": "app-017",
       "sorte": "app",
-      "text": "Das Schließfach ist die Sicherung der ganzen App bei uns. Verschlüsselt auf deinem Gerät. Wir sehen nur Bytes."
+      "text": "Das Schließfach ist die Sicherung der ganzen App bei uns. Verschlüsselt auf deinem Gerät. Wir sehen nur Bytes.",
+      "bedingung": {
+        "funktion": "schliessfach"
+      }
     },
     {
       "id": "app-018",
       "sorte": "app",
-      "text": "Gratis passt ins Schließfach, was unersetzlich ist: Dokumente, Tagebuch, Briefe. Fotos musst du auswählen. Das ist die Übung."
+      "text": "Gratis passt ins Schließfach, was unersetzlich ist: Dokumente, Tagebuch, Briefe. Fotos musst du auswählen. Das ist die Übung.",
+      "bedingung": {
+        "funktion": [
+          "schliessfach",
+          "tagebuch"
+        ]
+      }
     },
     {
       "id": "app-019",
       "sorte": "app",
-      "text": "Ein Skin ändert, wie die App aussieht. Nicht, was sie kann. Der Kontrast-Skin ist für Augen, die es schwer haben."
+      "text": "Ein Skin ändert, wie die App aussieht. Nicht, was sie kann. Der Kontrast-Skin ist für Augen, die es schwer haben.",
+      "bedingung": {
+        "funktion": "skin-kontrast"
+      }
     },
     {
       "id": "app-020",
       "sorte": "app",
-      "text": "Vorlesen geht bei jedem Text. Der Knopf mit dem Lautsprecher. Auch bei mir, wenn du willst.",
-      "bedingung": {
-        "benannt": true
-      }
+      "text": "Das Kapitel des Tages liest dir die App vor. Der Knopf „Vorlesen“ steht oben in der Leseansicht."
     },
     {
       "id": "app-021",
@@ -140,17 +171,23 @@
     {
       "id": "app-024",
       "sorte": "app",
-      "text": "Die Familiennachricht ist eine vorbereitete SMS. Ein Tipp, und sie geht an alle, die du eingetragen hast. Vorbereiten musst du sie heute."
+      "text": "Die Familiennachricht ist eine vorbereitete SMS. Ein Tipp, und sie geht an alle, die du eingetragen hast. Vorbereiten musst du sie heute.",
+      "bedingung": {
+        "funktion": "familiennachricht"
+      }
     },
     {
       "id": "app-025",
       "sorte": "app",
-      "text": "Die Radioseite kennt die Frequenzen deiner Region. Schreib sie trotzdem auf Papier. Papier braucht keinen Akku."
+      "text": "Unter Werkzeuge trägst du die Frequenz deines Radiosenders ein. Schreib sie trotzdem auf Papier. Papier braucht keinen Akku."
     },
     {
       "id": "app-026",
       "sorte": "app",
-      "text": "Die Offline-Stunde zählt, wie lange dein Handy im Flugmodus war. Sie zählt für dich, nicht gegen dich."
+      "text": "Die Offline-Stunde zählt, wie lange dein Handy im Flugmodus war. Sie zählt für dich, nicht gegen dich.",
+      "bedingung": {
+        "funktion": "offline-stunde"
+      }
     },
     {
       "id": "app-027",
@@ -163,12 +200,21 @@
     {
       "id": "app-028",
       "sorte": "app",
-      "text": "Der Mesh-Puls oben zeigt, wer in der Nähe ein Funkgerät hat. Hast du keines, siehst du nur, dass es andere gibt. Das ist auch etwas."
+      "text": "Der Mesh-Puls oben zeigt, wer in der Nähe ein Funkgerät hat. Hast du keines, siehst du nur, dass es andere gibt. Das ist auch etwas.",
+      "bedingung": {
+        "funktion": "mesh"
+      }
     },
     {
       "id": "app-029",
       "sorte": "app",
-      "text": "Fernschach geht über Mesh. Ein Zug braucht ein paar Bytes. Die kommen auch durch, wenn sonst nichts durchkommt."
+      "text": "Fernschach geht über Mesh. Ein Zug braucht ein paar Bytes. Die kommen auch durch, wenn sonst nichts durchkommt.",
+      "bedingung": {
+        "funktion": [
+          "fernschach",
+          "mesh"
+        ]
+      }
     },
     {
       "id": "app-030",
@@ -178,7 +224,7 @@
     {
       "id": "alltag-001",
       "sorte": "alltag",
-      "text": "Dein Wasser ist neun Monate alt. Tauschen dauert zehn Minuten und bringt acht Punkte.",
+      "text": "Dein Wasser ist neun Monate alt. Tauschen dauert zehn Minuten und hebt deine Bereit-Zahl.",
       "bedingung": {
         "alter": {
           "position": "c-0-0",
@@ -197,12 +243,12 @@
     {
       "id": "alltag-003",
       "sorte": "alltag",
-      "text": "Ein Probeabend ohne Strom bringt zehn Punkte. Und du weißt danach, was fehlt. Meistens die Taschenlampe."
+      "text": "Ein Probeabend ohne Strom hebt deine Bereit-Zahl. Und du weißt danach, was fehlt. Meistens die Taschenlampe."
     },
     {
       "id": "alltag-004",
       "sorte": "alltag",
-      "text": "Zwei Nachbarn eingetragen, und ich bin ruhiger. Man muss sie nicht mögen. Man muss wissen, wo sie wohnen.",
+      "text": "Ein Nachbar, den du im Notfall fragen kannst, und ich bin ruhiger. Man muss ihn nicht mögen. Man muss wissen, wo er wohnt.",
       "bedingung": {
         "benannt": true
       }
@@ -255,7 +301,7 @@
     {
       "id": "alltag-014",
       "sorte": "alltag",
-      "text": "Der Kocher. Hast du ihn je angezündet? Mach es heute. Draußen. Fünf Punkte."
+      "text": "Der Kocher. Hast du ihn je angezündet? Mach es heute. Draußen. Das hebt deine Bereit-Zahl."
     },
     {
       "id": "alltag-015",
@@ -306,7 +352,10 @@
     {
       "id": "alltag-023",
       "sorte": "alltag",
-      "text": "Ein Zettel an der Stiegentür: Wer hier wohnt, wer Hilfe braucht, wer helfen kann. Die App druckt ihn dir. Aufhängen musst du."
+      "text": "Ein Zettel an der Stiegentür: Wer hier wohnt, wer Hilfe braucht, wer helfen kann. Die App druckt ihn dir. Aufhängen musst du.",
+      "bedingung": {
+        "funktion": "zettel-drucken"
+      }
     },
     {
       "id": "alltag-024",
@@ -701,7 +750,7 @@
     {
       "id": "laune-002",
       "sorte": "laune",
-      "text": "Ich hab geschlafen. Du hast mich geweckt. Ich sag jetzt nichts Kluges.",
+      "text": "Wenn du mich weckst, sag ich nichts Kluges. Nur damit du es weißt.",
       "bedingung": {
         "benannt": true
       }
@@ -727,7 +776,7 @@
     {
       "id": "laune-006",
       "sorte": "laune",
-      "text": "Ob es intelligentes Leben da draußen gibt? Du hast heute dreimal die Kühlschranktür aufgemacht, um zu sehen, ob der Strom noch weg ist. Ich enthalte mich.",
+      "text": "Ob es intelligentes Leben da draußen gibt? Wer im Blackout dreimal die Kühlschranktür aufmacht, um zu sehen, ob der Strom noch weg ist, ist jedenfalls gründlich. Ich enthalte mich.",
       "bedingung": {
         "benannt": true
       }
@@ -735,7 +784,7 @@
     {
       "id": "laune-007",
       "sorte": "laune",
-      "text": "Du wischst schnell heute. Ich rede langsamer. Einer von uns muss.",
+      "text": "Wer schnell wischt, dem rede ich langsamer. Einer von uns muss.",
       "bedingung": {
         "benannt": true
       }
@@ -752,14 +801,6 @@
       "id": "laune-009",
       "sorte": "laune",
       "text": "Wenn du mich noch einmal anstupst, zeige ich die Zähne. Danach tut es mir leid. Das weißt du. Also lass es.",
-      "bedingung": {
-        "benannt": true
-      }
-    },
-    {
-      "id": "laune-010",
-      "sorte": "laune",
-      "text": "Du hast meinen Namen geändert. Schon wieder. Ich behalte alle. Ich habe Platz.",
       "bedingung": {
         "benannt": true
       }
@@ -793,7 +834,7 @@
     {
       "id": "laune-015",
       "sorte": "laune",
-      "text": "Du hast heute noch nichts bestätigt. Ich sage es nur. Ich meine es nicht böse. Ich meine es nie böse.",
+      "text": "Ein Häkchen bei Bereit dauert eine Sekunde. Ich sage es nur. Ich meine es nicht böse. Ich meine es nie böse.",
       "bedingung": {
         "benannt": true
       }
@@ -863,7 +904,8 @@
       "text": "Am ersten Jänner kommen neue Bücher in die Bibliothek. Wer vor siebzig Jahren gestorben ist, gehört ab heute allen. Das feiern wir.",
       "bedingung": {
         "tag": 1,
-        "monat": 1
+        "monat": 1,
+        "funktion": "neujahr-buecher"
       }
     },
     {
@@ -881,13 +923,14 @@
       "text": "Du bist in „Wohin“. Ich sage hier nichts über Gehen oder Bleiben. Ich erinnere dich nur an deine eigene Liste, einmal im Jahr.",
       "bedingung": {
         "ansicht": "wohin",
+        "funktion": "wohin",
         "benannt": true
       }
     },
     {
       "id": "alltag-039",
       "sorte": "alltag",
-      "text": "Über 80. Du bist ruhig, ich bin ruhig. Jetzt ist die Zeit für die Nachbarin, die noch bei sieben ist.",
+      "text": "Über 80. Du bist ruhig, ich bin ruhig. Jetzt ist die Zeit für die Nachbarin, die vielleicht noch nicht so weit ist.",
       "bedingung": {
         "score_ab": 80,
         "benannt": true
@@ -1141,6 +1184,7 @@
       "text": "Wenn du etwas nicht verstehst, ist nicht dein Kopf das Problem. Meistens ist es die Erklärung. Frag noch einmal. Mich zum Beispiel.",
       "bedingung": {
         "einstellung": "digital",
+        "funktion": "fragen",
         "benannt": true
       }
     }

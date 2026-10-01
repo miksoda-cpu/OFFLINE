@@ -148,3 +148,23 @@ test("Dezember 2026: 31 Rätsel ohne Wiederholung, Advent ab Montag, ab 24. Deze
   for (const k of kapitel.filter((k) => k.teil === 1)) assert.equal(new Date(k.datum + "T12:00:00Z").getUTCDay(), 1, `${k.werk} beginnt an einem Montag`);
   assert.deepEqual([...new Set(kapitel.map((k) => k.werk))], ["Das kalte Herz", "Immensee", "Wintermärchen der Brüder Grimm", "Kalendergeschichten aus dem Schatzkästlein"]);
 });
+
+test("Jänner 2027: 31 Rätsel ohne Wiederholung, vier Werke ab Montag, alle von vor 1956 und im Stand „fertig“", async () => {
+  const q = JSON.parse(await readFile(new URL("../pakete/tage-2027-01/paket.quelle.json", import.meta.url), "utf8"));
+  const inhalt = JSON.parse(await readFile(new URL("../pakete/tage-2027-01/inhalt/tage.json", import.meta.url), "utf8"));
+  assert.deepEqual(tageInhaltFehler(inhalt, q.tage), []);
+  assert.deepEqual(q.tage, { von: "2027-01-01", bis: "2027-01-31" });
+  const raetsel = inhalt.tage.map((t) => t.karten.find((k) => k.art === "raetsel"));
+  assert.equal(raetsel.filter(Boolean).length, 31);
+  const alt = [];
+  for (const m of ["2026-10", "2026-11", "2026-12"]) alt.push(...JSON.parse(await readFile(new URL(`../pakete/tage-${m}/inhalt/tage.json`, import.meta.url), "utf8")).tage.flatMap((t) => t.karten));
+  const fragen = new Set(alt.filter((k) => k.art === "raetsel").map((k) => k.frage));
+  const loesungen = new Set(alt.filter((k) => k.art === "raetsel").map((k) => k.loesung));
+  for (const r of raetsel) { assert.ok(!fragen.has(r.frage), `${r.id} wiederholt eine Frage`); assert.ok(!loesungen.has(r.loesung), `${r.id} wiederholt eine Lösung`); }
+  const kapitel = inhalt.tage.flatMap((t) => t.karten.filter((k) => k.art === "kapitel").map((k) => ({ ...k, datum: t.datum })));
+  for (const k of kapitel.filter((k) => k.teil === 1)) assert.equal(new Date(k.datum + "T12:00:00Z").getUTCDay(), 1, `${k.werk} beginnt an einem Montag`);
+  assert.deepEqual([...new Set(kapitel.map((k) => k.werk))], ["Der Condor", "Mozart auf der Reise nach Prag", "Die schwarze Spinne", "Unterm Birnbaum"]);
+  assert.equal(kapitel.length, 28);
+  // keine Titelzeile und kein leerer Absatz im Lesetext
+  for (const k of kapitel) for (const a of k.absaetze) assert.ok(a.trim() && a !== "Unterm Birnbaum.", `${k.id}: Absatz leer oder Titel`);
+});

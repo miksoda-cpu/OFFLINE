@@ -29,16 +29,18 @@ const wikitext = seite.revisions[0].slots.main.content;
 const feldAus = (text, k) => (text.match(new RegExp(`\\|\\s*${k}\\s*=([^\\n]*)`)) || [])[1]?.trim() ?? "";
 // Seiten mit {{Navigation2}} (Teil eines Sammelbands) tragen nur STATUS; die Textdaten stehen auf der Seite des Bandes (ARTIKEL)
 let kopf = wikitext;
-const nav = /\{\{Navigation2/.test(wikitext);
+// Seiten mit {{Navigation|Werk|vorher|nachher|Autor|STATUS=…}} (Kapitel eines Werks) ebenso; die Textdaten stehen auf der Werkseite
+const nav1 = wikitext.match(/\{\{Navigation\|([^|}]+)\|/);
+const nav = /\{\{Navigation2/.test(wikitext) || !!nav1;
 if (nav) {
-  const band = feldAus(wikitext, "ARTIKEL").replace(/^\[\[|\]\]$/g, "").split("|")[0];
+  const band = nav1 ? nav1[1].trim() : feldAus(wikitext, "ARTIKEL").replace(/^\[\[|\]\]$/g, "").split("|")[0];
   const b = await api(`action=query&prop=revisions&rvprop=content&rvslots=main&titles=${encodeURIComponent(band)}&redirects=1`);
   kopf = b.query.pages[0].revisions[0].slots.main.content;
 }
-const feld = (k) => (k === "TITEL" && nav ? feldAus(wikitext, "KAPITEL") : feldAus(kopf, k)) || (k === "AUTOR" ? feldAus(wikitext, "AUTOR") : "");
-const stand = nav ? feldAus(wikitext, "STATUS") : feldAus(wikitext, "BEARBEITUNGSSTAND");
+const feld = (k) => (k === "TITEL" && nav && !nav1 ? feldAus(wikitext, "KAPITEL") : feldAus(kopf, k)) || (k === "AUTOR" ? feldAus(wikitext, "AUTOR") : "");
+const stand = (nav ? feldAus(wikitext, "STATUS") : feldAus(wikitext, "BEARBEITUNGSSTAND")).replace(/\}\}.*$/, "").trim().toLowerCase();
 if (stand !== "fertig") throw new Error(`${titel}: Bearbeitungsstand „${stand}“, nicht „fertig“`);
-const klar = (s) => s.replace(/\[\[(?:[^|\]]*\|)?([^\]]*)\]\]/g, "$1").replace(/\{\{GBS\|([^|}]+)[^}]*\}\}/g, "Google Books $1").replace(/\[\S+ ([^\]]+)\]/g, "$1").replace(/'''?/g, "").trim();
+const klar = (s) => s.replace(/&nbsp;/g, " ").replace(/\[\[(?:[^|\]]*\|)?([^\]]*)\]\]/g, "$1").replace(/\{\{GBS\|([^|}]+)[^}]*\}\}/g, "Google Books $1").replace(/\[\S+ ([^\]]+)\]/g, "$1").replace(/'''?/g, "").trim();
 
 const html = (await api(`action=parse&page=${encodeURIComponent(seite.title)}&prop=text&disableeditsection=1`)).parse.text;
 const entity = (s) => s.replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16))).replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(+d))
@@ -52,7 +54,7 @@ h = h.replace(/<ol class="references">.*?<\/ol>/gs, "")             // Fußnoten
   .replace(/<span style="display:none;?">.*?<\/span>/gs, "")
   .replace(/<table.*?<\/table>/gs, "");                                // Kopf mit Textdaten
 // Gedichte: Zeilen behalten
-h = h.replace(/<div class="poem">(.*?)<\/div>/gs, (_, g) => `\n@@GEDICHT@@${g.replace(/<br\s*\/?>/g, "@@ZEILE@@").replace(/<\/p>\s*<p>/g, "@@ZEILE@@@@ZEILE@@")}@@ENDE@@\n`);
+h = h.replace(/<div class="poem">(.*?)<\/div>/gs, (_, g) => `\n@@GEDICHT@@${g.replace(/\n/g, "").replace(/<br\s*\/?>/g, "@@ZEILE@@").replace(/<\/p>\s*<p>/g, "@@ZEILE@@@@ZEILE@@")}@@ENDE@@\n`);
 // Zentrierte Zeilen → Überschrift
 h = h.replace(/<div style="[^"]*text-align:\s*center[^"]*">(.*?)<\/div>/gs, (_, t) => `\n@@UEBER@@${t}\n`);
 h = h.replace(/<br\s*\/?>/g, " ").replace(/<\/(p|div|h\d|li|dd)>/g, "\n").replace(/<[^>]+>/g, "");
@@ -83,13 +85,20 @@ if (nachspann) {
   if (n < 0) throw new Error(`${titel}: Nachspann „${nachspann}“ nicht gefunden`);
   absaetze.splice(n);
 }
+// Reste ohne Text (eine einzelne Klammer aus einer Vorlage) weg; „## 1.“ + „## Ein Nachtstück.“ → „## 1. Ein Nachtstück.“
+for (let i = absaetze.length - 1; i >= 0; i--) if (!absaetze[i] || /^[\[\]{}|]+$/.test(absaetze[i])) absaetze.splice(i, 1);
+for (let i = absaetze.length - 2; i >= 0; i--) if (/^## [0-9IVXL]+\.$/.test(absaetze[i]) && absaetze[i + 1].startsWith("## ")) absaetze.splice(i, 2, `${absaetze[i]} ${absaetze[i + 1].slice(3)}`);
 const woerter = absaetze.join(" ").split(/\s+/).length;
+// Fortsetzungsromane der Gartenlaube ({{GartenlaubenArtikel}}): Vorlage ist der Erstdruck in der Zeitschrift
+const gl = /\{\{GartenlaubenArtikel/.test(wikitext);
+const hefte = gl ? feldAus(wikitext, "Heft") : "";
 await writeFile(ziel, JSON.stringify({
   werk: klar(feld("TITEL")), autor: klar(feld("AUTOR")),
   quelle: {
     url: `https://de.wikisource.org/wiki/${encodeURIComponent(seite.title.replaceAll(" ", "_"))}`, revision: seite.revisions[0].revid,
-    herkunft: klar(feld("HERKUNFT")), verlag: klar(feld("VERLAG")), jahr: feld("ERSCHEINUNGSJAHR"), ort: klar(feld("ERSCHEINUNGSORT")),
-    scans: klar(feld("QUELLE")), stand, herausgeber: klar(feld("HERAUSGEBER")), auflage: klar(feld("AUFLAGE")),
+    herkunft: gl ? `Die Gartenlaube, Jahrgang ${feldAus(wikitext, "JAHR")}, Heft ${hefte}` : klar(feld("HERKUNFT")),
+    verlag: gl ? "Ernst Keil" : klar(feld("VERLAG")), jahr: gl ? feldAus(wikitext, "JAHR") : feld("ERSCHEINUNGSJAHR"),
+    ort: gl ? "Leipzig" : klar(feld("ERSCHEINUNGSORT")), scans: gl ? "Scans auf Wikisource (Die Gartenlaube)" : klar(feld("QUELLE")), stand, herausgeber: klar(feld("HERAUSGEBER")), auflage: klar(feld("AUFLAGE")),
   },
   woerter, absaetze,
 }, null, 1) + "\n");

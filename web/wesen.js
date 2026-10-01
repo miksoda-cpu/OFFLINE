@@ -106,10 +106,17 @@ function tageBisZeitumstellung(d) {
  * Bedingung eines Tipps gegen den Kontext. Bedingungen sind Daten mit festem Wortschatz (kein Code):
  * ansicht, einstellung, monat (Zahl oder Liste), tag, wochentag (1 = Mo … 7 = So), stunde, score_unter, score_ab,
  * verfallen, benannt, alter { position, ab_monate } (Bereit-Position seit so vielen Monaten nicht bestätigt),
- * offen (Bereit-Position noch nie bestätigt),
+ * offen (Bereit-Position noch nie bestätigt), funktion (Name oder Liste; erst, wenn die App alle hat, FUNKTIONEN),
  * zeitumstellung_in_tagen (höchstens so viele Tage bis zur nächsten Zeitumstellung). Unbekannte Wörter: Tipp kommt nicht.
  */
-const WORTSCHATZ = new Set(["ansicht", "einstellung", "monat", "tag", "wochentag", "stunde", "score_unter", "score_ab", "verfallen", "benannt", "alter", "offen", "zeitumstellung_in_tagen"]);
+const WORTSCHATZ = new Set(["ansicht", "einstellung", "monat", "tag", "wochentag", "stunde", "score_unter", "score_ab", "verfallen", "benannt", "alter", "offen", "funktion", "zeitumstellung_in_tagen"]);
+/**
+ * Funktionen, die diese App-Version hat. Ein Tipp mit funktion kommt erst, wenn sie hier steht; kommt eine Funktion dazu,
+ * gehört ihr Name in diese Liste (web/wesen.test.mjs prüft, dass jeder Tipp, der eine Funktion nennt, sie hier findet oder
+ * eine funktion-Bedingung hat).
+ */
+export const FUNKTIONEN = new Set(["tagesseite", "tagesplan", "vorrat", "vorlesen", "sparmodus", "schluss", "tresor", "notfallmappe",
+  "bereit", "bibliothek", "karte", "werkzeuge", "radio", "module", "skins", "updates", "was-ist-neu", "lumi"]);
 export function passtBedingung(b, k) {
   if (!b) return true;
   if (Object.keys(b).some((w) => !WORTSCHATZ.has(w))) return false;
@@ -129,6 +136,7 @@ export function passtBedingung(b, k) {
     if (!datum || (d.getTime() - new Date(datum).getTime()) / MONAT_MS < b.alter.ab_monate) return false;
   }
   if (b.offen && k.positionen?.[b.offen]) return false;
+  if (b.funktion != null && ![].concat(b.funktion).every((f) => FUNKTIONEN.has(f))) return false;
   if (b.zeitumstellung_in_tagen != null && tageBisZeitumstellung(d) > b.zeitumstellung_in_tagen) return false;
   return true;
 }

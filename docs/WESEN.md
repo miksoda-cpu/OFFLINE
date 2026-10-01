@@ -18,7 +18,7 @@
 - **Kein „ich“ ohne Namen:** Tipps mit ich/mir/mich/mein tragen `benannt`; zusätzlich filtert die App jeden Text, der von sich spricht, solange es keinen Namen gibt – auch Laute beim Anstupsen und `wesen.sagen` aus Modulen.
 - **Foto-Ansicht:** ein freigestelltes Bild je Zustand (`web/lumi/`), Vorrang nach der Mimik-Tafel (`mimikZustand`), Antennenlicht als Ebene über den Spitzen (Helligkeit nach Bereit, Fest sehr hell, Schläft aus, Unruhig flackert), Kopfneigung als Drehung um den Halsansatz. Das Pixel-Sprite bleibt als „Figur: Pixel (sparsam)“.
 - **Darstellungen:** aus (Standard), Lumi mit Tipps, nur Tipps.
-- **Tipps:** 176 im Paket `wir` (180 aus der Session, vier mit `profil.*` weggelassen), Wortschatz erweitert um `wochentag`, `stunde`, `tag`, Monatslisten, `alter` (Alter einer Bereit-Bestätigung) und `zeitumstellung_in_tagen`. Unbekannte Wörter: Der Tipp kommt nicht.
+- **Tipps:** 176 im Paket `wir` (180 aus der Session, vier mit `profil.*` weggelassen), Wortschatz erweitert um `wochentag`, `stunde`, `tag`, Monatslisten, `alter` (Alter einer Bereit-Bestätigung) und `zeitumstellung_in_tagen`. Unbekannte Wörter: Der Tipp kommt nicht. Seit 0.3.1 `offen` (Bereit-Position nie bestätigt), seit 0.3.2 `funktion` (der Tipp kommt erst, wenn die App die Funktion hat; Liste `FUNKTIONEN` in `web/wesen.js`). Grundsatz seit 01.10.2026: Ein Tipp behauptet nie etwas, das die App nicht weiß, und nennt keine Funktion, die es nicht gibt (Test in `web/wesen.test.mjs`). Stand 0.3.2: 175 Tipps.
 - **KI-Kennzeichnung** beim Einschalten und in den Einstellungen; Herkunft in `docs/LUMI-BILDER.md`.
 
 

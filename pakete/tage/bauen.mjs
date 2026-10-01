@@ -19,6 +19,7 @@ const PAKETE = path.resolve(HIER, "..");
 const RAETSEL = [
   { datei: "raetsel.json", ab: "2026-10-01" },
   { datei: "raetsel-12.json", ab: "2026-12-01" },
+  { datei: "raetsel-01.json", ab: "2027-01-01" },
 ];
 // Roman der Woche: Reihenfolge und Wochenbeginn (immer ein Montag). teile: Tage der Woche (Standard 7; kürzer am Monatsende)
 const ROMANE = [
@@ -33,7 +34,14 @@ const ROMANE = [
     dateien: ["grimm-drei-maennlein", "grimm-frau-holle", "grimm-schneeweisschen", "grimm-sternthaler", "grimm-wichtelmaenner", "grimm-hirtenbueblein", "grimm-goldener-schluessel"] },
   { id: "kalendergeschichten", ordner: "romane-12", sammlung: true, werk: "Kalendergeschichten aus dem Schatzkästlein", autor: "Johann Peter Hebel", ab: "2026-12-28", todesjahr: 1826,
     dateien: ["hebel-kannitverstan", "hebel-unverhoftes-wiedersehen", "hebel-kluger-richter", "hebel-weltgebaeude"] },
+  // Jänner 2027 (Auftrag 2026-10-01-tipps-und-jaenner); weg: Titelzeilen, die im Text nicht als Überschrift stehen
+  { id: "der-condor", ordner: "romane-01", dateien: ["stifter-condor-1", "stifter-condor-2", "stifter-condor-3", "stifter-condor-4"], werk: "Der Condor", ab: "2027-01-04", todesjahr: 1868 },
+  { id: "mozart-reise-prag", ordner: "romane-01", dateien: ["moerike-mozart"], ab: "2027-01-11", todesjahr: 1875 },
+  { id: "die-schwarze-spinne", ordner: "romane-01", dateien: ["gotthelf-spinne"], ab: "2027-01-18", todesjahr: 1854 },
+  { id: "unterm-birnbaum", ordner: "romane-01", dateien: ["fontane-birnbaum"], weg: ["Unterm Birnbaum."], ab: "2027-01-25", todesjahr: 1898 },
 ];
+// Datum der redaktionellen Abnahme je Monat (Standard: erste Ausgabe vom 30.09.2026)
+const ABNAHME = { "2027-01": "01.10.2026" };
 const TEILE = 7;
 
 const plus = (datum, n) => { const d = new Date(datum + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
@@ -98,6 +106,7 @@ for (const r of ROMANE) {
   for (const d of r.dateien) {
     const x = JSON.parse(await readFile(path.join(HIER, "quelle", r.ordner, `${d}.json`), "utf8"));
     if (r.ordner !== "romane") x.absaetze = x.absaetze.map((a) => a.trim()); // Oktober/November bleiben, wie sie veröffentlicht sind
+    if (r.weg) x.absaetze = x.absaetze.filter((a) => !r.weg.includes(a));
     werke.push(x);
   }
   for (const w of werke) if (w.quelle.stand !== "fertig") throw new Error(`${r.id}: Wikisource-Stand nicht fertig`);
@@ -149,7 +158,7 @@ for (const [monat, daten] of monate) {
     beschreibung: `Für die Tagesseite: jeden Tag ein Rätsel${werke.length ? ` und ein Stück vom Roman der Woche (${werke.map((w) => w.split(" (")[0]).join(", ")})` : ""}. Tag für Tag freigeschaltet.`,
     art: "tage", tage: bereich, sprache: "de-AT",
     lizenz: "Rätsel CC BY-SA 4.0 (eigene Texte); Romane gemeinfrei (Wikisource), Herkunft in inhalt/herkunft.md",
-    herausgeber: "The Digioneer / digitalworld Academy", pro: false, preis: "gratis", pruefstatus: "redaktion", kategorie: "jeden-tag", alter_ab: 10, braucht_netz: false, abnahme: "Redaktion (Code), 30.09.2026: Rätsel nachgerechnet, Romane gegen die Wikisource-Textdaten geprüft",
+    herausgeber: "The Digioneer / digitalworld Academy", pro: false, preis: "gratis", pruefstatus: "redaktion", kategorie: "jeden-tag", alter_ab: 10, braucht_netz: false, abnahme: `Redaktion (Code), ${ABNAHME[monat] ?? "30.09.2026"}: Rätsel nachgerechnet, Romane gegen die Wikisource-Textdaten geprüft`,
     app_min: "0.3.0", aenderungen: `Erste Ausgabe: ${daten.length} Tage.`,
     quellen: [{ id: "redaktion", name: "Eigene Rätsel der Redaktion", url: "" }, { id: "wikisource", name: "Wikisource (gemeinfreie Texte)", url: "https://de.wikisource.org" }],
   }, null, 2) + "\n");

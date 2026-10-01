@@ -6,6 +6,8 @@
 // - Tipps, die von sich sprechen (ich, mir, mich, mein …), bekommen „benannt“: erst nach der Namensgabe.
 // - app-001 korrigiert: Der Tresor liegt links in der Seitenleiste.
 // - Tipps, die einen Zustand behaupten, kommen nur, wenn er stimmt (ZUSTAND, Auftrag 2026-09-30-dezember-und-tippfix).
+// - Grundsatz (Auftrag 2026-10-01-tipps-und-jaenner): Ein Tipp behauptet nie etwas, das die App nicht weiß, und nennt keine
+//   Funktion, die es nicht gibt. Umformuliert (KORREKTUR), gestrichen (WEG), oder er wartet auf die Funktion (FUNKTION).
 
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -22,6 +24,32 @@ const KORREKTUR = {
   "app-001": "Der Tresor ist das kleine Schloss links in der Seitenleiste. Nur du kennst das Passwort. Ich auch nicht.",
   // Die App kennt den Treffpunkt als Bereit-Bestätigung, nicht als Eintrag im Tresor
   "alltag-020": "Euer Treffpunkt steht. Weiß ihn wirklich die ganze Familie? Frag heute Abend. Ohne Anlass.",
+  // Zustand, den die App nicht kennt: allgemein formuliert
+  "laune-002": "Wenn du mich weckst, sag ich nichts Kluges. Nur damit du es weißt.",
+  "laune-006": "Ob es intelligentes Leben da draußen gibt? Wer im Blackout dreimal die Kühlschranktür aufmacht, um zu sehen, ob der Strom noch weg ist, ist jedenfalls gründlich. Ich enthalte mich.",
+  "laune-007": "Wer schnell wischt, dem rede ich langsamer. Einer von uns muss.",
+  "laune-015": "Ein Häkchen bei Bereit dauert eine Sekunde. Ich sage es nur. Ich meine es nicht böse. Ich meine es nie böse.",
+  "alltag-004": "Ein Nachbar, den du im Notfall fragen kannst, und ich bin ruhiger. Man muss ihn nicht mögen. Man muss wissen, wo er wohnt.",
+  "alltag-039": "Über 80. Du bist ruhig, ich bin ruhig. Jetzt ist die Zeit für die Nachbarin, die vielleicht noch nicht so weit ist.",
+  "app-025": "Unter Werkzeuge trägst du die Frequenz deines Radiosenders ein. Schreib sie trotzdem auf Papier. Papier braucht keinen Akku.",
+  // Punktzahlen aus Bereit Version 1
+  "alltag-001": "Dein Wasser ist neun Monate alt. Tauschen dauert zehn Minuten und hebt deine Bereit-Zahl.",
+  "alltag-003": "Ein Probeabend ohne Strom hebt deine Bereit-Zahl. Und du weißt danach, was fehlt. Meistens die Taschenlampe.",
+  "alltag-014": "Der Kocher. Hast du ihn je angezündet? Mach es heute. Draußen. Das hebt deine Bereit-Zahl.",
+  // An den heutigen Stand angepasst
+  "app-005": "Der Vorrat unten auf der Tagesseite zeigt, wie viele Tage Rätsel und Kapitel schon da sind. Wie weit die App vorlädt, stellst du im Tagesplan ein. Ohne Netz geht es weiter, bis er leer ist.",
+  "app-010": "Der Sparmodus im Tagesplan lässt mich auf der Tagesseite weg. Dann ist es dort ruhiger. Ein Haken, und ich bin wieder da.",
+  "app-020": "Das Kapitel des Tages liest dir die App vor. Der Knopf „Vorlesen“ steht oben in der Leseansicht.",
+};
+// Gestrichen (Auftrag 2026-10-01): die App merkt sich frühere Namen nicht
+const WEG = new Set(["laune-010"]);
+// Tipps über Funktionen, die es noch nicht gibt: Sie kommen, sobald die App die Funktion hat (web/wesen.js, FUNKTIONEN)
+const FUNKTION = {
+  "app-002": "wischen", "app-003": "was-ist-los", "app-004": "gelernt", "app-006": "briefe", "app-013": "karte-offline",
+  "app-014": "kalender", "app-015": "wohin", "app-016": "tagebuch", "app-017": "schliessfach", "app-018": ["schliessfach", "tagebuch"],
+  "app-019": "skin-kontrast", "app-024": "familiennachricht", "app-026": "offline-stunde", "app-028": "mesh",
+  "app-029": ["fernschach", "mesh"], "app-031": "neujahr-buecher", "app-033": "wohin", "alltag-023": "zettel-drucken",
+  "digital-030": "fragen",
 };
 // Zusätzliche Bedingungen für Tipps, die einen Zustand behaupten (Bereit-Positionen aus web/bereit.js)
 const ZUSTAND = {
@@ -68,13 +96,15 @@ async function main() {
   for (const t of q.tipps) {
     const b = bedingung(t.bedingung);
     if (b === null) { weg.push(`${t.id} (${t.bedingung})`); continue; }
+    if (WEG.has(t.id)) { weg.push(`${t.id} (gestrichen)`); continue; }
     const text = KORREKTUR[t.id] ?? t.text;
     Object.assign(b, ZUSTAND[t.id] ?? {});
+    if (FUNKTION[t.id]) b.funktion = FUNKTION[t.id];
     if (ICH.test(text)) { b.benannt = true; benannt.push(t.id); }
     tipps.push({ id: t.id, sorte: t.sorte.toLowerCase(), text, ...(t.gewicht && t.gewicht !== 1 ? { gewicht: t.gewicht } : {}), ...(Object.keys(b).length ? { bedingung: b } : {}) });
   }
   const aus = {
-    hinweis: "Tipps der Lumi. Felder: id, sorte (app, alltag, wissen, weisheit, laune, heute, digital), text, optional gewicht und bedingung. Bedingungen sind Daten, kein Code (web/wesen.js, passtBedingung): ansicht, einstellung, monat (Zahl oder Liste), tag, wochentag (1 = Mo … 7 = So), stunde, score_unter, score_ab, verfallen, benannt (erst nach der Namensgabe; Pflicht bei jedem Tipp, der von sich spricht), alter { position, ab_monate }, zeitumstellung_in_tagen. Unbekannte Wörter: Der Tipp kommt nicht. Gebaut mit pakete/wir/tipps-umwandeln.mjs aus dem Bestand der Session (180 Tipps).",
+    hinweis: "Tipps der Lumi. Felder: id, sorte (app, alltag, wissen, weisheit, laune, heute, digital), text, optional gewicht und bedingung. Bedingungen sind Daten, kein Code (web/wesen.js, passtBedingung): ansicht, einstellung, monat (Zahl oder Liste), tag, wochentag (1 = Mo … 7 = So), stunde, score_unter, score_ab, verfallen, benannt (erst nach der Namensgabe; Pflicht bei jedem Tipp, der von sich spricht), alter { position, ab_monate }, offen (Position nie bestätigt), funktion (erst, wenn die App die Funktion hat), zeitumstellung_in_tagen. Unbekannte Wörter: Der Tipp kommt nicht. Gebaut mit pakete/wir/tipps-umwandeln.mjs aus dem Bestand der Session (180 Tipps).",
     tipps,
   };
   await writeFile(ZIEL, JSON.stringify(aus, null, 2) + "\n");
