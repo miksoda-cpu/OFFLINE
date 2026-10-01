@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "wir",
-  "version": "2026.09.30",
+  "version": "2026.10.01",
   "titel": "Wir · die Lumi und ihre Tipps",
   "beschreibung": "Die Tipps der Lumi von unter dem Eis: wie man sich in OFFLINE zurechtfindet, was die Bereitschaft hebt, und Dinge des Lebens. Nur Text, kein Code – die Lumi selbst ist Teil der App.",
   "art": "inhalt",
@@ -14,8 +14,8 @@
   "kategorie": "miteinander",
   "alter_ab": 0,
   "app_min": "0.2.0",
-  "erstellt": "2026-09-30T17:04:39Z",
-  "aenderungen": "Korrektur: Der Tipp zum Treffpunkt kommt nur noch, wenn ein Treffpunkt ausgemacht ist. Vier weitere Tipps über Wasser, Treffpunkt und Probeabend erscheinen nur, wenn das Gesagte stimmt.",
+  "erstellt": "2026-10-01T20:01:14Z",
+  "aenderungen": "Tipps aufgeräumt: Keiner behauptet mehr etwas, das die App nicht weiß. Tipps über Funktionen, die noch kommen, warten auf sie. Alte Punktzahlen ersetzt, ein Tipp gestrichen.",
   "quellen": [
     {
       "name": "Österreichischer Zivilschutzverband – Vorsorge",
@@ -29,9 +29,9 @@
   "dateien": [
     {
       "pfad": "inhalt/tipps.json",
-      "sha256": "407e758d697ae7f0150c7c53b508ed639aa955af6cec28b0da64bf9193708a13",
-      "groesse": 38705
+      "sha256": "28c1ceb49674dcfb2f067c840aeadf617cb01e8c00291f9cc6d2bb59e4870f3e",
+      "groesse": 39843
     }
   ],
-  "groesse": 38705
+  "groesse": 39843
 }

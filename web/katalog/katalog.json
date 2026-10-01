@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-09-30T17:28:36Z",
-  "gueltig_bis": "2026-12-29T17:28:36Z",
+  "erstellt": "2026-10-01T20:02:40Z",
+  "gueltig_bis": "2026-12-30T20:02:40Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -93,8 +93,31 @@
       "status": "verfuegbar"
     },
     {
+      "id": "tage-2027-01",
+      "version": "2026.10.01",
+      "titel": "Tage im Jänner 2027",
+      "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Der Condor, Mozart auf der Reise nach Prag, Die schwarze Spinne, Unterm Birnbaum). Tag für Tag freigeschaltet.",
+      "art": "tage",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "kategorie": "jeden-tag",
+      "alter_ab": 10,
+      "tage": {
+        "von": "2027-01-01",
+        "bis": "2027-01-31"
+      },
+      "groesse": 594624,
+      "app_min": "0.3.0",
+      "erstellt": "2026-10-01T20:00:25Z",
+      "aenderungen": "Erste Ausgabe: 31 Tage.",
+      "pfad": "tage-2027-01-2026.10.01/",
+      "sha256_manifest": "d9d952e8449032ba996c3779c80ddd6a0381067fb892e5fb3e9d41289112c341",
+      "status": "verfuegbar"
+    },
+    {
       "id": "wir",
-      "version": "2026.09.30",
+      "version": "2026.10.01",
       "titel": "Wir · die Lumi und ihre Tipps",
       "beschreibung": "Die Tipps der Lumi von unter dem Eis: wie man sich in OFFLINE zurechtfindet, was die Bereitschaft hebt, und Dinge des Lebens. Nur Text, kein Code – die Lumi selbst ist Teil der App.",
       "art": "inhalt",
@@ -103,12 +126,12 @@
       "pruefstatus": "redaktion",
       "kategorie": "miteinander",
       "alter_ab": 0,
-      "groesse": 38705,
+      "groesse": 39843,
       "app_min": "0.2.0",
-      "erstellt": "2026-09-30T17:04:39Z",
-      "aenderungen": "Korrektur: Der Tipp zum Treffpunkt kommt nur noch, wenn ein Treffpunkt ausgemacht ist. Vier weitere Tipps über Wasser, Treffpunkt und Probeabend erscheinen nur, wenn das Gesagte stimmt.",
-      "pfad": "wir-2026.09.30/",
-      "sha256_manifest": "05bb4ce84f7c313ed2ba278e5e5f7e7562626e1ad08d685d7f1b4a5498110e92",
+      "erstellt": "2026-10-01T20:01:14Z",
+      "aenderungen": "Tipps aufgeräumt: Keiner behauptet mehr etwas, das die App nicht weiß. Tipps über Funktionen, die noch kommen, warten auf sie. Alte Punktzahlen ersetzt, ein Tipp gestrichen.",
+      "pfad": "wir-2026.10.01/",
+      "sha256_manifest": "0efc640dcf53cd9cbf10cdd419a8ec8abc8ef4908c3adf4dad429ea7997a9bf8",
       "status": "verfuegbar"
     },
     {

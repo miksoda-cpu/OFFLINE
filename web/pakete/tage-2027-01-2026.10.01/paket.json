@@ -1,0 +1,49 @@
+{
+  "format": 1,
+  "id": "tage-2027-01",
+  "version": "2026.10.01",
+  "titel": "Tage im Jänner 2027",
+  "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Der Condor, Mozart auf der Reise nach Prag, Die schwarze Spinne, Unterm Birnbaum). Tag für Tag freigeschaltet.",
+  "art": "tage",
+  "sprache": "de-AT",
+  "lizenz": "Rätsel CC BY-SA 4.0 (eigene Texte); Romane gemeinfrei (Wikisource), Herkunft in inhalt/herkunft.md",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "kategorie": "jeden-tag",
+  "alter_ab": 10,
+  "abnahme": "Redaktion (Code), 01.10.2026: Rätsel nachgerechnet, Romane gegen die Wikisource-Textdaten geprüft",
+  "tage": {
+    "von": "2027-01-01",
+    "bis": "2027-01-31"
+  },
+  "app_min": "0.3.0",
+  "erstellt": "2026-10-01T20:00:25Z",
+  "aenderungen": "Erste Ausgabe: 31 Tage.",
+  "quellen": [
+    {
+      "id": "redaktion",
+      "name": "Eigene Rätsel der Redaktion",
+      "url": ""
+    },
+    {
+      "id": "wikisource",
+      "name": "Wikisource (gemeinfreie Texte)",
+      "url": "https://de.wikisource.org"
+    }
+  ],
+  "dateien": [
+    {
+      "pfad": "inhalt/herkunft.md",
+      "sha256": "451020ee788926ee55a280dbfa34c5bd41116ee27a867707f40c476c0838a37d",
+      "groesse": 2388
+    },
+    {
+      "pfad": "inhalt/tage.json",
+      "sha256": "93e6b48761afda8c977c8b0d1f1b3b6495e5896dc637faa28a2a5fa638fdf4e6",
+      "groesse": 592236
+    }
+  ],
+  "groesse": 594624
+}
