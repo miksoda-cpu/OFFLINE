@@ -58,6 +58,9 @@ const r = new ModulRahmen({ url: ${JSON.stringify(modulUrl)}, titel: "Testmodul"
   vorlesen: async () => {}, drucken: async () => {}, wesenSagen: async () => {},
 }});`;
 
+// Abbruchuhr und Browser (nur mit --chrome); der Bericht beendet beides selbst. Früher stoppte erst das close-Ereignis des
+// Servers die Uhr – hielt Edge eine Verbindung offen, kam es nie, und die Probe brach trotz Bericht ab (Lauf 37189554134).
+let zeit = null, browser = null;
 host.on("request", async (req, res) => {
   const kopf = { "Content-Security-Policy": APP_CSP.replaceAll("'self'", "'self'"), "Cache-Control": "no-store" };
   if (req.url === "/") { res.writeHead(200, { ...kopf, "Content-Type": "text/html; charset=utf-8" }); return res.end(SEITE); }
@@ -73,7 +76,8 @@ host.on("request", async (req, res) => {
     console.log(`\n${b.agent}\n`);
     for (const e of b.ergebnisse) console.log(`${e.blockiert ? "  ✓" : "  ✗"} ${e.name.padEnd(36)} ${e.text}`);
     console.log(`\n${b.offen.length ? `${b.offen.length} Angriff(e) GELUNGEN: ${b.offen.join(", ")}` : `Alle ${b.versuche} Angriffe blockiert.`} Bericht: ${path.relative(WURZEL, datei)}`);
-    kern.stdin.end(); host.close();
+    clearTimeout(zeit); browser?.kill();
+    kern.stdin.end(); host.close(); host.closeAllConnections?.();
     process.exitCode = b.offen.length ? 1 : 0;
     return;
   }
@@ -87,7 +91,7 @@ if (MIT_CHROME) {
   const os = await import("node:os");
   const chrome = process.env.CHROME || (process.platform === "darwin" ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" : "google-chrome");
   const profil = await mkdtemp(path.join(os.tmpdir(), "offline-probe-chrome-"));
-  const c = spawn(chrome, ["--headless=new", `--user-data-dir=${profil}`, "--no-first-run", "--disable-extensions", "--remote-debugging-port=0", `${hostUrl}/`], { stdio: "ignore" });
-  const zeit = setTimeout(() => { console.error("Kein Bericht nach 180 s."); c.kill(); kern.stdin.end(); host.close(); process.exit(2); }, 180_000);
-  host.on("close", () => { clearTimeout(zeit); c.kill(); });
+  browser = spawn(chrome, ["--headless=new", `--user-data-dir=${profil}`, "--no-first-run", "--disable-extensions", "--remote-debugging-port=0", `${hostUrl}/`], { stdio: "ignore" });
+  zeit = setTimeout(() => { console.error("Kein Bericht nach 180 s."); browser.kill(); kern.stdin.end(); host.close(); process.exit(2); }, 180_000);
+  host.on("close", () => { clearTimeout(zeit); browser.kill(); });
 }
