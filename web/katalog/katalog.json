@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-10-04T10:17:01Z",
-  "gueltig_bis": "2027-01-02T10:17:01Z",
+  "erstellt": "2026-10-04T12:14:18Z",
+  "gueltig_bis": "2027-01-02T12:14:18Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -117,7 +117,7 @@
     },
     {
       "id": "wir",
-      "version": "2026.10.01",
+      "version": "2026.10.04.1",
       "titel": "Wir · die Lumi und ihre Tipps",
       "beschreibung": "Die Tipps der Lumi von unter dem Eis: wie man sich in OFFLINE zurechtfindet, was die Bereitschaft hebt, und Dinge des Lebens. Nur Text, kein Code – die Lumi selbst ist Teil der App.",
       "art": "inhalt",
@@ -126,12 +126,12 @@
       "pruefstatus": "redaktion",
       "kategorie": "miteinander",
       "alter_ab": 0,
-      "groesse": 39843,
+      "groesse": 40389,
       "app_min": "0.2.0",
-      "erstellt": "2026-10-01T20:01:14Z",
-      "aenderungen": "Tipps aufgeräumt: Keiner behauptet mehr etwas, das die App nicht weiß. Tipps über Funktionen, die noch kommen, warten auf sie. Alte Punktzahlen ersetzt, ein Tipp gestrichen.",
-      "pfad": "wir-2026.10.01/",
-      "sha256_manifest": "0efc640dcf53cd9cbf10cdd419a8ec8abc8ef4908c3adf4dad429ea7997a9bf8",
+      "erstellt": "2026-10-04T12:13:05Z",
+      "aenderungen": "Unter den Sätzen der Lumi: „Zeig mir“ führt bei 16 Tipps an die passende Stelle der App. Ein Satz über Kriege neu formuliert. Neues Feld für das künftige Lumi-Buch reserviert.",
+      "pfad": "wir-2026.10.04.1/",
+      "sha256_manifest": "568b9207b97c68d57760acd82a812c44a72b4878b385b97adaf8d051d6223ebd",
       "status": "verfuegbar"
     },
     {

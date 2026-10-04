@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "wir",
-  "version": "2026.10.01",
+  "version": "2026.10.04.1",
   "titel": "Wir · die Lumi und ihre Tipps",
   "beschreibung": "Die Tipps der Lumi von unter dem Eis: wie man sich in OFFLINE zurechtfindet, was die Bereitschaft hebt, und Dinge des Lebens. Nur Text, kein Code – die Lumi selbst ist Teil der App.",
   "art": "inhalt",
@@ -14,8 +14,8 @@
   "kategorie": "miteinander",
   "alter_ab": 0,
   "app_min": "0.2.0",
-  "erstellt": "2026-10-01T20:01:14Z",
-  "aenderungen": "Tipps aufgeräumt: Keiner behauptet mehr etwas, das die App nicht weiß. Tipps über Funktionen, die noch kommen, warten auf sie. Alte Punktzahlen ersetzt, ein Tipp gestrichen.",
+  "erstellt": "2026-10-04T12:13:05Z",
+  "aenderungen": "Unter den Sätzen der Lumi: „Zeig mir“ führt bei 16 Tipps an die passende Stelle der App. Ein Satz über Kriege neu formuliert. Neues Feld für das künftige Lumi-Buch reserviert.",
   "quellen": [
     {
       "name": "Österreichischer Zivilschutzverband – Vorsorge",
@@ -29,9 +29,9 @@
   "dateien": [
     {
       "pfad": "inhalt/tipps.json",
-      "sha256": "28c1ceb49674dcfb2f067c840aeadf617cb01e8c00291f9cc6d2bb59e4870f3e",
-      "groesse": 39843
+      "sha256": "d5fc1af3693b05c2eff31e6388d0dd8edc5b552b3d7bc6489d369ea53a3d8e5d",
+      "groesse": 40389
     }
   ],
-  "groesse": 39843
+  "groesse": 40389
 }

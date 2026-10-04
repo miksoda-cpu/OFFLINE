@@ -1,5 +1,5 @@
 {
-  "hinweis": "Tipps der Lumi. Felder: id, sorte (app, alltag, wissen, weisheit, laune, heute, digital), text, optional gewicht und bedingung. Bedingungen sind Daten, kein Code (web/wesen.js, passtBedingung): ansicht, einstellung, monat (Zahl oder Liste), tag, wochentag (1 = Mo … 7 = So), stunde, score_unter, score_ab, verfallen, benannt (erst nach der Namensgabe; Pflicht bei jedem Tipp, der von sich spricht), alter { position, ab_monate }, offen (Position nie bestätigt), funktion (erst, wenn die App die Funktion hat), zeitumstellung_in_tagen. Unbekannte Wörter: Der Tipp kommt nicht. Gebaut mit pakete/wir/tipps-umwandeln.mjs aus dem Bestand der Session (180 Tipps).",
+  "hinweis": "Tipps der Lumi. Felder: id, sorte (app, alltag, wissen, weisheit, laune, heute, digital), text, optional gewicht und bedingung. Bedingungen sind Daten, kein Code (web/wesen.js, passtBedingung): ansicht, einstellung, monat (Zahl oder Liste), tag, wochentag (1 = Mo … 7 = So), stunde, score_unter, score_ab, verfallen, benannt (erst nach der Namensgabe; Pflicht bei jedem Tipp, der von sich spricht), alter { position, ab_monate }, offen (Position nie bestätigt), funktion (erst, wenn die App die Funktion hat), zeitumstellung_in_tagen. Optional ziel (Stelle in der App für „Zeig mir“) und buch (Absatz im künftigen Lumi-Buch, reserviert); Format in paket-kit/tipps-format.mjs. Unbekannte Wörter: Der Tipp kommt nicht. Gebaut mit pakete/wir/tipps-umwandeln.mjs aus dem Bestand der Session (180 Tipps).",
   "tipps": [
     {
       "id": "app-001",
@@ -7,7 +7,8 @@
       "text": "Der Tresor ist das kleine Schloss links in der Seitenleiste. Nur du kennst das Passwort. Ich auch nicht.",
       "bedingung": {
         "benannt": true
-      }
+      },
+      "ziel": "tresor"
     },
     {
       "id": "app-002",
@@ -32,12 +33,14 @@
       "bedingung": {
         "funktion": "gelernt",
         "benannt": true
-      }
+      },
+      "ziel": "lumi"
     },
     {
       "id": "app-005",
       "sorte": "app",
-      "text": "Der Vorrat unten auf der Tagesseite zeigt, wie viele Tage Rätsel und Kapitel schon da sind. Wie weit die App vorlädt, stellst du im Tagesplan ein. Ohne Netz geht es weiter, bis er leer ist."
+      "text": "Der Vorrat unten auf der Tagesseite zeigt, wie viele Tage Rätsel und Kapitel schon da sind. Wie weit die App vorlädt, stellst du im Tagesplan ein. Ohne Netz geht es weiter, bis er leer ist.",
+      "ziel": "tagesplan"
     },
     {
       "id": "app-006",
@@ -50,7 +53,8 @@
     {
       "id": "app-007",
       "sorte": "app",
-      "text": "Die Notfallmappe im Tresor hat zehn Felder. Du musst nicht alle füllen. Fang mit den Nummern an."
+      "text": "Die Notfallmappe im Tresor hat zehn Felder. Du musst nicht alle füllen. Fang mit den Nummern an.",
+      "ziel": "tresor"
     },
     {
       "id": "app-008",
@@ -58,7 +62,8 @@
       "text": "Wenn du mich anstupst, sage ich mh. Dreimal schnell, und ich zeige die Zähne. Dann tut es mir leid. So bin ich.",
       "bedingung": {
         "benannt": true
-      }
+      },
+      "ziel": "start"
     },
     {
       "id": "app-009",
@@ -66,7 +71,8 @@
       "text": "Alles, was ich sage, landet im Log. Filtern kannst du nach Sorte. Merken mit dem Stern.",
       "bedingung": {
         "benannt": true
-      }
+      },
+      "ziel": "lumi-log"
     },
     {
       "id": "app-010",
@@ -74,17 +80,20 @@
       "text": "Der Sparmodus im Tagesplan lässt mich auf der Tagesseite weg. Dann ist es dort ruhiger. Ein Haken, und ich bin wieder da.",
       "bedingung": {
         "benannt": true
-      }
+      },
+      "ziel": "tagesplan"
     },
     {
       "id": "app-011",
       "sorte": "app",
-      "text": "Die Pakete unter „Wissen“ liegen ganz auf deinem Gerät. Kein Netz nötig, nie. Deshalb sind sie groß."
+      "text": "Die Pakete unter „Wissen“ liegen ganz auf deinem Gerät. Kein Netz nötig, nie. Deshalb sind sie groß.",
+      "ziel": "bibliothek"
     },
     {
       "id": "app-012",
       "sorte": "app",
-      "text": "Wikipedia ohne Bilder ist ein Zehntel so groß wie mit. Fürs Handy reicht das meistens."
+      "text": "Wikipedia ohne Bilder ist ein Zehntel so groß wie mit. Fürs Handy reicht das meistens.",
+      "ziel": "bibliothek"
     },
     {
       "id": "app-013",
@@ -148,17 +157,20 @@
     {
       "id": "app-020",
       "sorte": "app",
-      "text": "Das Kapitel des Tages liest dir die App vor. Der Knopf „Vorlesen“ steht oben in der Leseansicht."
+      "text": "Das Kapitel des Tages liest dir die App vor. Der Knopf „Vorlesen“ steht oben in der Leseansicht.",
+      "ziel": "kapitel"
     },
     {
       "id": "app-021",
       "sorte": "app",
-      "text": "Der Roman der Woche kommt montags. Ein Kapitel am Tag. Wenn du schneller liest, musst du warten. Das ist der Sinn."
+      "text": "Der Roman der Woche kommt montags. Ein Kapitel am Tag. Wenn du schneller liest, musst du warten. Das ist der Sinn.",
+      "ziel": "start"
     },
     {
       "id": "app-022",
       "sorte": "app",
-      "text": "Das Tagesrätsel ist eines. Nicht zehn. Wenn es gelöst ist, ist es gelöst."
+      "text": "Das Tagesrätsel ist eines. Nicht zehn. Wenn es gelöst ist, ist es gelöst.",
+      "ziel": "start"
     },
     {
       "id": "app-023",
@@ -166,7 +178,8 @@
       "text": "Um Punkt Schluss sagt die App: Das war dein Tag. Wann Schluss ist, stellst du ein. Ich halte mich daran.",
       "bedingung": {
         "benannt": true
-      }
+      },
+      "ziel": "tagesplan"
     },
     {
       "id": "app-024",
@@ -179,7 +192,8 @@
     {
       "id": "app-025",
       "sorte": "app",
-      "text": "Unter Werkzeuge trägst du die Frequenz deines Radiosenders ein. Schreib sie trotzdem auf Papier. Papier braucht keinen Akku."
+      "text": "Unter Werkzeuge trägst du die Frequenz deines Radiosenders ein. Schreib sie trotzdem auf Papier. Papier braucht keinen Akku.",
+      "ziel": "werkzeuge"
     },
     {
       "id": "app-026",
@@ -195,7 +209,8 @@
       "text": "Wenn du das Paket „Wir“ abschaltest, bleibt die Zahl. Ich bin dann weg, aber nicht beleidigt. Ich schlafe.",
       "bedingung": {
         "benannt": true
-      }
+      },
+      "ziel": "bibliothek"
     },
     {
       "id": "app-028",
@@ -570,7 +585,7 @@
     {
       "id": "weisheit-002",
       "sorte": "weisheit",
-      "text": "Wir kennen unten keine Kriege. Nicht, weil wir besser sind. Es gab nie etwas, das man hätte haben wollen, was ein anderer hat."
+      "text": "Wir kennen unten keine Kriege. Nicht, weil wir besser sind. Wir haben aufgehört, haben zu wollen, was ein anderer hat."
     },
     {
       "id": "weisheit-003",
@@ -951,7 +966,8 @@
       "text": "Ein Update ist, wenn die App sich selbst repariert. Lass sie. Am besten über Nacht am Ladekabel.",
       "bedingung": {
         "einstellung": "digital"
-      }
+      },
+      "ziel": "updates"
     },
     {
       "id": "digital-002",
