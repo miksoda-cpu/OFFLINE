@@ -195,8 +195,10 @@ async function module() {
   const qOrdner = opt("quelle"), wName = (await readdir(qOrdner)).find((n) => n.startsWith("wichteln-"));
   if (!wName) throw new Error(`Wichteln fehlt in ${qOrdner}`);
   const wPfad = `${qOrdner.replace(/[\\/]$/, "")}${qOrdner.includes("\\") ? "\\" : "/"}${wName}`;
-  await gehe("#bibliothek");
-  await js("const b = document.createElement('button'); b.type = 'button'; b.dataset.stick = arguments[0]; b.id = 'probe-einspielen'; document.getElementById('main').appendChild(b); b.click(); b.remove();", wPfad);
+  // Derselbe Kernbefehl wie „Ordner wählen …“ (einspielen_ordner); eine Ablehnung steht so mit Grund im Bericht.
+  const ein = await invoke("einspielen_ordner", { pfad: wPfad, downgrade: false });
+  if (ein.fehler) throw new Error(`Wichteln einspielen abgelehnt: ${ein.fehler}`);
+  await neuLaden(); await gehe("#bibliothek");
   await bis(() => finde('[data-modul-start="wichteln"]'), "Wichteln geladen", 60_000);
   pruefe("Wichteln: laden", true, `aus der lokalen Quelle ${wName}, Signatur und Redaktionsschlüssel geprüft, eingespielt`);
   await klick('[data-modul-start="wichteln"]');

@@ -1,0 +1,5 @@
+# Signierte Pakete: Bytes nie umwandeln. Sonst setzt ein Checkout unter Windows (core.autocrlf) CRLF-Zeilenenden,
+# die Prüfsummen stimmen nicht mehr, und der Kern lehnt das Paket zu Recht ab (Windows-Probe, Lauf 37190533109).
+redaktion/freigegeben/** -text
+web/pakete/** -text
+web/katalog/** -text
