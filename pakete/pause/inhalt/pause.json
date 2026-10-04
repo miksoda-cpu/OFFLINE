@@ -1,0 +1,887 @@
+{
+ "format": 1,
+ "hinweis": "Inhalte der Pause (App ab 0.4.0): Formen der Happen mit Selbstbeschreibung (Trainingsart, Dauer, Altersband, Zone) und ihre Daten. Nur Text, kein Code; die Spiele selbst sind Teil der App. Format: paket-kit/pause-format.mjs.",
+ "formen": [
+  {
+   "id": "pilz",
+   "titel": "Wo war der Pilz?",
+   "gruppe": "spiel",
+   "art": [
+    "tempo"
+   ],
+   "trainiert": [
+    "Tp"
+   ],
+   "dauer": {
+    "von": 40,
+    "bis": 120
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Schau in die Mitte. Gleich blitzt irgendwo ein Pilz auf.",
+   "zone": {
+    "stufen": 10,
+    "start": 3
+   },
+   "auffrischung_monate": [
+    11,
+    35
+   ],
+   "herkunft": "Übungskatalog 7.5 (L)"
+  },
+  {
+   "id": "fehler",
+   "titel": "Der eingebaute Fehler",
+   "gruppe": "geschichte",
+   "art": [
+    "kraft",
+    "tempo"
+   ],
+   "trainiert": [
+    "Tp",
+    "Gd"
+   ],
+   "dauer": {
+    "von": 30,
+    "bis": 90
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Eine kurze Geschichte von unten. In einem Satz stimmt etwas nicht.",
+   "zone": {
+    "stufen": 3,
+    "start": 1
+   },
+   "herkunft": "Übungskatalog 7.6 (C)"
+  },
+  {
+   "id": "lumisch",
+   "titel": "Lumisch",
+   "gruppe": "wort",
+   "art": [
+    "kraft",
+    "beweglichkeit"
+   ],
+   "trainiert": [
+    "Gd",
+    "Sp"
+   ],
+   "dauer": {
+    "von": 30,
+    "bis": 60
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Ein Wort aus der Sprache der Lumis, jeden Tag ein neues.",
+   "zone": {
+    "stufen": 3,
+    "start": 1
+   },
+   "herkunft": "Übungskatalog 7.7 (C), Lumisch-Wörterbuch Abschnitt 8"
+  },
+  {
+   "id": "naechstes",
+   "titel": "Was kommt als Nächstes?",
+   "gruppe": "geschichte",
+   "art": [
+    "kraft"
+   ],
+   "trainiert": [
+    "Gd",
+    "Sp"
+   ],
+   "dauer": {
+    "von": 30,
+    "bis": 120
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "braucht": "roman",
+   "einladung": "Zum Roman der Woche: Was glaubst du, wie es weitergeht?",
+   "herkunft": "Übungskatalog 7.9 (F)"
+  },
+  {
+   "id": "tuersteher",
+   "titel": "Türsteherfrage",
+   "gruppe": "raetsel",
+   "art": [
+    "kraft"
+   ],
+   "trainiert": [
+    "Gd"
+   ],
+   "dauer": {
+    "von": 20,
+    "bis": 60
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "braucht": "gestern",
+   "einladung": "Eine Frage zu etwas, das du gestern hier gelesen hast. Hol es aus dem Kopf.",
+   "herkunft": "Übungskatalog 7.1 (B)"
+  },
+  {
+   "id": "rueckwaerts",
+   "titel": "Der Tag rückwärts",
+   "gruppe": "ruhe",
+   "art": [
+    "kraft"
+   ],
+   "trainiert": [
+    "Gd"
+   ],
+   "dauer": {
+    "von": 60,
+    "bis": 180
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "abend",
+   "einladung": "Drei Dinge vom Tag, vom Abend zurück zum Morgen. Du musst nichts aufschreiben.",
+   "herkunft": "Übungskatalog 7.12 (N)"
+  },
+  {
+   "id": "zeitgefuehl",
+   "titel": "Zeitgefühl",
+   "gruppe": "spiel",
+   "art": [
+    "beweglichkeit"
+   ],
+   "trainiert": [
+    "Gd",
+    "Pl"
+   ],
+   "dauer": {
+    "von": 20,
+    "bis": 40
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "morgen",
+   "einladung": "Wie spät ist es wohl? Schau dabei nicht auf die Uhr.",
+   "zone": {
+    "stufen": 3,
+    "start": 1
+   },
+   "herkunft": "Übungskatalog 7.4 (A)"
+  },
+  {
+   "id": "atem",
+   "titel": "Atemfenster",
+   "gruppe": "ruhe",
+   "art": [
+    "ausdauer"
+   ],
+   "trainiert": [
+    "Tp"
+   ],
+   "dauer": {
+    "von": 40,
+    "bis": 60
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Vier ruhige Atemzüge. Der Bildschirm wird dabei dunkler.",
+   "herkunft": "Übungskatalog 3.A"
+  },
+  {
+   "id": "sonnengruss",
+   "titel": "Sonnengruß-Kette",
+   "gruppe": "ruhe",
+   "art": [
+    "kraft",
+    "koordination"
+   ],
+   "trainiert": [
+    "Gd",
+    "Kp"
+   ],
+   "dauer": {
+    "von": 120,
+    "bis": 600
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "morgen",
+   "einladung": "Eine Haltung kommt jeden Tag dazu.",
+   "bedingung": {
+    "funktion": "bilderfolge"
+   },
+   "herkunft": "Übungskatalog 7.3 (A)"
+  },
+  {
+   "id": "wo-liegt-es",
+   "titel": "Wo liegt es? und Nachbar-Namen",
+   "gruppe": "raetsel",
+   "art": [
+    "kraft"
+   ],
+   "trainiert": [
+    "Gd",
+    "Mn"
+   ],
+   "dauer": {
+    "von": 20,
+    "bis": 60
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Wo ist die Taschenlampe?",
+   "bedingung": {
+    "funktion": "tresor-fragen"
+   },
+   "herkunft": "Übungskatalog 7.2 (B)"
+  },
+  {
+   "id": "rezept",
+   "titel": "Rezept nur einmal",
+   "gruppe": "raetsel",
+   "art": [
+    "kraft"
+   ],
+   "trainiert": [
+    "Gd",
+    "Pl"
+   ],
+   "dauer": {
+    "von": 300,
+    "bis": 1800
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Das Rezept erscheint einmal, dann kochst du aus dem Kopf.",
+   "bedingung": {
+    "funktion": "kochbuch"
+   },
+   "herkunft": "Übungskatalog 7.8 (E)"
+  },
+  {
+   "id": "weg-im-kopf",
+   "titel": "Weg im Kopf",
+   "gruppe": "spiel",
+   "art": [
+    "beweglichkeit"
+   ],
+   "trainiert": [
+    "Rm",
+    "Gd"
+   ],
+   "dauer": {
+    "von": 60,
+    "bis": 180
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Beschreibe den Weg zum Spital.",
+   "bedingung": {
+    "funktion": "karte-offline"
+   },
+   "herkunft": "Übungskatalog 7.10 (H)"
+  },
+  {
+   "id": "frag-jemanden",
+   "titel": "Frag jemanden",
+   "gruppe": "geschichte",
+   "art": [
+    "gruppe"
+   ],
+   "trainiert": [
+    "Mn",
+    "Gd"
+   ],
+   "dauer": {
+    "von": 300,
+    "bis": 1800
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Frag jemand Älteren, wie es damals ohne Handy war.",
+   "bedingung": {
+    "funktion": "tagebuch"
+   },
+   "herkunft": "Übungskatalog 7.11 (J)"
+  }
+ ],
+ "fehler": [
+  {
+   "id": "f-01",
+   "stufe": 1,
+   "saetze": [
+    "Gestern haben wir zwölf Beeren gesammelt.",
+    "Vier haben wir gleich gegessen.",
+    "Den Rest haben wir in die Vorratsnische gelegt.",
+    "Heute früh lagen dort zehn Beeren."
+   ],
+   "fehler": 3,
+   "erklaerung": "Zwölf weniger vier sind acht. Zehn Beeren können es nicht sein."
+  },
+  {
+   "id": "f-02",
+   "stufe": 1,
+   "saetze": [
+    "Unten ist es immer dunkel.",
+    "Nur unsere Antennen machen Licht.",
+    "Darum brauchen wir keine Fenster.",
+    "Mittags scheint die Sonne durch das Höhlendach und wärmt das Moos."
+   ],
+   "fehler": 3,
+   "erklaerung": "Unten ist es immer dunkel. Dort scheint keine Sonne."
+  },
+  {
+   "id": "f-03",
+   "stufe": 1,
+   "saetze": [
+    "Ein Pinguin ist durch eine Spalte im Eis zu uns gerutscht.",
+    "Er war nass und hatte Hunger.",
+    "Wir haben ihm einen Fisch aus dem Becken gegeben.",
+    "Danach ist er davongeflogen, zurück nach oben."
+   ],
+   "fehler": 3,
+   "erklaerung": "Pinguine können nicht fliegen. Er ist die Spalte wieder hinaufgewatschelt."
+  },
+  {
+   "id": "f-04",
+   "stufe": 2,
+   "saetze": [
+    "In unserer Höhle wohnen sieben von uns.",
+    "Drei schlafen immer, während vier wachen.",
+    "So ist nie jemand allein.",
+    "Gestern haben acht von uns gleichzeitig geschlafen."
+   ],
+   "fehler": 3,
+   "erklaerung": "Es sind nur sieben. Acht können nicht schlafen."
+  },
+  {
+   "id": "f-05",
+   "stufe": 2,
+   "saetze": [
+    "Unser Wasser kommt vom Eis über uns.",
+    "Es tropft langsam in ein Becken aus Stein.",
+    "Wenn es oben besonders kalt ist, tropft es am schnellsten.",
+    "Dann trinken wir sparsam."
+   ],
+   "fehler": 2,
+   "erklaerung": "Wenn es kalt ist, schmilzt weniger Eis. Dann tropft es langsamer, nicht schneller."
+  },
+  {
+   "id": "f-06",
+   "stufe": 1,
+   "saetze": [
+    "Mila hat ein helles, blaues Fell.",
+    "Sie singt gern beim Pilzesammeln.",
+    "Im Dunkeln finden wir sie sofort, weil ihr Fell so hell ist.",
+    "Gestern haben wir sie nicht gefunden, weil ihr dunkles Fell im Dunkeln verschwindet."
+   ],
+   "fehler": 3,
+   "erklaerung": "Milas Fell ist hell. Darum findet man sie im Dunkeln leicht."
+  },
+  {
+   "id": "f-07",
+   "stufe": 1,
+   "saetze": [
+    "Pilze wachsen bei uns auf dem feuchten Stein.",
+    "Sie brauchen kein Licht, nur Wasser und Wärme.",
+    "Darum stellen wir sie in die hellste Ecke, damit sie genug Licht bekommen.",
+    "Nach drei Tagen sind sie groß genug."
+   ],
+   "fehler": 2,
+   "erklaerung": "Pilze brauchen kein Licht. Das hat die Geschichte selbst gesagt."
+  },
+  {
+   "id": "f-08",
+   "stufe": 2,
+   "saetze": [
+    "Mit den Nachbarn aus der zweiten Höhle tauschen wir gern.",
+    "Für drei Beeren bekommen wir einen Pilz.",
+    "Heute hatten wir neun Beeren.",
+    "Dafür haben wir zwei Pilze bekommen, und keine Beere blieb übrig."
+   ],
+   "fehler": 3,
+   "erklaerung": "Neun Beeren sind dreimal drei. Das gibt drei Pilze."
+  },
+  {
+   "id": "f-09",
+   "stufe": 1,
+   "saetze": [
+    "Einmal im Jahr klettern wir nach oben, um die Sterne zu sehen.",
+    "Wir gehen in der Nacht, wenn es oben dunkel ist.",
+    "Die Sterne leuchten dann wie unsere Antennen, nur weiter weg.",
+    "Am liebsten schauen wir sie mittags an, wenn die Sonne am höchsten steht."
+   ],
+   "fehler": 3,
+   "erklaerung": "Mittags sieht man keine Sterne. Darum gehen wir in der Nacht."
+  },
+  {
+   "id": "f-10",
+   "stufe": 1,
+   "saetze": [
+    "Wenn wir in der großen Halle singen, kommt das Lied zurück.",
+    "Wir nennen das den zweiten Sänger.",
+    "Er singt immer dasselbe wie wir, nur etwas später.",
+    "Gestern hat er ein ganz anderes Lied gesungen als wir."
+   ],
+   "fehler": 3,
+   "erklaerung": "Das Echo singt immer dasselbe. Ein anderes Lied kann es nicht sein."
+  },
+  {
+   "id": "f-11",
+   "stufe": 2,
+   "saetze": [
+    "Opa Tok hat gesagt, er kommt in fünf Tagen.",
+    "Wir legen jeden Abend einen Stein in ein Körbchen.",
+    "Heute liegen drei Steine im Körbchen.",
+    "Also kommt er morgen."
+   ],
+   "fehler": 3,
+   "erklaerung": "Drei von fünf Steinen: Es fehlen noch zwei Tage. Er kommt übermorgen."
+  },
+  {
+   "id": "f-12",
+   "stufe": 2,
+   "saetze": [
+    "Je tiefer wir gehen, desto wärmer wird der Boden.",
+    "Ganz unten schlafen wir, weil es dort am wärmsten ist.",
+    "Oben am Eis ist es am kältesten.",
+    "Darum lagern wir unser Eis ganz unten, damit es nicht schmilzt."
+   ],
+   "fehler": 3,
+   "erklaerung": "Unten ist es am wärmsten. Dort würde das Eis schmelzen."
+  },
+  {
+   "id": "f-13",
+   "stufe": 1,
+   "saetze": [
+    "Wenn wir müde sind, wird das Licht in unseren Antennen schwächer.",
+    "Wenn wir uns freuen, leuchtet es heller.",
+    "Gestern hatten wir ein großes Fest.",
+    "Die ganze Höhle war dunkel vor lauter Freude."
+   ],
+   "fehler": 3,
+   "erklaerung": "Freude macht das Licht heller. Die Höhle war hell."
+  },
+  {
+   "id": "f-14",
+   "stufe": 2,
+   "saetze": [
+    "Wir sind vier und haben acht Nüsse.",
+    "Jeder bekommt gleich viele.",
+    "Also bekommt jeder drei Nüsse.",
+    "Keine Nuss bleibt übrig."
+   ],
+   "fehler": 2,
+   "erklaerung": "Acht Nüsse für vier: Jeder bekommt zwei."
+  },
+  {
+   "id": "f-15",
+   "stufe": 1,
+   "saetze": [
+    "Eine Lumi ohne Namen sagt nie „ich“.",
+    "Sie sagt dann „wir“.",
+    "Gestern rief eine kleine Lumi ohne Namen: „Ich habe einen Pilz gefunden!“",
+    "Alle haben sich mit ihr gefreut."
+   ],
+   "fehler": 2,
+   "erklaerung": "Ohne Namen sagt eine Lumi „wir“. Sie hätte gerufen: „Wir haben einen Pilz gefunden!“"
+  }
+ ],
+ "lumisch": {
+  "plan": [
+   {
+    "tag": 1,
+    "wort": "zan",
+    "bedeutung": "Licht",
+    "aufgabe": "Mach heute irgendwo das Licht an und sag dabei zan."
+   },
+   {
+    "tag": 2,
+    "wort": "mo",
+    "bedeutung": "Wasser",
+    "aufgabe": "Beim nächsten Glas Wasser: mo."
+   },
+   {
+    "tag": 3,
+    "wort": "pelu",
+    "bedeutung": "Brot",
+    "aufgabe": "Wer Brot sieht, sagt pelu."
+   },
+   {
+    "tag": 4,
+    "wort": "tiv",
+    "bedeutung": "Weg",
+    "aufgabe": "Auf dem Weg zur Haustür: tiv."
+   },
+   {
+    "tag": 5,
+    "wort": "orr",
+    "bedeutung": "Dach",
+    "aufgabe": "Schau auf ein Dach und rolle das r."
+   },
+   {
+    "tag": 6,
+    "wort": "kir",
+    "bedeutung": "Eis, kalt",
+    "aufgabe": "Was ist heute kir? Der Kühlschrank, das Fenster?"
+   },
+   {
+    "tag": 7,
+    "wort": "pim",
+    "bedeutung": "Pilz",
+    "aufgabe": "Wiederholungstag: zan, mo, pelu, tiv, orr, kir, pim."
+   },
+   {
+    "tag": 8,
+    "wort": "kuli",
+    "bedeutung": "Beere",
+    "aufgabe": "Zahl im Wort: kuli3 sind drei Beeren. Zähle drei Dinge und hänge die Zahl an."
+   },
+   {
+    "tag": 9,
+    "wort": "ne",
+    "bedeutung": "nicht, kein",
+    "aufgabe": "Mach ein Gegenteil: nezan ist dunkel. Welches Wort kannst du umdrehen?"
+   },
+   {
+    "tag": 10,
+    "wort": "nu",
+    "bedeutung": "wir",
+    "aufgabe": "Sag nu, wenn du dich und jemanden meinst."
+   },
+   {
+    "tag": 11,
+    "wort": "li",
+    "bedeutung": "du",
+    "aufgabe": "Sag li zu einem Menschen, den du magst."
+   },
+   {
+    "tag": 12,
+    "wort": "ke",
+    "bedeutung": "früher",
+    "aufgabe": "ke zel heißt gestern. Was war gestern zan?"
+   },
+   {
+    "tag": 13,
+    "wort": "su",
+    "bedeutung": "bald",
+    "aufgabe": "su zel heißt morgen. Was wünschst du dir für morgen?"
+   },
+   {
+    "tag": 14,
+    "wort": "ma",
+    "bedeutung": "Fragewort (was, wer, wo …)",
+    "aufgabe": "Stell eine Frage mit ma, zum Beispiel ma mi pelu?"
+   },
+   {
+    "tag": 15,
+    "wort": "sen",
+    "bedeutung": "essen",
+    "aufgabe": "Bilde einen Satz: ta nu sen pelu."
+   },
+   {
+    "tag": 16,
+    "wort": "lik",
+    "bedeutung": "mögen",
+    "aufgabe": "Sag, was du magst: Name, dann lik, dann das Ding."
+   },
+   {
+    "tag": 17,
+    "wort": "mi",
+    "bedeutung": "haben",
+    "aufgabe": "Susi mi kuli3: Sag, was du hast, mit Zahl."
+   },
+   {
+    "tag": 18,
+    "wort": "pat",
+    "bedeutung": "gehen",
+    "aufgabe": "su nu pat ko tiv: ein Satz mit Zeit, Wer, Tun und Wohin."
+   },
+   {
+    "tag": 19,
+    "wort": "sumu",
+    "bedeutung": "schlafen, müde",
+    "aufgabe": "Abends: ke zel sumu, su zel zan."
+   },
+   {
+    "tag": 20,
+    "wort": "sum",
+    "bedeutung": "gut",
+    "aufgabe": "Beende deinen Tag mit nezel sum."
+   },
+   {
+    "tag": 21,
+    "wort": "",
+    "bedeutung": "dein Satz",
+    "aufgabe": "Bilde einen eigenen Satz mit Zeit, Zahl und Verneinung."
+   }
+  ],
+  "woerter": [
+   {
+    "wort": "zan",
+    "deutsch": "Licht"
+   },
+   {
+    "wort": "mo",
+    "deutsch": "Wasser"
+   },
+   {
+    "wort": "pelu",
+    "deutsch": "Brot"
+   },
+   {
+    "wort": "tiv",
+    "deutsch": "Weg"
+   },
+   {
+    "wort": "orr",
+    "deutsch": "Dach"
+   },
+   {
+    "wort": "kir",
+    "deutsch": "Eis, kalt"
+   },
+   {
+    "wort": "pim",
+    "deutsch": "Pilz"
+   },
+   {
+    "wort": "kuli",
+    "deutsch": "Beere"
+   },
+   {
+    "wort": "ne",
+    "deutsch": "nicht, kein"
+   },
+   {
+    "wort": "nu",
+    "deutsch": "wir"
+   },
+   {
+    "wort": "li",
+    "deutsch": "du"
+   },
+   {
+    "wort": "ke",
+    "deutsch": "früher"
+   },
+   {
+    "wort": "su",
+    "deutsch": "bald"
+   },
+   {
+    "wort": "ma",
+    "deutsch": "Fragewort"
+   },
+   {
+    "wort": "sen",
+    "deutsch": "essen"
+   },
+   {
+    "wort": "lik",
+    "deutsch": "mögen"
+   },
+   {
+    "wort": "mi",
+    "deutsch": "haben"
+   },
+   {
+    "wort": "pat",
+    "deutsch": "gehen"
+   },
+   {
+    "wort": "sumu",
+    "deutsch": "schlafen, müde"
+   },
+   {
+    "wort": "sum",
+    "deutsch": "gut"
+   },
+   {
+    "wort": "tul",
+    "deutsch": "danke"
+   },
+   {
+    "wort": "sul",
+    "deutsch": "bitte"
+   },
+   {
+    "wort": "ak",
+    "deutsch": "ja"
+   },
+   {
+    "wort": "ora",
+    "deutsch": "Haus"
+   },
+   {
+    "wort": "pok",
+    "deutsch": "Tür"
+   },
+   {
+    "wort": "uvo",
+    "deutsch": "oben, Himmel"
+   },
+   {
+    "wort": "unu",
+    "deutsch": "unten, Zuhause"
+   },
+   {
+    "wort": "zel",
+    "deutsch": "Tag"
+   },
+   {
+    "wort": "nezel",
+    "deutsch": "Nacht"
+   },
+   {
+    "wort": "mili",
+    "deutsch": "Blume"
+   },
+   {
+    "wort": "tura",
+    "deutsch": "Baum"
+   },
+   {
+    "wort": "pinu",
+    "deutsch": "Pinguin"
+   },
+   {
+    "wort": "sila",
+    "deutsch": "Fisch"
+   },
+   {
+    "wort": "tuk",
+    "deutsch": "Herz"
+   },
+   {
+    "wort": "oki",
+    "deutsch": "Auge"
+   },
+   {
+    "wort": "zik",
+    "deutsch": "Stern"
+   },
+   {
+    "wort": "molu",
+    "deutsch": "Regen"
+   },
+   {
+    "wort": "kirmulo",
+    "deutsch": "Schnee"
+   },
+   {
+    "wort": "lis",
+    "deutsch": "lesen, Buch"
+   },
+   {
+    "wort": "kami",
+    "deutsch": "Freund, Freundin"
+   },
+   {
+    "wort": "vul",
+    "deutsch": "warm"
+   },
+   {
+    "wort": "nezan",
+    "deutsch": "dunkel"
+   },
+   {
+    "wort": "kik",
+    "deutsch": "lachen"
+   },
+   {
+    "wort": "mimu",
+    "deutsch": "ruhig, still"
+   },
+   {
+    "wort": "zip",
+    "deutsch": "schnell"
+   }
+  ]
+ },
+ "texte": {
+  "rueckwaerts": {
+   "schritte": [
+    "Was war heute Abend?",
+    "Und am Nachmittag?",
+    "Und am Morgen?"
+   ],
+   "ende": "nezel sum. Gute Nacht."
+  },
+  "zeitgefuehl": {
+   "frage": "Wie spät ist es wohl gerade?",
+   "knapp": "Fast genau.",
+   "nah": "Gutes Gefühl für die Zeit.",
+   "weit": "Die Zeit läuft manchmal anders, als man denkt."
+  },
+  "atem": {
+   "ein": "Einatmen …",
+   "aus": "… und langsam aus.",
+   "ende": "Vier Atemzüge. Schön, dass du da warst."
+  },
+  "mitnehmen": [
+   "Heute Abend: einmal das Licht ausmachen und still zan sagen.",
+   "Nimm dir draußen einen Moment und schau dich bewusst um.",
+   "Erzähl heute jemandem von dem Happen."
+  ]
+ }
+}

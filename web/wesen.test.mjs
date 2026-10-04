@@ -210,7 +210,7 @@ const NENNT = {
   "karte-offline": /Karte deiner Region/, kalender: /Kalender in der App/, wohin: /„Wohin“/, tagebuch: /Tagebuch/,
   schliessfach: /Schließfach/, "skin-kontrast": /Kontrast-Skin/, familiennachricht: /Familiennachricht/,
   "offline-stunde": /Offline-Stunde/, mesh: /Mesh/, fernschach: /Fernschach/, "neujahr-buecher": /neue Bücher in die Bibliothek/,
-  "zettel-drucken": /App druckt/, fragen: /Frag noch einmal\. Mich/,
+  "zettel-drucken": /App druckt/, fragen: /Frag noch einmal\. Mich/, "wikipedia-varianten": /Wikipedia ohne Bilder/, export: /exportierbar/,
   tagesseite: /Tagesseite/, tagesplan: /Tagesplan/, vorrat: /Der Vorrat/, vorlesen: /[Vv]orlesen|liest dir die App vor/,
   sparmodus: /Sparmodus/, tresor: /Tresor/, notfallmappe: /Notfallmappe/, bereit: /Bereit/, bibliothek: /Bibliothek/,
   werkzeuge: /Werkzeuge/, radio: /Frequenz deines/, skins: /\bSkin\b/,
@@ -229,7 +229,7 @@ test("Funktionen: Jeder Tipp, der eine Funktion nennt, hat sie in der App oder w
   for (const t of tipps) for (const f of [].concat(t.bedingung?.funktion ?? [])) assert.ok(NENNT[f], `${t.id}: funktion „${f}“ unbekannt`);
   // Bills Liste vom 1.10.: alle warten auf ihre Funktion und kommen heute nicht
   const t = Object.fromEntries(tipps.map((x) => [x.id, x]));
-  for (const id of ["app-002", "app-003", "app-006", "app-014", "app-015", "app-016", "app-017", "app-018", "app-019", "app-024", "app-026", "app-028", "app-029", "app-033", "alltag-023"]) {
+  for (const id of ["app-002", "app-003", "app-006", "app-014", "app-015", "app-016", "app-017", "app-018", "app-019", "app-024", "app-026", "app-028", "app-029", "app-033", "alltag-023", "app-012", "app-030"]) {
     assert.ok(t[id].bedingung?.funktion, id);
     assert.equal(passtBedingung(t[id].bedingung, k({ ansicht: t[id].bedingung.ansicht, benannt: true })), false, id);
   }
@@ -290,7 +290,7 @@ test("Ziele: gleiche Liste wie das Kit, jedes Ziel gibt es in der App, jeder Tip
   }
   for (const t of tipps.filter((x) => x.ziel)) assert.ok(ZIELE.includes(t.ziel), t.id);
   assert.ok(tipps.filter((x) => x.sorte === "app" && x.ziel).length >= 12);
-  for (const t of tipps.filter((x) => x.ziel && x.bedingung?.funktion)) assert.ok([].concat(t.bedingung.funktion).every((f) => FUNKTIONEN.has(f)), `${t.id}: Ziel nur, wenn die Funktion da ist`);
+  // ein wartender Tipp darf sein Ziel behalten (app-012, Entscheidung Bill): er erscheint erst mit der Funktion
   assert.ok(passtBedingung(tipps.find((x) => x.id === "app-004").bedingung, k({ benannt: true })), "„gelernt“ gibt es jetzt: app-004 kommt");
   assert.deepEqual(kit.tippsFehler({ tipps }), []);
   assert.ok(kit.tippsFehler({ tipps: [{ id: "a-1", sorte: "app", text: "x", ziel: "nirgendwo" }] }).some((f) => /ziel unbekannt/.test(f)));
@@ -370,4 +370,14 @@ test("Eine Stimme und kein Tipp vor dem Namen: Namensfrage zuerst, nach „Spät
   w.bewerte(ohne.id, "passt"); assert.equal(w.aktuellerTipp, null, "Bewertung schließt den Satz");
   // Textkarten: keine Sprechblase für den Satz des Tages (dort ist er die Karte)
   w.e.darstellung = "karten"; assert.equal(w.satzDesTages(ohne), false);
+});
+
+test("Drei Tipps (Auftrag 2026-10-04-wir-drei-tipps): app-011 ohne „Wissen“, app-012 und app-030 warten auf ihre Funktion", () => {
+  const t = Object.fromEntries(tipps.map((x) => [x.id, x]));
+  assert.equal(t["app-011"].text, "Die Pakete in der Bibliothek liegen ganz auf deinem Gerät. Kein Netz nötig, nie. Deshalb sind sie groß.");
+  assert.equal(t["app-011"].ziel, "bibliothek");
+  assert.equal(t["app-012"].bedingung.funktion, "wikipedia-varianten"); assert.equal(t["app-012"].ziel, "bibliothek");
+  assert.equal(t["app-030"].bedingung.funktion, "export"); assert.equal(t["app-030"].ziel, undefined);
+  for (const f of ["wikipedia-varianten", "export"]) assert.ok(!FUNKTIONEN.has(f), f);
+  assert.equal(tipps.filter((x) => x.bedingung?.funktion && ![].concat(x.bedingung.funktion).every((f) => FUNKTIONEN.has(f))).length, 20, "20 Tipps warten auf eine Funktion");
 });

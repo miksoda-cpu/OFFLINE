@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "wichteln",
-  "version": "2026.09.29",
+  "version": "2026.10.04",
   "titel": "Wichteln und Engerl-Bengerl",
   "beschreibung": "Auslosen ohne Zettel und ohne Internet: Preisrahmen, Datum, wer sich nicht zieht. Niemand sieht die ganze Liste.",
   "art": "modul",
@@ -16,8 +16,8 @@
   "abnahme": "keine",
   "datenversion": 1,
   "app_min": "0.2.0",
-  "erstellt": "2026-09-29T15:18:05Z",
-  "aenderungen": "Erste Ausgabe: Wichteln und Engerl-Bengerl, Handy reihum, Zettel zum Drucken.",
+  "erstellt": "2026-10-04T12:44:01Z",
+  "aenderungen": "Meldet eine ausgeloste Runde ins Spiel-Log der App (ab App 0.4.0, für Pause). Sonst unverändert.",
   "quellen": [
     {
       "id": "eigen",
@@ -28,8 +28,8 @@
   "dateien": [
     {
       "pfad": "inhalt/modul/index.html",
-      "sha256": "63d7d8ee7b512376b1f79a8ca145b2cc8814d5b52fe1ac4cc3d8c320d9deacbd",
-      "groesse": 22607
+      "sha256": "dd62ffbc2e9bb37a4fbd5c5ed34d793bb39b70db03e5af6a9b6d2095b1f07b7d",
+      "groesse": 22913
     },
     {
       "pfad": "inhalt/vorschau/1.svg",
@@ -62,5 +62,5 @@
       "groesse": 1275
     }
   ],
-  "groesse": 51799
+  "groesse": 52105
 }

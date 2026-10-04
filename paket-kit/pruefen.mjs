@@ -10,6 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { tageBereichFehler, tageInhaltFehler } from "./tage-format.mjs";
 import { tippsFehler } from "./tipps-format.mjs";
+import { pauseFehler } from "./pause-format.mjs";
 
 const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul", "skin", "tage"];
 const PREISE = ["gratis", "pro", "kauf"];
@@ -170,6 +171,8 @@ async function pruefen(ordner) {
     const t = await readFile(path.join(inhalt, d.rel), "utf8");
     for (const [re, was] of VERBOTEN) if (re.test(t)) F(`inhalt/${d.rel}: verboten – ${was}`);
     if (d.rel.startsWith("modul/") && /localStorage/.test(t) && !/window\.offline/.test(t)) F(`inhalt/${d.rel}: localStorage direkt verwendet; nur über offline.speicher (Ersatz für die Entwicklung erlaubt)`);
+    // offline.spiel.melden / .liste gibt es ab App 0.4.0: entweder app_min 0.4.0 oder vorher prüfen (if (offline.spiel) …)
+    if (d.rel.startsWith("modul/") && /offline\.spiel\b/.test(t) && !(txt(meta.app_min) && !versionKleiner(meta.app_min, "0.4.0")) && !/if\s*\(\s*(window\.)?offline\.spiel\s*\)|(window\.)?offline\.spiel\s*&&/.test(t)) H(`inhalt/${d.rel}: offline.spiel gibt es erst ab App 0.4.0 – app_min auf 0.4.0 setzen oder vorher prüfen (if (offline.spiel) …)`);
   }
   for (const d of liste.filter((d) => [".md", ".txt", ".json", ".html"].includes(path.extname(d.rel)))) {
     const t = await readFile(path.join(inhalt, d.rel), "utf8");
@@ -226,6 +229,14 @@ async function pruefen(ordner) {
     let t = null;
     try { t = JSON.parse(await readFile(path.join(inhalt, "tipps.json"), "utf8")); } catch { F("inhalt/tipps.json: kein gültiges JSON"); }
     if (t) for (const f of tippsFehler(t)) F(`inhalt/tipps.json: ${f}`);
+  }
+
+  // --- Pause (inhalt/pause.json, Paket „pause“): Formen mit Selbstbeschreibung, Geschichten, Lumisch ---
+  if (liste.find((d) => d.rel === "pause.json")) {
+    let t = null;
+    try { t = JSON.parse(await readFile(path.join(inhalt, "pause.json"), "utf8")); } catch { F("inhalt/pause.json: kein gültiges JSON"); }
+    if (t) for (const f of pauseFehler(t)) F(`inhalt/pause.json: ${f}`);
+    if (txt(meta.app_min) && versionKleiner(meta.app_min, "0.4.0")) F("Pause-Inhalte: app_min muss 0.4.0 oder höher sein");
   }
 
   // --- Quellen-Verweise und Notrufhinweis in den Inhalten ---

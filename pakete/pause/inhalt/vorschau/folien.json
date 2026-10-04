@@ -1,0 +1,44 @@
+{
+ "folien": [
+  {
+   "nr": 1,
+   "rolle": "wofuer",
+   "bild": "1.svg",
+   "titel": "Ein Happen für zwischendurch",
+   "text": "Beim Öffnen der App ein kurzer Happen: etwas, auf das man sich konzentriert, ein Gelingen, ein Satz zum Mitnehmen.",
+   "alt": "Titel „Ein Happen für zwischendurch“ mit drei Zeilen: kurz, freundlich, überspringbar"
+  },
+  {
+   "nr": 2,
+   "rolle": "aussehen",
+   "bild": "2.svg",
+   "titel": "Wo war der Pilz?",
+   "text": "Ein Pilz blitzt kurz auf, du tippst, wo er war. Danach: Mehr davon, Passt oder Nicht mehr.",
+   "alt": "Skizze des Happens „Wo war der Pilz?“: neun Felder im Quadrat, darunter die drei Bewertungsknöpfe"
+  },
+  {
+   "nr": 3,
+   "rolle": "inhalt",
+   "bild": "3.svg",
+   "titel": "Was drin ist",
+   "text": "Acht Happen: Pilz, eingebauter Fehler, Lumisch, Was kommt als Nächstes?, Türsteherfrage, Tag rückwärts, Zeitgefühl, Atemfenster.",
+   "alt": "Liste mit acht Happen-Formen"
+  },
+  {
+   "nr": 4,
+   "rolle": "platz",
+   "bild": "4.svg",
+   "titel": "Klein und ohne Netz",
+   "text": "Unter 50 kB, nur Text. Spiel-Log und deine Linie bleiben auf dem Gerät. Keine KI, keine Pushnachrichten.",
+   "alt": "Angaben zu Größe, Netz und Daten"
+  },
+  {
+   "nr": 5,
+   "rolle": "herkunft",
+   "bild": "5.svg",
+   "titel": "Von The Digioneer",
+   "text": "Eigene Inhalte der Redaktion, gratis, ab 14 Jahren. Pause selbst ist Teil der App und standardmäßig aus.",
+   "alt": "Angaben zu Herausgeber, Preis und Alter"
+  }
+ ]
+}

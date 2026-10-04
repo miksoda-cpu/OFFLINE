@@ -4,6 +4,29 @@
 
 ## B. Umsetzung (App 0.1.5, 28.09.2026; Lumi und Bereit 2 in 0.2.0, 29.09.2026)
 
+**Tipps, die auf eine Funktion warten** (Bedingung `funktion`, Stand 0.4.0, 20 Tipps; sie kommen erst, wenn das Wort in `FUNKTIONEN` steht):
+
+| Funktion | Tipps |
+|---|---|
+| `wischen` | app-002 |
+| `was-ist-los` | app-003 |
+| `briefe` | app-006 |
+| `wikipedia-varianten` | app-012 (Ziel `bibliothek` bleibt) |
+| `karte-offline` | app-013 |
+| `kalender` | app-014 |
+| `wohin` | app-015, app-033 |
+| `tagebuch` | app-016, app-018 |
+| `schliessfach` | app-017, app-018 |
+| `skin-kontrast` | app-019 |
+| `familiennachricht` | app-024 |
+| `offline-stunde` | app-026 |
+| `mesh` | app-028, app-029 |
+| `fernschach` | app-029 |
+| `export` | app-030 |
+| `zettel-drucken` | alltag-023 |
+| `neujahr-buecher` | app-031 |
+| `fragen` | digital-030 |
+
 **0.3.4: Sätze führen irgendwohin (Auftrag `2026-10-04-lumi-knoepfe`):**
 - **Knöpfe je Sorte** unter jedem Satz (Sprechblase, eingeblendete Meldung, Textkarte des Tages): App „Zeig mir“ (nur mit `ziel`), Alltag „Mach ich“ (wird ein Vorhaben in Vorsorge, abhakbar, ändert Bereit nicht), Wissen „Merken“ (ins Heft), Digital „Zeig mir“ mit Ziel, sonst „Merken“; Weisheit und Laune nur Bewertung. Platz für einen zweiten Knopf (später „Aus dem Lumi-Buch“).
 - **Bewertung statt „Gelesen / Weglegen“:** *Mehr davon · Passt · Nicht mehr*, jede schließt den Satz; das ✕ schließt ohne Bewertung (auf der Tagesseite zählt das als weggelegt). Gewicht je Sorte: Start 1, „Mehr davon“ ×1,3 bis höchstens 3, „Nicht mehr“ ×0,85 bis mindestens 0,4 und der Satz kommt nie wieder; keine Sorte fällt durch Bewertungen auf null, ganz abschalten nur in den Einstellungen. Keine Zählung, keine Serien, nichts verlässt das Gerät (`lumi-bewertung`).

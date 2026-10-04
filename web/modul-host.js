@@ -4,8 +4,35 @@
 // Herkunft (genau dieser Rahmen, Herkunft „null“), Aufruf aus der Liste in PAKET-KIT.md Abschnitt 5, Größe, Takt.
 // Alles andere wird verworfen. Welches Modul spricht, weiß die App selbst – es steht nie in der Nachricht.
 
-export const AUFRUFE = ["speicher.lesen", "speicher.schreiben", "vorlesen", "drucken", "wesen.sagen"];
-export const GRENZEN = { nachricht: 256 * 1024, vorlesen: 2000, wesen: 300, drucken: 200 * 1024, proSekunde: 50 };
+export const AUFRUFE = ["speicher.lesen", "speicher.schreiben", "vorlesen", "drucken", "wesen.sagen", "spiel.melden", "spiel.liste"];
+export const GRENZEN = { nachricht: 256 * 1024, vorlesen: 2000, wesen: 300, drucken: 200 * 1024, proSekunde: 50, ergebnis: 1024, ergebnisFelder: 12, meldungenProMinute: 10 };
+/** Trainingsarten aus dem Trainingsmodell (OFFLINE-Gehirn-Fitness-Trainingsmodell.md, Abschnitt 3). */
+export const TRAININGSARTEN = ["tempo", "kraft", "ausdauer", "beweglichkeit", "koordination", "gruppe"];
+const SPIEL_ID = /^[a-z0-9][a-z0-9-]{0,39}$/;
+
+/**
+ * Eine Spielmeldung prüfen (spiel.melden): { id, art, ergebnis, dauer } und sonst nichts – kein Feld für das Modul (das
+ * setzt die App), keine verschachtelten Werte. Gibt { ok, eintrag } oder { ok: false, grund } zurück.
+ */
+export function pruefeSpielMeldung(x) {
+  if (!istObjekt(x)) return { ok: false, grund: "Meldung fehlt" };
+  const fremd = Object.keys(x).filter((k) => !["id", "art", "ergebnis", "dauer"].includes(k));
+  if (fremd.length) return { ok: false, grund: `unbekanntes Feld: ${fremd[0]}` };
+  if (typeof x.id !== "string" || !SPIEL_ID.test(x.id)) return { ok: false, grund: "id ungültig (a–z, 0–9, -, höchstens 40)" };
+  const arten = [].concat(x.art);
+  if (!arten.length || arten.length > 3 || !arten.every((a) => TRAININGSARTEN.includes(a))) return { ok: false, grund: `art: eine bis drei von ${TRAININGSARTEN.join(", ")}` };
+  if (!istObjekt(x.ergebnis)) return { ok: false, grund: "ergebnis: Objekt" };
+  const felder = Object.entries(x.ergebnis);
+  if (felder.length > GRENZEN.ergebnisFelder) return { ok: false, grund: "ergebnis: zu viele Felder" };
+  for (const [k, v] of felder) {
+    if (!/^[a-z][a-z0-9_]{0,23}$/.test(k)) return { ok: false, grund: `ergebnis: Feldname ${k.slice(0, 30)}` };
+    const ok = (typeof v === "number" && Number.isFinite(v)) || typeof v === "boolean" || (typeof v === "string" && v.length <= 80);
+    if (!ok) return { ok: false, grund: `ergebnis.${k}: nur Zahl, ja/nein oder kurzer Text` };
+  }
+  if (JSON.stringify(x.ergebnis).length > GRENZEN.ergebnis) return { ok: false, grund: "ergebnis zu groß" };
+  if (typeof x.dauer !== "number" || !Number.isFinite(x.dauer) || x.dauer < 0 || x.dauer > 86400) return { ok: false, grund: "dauer: Sekunden von 0 bis 86400" };
+  return { ok: true, eintrag: { id: x.id, art: arten, ergebnis: Object.fromEntries(felder), dauer: Math.round(x.dauer) } };
+}
 const SCHLUESSEL = /^[A-Za-z0-9_-][A-Za-z0-9_.-]{0,63}$/;
 
 const istObjekt = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
@@ -39,6 +66,15 @@ export function pruefeNachricht(d) {
     case "wesen.sagen": {
       const t = text("text", GRENZEN.wesen);
       return t === null ? { ok: false, id, grund: "text fehlt oder zu lang" } : { ok: true, id, aufruf: d.aufruf, daten: { text: t } };
+    }
+    case "spiel.melden": {
+      const m = pruefeSpielMeldung(d.daten);
+      return m.ok ? { ok: true, id, aufruf: d.aufruf, daten: m.eintrag } : { ok: false, id, grund: m.grund };
+    }
+    case "spiel.liste": {
+      // keine Daten: wessen Einträge, weiß die App selbst (nie aus der Nachricht)
+      if (d.daten !== undefined && !(istObjekt(d.daten) && !Object.keys(d.daten).length)) return { ok: false, id, grund: "spiel.liste nimmt keine Daten" };
+      return { ok: true, id, aufruf: d.aufruf, daten: {} };
     }
     case "drucken": {
       const h = text("html", GRENZEN.drucken);
@@ -81,13 +117,15 @@ export function druckTeil(html, doc = document, parser = new DOMParser()) {
 
 /**
  * Ein laufendes Modul in der Oberfläche.
- * dienste: { speicherLesen(schluessel), speicherSchreiben(schluessel, wert), vorlesen(text), drucken(html), wesenSagen(text) }
+ * dienste: { speicherLesen(schluessel), speicherSchreiben(schluessel, wert), vorlesen(text), drucken(html), wesenSagen(text),
+ *            spielMelden(eintrag), spielListe() } – spielListe gibt nur die Einträge dieses Moduls zurück.
  * – alle bekommen nur ihre geprüften Daten, die Modul-Id bindet der Aufrufer selbst ein.
  */
 export class ModulRahmen {
   constructor({ url, titel, behaelter, dienste }) {
     this.dienste = dienste;
     this.takt = { sekunde: 0, anzahl: 0 };
+    this.meldungen = []; // Zeitpunkte der angenommenen Spielmeldungen (höchstens GRENZEN.meldungenProMinute je Minute)
     this.abgelehnt = 0;
     const f = document.createElement("iframe");
     f.setAttribute("sandbox", "allow-scripts");
@@ -124,6 +162,13 @@ export class ModulRahmen {
       else if (r.aufruf === "vorlesen") await this.dienste.vorlesen(d.text);
       else if (r.aufruf === "drucken") await this.dienste.drucken(d.html);
       else if (r.aufruf === "wesen.sagen") await this.dienste.wesenSagen(d.text);
+      else if (r.aufruf === "spiel.melden") {
+        const jetzt = Date.now();
+        this.meldungen = this.meldungen.filter((t) => jetzt - t < 60000);
+        if (this.meldungen.length >= GRENZEN.meldungenProMinute) { this.abgelehnt++; return this.antworten(r.id, false, "zu viele Meldungen (höchstens 10 je Minute)"); }
+        this.meldungen.push(jetzt);
+        await this.dienste.spielMelden(d);
+      } else if (r.aufruf === "spiel.liste") wert = await this.dienste.spielListe();
       this.antworten(r.id, true, wert);
     } catch (err) {
       this.antworten(r.id, false, err?.message ?? err);

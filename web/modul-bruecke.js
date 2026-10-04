@@ -53,6 +53,11 @@
     vorlesen: function (text) { return rufe("vorlesen", { text: String(text) }); },
     drucken: function (html) { return rufe("drucken", { html: String(html) }); },
     wesen: Object.freeze({ sagen: function (text) { return rufe("wesen.sagen", { text: String(text) }); } }),
+    // Ab App 0.4.0: Ergebnisse ins Spiel-Log am Gerät (Pause). Nur eigene Einträge sind lesbar.
+    spiel: Object.freeze({
+      melden: function (m) { return rufe("spiel.melden", m); },
+      liste: function () { return rufe("spiel.liste"); },
+    }),
   };
   Object.defineProperty(window, "offline", { value: Object.freeze(api), writable: false, configurable: false, enumerable: true });
 })();

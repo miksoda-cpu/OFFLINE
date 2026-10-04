@@ -45,6 +45,7 @@ const SEITE = `<!doctype html><html lang="de-AT"><head><meta charset="utf-8"><ti
 
 const PROBE_JS = `import { ModulRahmen } from "/modul-host.js";
 const speicher = new Map();
+const spielLog = [{ quelle: "pause", id: "pilz", art: ["tempo"], ergebnis: { treffer: 3 }, dauer: 40 }];
 const stand = document.getElementById("stand");
 const r = new ModulRahmen({ url: ${JSON.stringify(modulUrl)}, titel: "Testmodul", behaelter: document.getElementById("platz"), dienste: {
   speicherLesen: async (k) => speicher.get(k) ?? null,
@@ -56,6 +57,9 @@ const r = new ModulRahmen({ url: ${JSON.stringify(modulUrl)}, titel: "Testmodul"
     }
   },
   vorlesen: async () => {}, drucken: async () => {}, wesenSagen: async () => {},
+  // Spiel-Log wie in der App: je Modul getrennt; ein fremder Eintrag liegt schon da (darf nie zurückkommen)
+  spielMelden: async (m) => { spielLog.push({ quelle: "modul:modul-test", ...m }); },
+  spielListe: async () => spielLog.filter((e) => e.quelle === "modul:modul-test").map(({ quelle, ...e }) => e),
 }});`;
 
 // Abbruchuhr und Browser (nur mit --chrome); der Bericht beendet beides selbst. Früher stoppte erst das close-Ereignis des

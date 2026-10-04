@@ -2,6 +2,17 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.4.0",
+      "datum": "2026-10-04",
+      "punkte": [
+        "Neu: ⏸ Pause. Wer sie einschaltet, bekommt beim Öffnen der App einen kurzen Happen, zwischen 30 Sekunden und 3 Minuten. Pause ist zuerst aus; einschalten kannst du sie unter Übersicht.",
+        "Acht Happen zum Anfang: Wo war der Pilz?, Der eingebaute Fehler, Lumisch, Was kommt als Nächstes?, Türsteherfrage, Der Tag rückwärts, Zeitgefühl und Atemfenster.",
+        "Jeder Happen lässt sich überspringen. Danach sagst du „Mehr davon“, „Passt“ oder „Nicht mehr“, und „Noch einen?“ tippst du nur, wenn du willst.",
+        "Unter „Deine Linie“ siehst du, was Pause über dich gelernt hat, und kannst alles ändern oder zurücksetzen. Es gibt keine Serien und keine Pushnachrichten.",
+        "Drei Tipps der Lumi sind genauer geworden: Sie versprechen nichts mehr, was die App noch nicht kann."
+      ]
+    },
+    {
       "version": "0.3.4",
       "datum": "2026-10-04",
       "punkte": [

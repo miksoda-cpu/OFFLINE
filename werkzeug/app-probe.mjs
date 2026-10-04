@@ -219,6 +219,9 @@ async function module() {
   const runden = (await invoke("modul_speicher_lesen", { id: "wichteln", schluessel: "runden" })).ok;
   // Wichteln legt vier Beispielnamen an (Anna, Ben, Clara, David); dazu kommen Bert, Cleo, Dora (Anna gibt es schon)
   pruefe("Wichteln: spielen", !fehler && Array.isArray(runden) && runden.length === 1 && ["Bert", "Cleo", "Dora"].every((n) => runden[0].namen?.includes(n)) && Object.keys(runden[0].zuteilung ?? {}).length === runden[0].namen.length, fehler ?? `${runden?.length ?? 0} Runde, ${runden?.[0]?.namen?.length ?? 0} Namen, über window.offline gespeichert`);
+  // ab 0.4.0: Wichteln meldet die ausgeloste Runde über spiel.melden ins Spiel-Log der App (nur die eigene Quelle)
+  const spiel = (await ls("spiel-log")) ?? [];
+  pruefe("Wichteln: meldet ins Spiel-Log", spiel.some((e) => e.quelle === "modul:wichteln" && e.id === "wichteln" && e.art?.includes("gruppe")), `${spiel.filter((e) => e.quelle === "modul:wichteln").length} Meldung(en) von Wichteln`);
   await klick("[data-modul-zu]");
   await gehe("#bibliothek");
   await klick('[data-modul-aktiv="wichteln"]');

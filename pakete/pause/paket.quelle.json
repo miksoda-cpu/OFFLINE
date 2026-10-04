@@ -1,0 +1,25 @@
+{
+  "id": "pause",
+  "titel": "Pause · Happen für zwischendurch",
+  "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten – Pilze finden, Geschichten von unten, Lumisch, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
+  "art": "inhalt",
+  "sprache": "de-AT",
+  "lizenz": "CC BY-SA 4.0",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "kategorie": "jeden-tag",
+  "alter_ab": 14,
+  "app_min": "0.4.0",
+  "aenderungen": "Erste Ausgabe: acht Formen, 15 Geschichten, Lumisch in 21 Tagen.",
+  "quellen": [
+    {
+      "id": "redaktion",
+      "name": "Eigene Inhalte der Redaktion nach OFFLINE-Modul-Pause-Konzept, Übungskatalog, Trainingsmodell und Lumisch-Wörterbuch (04.10.2026)",
+      "url": "https://github.com/miksoda-cpu/OFFLINE/blob/main/docs/PAUSE.md"
+    }
+  ],
+  "abnahme": "Redaktion (Code), 04.10.2026: Geschichten auf genau einen falschen Satz geprüft, Lumisch gegen das Wörterbuch",
+  "braucht_netz": false
+}

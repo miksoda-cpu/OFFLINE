@@ -86,13 +86,16 @@
     {
       "id": "app-011",
       "sorte": "app",
-      "text": "Die Pakete unter „Wissen“ liegen ganz auf deinem Gerät. Kein Netz nötig, nie. Deshalb sind sie groß.",
+      "text": "Die Pakete in der Bibliothek liegen ganz auf deinem Gerät. Kein Netz nötig, nie. Deshalb sind sie groß.",
       "ziel": "bibliothek"
     },
     {
       "id": "app-012",
       "sorte": "app",
       "text": "Wikipedia ohne Bilder ist ein Zehntel so groß wie mit. Fürs Handy reicht das meistens.",
+      "bedingung": {
+        "funktion": "wikipedia-varianten"
+      },
       "ziel": "bibliothek"
     },
     {
@@ -234,7 +237,10 @@
     {
       "id": "app-030",
       "sorte": "app",
-      "text": "Alles hier ist exportierbar. Offene Formate. Falls es uns einmal nicht mehr gibt, gibt es dich noch."
+      "text": "Alles hier ist exportierbar. Offene Formate. Falls es uns einmal nicht mehr gibt, gibt es dich noch.",
+      "bedingung": {
+        "funktion": "export"
+      }
     },
     {
       "id": "alltag-001",

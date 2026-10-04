@@ -108,6 +108,8 @@ Ein Modul ist ein Paket mit eigener Oberfläche, etwa Wichteln, ein Rätsel oder
 | `offline.vorlesen(text)` | Text vorlesen lassen |
 | `offline.drucken(html)` | Druckansicht öffnen (Karten, Zettel) |
 | `offline.wesen.sagen(text)` | das Wesen sagt einen Satz (nur, wenn das Paket „Wir" aktiv ist) |
+| `offline.spiel.melden({ id, art, ergebnis, dauer })` | ab App 0.4.0: ein Spielergebnis ins Spiel-Log am Gerät (für Pause). `id` a–z, 0–9, - (höchstens 40), `art` eine bis drei von `tempo`, `kraft`, `ausdauer`, `beweglichkeit`, `koordination`, `gruppe`, `ergebnis` höchstens 12 Felder mit Zahl, ja/nein oder Text bis 80 Zeichen (zusammen höchstens 1 kB), `dauer` in Sekunden. Kein Feld für das Modul: das setzt die App. Höchstens 10 Meldungen je Minute. |
+| `offline.spiel.liste()` | ab App 0.4.0: die eigenen Einträge im Spiel-Log (nie die anderer Module oder der Pause), ohne Daten im Aufruf |
 | `offline.alter()` | Altersstufe im Kinder-Modus oder `null` |
 | `offline.version` | App-Version |
 
@@ -136,6 +138,10 @@ Tagesinhalte füllen die Vorratskammer der Tagesseite: Rätsel, Kapitel, Textkar
 3. **Keine Vorschau-Folien nötig:** Die Tagesseite ist die Vorschau.
 4. **Fremde Texte:** Romane und andere Werke nur, wenn der Autor vor 1956 gestorben ist und die Ausgabe keine eigenen Rechte hat (keine Übersetzung, keine neue Bearbeitung). Quelle und Vorlage je Werk in `inhalt/herkunft.md`. Historische Schreibweisen bleiben, wie sie in der Vorlage stehen.
 5. **Rätsel:** eigene Texte. Bekannte Denkaufgaben neu erzählen, keine fremden Rätseltexte übernehmen. Lösungen nachrechnen.
+
+## 5d. Pause-Inhalte (`inhalt/pause.json`, Paket „pause“)
+
+Daten für die Happen der Pause (App ab 0.4.0, `app_min` mindestens `0.4.0`), Format und Prüfung in `paket-kit/pause-format.mjs`: `{ "format": 1, "formen": [ … ], "fehler": [ … ], "lumisch": { "plan": [ … ], "woerter": [ … ] }, "texte": { … } }`. Jede Form beschreibt sich selbst: `id`, `titel`, `einladung` (ein Satz), `gruppe` (spiel, raetsel, wort, geschichte, ruhe, hand, zu-zweit), `art` (Trainingsarten wie bei `offline.spiel`), `dauer` `{ von, bis }` in Sekunden (ein Happen höchstens 3 Minuten), `alter` (J, M1, M2, A), `tageszeit` (jederzeit, morgen, abend), optional `zone` `{ stufen, start }`, `braucht` (roman, gestern), `auffrischung_monate`, `herkunft`. Eine Form, die die App noch nicht spielen kann, trägt `bedingung: { funktion: "…" }` und wartet, wie bei den Tipps. Die Spiele sind Teil der App, das Paket liefert nur Text.
 
 ## 5c. Lumi-Tipps (`inhalt/tipps.json`, Paket „wir“)
 

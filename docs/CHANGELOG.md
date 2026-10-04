@@ -1,5 +1,15 @@
 # Änderungen
 
+## 0.4.0 · 04.10.2026 · Pause, Stufe 1
+
+- **⏸ Pause** (`docs/PAUSE.md`): Happen beim Öffnen (30 s bis 3 min), höchstens einmal je Öffnen, 10-Minuten-Regel, Appetit 1/3/6 Angebote je Tag, nie im Notfall, nach dem Tagesschluss nur „Der Tag rückwärts“. Ein- und ausschalten in Übersicht › Pause und Bibliothek › Module, standardmäßig aus, unter 14 nicht angeboten.
+- **Acht Formen** (`web/pause-happen.js`): Wo war der Pilz? (Tempo, Zone, Auffrischung nach 11 und 35 Monaten vorgemerkt), Der eingebaute Fehler, Lumisch, Was kommt als Nächstes?, Türsteherfrage, Der Tag rückwärts, Zeitgefühl, Atemfenster; fünf weitere warten mit `bedingung.funktion`. Kein Falsch-Ton, „Schau, so war's“.
+- **Dirigent ohne KI** (`web/pause.js`, Startwerte `web/pause-werte.js`): Mischung Vertraut/Verwandt/Neu mit Regler, Gewicht, Lebensabschnitt, Wochenausgleich, Zone 2 (75–85 %), Kennenlernen 21 Tage, Rückfragen höchstens einmal am Tag bzw. je Woche.
+- **Bewertung und „Deine Linie“** (`#linie`): Mehr davon · Passt · Nicht mehr, bei jedem fünften Happen Zu leicht · Genau richtig · Zu schwer; Balken, Ausschlüsse mit Zurückholen, Stufen, Wochensatz, Auffrischung, Info zur Wirkung (nur erlaubte Sätze), Zurücksetzen. Rückspiegel einmal im Monat in Worten.
+- **Spiel-Log am Gerät:** Pause, Tagesrätsel und Module (`offline.spiel.melden` / `.liste`, geprüft in `web/modul-host.js`: feste Arten, flache Werte, 1 kB, kein Modul-Feld, 10 je Minute; Liste nur eigene Einträge). Testmodul mit sechs neuen Angriffen (48). Wichteln 2026.10.04 meldet eine ausgeloste Runde.
+- **Paket `pause`** (neu, `app_min` 0.4.0) mit Format im Kit (`paket-kit/pause-format.mjs`, `pruefen.mjs`, `PAKET-KIT.md` 5d).
+- **Paket `wir`:** `app-011` ohne die Kategorie „Wissen“, `app-012` wartet auf `wikipedia-varianten`, `app-030` auf `export`; Liste der wartenden Tipps in `docs/WESEN.md`.
+
 ## 0.3.4 · 04.10.2026 · Lumi-Sätze führen irgendwohin
 
 - **Knöpfe je Sorte** unter jedem Satz der Lumi (Sprechblase, Meldung, Textkarte): App „Zeig mir“ (mit `ziel`), Alltag „Mach ich“ (Vorhaben in Vorsorge, ändert Bereit nicht), Wissen „Merken“ (Heft), Digital „Zeig mir“ oder „Merken“; Weisheit und Laune nur Bewertung (`tippAktion`, `tippKnoepfeHtml` in `web/wesen.js`).

@@ -43,7 +43,7 @@ jobs:
       # Pushes aus einem Workflow lösen keine Tests aus; die Tests, die web/pakete als Prüfstück nehmen, laufen deshalb hier
       - name: Tests gegen die neuen Pakete
         run: |
-          node --test werkzeug/test.mjs web/bereit.test.mjs web/wesen.test.mjs web/tag.test.mjs web/neues.test.mjs
+          node --test werkzeug/test.mjs web/bereit.test.mjs web/wesen.test.mjs web/tag.test.mjs web/neues.test.mjs web/pause.test.mjs
           cargo test --manifest-path kern/Cargo.toml
 
       - name: Committen, wenn sich etwas geändert hat

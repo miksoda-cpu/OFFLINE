@@ -32,6 +32,8 @@ const KORREKTUR = {
   "alltag-004": "Ein Nachbar, den du im Notfall fragen kannst, und ich bin ruhiger. Man muss ihn nicht mögen. Man muss wissen, wo er wohnt.",
   "alltag-039": "Über 80. Du bist ruhig, ich bin ruhig. Jetzt ist die Zeit für die Nachbarin, die vielleicht noch nicht so weit ist.",
   "app-025": "Unter Werkzeuge trägst du die Frequenz deines Radiosenders ein. Schreib sie trotzdem auf Papier. Papier braucht keinen Akku.",
+  // Auftrag 2026-10-04-wir-drei-tipps: die Bibliothek hat keine Kategorie „Wissen“
+  "app-011": "Die Pakete in der Bibliothek liegen ganz auf deinem Gerät. Kein Netz nötig, nie. Deshalb sind sie groß.",
   // Mik, 04.10.2026 (Nachtrag 2026-10-04-01a), wegen des Lumi-Buchs
   "weisheit-002": "Wir kennen unten keine Kriege. Nicht, weil wir besser sind. Wir haben aufgehört, haben zu wollen, was ein anderer hat.",
   // Punktzahlen aus Bereit Version 1
@@ -60,6 +62,8 @@ const FUNKTION = {
   "app-019": "skin-kontrast", "app-024": "familiennachricht", "app-026": "offline-stunde", "app-028": "mesh",
   "app-029": ["fernschach", "mesh"], "app-031": "neujahr-buecher", "app-033": "wohin", "alltag-023": "zettel-drucken",
   "digital-030": "fragen",
+  // Auftrag 2026-10-04-wir-drei-tipps: Wikipedia mit und ohne Bilder ist noch keine eigene Wahl; Export gibt es noch nicht
+  "app-012": "wikipedia-varianten", "app-030": "export",
 };
 // Zusätzliche Bedingungen für Tipps, die einen Zustand behaupten (Bereit-Positionen aus web/bereit.js)
 const ZUSTAND = {

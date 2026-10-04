@@ -6,12 +6,18 @@
   "sprache": "de-AT",
   "lizenz": "eigene Rechte",
   "herausgeber": "The Digioneer",
-  "quellen": [{ "id": "eigen", "name": "eigene Entwicklung", "url": "" }],
+  "quellen": [
+    {
+      "id": "eigen",
+      "name": "eigene Entwicklung",
+      "url": ""
+    }
+  ],
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",
   "app_min": "0.2.0",
-  "aenderungen": "Erste Ausgabe: Wichteln und Engerl-Bengerl, Handy reihum, Zettel zum Drucken.",
+  "aenderungen": "Meldet eine ausgeloste Runde ins Spiel-Log der App (ab App 0.4.0, für Pause). Sonst unverändert.",
   "alter_ab": 6,
   "kategorie": "miteinander",
   "braucht_netz": false,

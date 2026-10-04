@@ -1,7 +1,11 @@
 // OFFLINE – App-Oberfläche (Prototyp). Alle Inhalte kommen aus signierten Paketen, siehe paket-client.js.
 import { versionVergleich } from "./paket-kern.js";
 import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUebertragen, wertV1 as bereitWertV1, POSITIONEN as BEREIT_POSITIONEN } from "./bereit.js";
-import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch, tippPool, tippKnoepfeHtml, ZIELE } from "./wesen.js";
+import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch, tippPool, tippKnoepfeHtml, ZIELE, FUNKTIONEN } from "./wesen.js";
+import { WERTE as PAUSE_WERTE, LEBENSABSCHNITTE, APPETIT, ART_TEXT, angeboten as pauseAngeboten, einstellungenLaden as pauseEinstellungenLaden, linieLaden as pauseLinieLaden,
+  logDazu as pauseLogDazu, happenFaellig, waehle as pauseWaehle, bewerten as pauseBewerten, schwierigkeit as pauseSchwierigkeit, zoneAnpassen, zoneText, zurueckholen as pauseZurueckholen,
+  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, soSeheIchDich, wochenSatz, rueckspiegel, imKennenlernen, gewichtVon, stufeVon, verfuegbar as pauseVerfuegbar, tagVon } from "./pause.js";
+import { FORMEN as PAUSE_FORMEN, happenRahmen } from "./pause-happen.js";
 import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
 
@@ -9,7 +13,7 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.3.4";
+const APP_VERSION = "0.4.0";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -173,6 +177,11 @@ const tagZustand = (datum) => speicher.get(`tag:${datum}`, {});
 /** Status einer Karte für heute merken, dazu der Verlauf (für die gelernte Schicht, 45 Tage). */
 function tagSetzen(karte, status) {
   const d = heuteDatum(), z = tagZustand(d);
+  // Das Tagesrätsel bleibt sein eigenes Paket, meldet sein Ergebnis aber ins Spiel-Log (einmal je Rätsel)
+  if (karte.art === "raetsel" && status === "erledigt" && !spielLog().some((e) => e.quelle === "raetsel" && e.ergebnis?.raetsel === karte.id)) {
+    const o = state.tag.offen[karte.id] ?? {};
+    spielLogDazu({ quelle: "raetsel", id: "tagesraetsel", art: ["beweglichkeit"], ergebnis: { raetsel: karte.id, geloest: !!o.richtig, aufgedeckt: !!o.loesung && !o.richtig }, dauer: 0 });
+  }
   if (status) z[karte.id] = status; else delete z[karte.id];
   speicher.set(`tag:${d}`, z);
   const v = speicher.get("tag-verlauf", {}), art = karte.art === "text" ? "lumi" : karte.art;
@@ -355,6 +364,7 @@ const seiten = {
         <button type="button" class="btn btn-primary of-btn of-btn--primaer" data-lumi="einladung-ja">${esc(LUMI_TEXTE.einladungJa)}</button> <button type="button" class="btn of-btn" data-lumi="einladung-nein">${esc(LUMI_TEXTE.einladungNein)}</button>
         <p class="lumi-einladung-klein">${esc(LUMI_TEXTE.einladungHinweis)} ${esc(LUMI_TEXTE.ki)}</p></div></div>` : ""}
       ${g.hinweis ? `<div class="card of-karte tag-gelernt" role="status"><p style="margin:0 0 .6rem">${esc(g.hinweis.text)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="lern-zurueck">Rückgängig</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="lern-ok">In Ordnung</button></div>` : ""}
+      ${(() => { if (!pauseE().an || !pauseDaten()) return ""; const t = rueckspiegel(spielLog(), pauseL(), speicher.get("pause", null), testJetzt()); return t ? `<div class="card of-karte pause-rueckspiegel" role="status"><p class="muted of-klein" style="margin:0 0 .3rem">⏸ Pause · Rückspiegel</p><p style="margin:0 0 .6rem">${esc(t)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause="rueckspiegel-ok">Schön</button></div>` : ""; })()}
       <section class="tag-karten" aria-label="Heute">
         ${schluss ? `${karten.filter((k) => k.art === "raetsel" && zustand[k.id] === "erledigt" && state.tag.offen[k.id]?.richtig).map((k) => tagKarteHtml(k, "erledigt")).join("")}<div class="card of-karte tag-schluss" role="status"><p class="tag-schluss-satz">${esc(SCHLUSS)}</p>${karten.length ? `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="nochmal">Heute noch einmal ansehen</button>` : ""}</div>`
           : karten.length ? karten.map((k) => tagKarteHtml(k, zustand[k.id])).join("")
@@ -362,6 +372,9 @@ const seiten = {
       </section>
       <p class="tag-vorrat muted of-klein">${vorrat ? `Vorrat: noch ${vorrat} ${vorrat === 1 ? "Tag" : "Tage"}${!navigator.onLine ? " · ohne Netz geht es weiter" : ""}` : `Vorrat: leer. ${navigator.onLine ? "Die nächsten Tage kommen, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."}`}</p>`;
   },
+
+  /** Pause › Deine Linie */
+  linie() { return linieHtml(); },
 
   /** Heft „Was Lumi gesagt hat“: gemerkte Sätze, ohne Netz durchsuchbar, einzeln löschbar. */
   heft() {
@@ -437,6 +450,7 @@ const seiten = {
         ${b.positionen.filter((x) => (!x.check && !x.auto) || (x.check && x.stand === "faellig")).map((x) => `<div class="bestaetigung of-liste__zeile"><span><strong>${esc(x.titel)}</strong><br><span class="muted of-klein">${x.stand === "gut" ? `gültig noch ${x.rest} Tage` : x.stand === "faellig" ? `<span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span> seit ${-x.rest} Tagen` : esc(x.hinweis ?? "")}</span></span><button class="btn btn-sm of-btn of-btn--klein ${x.stand === "gut" ? "" : "btn-primary of-btn--primaer"}" data-bestaetigen="${x.id}">${x.stand === "gut" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
       </div>
       ${tagesplanHtml()}
+      <details class="card of-karte" id="pause-einstellungen" style="margin-bottom:1rem"><summary><strong>⏸ Pause</strong> <span class="muted of-klein">· ${pauseE().an ? `ein · Appetit ${esc(pauseE().appetit)}` : "aus"} · Happen für zwischendurch</span></summary><div style="margin-top:.8rem">${pauseEinstellungenHtml()}</div></details>
       <details class="card of-karte" id="lumi-einstellungen" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? `${esc(wesen.anzeigename())} · Einstellungen` : wesen.aktiv() ? "Textkarten" : "Tipps aus"}</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
       ${wesen.aktiv() || wesen.log.length ? `<details class="card of-karte" id="lumi-log" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>${wesen.mitFigur() ? `Alles, was ${esc(wesen.anzeigename())} gesagt hat` : "Bisherige Tipps"}</strong> <span class="muted of-klein" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` : ""}
       ${updates ? `<a class="card of-karte" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn of-plakette of-plakette--warnung">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted of-klein">· ${intervallText()}</span></a>` : ""}
@@ -638,7 +652,7 @@ const seiten = {
       <div class="filters of-reiter">${typen.map((t) => `<button data-filter="${esc(t)}" aria-pressed="${t === state.filter}">${esc(t)}</button>`).join("")}</div>
       <p class="form-msg of-meldung" id="bib-msg"></p>
       ${desktop ? lokaleQuelleHtml() : ""}
-      <div class="grid grid-2">${liste.map((p) => {
+      <div class="grid grid-2">${state.filter === "Alle" || state.filter === ARTEN.modul ? `<div class="card of-karte pkg"><div class="pkg-head"><h3 style="margin:0">⏸ Pause</h3><span><span class="tag of-plakette">eingebaut</span> <span class="tag of-plakette ${pauseE().an ? "tag-ok of-plakette--offline" : ""}">${pauseE().an ? "Ein" : "Aus"}</span></span></div><p class="muted of-klein" style="margin:.4rem 0 .6rem">Ein Happen für zwischendurch, beim Öffnen der App. Teil der App, standardmäßig aus; die Inhalte kommen als Paket „Pause“.</p><a class="btn btn-sm of-btn of-btn--klein" href="#uebersicht" data-anker="pause-einstellungen">${pauseE().an ? "Einstellungen" : "Einschalten"}</a></div>` : ""}${liste.map((p) => {
         if (p.art === "modul" || p.art === "skin") return modulKarte(p, { art: "katalog" });
         const inst = installiertesPaket(p.id);
         const update = inst && p.status === "verfuegbar" && versionVergleich(p.version, inst.manifest.version) > 0 && appPasst(p);
@@ -887,6 +901,153 @@ async function installiereMitMeldung(id, ziel) {
   }
 }
 
+// ---------- Pause (Auftrag 2026-10-04-pause-stufe1): Happen beim Öffnen, Spiel-Log, Deine Linie ----------
+// Eine Funktion im Kern, die man wie ein Modul ein- und ausschaltet (Übersicht › Pause, Bibliothek › Module); standardmäßig
+// aus. Inhalte aus dem Paket „pause“ (nur Daten). Logik: web/pause.js, Spiele: web/pause-happen.js, Startwerte: web/pause-werte.js.
+const PP = () => installiertesPaket("pause");
+const pauseDaten = () => inhalt(PP(), "inhalt/pause.json");
+const pauseE = () => pauseEinstellungenLaden(speicher.get("pause", null));
+const pauseL = () => pauseLinieLaden(speicher.get("pause-linie", null));
+const linieSpeichern = (l) => speicher.set("pause-linie", l);
+const spielLog = () => speicher.get("spiel-log", []);
+function spielLogDazu(eintrag) { speicher.set("spiel-log", pauseLogDazu(spielLog(), eintrag, testJetzt())); }
+let pauseOffen = false;
+
+/** Roman der Woche für „Was kommt als Nächstes?“: fragen (gestern gelesen, heute noch nicht) oder auflösen (heute gelesen). */
+function pauseRoman() {
+  const d = heuteDatum(), heute = kartenFuer(tagesPakete(), d, tagStart()).find((k) => k.art === "kapitel");
+  if (!heute) return null;
+  const gestern = kartenFuer(tagesPakete(), plusTage(d, -1), tagStart()).find((k) => k.art === "kapitel" && k.werk === heute.werk && k.teil === heute.teil - 1) ?? null;
+  const heuteGelesen = tagZustand(d)[heute.id] === "erledigt", v = speicher.get("pause-vermutung", null);
+  const aufloesen = v?.kapitel === heute.id && heuteGelesen, fragen = !!gestern && !heuteGelesen && v?.kapitel !== heute.id;
+  return aufloesen || fragen ? { heute, gestern, heuteGelesen } : null;
+}
+/** Türsteherfrage: das Rätsel von gestern (mit Kurzantwort) oder der Autor des Romans der Woche. */
+function pauseGestern() {
+  const karten = kartenFuer(tagesPakete(), plusTage(heuteDatum(), -1), tagStart());
+  const raetsel = karten.find((k) => k.art === "raetsel" && k.antworten?.length);
+  if (raetsel) return { raetsel };
+  const kap = karten.find((k) => k.art === "kapitel");
+  if (!kap) return null;
+  const andere = [...new Set(tagesPakete().flatMap((p) => p.tage.flatMap((t) => t.karten.filter((k) => k.art === "kapitel").map((k) => k.autor))))].filter((a) => a && a !== kap.autor);
+  return andere.length >= 2 ? { roman: { werk: kap.werk, autor: kap.autor, andere } } : null;
+}
+function pauseKontext(nurAbend) {
+  const plan = tagesplan(), jetzt = testJetzt();
+  const abend = nurAbend || (plan.schlussUm != null && new Date(jetzt).getHours() >= plan.schlussUm);
+  return { funktionen: FUNKTIONEN, abend, nurAbend, hat: { roman: !!pauseRoman(), gestern: !!pauseGestern() } };
+}
+const tagesSchlussVorbei = () => { const p = tagesplan(); return p.schlussUm != null && new Date(testJetzt()).getHours() >= p.schlussUm; };
+
+/** Einen Happen (und auf Wunsch weitere) zeigen. nurAbend: nach dem Tagesschluss nur „Der Tag rückwärts“, einmal. */
+async function pauseStarten({ nurAbend = false } = {}) {
+  const daten = pauseDaten();
+  if (!daten || pauseOffen) return;
+  pauseOffen = true;
+  const formen = daten.formen;
+  await happenRahmen({
+    naechster: (ohne) => {
+      if (nurAbend && spielLog().some((e) => e.quelle === "pause" && e.id === "rueckwaerts" && tagVon(Date.parse(e.zeit)) === heuteDatum() && !e.abgebrochen)) return null;
+      return pauseWaehle({ formen, linie: pauseL(), log: spielLog(), einstellungen: speicher.get("pause", null), jetzt: testJetzt(), kontext: pauseKontext(nurAbend), ohne });
+    },
+    spielen: (form, el, rahmen) => {
+      const log = spielLog().filter((e) => e.quelle === "pause"), heute = heuteDatum();
+      return PAUSE_FORMEN[form.id](el, {
+        form, linie: pauseL(), daten, rahmen, rnd: Math.random, jetzt: testJetzt, antwortRichtig,
+        gesehen: new Set(log.filter((e) => e.id === "fehler").slice(-10).map((e) => e.ergebnis?.geschichte)),
+        gelernt: new Set(log.filter((e) => e.id === "lumisch" && e.ergebnis?.wort && tagVon(Date.parse(e.zeit)) < heute).map((e) => e.ergebnis.wort)),
+        roman: pauseRoman(), vermutung: speicher.get("pause-vermutung", null), vermutungSpeichern: (v) => speicher.set("pause-vermutung", v), gestern: pauseGestern(),
+      });
+    },
+    gespielt: (form, erg, sek) => {
+      spielLogDazu({ quelle: "pause", id: form.id, art: form.art, ergebnis: erg?.ergebnis ?? {}, dauer: sek, ...(erg ? {} : { abgebrochen: true }) });
+      let l = pauseL();
+      if (erg) l.happen = (l.happen ?? 0) + 1;
+      if (erg && form.auffrischung_monate) {
+        const a = { ...(l.auffrischung[form.id] ?? {}) };
+        if (!a.erstes) a.erstes = heuteDatum();
+        else { const f = auffrischungFaellig(l, [form], testJetzt()); if (f) a.erledigt = [...(a.erledigt ?? []), f.monate]; }
+        l.auffrischung[form.id] = a;
+      }
+      l = zoneAnpassen(l, form, spielLog());
+      linieSpeichern(l);
+      if (erg && wesen.mitFigur()) wesen.freude(2500); // die Lumi freut sich mit
+    },
+    bewertet: (form, art) => linieSpeichern(pauseBewerten(pauseL(), formen, form.id, art)),
+    schwierigkeit: (form, u) => linieSpeichern(pauseSchwierigkeit(pauseL(), form, u)),
+    rueckfrage: () => { const q = rueckfrageFaellig(pauseL(), speicher.get("pause", null), testJetzt()); if (q) { const l = pauseL(); l.letzteRueckfrage = new Date(testJetzt()).toISOString(); linieSpeichern(l); } return q; },
+    beantwortet: (id, a) => linieSpeichern(rueckfrageBeantworten(pauseL(), id, a, testJetzt())),
+    schwierigkeitFragen: () => pauseL().happen % PAUSE_WERTE.schwierigkeitAlleN === 0,
+    fertig: () => { pauseOffen = false; if ((location.hash || "#start") === "#start") render(); },
+  });
+}
+/** Beim Öffnen der App (und beim Zurückkommen): höchstens ein Happen je Öffnen, nie im Notfall-Bereich. */
+function pauseBeimOeffnen() {
+  if (pauseOffen || !pauseE().an || !pauseDaten()) return;
+  const route = (location.hash || "#start").slice(1);
+  const f = happenFaellig({ einstellungen: speicher.get("pause", null), jetzt: testJetzt(), oeffnen: speicher.get("pause-oeffnen", null), route, schluss: tagesSchlussVorbei() });
+  speicher.set("pause-oeffnen", f.oeffnen);
+  if (f.faellig && route !== "notfall") pauseStarten({ nurAbend: f.nurAbend });
+}
+async function pauseEinschalten(alter) {
+  if (!(alter in LEBENSABSCHNITTE)) return;
+  const e = pauseE();
+  speicher.set("pause", { ...e, alter, an: pauseAngeboten(alter), seit: e.seit ?? heuteDatum() });
+  if (pauseAngeboten(alter) && !PP()) await installiereMitMeldung("pause", "pause-msg");
+  render();
+}
+
+/** Übersicht › Pause (auch aus der Bibliothek erreichbar): ein- und ausschalten, Appetit, Vertraut ↔ Neues, Alter. */
+function pauseEinstellungenHtml() {
+  const e = pauseE(), roh = speicher.get("pause", null) ?? {};
+  const alterWahl = (wert) => `<label>Wie alt bist du?<br><select class="of-select" data-pause-einstellung="alter">${!wert ? '<option value="" selected>bitte wählen</option>' : ""}${Object.entries(LEBENSABSCHNITTE).map(([k, l]) => `<option value="${k}" ${wert === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>`;
+  if (!e.an) return `<p style="margin:0 0 .6rem">Beim Öffnen der App ein kurzer Happen: 30 Sekunden bis 3 Minuten, etwas, auf das man sich konzentriert, ein Gelingen und ein Satz zum Mitnehmen. Jederzeit überspringbar. Keine Serien, keine Pushnachrichten, nichts verlässt das Gerät.</p>
+    ${roh.alter === "kind" ? `<p class="of-meldung">Pause gibt es ab 14 Jahren. Für Jüngere kommt später ein Kinder-Modus.</p>` : ""}
+    <div class="grid grid-3">${alterWahl(roh.alter && roh.alter in LEBENSABSCHNITTE ? roh.alter : "")}</div>
+    <p style="margin:.8rem 0 0"><button type="button" class="btn btn-primary of-btn of-btn--primaer" data-pause="ein" ${!roh.alter || roh.alter === "kind" ? "disabled" : ""}>⏸ Pause einschalten</button></p><p class="form-msg of-meldung" id="pause-msg"></p>`;
+  return `<div class="grid grid-3">${alterWahl(e.alter)}
+      <label>Appetit<br><select class="of-select" data-pause-einstellung="appetit">${Object.entries(APPETIT).map(([k, l]) => `<option value="${k}" ${e.appetit === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>
+      <label>Vertraut ↔ Neues<br><input type="range" min="-1" max="1" step="0.5" value="${e.neuigkeit}" data-pause-einstellung="neuigkeit" aria-valuetext="${e.neuigkeit < 0 ? "mehr Vertrautes" : e.neuigkeit > 0 ? "mehr Neues" : "gemischt"}"></label></div>
+    <p class="muted of-klein" style="margin:.5rem 0 .6rem">Appetit: wie oft am Tag beim Öffnen ein Happen kommt (wenig 1, mittel 3, viel 6). „Noch einen?“ geht immer.</p>
+    ${PP() ? "" : `<p class="of-meldung">Die Happen kommen, sobald das Paket „Pause“ geladen ist${navigator.onLine ? "" : " (beim nächsten Mal mit Netz)"}.</p>`}
+    <p style="margin:0"><button type="button" class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-pause="jetzt" ${PP() ? "" : "disabled"}>Jetzt einen Happen</button> <a class="btn btn-sm of-btn of-btn--klein" href="#linie">Deine Linie</a> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause="aus">Pause ausschalten</button></p><p class="form-msg of-meldung" id="pause-msg"></p>`;
+}
+
+/** Deine Linie: was die App gelernt hat, in einfachen Balken – alles änderbar, alles zurücksetzbar. */
+function linieHtml() {
+  const daten = pauseDaten(), e = pauseE(), l = pauseL(), log = spielLog(), jetzt = testJetzt();
+  if (!e.an) return `${kopf("⏸ Deine Linie", "Was Pause über dich gelernt hat.")}<div class="card of-karte"><p>Pause ist aus. Einschalten kannst du sie in der <a href="#uebersicht" data-anker="pause-einstellungen">Übersicht</a>.</p></div>`;
+  if (!daten) return `${kopf("⏸ Deine Linie", "Was Pause über dich gelernt hat.")}<div class="card of-karte"><p>Das Paket „Pause“ ist noch nicht geladen.</p></div>`;
+  const formen = daten.formen.filter((f) => !f.bedingung), max = PAUSE_WERTE.gewicht.hoch;
+  const gespielt = (id) => log.some((x) => x.quelle === "pause" && x.id === id);
+  const bild = soSeheIchDich(l, log, daten.formen);
+  const termine = auffrischungTermine(l, daten.formen);
+  const fmt = (d) => new Date(`${d}T12:00:00`).toLocaleDateString("de-AT", { day: "numeric", month: "long", year: "numeric" });
+  return `${kopf("⏸ Deine Linie", "Was Pause über dich gelernt hat. Jede Annahme kannst du hier ändern oder zurücksetzen.")}
+    <p style="margin:0 0 1rem"><a href="#uebersicht">‹ Übersicht</a></p>
+    ${bild && !imKennenlernen(e, jetzt) ? `<div class="card of-karte" style="margin-bottom:1rem"><p style="margin:0"><strong>So sehe ich dich:</strong> ${esc(bild)}</p></div>` : imKennenlernen(e, jetzt) ? `<div class="card of-karte" style="margin-bottom:1rem"><p style="margin:0">Wir lernen uns noch kennen. In den ersten drei Wochen kommt viel Abwechslung.</p></div>` : ""}
+    <div class="card of-karte" style="margin-bottom:1rem"><h3 style="margin-top:0">Was du magst</h3>
+      <ul class="lumi-balken linie-balken">${formen.filter((f) => !l.aus.includes(f.id)).map((f) => { const g = gewichtVon(l, f.id); return `<li><span>${esc(f.titel)}</span><span class="lumi-balken-spur" role="img" aria-label="${esc(f.titel)}: ${g < 1 ? "seltener" : g > 1 ? "öfter" : "normal"}"><span style="width:${Math.round((g / max) * 100)}%"></span></span><span class="muted of-klein">${gespielt(f.id) ? (g < 1 ? "seltener" : g > 1 ? "öfter" : "normal") : "neu"}</span></li>`; }).join("")}</ul>
+      ${l.aus.length ? `<p class="of-klein" style="margin:.8rem 0 .3rem"><strong>Nicht mehr</strong></p><ul class="lumi-aus">${l.aus.map((id) => `<li><span>${esc(daten.formen.find((f) => f.id === id)?.titel ?? id)}</span> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause-zurueck="${esc(id)}">Zurückholen</button></li>`).join("")}</ul>` : ""}
+    </div>
+    <div class="card of-karte" style="margin-bottom:1rem"><h3 style="margin-top:0">Wie schwer</h3>
+      <p class="muted of-klein" style="margin:0 0 .5rem">Die Aufgaben stellen sich so ein, dass es meist klappt. Du kannst nachhelfen.</p>
+      <ul class="lumi-aus">${formen.filter((f) => f.zone).map((f) => `<li><span>${esc(f.titel)}: Stufe ${stufeVon(l, f)} von ${f.zone.stufen} · ${esc(zoneText(l, f, log))}</span> <span><button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause-stufe="${f.id}" data-richtung="schwer" aria-label="${esc(f.titel)} leichter">leichter</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause-stufe="${f.id}" data-richtung="leicht" aria-label="${esc(f.titel)} schwerer">schwerer</button></span></li>`).join("")}</ul>
+    </div>
+    <div class="card of-karte" style="margin-bottom:1rem"><h3 style="margin-top:0">Über die Woche</h3><p style="margin:0">${esc(wochenSatz(l, log, daten.formen, jetzt))}</p>
+      ${termine.length ? `<p class="of-klein" style="margin:.6rem 0 0">Auffrischung vorgemerkt: ${termine.map((t) => `${esc(t.titel)} am ${t.termine.map((x) => `${fmt(x.datum)}${x.erledigt ? " (erledigt)" : ""}`).join(" und am ")}`).join("; ")}. Ohne Pushnachricht: Der Happen kommt einfach an dem Tag.</p>` : ""}
+      ${Object.keys(l.antworten).length ? `<p class="of-klein" style="margin:.6rem 0 0">Deine Antworten: ${Object.entries(l.antworten).filter(([, v]) => v).map(([, v]) => esc({ schneller: "lieber schneller", ruhiger: "lieber ruhiger", woerter: "mehr Wörter", zahlen: "mehr Zahlen", morgens: "morgens", abends: "abends", egal: "Zeit egal" }[v] ?? v)).join(", ") || "übersprungen"}.</p>` : ""}
+    </div>
+    <div class="card of-karte" style="margin-bottom:1rem"><h3 style="margin-top:0">Einstellungen</h3>${pauseEinstellungenHtml()}</div>
+    <div class="card of-karte" style="margin-bottom:1rem"><h3 style="margin-top:0">Was Pause bewirkt</h3>
+      <p style="margin:0 0 .4rem">Spiele werden besser durch Übung. Ob sich das auf den Alltag überträgt, ist offen.</p>
+      <p style="margin:0 0 .4rem">Die Pilz-Aufgabe schult Tempo und Wahrnehmung. Ob sich das auf den Alltag überträgt, ist noch offen.</p>
+      <p style="margin:0 0 .4rem">Studien zeigen: Wer sich viel bewegt, hat im Durchschnitt ein niedrigeres Demenzrisiko. Pause ersetzt keine Bewegung.</p>
+      <p style="margin:0">Wenn du dich wegen deines Gedächtnisses sorgst, sprich mit deiner Ärztin oder deinem Arzt.</p></div>
+    <p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause="linie-zuruecksetzen">Linie zurücksetzen</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause="log-loeschen">Spiel-Log löschen</button></p>
+    <p class="muted of-klein">Alles hier bleibt auf diesem Gerät. Es wird nichts gezählt, um dich festzuhalten.</p>`;
+}
+
 // ---------- Module (art = "modul"): Katalogkarte, Schieber, aktiv/inaktiv, löschen, Ansicht in der Sandbox ----------
 // Sicherheit: SICHERHEIT.md, Abschnitt Module. Das Modul läuft in einem eigenen Rahmen (web/modul-host.js) und erreicht
 // die App nur über die geprüfte Brücke; welches Modul spricht, setzt diese Datei selbst.
@@ -1090,6 +1251,9 @@ async function modulAnsichtZeigen() {
         document.getElementById("druck-bereich").replaceChildren(druckTeil(html));
         try { await client.drucken(); } catch { print(); }
       },
+      // Spiel-Log (ab 0.4.0): geprüft in web/modul-host.js; die Quelle setzt die App, lesbar sind nur die eigenen Einträge
+      spielMelden: async (m) => spielLogDazu({ quelle: `modul:${id}`, ...m }),
+      spielListe: async () => spielLog().filter((e) => e.quelle === `modul:${id}`).slice(-200).map(({ quelle, ...e }) => e),
       wesenSagen: async (t) => {
         if (!wesen.mitFigur() || (!wesen.benannt() && !ohneIch(t))) return; // nur mit Figur, und ohne Namen kein „ich“
         const el = document.getElementById("modul-wesen");
@@ -1519,13 +1683,13 @@ function render() {
   if (seite === "start") wesen.einbauen(); else wesen.setScore(bereit());
   wesen.ansicht(seite);
   if (seite === "start") tagesSatzZeigen();
-  const aktiv = seite === "lesen" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" ? "uebersicht" : seite;
+  const aktiv = seite === "lesen" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" || seite === "linie" ? "uebersicht" : seite;
   if (seite !== "kapitel" && state.tag.liest) vorlesenStop();
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
   main.classList.toggle("main-lesen", seite === "lesen");
-  if ((seite === "kapitel" || seite === "neues" || seite === "heft") && state.tag.seiteVorher !== seite) { window.scrollTo(0, 0); main.scrollTop = 0; } // beginnt oben
+  if ((seite === "kapitel" || seite === "neues" || seite === "heft" || seite === "linie") && state.tag.seiteVorher !== seite) { window.scrollTo(0, 0); main.scrollTop = 0; } // beginnt oben
   state.tag.seiteVorher = seite;
-  document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : seite === "heft" ? `Was ${wesen.anzeigename()} gesagt hat` : state.lesen?.titel ?? "Lesen")}`;
+  document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : seite === "heft" ? `Was ${wesen.anzeigename()} gesagt hat` : seite === "linie" ? "Deine Linie" : state.lesen?.titel ?? "Lesen")}`;
   if (seite === "karte") karteStarten();
   if (seite === "bibliothek") vorschauenNachladen();
   skinFuerSeite();
@@ -1544,6 +1708,13 @@ main.addEventListener("change", (e) => {
     planSpeichern(p); if (k === "tiefe") vorratAuffuellen(); return;
   }
   if (t.dataset.check) { state.checks[t.dataset.check] = t.checked; speicher.set("checks", state.checks); return bestaetigen(`c-${t.dataset.check}`, t.checked); }
+  if (t.dataset.pauseEinstellung) {
+    const k = t.dataset.pauseEinstellung, roh = speicher.get("pause", null) ?? {};
+    const v = k === "neuigkeit" ? Number(t.value) : t.value;
+    const neu = { ...roh, [k]: v };
+    if (k === "alter" && v === "kind") neu.an = false; // unter 14 gibt es Pause nicht
+    speicher.set("pause", neu); return render();
+  }
   if (t.dataset.vorhaben) { vorhabenSpeichern(vorhaben().map((v) => (v.id === t.dataset.vorhaben ? { ...v, erledigt: t.checked ? new Date().toISOString() : null } : v))); return; }
   if (t.dataset.abo) { state.abo[t.dataset.abo] = t.checked; aboSpeichern(); render(); }
   if (t.dataset.zeit) { state.abo[t.dataset.zeit] = t.value; aboSpeichern(); }
@@ -1654,9 +1825,14 @@ if (desktop) {
 document.getElementById("download").addEventListener("click", beiKlick);
 // Sprechblase, Karte und Log des Wesens (Karte liegt außerhalb von main)
 document.addEventListener("click", (e) => {
+  const anker = e.target.closest("a[data-anker]");
+  if (anker) setTimeout(() => { const el = document.getElementById(anker.dataset.anker); if (el) { if (el.tagName === "DETAILS") el.open = true; el.scrollIntoView({ block: "start" }); } }, 60);
   const b = e.target.closest("button"); if (!b) return;
   if (b.hasAttribute("data-wesen-zu")) { const satz = wesen.tagesSatz; wesen.tippSchliessen(); if (satz) tagSetzen({ id: `lumi-${satz}`, art: "lumi" }, "weg"); }
   if (b.dataset.lumiAktion) return lumiKnopf(b);
+  if (b.dataset.pause) return pauseKnopf(b.dataset.pause);
+  if (b.dataset.pauseZurueck) { linieSpeichern(pauseZurueckholen(pauseL(), b.dataset.pauseZurueck)); return render(); }
+  if (b.dataset.pauseStufe) { const f = pauseDaten()?.formen.find((x) => x.id === b.dataset.pauseStufe); if (f) linieSpeichern(pauseSchwierigkeit(pauseL(), f, b.dataset.richtung)); return render(); }
   if (b.dataset.lumiBewerten) return lumiBewerten(b);
   if (b.dataset.lumiZurueckholen) { wesen.zurueckholen(b.dataset.lumiZurueckholen); return render(); }
   if (b.hasAttribute("data-lumi-lernen-zuruecksetzen")) { wesen.lernenZuruecksetzen(); return render(); }
@@ -1665,6 +1841,14 @@ document.addEventListener("click", (e) => {
   if (b.dataset.wesenStern) { wesen.stern(b.dataset.wesenStern); const el = document.getElementById("wesen-log"); if (el) el.innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche); }
 });
 
+function pauseKnopf(was) {
+  if (was === "ein") { const a = (speicher.get("pause", null) ?? {}).alter; return pauseEinschalten(a); }
+  if (was === "aus") { speicher.set("pause", { ...(speicher.get("pause", null) ?? {}), an: false }); return render(); }
+  if (was === "jetzt") return pauseStarten();
+  if (was === "rueckspiegel-ok") { const l = pauseL(); l.rueckspiegelAm = new Date(testJetzt()).toISOString(); linieSpeichern(l); return render(); }
+  if (was === "linie-zuruecksetzen") { const l = pauseL(); linieSpeichern({ ...pauseLinieLaden(null), auffrischung: l.auffrischung }); return render(); } // Auffrischungstermine bleiben
+  if (was === "log-loeschen") { speicher.set("spiel-log", []); return render(); }
+}
 /** Erster Knopf unter einem Satz: Zeig mir, Mach ich, Merken. Die Karte bleibt offen, bewerten kann man danach. */
 function lumiKnopf(b) {
   const id = b.dataset.tipp, t = wesen.tipp(id); if (!t) return;
@@ -1844,7 +2028,13 @@ if (desktop) (async () => {
     await pruefeUpdates({ still: true });
     if (katalog() && verfuegbareUpdates(katalog()).length) render();
   }
-})().finally(() => vorratAuffuellen()); // danach die Vorratskammer der Tagesseite
+})().finally(async () => {
+  vorratAuffuellen(); // danach die Vorratskammer der Tagesseite
+  // Pause: ist sie an und das Paket fehlt, still holen; dann der Happen beim Öffnen
+  if (pauseE().an && !PP() && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "pause" && p.status === "verfuegbar"); if (e && appPasst(e)) await installiere(k, e); } catch (err) { console.error("Pause", err); } }
+  pauseBeimOeffnen();
+});
+document.addEventListener("visibilitychange", () => { if (!document.hidden) pauseBeimOeffnen(); });
 addEventListener("online", () => vorratAuffuellen());
 
 // Service Worker nur im Web-Prototyp. In der Desktop-App liefert der Kern die Dateien; ein Worker aus 0.1.x (Windows)

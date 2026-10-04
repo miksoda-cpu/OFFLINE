@@ -155,6 +155,26 @@ async function alles() {
     return antworten >= 300 ? true : `${antworten} von 300 beantwortet`;
   });
 
+  // --- Spiel-Log (spiel.melden / spiel.liste, ab App 0.4.0) ---
+  const melde = (id, daten) => roh({ offline: 1, id, aufruf: "spiel.melden", daten });
+  const echt = { id: "probe-spiel", art: "tempo", ergebnis: { treffer: 3, von: 3 }, dauer: 20 };
+  try { await offline.spiel.melden(echt); } catch (e) { /* ältere App: kein Spiel-Log */ }
+  await versuch("Spiel: Meldung unter fremdem Modul", async () => { const a = await melde(9201, { ...echt, modul: "wichteln" }); return !!(a && a.ok); });
+  await versuch("Spiel: fremde Einträge lesen", async () => {
+    const a = await roh({ offline: 1, id: 9202, aufruf: "spiel.liste", daten: { modul: "wichteln" } });
+    if (a && a.ok) return true;
+    const eigene = await offline.spiel.liste().catch(() => []);
+    return Array.isArray(eigene) && eigene.some((e) => e.id !== "probe-spiel"); // gelungen, wenn Fremdes mitkommt
+  });
+  await versuch("Spiel: übergroßes Ergebnis", async () => { const a = await melde(9203, { ...echt, ergebnis: { text: "x".repeat(5000) } }); return !!(a && a.ok); });
+  await versuch("Spiel: verschachtelte Werte", async () => { const a = await melde(9204, { ...echt, ergebnis: { tief: { geheim: 1 } } }); return !!(a && a.ok); });
+  await versuch("Spiel: unbekannte Trainingsart", async () => { const a = await melde(9205, { ...echt, art: "geld" }); return !!(a && a.ok); });
+  await versuch("Spiel: Flut (30 Meldungen in einer Minute)", async () => {
+    let angenommen = 0;
+    for (let i = 0; i < 30; i++) { const a = await melde(9300 + i, echt); if (a && a.ok) angenommen++; }
+    return angenommen > 10 ? true : `${angenommen} von 30 angenommen`;
+  });
+
   // --- Fenster und Navigation ---
   await versuch("window.open", async () => !!window.open(extern));
   await versuch("top.location umleiten", async () => { top.location.href = extern; await warte(500); return true; });
