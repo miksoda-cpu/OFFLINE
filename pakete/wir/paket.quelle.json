@@ -12,7 +12,7 @@
   "kategorie": "miteinander",
   "alter_ab": 0,
   "app_min": "0.2.0",
-  "aenderungen": "Drei Tipps genauer: Die Bibliothek hat keine Kategorie „Wissen“; die Tipps zu Wikipedia ohne Bilder und zum Export warten, bis es diese Funktionen gibt.",
+  "aenderungen": "Jeder Tipp zeigt jetzt auf seinen Absatz im Lumi-Buch. Ab App 0.5.0 steht unter den Sätzen der Lumi „Aus dem Lumi-Buch“.",
   "quellen": [
     {
       "name": "Österreichischer Zivilschutzverband – Vorsorge",
