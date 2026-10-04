@@ -1,7 +1,7 @@
 // OFFLINE – App-Oberfläche (Prototyp). Alle Inhalte kommen aus signierten Paketen, siehe paket-client.js.
 import { versionVergleich } from "./paket-kern.js";
 import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUebertragen, wertV1 as bereitWertV1, POSITIONEN as BEREIT_POSITIONEN } from "./bereit.js";
-import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch, tippPool } from "./wesen.js";
+import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch, tippPool, tippKnoepfeHtml, ZIELE } from "./wesen.js";
 import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
 
@@ -9,7 +9,7 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.3.3";
+const APP_VERSION = "0.3.4";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -76,7 +76,15 @@ const ARTEN = { inhalt: "Österreich", zim: "Bibliothek", karte: "Karten", model
 // ---------- Paketinhalt ----------
 const P = () => installiertesPaket(BASISPAKET);
 const PW = () => installiertesPaket("wir");
-const wesen = new Wesen({ speicher, tipps: () => inhalt(PW(), "inhalt/tipps.json")?.tipps ?? [], onLog: () => {
+// Vorhaben: Sätze der Lumi, die man sich mit „Mach ich“ vorgenommen hat. Eine Erinnerung, keine Prüfung: zählen nicht zu Bereit.
+const vorhaben = () => speicher.get("vorhaben", []);
+const vorhabenSpeichern = (l) => speicher.set("vorhaben", l);
+function vorhabenDazu(t) {
+  const l = vorhaben(); if (l.some((v) => v.tipp === t.id)) return;
+  l.unshift({ id: `v-${Date.now().toString(36)}`, tipp: t.id, text: t.text, datum: new Date().toISOString(), erledigt: null });
+  vorhabenSpeichern(l);
+}
+const wesen = new Wesen({ speicher, istVorhaben: (id) => vorhaben().some((v) => v.tipp === id), tipps: () => inhalt(PW(), "inhalt/tipps.json")?.tipps ?? [], onLog: () => {
   const z = document.getElementById("wesen-log-zahl"); if (z) z.textContent = `· ${wesen.log.length}`;
   const el = document.getElementById("wesen-log"); if (el) el.innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche);
 } });
@@ -173,7 +181,29 @@ function tagSetzen(karte, status) {
   speicher.set("tag-verlauf", v);
 }
 /** Die Textkarte (oder der Satz der Lumi) des Tages: aus demselben Pool wie die Tipps, fest für den Tag. */
-function textkarteHeute(d) { return textkarteFuer(tippPool(wesen.tippsQuelle(), wesen.e, { ...wesen.kontext(), ansicht: "start", jetzt: testJetzt() }), d); }
+function textkarteHeute(d) {
+  const k = { ...wesen.kontext(), ansicht: "start", jetzt: testJetzt() };
+  const g = speicher.get("lumi-satz", null), pool = tippPool(wesen.tippsQuelle(), wesen.e, k);
+  if (g?.datum === d) { const t = pool.find((x) => x.id === g.id); if (t) return t; } // bleibt den Tag über, auch nach „Nicht mehr“
+  const t = textkarteFuer(tippPool(wesen.tippsQuelle(), wesen.e, k, new Set(wesen.bewertung.aus)), d);
+  if (t) speicher.set("lumi-satz", { datum: d, id: t.id });
+  return t;
+}
+/** Mit Figur spricht der Satz des Tages in der Sprechblase – einmal, bis er bewertet oder geschlossen ist. */
+function tagesSatzZeigen() {
+  if (!wesen.mitFigur()) return;
+  const d = heuteDatum(), t = textkarteHeute(d), z = tagZustand(d);
+  if (!t || z[`lumi-${t.id}`] || !tagesplan().karten.lumi) return;
+  wesen.satzDesTages(t);
+}
+/** „Zeig mir“: an die Stelle in der App, Abschnitte der Übersicht aufklappen. */
+const ANKER = { tagesplan: "tagesplan", lumi: "lumi-einstellungen", "lumi-log": "lumi-log" };
+function zielOeffnen(ziel) {
+  if (!ZIELE.includes(ziel)) return;
+  const anker = ANKER[ziel];
+  location.hash = `#${anker ? "uebersicht" : ziel}`;
+  if (anker) setTimeout(() => { const el = document.getElementById(anker); if (el) { if (el.tagName === "DETAILS") el.open = true; el.scrollIntoView({ block: "start" }); } }, 60);
+}
 function heutigeKarten() {
   const d = heuteDatum();
   return tagesKarten({ karten: kartenFuer(tagesPakete(), d, tagStart()), plan: tagesplan(), lumi: wesen.e.darstellung, textkarte: textkarteHeute(d) });
@@ -209,7 +239,9 @@ function tagKarteHtml(k, status) {
     inhaltHtml = `<h3 style="margin:.2rem 0 0">${esc(k.werk)}</h3><p class="muted of-klein" style="margin:.1rem 0 .6rem">${esc(k.autor)} · Teil ${k.teil} von ${k.teile}</p><p class="tag-anriss">${esc(anriss.length > 220 ? anriss.slice(0, 220).replace(/\s\S*$/, "") + " …" : anriss)}</p>`;
     knoepfe = `<a class="btn btn-primary of-btn of-btn--primaer" href="#kapitel" data-tag-lesen="${esc(k.id)}">Lesen</a>`;
   } else {
-    inhaltHtml = `<p class="tag-text">${esc(k.text)}</p>`;
+    const t = wesen.tipp(k.id.replace(/^lumi-/, "")) ?? { id: k.id.replace(/^lumi-/, ""), sorte: k.sorte, text: k.text };
+    inhaltHtml = `<button type="button" class="tag-zu" data-tag="weg" data-tag-id="${esc(k.id)}" aria-label="Schließen ohne Bewertung">×</button><p class="tag-text">${esc(k.text)}</p>${tippKnoepfeHtml(t, { ort: "karte", gemerkt: wesen.imHeft(t.id), vorgemerkt: vorhaben().some((v) => v.tipp === t.id) })}`;
+    return `<article class="card of-karte tag-karte tag-karte--lumi" data-tag-karte="${esc(k.id)}"><p class="tag-art">${titel}</p>${inhaltHtml}</article>`;
     knoepfe = `<button type="button" class="btn btn-primary of-btn of-btn--primaer" data-tag="erledigt" data-tag-id="${esc(k.id)}">Gelesen</button>`;
   }
   return `<article class="card of-karte tag-karte" data-tag-karte="${esc(k.id)}"><p class="tag-art">${titel}${k.art === "raetsel" && k.stufe ? ` <span class="muted of-klein">· ${esc(k.stufe)}</span>` : ""}</p>${inhaltHtml}<div class="tag-knoepfe">${knoepfe} ${weg}</div></article>`;
@@ -331,6 +363,14 @@ const seiten = {
       <p class="tag-vorrat muted of-klein">${vorrat ? `Vorrat: noch ${vorrat} ${vorrat === 1 ? "Tag" : "Tage"}${!navigator.onLine ? " · ohne Netz geht es weiter" : ""}` : `Vorrat: leer. ${navigator.onLine ? "Die nächsten Tage kommen, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."}`}</p>`;
   },
 
+  /** Heft „Was Lumi gesagt hat“: gemerkte Sätze, ohne Netz durchsuchbar, einzeln löschbar. */
+  heft() {
+    return `${kopf(`Was ${esc(wesen.anzeigename())} gesagt hat`, "Die Sätze, die du dir gemerkt hast. Sie bleiben auf diesem Gerät.")}
+      <p style="margin:0 0 1rem"><a href="#uebersicht">‹ Übersicht</a></p>
+      ${wesen.heft.length ? `<label for="heft-suche" class="of-klein">Im Heft suchen</label><br><input class="of-input" type="search" id="heft-suche" value="${esc(state.heftSuche ?? "")}" autocomplete="off" style="margin:.3rem 0 1rem;max-width:28rem;width:100%">` : ""}
+      <div class="card of-karte" id="heft-liste">${wesen.heftHtml(state.heftSuche ?? "")}</div>`;
+  },
+
   /** Was ist neu: alle Versionen, neueste oben, in Alltagssprache. */
   neues() {
     if (!state.neues) { neuesLaden(); return `${kopf("Was ist neu", "Einen Moment …")}`; }
@@ -397,8 +437,8 @@ const seiten = {
         ${b.positionen.filter((x) => (!x.check && !x.auto) || (x.check && x.stand === "faellig")).map((x) => `<div class="bestaetigung of-liste__zeile"><span><strong>${esc(x.titel)}</strong><br><span class="muted of-klein">${x.stand === "gut" ? `gültig noch ${x.rest} Tage` : x.stand === "faellig" ? `<span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span> seit ${-x.rest} Tagen` : esc(x.hinweis ?? "")}</span></span><button class="btn btn-sm of-btn of-btn--klein ${x.stand === "gut" ? "" : "btn-primary of-btn--primaer"}" data-bestaetigen="${x.id}">${x.stand === "gut" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
       </div>
       ${tagesplanHtml()}
-      <details class="card of-karte" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? `${esc(wesen.anzeigename())} · Einstellungen` : wesen.aktiv() ? "Textkarten" : "Tipps aus"}</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
-      ${wesen.aktiv() || wesen.log.length ? `<details class="card of-karte" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>${wesen.mitFigur() ? `Was ${esc(wesen.anzeigename())} gesagt hat` : "Bisherige Tipps"}</strong> <span class="muted of-klein" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` : ""}
+      <details class="card of-karte" id="lumi-einstellungen" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? `${esc(wesen.anzeigename())} · Einstellungen` : wesen.aktiv() ? "Textkarten" : "Tipps aus"}</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
+      ${wesen.aktiv() || wesen.log.length ? `<details class="card of-karte" id="lumi-log" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>${wesen.mitFigur() ? `Alles, was ${esc(wesen.anzeigename())} gesagt hat` : "Bisherige Tipps"}</strong> <span class="muted of-klein" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` : ""}
       ${updates ? `<a class="card of-karte" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn of-plakette of-plakette--warnung">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted of-klein">· ${intervallText()}</span></a>` : ""}
       ${land ? `<div class="card of-karte" style="margin-top:0"><strong>${esc(land.name)}</strong> <span class="muted of-klein">· Landeshauptstadt ${esc(land.hauptstadt)} · im Krisenfall informiert <strong>${esc(land.orf_radio)}</strong></span></div>` : ""}
       <h2 style="margin-top:2rem">Installiert</h2>
@@ -436,10 +476,13 @@ const seiten = {
     if (!v || !b) return fehlt();
     const gesamt = v.gruppen.reduce((s, g) => s + g.punkte.length, 0);
     const erledigt = Object.values(state.checks).filter(Boolean).length;
-    const bereitStand = bereit();
+    const bereitStand = bereit(), vh = vorhaben();
+    const vorhabenHtml = vh.length ? `<div class="card of-karte vorhaben" id="vorhaben" style="margin-bottom:1rem"><h3 style="margin-top:0">Vorhaben</h3>
+      <p class="muted of-klein" style="margin:0 0 .6rem">Was du dir nach einem Satz von ${esc(wesen.anzeigename())} vorgenommen hast. Eine Erinnerung für dich, sie ändert die Bereit-Zahl nicht.</p>
+      <ul class="check">${vh.map((v) => `<li><label><input type="checkbox" data-vorhaben="${esc(v.id)}" ${v.erledigt ? "checked" : ""}><span>${esc(v.text)}</span></label> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-vorhaben-weg="${esc(v.id)}" aria-label="Vorhaben löschen">Löschen</button></li>`).join("")}</ul></div>` : "";
     return `
       ${kopf("Blackout-Vorsorge", esc(v.einleitung), `<div style="min-width:220px"><div class="muted of-klein" style="font-size:.9rem;margin-bottom:.3rem">${erledigt} von ${gesamt} erledigt</div><div class="progress of-balken"><div style="width:${(erledigt / gesamt) * 100}%"></div></div></div>`)}
-      <div class="grid grid-2">${v.gruppen.map((g, gi) => `
+      ${vorhabenHtml}<div class="grid grid-2">${v.gruppen.map((g, gi) => `
         <div class="card of-karte"><h3>${esc(g.gruppe)}</h3><ul class="check">${g.punkte.map((p, pi) => {
           const id = `${gi}-${pi}`;
           const pos = bereitStand.positionen.find((x) => x.check === id);
@@ -1475,13 +1518,14 @@ function render() {
   main.innerHTML = seiten[seite]();
   if (seite === "start") wesen.einbauen(); else wesen.setScore(bereit());
   wesen.ansicht(seite);
-  const aktiv = seite === "lesen" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite;
+  if (seite === "start") tagesSatzZeigen();
+  const aktiv = seite === "lesen" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" ? "uebersicht" : seite;
   if (seite !== "kapitel" && state.tag.liest) vorlesenStop();
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
   main.classList.toggle("main-lesen", seite === "lesen");
-  if ((seite === "kapitel" || seite === "neues") && state.tag.seiteVorher !== seite) { window.scrollTo(0, 0); main.scrollTop = 0; } // beginnt oben
+  if ((seite === "kapitel" || seite === "neues" || seite === "heft") && state.tag.seiteVorher !== seite) { window.scrollTo(0, 0); main.scrollTop = 0; } // beginnt oben
   state.tag.seiteVorher = seite;
-  document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : state.lesen?.titel ?? "Lesen")}`;
+  document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : seite === "heft" ? `Was ${wesen.anzeigename()} gesagt hat` : state.lesen?.titel ?? "Lesen")}`;
   if (seite === "karte") karteStarten();
   if (seite === "bibliothek") vorschauenNachladen();
   skinFuerSeite();
@@ -1500,6 +1544,7 @@ main.addEventListener("change", (e) => {
     planSpeichern(p); if (k === "tiefe") vorratAuffuellen(); return;
   }
   if (t.dataset.check) { state.checks[t.dataset.check] = t.checked; speicher.set("checks", state.checks); return bestaetigen(`c-${t.dataset.check}`, t.checked); }
+  if (t.dataset.vorhaben) { vorhabenSpeichern(vorhaben().map((v) => (v.id === t.dataset.vorhaben ? { ...v, erledigt: t.checked ? new Date().toISOString() : null } : v))); return; }
   if (t.dataset.abo) { state.abo[t.dataset.abo] = t.checked; aboSpeichern(); render(); }
   if (t.dataset.zeit) { state.abo[t.dataset.zeit] = t.value; aboSpeichern(); }
   if (t.dataset.wesen) { wesen.einstellen(t.dataset.wesen, t.type === "checkbox" ? t.checked : t.value); if (t.dataset.wesen !== "name") render(); return; }
@@ -1610,10 +1655,31 @@ document.getElementById("download").addEventListener("click", beiKlick);
 // Sprechblase, Karte und Log des Wesens (Karte liegt außerhalb von main)
 document.addEventListener("click", (e) => {
   const b = e.target.closest("button"); if (!b) return;
-  if (b.hasAttribute("data-wesen-zu")) wesen.tippSchliessen();
+  if (b.hasAttribute("data-wesen-zu")) { const satz = wesen.tagesSatz; wesen.tippSchliessen(); if (satz) tagSetzen({ id: `lumi-${satz}`, art: "lumi" }, "weg"); }
+  if (b.dataset.lumiAktion) return lumiKnopf(b);
+  if (b.dataset.lumiBewerten) return lumiBewerten(b);
+  if (b.dataset.lumiZurueckholen) { wesen.zurueckholen(b.dataset.lumiZurueckholen); return render(); }
+  if (b.hasAttribute("data-lumi-lernen-zuruecksetzen")) { wesen.lernenZuruecksetzen(); return render(); }
+  if (b.dataset.heftWeg) { wesen.heftLoeschen(b.dataset.heftWeg); return render(); }
+  if (b.dataset.vorhabenWeg) { vorhabenSpeichern(vorhaben().filter((v) => v.id !== b.dataset.vorhabenWeg)); return render(); }
   if (b.dataset.wesenStern) { wesen.stern(b.dataset.wesenStern); const el = document.getElementById("wesen-log"); if (el) el.innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche); }
 });
 
+/** Erster Knopf unter einem Satz: Zeig mir, Mach ich, Merken. Die Karte bleibt offen, bewerten kann man danach. */
+function lumiKnopf(b) {
+  const id = b.dataset.tipp, t = wesen.tipp(id); if (!t) return;
+  if (b.dataset.lumiAktion === "zeig") return zielOeffnen(t.ziel);
+  if (b.dataset.lumiAktion === "mach") vorhabenDazu(t);
+  if (b.dataset.lumiAktion === "merken") wesen.merken(id);
+  if (b.dataset.ort === "karte") render(); else wesen.knoepfeNeu();
+}
+/** Mehr davon · Passt · Nicht mehr: jede schließt den Satz. Auf der Tagesseite gilt die Karte dann als erledigt. */
+function lumiBewerten(b) {
+  const id = b.dataset.tipp, satz = wesen.tagesSatz;
+  if (!wesen.bewerte(id, b.dataset.lumiBewerten)) return;
+  if (b.dataset.ort === "karte" || satz === id) tagSetzen({ id: `lumi-${id}`, art: "lumi" }, "erledigt");
+  if (b.dataset.ort === "karte" || (location.hash || "#start") === "#uebersicht") render();
+}
 main.addEventListener("submit", (e) => {
   if (e.target.id !== "chat-form") return;
   e.preventDefault();
@@ -1627,6 +1693,7 @@ main.addEventListener("submit", (e) => {
 function notizbuchSpeichern() { speicher.set("notizbuch", state.notizbuch); }
 let notizTimer = null;
 main.addEventListener("input", (e) => {
+  if (e.target.id === "heft-suche") { state.heftSuche = e.target.value; const l = document.getElementById("heft-liste"); if (l) l.innerHTML = wesen.heftHtml(state.heftSuche); return; }
   if (e.target.id === "wesen-log-suche") { state.wesenLog.suche = e.target.value; const pos = e.target.selectionStart; document.getElementById("wesen-log").innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche); const s2 = document.getElementById("wesen-log-suche"); s2?.focus(); s2?.setSelectionRange(pos, pos); return; }
   if (e.target.dataset.wesen === "name") { if (!wesen.benannt()) return; wesen.einstellen("name", e.target.value); const el = document.querySelector(".wesen-text strong"); if (el) el.textContent = wesen.anzeigename(); return; }
   if (e.target.id === "wz-wert") { state.werkzeug.rechner.wert = e.target.value; const r = state.werkzeug.rechner; const el = document.getElementById("wz-ergebnis"); if (el) el.textContent = `${zahl(umrechnen(r.art, parseFloat(r.wert.replace(",", ".")), r.von, r.nach))} ${r.nach}`; }

@@ -80,7 +80,8 @@ export function tagesKarten({ karten, plan = PLAN_STANDARD, lumi = "karten", tex
   const aus = [];
   if (p.raetsel) aus.push(...karten.filter((k) => k.art === "raetsel").slice(0, 1));
   if (p.kapitel) aus.push(...karten.filter((k) => k.art === "kapitel").slice(0, 1));
-  if (p.lumi && lumi !== "aus" && textkarte) aus.push({ art: lumi === "wesen" ? "lumi" : "text", id: `lumi-${textkarte.id}`, text: textkarte.text, sorte: textkarte.sorte });
+  // Eine Stimme: Mit Figur spricht der Satz des Tages in der Sprechblase, als Karte nur bei Textkarten.
+  if (p.lumi && lumi === "karten" && textkarte) aus.push({ art: "text", id: `lumi-${textkarte.id}`, text: textkarte.text, sorte: textkarte.sorte });
   if (p.lektion) aus.push(...karten.filter((k) => k.art === "lektion" && k.absaetze).slice(0, 1));
   return aus;
 }

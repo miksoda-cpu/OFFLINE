@@ -1,5 +1,13 @@
 # Änderungen
 
+## 0.3.4 · 04.10.2026 · Lumi-Sätze führen irgendwohin
+
+- **Knöpfe je Sorte** unter jedem Satz der Lumi (Sprechblase, Meldung, Textkarte): App „Zeig mir“ (mit `ziel`), Alltag „Mach ich“ (Vorhaben in Vorsorge, ändert Bereit nicht), Wissen „Merken“ (Heft), Digital „Zeig mir“ oder „Merken“; Weisheit und Laune nur Bewertung (`tippAktion`, `tippKnoepfeHtml` in `web/wesen.js`).
+- **Bewertung** „Mehr davon · Passt · Nicht mehr“ statt „Gelesen / Weglegen“, ✕ schließt ohne Bewertung. Gewicht je Sorte (×1,3 bis 3, ×0,85 bis 0,4), „Nicht mehr“ nimmt den Satz aus dem Pool. „Was Lumi gelernt hat“ in Übersicht › Lumi mit Balken, Zurückholen, Zurücksetzen.
+- **Heft „Was Lumi gesagt hat“** (`#heft`): gemerkte Sätze mit Datum, durchsuchbar, löschbar; Stern im Verlauf = Merken, frühere Sterne übernommen.
+- **Fehler behoben:** Mit Figur sprach die Lumi zweimal (Sprechblase und Karte „Lumi sagt“) – jetzt spricht der Satz des Tages in der Sprechblase, die Karte gibt es nur bei Textkarten. Vor der Namensgabe kam ein Tipp – jetzt nur die Frage; „Später“ gilt auch nach einem Neustart.
+- **Paket `wir` 2026.10.04:** Felder `ziel` (16 Tipps) und `buch` (reserviert), geprüft vom Kit (`paket-kit/tipps-format.mjs`, `pruefen.mjs`); `app-004` kommt jetzt (Funktion „gelernt“).
+
 ## 0.3.3 · 04.10.2026 · Antwortfeld beim Tagesrätsel
 
 - **Antwortfeld:** Rätsel mit eindeutiger Kurzantwort haben ein Feld „Deine Antwort“ mit „Prüfen“ (Enter prüft). Verglichen wird lokal (`antwortRichtig` in `web/tag.js`): Groß/klein, Leer- und Satzzeichen, ä/ae, ö/oe, ü/ue, ß/ss, Ziffer und Zahlwort bis 9999, Füllwörter vorn; bei einer reinen Zahl darf ein Wort folgen („12 Runden“). Richtig: Bestätigung mit Erklärung, Karte erledigt, bleibt sichtbar auch über dem Tagesschluss. Falsch: „Noch nicht. Magst du einen Hinweis?“ Keine Zählung, keine Punkte.

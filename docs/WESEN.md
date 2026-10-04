@@ -4,6 +4,15 @@
 
 ## B. Umsetzung (App 0.1.5, 28.09.2026; Lumi und Bereit 2 in 0.2.0, 29.09.2026)
 
+**0.3.4: Sätze führen irgendwohin (Auftrag `2026-10-04-lumi-knoepfe`):**
+- **Knöpfe je Sorte** unter jedem Satz (Sprechblase, eingeblendete Meldung, Textkarte des Tages): App „Zeig mir“ (nur mit `ziel`), Alltag „Mach ich“ (wird ein Vorhaben in Vorsorge, abhakbar, ändert Bereit nicht), Wissen „Merken“ (ins Heft), Digital „Zeig mir“ mit Ziel, sonst „Merken“; Weisheit und Laune nur Bewertung. Platz für einen zweiten Knopf (später „Aus dem Lumi-Buch“).
+- **Bewertung statt „Gelesen / Weglegen“:** *Mehr davon · Passt · Nicht mehr*, jede schließt den Satz; das ✕ schließt ohne Bewertung (auf der Tagesseite zählt das als weggelegt). Gewicht je Sorte: Start 1, „Mehr davon“ ×1,3 bis höchstens 3, „Nicht mehr“ ×0,85 bis mindestens 0,4 und der Satz kommt nie wieder. Keine Zählung, keine Serien, nichts verlässt das Gerät (`lumi-bewertung`).
+- **Sichtbar und rückgängig:** Übersicht › Lumi › „Was Lumi gelernt hat“ mit Balken je Sorte, den ausgeschlossenen Sätzen (Zurückholen) und Zurücksetzen.
+- **Heft „Was Lumi gesagt hat“** (`#heft`, verlinkt dort): gemerkte Sätze mit Datum, ohne Netz durchsuchbar, einzeln löschbar (`lumi-heft`). Der Stern im Verlauf („Alles, was Lumi gesagt hat“) ist dasselbe Merken; frühere Sterne wurden übernommen.
+- **Eine Stimme:** Mit Figur spricht der Satz des Tages in der Sprechblase, eine Karte gibt es nur bei Textkarten; ein offener Satz wird nicht durch einen neuen ersetzt; bei Textkarten keine eingeblendete Meldung auf der Tagesseite. Der Satz des Tages bleibt den Tag über derselbe (`lumi-satz`).
+- **Vor dem Namen kein Tipp:** Solange die Namensfrage offen ist, nur die Frage. „Später“ gilt auch nach einem Neustart (`lumi-start.spaeter`); danach Sätze ohne „ich“.
+- **Paket `wir`:** optional `ziel` (Stelle der App, Liste `ZIELE` in `web/wesen.js` und `paket-kit/tipps-format.mjs`) und `buch` (reserviert für das Lumi-Buch, Form `b1-03-07`, noch ohne Wirkung). 16 Tipps haben ein Ziel. Neue Funktionen in `FUNKTIONEN`: `gelernt`, `heft`, `vorhaben` (damit kommt `app-004`).
+
 **Nachtrag 0.2.1 (Entscheidungen Mik 29.09. abends, Auftrag `2026-09-29-lumi-nachtrag`):**
 - **Drei Stufen:** *Aus mit Textkarten* (Standard), *Lumi mit Tipps*, *Tipps aus*. Textkarten: keine Figur, Tipps als neutrale Karte unten rechts im selben Takt, nur die Sorten App, Alltag, Wissen, dazu Digital, wenn angekreuzt. *Tipps aus*: ganz still, nur die Bereit-Zahl, keine Einladung. Wahl unter „Lumi“ auf der Übersicht; „Lumi ausschalten“ führt zurück zu den Textkarten.
 - **Von sich erzählen** (Text mit ich/mir/mein oder Bedingung `benannt`) nur bei eingeschalteter und benannter Lumi, nie auf Textkarten.

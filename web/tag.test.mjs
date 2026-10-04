@@ -80,7 +80,7 @@ test("Tagesseite: Karten nach Tagesplan, die Lumi oder die Textkarte, Schluss mi
   const karten = [r("x"), { art: "kapitel", id: "k1" }];
   const tipp = { id: "app-001", text: "Tipp", sorte: "app" };
   assert.deepEqual(tagesKarten({ karten, lumi: "karten", textkarte: tipp }).map((k) => k.art), ["raetsel", "kapitel", "text"]);
-  assert.deepEqual(tagesKarten({ karten, lumi: "wesen", textkarte: tipp }).map((k) => k.art), ["raetsel", "kapitel", "lumi"]);
+  assert.deepEqual(tagesKarten({ karten, lumi: "wesen", textkarte: tipp }).map((k) => k.art), ["raetsel", "kapitel"], "mit Figur spricht der Satz in der Sprechblase, keine zweite Stimme als Karte");
   assert.deepEqual(tagesKarten({ karten, lumi: "aus", textkarte: tipp }).map((k) => k.art), ["raetsel", "kapitel"], "Tipps aus: keine Karte");
   assert.deepEqual(tagesKarten({ karten, plan: { karten: { raetsel: false, kapitel: true, lumi: false } } }).map((k) => k.art), ["kapitel"]);
   const tk = tagesKarten({ karten, lumi: "karten", textkarte: tipp });

@@ -50,6 +50,37 @@ export const DARSTELLUNG = { karten: "Aus mit Textkarten", wesen: "Lumi mit Tipp
 /** Sorten, die als neutrale Textkarte kommen (Digital nur, wenn angekreuzt). */
 export const KARTEN_SORTEN = ["app", "alltag", "wissen", "digital"];
 
+// ---------- Was man mit einem Satz tun kann (Auftrag 2026-10-04-lumi-knoepfe) ----------
+/** Stellen der App für „Zeig mir“ – gleiche Liste wie paket-kit/tipps-format.mjs (Test prüft Gleichheit). */
+export const ZIELE = ["start", "uebersicht", "notfall", "vorsorge", "tresor", "werkzeuge", "bibliothek", "karte", "notizen", "updates", "neues", "kapitel", "heft", "tagesplan", "lumi", "lumi-log"];
+export const AKTION_TEXT = { zeig: "Zeig mir", mach: "Mach ich", merken: "Merken" };
+/** Erster Knopf je Sorte: App „Zeig mir“ (nur mit Ziel), Alltag „Mach ich“, Wissen „Merken“, Digital „Zeig mir“ mit Ziel, sonst „Merken“. Weisheit, Laune: keiner. */
+export function tippAktion(t) {
+  const ziel = !!t?.ziel && ZIELE.includes(t.ziel);
+  if (t?.sorte === "app") return ziel ? "zeig" : null;
+  if (t?.sorte === "alltag") return "mach";
+  if (t?.sorte === "wissen") return "merken";
+  if (t?.sorte === "digital") return ziel ? "zeig" : "merken";
+  return null;
+}
+export const BEWERTUNG = { mehr: "Mehr davon", passt: "Passt", nicht: "Nicht mehr" };
+/** Gewicht je Sorte: Start 1, „Mehr davon“ ×1,3 (höchstens 3), „Nicht mehr“ ×0,85 (mindestens 0,4). Keine Zählung, keine Serien. */
+export const GEWICHT = { start: 1, mehr: 1.3, nicht: 0.85, hoch: 3, tief: 0.4 };
+export function bewertungLaden(g) {
+  const gewicht = {};
+  for (const [k, v] of Object.entries(g?.gewicht ?? {})) if (SORTEN[k] && typeof v === "number" && v > 0) gewicht[k] = Math.min(GEWICHT.hoch, Math.max(GEWICHT.tief, v));
+  return { gewicht, aus: [...new Set((Array.isArray(g?.aus) ? g.aus : []).filter((x) => typeof x === "string"))] };
+}
+export const sorteGewicht = (stand, sorte) => stand?.gewicht?.[sorte] ?? GEWICHT.start;
+/** Bewertung anwenden: mehr hebt die Sorte, nicht nimmt den Satz aus dem Pool und senkt die Sorte leicht, passt ändert nichts. */
+export function bewerten(stand, tipp, art) {
+  const s = bewertungLaden(stand), g = sorteGewicht(s, tipp.sorte);
+  const r = (x) => Math.round(x * 100) / 100;
+  if (art === "mehr") s.gewicht[tipp.sorte] = r(Math.min(GEWICHT.hoch, g * GEWICHT.mehr));
+  if (art === "nicht") { s.gewicht[tipp.sorte] = r(Math.max(GEWICHT.tief, g * GEWICHT.nicht)); if (!s.aus.includes(tipp.id)) s.aus.push(tipp.id); }
+  return s;
+}
+
 /** Spricht der Text von sich selbst? Vor der Namensgabe ist das nicht erlaubt. */
 export const ICH = /(^|[^\p{L}])(ich|mir|mich|mein|meine|meinen|meinem|meiner|meines)(?![\p{L}])/iu;
 export const ohneIch = (text) => !ICH.test(String(text ?? ""));
@@ -116,7 +147,7 @@ const WORTSCHATZ = new Set(["ansicht", "einstellung", "monat", "tag", "wochentag
  * eine funktion-Bedingung hat).
  */
 export const FUNKTIONEN = new Set(["tagesseite", "tagesplan", "vorrat", "vorlesen", "sparmodus", "schluss", "tresor", "notfallmappe",
-  "bereit", "bibliothek", "karte", "werkzeuge", "radio", "module", "skins", "updates", "was-ist-neu", "lumi"]);
+  "bereit", "bibliothek", "karte", "werkzeuge", "radio", "module", "skins", "updates", "was-ist-neu", "lumi", "gelernt", "heft", "vorhaben"]);
 export function passtBedingung(b, k) {
   if (!b) return true;
   if (Object.keys(b).some((w) => !WORTSCHATZ.has(w))) return false;
@@ -147,11 +178,12 @@ export const erzaehltVonSich = (t) => !ohneIch(t?.text) || !!t?.bedingung?.benan
 /**
  * Welche Tipps kommen in Frage? „Tipps aus“: keiner. Textkarten: nur App, Alltag, Wissen (Digital, wenn angekreuzt), nichts,
  * worin die Lumi von sich erzählt. Lumi mit Tipps: alle angekreuzten Sorten; von sich erzählt sie nur mit Namen.
+ * aus: Sätze, die mit „Nicht mehr“ bewertet wurden (Set der ids).
  */
-export function tippPool(alle, e, k) {
+export function tippPool(alle, e, k, aus = null) {
   if (!e || e.darstellung === "aus") return [];
   const figur = e.darstellung === "wesen";
-  return (alle || []).filter((t) => t && typeof t.text === "string" && SORTEN[t.sorte] && e.sorten[t.sorte]
+  return (alle || []).filter((t) => t && typeof t.text === "string" && SORTEN[t.sorte] && e.sorten[t.sorte] && !aus?.has(t.id)
     && (figur || KARTEN_SORTEN.includes(t.sorte))
     && passtBedingung(t.bedingung, k) && (!erzaehltVonSich(t) || (figur && k.benannt)));
 }
@@ -190,6 +222,20 @@ const TAKT = { normal: 90, seltener: 180, aus: 0 };
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const rnd = (n) => Math.floor(Math.random() * n);
 
+/**
+ * Knöpfe unter einem Satz: der erste je Sorte (Platz für einen zweiten, später „Aus dem Lumi-Buch“), darunter die Bewertung.
+ * ort: blase | toast | karte. o.gemerkt / o.vorgemerkt: schon im Heft / schon Vorhaben.
+ */
+export function tippKnoepfeHtml(t, o = {}) {
+  if (!t?.id) return "";
+  const a = tippAktion(t), id = esc(t.id), ort = esc(o.ort ?? "blase");
+  const knopf = (art, text) => `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi-aktion="${art}" data-tipp="${id}" data-ort="${ort}">${text}</button>`;
+  const erster = a === "zeig" ? knopf("zeig", AKTION_TEXT.zeig)
+    : a === "mach" ? (o.vorgemerkt ? `<a class="lumi-erledigt of-klein" href="#vorsorge">Steht in Vorsorge unter Vorhaben</a>` : knopf("mach", AKTION_TEXT.mach))
+    : a === "merken" ? (o.gemerkt ? `<a class="lumi-erledigt of-klein" href="#heft">Steht im Heft</a>` : knopf("merken", AKTION_TEXT.merken)) : "";
+  return `<div class="lumi-knoepfe">${erster ? `<div class="lumi-aktionen">${erster}</div>` : ""}<div class="lumi-bewertung" role="group" aria-label="Wie war der Satz?">${Object.entries(BEWERTUNG).map(([k, l]) => `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi-bewerten="${k}" data-tipp="${id}" data-ort="${ort}">${l}</button>`).join("")}</div></div>`;
+}
+
 export class Wesen {
   /** @param {{speicher:object, tipps:()=>Array, onLog?:Function}} o */
   constructor(o) {
@@ -198,9 +244,13 @@ export class Wesen {
     this.start = this.sp.get("lumi-start", null) ?? { erstStart: new Date().toISOString(), karte: "offen" };
     this.sp.set("lumi-start", this.start);
     this.positionen = {}; this.sprichtBis = 0; this.denktBis = 0; this.freudeBis = 0; this.hoertZu = false;
-    this.namensfrage = !this.e.name && this.e.darstellung === "wesen"; this.ausschaltenFrage = false; this.wachBis = 0;
+    this.namensfrage = !this.e.name && this.e.darstellung === "wesen" && !this.start.spaeter; this.ausschaltenFrage = false; this.wachBis = 0;
+    this.istVorhaben = o.istVorhaben ?? (() => false); this.tagesSatz = null;
+    this.bewertung = bewertungLaden(this.sp.get("lumi-bewertung", null));
     this.gelernt = this.sp.get("wesen-gelernt", { intervall: 90, gelesen: 0, weitergewischt: 0 });
     this.log = this.sp.get("wesen-log", []);
+    // Heft „Was Lumi gesagt hat“: gemerkte Sätze; beim ersten Start die bisher mit Stern gemerkten übernehmen
+    this.heft = this.sp.get("lumi-heft", null) ?? this.log.filter((l) => l.stern).map((l) => ({ id: l.id, sorte: l.sorte, text: l.text, datum: l.zeit }));
     this.score = 0; this.verfallen = []; this.zustand = "sitzt"; this.ansichtName = "start";
     this.frame = 0; this.blinzelt = 0; this.pokes = []; this.zaehneBis = 0; this.ohrenZurueckBis = 0;
     this.sitzung = { tipps: 0, start: Date.now() }; this.letzteEingabe = Date.now(); this.timer = null; this.tickTimer = null;
@@ -217,7 +267,7 @@ export class Wesen {
     addEventListener("keydown", eingabe);
   }
 
-  speichern() { this.sp.set("lumi-start", this.start); this.sp.set("wesen", this.e); this.sp.set("wesen-gelernt", this.gelernt); this.sp.set("wesen-log", this.log.slice(-500)); }
+  speichern() { this.sp.set("lumi-start", this.start); this.sp.set("wesen", this.e); this.sp.set("wesen-gelernt", this.gelernt); this.sp.set("wesen-log", this.log.slice(-500)); this.sp.set("lumi-bewertung", this.bewertung); this.sp.set("lumi-heft", this.heft); }
   aktiv() { return this.e.darstellung !== "aus"; } // es kommen Tipps (als Lumi oder als Textkarte)
   mitFigur() { return this.e.darstellung === "wesen"; }
   benannt() { return this.e.name.trim() !== ""; }
@@ -244,7 +294,9 @@ export class Wesen {
     this.e.name = name; this.namensfrage = false; this.hoertZu = false; this.speichern();
     this.freude(4000); setTimeout(() => this.sagen(TEXTE.mitNamen(name)), 80); // nach dem Neuzeichnen der Seite
   }
-  spaeter() { this.namensfrage = false; this.hoertZu = false; }
+  spaeter() { this.namensfrage = false; this.hoertZu = false; this.start.spaeter = true; this.speichern(); }
+  /** Solange die Namensfrage offen ist, sagt sie keinen Tipp (nur die Frage). */
+  fragtNachNamen() { return this.mitFigur() && !this.benannt() && this.namensfrage; }
   /** Lumi ausschalten: zurück zu den Textkarten. „Tipps aus“ wählt man in den Einstellungen. */
   ausschalten(stufe = "karten") {
     this.e.darstellung = stufe; this.ausschaltenFrage = false; this.namensfrage = false; this.speichern(); this.planen();
@@ -299,13 +351,13 @@ export class Wesen {
   waehleTipp(nurAnsicht = null) {
     const k = this.kontext();
     const kuerzlich = new Set(this.log.filter((l) => Date.now() - new Date(l.zeit).getTime() < 86400000).map((l) => l.id));
-    let pool = tippPool(this.tippsQuelle(), this.e, k);
+    let pool = tippPool(this.tippsQuelle(), this.e, k, new Set(this.bewertung.aus));
     if (nurAnsicht) pool = pool.filter((t) => t.bedingung?.ansicht === nurAnsicht);
     if (!pool.length) return null;
     const frisch = pool.filter((t) => !kuerzlich.has(t.id)); if (frisch.length) pool = frisch;
     // erst die Sorte (gleich verteilt, Laune halb so oft), dann der Tipp nach Gewicht
     const sorten = [...new Set(pool.map((t) => t.sorte))];
-    const sw = sorten.map((s) => (s === "laune" ? 0.5 : 1)); let r = Math.random() * sw.reduce((a, b) => a + b, 0); let sorte = sorten[0];
+    const sw = sorten.map((s) => (s === "laune" ? 0.5 : 1) * sorteGewicht(this.bewertung, s)); let r = Math.random() * sw.reduce((a, b) => a + b, 0); let sorte = sorten[0];
     for (let i = 0; i < sorten.length; i++) { r -= sw[i]; if (r <= 0) { sorte = sorten[i]; break; } }
     const kand = pool.filter((t) => t.sorte === sorte); const gw = kand.map((t) => t.gewicht || 1);
     r = Math.random() * gw.reduce((a, b) => a + b, 0);
@@ -313,14 +365,14 @@ export class Wesen {
     return kand[kand.length - 1];
   }
   zeigeTipp(t, nachgedacht = false) {
-    if (!t || !this.aktiv()) return;
+    if (!t || !this.aktiv() || this.fragtNachNamen()) return;
     // vor einem Weisheitstipp kurz nachdenken (Mimik-Tafel), dann genau einmal zeigen
     if (t.sorte === "weisheit" && this.mitFigur() && !nachgedacht) { this.denktBis = Date.now() + 1200; this.zeichnen(); setTimeout(() => { this.denktBis = 0; this.zeigeTipp(t, true); }, 1200); return; }
     this.sprichtBis = Date.now() + 2500;
     this.aktuellerTipp = t; this.tippGezeigtUm = Date.now(); this.sitzung.tipps++;
     this.log.push({ id: t.id, sorte: t.sorte, text: t.text, zeit: new Date().toISOString(), stern: false });
     this.speichern();
-    this.sprechblase(t.text, t.sorte);
+    this.sprechblase(t.text, t.sorte, 0, t);
     this.onLog?.();
   }
   tippSchliessen() {
@@ -334,7 +386,7 @@ export class Wesen {
       this.gelernt.intervall = Math.round(basis * (anteil < 0.3 ? 2 : anteil > 0.7 ? 0.67 : 1));
       this.speichern();
     }
-    this.aktuellerTipp = null;
+    this.aktuellerTipp = null; this.tagesSatz = null;
     const el = document.getElementById("wesen-blase"); if (el) el.hidden = true;
     const toast = document.getElementById("wesen-toast"); if (toast) toast.remove();
   }
@@ -345,6 +397,8 @@ export class Wesen {
       if (this.sitzung.tipps >= 12 || this.ansichtName === "notfall" || document.hidden) return;
       if (Date.now() - this.letzteEingabe > 120000) return; // Stillstand: pausieren
       if (this.nachtruhe()) return; // sie schläft
+      if (this.fragtNachNamen() || this.aktuellerTipp) return; // vor dem Namen nur die Frage; nie zwei Sätze zugleich
+      if (!this.mitFigur() && this.ansichtName === "start") return; // Textkarten: auf der Tagesseite spricht die Karte
       this.zeigeTipp(this.waehleTipp());
     };
     this.timer = setTimeout(versuch, 3000);
@@ -353,24 +407,59 @@ export class Wesen {
   ansicht(name) {
     const vorher = this.ansichtName; this.ansichtName = name;
     if (name === "start") { const toast = document.getElementById("wesen-toast"); if (toast) { toast.remove(); this.aktuellerTipp = null; } this.planen(); return; }
-    if (!this.aktiv() || this.nachtruhe() || name === vorher || this.ansichtTippGezeigt.has(name) || name === "notfall" || this.sitzung.tipps >= 12) return;
+    if (!this.aktiv() || this.nachtruhe() || this.fragtNachNamen() || name === vorher || this.ansichtTippGezeigt.has(name) || name === "notfall" || this.sitzung.tipps >= 12) return;
     const t = this.waehleTipp(name); if (t) { this.ansichtTippGezeigt.add(name); this.zeigeTipp(t); }
   }
-  stern(id) { const l = this.log.find((x) => x.id === id && !x.stern) || [...this.log].reverse().find((x) => x.id === id); if (l) { l.stern = !l.stern; this.speichern(); } }
+  /** Stern im Log = ins Heft legen oder wieder herausnehmen. */
+  stern(id) { if (this.imHeft(id)) this.heftLoeschen(id); else this.merken(id); }
+
+  // ---------- Satz des Tages, Bewertung, Heft ----------
+  tipp(id) { return (this.tippsQuelle() ?? []).find((t) => t.id === id) ?? null; }
+  /** Mit Figur spricht der Satz des Tages in der Sprechblase (eine Stimme), nicht als Karte. */
+  satzDesTages(t) {
+    if (!t || !this.mitFigur() || this.fragtNachNamen() || this.nachtruhe() || this.aktuellerTipp) return false;
+    this.zeigeTipp(t); this.tagesSatz = t.id; return true;
+  }
+  bewerte(id, art) {
+    const t = this.tipp(id) ?? this.log.find((l) => l.id === id);
+    if (!t || !BEWERTUNG[art]) return null;
+    this.bewertung = bewerten(this.bewertung, t, art);
+    const l = [...this.log].reverse().find((x) => x.id === id); if (l) l.bewertung = art;
+    this.speichern();
+    if (this.aktuellerTipp?.id === id) this.tippSchliessen();
+    return t;
+  }
+  imHeft(id) { return this.heft.some((h) => h.id === id); }
+  merken(id) {
+    if (this.imHeft(id)) return true;
+    const t = this.tipp(id) ?? this.log.find((l) => l.id === id); if (!t) return false;
+    this.heft.unshift({ id: t.id, sorte: t.sorte, text: t.text, datum: new Date().toISOString() });
+    for (const l of this.log) if (l.id === id) l.stern = true;
+    this.speichern(); return true;
+  }
+  heftLoeschen(id) { this.heft = this.heft.filter((h) => h.id !== id); for (const l of this.log) if (l.id === id) l.stern = false; this.speichern(); }
+  zurueckholen(id) { this.bewertung.aus = this.bewertung.aus.filter((x) => x !== id); this.speichern(); }
+  lernenZuruecksetzen() { this.bewertung = bewertungLaden(null); this.speichern(); }
+  /** Knöpfe einer offenen Sprechblase oder Meldung neu zeichnen (nach „Merken“ / „Mach ich“). */
+  knoepfeNeu() {
+    const t = this.aktuellerTipp; if (!t) return;
+    for (const el of document.querySelectorAll("#wesen-blase .lumi-knoepfe, #wesen-toast .lumi-knoepfe")) el.outerHTML = tippKnoepfeHtml(t, { ort: el.closest("#wesen-toast") ? "toast" : "blase", gemerkt: this.imHeft(t.id), vorgemerkt: this.istVorhaben(t.id) });
+  }
 
   // ---------- Sprechblase / Karte ----------
   laut(text) { if (this.e.laute && this.mitFigur()) this.sprechblase(text, null, 2500); }
-  sprechblase(text, sorte, dauer = 0) {
+  sprechblase(text, sorte, dauer = 0, t = null) {
     const blase = document.getElementById("wesen-blase");
+    const knoepfe = (ort) => (t ? tippKnoepfeHtml(t, { ort, gemerkt: this.imHeft(t.id), vorgemerkt: this.istVorhaben(t.id) }) : "");
     if (blase && this.mitFigur()) {
-      blase.hidden = false; blase.innerHTML = `${sorte ? `<span class="wesen-sorte">${esc(SORTEN[sorte])}</span>` : ""}<span>${esc(text)}</span>${sorte ? `<button class="wesen-zu" data-wesen-zu aria-label="Weiter">×</button>` : ""}`;
+      blase.hidden = false; blase.innerHTML = `${sorte ? `<span class="wesen-sorte">${esc(SORTEN[sorte])}</span>` : ""}<span>${esc(text)}</span>${sorte ? `<button class="wesen-zu" data-wesen-zu aria-label="Schließen ohne Bewertung">×</button>` : ""}${knoepfe("blase")}`;
       if (dauer) setTimeout(() => { if (!this.aktuellerTipp) blase.hidden = true; }, dauer);
       return;
     }
     if (!sorte) return;
     let toast = document.getElementById("wesen-toast");
     if (!toast) { toast = document.createElement("div"); toast.id = "wesen-toast"; toast.className = "wesen-toast"; toast.setAttribute("role", "status"); toast.setAttribute("aria-live", "polite"); document.body.appendChild(toast); }
-    toast.innerHTML = `<span class="wesen-sorte">${esc(SORTEN[sorte])}</span><span>${esc(text)}</span><button class="wesen-zu" data-wesen-zu aria-label="Weiter">×</button>`;
+    toast.innerHTML = `<span class="wesen-sorte">${esc(SORTEN[sorte])}</span><span>${esc(text)}</span><button class="wesen-zu" data-wesen-zu aria-label="Schließen ohne Bewertung">×</button>${knoepfe("toast")}`;
   }
 
   // ---------- Bühne (HTML) ----------
@@ -514,7 +603,8 @@ export class Wesen {
       ${e.darstellung === "karten" ? `<div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:.8rem">${KARTEN_SORTEN.map((k) => `<label><input type="checkbox" data-wesen-sorte="${k}" ${e.sorten[k] ? "checked" : ""}> ${SORTEN[k]}${k === "digital" ? ' <span class="muted of-klein">(Einstieg in die digitale Welt)</span>' : ""}</label>`).join("")}</div>` : ""}
       <p style="margin:0 0 .6rem">${esc(TEXTE.beschreibung)}</p>
       <button type="button" class="btn btn-primary of-btn of-btn--primaer" data-lumi="einschalten">Lumi zeigen</button>
-      <p class="muted of-klein" style="margin:.6rem 0 0;font-size:.85rem">${esc(TEXTE.einladungHinweis)} ${esc(TEXTE.ki)}${this.benannt() ? ` ${esc(e.name)} und alles, was sie gesagt hat, bleiben gespeichert.` : ""}</p>`;
+      <p class="muted of-klein" style="margin:.6rem 0 0;font-size:.85rem">${esc(TEXTE.einladungHinweis)} ${esc(TEXTE.ki)}${this.benannt() ? ` ${esc(e.name)} und alles, was sie gesagt hat, bleiben gespeichert.` : ""}</p>
+      ${e.darstellung === "karten" ? this.gelerntHtml() : ""}`;
     const aus = this.ausschaltenFrage
       ? `<div class="lumi-aus-frage" role="group"><p style="margin:0 0 .5rem">${esc(TEXTE.ausschalten(this.benannt() ? e.name : ""))}</p><button type="button" class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-lumi="ausschalten">Ausschalten</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi="dochnicht">Doch nicht</button></div>`
       : `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi="ausschalten-frage">Lumi ausschalten</button>`;
@@ -531,13 +621,35 @@ export class Wesen {
     <div style="display:flex;gap:.8rem;flex-wrap:wrap">${Object.entries(SORTEN).map(([k, l]) => `<label><input type="checkbox" data-wesen-sorte="${k}" ${e.sorten[k] ? "checked" : ""}> ${l}${k === "digital" ? ' <span class="muted of-klein">(Einstieg in die digitale Welt)</span>' : ""}</label>`).join("")}</div>
     <p class="muted of-klein" style="margin:.8rem 0 0;font-size:.85rem">Gelernt: Tipps alle ${this.gelernt.intervall} s (${this.gelernt.gelesen} gelesen, ${this.gelernt.weitergewischt} weitergewischt). <button class="btn btn-sm of-btn of-btn--klein" data-wesen-gelernt-zurueck>Zurücksetzen</button></p>
     <p class="muted of-klein" style="margin:.4rem 0 .8rem;font-size:.85rem">${esc(TEXTE.ki)}</p>
+    ${this.gelerntHtml()}
     ${aus}`;
+  }
+  /** „Was Lumi gelernt hat“: Gewicht je Sorte als Balken, ausgeschlossene Sätze (zurückholbar), Zurücksetzen. Alles bleibt am Gerät. */
+  gelerntHtml() {
+    const sorten = Object.keys(SORTEN).filter((k) => this.e.sorten[k] && (this.mitFigur() || KARTEN_SORTEN.includes(k)));
+    const aus = this.bewertung.aus.map((id) => this.tipp(id) ?? { id, text: id });
+    const breite = (g) => Math.round((g / GEWICHT.hoch) * 100);
+    return `<section class="lumi-gelernt" id="lumi-gelernt" aria-labelledby="lumi-gelernt-titel">
+      <h4 id="lumi-gelernt-titel" style="margin:1rem 0 .3rem">Was ${esc(this.anzeigename())} gelernt hat</h4>
+      <p class="muted of-klein" style="margin:0 0 .6rem">Aus „Mehr davon“ und „Nicht mehr“. Es wird nichts gezählt und nichts verlässt das Gerät.</p>
+      <ul class="lumi-balken">${sorten.map((k) => { const g = sorteGewicht(this.bewertung, k); return `<li><span>${esc(SORTEN[k])}</span><span class="lumi-balken-spur" role="img" aria-label="${esc(SORTEN[k])}: ${g < 1 ? "seltener" : g > 1 ? "öfter" : "wie am Anfang"}"><span style="width:${breite(g)}%"></span></span><span class="muted of-klein">${g < 1 ? "seltener" : g > 1 ? "öfter" : "normal"}</span></li>`; }).join("")}</ul>
+      ${aus.length ? `<p class="of-klein" style="margin:.6rem 0 .3rem"><strong>Nicht mehr</strong> (${aus.length})</p><ul class="lumi-aus">${aus.map((t) => `<li><span>${esc(t.text)}</span> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi-zurueckholen="${esc(t.id)}">Zurückholen</button></li>`).join("")}</ul>` : ""}
+      <p style="margin:.6rem 0 0"><a href="#heft">Heft: Was ${esc(this.anzeigename())} gesagt hat</a> <span class="muted of-klein">· ${this.heft.length}</span> · <button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi-lernen-zuruecksetzen ${!aus.length && !Object.keys(this.bewertung.gewicht).length ? "disabled" : ""}>Zurücksetzen</button></p>
+    </section>`;
+  }
+  /** Das Heft: gemerkte Sätze mit Datum, ohne Netz durchsuchbar, einzeln löschbar. */
+  heftHtml(suche = "") {
+    const q = suche.trim().toLowerCase();
+    const liste = this.heft.filter((h) => !q || h.text.toLowerCase().includes(q));
+    return `${this.heft.length ? `<p class="muted of-klein" style="margin:0 0 .6rem">${liste.length} von ${this.heft.length}</p>` : ""}
+      ${liste.length ? `<ul class="lumi-heft">${liste.map((h) => `<li><p style="margin:0 0 .3rem">${esc(h.text)}</p><span class="muted of-klein">${esc(SORTEN[h.sorte] ?? h.sorte)} · ${new Date(h.datum).toLocaleDateString("de-AT", { day: "numeric", month: "long", year: "numeric" })}</span> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-heft-weg="${esc(h.id)}" aria-label="Aus dem Heft löschen">Löschen</button></li>`).join("")}</ul>`
+        : this.heft.length ? `<p class="muted">Nichts gefunden.</p>` : `<p class="muted">Noch leer. Unter einem Satz von ${esc(this.anzeigename())} legt „Merken“ ihn hierher.</p>`}`;
   }
   logHtml(filter = "", suche = "") {
     const q = suche.trim().toLowerCase();
     const liste = [...this.log].reverse().filter((l) => (!filter || l.sorte === filter) && (!q || l.text.toLowerCase().includes(q)));
     return `<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem"><select class="of-select" id="wesen-log-filter"><option value="">Alle Sorten</option>${Object.entries(SORTEN).map(([k, l]) => `<option value="${k}" ${filter === k ? "selected" : ""}>${l}</option>`).join("")}</select><input class="of-input" type="text" id="wesen-log-suche" placeholder="Suchen …" value="${esc(suche)}" autocomplete="off"><span class="muted of-klein" style="align-self:center">${liste.length} Tipp${liste.length === 1 ? "" : "s"}</span></div>
-      ${liste.length ? `<ul class="wesen-log">${liste.slice(0, 200).map((l) => `<li><button class="wesen-stern ${l.stern ? "an" : ""}" data-wesen-stern="${esc(l.id)}" aria-label="Merken">${l.stern ? "★" : "☆"}</button><span class="wesen-sorte">${esc(SORTEN[l.sorte] ?? l.sorte)}</span> ${esc(l.text)} <span class="muted of-klein" style="font-size:.8rem">${new Date(l.zeit).toLocaleString("de-AT", { dateStyle: "short", timeStyle: "short" })}</span></li>`).join("")}</ul>` : `<p class="muted of-klein">Noch nichts gesagt.</p>`}`;
+      ${liste.length ? `<ul class="wesen-log">${liste.slice(0, 200).map((l) => `<li><button class="wesen-stern ${this.imHeft(l.id) ? "an" : ""}" data-wesen-stern="${esc(l.id)}" aria-label="${this.imHeft(l.id) ? "Aus dem Heft nehmen" : "Ins Heft legen"}">${this.imHeft(l.id) ? "★" : "☆"}</button><span class="wesen-sorte">${esc(SORTEN[l.sorte] ?? l.sorte)}</span> ${esc(l.text)} <span class="muted of-klein" style="font-size:.8rem">${new Date(l.zeit).toLocaleString("de-AT", { dateStyle: "short", timeStyle: "short" })}</span></li>`).join("")}</ul>` : `<p class="muted of-klein">Noch nichts gesagt.</p>`}`;
   }
   einstellen(k, v) {
     if (k === "darstellung") {

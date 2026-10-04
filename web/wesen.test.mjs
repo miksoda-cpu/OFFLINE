@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { FUNKTIONEN, lumiEinstellungenLaden, einladungFaellig, mimikZustand, passtBedingung, tippPool, ohneIch, TEXTE, DARSTELLUNG, nachtsSchlaf, schlafenszeit, abendMerken, Wesen } from "./wesen.js";
+import { erzaehltVonSich, FUNKTIONEN, ZIELE, tippAktion, tippKnoepfeHtml, bewerten, bewertungLaden, sorteGewicht, GEWICHT, lumiEinstellungenLaden, einladungFaellig, mimikZustand, passtBedingung, tippPool, ohneIch, TEXTE, DARSTELLUNG, nachtsSchlaf, schlafenszeit, abendMerken, Wesen } from "./wesen.js";
 import { MIMIK } from "./lumi/mimik.js";
 
 const TAG = 86400000;
@@ -246,4 +246,123 @@ test("Keine alten Punktzahlen und keine Behauptungen ohne Wissen (Auftrag 2026-1
   assert.match(t["app-005"].text, /unten/); assert.doesNotMatch(t["app-005"].text, /unter sieben/);
   assert.doesNotMatch(t["app-010"].text, /Blackout/);
   assert.doesNotMatch(t["app-020"].text, /jedem Text/);
+});
+
+// ---------- Auftrag 2026-10-04-lumi-knoepfe ----------
+const neuesWesen = (gespeichert = {}) => {
+  const m = new Map(Object.entries(gespeichert));
+  const sp = { get: (x, d) => (m.has(x) ? m.get(x) : d), set: (x, v) => m.set(x, v), m };
+  globalThis.addEventListener ??= () => {};
+  globalThis.document ??= { getElementById: () => null, hidden: false };
+  document.createElement ??= () => ({ setAttribute() {}, remove() {} });
+  document.body ??= { appendChild() {} };
+  document.querySelectorAll ??= () => [];
+  return { w: new Wesen({ speicher: sp, tipps: () => tipps }), sp };
+};
+
+test("Knöpfe je Sorte: App „Zeig mir“ mit Ziel, Alltag „Mach ich“, Wissen „Merken“, Digital je nach Ziel, Weisheit und Laune nur Bewertung", () => {
+  const t = Object.fromEntries(tipps.map((x) => [x.id, x]));
+  assert.equal(tippAktion(t["app-001"]), "zeig");
+  assert.equal(tippAktion(t["app-030"]), null, "App ohne eindeutiges Ziel: nur Bewertung");
+  assert.equal(tippAktion(tipps.find((x) => x.sorte === "alltag")), "mach");
+  assert.equal(tippAktion(tipps.find((x) => x.sorte === "wissen")), "merken");
+  assert.equal(tippAktion(t["digital-001"]), "zeig");
+  assert.equal(tippAktion(t["digital-002"]), "merken");
+  for (const s of ["weisheit", "laune"]) assert.equal(tippAktion(tipps.find((x) => x.sorte === s)), null, s);
+  assert.equal(tippAktion({ sorte: "app", ziel: "irgendwo" }), null, "unbekanntes Ziel zählt nicht");
+  const h = tippKnoepfeHtml(t["app-001"], { ort: "karte" });
+  assert.match(h, /data-lumi-aktion="zeig"[^>]*>Zeig mir</);
+  for (const l of ["Mehr davon", "Passt", "Nicht mehr"]) assert.match(h, new RegExp(`>${l}<`));
+  assert.doesNotMatch(h, /Gelesen|Weglegen/);
+  assert.match(tippKnoepfeHtml(tipps.find((x) => x.sorte === "wissen"), { gemerkt: true }), /Steht im Heft/);
+  assert.match(tippKnoepfeHtml(tipps.find((x) => x.sorte === "alltag"), { vorgemerkt: true }), /Steht in Vorsorge/);
+  assert.doesNotMatch(tippKnoepfeHtml(tipps.find((x) => x.sorte === "laune")), /data-lumi-aktion/);
+});
+
+test("Ziele: gleiche Liste wie das Kit, jedes Ziel gibt es in der App, jeder Tipp mit Ziel zeigt auf eine bekannte Stelle", async () => {
+  const kit = await import("../paket-kit/tipps-format.mjs");
+  assert.deepEqual(ZIELE, kit.ZIELE);
+  const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
+  const seiten = app.slice(app.indexOf("const seiten = {"));
+  for (const z of ZIELE) {
+    const anker = { tagesplan: 'id="tagesplan"', lumi: 'id="lumi-einstellungen"', "lumi-log": 'id="lumi-log"' }[z];
+    assert.ok(anker ? app.includes(anker) : new RegExp(`\\n  ${z}\\(\\) \\{`).test(seiten), `Ziel ${z} fehlt in der App`);
+  }
+  for (const t of tipps.filter((x) => x.ziel)) assert.ok(ZIELE.includes(t.ziel), t.id);
+  assert.ok(tipps.filter((x) => x.sorte === "app" && x.ziel).length >= 12);
+  for (const t of tipps.filter((x) => x.ziel && x.bedingung?.funktion)) assert.ok([].concat(t.bedingung.funktion).every((f) => FUNKTIONEN.has(f)), `${t.id}: Ziel nur, wenn die Funktion da ist`);
+  assert.ok(passtBedingung(tipps.find((x) => x.id === "app-004").bedingung, k({ benannt: true })), "„gelernt“ gibt es jetzt: app-004 kommt");
+  assert.deepEqual(kit.tippsFehler({ tipps }), []);
+  assert.ok(kit.tippsFehler({ tipps: [{ id: "a-1", sorte: "app", text: "x", ziel: "nirgendwo" }] }).some((f) => /ziel unbekannt/.test(f)));
+  assert.ok(kit.tippsFehler({ tipps: [{ id: "a-1", sorte: "app", text: "x", buch: "Kapitel 3" }] }).some((f) => /buch/.test(f)));
+  assert.deepEqual(kit.tippsFehler({ tipps: [{ id: "a-1", sorte: "app", text: "x", buch: "b1-03-07", ziel: "tresor" }] }), []);
+});
+
+test("Bewertung: Mehr davon hebt die Sorte, Nicht mehr nimmt den Satz heraus und senkt leicht, Passt ändert nichts, Grenzen halten", () => {
+  const a = { id: "wissen-001", sorte: "wissen" };
+  let s = bewertungLaden(null);
+  s = bewerten(s, a, "passt"); assert.deepEqual(s, { gewicht: {}, aus: [] });
+  s = bewerten(s, a, "mehr"); assert.equal(sorteGewicht(s, "wissen"), 1.3);
+  for (let i = 0; i < 20; i++) s = bewerten(s, a, "mehr");
+  assert.equal(sorteGewicht(s, "wissen"), GEWICHT.hoch);
+  s = bewerten(s, { id: "laune-001", sorte: "laune" }, "nicht");
+  assert.equal(sorteGewicht(s, "laune"), 0.85); assert.deepEqual(s.aus, ["laune-001"]);
+  for (let i = 0; i < 30; i++) s = bewerten(s, { id: "laune-001", sorte: "laune" }, "nicht");
+  assert.equal(sorteGewicht(s, "laune"), GEWICHT.tief); assert.deepEqual(s.aus, ["laune-001"], "einmal ausgeschlossen, nicht doppelt");
+  assert.deepEqual(bewertungLaden({ gewicht: { wissen: 99, quatsch: 2, app: -1 }, aus: ["x", "x", 3] }), { gewicht: { wissen: 3 }, aus: ["x"] });
+  // Ausschluss wirkt auf den Pool
+  const e = { ...lumiEinstellungenLaden(null), darstellung: "wesen" };
+  const pool = tippPool(tipps, e, k({ benannt: true }), new Set(["wissen-001"]));
+  assert.ok(pool.length > 0 && !pool.some((t) => t.id === "wissen-001"));
+});
+
+test("Bewertung wirkt auf die Auswahl der Lumi und lässt sich zurücknehmen", () => {
+  const { w } = neuesWesen();
+  w.einstellen("name", "Susi"); w.e.darstellung = "wesen"; w.namensfrage = false;
+  const echt = Math.random; let x = 7; Math.random = () => ((x = (x * 16807) % 2147483647) / 2147483647);
+  try {
+    const anteil = () => { let n = 0; for (let i = 0; i < 1500; i++) if (w.waehleTipp()?.sorte === "wissen") n++; return n / 1500; };
+    const vorher = anteil();
+    for (let i = 0; i < 6; i++) w.bewerte("wissen-001", "mehr");
+    const nachher = anteil();
+    assert.ok(nachher > vorher * 1.8, `Wissen kommt öfter (${vorher.toFixed(2)} → ${nachher.toFixed(2)})`);
+    w.bewerte("laune-001", "nicht");
+    for (let i = 0; i < 1500; i++) assert.notEqual(w.waehleTipp()?.id, "laune-001");
+    assert.match(w.gelerntHtml(), /Zurückholen/);
+    w.zurueckholen("laune-001"); assert.deepEqual(w.bewertung.aus, []);
+    w.lernenZuruecksetzen(); assert.deepEqual(w.bewertung, { gewicht: {}, aus: [] });
+  } finally { Math.random = echt; }
+});
+
+test("Heft: Merken legt den Satz mit Datum ab, Stern im Log ist dasselbe, einzeln löschbar, durchsuchbar; alte Sterne werden übernommen", () => {
+  const { w, sp } = neuesWesen({ "wesen-log": [{ id: "wissen-002", sorte: "wissen", text: "Alter Stern", zeit: "2026-09-30T08:00:00Z", stern: true }] });
+  assert.deepEqual(w.heft.map((h) => h.id), ["wissen-002"], "Sterne aus dem Log stehen im Heft");
+  assert.ok(w.merken("wissen-001")); assert.ok(w.imHeft("wissen-001"));
+  assert.ok(sp.m.get("lumi-heft").some((h) => h.id === "wissen-001" && h.datum));
+  w.merken("wissen-001"); assert.equal(w.heft.filter((h) => h.id === "wissen-001").length, 1, "nicht doppelt");
+  const wort = tipps.find((t) => t.id === "wissen-001").text.split(" ")[1];
+  assert.match(w.heftHtml(wort), /von 2/);
+  assert.match(w.heftHtml("zzzz-nichts"), /Nichts gefunden/);
+  w.stern("wissen-002"); assert.ok(!w.imHeft("wissen-002"), "Stern aus = aus dem Heft");
+  w.heftLoeschen("wissen-001"); assert.equal(w.heft.length, 0);
+});
+
+test("Eine Stimme und kein Tipp vor dem Namen: Namensfrage zuerst, nach „Später“ Sätze ohne „ich“, auch nach Neustart", () => {
+  const { w, sp } = neuesWesen();
+  w.einschalten = Wesen.prototype.einschalten; w.e.darstellung = "wesen"; w.namensfrage = true;
+  const ohne = tipps.find((t) => ohneIch(t.text) && !t.bedingung);
+  w.zeigeTipp(ohne); assert.equal(w.aktuellerTipp, null, "während der Namensfrage kein Tipp");
+  assert.equal(w.satzDesTages(ohne), false);
+  w.spaeter(); assert.equal(sp.m.get("lumi-start").spaeter, true);
+  w.zeigeTipp(ohne); assert.equal(w.aktuellerTipp?.id, ohne.id, "nach „Später“ darf sie Sätze ohne ich sagen");
+  for (let i = 0; i < 200; i++) { const t = w.waehleTipp(); if (t) assert.ok(!erzaehltVonSich(t), t.id); }
+  const w2 = new Wesen({ speicher: sp, tipps: () => tipps }); w2.e.darstellung = "wesen";
+  assert.equal(new Wesen({ speicher: sp, tipps: () => tipps }).namensfrage, false, "„Später“ gilt auch nach dem Neustart");
+  // mit Namen: Satz des Tages in der Sprechblase, ein zweiter Satz wartet
+  w.tippSchliessen(); w.namenGeben("Susi");
+  assert.equal(w.satzDesTages(ohne), true); assert.equal(w.tagesSatz, ohne.id);
+  assert.equal(w.satzDesTages(tipps[1]), false, "nie zwei Sätze zugleich");
+  w.bewerte(ohne.id, "passt"); assert.equal(w.aktuellerTipp, null, "Bewertung schließt den Satz");
+  // Textkarten: keine Sprechblase für den Satz des Tages (dort ist er die Karte)
+  w.e.darstellung = "karten"; assert.equal(w.satzDesTages(ohne), false);
 });

@@ -41,6 +41,14 @@ const KORREKTUR = {
   "app-010": "Der Sparmodus im Tagesplan lässt mich auf der Tagesseite weg. Dann ist es dort ruhiger. Ein Haken, und ich bin wieder da.",
   "app-020": "Das Kapitel des Tages liest dir die App vor. Der Knopf „Vorlesen“ steht oben in der Leseansicht.",
 };
+// Stelle in der App für „Zeig mir“ (Auftrag 2026-10-04-lumi-knoepfe; Liste in paket-kit/tipps-format.mjs). Nur wo eindeutig;
+// Tipps, die auf eine Funktion warten, bekommen keins.
+const STELLE = {
+  "app-001": "tresor", "app-004": "lumi", "app-005": "tagesplan", "app-007": "tresor", "app-008": "start", "app-009": "lumi-log",
+  "app-010": "tagesplan", "app-011": "bibliothek", "app-012": "bibliothek", "app-020": "kapitel", "app-021": "start", "app-022": "start",
+  "app-023": "tagesplan", "app-025": "werkzeuge", "app-027": "bibliothek",
+  "digital-001": "updates",
+};
 // Gestrichen (Auftrag 2026-10-01): die App merkt sich frühere Namen nicht
 const WEG = new Set(["laune-010"]);
 // Tipps über Funktionen, die es noch nicht gibt: Sie kommen, sobald die App die Funktion hat (web/wesen.js, FUNKTIONEN)
@@ -101,10 +109,10 @@ async function main() {
     Object.assign(b, ZUSTAND[t.id] ?? {});
     if (FUNKTION[t.id]) b.funktion = FUNKTION[t.id];
     if (ICH.test(text)) { b.benannt = true; benannt.push(t.id); }
-    tipps.push({ id: t.id, sorte: t.sorte.toLowerCase(), text, ...(t.gewicht && t.gewicht !== 1 ? { gewicht: t.gewicht } : {}), ...(Object.keys(b).length ? { bedingung: b } : {}) });
+    tipps.push({ id: t.id, sorte: t.sorte.toLowerCase(), text, ...(t.gewicht && t.gewicht !== 1 ? { gewicht: t.gewicht } : {}), ...(Object.keys(b).length ? { bedingung: b } : {}), ...(STELLE[t.id] ? { ziel: STELLE[t.id] } : {}) });
   }
   const aus = {
-    hinweis: "Tipps der Lumi. Felder: id, sorte (app, alltag, wissen, weisheit, laune, heute, digital), text, optional gewicht und bedingung. Bedingungen sind Daten, kein Code (web/wesen.js, passtBedingung): ansicht, einstellung, monat (Zahl oder Liste), tag, wochentag (1 = Mo … 7 = So), stunde, score_unter, score_ab, verfallen, benannt (erst nach der Namensgabe; Pflicht bei jedem Tipp, der von sich spricht), alter { position, ab_monate }, offen (Position nie bestätigt), funktion (erst, wenn die App die Funktion hat), zeitumstellung_in_tagen. Unbekannte Wörter: Der Tipp kommt nicht. Gebaut mit pakete/wir/tipps-umwandeln.mjs aus dem Bestand der Session (180 Tipps).",
+    hinweis: "Tipps der Lumi. Felder: id, sorte (app, alltag, wissen, weisheit, laune, heute, digital), text, optional gewicht und bedingung. Bedingungen sind Daten, kein Code (web/wesen.js, passtBedingung): ansicht, einstellung, monat (Zahl oder Liste), tag, wochentag (1 = Mo … 7 = So), stunde, score_unter, score_ab, verfallen, benannt (erst nach der Namensgabe; Pflicht bei jedem Tipp, der von sich spricht), alter { position, ab_monate }, offen (Position nie bestätigt), funktion (erst, wenn die App die Funktion hat), zeitumstellung_in_tagen. Optional ziel (Stelle in der App für „Zeig mir“) und buch (Absatz im künftigen Lumi-Buch, reserviert); Format in paket-kit/tipps-format.mjs. Unbekannte Wörter: Der Tipp kommt nicht. Gebaut mit pakete/wir/tipps-umwandeln.mjs aus dem Bestand der Session (180 Tipps).",
     tipps,
   };
   await writeFile(ZIEL, JSON.stringify(aus, null, 2) + "\n");

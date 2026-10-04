@@ -9,6 +9,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { tageBereichFehler, tageInhaltFehler } from "./tage-format.mjs";
+import { tippsFehler } from "./tipps-format.mjs";
 
 const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul", "skin", "tage"];
 const PREISE = ["gratis", "pro", "kauf"];
@@ -218,6 +219,13 @@ async function pruefen(ordner) {
     }
     for (const d of liste) if (!d.rel.startsWith("vorschau/") && ![".json", ".md", ".txt"].includes(path.extname(d.rel).toLowerCase())) F(`art = tage: Dateityp nicht erlaubt: inhalt/${d.rel}`);
     R("Texte gegengelesen; bei Romanen Autor vor 1956 gestorben und Ausgabe ohne eigene Rechte (Herkunft im Paket).");
+  }
+
+  // --- Lumi-Tipps (inhalt/tipps.json, Paket „wir“): Sorten, ziel gegen die bekannten Stellen der App, buch reserviert ---
+  if (liste.find((d) => d.rel === "tipps.json")) {
+    let t = null;
+    try { t = JSON.parse(await readFile(path.join(inhalt, "tipps.json"), "utf8")); } catch { F("inhalt/tipps.json: kein gültiges JSON"); }
+    if (t) for (const f of tippsFehler(t)) F(`inhalt/tipps.json: ${f}`);
   }
 
   // --- Quellen-Verweise und Notrufhinweis in den Inhalten ---

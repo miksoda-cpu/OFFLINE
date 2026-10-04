@@ -2,6 +2,17 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.3.4",
+      "datum": "2026-10-04",
+      "punkte": [
+        "Unter jedem Satz der Lumi kannst du jetzt etwas tun: „Zeig mir“ springt an die richtige Stelle, „Mach ich“ legt ein Vorhaben in Vorsorge ab, „Merken“ schreibt den Satz ins Heft.",
+        "Statt „Gelesen“ sagst du mit einem Tipp, wie dir der Satz gefallen hat: „Mehr davon“, „Passt“ oder „Nicht mehr“. Die Lumi richtet sich danach. Gezählt wird nichts.",
+        "Was die Lumi daraus gelernt hat, siehst du unter Übersicht bei der Lumi. Dort kannst du Sätze zurückholen oder alles zurücksetzen.",
+        "Im Heft „Was Lumi gesagt hat“ findest du alle gemerkten Sätze mit Datum, auch ohne Netz durchsuchbar.",
+        "Die Lumi spricht nur noch an einer Stelle zugleich, und bevor sie einen Namen hat, stellt sie nur die Frage nach dem Namen."
+      ]
+    },
+    {
       "version": "0.3.3",
       "datum": "2026-10-04",
       "punkte": [

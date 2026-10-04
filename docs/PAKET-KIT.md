@@ -137,6 +137,10 @@ Tagesinhalte füllen die Vorratskammer der Tagesseite: Rätsel, Kapitel, Textkar
 4. **Fremde Texte:** Romane und andere Werke nur, wenn der Autor vor 1956 gestorben ist und die Ausgabe keine eigenen Rechte hat (keine Übersetzung, keine neue Bearbeitung). Quelle und Vorlage je Werk in `inhalt/herkunft.md`. Historische Schreibweisen bleiben, wie sie in der Vorlage stehen.
 5. **Rätsel:** eigene Texte. Bekannte Denkaufgaben neu erzählen, keine fremden Rätseltexte übernehmen. Lösungen nachrechnen.
 
+## 5c. Lumi-Tipps (`inhalt/tipps.json`, Paket „wir“)
+
+`{ "tipps": [ { id, sorte, text, gewicht?, bedingung?, ziel?, buch? } ] }`, Format und Prüfung in `paket-kit/tipps-format.mjs`. Sorten: app, alltag, wissen, weisheit, laune, heute, digital. `ziel` (optional) ist die Stelle der App für den Knopf „Zeig mir“ und muss in der Liste `ZIELE` stehen (Seiten wie `tresor`, `vorsorge`, `bibliothek`, `werkzeuge` und Abschnitte der Übersicht `tagesplan`, `lumi`, `lumi-log`); wo ein Ziel nicht eindeutig ist, keins setzen. `buch` (optional, reserviert) ist ein Absatz im künftigen „Lumi-Buch“ in der Form `b1-03-07`; die App nimmt es an und verwendet es noch nicht. Bedingungen sind Daten mit festem Wortschatz (`docs/WESEN.md`).
+
 ## 6. `LIESMICH.md`
 
 Für die Redaktion, nicht für Nutzer. Pflichtabschnitte: **Was** (zwei Sätze) · **Für wen** · **Wie geprüft** (was hat man selbst ausprobiert, auf welchen Geräten) · **Offene Punkte** · bei Updates: **Was hat sich geändert**.

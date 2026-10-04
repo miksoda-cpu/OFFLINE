@@ -339,6 +339,11 @@ textarea { border-radius: var(--radius-sm) !important; }
 .tag-richtig { border-color: var(--ok, var(--line)); }
 .tag-knoepfe { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
 .tag-karte .btn, .tag-schluss .btn, .tag-gelernt .btn, .kapitel-kopf .btn, .kapitel-text .btn { min-height: 44px; min-width: 44px; }
+.tag-karte--lumi { position: relative; }
+.tag-karte--lumi .tag-art { padding-right: 2.4rem; }
+.tag-zu { position: absolute; top: .3rem; right: .3rem; width: 44px; height: 44px; border: 0; background: none; font-size: 1.3rem; line-height: 1; cursor: pointer; color: var(--muted); border-radius: 10px; }
+.tag-zu:focus-visible { outline: 2px solid var(--accent); }
+.vorhaben .check li { display: flex; gap: .5rem; align-items: center; justify-content: space-between; }
 .tag-karte--fertig { display: flex; justify-content: space-between; align-items: center; gap: .6rem; flex-wrap: wrap; }
 .tag-karte--fertig .tag-art { display: inline; margin: 0 .4rem 0 0; }
 .tag-schluss { text-align: center; padding: 2.2rem 1rem; }
