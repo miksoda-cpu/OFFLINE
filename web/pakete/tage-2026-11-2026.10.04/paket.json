@@ -1,9 +1,9 @@
 {
   "format": 1,
-  "id": "tage-2026-12",
-  "version": "2026.09.30",
-  "titel": "Tage im Dezember 2026",
-  "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Das kalte Herz, Immensee, Wintermärchen der Brüder Grimm, Kalendergeschichten aus dem Schatzkästlein). Tag für Tag freigeschaltet.",
+  "id": "tage-2026-11",
+  "version": "2026.10.04",
+  "titel": "Tage im November 2026",
+  "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Der Schimmelreiter). Tag für Tag freigeschaltet.",
   "art": "tage",
   "sprache": "de-AT",
   "lizenz": "Rätsel CC BY-SA 4.0 (eigene Texte); Romane gemeinfrei (Wikisource), Herkunft in inhalt/herkunft.md",
@@ -15,12 +15,12 @@
   "alter_ab": 10,
   "abnahme": "Redaktion (Code), 30.09.2026: Rätsel nachgerechnet, Romane gegen die Wikisource-Textdaten geprüft",
   "tage": {
-    "von": "2026-12-01",
-    "bis": "2026-12-31"
+    "von": "2026-11-01",
+    "bis": "2026-11-30"
   },
   "app_min": "0.3.0",
-  "erstellt": "2026-09-30T17:03:47Z",
-  "aenderungen": "Erste Ausgabe: 31 Tage.",
+  "erstellt": "2026-10-04T09:54:28Z",
+  "aenderungen": "Rätsel mit eindeutiger Kurzantwort lassen sich jetzt eintippen und prüfen (Antworten ergänzt).",
   "quellen": [
     {
       "id": "redaktion",
@@ -36,14 +36,14 @@
   "dateien": [
     {
       "pfad": "inhalt/herkunft.md",
-      "sha256": "ee4ab145d9cf3973081e86566f6dd865d82fcfd5e25c87d4a6a932ab2123406f",
-      "groesse": 4257
+      "sha256": "16cd187ee18db939a79ce538c725c1de1bd060daf8e31e7285a8aaa022bbf1a9",
+      "groesse": 644
     },
     {
       "pfad": "inhalt/tage.json",
-      "sha256": "3060ce34b34d766ea8ca998c12df8e7cb93d055ac10c5153449c503e25314070",
-      "groesse": 230044
+      "sha256": "dfc0dfb1bffdf6c8108da0b3a691f5991d5d79dc212bc80e618e7ebfdd68b57c",
+      "groesse": 45843
     }
   ],
-  "groesse": 234301
+  "groesse": 46487
 }

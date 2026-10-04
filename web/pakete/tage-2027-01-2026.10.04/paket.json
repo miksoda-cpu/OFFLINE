@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "tage-2027-01",
-  "version": "2026.10.01",
+  "version": "2026.10.04",
   "titel": "Tage im Jänner 2027",
   "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Der Condor, Mozart auf der Reise nach Prag, Die schwarze Spinne, Unterm Birnbaum). Tag für Tag freigeschaltet.",
   "art": "tage",
@@ -19,8 +19,8 @@
     "bis": "2027-01-31"
   },
   "app_min": "0.3.0",
-  "erstellt": "2026-10-01T20:00:25Z",
-  "aenderungen": "Erste Ausgabe: 31 Tage.",
+  "erstellt": "2026-10-04T09:54:28Z",
+  "aenderungen": "Rätsel mit eindeutiger Kurzantwort lassen sich jetzt eintippen und prüfen (Antworten ergänzt).",
   "quellen": [
     {
       "id": "redaktion",
@@ -41,9 +41,9 @@
     },
     {
       "pfad": "inhalt/tage.json",
-      "sha256": "93e6b48761afda8c977c8b0d1f1b3b6495e5896dc637faa28a2a5fa638fdf4e6",
-      "groesse": 592236
+      "sha256": "cf6e57cd631e9d0aaaf0ffe6092dbaf28c85dd3cda5101042da8dff96ca908ce",
+      "groesse": 593178
     }
   ],
-  "groesse": 594624
+  "groesse": 595566
 }

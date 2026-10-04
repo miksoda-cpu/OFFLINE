@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "tage-2026-10",
-  "version": "2026.09.30",
+  "version": "2026.10.04",
   "titel": "Tage im Oktober 2026",
   "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Kleider machen Leute, Die Judenbuche, Aus dem Leben eines Taugenichts, Der Schimmelreiter). Tag für Tag freigeschaltet.",
   "art": "tage",
@@ -19,8 +19,8 @@
     "bis": "2026-10-31"
   },
   "app_min": "0.3.0",
-  "erstellt": "2026-09-30T12:11:42Z",
-  "aenderungen": "Erste Ausgabe: 31 Tage.",
+  "erstellt": "2026-10-04T09:54:28Z",
+  "aenderungen": "Rätsel mit eindeutiger Kurzantwort lassen sich jetzt eintippen und prüfen (Antworten ergänzt).",
   "quellen": [
     {
       "id": "redaktion",
@@ -41,9 +41,9 @@
     },
     {
       "pfad": "inhalt/tage.json",
-      "sha256": "e451c356454e5e81e00b2073b21b9de200ac968f4887448f91dae4fa51451f93",
-      "groesse": 625237
+      "sha256": "f66b9acd278f1b9a4db9ccffb704773fda7767e87fffd84e48fa636085c2ad92",
+      "groesse": 625830
     }
   ],
-  "groesse": 627526
+  "groesse": 628119
 }

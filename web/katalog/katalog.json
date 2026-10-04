@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-10-01T20:02:40Z",
-  "gueltig_bis": "2026-12-30T20:02:40Z",
+  "erstellt": "2026-10-04T10:17:01Z",
+  "gueltig_bis": "2027-01-02T10:17:01Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -25,7 +25,7 @@
     },
     {
       "id": "tage-2026-10",
-      "version": "2026.09.30",
+      "version": "2026.10.04",
       "titel": "Tage im Oktober 2026",
       "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Kleider machen Leute, Die Judenbuche, Aus dem Leben eines Taugenichts, Der Schimmelreiter). Tag für Tag freigeschaltet.",
       "art": "tage",
@@ -38,17 +38,17 @@
         "von": "2026-10-01",
         "bis": "2026-10-31"
       },
-      "groesse": 627526,
+      "groesse": 628119,
       "app_min": "0.3.0",
-      "erstellt": "2026-09-30T12:11:42Z",
-      "aenderungen": "Erste Ausgabe: 31 Tage.",
-      "pfad": "tage-2026-10-2026.09.30/",
-      "sha256_manifest": "28c450cd7421736cee3793d27652a30c101c0e62ebdcdb2aa9d79eb5874aea6a",
+      "erstellt": "2026-10-04T09:54:28Z",
+      "aenderungen": "Rätsel mit eindeutiger Kurzantwort lassen sich jetzt eintippen und prüfen (Antworten ergänzt).",
+      "pfad": "tage-2026-10-2026.10.04/",
+      "sha256_manifest": "09284ceb06935b9a510cc4811995c55b3895ab55f220559cf92280eed346ac6b",
       "status": "verfuegbar"
     },
     {
       "id": "tage-2026-11",
-      "version": "2026.09.30",
+      "version": "2026.10.04",
       "titel": "Tage im November 2026",
       "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Der Schimmelreiter). Tag für Tag freigeschaltet.",
       "art": "tage",
@@ -61,17 +61,17 @@
         "von": "2026-11-01",
         "bis": "2026-11-30"
       },
-      "groesse": 45774,
+      "groesse": 46487,
       "app_min": "0.3.0",
-      "erstellt": "2026-09-30T12:11:42Z",
-      "aenderungen": "Erste Ausgabe: 30 Tage.",
-      "pfad": "tage-2026-11-2026.09.30/",
-      "sha256_manifest": "1756f58680ff29c60516213104d6498d56f9797326ed831c5c2eac2848607ca0",
+      "erstellt": "2026-10-04T09:54:28Z",
+      "aenderungen": "Rätsel mit eindeutiger Kurzantwort lassen sich jetzt eintippen und prüfen (Antworten ergänzt).",
+      "pfad": "tage-2026-11-2026.10.04/",
+      "sha256_manifest": "365d0f40b7d76036c259a83c0ce1d967be81bd7bfe2f542dec3d6eee39b72543",
       "status": "verfuegbar"
     },
     {
       "id": "tage-2026-12",
-      "version": "2026.09.30",
+      "version": "2026.10.04",
       "titel": "Tage im Dezember 2026",
       "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Das kalte Herz, Immensee, Wintermärchen der Brüder Grimm, Kalendergeschichten aus dem Schatzkästlein). Tag für Tag freigeschaltet.",
       "art": "tage",
@@ -84,17 +84,17 @@
         "von": "2026-12-01",
         "bis": "2026-12-31"
       },
-      "groesse": 234301,
+      "groesse": 235189,
       "app_min": "0.3.0",
-      "erstellt": "2026-09-30T17:03:47Z",
-      "aenderungen": "Erste Ausgabe: 31 Tage.",
-      "pfad": "tage-2026-12-2026.09.30/",
-      "sha256_manifest": "f26aea1467b3f6571f3b173e6c7d65e6167006a77c6c1e7c7e5f22aff2dffb40",
+      "erstellt": "2026-10-04T09:54:28Z",
+      "aenderungen": "Rätsel mit eindeutiger Kurzantwort lassen sich jetzt eintippen und prüfen (Antworten ergänzt).",
+      "pfad": "tage-2026-12-2026.10.04/",
+      "sha256_manifest": "1a8807e68e3592545304694225d78d638396c10ed112d61d4b78ed6e5a17b93f",
       "status": "verfuegbar"
     },
     {
       "id": "tage-2027-01",
-      "version": "2026.10.01",
+      "version": "2026.10.04",
       "titel": "Tage im Jänner 2027",
       "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Der Condor, Mozart auf der Reise nach Prag, Die schwarze Spinne, Unterm Birnbaum). Tag für Tag freigeschaltet.",
       "art": "tage",
@@ -107,12 +107,12 @@
         "von": "2027-01-01",
         "bis": "2027-01-31"
       },
-      "groesse": 594624,
+      "groesse": 595566,
       "app_min": "0.3.0",
-      "erstellt": "2026-10-01T20:00:25Z",
-      "aenderungen": "Erste Ausgabe: 31 Tage.",
-      "pfad": "tage-2027-01-2026.10.01/",
-      "sha256_manifest": "d9d952e8449032ba996c3779c80ddd6a0381067fb892e5fb3e9d41289112c341",
+      "erstellt": "2026-10-04T09:54:28Z",
+      "aenderungen": "Rätsel mit eindeutiger Kurzantwort lassen sich jetzt eintippen und prüfen (Antworten ergänzt).",
+      "pfad": "tage-2027-01-2026.10.04/",
+      "sha256_manifest": "17875ea716de13f454b176866183d80e84b7f50a4b7ebb44f1813815860424bc",
       "status": "verfuegbar"
     },
     {
