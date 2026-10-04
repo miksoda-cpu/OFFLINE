@@ -1,5 +1,13 @@
 # Änderungen
 
+## 0.5.0 · 04.10.2026 · Das Lumi-Buch
+
+- **Paket `lumi-buch`** (neu, Art `inhalt`, `app_min` 0.5.0, Auftrag 2026-10-04-lumi-buch-app): Band 1, zwölf Kapitel, 127 Absätze `b1-KK-PP`, Titelseite mit „Eine erfundene Geschichte“ (Anwaltsfrage 35). Gebaut aus der freigegebenen Vorlage mit `pakete/lumi-buch/buch-umwandeln.mjs`, Format `paket-kit/buch-format.mjs`; Band 2 kann als eigenes Paket mit `band: 2` folgen. Wird bei der Erstinstallation und still bei bestehenden Nutzern geladen.
+- **Paket `wir`:** Feld `buch` bei allen 175 Tipps aus der Zuordnung von Bill (`pakete/lumi-buch/quelle/OFFLINE-Lumi-Buch-Zuordnung.json`), sonst unverändert.
+- **„Aus dem Lumi-Buch“** (`web/buch.js`, `tippKnoepfeHtml` mit `buch`): zarter Textlink unter jedem Satz der eingeschalteten, benannten Lumi und an jedem Logeintrag; nicht bei Textkarten, nicht bei „Tipps aus“. Öffnet den Absatz in einer ruhigen Leseansicht (`#absatz`, Serif, Kapitelname, nur ✕ und „Zurück“). Erst das Öffnen schaltet frei (`lumi-buch-frei` am Gerät); Logeinträge aus der Zeit davor gelten nicht als gelesen.
+- **Das Buch** (`#buch`, aus Übersicht und Bibliothek): „Band 1 · N % lesbar“ ohne Balken, Kapitel in Reihenfolge, fehlende Absätze als stille Lücke „Dieses Stück hat dir deine Lumi noch nicht erzählt.“ (mehrere hintereinander als eine), Vorlesen wie beim Roman. Keine Liste fehlender Tipps, kein Hinweis aufs schnellere Freischalten.
+- **Kit:** `pruefen.mjs` kennt `inhalt/buch.json` und prüft beim Paket `wir`, dass jede `buch`-Nummer im Buch daneben existiert, beim Buch, dass jeder Absatz einen Tipp hat. Test `web/buch.test.mjs` (in der CI): alle 175 Tipps zeigen auf einen vorhandenen Absatz, jeder Absatz hat mindestens einen Tipp, Freischalten, Prozent, Lücken, Link-Regeln, kein Druck.
+
 ## 0.4.3 · 04.10.2026 · Zart für die ganze App
 
 - **Grundlage** (Auftrag 2026-10-04-stil-zart-app): die Werte aus dem Pause-Umbau (`--z-*`, `--eis*`) gelten in der ganzen App (`.of-app`), die Startseite bleibt. Hauptknopf `.btn-primary` als zartes hellrotes Feld ohne Schatten (12,5 px, 500), Nebenknopf `.btn` als Haarlinien-Feld, Tippfläche 44 px. Karten weiß ohne Rand mit kaum sichtbarem Schatten (Bühne Heute ebenso). Überschriften in leichter Serif (h1 300, h2 und h3 400), `strong` 600, nichts schwerer als 600 außer den Notrufnummern; Bereit-Zahl groß und leicht (300). Fortschrittsbalken 4 px, Segment-Wahl und Filter als Haarlinien mit hellrotem Gewählt, Schieber feiner (40 × 22), Hinweis und Lösung beim Rätsel mit Haarlinie statt Kasten, Lumi-Einladung auf Eisblau statt dunkel.

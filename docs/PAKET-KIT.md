@@ -145,7 +145,11 @@ Daten für die Happen der Pause (App ab 0.4.0, `app_min` mindestens `0.4.0`), Fo
 
 ## 5c. Lumi-Tipps (`inhalt/tipps.json`, Paket „wir“)
 
-`{ "tipps": [ { id, sorte, text, gewicht?, bedingung?, ziel?, buch? } ] }`, Format und Prüfung in `paket-kit/tipps-format.mjs`. Sorten: app, alltag, wissen, weisheit, laune, heute, digital. `ziel` (optional) ist die Stelle der App für den Knopf „Zeig mir“ und muss in der Liste `ZIELE` stehen (Seiten wie `tresor`, `vorsorge`, `bibliothek`, `werkzeuge` und Abschnitte der Übersicht `tagesplan`, `lumi`, `lumi-log`); wo ein Ziel nicht eindeutig ist, keins setzen. `buch` (optional, reserviert) ist ein Absatz im künftigen „Lumi-Buch“ in der Form `b1-03-07`; die App nimmt es an und verwendet es noch nicht. Bedingungen sind Daten mit festem Wortschatz (`docs/WESEN.md`).
+`{ "tipps": [ { id, sorte, text, gewicht?, bedingung?, ziel?, buch? } ] }`, Format und Prüfung in `paket-kit/tipps-format.mjs`. Sorten: app, alltag, wissen, weisheit, laune, heute, digital. `ziel` (optional) ist die Stelle der App für den Knopf „Zeig mir“ und muss in der Liste `ZIELE` stehen (Seiten wie `tresor`, `vorsorge`, `bibliothek`, `werkzeuge` und Abschnitte der Übersicht `tagesplan`, `lumi`, `lumi-log`); wo ein Ziel nicht eindeutig ist, keins setzen. `buch` (optional) ist ein Absatz im „Lumi-Buch“ in der Form `b1-03-07` (App ab 0.5.0: Link „Aus dem Lumi-Buch“); liegt das Paket `lumi-buch` daneben, prüft das Kit, dass es den Absatz gibt. Bedingungen sind Daten mit festem Wortschatz (`docs/WESEN.md`).
+
+## 5e. Lumi-Buch (`inhalt/buch.json`, Paket „lumi-buch“)
+
+Ein Band je Paket (App ab 0.5.0, `app_min` mindestens `0.5.0`), Format und Prüfung in `paket-kit/buch-format.mjs`: `{ "format": 1, "band": 1, "titel", "untertitel"?, "hinweis", "kapitel": [ { "nr", "titel", "absaetze": [ { "id": "b1-01-01", "text" } ] } ] }`. Kapitel in Reihenfolge ab 1, Absatznummern lückenlos `b<Band>-<Kapitel>-<Absatz>`. Der `hinweis` steht auf der Titelseite und enthält „Eine erfundene Geschichte“. Liegt das Paket `wir` daneben, prüft das Kit, dass jeder Absatz mindestens einen Tipp hat. Lesbar wird ein Absatz erst in der App, wenn man ihn unter einem Satz der Lumi öffnet; das Paket liefert nur Text.
 
 ## 6. `LIESMICH.md`
 

@@ -17,6 +17,8 @@ import { ICH } from "../../web/wesen.js";
 const WURZEL = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 const QUELLE = path.join(WURZEL, "bill", "eingang", "2026-09-29-bill", "material", "pakete", "wir", "inhalt", "tipps.json");
 const ZIEL = path.join(WURZEL, "pakete", "wir", "inhalt", "tipps.json");
+// Auftrag 2026-10-04-lumi-buch-app: jeder Tipp zeigt auf seinen Absatz im Lumi-Buch (Zuordnung von Bill, gegen das Buch geprüft)
+const ZUORDNUNG = path.join(WURZEL, "pakete", "lumi-buch", "quelle", "OFFLINE-Lumi-Buch-Zuordnung.json");
 
 const WOCHENTAG = { mo: 1, di: 2, mi: 3, do: 4, fr: 5, sa: 6, so: 7 };
 const ALTER = { wasser_alter_monate: "c-0-0", batterien_alter_monate: "c-1-1" };
@@ -106,6 +108,7 @@ export function bedingung(text) {
 
 async function main() {
   const q = JSON.parse(await readFile(QUELLE, "utf8"));
+  const buch = JSON.parse(await readFile(ZUORDNUNG, "utf8"));
   const tipps = [], weg = [], benannt = [];
   for (const t of q.tipps) {
     const b = bedingung(t.bedingung);
@@ -115,10 +118,10 @@ async function main() {
     Object.assign(b, ZUSTAND[t.id] ?? {});
     if (FUNKTION[t.id]) b.funktion = FUNKTION[t.id];
     if (ICH.test(text)) { b.benannt = true; benannt.push(t.id); }
-    tipps.push({ id: t.id, sorte: t.sorte.toLowerCase(), text, ...(t.gewicht && t.gewicht !== 1 ? { gewicht: t.gewicht } : {}), ...(Object.keys(b).length ? { bedingung: b } : {}), ...(STELLE[t.id] ? { ziel: STELLE[t.id] } : {}) });
+    tipps.push({ id: t.id, sorte: t.sorte.toLowerCase(), text, ...(t.gewicht && t.gewicht !== 1 ? { gewicht: t.gewicht } : {}), ...(Object.keys(b).length ? { bedingung: b } : {}), ...(STELLE[t.id] ? { ziel: STELLE[t.id] } : {}), ...(buch[t.id] ? { buch: buch[t.id] } : {}) });
   }
   const aus = {
-    hinweis: "Tipps der Lumi. Felder: id, sorte (app, alltag, wissen, weisheit, laune, heute, digital), text, optional gewicht und bedingung. Bedingungen sind Daten, kein Code (web/wesen.js, passtBedingung): ansicht, einstellung, monat (Zahl oder Liste), tag, wochentag (1 = Mo … 7 = So), stunde, score_unter, score_ab, verfallen, benannt (erst nach der Namensgabe; Pflicht bei jedem Tipp, der von sich spricht), alter { position, ab_monate }, offen (Position nie bestätigt), funktion (erst, wenn die App die Funktion hat), zeitumstellung_in_tagen. Optional ziel (Stelle in der App für „Zeig mir“) und buch (Absatz im künftigen Lumi-Buch, reserviert); Format in paket-kit/tipps-format.mjs. Unbekannte Wörter: Der Tipp kommt nicht. Gebaut mit pakete/wir/tipps-umwandeln.mjs aus dem Bestand der Session (180 Tipps).",
+    hinweis: "Tipps der Lumi. Felder: id, sorte (app, alltag, wissen, weisheit, laune, heute, digital), text, optional gewicht und bedingung. Bedingungen sind Daten, kein Code (web/wesen.js, passtBedingung): ansicht, einstellung, monat (Zahl oder Liste), tag, wochentag (1 = Mo … 7 = So), stunde, score_unter, score_ab, verfallen, benannt (erst nach der Namensgabe; Pflicht bei jedem Tipp, der von sich spricht), alter { position, ab_monate }, offen (Position nie bestätigt), funktion (erst, wenn die App die Funktion hat), zeitumstellung_in_tagen. Optional ziel (Stelle in der App für „Zeig mir“) und buch (Absatz im Lumi-Buch, Paket „lumi-buch“, App ab 0.5.0); Format in paket-kit/tipps-format.mjs. Unbekannte Wörter: Der Tipp kommt nicht. Gebaut mit pakete/wir/tipps-umwandeln.mjs aus dem Bestand der Session (180 Tipps).",
     tipps,
   };
   await writeFile(ZIEL, JSON.stringify(aus, null, 2) + "\n");

@@ -1,0 +1,44 @@
+{
+ "folien": [
+  {
+   "nr": 1,
+   "rolle": "wofuer",
+   "bild": "1.svg",
+   "titel": "Eine Geschichte, Stück für Stück",
+   "text": "Nach einem Satz deiner Lumi kannst du den passenden Absatz aus ihrem Buch lesen. Was du gelesen hast, bleibt im Buch.",
+   "alt": "Titel „Eine Geschichte, Stück für Stück“ mit drei Zeilen Erklärung"
+  },
+  {
+   "nr": 2,
+   "rolle": "aussehen",
+   "bild": "2.jpg",
+   "titel": "Lesen, wenn du magst",
+   "text": "Unter dem Satz steht leise „Aus dem Lumi-Buch“. Ein Tipp öffnet eine ruhige Leseseite mit dem Kapitelnamen.",
+   "alt": "Bildschirm der Web-Version bei 360 Pixel Breite: ein Absatz aus Kapitel 1 „Der Fluss“ in Serifenschrift, oben ein feines ✕ und der Kapitelname"
+  },
+  {
+   "nr": 3,
+   "rolle": "inhalt",
+   "bild": "3.svg",
+   "titel": "Was drin ist",
+   "text": "Band 1: zwölf Kapitel, 127 Absätze Der Fluss, Die Hellen, Das Klopfen … Über dem Eis: das letzte Kapitel Vorlesen wie beim Roman der Woche",
+   "alt": "Liste: zwölf Kapitel, 127 Absätze, Vorlesen"
+  },
+  {
+   "nr": 4,
+   "rolle": "platz",
+   "bild": "4.svg",
+   "titel": "Klein und ohne Netz",
+   "text": "Unter 200 kB, das Buch selbst ist nur Text. Das ganze Buch liegt auf dem Gerät. Was du gelesen hast, weiß nur dein Gerät.",
+   "alt": "Angaben zu Größe, Netz und Daten"
+  },
+  {
+   "nr": 5,
+   "rolle": "herkunft",
+   "bild": "5.svg",
+   "titel": "Von The Digioneer",
+   "text": "Eine erfundene Geschichte, geschrieben für OFFLINE. Gratis, für alle. Band 2 kommt später als eigenes Paket.",
+   "alt": "Angaben zu Herausgeber, Preis und Band"
+  }
+ ]
+}

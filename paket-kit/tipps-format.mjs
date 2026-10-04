@@ -1,7 +1,7 @@
 // Format der Lumi-Tipps (inhalt/tipps.json im Paket „wir“). Wird vom Prüfprogramm (pruefen.mjs) und den Tests benutzt.
 //   { "hinweis"?: "…", "tipps": [ { id, sorte, text, gewicht?, bedingung?, ziel?, buch? } ] }
-// ziel: Stelle in der App für den Knopf „Zeig mir“ (eine der ZIELE). buch: Absatz im künftigen „Lumi-Buch“ (b1-03-07),
-// in App 0.3.4 angenommen und noch nicht verwendet. Die App führt dieselbe Liste in web/wesen.js (Test prüft Gleichheit).
+// ziel: Stelle in der App für den Knopf „Zeig mir“ (eine der ZIELE). buch: Absatz im „Lumi-Buch“ (b1-03-07, Paket lumi-buch),
+// ab App 0.5.0 ausgewertet (Link „Aus dem Lumi-Buch“, web/buch.js). Die App führt dieselbe Liste in web/wesen.js (Test prüft Gleichheit).
 
 /** Stellen der App, zu denen „Zeig mir“ springen kann: Seiten und Abschnitte der Übersicht. */
 export const ZIELE = ["start", "uebersicht", "notfall", "vorsorge", "tresor", "werkzeuge", "bibliothek", "karte", "notizen", "updates", "neues", "kapitel", "heft", "tagesplan", "lumi", "lumi-log"];

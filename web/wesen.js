@@ -226,9 +226,8 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 const rnd = (n) => Math.floor(Math.random() * n);
 
 /**
- * Knöpfe unter einem Satz: der erste je Sorte (Platz für einen zweiten, später „Aus dem Lumi-Buch“), darunter die Bewertung.
- * Das Feld buch wird in 0.3.4 nirgends ausgewertet; das Lumi-Buch gehört zur eingeschalteten, benannten Lumi, bei Textkarten
- * (ort toast/karte ohne Figur) gibt es auch später keinen Buch-Knopf (Nachtrag 2026-10-04-01a).
+ * Knöpfe unter einem Satz: der erste je Sorte, daneben als zarter Textlink „Aus dem Lumi-Buch“ (seit 0.5.0, nur wenn o.buch:
+ * benannte Lumi mit Figur, Tipps an, Absatz im Buch – web/buch.js, linkErlaubt), darunter die Bewertung.
  * ort: blase | toast | karte. o.gemerkt / o.vorgemerkt: schon im Heft / schon Vorhaben.
  */
 export function tippKnoepfeHtml(t, o = {}) {
@@ -238,7 +237,8 @@ export function tippKnoepfeHtml(t, o = {}) {
   const erster = a === "zeig" ? knopf("zeig", AKTION_TEXT.zeig)
     : a === "mach" ? (o.vorgemerkt ? `<a class="lumi-erledigt of-klein" href="#vorsorge">Steht in Vorsorge unter Vorhaben</a>` : knopf("mach", AKTION_TEXT.mach))
     : a === "merken" ? (o.gemerkt ? `<a class="lumi-erledigt of-klein" href="#heft">Steht im Heft</a>` : knopf("merken", AKTION_TEXT.merken)) : "";
-  return `<div class="lumi-knoepfe">${erster ? `<div class="lumi-aktionen">${erster}</div>` : ""}<div class="lumi-bewertung" role="group" aria-label="Wie war der Satz?">${Object.entries(BEWERTUNG).map(([k, l]) => `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi-bewerten="${k}" data-tipp="${id}" data-ort="${ort}">${l}</button>`).join("")}</div></div>`;
+  const buch = o.buch && t.buch ? `<button type="button" class="z-neben lumi-buch-link" data-lumi-buch="${esc(t.buch)}" data-tipp="${id}">Aus dem Lumi-Buch</button>` : "";
+  return `<div class="lumi-knoepfe">${erster || buch ? `<div class="lumi-aktionen">${erster}${buch}</div>` : ""}<div class="lumi-bewertung" role="group" aria-label="Wie war der Satz?">${Object.entries(BEWERTUNG).map(([k, l]) => `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi-bewerten="${k}" data-tipp="${id}" data-ort="${ort}">${l}</button>`).join("")}</div></div>`;
 }
 
 export class Wesen {
@@ -251,6 +251,7 @@ export class Wesen {
     this.positionen = {}; this.sprichtBis = 0; this.denktBis = 0; this.freudeBis = 0; this.hoertZu = false;
     this.namensfrage = !this.e.name && this.e.darstellung === "wesen" && !this.start.spaeter; this.ausschaltenFrage = false; this.wachBis = 0;
     this.istVorhaben = o.istVorhaben ?? (() => false); this.tagesSatz = null;
+    this.buchLink = o.buchLink ?? (() => false); // Lumi-Buch (0.5.0): gibt es unter diesem Satz „Aus dem Lumi-Buch“?
     this.bewertung = bewertungLaden(this.sp.get("lumi-bewertung", null));
     this.gelernt = this.sp.get("wesen-gelernt", { intervall: 90, gelesen: 0, weitergewischt: 0 });
     this.log = this.sp.get("wesen-log", []);
@@ -458,14 +459,14 @@ export class Wesen {
   /** Knöpfe einer offenen Sprechblase oder Meldung neu zeichnen (nach „Merken“ / „Mach ich“). */
   knoepfeNeu() {
     const t = this.aktuellerTipp; if (!t) return;
-    for (const el of document.querySelectorAll("#wesen-blase .lumi-knoepfe, #wesen-toast .lumi-knoepfe")) el.outerHTML = tippKnoepfeHtml(t, { ort: el.closest("#wesen-toast") ? "toast" : "blase", gemerkt: this.imHeft(t.id), vorgemerkt: this.istVorhaben(t.id) });
+    for (const el of document.querySelectorAll("#wesen-blase .lumi-knoepfe, #wesen-toast .lumi-knoepfe")) el.outerHTML = tippKnoepfeHtml(t, { ort: el.closest("#wesen-toast") ? "toast" : "blase", gemerkt: this.imHeft(t.id), vorgemerkt: this.istVorhaben(t.id), buch: this.buchLink(t) });
   }
 
   // ---------- Sprechblase / Karte ----------
   laut(text) { if (this.e.laute && this.mitFigur()) this.sprechblase(text, null, 2500); }
   sprechblase(text, sorte, dauer = 0, t = null) {
     const blase = document.getElementById("wesen-blase");
-    const knoepfe = (ort) => (t ? tippKnoepfeHtml(t, { ort, gemerkt: this.imHeft(t.id), vorgemerkt: this.istVorhaben(t.id) }) : "");
+    const knoepfe = (ort) => (t ? tippKnoepfeHtml(t, { ort, gemerkt: this.imHeft(t.id), vorgemerkt: this.istVorhaben(t.id), buch: ort !== "karte" && this.buchLink(t) }) : "");
     if (blase && this.mitFigur()) {
       blase.hidden = false; blase.innerHTML = `${sorte ? `<span class="wesen-sorte">${esc(SORTEN[sorte])}</span>` : ""}<span>${esc(text)}</span>${sorte ? `<button class="wesen-zu" data-wesen-zu aria-label="Schließen ohne Bewertung">×</button>` : ""}${knoepfe("blase")}`;
       if (dauer) setTimeout(() => { if (!this.aktuellerTipp) blase.hidden = true; }, dauer);
@@ -664,7 +665,7 @@ export class Wesen {
     const q = suche.trim().toLowerCase();
     const liste = [...this.log].reverse().filter((l) => (!filter || (filter === "gemerkt" ? l.stern : l.sorte === filter)) && (!q || l.text.toLowerCase().includes(q)));
     return `<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem"><select class="of-select" id="wesen-log-filter"><option value="">Alle Sorten</option><option value="gemerkt" ${filter === "gemerkt" ? "selected" : ""}>Gemerkt (Heft)</option>${Object.entries(SORTEN).map(([k, l]) => `<option value="${k}" ${filter === k ? "selected" : ""}>${l}</option>`).join("")}</select><input class="of-input" type="text" id="wesen-log-suche" placeholder="Suchen …" value="${esc(suche)}" autocomplete="off"><span class="muted of-klein" style="align-self:center">${liste.length} Tipp${liste.length === 1 ? "" : "s"}</span></div>
-      ${liste.length ? `<ul class="wesen-log">${liste.slice(0, 200).map((l) => `<li><button class="wesen-stern ${this.imHeft(l.id) ? "an" : ""}" data-wesen-stern="${esc(l.id)}" aria-label="${this.imHeft(l.id) ? "Aus dem Heft nehmen" : "Ins Heft legen"}">${this.imHeft(l.id) ? "★" : "☆"}</button><span class="wesen-sorte">${esc(SORTEN[l.sorte] ?? l.sorte)}</span> ${esc(l.text)} <span class="muted of-klein" style="font-size:.8rem">${new Date(l.zeit).toLocaleString("de-AT", { dateStyle: "short", timeStyle: "short" })}</span></li>`).join("")}</ul>` : `<p class="muted of-klein">Noch nichts gesagt.</p>`}`;
+      ${liste.length ? `<ul class="wesen-log">${liste.slice(0, 200).map((l) => `<li><button class="wesen-stern ${this.imHeft(l.id) ? "an" : ""}" data-wesen-stern="${esc(l.id)}" aria-label="${this.imHeft(l.id) ? "Aus dem Heft nehmen" : "Ins Heft legen"}">${this.imHeft(l.id) ? "★" : "☆"}</button><span class="wesen-sorte">${esc(SORTEN[l.sorte] ?? l.sorte)}</span> ${esc(l.text)} <span class="muted of-klein" style="font-size:.8rem">${new Date(l.zeit).toLocaleString("de-AT", { dateStyle: "short", timeStyle: "short" })}</span>${(() => { const t = this.tipp(l.id); return t && this.buchLink(t) ? ` <button type="button" class="z-neben lumi-buch-link" data-lumi-buch="${esc(t.buch)}" data-tipp="${esc(t.id)}">Aus dem Lumi-Buch</button>` : ""; })()}</li>`).join("")}</ul>` : `<p class="muted of-klein">Noch nichts gesagt.</p>`}`;
   }
   einstellen(k, v) {
     if (k === "darstellung") {

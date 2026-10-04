@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import { tageBereichFehler, tageInhaltFehler } from "./tage-format.mjs";
 import { tippsFehler } from "./tipps-format.mjs";
 import { pauseFehler } from "./pause-format.mjs";
+import { buchFehler, zuordnungFehler } from "./buch-format.mjs";
 
 const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul", "skin", "tage"];
 const PREISE = ["gratis", "pro", "kauf"];
@@ -229,6 +230,33 @@ async function pruefen(ordner) {
     let t = null;
     try { t = JSON.parse(await readFile(path.join(inhalt, "tipps.json"), "utf8")); } catch { F("inhalt/tipps.json: kein gültiges JSON"); }
     if (t) for (const f of tippsFehler(t)) F(`inhalt/tipps.json: ${f}`);
+    // buch: jede Absatznummer muss es im Lumi-Buch geben (Paket „lumi-buch“ daneben, z. B. pakete/lumi-buch)
+    const mitBuch = (t?.tipps ?? []).filter((x) => x.buch);
+    if (mitBuch.length) {
+      const buchDatei = path.join(ordner, "..", "lumi-buch", "inhalt", "buch.json");
+      if (!existsSync(buchDatei)) H(`inhalt/tipps.json: ${mitBuch.length} Tipps mit buch, aber kein Lumi-Buch daneben (../lumi-buch) – Nummern nicht geprüft`);
+      else {
+        let b = null;
+        try { b = JSON.parse(await readFile(buchDatei, "utf8")); } catch { F("../lumi-buch/inhalt/buch.json: kein gültiges JSON"); }
+        if (b) for (const f of zuordnungFehler(b, t.tipps).filter((x) => !/kein Tipp zeigt/.test(x))) F(`inhalt/tipps.json: ${f}`);
+      }
+    }
+  }
+
+  // --- Lumi-Buch (inhalt/buch.json, Paket „lumi-buch“): Band, Kapitel in Reihenfolge, Absatznummern b<Band>-KK-PP ---
+  if (liste.find((d) => d.rel === "buch.json")) {
+    let b = null;
+    try { b = JSON.parse(await readFile(path.join(inhalt, "buch.json"), "utf8")); } catch { F("inhalt/buch.json: kein gültiges JSON"); }
+    if (b) for (const f of buchFehler(b)) F(`inhalt/buch.json: ${f}`);
+    if (txt(meta.app_min) && versionKleiner(meta.app_min, "0.5.0")) F("Lumi-Buch: app_min muss 0.5.0 oder höher sein");
+    // jeder Absatz braucht mindestens einen Tipp im Paket „wir“ daneben
+    const tippDatei = path.join(ordner, "..", "wir", "inhalt", "tipps.json");
+    if (b && existsSync(tippDatei)) {
+      let t = null;
+      try { t = JSON.parse(await readFile(tippDatei, "utf8")); } catch { /* das prüft das Paket wir selbst */ }
+      if (t) for (const f of zuordnungFehler(b, t.tipps ?? []).filter((x) => /kein Tipp zeigt/.test(x))) F(`inhalt/buch.json: ${f}`);
+    }
+    R("Text gegen die freigegebene Vorlage gelesen; nur Tippfehler korrigiert und gemeldet.");
   }
 
   // --- Pause (inhalt/pause.json, Paket „pause“): Formen mit Selbstbeschreibung, Geschichten, Lumisch ---

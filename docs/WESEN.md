@@ -28,13 +28,13 @@
 | `fragen` | digital-030 |
 
 **0.3.4: Sätze führen irgendwohin (Auftrag `2026-10-04-lumi-knoepfe`):**
-- **Knöpfe je Sorte** unter jedem Satz (Sprechblase, eingeblendete Meldung, Textkarte des Tages): App „Zeig mir“ (nur mit `ziel`), Alltag „Mach ich“ (wird ein Vorhaben in Vorsorge, abhakbar, ändert Bereit nicht), Wissen „Merken“ (ins Heft), Digital „Zeig mir“ mit Ziel, sonst „Merken“; Weisheit und Laune nur Bewertung. Platz für einen zweiten Knopf (später „Aus dem Lumi-Buch“).
+- **Knöpfe je Sorte** unter jedem Satz (Sprechblase, eingeblendete Meldung, Textkarte des Tages): App „Zeig mir“ (nur mit `ziel`), Alltag „Mach ich“ (wird ein Vorhaben in Vorsorge, abhakbar, ändert Bereit nicht), Wissen „Merken“ (ins Heft), Digital „Zeig mir“ mit Ziel, sonst „Merken“; Weisheit und Laune nur Bewertung. Daneben seit 0.5.0 der zarte Textlink „Aus dem Lumi-Buch“ (siehe unten).
 - **Bewertung statt „Gelesen / Weglegen“:** *Mehr davon · Passt · Nicht mehr*, jede schließt den Satz; das ✕ schließt ohne Bewertung (auf der Tagesseite zählt das als weggelegt). Gewicht je Sorte: Start 1, „Mehr davon“ ×1,3 bis höchstens 3, „Nicht mehr“ ×0,85 bis mindestens 0,4 und der Satz kommt nie wieder; keine Sorte fällt durch Bewertungen auf null, ganz abschalten nur in den Einstellungen. Keine Zählung, keine Serien, nichts verlässt das Gerät (`lumi-bewertung`).
 - **Sichtbar und rückgängig:** Übersicht › Lumi › „Was Lumi gelernt hat“ mit Balken je Sorte, den ausgeschlossenen Sätzen (Zurückholen) und Zurücksetzen.
 - **Heft „Was Lumi gesagt hat“** (`#heft`, verlinkt dort): die Ansicht des Logs (`wesen-log`) mit dem Filter „gemerkt“, kein zweiter Speicher (Nachtrag 2026-10-04-01a). „Merken“ setzt den Stern im Log; stand ein Satz noch nicht darin (Textkarte des Tages), kommt er hinein. Mit Datum, ohne Netz durchsuchbar, einzeln aus dem Heft zu nehmen. Gemerktes fällt beim Kürzen des Logs (500) nie heraus. Im Verlauf gibt es den Filter „Gemerkt (Heft)“.
 - **Eine Stimme:** Mit Figur spricht der Satz des Tages in der Sprechblase, eine Karte gibt es nur bei Textkarten; ein offener Satz wird nicht durch einen neuen ersetzt; bei Textkarten keine eingeblendete Meldung auf der Tagesseite. Der Satz des Tages bleibt den Tag über derselbe (`lumi-satz`).
 - **Vor dem Namen kein Tipp:** Solange die Namensfrage offen ist, nur die Frage. „Später“ gilt auch nach einem Neustart (`lumi-start.spaeter`); danach Sätze ohne „ich“.
-- **Paket `wir`:** optional `ziel` (Stelle der App, Liste `ZIELE` in `web/wesen.js` und `paket-kit/tipps-format.mjs`) und `buch` (reserviert für das Lumi-Buch, Form `b1-03-07`, noch ohne Wirkung; das Buch gehört zur eingeschalteten, benannten Lumi, bei Textkarten wird `buch` nie ausgewertet). 16 Tipps haben ein Ziel. Neue Funktionen in `FUNKTIONEN`: `gelernt`, `heft`, `vorhaben` (damit kommt `app-004`).
+- **Paket `wir`:** optional `ziel` (Stelle der App, Liste `ZIELE` in `web/wesen.js` und `paket-kit/tipps-format.mjs`) und `buch` (Absatz im Lumi-Buch, Form `b1-03-07`; seit 0.5.0 bei allen 175 Tipps, siehe unten). 16 Tipps haben ein Ziel. Neue Funktionen in `FUNKTIONEN`: `gelernt`, `heft`, `vorhaben` (damit kommt `app-004`).
 
 **Nachtrag 0.2.1 (Entscheidungen Mik 29.09. abends, Auftrag `2026-09-29-lumi-nachtrag`):**
 - **Drei Stufen:** *Aus mit Textkarten* (Standard), *Lumi mit Tipps*, *Tipps aus*. Textkarten: keine Figur, Tipps als neutrale Karte unten rechts im selben Takt, nur die Sorten App, Alltag, Wissen, dazu Digital, wenn angekreuzt. *Tipps aus*: ganz still, nur die Bereit-Zahl, keine Einladung. Wahl unter „Lumi“ auf der Übersicht; „Lumi ausschalten“ führt zurück zu den Textkarten.
@@ -95,6 +95,14 @@
 - Der Web-Prototyp zeigt das Wesen ebenfalls, ohne Tresor-Quelle in der Bereit-Zahl.
 
 ---
+
+### Das Lumi-Buch (App 0.5.0, Auftrag 2026-10-04-lumi-buch-app)
+
+- **Paket `lumi-buch`:** Band 1 mit zwölf Kapiteln und 127 Absätzen liegt ganz auf dem Gerät (`inhalt/buch.json`, Format `paket-kit/buch-format.mjs`). Titelseite: „Eine erfundene Geschichte“. Band 2 kommt später als eigenes Paket mit `band: 2`.
+- **Zuordnung:** Jeder der 175 Tipps zeigt mit `buch` auf einen Absatz, jeder Absatz hat mindestens einen Tipp (Test `web/buch.test.mjs`, Kit `pruefen.mjs`).
+- **Freischalten:** Unter jedem Satz der eingeschalteten, benannten Lumi (Sprechblase, Meldung) und an jedem Logeintrag steht „Aus dem Lumi-Buch“. Erst das Öffnen macht den Absatz lesbar (`lumi-buch-frei` am Gerät). Bei Textkarten und bei „Tipps aus“ gibt es den Link nicht, und das Buch wächst nicht.
+- **Lesen:** `#absatz` zeigt einen Absatz ruhig mit Kapitelname (nur ✕ und „Zurück“). `#buch` zeigt „Band 1 · N % lesbar“, die Kapitel in Reihenfolge, Lücken als „Dieses Stück hat dir deine Lumi noch nicht erzählt.“ und Vorlesen. Erreichbar aus der Übersicht (unter den Lumi-Einstellungen) und der Bibliothek.
+- **Milde Zugkraft:** keine Liste fehlender Tipps, kein Hinweis aufs schnellere Freischalten, keine Zählung von Tagen.
 
 ## A. Konzept (Entwurf 3, 29.09.2026, aus der Session Lumi-Mimik übernommen)
 

@@ -6,6 +6,7 @@ import { WERTE as PAUSE_WERTE, LEBENSABSCHNITTE, APPETIT, ART_TEXT, angeboten as
   logDazu as pauseLogDazu, happenFaellig, waehle as pauseWaehle, bewerten as pauseBewerten, schwierigkeit as pauseSchwierigkeit, zoneAnpassen, zoneText, zurueckholen as pauseZurueckholen,
   rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, soSeheIchDich, wochenSatz, rueckspiegel, lumischHeute, imKennenlernen, gewichtVon, stufeVon, verfuegbar as pauseVerfuegbar, tagVon, raumFormen, dauerText } from "./pause.js";
 import { FORMEN as PAUSE_FORMEN, happenFokus } from "./pause-happen.js";
+import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE } from "./buch.js";
 import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
 
@@ -13,7 +14,7 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.4.3";
+const APP_VERSION = "0.5.0";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -80,6 +81,8 @@ const ARTEN = { inhalt: "Österreich", zim: "Bibliothek", karte: "Karten", model
 // ---------- Paketinhalt ----------
 const P = () => installiertesPaket(BASISPAKET);
 const PW = () => installiertesPaket("wir");
+const PB = () => installiertesPaket("lumi-buch"); // Das Lumi-Buch (0.5.0)
+const buchDaten = () => inhalt(PB(), "inhalt/buch.json");
 // Vorhaben: Sätze der Lumi, die man sich mit „Mach ich“ vorgenommen hat. Eine Erinnerung, keine Prüfung: zählen nicht zu Bereit.
 const vorhaben = () => speicher.get("vorhaben", []);
 const vorhabenSpeichern = (l) => speicher.set("vorhaben", l);
@@ -88,7 +91,7 @@ function vorhabenDazu(t) {
   l.unshift({ id: `v-${Date.now().toString(36)}`, tipp: t.id, text: t.text, datum: new Date().toISOString(), erledigt: null });
   vorhabenSpeichern(l);
 }
-const wesen = new Wesen({ speicher, istVorhaben: (id) => vorhaben().some((v) => v.tipp === id), tipps: () => inhalt(PW(), "inhalt/tipps.json")?.tipps ?? [], onLog: () => {
+const wesen = new Wesen({ speicher, istVorhaben: (id) => vorhaben().some((v) => v.tipp === id), buchLink: (t) => buchLinkErlaubt(t, wesen.e, buchDaten()), tipps: () => inhalt(PW(), "inhalt/tipps.json")?.tipps ?? [], onLog: () => {
   const z = document.getElementById("wesen-log-zahl"); if (z) z.textContent = `· ${wesen.log.length}`;
   const el = document.getElementById("wesen-log"); if (el) el.innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche);
 } });
@@ -381,6 +384,10 @@ const seiten = {
   happen() { return ""; },
   /** Pause › Deine Linie */
   linie() { return linieHtml(); },
+  /** Das Lumi-Buch: Titelseite, Anteil, Kapitel mit Lücken, Vorlesen. */
+  buch() { return buchHtml(); },
+  /** Ein Absatz aus dem Lumi-Buch: ruhige Leseansicht, nur ✕ und „Zurück“. */
+  absatz() { return absatzHtml(); },
 
   /** Heft „Was Lumi gesagt hat“: gemerkte Sätze, ohne Netz durchsuchbar, einzeln löschbar. */
   heft() {
@@ -458,6 +465,7 @@ const seiten = {
       ${tagesplanHtml()}
       <a class="card of-karte pause-zeile" href="#pause" style="margin-bottom:1rem"><strong>⏸ Pause</strong> <span class="muted of-klein">· ${pauseE().an ? `ein · Appetit ${esc(pauseE().appetit)}` : "aus"} · Happen für zwischendurch, jetzt mit eigenem Raum</span></a>
       <details class="card of-karte" id="lumi-einstellungen" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? `${esc(wesen.anzeigename())} · Einstellungen` : wesen.aktiv() ? "Textkarten" : "Tipps aus"}</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
+      ${buchDaten() && wesen.mitFigur() ? `<a class="card of-karte buch-zeile" href="#buch" style="margin-bottom:1rem"><strong>Das Lumi-Buch</strong> <span class="muted of-klein">· Band ${buchDaten().band} · ${buchAnteil(buchDaten(), buchFrei())} % lesbar</span></a>` : ""}
       ${wesen.aktiv() || wesen.log.length ? `<details class="card of-karte" id="lumi-log" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>${wesen.mitFigur() ? `Alles, was ${esc(wesen.anzeigename())} gesagt hat` : "Bisherige Tipps"}</strong> <span class="muted of-klein" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` : ""}
       ${updates ? `<a class="card of-karte" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn of-plakette of-plakette--warnung">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted of-klein">· ${intervallText()}</span></a>` : ""}
       ${land ? `<div class="card of-karte" style="margin-top:0"><strong>${esc(land.name)}</strong> <span class="muted of-klein">· Landeshauptstadt ${esc(land.hauptstadt)} · im Krisenfall informiert <strong>${esc(land.orf_radio)}</strong></span></div>` : ""}
@@ -663,7 +671,7 @@ const seiten = {
         const inst = installiertesPaket(p.id);
         const update = inst && p.status === "verfuegbar" && versionVergleich(p.version, inst.manifest.version) > 0 && appPasst(p);
         let knopf;
-        if (inst) knopf = `${update ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${p.id}">Aktualisieren</button> ` : ""}${desktop && p.art === "zim" ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-oeffnen-zim="${p.id}">Öffnen</button> ` : ""}${desktop && p.art === "karte" ? `<a class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" href="#karte">Karte öffnen</a> ` : ""}<button class="btn btn-sm of-btn of-btn--klein" data-remove="${p.id}">Entfernen</button>`;
+        if (inst) knopf = `${p.id === "lumi-buch" ? `<a class="btn btn-sm of-btn of-btn--klein" href="#buch">Lesen</a> ` : ""}${update ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${p.id}">Aktualisieren</button> ` : ""}${desktop && p.art === "zim" ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-oeffnen-zim="${p.id}">Öffnen</button> ` : ""}${desktop && p.art === "karte" ? `<a class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" href="#karte">Karte öffnen</a> ` : ""}<button class="btn btn-sm of-btn of-btn--klein" data-remove="${p.id}">Entfernen</button>`;
         else if (p.status !== "verfuegbar") knopf = `<span class="tag tag-warn of-plakette of-plakette--warnung">Geplant</span>`;
         else if (p.pro) knopf = `<button class="btn btn-sm of-btn of-btn--klein" disabled title="Nur mit Pro">Nur mit Pro</button>`;
         else if (!desktop && p.art !== "inhalt" && p.art !== "tage") knopf = `<span class="tag of-plakette">Nur in der Desktop-App</span>`;
@@ -1120,6 +1128,56 @@ function linieHtml() {
     <p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause="linie-zuruecksetzen">Linie zurücksetzen</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause="log-loeschen">Spiel-Log löschen</button></p>
     <p class="muted of-klein">Alles hier bleibt auf diesem Gerät. Es wird nichts gezählt, um dich festzuhalten.</p>`;
 }
+
+// ---------- Das Lumi-Buch (Auftrag 2026-10-04-lumi-buch-app): lesbar wird, was man unter einem Satz der Lumi öffnet ----------
+// Logik in web/buch.js. Milde Zugkraft: oben nur der Anteil in Prozent, keine Liste fehlender Tipps, kein Hinweis aufs
+// schnellere Freischalten. Gespeichert wird nur, welche Absätze lesbar sind ("lumi-buch-frei").
+const buchFrei = () => buchFreiLaden(speicher.get("lumi-buch-frei", null));
+let buchLesen = null; // { id, zurueck } – der zuletzt geöffnete Absatz und wohin „Zurück“ führt
+/** „Aus dem Lumi-Buch“ unter einem Satz oder im Log: Absatz öffnen und damit lesbar machen (nicht bei „Tipps aus“). */
+function buchOeffnen(id) {
+  const b = buchDaten();
+  if (!b || !buchAbsatz(b, id)) return;
+  if (wesen.e.takt !== "aus") speicher.set("lumi-buch-frei", buchFreischalten(buchFrei(), b, id));
+  const hier = (location.hash || "#start").slice(1);
+  buchLesen = { id, zurueck: hier === "absatz" ? buchLesen?.zurueck ?? "start" : hier };
+  wesen.tippSchliessen?.();
+  if (hier === "absatz") render(); else location.hash = "#absatz";
+}
+function absatzHtml() {
+  const b = buchDaten(), a = b && buchLesen ? buchAbsatz(b, buchLesen.id) : null;
+  if (!a) return buchHtml();
+  const zurueck = `#${buchLesen.zurueck || "start"}`;
+  return `<article class="buch-lesen buch-absatz" lang="de" aria-labelledby="buch-kapitel">
+    <div class="buch-kopf"><a class="buch-zu" href="${esc(zurueck)}" aria-label="Schließen"><svg class="z-x" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></a><p class="buch-marke" id="buch-kapitel">${esc(b.titel)} · Kapitel ${a.kapitel}: ${esc(a.kapitelTitel)}</p></div>
+    <p class="buch-text">${esc(a.text)}</p>
+    <p class="buch-fuss"><a class="z-neben" href="${esc(zurueck)}">Zurück</a></p>
+  </article>`;
+}
+function buchHtml() {
+  const b = buchDaten();
+  if (!b) return `${kopf("Das Lumi-Buch", "Das Buch kommt mit dem Paket „Das Lumi-Buch“.")}<div class="card of-karte"><p style="margin:0">${navigator.onLine ? "Es wird gerade geladen oder lässt sich in der Bibliothek installieren." : "Sobald du online bist, lädt OFFLINE es."}</p></div>`;
+  const frei = buchFrei();
+  return `<article class="buch-lesen" lang="de">
+    <header class="buch-titel"><h1>${esc(b.titel)}</h1><p class="buch-band">Band ${b.band} · ${buchAnteil(b, frei)} % lesbar</p>
+      <p class="buch-hinweis">${esc(b.hinweis)}</p>
+      <p class="buch-werkzeug">${frei.absaetze.length ? `<button type="button" class="z-neben" data-buch="vorlesen">${state.buchLiest ? "Anhalten" : "Vorlesen"}</button>` : ""}<a class="z-neben" href="#uebersicht">Zurück</a></p></header>
+    ${frei.absaetze.length ? "" : `<p class="buch-leer">Unter einem Satz deiner Lumi steht „Aus dem Lumi-Buch“. Was du dort aufschlägst, steht danach hier.</p>`}
+    ${buchMitLuecken(b, frei).map((k) => `<section class="buch-kapitel"><h2>Kapitel ${k.nr}: ${esc(k.titel)}</h2>${k.teile.map((t) => t.art === "absatz" ? `<p class="buch-text" id="${esc(t.id)}">${esc(t.text)}</p>` : `<p class="buch-luecke">${esc(BUCH_LUECKE)}</p>`).join("")}</section>`).join("")}
+  </article>`;
+}
+function buchVorlesen() {
+  if (state.buchLiest) { try { speechSynthesis.cancel(); } catch { /* egal */ } state.buchLiest = false; return render(); }
+  const teile = buchDaten() ? buchVorleseTeile(buchDaten(), buchFrei()) : [];
+  if (!teile.length) return;
+  try {
+    speechSynthesis.cancel();
+    teile.forEach((t, i) => { const u = new SpeechSynthesisUtterance(t); u.lang = "de-AT"; if (i === teile.length - 1) u.onend = () => { state.buchLiest = false; if (location.hash === "#buch") render(); }; speechSynthesis.speak(u); });
+    state.buchLiest = true;
+  } catch { state.buchLiest = false; }
+  render();
+}
+// ---------- Das Lumi-Buch ende ----------
 
 // ---------- Module (art = "modul"): Katalogkarte, Schieber, aktiv/inaktiv, löschen, Ansicht in der Sandbox ----------
 // Sicherheit: SICHERHEIT.md, Abschnitt Module. Das Modul läuft in einem eigenen Rahmen (web/modul-host.js) und erreicht
@@ -1767,13 +1825,14 @@ function render() {
   if (seite === "start") wesen.einbauen(); else wesen.setScore(bereit());
   wesen.ansicht(seite);
   if (seite === "start") { tagesSatzZeigen(); pauseKarteWischen(); }
-  const aktiv = seite === "lesen" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" ? "uebersicht" : seite === "linie" ? "pause" : seite;
+  const aktiv = seite === "lesen" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" || seite === "buch" || seite === "absatz" ? "uebersicht" : seite === "linie" ? "pause" : seite;
   if (seite !== "kapitel" && state.tag.liest) vorlesenStop();
+  if (seite !== "buch" && state.buchLiest) { try { speechSynthesis.cancel(); } catch { /* egal */ } state.buchLiest = false; }
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
   main.classList.toggle("main-lesen", seite === "lesen");
-  if ((seite === "kapitel" || seite === "neues" || seite === "heft" || seite === "linie" || seite === "pause") && state.tag.seiteVorher !== seite) { window.scrollTo(0, 0); main.scrollTop = 0; } // beginnt oben
+  if ((seite === "kapitel" || seite === "neues" || seite === "heft" || seite === "linie" || seite === "pause" || seite === "buch" || seite === "absatz") && state.tag.seiteVorher !== seite) { window.scrollTo(0, 0); main.scrollTop = 0; } // beginnt oben
   state.tag.seiteVorher = seite;
-  document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : seite === "heft" ? `Was ${wesen.anzeigename()} gesagt hat` : seite === "linie" ? "Deine Linie" : state.lesen?.titel ?? "Lesen")}`;
+  document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : seite === "heft" ? `Was ${wesen.anzeigename()} gesagt hat` : seite === "linie" ? "Deine Linie" : seite === "buch" || seite === "absatz" ? "Das Lumi-Buch" : state.lesen?.titel ?? "Lesen")}`;
   if (seite === "karte") karteStarten();
   if (seite === "bibliothek") vorschauenNachladen();
   skinFuerSeite();
@@ -1913,7 +1972,9 @@ document.addEventListener("click", (e) => {
   if (anker) setTimeout(() => { const el = document.getElementById(anker.dataset.anker); if (el) { if (el.tagName === "DETAILS") el.open = true; el.scrollIntoView({ block: "start" }); } }, 60);
   const b = e.target.closest("button"); if (!b) return;
   if (b.hasAttribute("data-wesen-zu")) { const satz = wesen.tagesSatz; wesen.tippSchliessen(); if (satz) tagSetzen({ id: `lumi-${satz}`, art: "lumi" }, "weg"); }
+  if (b.dataset.lumiBuch) return buchOeffnen(b.dataset.lumiBuch);
   if (b.dataset.lumiAktion) return lumiKnopf(b);
+  if (b.dataset.buch === "vorlesen") return buchVorlesen();
   if (b.dataset.pause) return pauseKnopf(b.dataset.pause, b);
   if (b.dataset.pauseZurueck) { linieSpeichern(pauseZurueckholen(pauseL(), b.dataset.pauseZurueck)); return render(); }
   if (b.dataset.pauseStufe) { const f = pauseDaten()?.formen.find((x) => x.id === b.dataset.pauseStufe); if (f) linieSpeichern(pauseSchwierigkeit(pauseL(), f, b.dataset.richtung)); return render(); }
@@ -2103,7 +2164,7 @@ if (desktop) (async () => {
     if (!navigator.onLine) return;
     try {
       const { katalog: k } = await ladeKatalog();
-      for (const id of [BASISPAKET, "wir"]) {
+      for (const id of [BASISPAKET, "wir", "lumi-buch"]) {
         if (installiertesPaket(id)) continue;
         const e = k.pakete.find((p) => p.id === id && p.status === "verfuegbar");
         if (e && appPasst(e)) { await installiere(k, e); render(); }
@@ -2115,6 +2176,8 @@ if (desktop) (async () => {
   }
 })().finally(async () => {
   vorratAuffuellen(); // danach die Vorratskammer der Tagesseite
+  // Lumi-Buch (0.5.0): liegt ganz auf dem Gerät; wer es noch nicht hat (Update von 0.4), bekommt es still dazu
+  if (!PB() && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "lumi-buch" && p.status === "verfuegbar"); if (e && appPasst(e)) await installiere(k, e); } catch (err) { console.error("Lumi-Buch", err); } }
   // Pause: ist sie an und das Paket fehlt, still holen; dann der Happen beim Öffnen
   if (pauseE().an && !PP() && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "pause" && p.status === "verfuegbar"); if (e && appPasst(e)) await installiere(k, e); } catch (err) { console.error("Pause", err); } }
   pauseBeimOeffnen();

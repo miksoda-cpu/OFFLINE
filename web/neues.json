@@ -2,6 +2,17 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.5.0",
+      "datum": "2026-10-04",
+      "punkte": [
+        "Neu: Das Lumi-Buch. Die Geschichte deiner Lumi von unter dem Eis, in zwölf Kapiteln.",
+        "Unter jedem Satz deiner Lumi steht leise „Aus dem Lumi-Buch“. Ein Tipp öffnet den passenden Absatz in einer ruhigen Leseseite.",
+        "Was du aufgeschlagen hast, steht danach im Buch. Du findest es in der Übersicht und in der Bibliothek, mit Vorlesen wie beim Roman der Woche.",
+        "Auch frühere Sätze im Verlauf der Lumi haben den Link. So kannst du nachlesen, was sie dir schon erzählt hat.",
+        "Das Buch gehört zur Lumi mit Namen. Mit Textkarten oder ohne Tipps wächst es nicht."
+      ]
+    },
+    {
       "version": "0.4.3",
       "datum": "2026-10-04",
       "punkte": [

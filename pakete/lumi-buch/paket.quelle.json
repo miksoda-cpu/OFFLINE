@@ -1,0 +1,25 @@
+{
+  "id": "lumi-buch",
+  "titel": "Das Lumi-Buch · Band 1",
+  "beschreibung": "Die Geschichte der Lumi von unter dem Eis, in zwölf Kapiteln. Das ganze Buch liegt auf dem Gerät; lesbar wird ein Stück, wenn du es nach einem Satz deiner Lumi aufschlägst. Eine erfundene Geschichte.",
+  "art": "inhalt",
+  "sprache": "de-AT",
+  "lizenz": "CC BY-SA 4.0",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "kategorie": "miteinander",
+  "alter_ab": 0,
+  "app_min": "0.5.0",
+  "aenderungen": "Erste Ausgabe: Band 1, zwölf Kapitel, 127 Absätze.",
+  "quellen": [
+    {
+      "id": "redaktion",
+      "name": "Das Lumi-Buch, Band 1 (Text von Mik freigegeben am 04.10.2026)",
+      "url": "https://github.com/miksoda-cpu/OFFLINE/blob/main/docs/WESEN.md"
+    }
+  ],
+  "abnahme": "Redaktion (Code), 04.10.2026: Format, Reihenfolge, jede Absatznummer mit mindestens einem Tipp, alle 175 Tipps mit vorhandenem Absatz; Text unverändert (keine Tippfehler gefunden)",
+  "braucht_netz": false
+}
