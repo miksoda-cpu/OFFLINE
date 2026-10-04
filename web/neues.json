@@ -2,6 +2,18 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.4.2",
+      "datum": "2026-10-04",
+      "punkte": [
+        "Pause hat jetzt einen eigenen Raum, direkt unter „Heute“ (am Handy in der unteren Leiste; die Bibliothek findest du dort unter „Mehr“). Oben steht ein Vorschlag, darunter alle Spiele zum Aussuchen.",
+        "Einschalten geht in einem Schritt: Alter antippen, und der erste Happen beginnt.",
+        "Kein Fenster mehr über der Tagesseite. Beim Öffnen steht oben auf „Heute“ eine ruhige Einladung, die du spielen, tauschen oder zur Seite wischen kannst.",
+        "Ein Happen ist ein eigener ruhiger Bildschirm: oben ✕, unten ein Knopf. Danach geht es zurück, wo du warst.",
+        "„Der Tag rückwärts“ kommt nur noch ab 18 Uhr, das Atemfenster nie als Erstes am Tag. Statt Textfeldern genügt „Ich hab's“. Und Pause sieht zarter aus: helle Flächen, feine Linien, leichte Schrift.",
+        "Die Startseite verspricht nur noch, was die App kann. Alles andere ist mit „kommt“ markiert."
+      ]
+    },
+    {
       "version": "0.4.1",
       "datum": "2026-10-04",
       "punkte": [

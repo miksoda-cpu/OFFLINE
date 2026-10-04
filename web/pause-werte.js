@@ -30,9 +30,11 @@ export const WERTE = {
     M2: { beweglichkeit: 1.3, wort: 1.1, tempo: 1.1 },
     A: { tempo: 1.2, ruhe: 1.2, geschichte: 1.1 },
   },
-  // Tageszeiten: „morgen“ bis 12 Uhr, „abend“ ab 18 Uhr (oder nach dem Tagesschluss)
+  // Tageszeiten: „morgen“ bis 12 Uhr, „abend“ (Der Tag rückwärts) ab 18 Uhr, auch nach einem früheren Tagesschluss nie davor
   morgenBis: 12,
   abendAb: 18,
+  // Diese Formen sind nie der erste Vorschlag des Tages (Auftrag 2026-10-04-pause-umbau): erst nach einem gespielten Happen
+  nichtAlsErstes: ["atem"],
   // Rückspiegel: eine ruhige Karte höchstens alle so viele Tage, frühestens nach so vielen Tagen Pause
   rueckspiegelTage: 30,
   // Routine erreicht, wenn an so vielen der letzten 7 Tage ein Happen gespielt wurde (Annahme)

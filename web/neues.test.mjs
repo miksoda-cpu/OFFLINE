@@ -30,3 +30,20 @@ test("Neueste oben, jede Version einmal, Datum, drei bis sechs Punkte in Alltags
     }
   }
 });
+
+// Startseite verspricht nur, was die App kann (Auftrag 2026-10-04-webseite-ehrlich): keine KI im Startbild und in der
+// Seitenbeschreibung, Geplantes trägt „kommt“, der Satz über den Preiskarten steht da.
+test("Startseite: kein KI-Versprechen im Startbild, Geplantes mit „kommt“", async () => {
+  const html = await readFile(new URL("./index.html", import.meta.url), "utf8");
+  const meta = [...html.matchAll(/<meta[^>]+(?:name|property)="(?:og:)?description"[^>]+content="([^"]+)"/g)].map((m) => m[1]);
+  const lead = html.match(/<p class="lead">([\s\S]*?)<\/p>/)[1];
+  for (const t of [...meta, lead]) assert.doesNotMatch(t, /\bKI\b|KI-|Wikipedia|Karte/, t);
+  assert.equal(meta.length, 2);
+  const kommt = (text) => new RegExp(`${text}[^<]*<span class="tag tag-warn">kommt</span>`).test(html);
+  for (const t of ["Nach Bundesland", "Österreich-Paket nach Bundesland", "RIS-Gesetzesauszug, wöchentlich", "Karte Österreich und Wikipedia auf Deutsch", "Zentral verwaltete Updates"]) assert.ok(kommt(t), t);
+  assert.match(html, /<h3>Karten <span class="tag tag-warn">kommt<\/span><\/h3>/);
+  assert.match(html, /Wikivoyage auf Deutsch\. Wikipedia und Wiktionary kommen\./);
+  assert.match(html, /Wikivoyage, Österreich-Paket Grundversion<\/li>\s*<li class="muted">Wikipedia und Karte kommen<\/li>/);
+  assert.match(html, /Was mit „kommt“ markiert ist, bauen wir gerade\. Du zahlst für das, was es gibt\./);
+  for (const p of ["7,90 €", "79 € / Jahr", "19,90 €", "199 € / Jahr", "ab 590 €"]) assert.ok(html.includes(p), `Preis ${p} unverändert`);
+});

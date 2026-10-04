@@ -1,10 +1,10 @@
-# Pause – Happen für zwischendurch (Stufe 1, App 0.4.0)
+# Pause – Happen für zwischendurch (Stufe 1, App 0.4.0; eigener Raum seit 0.4.2)
 
-Umsetzung des Auftrags `bill/erledigt/2026-10-04-pause-stufe1.md`. Quellen: `bill/eingang/2026-10-04-pause-quellen/` (Pause-Konzept, Übungskatalog Abschnitt 7, Trainingsmodell Abschnitte 4 und 8, Prinzip Milde Zugkraft, Lumisch-Wörterbuch).
+Umsetzung der Aufträge `bill/erledigt/2026-10-04-pause-stufe1.md` und `bill/erledigt/2026-10-04-pause-umbau.md` (Bedienung neu, 0.4.2). Quellen: `bill/eingang/2026-10-04-pause-quellen/` (Pause-Konzept, Übungskatalog Abschnitt 7, Trainingsmodell Abschnitte 4 und 8, Prinzip Milde Zugkraft, Lumisch-Wörterbuch).
 
 ## Was es ist
 
-Wer Pause einschaltet, bekommt beim Öffnen der App einen **Happen** (30 Sekunden bis 3 Minuten): Einladung in einem Satz → eine Sache → Gelingen → ein Satz zum Mitnehmen → Ende. Unterhaltung zuerst; die App wirbt nirgends mit Gehirntraining. Aussagen zur Wirkung stehen nur in „Deine Linie“, mit den erlaubten Sätzen aus dem Trainingsmodell.
+Wer Pause einschaltet, bekommt beim Öffnen der App eine Einladung zu einem **Happen** (30 Sekunden bis 3 Minuten): Einladung in einem Satz → eine Sache → Gelingen → ein Satz zum Mitnehmen → Ende. Unterhaltung zuerst; die App wirbt nirgends mit Gehirntraining. Aussagen zur Wirkung stehen nur in „Deine Linie“, mit den erlaubten Sätzen aus dem Trainingsmodell.
 
 ## Bausteine
 
@@ -12,22 +12,36 @@ Wer Pause einschaltet, bekommt beim Öffnen der App einen **Happen** (30 Sekunde
 |---|---|---|
 | Startwerte | `web/pause-werte.js` | alle Zahlen an einer Stelle (Mischung, Zone, Kennenlernen, Appetit, Rückfragen, Pilz, Log) |
 | Logik | `web/pause.js` | Einstellungen, Spiel-Log, Linie, Zone, Dirigent, wann ein Happen fällig ist, Rückfragen, Auffrischung, Rückspiegel |
-| Spiele | `web/pause-happen.js` | der Rahmen (Dialog) und die acht Formen |
-| Einbau | `web/app.js` (Abschnitt „Pause“) | Happen beim Öffnen, Übersicht › Pause, Bibliothek, Seite „Deine Linie“ (`#linie`), Rückspiegel-Karte, Spiel-Log über die Brücke |
+| Spiele | `web/pause-happen.js` | der Fokus-Bildschirm (`happenFokus`) und die acht Formen |
+| Einbau | `web/app.js` (Abschnitt „Pause“) | Raum `#pause`, Happen `#happen`, Einladung auf Heute, Seite „Deine Linie“ (`#linie`), Rückspiegel-Karte, Spiel-Log über die Brücke |
 | Inhalte | Paket `pause` (`pakete/pause/`, `inhalt/pause.json`, Format `paket-kit/pause-format.mjs`) | Formen mit Selbstbeschreibung, 15 Geschichten, Lumisch in 21 Tagen, Texte |
 | Tests | `web/pause.test.mjs` | Verhalten, Format, Brücke |
 
-## Einschalten
+## Der Raum „Pause“ (`#pause`, seit 0.4.2)
 
-Eine Funktion im Kern, die man wie ein Modul ein- und ausschaltet: **Übersicht › ⏸ Pause** (und als eingebaute Karte in **Bibliothek › Module**). Standard ist aus. Beim Einschalten fragt die App nach dem Lebensabschnitt (14–29, 30–49, 50–64, 65+). **Unter 14** bietet sie Pause nicht an, bis es den Kinder-Modus gibt. Danach lädt sie das Paket `pause`.
+In der Seitenleiste direkt unter „Heute“, am Handy in der unteren Leiste (dafür liegt die Bibliothek unter „Mehr“; die Leiste behält fünf Plätze). Übersicht und Bibliothek › Module verweisen hierher.
 
-## Wann ein Happen kommt
+- **Pause aus:** zwei Sätze, was Pause ist, und fünf Knöpfe fürs Alter (unter 14, 14–29, 30–49, 50–64, 65+). Ein Tipp schaltet ein, lädt bei Bedarf das Paket `pause` und startet sofort den ersten Happen. **Unter 14** zeigt den Hinweis; Pause bleibt aus, bis es den Kinder-Modus gibt. Standard ist aus.
+- **Pause an:** oben der Vorschlag des Dirigenten mit „Spielen“ (bleibt stehen, bis sich Log, Ausschlüsse, Alter oder die Stunde ändern), darunter **alle gebauten Formen** als Liste mit Dauer oder Stand („Tag 5 von 21“), jede frei wählbar (`raumFormen`). Wartende Formen erscheinen nicht. Was gerade nicht geht, steht grau mit Grund da: „Der Tag rückwärts“ „ab 18 Uhr“, „Was kommt als Nächstes?“ nur mit Roman der Woche, die Türsteherfrage nur nach einem Tag mit Rätsel. Morgen-Formen (Zeitgefühl) darf man selbst auch später wählen; vorgeschlagen werden sie nur morgens. Unten „Deine Linie“ und die Einstellungen (Alter, Appetit, Vertraut ↔ Neues, ausschalten).
 
-- Beim Öffnen der App über der Tagesseite, höchstens einmal je Öffnen. Ein Öffnen innerhalb von 10 Minuten nach dem letzten zählt nicht.
-- **Appetit** (wenig, mittel, viel) = Angebote je Tag: 1, 3 oder 6. „Noch einen?“ muss man selbst tippen und zählt nicht dazu. Kein weiteres Tageslimit.
-- **Nie im Notfall-Bereich.** Nichts startet von allein außer dem einen Angebot beim Öffnen.
-- Nach dem **Tagesschluss** (Uhrzeit aus dem Tagesplan) nur noch „Der Tag rückwärts“, einmal.
-- „Nicht jetzt“ ist immer da, ohne Folgen; das Log merkt sich nur „abgebrochen“.
+## Wann eine Einladung kommt
+
+- Beim Öffnen der App steht oben auf **Heute** eine Karte (Eisblau): Name der Form, Dauer, „Spielen“, „Andere Pause“ (in den Raum), „später“. Sie lässt sich zur Seite wischen. **Kein Fenster** über der Tagesseite (bis 0.4.1 legte sich ein Dialog über Bereit und Rätsel).
+- Höchstens eine Einladung je Öffnen; ein Öffnen innerhalb von 10 Minuten nach dem letzten zählt nicht.
+- **Appetit** (wenig, mittel, viel) = Einladungen je Tag: 1, 3 oder 6. Im Raum kann man immer spielen; „Noch einen“ zählt nicht dazu.
+- **Nie im Notfall-Bereich.** Nichts startet von allein.
+- Nach dem **Tagesschluss** (Uhrzeit aus dem Tagesplan) nur noch „Der Tag rückwärts“, einmal – und nie vor 18 Uhr.
+- **Uhrzeit** (`web/pause-werte.js`): „Der Tag rückwärts“ ab `abendAb` (18 Uhr), Zeitgefühl als Vorschlag bis `morgenBis` (12 Uhr), das Atemfenster nie als erster Vorschlag des Tages (`nichtAlsErstes`; ein abgebrochener Happen zählt nicht).
+
+## Der Happen (`#happen`, Fokus-Bildschirm)
+
+Füllt den Inhaltsbereich, am Handy den ganzen Schirm, auf einem Hauch Eisblau. Oben ✕, drei feine Striche als Fortschritt und der Name der Form; darunter die Einladung als Satz, dann die Aufgabe; unten genau ein Hauptknopf. ✕, Escape und Zurück im Browser schließen; ein laufender Happen zählt dann als abgebrochen. Danach geht es dorthin zurück, wo man herkam (Heute oder Raum). **Ende:** der Satz zum Mitnehmen, „Mehr davon · Passt · Nicht mehr“ in einer Reihe, gelegentlich die Schwierigkeit oder eine Rückfrage, dann „Noch einen“ (Hauptknopf) und „Zurück zu Heute“ bzw. „Zurück zur Pause“. Die Lumi meldet sich im Happen nicht dazwischen.
+
+**Eingaben:** Wo nichts gespeichert wird („Der Tag rückwärts“), gibt es kein Textfeld, nur „Ich hab's“. Wo eine Antwort geprüft wird (Lumisch-Wiederholung, Türsteherfrage), ist das Feld einzeilig; die Vermutung zum Roman ebenso.
+
+## Aussehen: zart (`--z-*` in `web/styles.css`)
+
+Hauptknopf: helles Rot (`--accent-soft`) mit roter Schrift, 12,5 px, Gewicht 500, 6 × 11 px, Rundung 6, ohne Rand, Schatten oder Leuchten, je Bildschirm genau einer. Nebenwege: grauer Text mit Haarlinie. Wahl- und Bewertungsfelder: 1 px Haarlinie, dunkle Schrift, keine Füllung. Karten weiß ohne Rand mit kaum sichtbarem Schatten, Pause-Karte und Happen auf `--eis` (Lumi-Farben). Überschriften in leichter Serif (300–400), Text 400, höchstens 500. Tippflächen bleiben mindestens 44 px. Alle Werte sind Variablen (hell und dunkel), damit die App mit 0.4.3 folgen kann.
 
 ## Formen in 0.4.0
 
@@ -38,9 +52,9 @@ Eine Funktion im Kern, die man wie ein Modul ein- und ausschaltet: **Übersicht 
 | Lumisch | Kraft, Beweglichkeit | Tag 1–21 ein Wort nach dem Plan, dazu eine Abfrage mit 3 bis 4 Möglichkeiten. Ab Tag 22 (seit 0.4.1, `lumischHeute`): an zwei von drei Tagen eine Wiederholung aus dem Kopf (zuletzt Falsches zuerst), an jedem dritten ein neues Wort aus dem Wörterbuch nach Gruppen (Welt, Haus, Menschen, Tun …), mit Beispielsatz. Vorerst nur Plan- und Beispielsatz-Wörter (37), der Rest nach der Wortprüfung. | 3 Stufen |
 | Was kommt als Nächstes? | Kraft | Roman der Woche: gestern das Ende zeigen, Vermutung (auch nur im Kopf), nach dem Lesen auflösen | – |
 | Türsteherfrage | Kraft | das Tagesrätsel von gestern (mit Antwortfeld) oder der Autor des Romans | – |
-| Der Tag rückwärts | Kraft | Abend: drei Fragen vom Abend zum Morgen, nichts wird gespeichert, der Rahmen wird dunkel | – |
+| Der Tag rückwärts | Kraft | ab 18 Uhr: drei Fragen vom Abend zum Morgen, je „Ich hab's“, nichts wird gespeichert, ruhigerer Hintergrund | – |
 | Zeitgefühl | Beweglichkeit | morgens: Uhrzeit schätzen; Toleranz 30, 20, 10 Minuten je Stufe | 3 Stufen |
-| Atemfenster | Ausdauer | vier geführte Atemzüge (4 s ein, 6 s aus), Rahmen dunkler, bei „weniger Bewegung“ ohne Animation | – |
+| Atemfenster | Ausdauer | vier geführte Atemzüge (4 s ein, 6 s aus), Hintergrund etwas dunkler, bei „weniger Bewegung“ ohne Animation; nie der erste Vorschlag des Tages | – |
 
 **Warten auf eine Funktion** (im Paket mit `bedingung.funktion`, nicht gebaut): Sonnengruß-Kette (`bilderfolge`), Wo liegt es? und Nachbar-Namen (`tresor-fragen`), Rezept nur einmal (`kochbuch`), Weg im Kopf (`karte-offline`), Frag jemanden (`tagebuch`). Das Tagesrätsel bleibt ein eigenes Paket und meldet sein Ergebnis ins Spiel-Log (`quelle: "raetsel"`). Wichteln meldet eine ausgeloste Runde über `offline.spiel.melden`.
 
@@ -56,7 +70,7 @@ Eine Funktion im Kern, die man wie ein Modul ein- und ausschaltet: **Übersicht 
 
 ## Deine Linie (`#linie`)
 
-Erreichbar aus Übersicht › Pause. Zeigt in Balken, was gemocht wird, die ausgeschlossenen Formen (Zurückholen), die Stufe je Form mit „leichter“/„schwerer“, den Wochensatz („Ich achte darauf, dass …“), die vorgemerkten Auffrischungen, die Antworten, die Einstellungen (Alter, Appetit, Vertraut ↔ Neues), „So sehe ich dich“ nach dem Kennenlernen, die Info zur Wirkung (nur die erlaubten Sätze) und „Linie zurücksetzen“ / „Spiel-Log löschen“. Der **Rückspiegel** kommt höchstens einmal im Monat als ruhige Karte auf der Tagesseite, in Worten, ohne Punkte. Er spricht nur über **Fortschritt** (Pilz, Lumisch). Gibt es keinen, nennt er höchstens die Lieblingsformen des Monats ohne Zahl („Diesen Monat warst du am liebsten beim Pilz und beim Atemfenster.“, Feld `beim` je Form); sonst kommt keine Karte. Er zählt nie Tage oder Besuche (seit 0.4.1, Test in `web/pause.test.mjs`).
+Erreichbar aus dem Raum „Pause“. Zeigt in Balken, was gemocht wird, die ausgeschlossenen Formen (Zurückholen), die Stufe je Form mit „leichter“/„schwerer“, den Wochensatz („Ich achte darauf, dass …“), die vorgemerkten Auffrischungen, die Antworten, die Einstellungen (Alter, Appetit, Vertraut ↔ Neues), „So sehe ich dich“ nach dem Kennenlernen, die Info zur Wirkung (nur die erlaubten Sätze) und „Linie zurücksetzen“ / „Spiel-Log löschen“. Der **Rückspiegel** kommt höchstens einmal im Monat als ruhige Karte auf der Tagesseite, in Worten, ohne Punkte. Er spricht nur über **Fortschritt** (Pilz, Lumisch). Gibt es keinen, nennt er höchstens die Lieblingsformen des Monats ohne Zahl („Diesen Monat warst du am liebsten beim Pilz und beim Atemfenster.“, Feld `beim` je Form); sonst kommt keine Karte. Er zählt nie Tage oder Besuche (seit 0.4.1, Test in `web/pause.test.mjs`).
 
 ## Milde Zugkraft: die fünf Prüffragen je Form
 
@@ -67,7 +81,7 @@ Erreichbar aus Übersicht › Pause. Zeigt in Balken, was gemocht wird, die ausg
 | Lumisch | ein Wort am Tag, eine Frage | Aufgabe für draußen („sag zan, wenn …“) | ja | kein Verlust, wenn man aussetzt | Gewicht, Stufe |
 | Was kommt als Nächstes? | eine Vermutung oder eine Auflösung | lädt zum Lesen ein | ja | kein Richtig/Falsch | Gewicht |
 | Türsteherfrage | eine Frage | Abrufen statt Nachschauen | ja | „Weiß ich nicht mehr“ ist ein Knopf | Gewicht |
-| Tag rückwärts | drei Fragen | ruhiger Abend, nichts gespeichert | ja | einziger Happen nach Schluss, einmal | Gewicht |
+| Tag rückwärts | drei Fragen | ruhiger Abend, nichts gespeichert | ja | einziger Happen nach Schluss, einmal, nie vor 18 Uhr | Gewicht |
 | Zeitgefühl | eine Schätzung | Gefühl für die Zeit (Bunker) | ja | Abweichung nur leise | Stufe |
 | Atemfenster | vier Atemzüge | Ruhe | ja | keine Wertung | Gewicht |
 
@@ -75,9 +89,7 @@ Für alle gilt: keine Serien, kein Push, keine Ranglisten, keine Optimierung auf
 
 ## Bedienbarkeit
 
-Der Rahmen liegt über Kopf- und Tableiste (seit 0.4.1; in 0.4.0 lagen am Handy beide Leisten über dem Dialog).
-
-Dialog mit `role="dialog"` und `aria-modal`, Fokus auf das erste Bedienelement, Escape = „Nicht jetzt“. Alle Knöpfe mindestens 44 px, bei 360 px kein seitliches Überlaufen. Texte sind Text (vorlesbar). Der Pilz ist ein Sehspiel; die Felder sind beschriftet („oben links“ …), das Blitzen selbst kann ein Bildschirmleser nicht ersetzen – wer nicht sieht, schließt die Form mit „Nicht mehr“ aus.
+Der Happen ist ein Bereich (`role="region"`) mit Überschrift (Name der Form); der Fokus springt auf den Hauptknopf bzw. das erste Bedienelement, Escape = ✕. Alle Knöpfe mindestens 44 px hoch (die sichtbare Fläche ist kleiner), bei 360 px kein seitliches Überlaufen und der Hauptknopf ohne Scrollen erreichbar (geprüft für alle gebauten Formen bei 360 × 740 und 360 × 640). Texte sind Text (vorlesbar). Der Pilz ist ein Sehspiel; die Felder sind beschriftet („oben links“ …), das Blitzen selbst kann ein Bildschirmleser nicht ersetzen – wer nicht sieht, schließt die Form mit „Nicht mehr“ aus. Beim Öffnen des Happens eine ruhige Einblendung (0,22 s), bei „weniger Bewegung“ keine.
 
 ## Grenzen von Stufe 1
 

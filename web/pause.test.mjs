@@ -6,7 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { WERTE, einstellungenLaden, angeboten, happenFaellig, waehle, linieLaden, bewerten, zurueckholen, schwierigkeit, zoneAnpassen, verfuegbar,
-  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, rueckspiegel, lumischHeute, lumischAntworten, soSeheIchDich, wochenSatz, logDazu, imKennenlernen, gewichtVon, stufeVon, tagVon } from "./pause.js";
+  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, rueckspiegel, lumischHeute, lumischAntworten, soSeheIchDich, wochenSatz, logDazu, imKennenlernen, gewichtVon, stufeVon, tagVon, raumFormen, dauerText } from "./pause.js";
 import { pilzMs } from "./pause-happen.js";
 import { pruefeNachricht, pruefeSpielMeldung, GRENZEN } from "./modul-host.js";
 import { pauseFehler, GEBAUT } from "../paket-kit/pause-format.mjs";
@@ -78,7 +78,44 @@ test("Dirigent: Mischung Vertraut/Verwandt/Neu, Regler, „Nicht mehr“ nie, ni
   const kenn = waehle({ formen, linie: {}, log, einstellungen: { ...an, seit: "2026-10-15" }, jetzt, kontext: k(), rnd: folge(0) });
   assert.equal(kenn.grund, "kennenlernen"); assert.ok(!["pilz", "fehler"].includes(kenn.form.id), "im Kennenlernen das wenig Gespielte");
   assert.equal(imKennenlernen({ seit: "2026-10-15" }, jetzt), true); assert.equal(imKennenlernen({ seit: "2026-09-01" }, jetzt), false);
-  assert.equal(waehle({ formen, linie: {}, log, einstellungen: e, jetzt: T("2026-10-20T14:00:00"), kontext: k({ nurAbend: true, abend: true }) }).form.id, "rueckwaerts", "nach Schluss nur der Tag rückwärts");
+  assert.equal(waehle({ formen, linie: {}, log, einstellungen: e, jetzt: T("2026-10-20T22:30:00"), kontext: k({ nurAbend: true, abend: true }) }).form.id, "rueckwaerts", "nach Schluss nur der Tag rückwärts");
+});
+
+test("Uhrzeit (0.4.2): Tag rückwärts nie vor 18 Uhr, auch nach einem frühen Schluss; Atemfenster nie der erste Vorschlag des Tages", () => {
+  const e = { ...an, seit: "2026-08-01" }, rueck = formen.find((x) => x.id === "rueckwaerts");
+  assert.equal(WERTE.abendAb, 18); assert.deepEqual(WERTE.nichtAlsErstes, ["atem"]);
+  for (const h of ["09", "14", "17"]) {
+    assert.equal(verfuegbar(rueck, k({ jetzt: T(`2026-10-20T${h}:30:00`), abend: true })), false, `nicht um ${h}:30, auch wenn der Tag schon geschlossen ist`);
+    assert.equal(waehle({ formen, linie: {}, log: [], einstellungen: e, jetzt: T(`2026-10-20T${h}:30:00`), kontext: k({ nurAbend: true, abend: true }) }), null, "nach frühem Schluss lieber nichts als die Abendfragen");
+  }
+  assert.equal(verfuegbar(rueck, k({ jetzt: T("2026-10-20T18:00:00") })), true);
+  // Nur Atemfenster und Pilz zur Wahl: der erste Vorschlag des Tages ist nie das Atemfenster, danach darf es kommen
+  const zwei = formen.filter((x) => ["atem", "pilz"].includes(x.id)), nachm = T("2026-10-20T15:00:00");
+  for (let i = 0; i < 40; i++) assert.equal(waehle({ formen: zwei, linie: {}, log: [], einstellungen: e, jetzt: nachm, kontext: k(), rnd: Math.random }).form.id, "pilz");
+  const log = []; logDazu(log, { quelle: "pause", id: "pilz", art: ["tempo"], ergebnis: {} }, nachm - 3600000);
+  const ids = new Set(Array.from({ length: 60 }, () => waehle({ formen: zwei, linie: {}, log, einstellungen: e, jetzt: nachm, kontext: k(), rnd: Math.random }).form.id));
+  assert.ok(ids.has("atem"), "nach dem ersten Happen darf das Atemfenster kommen");
+  const abgebrochen = []; logDazu(abgebrochen, { quelle: "pause", id: "pilz", art: ["tempo"], ergebnis: {}, abgebrochen: true }, nachm - 3600000);
+  for (let i = 0; i < 20; i++) assert.equal(waehle({ formen: zwei, linie: {}, log: abgebrochen, einstellungen: e, jetzt: nachm, kontext: k() }).form.id, "pilz", "ein abgebrochener zählt nicht");
+  const nurAtem = formen.filter((x) => x.id === "atem");
+  assert.equal(waehle({ formen: nurAtem, linie: {}, log: [], einstellungen: e, jetzt: nachm, kontext: k() }).form.id, "atem", "gibt es nur das Atemfenster, kommt es trotzdem");
+});
+
+test("Raum: alle gebauten Formen wählbar, wartende fehlen, Dauer oder Stand in Worten, Abend und Gebrauchtes mit Grund", () => {
+  const roh = { ...an, seit: "2026-10-01" }, kont = k({ hat: { roman: true, gestern: true } });
+  const l = raumFormen({ formen, einstellungen: roh, jetzt: T("2026-10-20T10:00:00"), kontext: kont, log: [], lumisch: daten.lumisch, heute: "2026-10-20" });
+  assert.deepEqual(l.map((x) => x.form.id).sort(), [...GEBAUT].sort(), "genau die gebauten Formen");
+  const by = Object.fromEntries(l.map((x) => [x.form.id, x]));
+  assert.equal(by.rueckwaerts.geht, false); assert.equal(by.rueckwaerts.stand, "ab 18 Uhr");
+  assert.equal(by.zeitgefuehl.geht, true, "Morgen-Formen darf man selbst auch später wählen");
+  assert.equal(by.lumisch.stand, `Tag 1 von ${daten.lumisch.plan.length}`);
+  for (const x of l.filter((y) => y.geht && y.form.id !== "lumisch")) assert.match(x.stand, /^(\d+ Sekunden|eine Minute|\w+ Minuten)$/, x.form.id);
+  const abends = raumFormen({ formen, einstellungen: roh, jetzt: T("2026-10-20T19:00:00"), kontext: k({ hat: { roman: false, gestern: false } }), log: [], lumisch: daten.lumisch });
+  const ab = Object.fromEntries(abends.map((x) => [x.form.id, x]));
+  assert.equal(ab.rueckwaerts.geht, true); assert.equal(ab.naechstes.geht, false); assert.equal(ab.tuersteher.geht, false);
+  assert.equal(dauerText({ dauer: { von: 40, bis: 60 } }), "50 Sekunden"); assert.equal(dauerText({ dauer: { von: 40, bis: 120 } }), "eine Minute"); assert.equal(dauerText({ dauer: { von: 60, bis: 180 } }), "zwei Minuten");
+  const jung = raumFormen({ formen: formen.map((f) => (f.id === "pilz" ? { ...f, alter: ["A"] } : f)), einstellungen: roh, jetzt: T("2026-10-20T10:00:00"), kontext: kont, log: [], lumisch: daten.lumisch });
+  assert.ok(!jung.some((x) => x.form.id === "pilz"), "außerhalb des Altersbands fehlt die Form");
 });
 
 test("Linie: Mehr davon hebt die Form und Verwandtes, Nicht mehr nimmt sie heraus bis zum Zurückholen, Grenzen halten", () => {

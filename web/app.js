@@ -4,8 +4,8 @@ import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUeb
 import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch, tippPool, tippKnoepfeHtml, ZIELE, FUNKTIONEN } from "./wesen.js";
 import { WERTE as PAUSE_WERTE, LEBENSABSCHNITTE, APPETIT, ART_TEXT, angeboten as pauseAngeboten, einstellungenLaden as pauseEinstellungenLaden, linieLaden as pauseLinieLaden,
   logDazu as pauseLogDazu, happenFaellig, waehle as pauseWaehle, bewerten as pauseBewerten, schwierigkeit as pauseSchwierigkeit, zoneAnpassen, zoneText, zurueckholen as pauseZurueckholen,
-  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, soSeheIchDich, wochenSatz, rueckspiegel, lumischHeute, imKennenlernen, gewichtVon, stufeVon, verfuegbar as pauseVerfuegbar, tagVon } from "./pause.js";
-import { FORMEN as PAUSE_FORMEN, happenRahmen } from "./pause-happen.js";
+  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, soSeheIchDich, wochenSatz, rueckspiegel, lumischHeute, imKennenlernen, gewichtVon, stufeVon, verfuegbar as pauseVerfuegbar, tagVon, raumFormen, dauerText } from "./pause.js";
+import { FORMEN as PAUSE_FORMEN, happenFokus } from "./pause-happen.js";
 import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
 
@@ -13,7 +13,7 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.4.1";
+const APP_VERSION = "0.4.2";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -132,6 +132,7 @@ const katalog = () => katalogAusSpeicher()?.katalog ?? null;
 // ---------- Navigation ----------
 const I = {
   start: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  pause: '<circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/>',
   uebersicht: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
   notfall: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
   vorsorge: '<path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/>',
@@ -144,12 +145,12 @@ const I = {
   updates: '<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
 };
 const ROUTEN = [
-  ["start", "Heute"], ["uebersicht", "Übersicht"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
+  ["start", "Heute"], ["pause", "Pause"], ["uebersicht", "Übersicht"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
   ["karte", "Karte"], ["ki", "KI-Assistent"], ["notizen", "Notizen"], ["tresor", "Tresor"], ["updates", "Updates & Abo"],
 ];
 const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
 document.getElementById("nav").innerHTML = ROUTEN.map(([id, name]) => `<a href="#${id}" data-route="${id}">${icon(id)}${name}</a>`).join("");
-const TABS = ["start", "notfall", "vorsorge", "bibliothek"];
+const TABS = ["start", "pause", "notfall", "vorsorge"]; // seit 0.4.2 Pause statt Bibliothek; die Bibliothek ist unter „Mehr“
 document.getElementById("tabbar").innerHTML = TABS.map((id) => { const n = ROUTEN.find((r) => r[0] === id)[1]; return `<a href="#${id}" data-route="${id}">${icon(id)}${n}</a>`; }).join("")
   + `<button type="button" id="tab-mehr" aria-controls="sidebar" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Mehr</button>`;
 if (desktop) document.getElementById("proto-banner")?.remove();
@@ -347,6 +348,7 @@ const seiten = {
     const datumText = new Date(testJetzt()).toLocaleDateString("de-AT", { weekday: "long", day: "numeric", month: "long" });
     return `
       <div class="gruss of-gruss"><div><h1>Servus.</h1><p class="muted of-klein">${esc(datumText)}</p></div></div>
+      ${pauseKarteHtml()}
       <div class="buehne-kopf" id="wesen-karte">
         ${wesen.mitFigur() && !plan.sparmodus ? wesen.buehneHtml() : ""}
         <div class="bereit-kopf">
@@ -373,6 +375,10 @@ const seiten = {
       <p class="tag-vorrat muted of-klein">${vorrat ? `Vorrat: noch ${vorrat} ${vorrat === 1 ? "Tag" : "Tage"}${!navigator.onLine ? " · ohne Netz geht es weiter" : ""}` : `Vorrat: leer. ${navigator.onLine ? "Die nächsten Tage kommen, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."}`}</p>`;
   },
 
+  /** Der Raum „Pause“: Vorschlag, alle Formen zum Wählen, Deine Linie und Einstellungen; beim ersten Mal das Einschalten. */
+  pause() { return pauseRaumHtml(); },
+  /** Ein laufender Happen (Fokus-Bildschirm). render() baut ihn selbst ein; ohne laufenden Happen geht es in den Raum. */
+  happen() { return ""; },
   /** Pause › Deine Linie */
   linie() { return linieHtml(); },
 
@@ -450,7 +456,7 @@ const seiten = {
         ${b.positionen.filter((x) => (!x.check && !x.auto) || (x.check && x.stand === "faellig")).map((x) => `<div class="bestaetigung of-liste__zeile"><span><strong>${esc(x.titel)}</strong><br><span class="muted of-klein">${x.stand === "gut" ? `gültig noch ${x.rest} Tage` : x.stand === "faellig" ? `<span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span> seit ${-x.rest} Tagen` : esc(x.hinweis ?? "")}</span></span><button class="btn btn-sm of-btn of-btn--klein ${x.stand === "gut" ? "" : "btn-primary of-btn--primaer"}" data-bestaetigen="${x.id}">${x.stand === "gut" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
       </div>
       ${tagesplanHtml()}
-      <details class="card of-karte" id="pause-einstellungen" style="margin-bottom:1rem"><summary><strong>⏸ Pause</strong> <span class="muted of-klein">· ${pauseE().an ? `ein · Appetit ${esc(pauseE().appetit)}` : "aus"} · Happen für zwischendurch</span></summary><div style="margin-top:.8rem">${pauseEinstellungenHtml()}</div></details>
+      <a class="card of-karte pause-zeile" href="#pause" style="margin-bottom:1rem"><strong>⏸ Pause</strong> <span class="muted of-klein">· ${pauseE().an ? `ein · Appetit ${esc(pauseE().appetit)}` : "aus"} · Happen für zwischendurch, jetzt mit eigenem Raum</span></a>
       <details class="card of-karte" id="lumi-einstellungen" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? `${esc(wesen.anzeigename())} · Einstellungen` : wesen.aktiv() ? "Textkarten" : "Tipps aus"}</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
       ${wesen.aktiv() || wesen.log.length ? `<details class="card of-karte" id="lumi-log" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>${wesen.mitFigur() ? `Alles, was ${esc(wesen.anzeigename())} gesagt hat` : "Bisherige Tipps"}</strong> <span class="muted of-klein" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` : ""}
       ${updates ? `<a class="card of-karte" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn of-plakette of-plakette--warnung">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted of-klein">· ${intervallText()}</span></a>` : ""}
@@ -652,7 +658,7 @@ const seiten = {
       <div class="filters of-reiter">${typen.map((t) => `<button data-filter="${esc(t)}" aria-pressed="${t === state.filter}">${esc(t)}</button>`).join("")}</div>
       <p class="form-msg of-meldung" id="bib-msg"></p>
       ${desktop ? lokaleQuelleHtml() : ""}
-      <div class="grid grid-2">${state.filter === "Alle" || state.filter === ARTEN.modul ? `<div class="card of-karte pkg"><div class="pkg-head"><h3 style="margin:0">⏸ Pause</h3><span><span class="tag of-plakette">eingebaut</span> <span class="tag of-plakette ${pauseE().an ? "tag-ok of-plakette--offline" : ""}">${pauseE().an ? "Ein" : "Aus"}</span></span></div><p class="muted of-klein" style="margin:.4rem 0 .6rem">Ein Happen für zwischendurch, beim Öffnen der App. Teil der App, standardmäßig aus; die Inhalte kommen als Paket „Pause“.</p><a class="btn btn-sm of-btn of-btn--klein" href="#uebersicht" data-anker="pause-einstellungen">${pauseE().an ? "Einstellungen" : "Einschalten"}</a></div>` : ""}${liste.map((p) => {
+      <div class="grid grid-2">${state.filter === "Alle" || state.filter === ARTEN.modul ? `<div class="card of-karte pkg"><div class="pkg-head"><h3 style="margin:0">⏸ Pause</h3><span><span class="tag of-plakette">eingebaut</span> <span class="tag of-plakette ${pauseE().an ? "tag-ok of-plakette--offline" : ""}">${pauseE().an ? "Ein" : "Aus"}</span></span></div><p class="muted of-klein" style="margin:.4rem 0 .6rem">Ein Happen für zwischendurch, beim Öffnen der App. Teil der App, standardmäßig aus; die Inhalte kommen als Paket „Pause“.</p><a class="btn btn-sm of-btn of-btn--klein" href="#pause">${pauseE().an ? "Zur Pause" : "Einschalten"}</a></div>` : ""}${liste.map((p) => {
         if (p.art === "modul" || p.art === "skin") return modulKarte(p, { art: "katalog" });
         const inst = installiertesPaket(p.id);
         const update = inst && p.status === "verfuegbar" && versionVergleich(p.version, inst.manifest.version) > 0 && appPasst(p);
@@ -901,8 +907,8 @@ async function installiereMitMeldung(id, ziel) {
   }
 }
 
-// ---------- Pause (Auftrag 2026-10-04-pause-stufe1): Happen beim Öffnen, Spiel-Log, Deine Linie ----------
-// Eine Funktion im Kern, die man wie ein Modul ein- und ausschaltet (Übersicht › Pause, Bibliothek › Module); standardmäßig
+// ---------- Pause (Aufträge 2026-10-04-pause-stufe1 und -umbau): Raum, Einladung auf Heute, Happen, Spiel-Log, Deine Linie ----------
+// Eine Funktion im Kern mit eigenem Raum (#pause, seit 0.4.2; Auftrag 2026-10-04-pause-umbau), ein- und ausschaltbar; standardmäßig
 // aus. Inhalte aus dem Paket „pause“ (nur Daten). Logik: web/pause.js, Spiele: web/pause-happen.js, Startwerte: web/pause-werte.js.
 const PP = () => installiertesPaket("pause");
 const pauseDaten = () => inhalt(PP(), "inhalt/pause.json");
@@ -911,7 +917,9 @@ const pauseL = () => pauseLinieLaden(speicher.get("pause-linie", null));
 const linieSpeichern = (l) => speicher.set("pause-linie", l);
 const spielLog = () => speicher.get("spiel-log", []);
 function spielLogDazu(eintrag) { speicher.set("spiel-log", pauseLogDazu(spielLog(), eintrag, testJetzt())); }
-let pauseOffen = false;
+let pauseFokus = null; // laufender Happen: { erste, nurAbend, zurueck, gepusht, ctrl }
+let pauseKarte = null; // Einladung oben auf Heute: { form, nurAbend, tag } – einmal je Öffnen, wegwischbar
+let pauseVorschlagMerk = null; // Vorschlag im Raum bleibt stehen, solange sich nichts ändert
 
 /** Roman der Woche für „Was kommt als Nächstes?“: fragen (gestern gelesen, heute noch nicht) oder auflösen (heute gelesen). */
 function pauseRoman() {
@@ -939,13 +947,30 @@ function pauseKontext(nurAbend) {
 }
 const tagesSchlussVorbei = () => { const p = tagesplan(); return p.schlussUm != null && new Date(testJetzt()).getHours() >= p.schlussUm; };
 
-/** Einen Happen (und auf Wunsch weitere) zeigen. nurAbend: nach dem Tagesschluss nur „Der Tag rückwärts“, einmal. */
-async function pauseStarten({ nurAbend = false } = {}) {
+/**
+ * Einen Happen starten (Fokus-Bildschirm, Route #happen). form: im Raum oder auf der Karte gewählte Form (id), sonst wählt
+ * der Dirigent. nurAbend: nach dem Tagesschluss nur „Der Tag rückwärts“. Nach ✕ oder „Zurück“ geht es dorthin zurück, wo
+ * man herkam (Heute oder Raum).
+ */
+function pauseStarten({ nurAbend = false, form = null, zurueck = null } = {}) {
   const daten = pauseDaten();
-  if (!daten || pauseOffen) return;
-  pauseOffen = true;
-  const formen = daten.formen;
-  await happenRahmen({
+  if (!daten) return;
+  const hier = (location.hash || "#start").slice(1);
+  pauseFokus = { nurAbend, erste: form ? daten.formen.find((f) => f.id === form) ?? null : null, zurueck: zurueck ?? (hier === "pause" ? "pause" : "start"), gepusht: hier !== "happen", ctrl: null };
+  pauseKarte = null; pauseVorschlagMerk = null;
+  if (hier === "happen") render(); else location.hash = "#happen";
+}
+/** Baut den Fokus-Bildschirm in den Inhaltsbereich (aus render()). Ohne laufenden Happen geht es in den Raum. */
+function pauseFokusEinbauen() {
+  const daten = pauseDaten();
+  if (!pauseFokus || !daten) { pauseFokus = null; location.replace("#pause"); return; }
+  if (pauseFokus.ctrl) return; // läuft schon
+  const formen = daten.formen, { nurAbend } = pauseFokus;
+  main.innerHTML = '<section id="happen"></section>';
+  pauseFokus.ctrl = happenFokus(document.getElementById("happen"), {
+    erste: pauseFokus.erste,
+    zurueckText: pauseFokus.zurueck === "pause" ? "Zurück zur Pause" : "Zurück zu Heute",
+    zu: () => { const f = pauseFokus; pauseFokus = null; if (f?.gepusht) history.back(); else location.replace(`#${f?.zurueck ?? "start"}`); },
     naechster: (ohne) => {
       if (nurAbend && spielLog().some((e) => e.quelle === "pause" && e.id === "rueckwaerts" && tagVon(Date.parse(e.zeit)) === heuteDatum() && !e.abgebrochen)) return null;
       return pauseWaehle({ formen, linie: pauseL(), log: spielLog(), einstellungen: speicher.get("pause", null), jetzt: testJetzt(), kontext: pauseKontext(nurAbend), ohne });
@@ -978,45 +1003,93 @@ async function pauseStarten({ nurAbend = false } = {}) {
     rueckfrage: () => { const q = rueckfrageFaellig(pauseL(), speicher.get("pause", null), testJetzt()); if (q) { const l = pauseL(); l.letzteRueckfrage = new Date(testJetzt()).toISOString(); linieSpeichern(l); } return q; },
     beantwortet: (id, a) => linieSpeichern(rueckfrageBeantworten(pauseL(), id, a, testJetzt())),
     schwierigkeitFragen: () => pauseL().happen % PAUSE_WERTE.schwierigkeitAlleN === 0,
-    fertig: () => { pauseOffen = false; if ((location.hash || "#start") === "#start") render(); },
   });
 }
-/** Beim Öffnen der App (und beim Zurückkommen): höchstens ein Happen je Öffnen, nie im Notfall-Bereich. */
+/** Beim Öffnen der App (und beim Zurückkommen): höchstens eine Einladung je Öffnen, als Karte oben auf Heute, nie im Notfall-Bereich. */
 function pauseBeimOeffnen() {
-  if (pauseOffen || !pauseE().an || !pauseDaten()) return;
+  if (pauseFokus || !pauseE().an || !pauseDaten()) return;
   const route = (location.hash || "#start").slice(1);
+  if (pauseKarte && pauseKarte.tag !== heuteDatum()) pauseKarte = null;
   const f = happenFaellig({ einstellungen: speicher.get("pause", null), jetzt: testJetzt(), oeffnen: speicher.get("pause-oeffnen", null), route, schluss: tagesSchlussVorbei() });
   speicher.set("pause-oeffnen", f.oeffnen);
-  if (f.faellig && route !== "notfall") pauseStarten({ nurAbend: f.nurAbend });
+  if (!f.faellig || route === "notfall") return;
+  const w = pauseWaehle({ formen: pauseDaten().formen, linie: pauseL(), log: spielLog(), einstellungen: speicher.get("pause", null), jetzt: testJetzt(), kontext: pauseKontext(f.nurAbend) });
+  if (!w) return;
+  pauseKarte = { form: w.form.id, nurAbend: f.nurAbend, tag: heuteDatum() };
+  if (route === "start") render();
+}
+/** Die Einladung oben auf Heute: Name, Dauer, „Spielen“, „Andere Pause“ (Raum), „später“. Wegwischbar. */
+function pauseKarteHtml() {
+  if (!pauseKarte || !pauseE().an) return "";
+  const f = pauseDaten()?.formen.find((x) => x.id === pauseKarte.form);
+  if (!f) return "";
+  return `<div class="z-karte z-eis pause-einladung" id="pause-karte" role="group" aria-label="Pause">
+    <small class="z-marke">Pause</small><p class="z-titel">${esc(f.titel)}</p><p class="z-unter">${esc(dauerText(f))}</p>
+    <div class="z-zeile"><button type="button" class="z-haupt" data-pause="spielen" data-form="${esc(f.id)}">Spielen</button><a class="z-neben" href="#pause">Andere Pause</a><button type="button" class="z-neben" data-pause="karte-weg">später</button></div></div>`;
+}
+/** Die Karte lässt sich zur Seite wischen (wie „später“). */
+function pauseKarteWischen() {
+  const k = document.getElementById("pause-karte");
+  if (!k) return;
+  let x0 = null, dx = 0;
+  k.addEventListener("pointerdown", (e) => { if (e.target.closest("button, a")) return; x0 = e.clientX; dx = 0; k.setPointerCapture?.(e.pointerId); });
+  k.addEventListener("pointermove", (e) => { if (x0 === null) return; dx = e.clientX - x0; k.style.transform = `translateX(${dx}px)`; k.style.opacity = String(Math.max(.2, 1 - Math.abs(dx) / 300)); });
+  const los = () => {
+    if (x0 === null) return; x0 = null;
+    if (Math.abs(dx) > 90) { pauseKarte = null; k.remove(); return; }
+    k.style.transform = ""; k.style.opacity = "";
+  };
+  k.addEventListener("pointerup", los); k.addEventListener("pointercancel", los);
 }
 async function pauseEinschalten(alter) {
   if (!(alter in LEBENSABSCHNITTE)) return;
-  const e = pauseE();
-  speicher.set("pause", { ...e, alter, an: pauseAngeboten(alter), seit: e.seit ?? heuteDatum() });
-  if (pauseAngeboten(alter) && !PP()) await installiereMitMeldung("pause", "pause-msg");
-  render();
+  const e = pauseE(), roh = speicher.get("pause", null) ?? {};
+  speicher.set("pause", { ...roh, alter, an: pauseAngeboten(alter), seit: e.seit ?? heuteDatum() });
+  if (!pauseAngeboten(alter)) return render();
+  if (!PP()) { render(); await installiereMitMeldung("pause", "pause-msg"); }
+  if (PP()) pauseStarten({ zurueck: "pause" }); else render();
 }
 
-/** Übersicht › Pause (auch aus der Bibliothek erreichbar): ein- und ausschalten, Appetit, Vertraut ↔ Neues, Alter. */
-function pauseEinstellungenHtml() {
-  const e = pauseE(), roh = speicher.get("pause", null) ?? {};
-  const alterWahl = (wert) => `<label>Wie alt bist du?<br><select class="of-select" data-pause-einstellung="alter">${!wert ? '<option value="" selected>bitte wählen</option>' : ""}${Object.entries(LEBENSABSCHNITTE).map(([k, l]) => `<option value="${k}" ${wert === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>`;
-  if (!e.an) return `<p style="margin:0 0 .6rem">Beim Öffnen der App ein kurzer Happen: 30 Sekunden bis 3 Minuten, etwas, auf das man sich konzentriert, ein Gelingen und ein Satz zum Mitnehmen. Jederzeit überspringbar. Keine Serien, keine Pushnachrichten, nichts verlässt das Gerät.</p>
+/** Der Raum „Pause“ (#pause). Ist Pause aus: zwei Sätze und fünf Knöpfe fürs Alter – ein Tipp schaltet ein und startet den ersten Happen. */
+function pauseRaumHtml() {
+  const e = pauseE(), roh = speicher.get("pause", null) ?? {}, daten = pauseDaten();
+  const kopfR = `<div class="page-head of-seitenkopf"><div><h1 class="z-h1">Pause</h1><p class="z-leise">Ein Happen für zwischendurch, dann ist wieder Ruhe.</p></div></div>`;
+  if (!e.an) return `${kopfR}<div class="pause-raum">
+    <p class="z-text">Pause schlägt dir ab und zu einen kurzen Happen vor, 30 Sekunden bis 3 Minuten: eine Sache, ein Gelingen, ein Satz zum Mitnehmen. Keine Serien, keine Pushnachrichten, nichts verlässt das Gerät.</p>
     ${roh.alter === "kind" ? `<p class="of-meldung">Pause gibt es ab 14 Jahren. Für Jüngere kommt später ein Kinder-Modus.</p>` : ""}
-    <div class="grid grid-3">${alterWahl(roh.alter && roh.alter in LEBENSABSCHNITTE ? roh.alter : "")}</div>
-    <p style="margin:.8rem 0 0"><button type="button" class="btn btn-primary of-btn of-btn--primaer" data-pause="ein" ${!roh.alter || roh.alter === "kind" ? "disabled" : ""}>⏸ Pause einschalten</button></p><p class="form-msg of-meldung" id="pause-msg"></p>`;
-  return `<div class="grid grid-3">${alterWahl(e.alter)}
+    <p class="z-leise" id="pause-alter-frage">Wie alt bist du? Ein Tipp schaltet Pause ein und startet den ersten Happen.</p>
+    <div class="pause-alter" role="group" aria-labelledby="pause-alter-frage">${Object.entries(LEBENSABSCHNITTE).map(([k, l]) => `<button type="button" class="z-linie" data-pause="alter" data-alter="${k}">${esc(l)}</button>`).join("")}</div>
+    <p class="form-msg of-meldung" id="pause-msg"></p></div>`;
+  if (!daten) return `${kopfR}<div class="pause-raum"><p class="z-text">Die Happen kommen, sobald das Paket „Pause“ geladen ist${navigator.onLine ? "" : " (beim nächsten Mal mit Netz)"}.</p><p class="form-msg of-meldung" id="pause-msg"></p>
+    <details class="pause-einst" id="pause-einstellungen"><summary class="z-neben">Einstellungen</summary><div>${pauseEinstellungenHtml()}</div></details></div>`;
+  const liste = raumFormen({ formen: daten.formen, einstellungen: roh, jetzt: testJetzt(), kontext: pauseKontext(false), log: spielLog(), lumisch: daten.lumisch, heute: heuteDatum() });
+  const schluessel = `${heuteDatum()}|${spielLog().length}|${pauseL().aus.join()}|${e.alter}|${new Date(testJetzt()).getHours()}`;
+  if (pauseKarte) pauseVorschlagMerk = { schluessel, form: pauseKarte.form };
+  if (pauseVorschlagMerk?.schluessel !== schluessel) pauseVorschlagMerk = { schluessel, form: pauseWaehle({ formen: daten.formen, linie: pauseL(), log: spielLog(), einstellungen: roh, jetzt: testJetzt(), kontext: pauseKontext(false) })?.form.id ?? null };
+  const v = daten.formen.find((f) => f.id === pauseVorschlagMerk.form);
+  return `${kopfR}<div class="pause-raum">
+    ${v ? `<div class="z-karte z-eis pause-vorschlag"><small class="z-marke">Jetzt passt</small><p class="z-titel">${esc(v.titel)}</p><p class="z-unter">${esc(dauerText(v))}</p><div class="z-zeile"><button type="button" class="z-haupt" data-pause="spielen" data-form="${esc(v.id)}">Spielen</button></div></div>`
+      : `<div class="z-karte z-eis"><p class="z-text" style="margin:0">Gerade schlägt Pause nichts vor. Such dir unten etwas aus.</p></div>`}
+    <h2 class="z-ueber">Alle Spiele</h2>
+    <ul class="z-liste pause-liste">${liste.map((x) => `<li><button type="button" class="pause-zeile-wahl" data-pause="spielen" data-form="${esc(x.form.id)}" ${x.geht ? "" : "disabled"}><span class="z-name">${esc(x.form.titel)}</span><span class="z-unter">${esc(x.stand)}</span></button></li>`).join("")}</ul>
+    <div class="z-zeile pause-raum-fuss"><a class="z-neben" href="#linie">Deine Linie</a></div>
+    <details class="pause-einst" id="pause-einstellungen"><summary class="z-neben">Einstellungen</summary><div>${pauseEinstellungenHtml()}</div></details></div>`;
+}
+
+/** Raum › Einstellungen: Alter, Appetit, Vertraut ↔ Neues, ausschalten. */
+function pauseEinstellungenHtml() {
+  const e = pauseE();
+  return `<div class="grid grid-3"><label>Wie alt bist du?<br><select class="of-select" data-pause-einstellung="alter">${Object.entries(LEBENSABSCHNITTE).map(([k, l]) => `<option value="${k}" ${e.alter === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>
       <label>Appetit<br><select class="of-select" data-pause-einstellung="appetit">${Object.entries(APPETIT).map(([k, l]) => `<option value="${k}" ${e.appetit === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>
       <label>Vertraut ↔ Neues<br><input type="range" min="-1" max="1" step="0.5" value="${e.neuigkeit}" data-pause-einstellung="neuigkeit" aria-valuetext="${e.neuigkeit < 0 ? "mehr Vertrautes" : e.neuigkeit > 0 ? "mehr Neues" : "gemischt"}"></label></div>
-    <p class="muted of-klein" style="margin:.5rem 0 .6rem">Appetit: wie oft am Tag beim Öffnen ein Happen kommt (wenig 1, mittel 3, viel 6). „Noch einen?“ geht immer.</p>
-    ${PP() ? "" : `<p class="of-meldung">Die Happen kommen, sobald das Paket „Pause“ geladen ist${navigator.onLine ? "" : " (beim nächsten Mal mit Netz)"}.</p>`}
-    <p style="margin:0"><button type="button" class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-pause="jetzt" ${PP() ? "" : "disabled"}>Jetzt einen Happen</button> <a class="btn btn-sm of-btn of-btn--klein" href="#linie">Deine Linie</a> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause="aus">Pause ausschalten</button></p><p class="form-msg of-meldung" id="pause-msg"></p>`;
+    <p class="z-leise" style="margin:.5rem 0 .6rem">Appetit: wie oft am Tag beim Öffnen eine Einladung auf Heute steht (wenig 1, mittel 3, viel 6). Hier im Raum kannst du immer spielen.</p>
+    <p style="margin:0">${`<button type="button" class="z-neben" data-pause="aus">Pause ausschalten</button>`}</p>`;
 }
 
 /** Deine Linie: was die App gelernt hat, in einfachen Balken – alles änderbar, alles zurücksetzbar. */
 function linieHtml() {
   const daten = pauseDaten(), e = pauseE(), l = pauseL(), log = spielLog(), jetzt = testJetzt();
-  if (!e.an) return `${kopf("⏸ Deine Linie", "Was Pause über dich gelernt hat.")}<div class="card of-karte"><p>Pause ist aus. Einschalten kannst du sie in der <a href="#uebersicht" data-anker="pause-einstellungen">Übersicht</a>.</p></div>`;
+  if (!e.an) return `${kopf("⏸ Deine Linie", "Was Pause über dich gelernt hat.")}<div class="card of-karte"><p>Pause ist aus. Einschalten kannst du sie im Raum <a href="#pause">Pause</a>.</p></div>`;
   if (!daten) return `${kopf("⏸ Deine Linie", "Was Pause über dich gelernt hat.")}<div class="card of-karte"><p>Das Paket „Pause“ ist noch nicht geladen.</p></div>`;
   const formen = daten.formen.filter((f) => !f.bedingung), max = PAUSE_WERTE.gewicht.hoch;
   const gespielt = (id) => log.some((x) => x.quelle === "pause" && x.id === id);
@@ -1677,17 +1750,28 @@ function render() {
   const route = location.hash.slice(1) || "start";
   if (route === "modul") { modulAnsichtZeigen(); return; }
   modulAnsichtVerbergen();
+  if (route !== "happen" && pauseFokus) { pauseFokus.ctrl?.abbrechen(); pauseFokus = null; } // Happen verlassen (Zurück, Navigation): zählt als abgebrochen
+  document.body.classList.toggle("happen-offen", route === "happen");
+  if (route === "happen") {
+    if (!pauseFokus?.ctrl) { window.scrollTo(0, 0); main.scrollTop = 0; }
+    pauseFokusEinbauen();
+    state.tag.seiteVorher = "happen";
+    document.title = "OFFLINE – Pause";
+    sidebar.classList.remove("open"); menu.setAttribute("aria-expanded", "false"); document.getElementById("sheet-hinter").hidden = true;
+    document.querySelectorAll("#nav a, #tabbar a").forEach((a) => (a.dataset.route === "pause" ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
+    return;
+  }
   if (desktop && route === "updates") client.aboStatus().then((st) => { if (st !== desktop.aboStatus) { desktop.aboStatus = st; render(); } }).catch(() => {});
   const seite = seiten[route] ? route : "start";
   main.innerHTML = seiten[seite]();
   if (seite === "start") wesen.einbauen(); else wesen.setScore(bereit());
   wesen.ansicht(seite);
-  if (seite === "start") tagesSatzZeigen();
-  const aktiv = seite === "lesen" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" || seite === "linie" ? "uebersicht" : seite;
+  if (seite === "start") { tagesSatzZeigen(); pauseKarteWischen(); }
+  const aktiv = seite === "lesen" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" ? "uebersicht" : seite === "linie" ? "pause" : seite;
   if (seite !== "kapitel" && state.tag.liest) vorlesenStop();
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
   main.classList.toggle("main-lesen", seite === "lesen");
-  if ((seite === "kapitel" || seite === "neues" || seite === "heft" || seite === "linie") && state.tag.seiteVorher !== seite) { window.scrollTo(0, 0); main.scrollTop = 0; } // beginnt oben
+  if ((seite === "kapitel" || seite === "neues" || seite === "heft" || seite === "linie" || seite === "pause") && state.tag.seiteVorher !== seite) { window.scrollTo(0, 0); main.scrollTop = 0; } // beginnt oben
   state.tag.seiteVorher = seite;
   document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : seite === "heft" ? `Was ${wesen.anzeigename()} gesagt hat` : seite === "linie" ? "Deine Linie" : state.lesen?.titel ?? "Lesen")}`;
   if (seite === "karte") karteStarten();
@@ -1830,7 +1914,7 @@ document.addEventListener("click", (e) => {
   const b = e.target.closest("button"); if (!b) return;
   if (b.hasAttribute("data-wesen-zu")) { const satz = wesen.tagesSatz; wesen.tippSchliessen(); if (satz) tagSetzen({ id: `lumi-${satz}`, art: "lumi" }, "weg"); }
   if (b.dataset.lumiAktion) return lumiKnopf(b);
-  if (b.dataset.pause) return pauseKnopf(b.dataset.pause);
+  if (b.dataset.pause) return pauseKnopf(b.dataset.pause, b);
   if (b.dataset.pauseZurueck) { linieSpeichern(pauseZurueckholen(pauseL(), b.dataset.pauseZurueck)); return render(); }
   if (b.dataset.pauseStufe) { const f = pauseDaten()?.formen.find((x) => x.id === b.dataset.pauseStufe); if (f) linieSpeichern(pauseSchwierigkeit(pauseL(), f, b.dataset.richtung)); return render(); }
   if (b.dataset.lumiBewerten) return lumiBewerten(b);
@@ -1841,10 +1925,11 @@ document.addEventListener("click", (e) => {
   if (b.dataset.wesenStern) { wesen.stern(b.dataset.wesenStern); const el = document.getElementById("wesen-log"); if (el) el.innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche); }
 });
 
-function pauseKnopf(was) {
-  if (was === "ein") { const a = (speicher.get("pause", null) ?? {}).alter; return pauseEinschalten(a); }
-  if (was === "aus") { speicher.set("pause", { ...(speicher.get("pause", null) ?? {}), an: false }); return render(); }
-  if (was === "jetzt") return pauseStarten();
+function pauseKnopf(was, b) {
+  if (was === "alter") return pauseEinschalten(b.dataset.alter);
+  if (was === "aus") { speicher.set("pause", { ...(speicher.get("pause", null) ?? {}), an: false }); pauseKarte = null; return render(); }
+  if (was === "spielen") { const nurAbend = !!(pauseKarte && pauseKarte.form === b.dataset.form && pauseKarte.nurAbend); return pauseStarten({ form: b.dataset.form, nurAbend }); }
+  if (was === "karte-weg") { pauseKarte = null; return render(); }
   if (was === "rueckspiegel-ok") { const l = pauseL(); l.rueckspiegelAm = new Date(testJetzt()).toISOString(); linieSpeichern(l); return render(); }
   if (was === "linie-zuruecksetzen") { const l = pauseL(); linieSpeichern({ ...pauseLinieLaden(null), auffrischung: l.auffrischung }); return render(); } // Auffrischungstermine bleiben
   if (was === "log-loeschen") { speicher.set("spiel-log", []); return render(); }

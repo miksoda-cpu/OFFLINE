@@ -1,8 +1,9 @@
-// Pause: die Happen auf dem Bildschirm (Auftrag 2026-10-04-pause-stufe1). Ein Happen läuft in einem Rahmen über der
-// Tagesseite (Dialog), immer mit „Nicht jetzt“. Ablauf: Einladung in einem Satz → eine Sache → Gelingen → ein Satz zum
-// Mitnehmen → Bewertung (Mehr davon · Passt · Nicht mehr, gelegentlich die Schwierigkeit, höchstens eine Rückfrage) →
-// „Noch einen?“ muss man selbst tippen. Kein Falsch-Ton, keine rote Zahl: Falsches führt zu „Schau, so war's“.
-// Die Daten kommen aus dem Paket „pause“, die Auswahl aus web/pause.js.
+// Pause: die Happen auf dem Bildschirm (Aufträge 2026-10-04-pause-stufe1 und -pause-umbau). Ein Happen ist ein eigener
+// ruhiger Fokus-Bildschirm (seit 0.4.2; vorher ein Fenster über der Tagesseite): oben ✕, drei feine Striche als Fortschritt
+// und der Name der Form, in der Mitte die Aufgabe, unten genau ein Hauptknopf. Ablauf: Einladung in einem Satz → eine Sache
+// → Gelingen → ein Satz zum Mitnehmen → Bewertung (Mehr davon · Passt · Nicht mehr, gelegentlich die Schwierigkeit,
+// höchstens eine Rückfrage) → „Noch einen“ oder „Zurück“. Kein Falsch-Ton, keine rote Zahl: Falsches führt zu „Schau, so war's“.
+// Die Daten kommen aus dem Paket „pause“, die Auswahl aus web/pause.js. Aussehen: die zarten Werte (--z-*) in styles.css.
 
 import { WERTE, stufeVon, zahlText, lumischAntworten } from "./pause.js";
 
@@ -11,7 +12,11 @@ const warte = (ms) => new Promise((r) => setTimeout(r, ms));
 const zufall = (n, rnd = Math.random) => Math.floor(rnd() * n) % Math.max(1, n);
 const mischen = (a, rnd = Math.random) => { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = zufall(i + 1, rnd); [b[i], b[j]] = [b[j], b[i]]; } return b; };
 const ruhigBewegt = () => { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; } };
-const knopf = (text, attr = "", primaer = false) => `<button type="button" class="btn of-btn ${primaer ? "btn-primary of-btn--primaer" : ""}" ${attr}>${text}</button>`;
+/** Hauptknopf (zartes Feld in hellem Rot, je Bildschirm genau einer) oder Nebenweg (grauer Text mit Haarlinie). */
+const knopf = (text, attr = "", primaer = false) => `<button type="button" class="${primaer ? "z-haupt" : "z-neben"}" ${attr}>${text}</button>`;
+/** Wahl- und Bewertungsfelder: Haarlinie, dunkle Schrift, keine Füllung. */
+const feld = (text, attr = "") => `<button type="button" class="z-linie" ${attr}>${text}</button>`;
+const X = '<svg class="z-x" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg>';
 
 /** Pilz: neun Felder; die Mitte ist der Blickpunkt. Beschriftet, damit man auch per Vorlesen weiß, welches Feld welches ist. */
 const FELDER = ["oben links", "oben", "oben rechts", "links", "Mitte", "rechts", "unten links", "unten", "unten rechts"];
@@ -21,10 +26,10 @@ export const pilzMs = (stufe) => Math.max(WERTE.pilz.msMin, WERTE.pilz.msStufe1 
 // ---------- Die Formen: jede bekommt ein Element und gibt am Ende ein Ergebnis zurück ----------
 // Ergebnis: { treffer?, von?, satz (zum Mitnehmen), mitnehmen?, ergebnis (fürs Spiel-Log) }
 export const FORMEN = {
-  async pilz(el, { form, linie, rnd }) {
+  async pilz(el, { form, linie, rnd, rahmen }) {
     const stufe = stufeVon(linie, form), ms = pilzMs(stufe), runden = stufe >= 7 ? WERTE.pilz.rundenAbStufe7 : WERTE.pilz.runden;
     const orte = stufe <= 2 ? NAH : stufe <= 5 ? [...NAH, ...RAND] : RAND;
-    el.innerHTML = `<p class="pause-anleitung" id="pause-pilz-hinweis">Schau auf den Punkt in der Mitte. Ein Pilz blitzt kurz auf. Tipp dann auf das Feld, wo er war.</p>
+    el.innerHTML = `<p class="pause-anleitung" id="pause-pilz-hinweis">Er ist nur kurz zu sehen. Tipp danach auf das Feld, wo er war.</p>
       <div class="pause-pilz" role="group" aria-label="Neun Felder">${FELDER.map((f, i) => `<button type="button" class="pause-feld" data-feld="${i}" aria-label="${f}" disabled ${i === 4 ? 'aria-hidden="true" tabindex="-1"' : ""}>${i === 4 ? '<span class="pause-punkt"></span>' : ""}</button>`).join("")}</div>
       <p class="pause-stand" role="status" aria-live="polite"></p>${knopf("Los", "data-pause-los", true)}`;
     const stand = el.querySelector(".pause-stand"), los = el.querySelector("[data-pause-los]"), felder = [...el.querySelectorAll(".pause-feld")];
@@ -45,6 +50,7 @@ export const FORMEN = {
       felder.forEach((f) => { f.disabled = true; f.onclick = null; });
       if (gewaehlt === ort) { treffer++; felder[ort].classList.add("pause-feld--gut"); stand.textContent = "Genau dort."; }
       else { felder[ort].classList.add("pause-feld--hier"); stand.textContent = `Schau, so war's: ${FELDER[ort]}.`; }
+      rahmen?.fortschritt?.((runde + 1) / runden);
       await warte(1100);
     }
     const satz = treffer === runden ? `Heute: alle ${zahlText(runden)} Pilze gefunden.` : treffer ? `Heute: ${zahlText(treffer)} von ${zahlText(runden)} Pilzen gefunden.` : "Heute hat sich der Pilz gut versteckt. Nächstes Mal blitzt er etwas länger.";
@@ -77,7 +83,7 @@ export const FORMEN = {
       const anzahl = 2 + Math.min(2, stufe); // 3 bis 4 Möglichkeiten
       const falsch = mischen((daten.lumisch.woerter ?? wb).filter((w) => w.wort !== frage && w.deutsch !== richtigText), rnd).slice(0, anzahl - 1).map((w) => w.deutsch);
       const wahl = mischen([richtigText, ...falsch], rnd);
-      ziel.innerHTML = `<p>Was heißt <strong lang="x-lumisch">${esc(frage)}</strong>?</p><div class="pause-wahl" role="group">${wahl.map((w, i) => `<button type="button" class="btn of-btn" data-wahl="${i}">${esc(w)}</button>`).join("")}</div><p class="pause-aufloesung" role="status" aria-live="polite"></p>`;
+      ziel.innerHTML = `<p>Was heißt <strong lang="x-lumisch">${esc(frage)}</strong>?</p><div class="pause-wahl" role="group">${wahl.map((w, i) => feld(esc(w), `data-wahl="${i}"`)).join("")}</div><p class="pause-aufloesung" role="status" aria-live="polite"></p>`;
       const kn = [...ziel.querySelectorAll("[data-wahl]")];
       const i = await new Promise((r) => kn.forEach((b, j) => { b.onclick = () => r(j); }));
       kn.forEach((b) => { b.disabled = true; });
@@ -89,7 +95,7 @@ export const FORMEN = {
     if (heute.art === "wiederholung") {
       const w = heute.eintrag;
       el.innerHTML = `<p class="pause-anleitung">Wiederholung · Tag ${heute.tag}</p><p class="pause-wort">Weißt du es noch? Was heißt <strong lang="x-lumisch">${esc(w.wort)}</strong>?</p>
-        <form class="tag-antwort" data-pause-form autocomplete="off"><label for="pause-antwort">Aus dem Kopf</label><div class="tag-antwort-zeile"><input id="pause-antwort" class="of-feld" type="text" maxlength="60" autocapitalize="off" spellcheck="false"><button type="submit" class="btn of-btn">Prüfen</button></div></form>
+        <form class="tag-antwort" data-pause-form autocomplete="off"><label for="pause-antwort">Aus dem Kopf</label><div class="tag-antwort-zeile"><input id="pause-antwort" class="z-eingabe" type="text" maxlength="60" autocapitalize="off" spellcheck="false"><button type="submit" class="z-haupt">Prüfen</button></div></form>
         ${knopf("Weiß ich nicht mehr", "data-pause-aufdecken")}<div class="pause-aufloesung" role="status" aria-live="polite"></div>`;
       const eingabe = await new Promise((ja) => { el.querySelector("[data-pause-form]").onsubmit = (e) => { e.preventDefault(); ja(el.querySelector("#pause-antwort").value); }; el.querySelector("[data-pause-aufdecken]").onclick = () => ja(null); });
       const ok = eingabe !== null && antwortRichtig(eingabe, lumischAntworten(w.deutsch));
@@ -129,9 +135,9 @@ export const FORMEN = {
     }
     el.innerHTML = `<p class="pause-anleitung">${esc(roman.heute.werk)} · ${esc(roman.heute.autor)}</p><p>So endete es gestern:</p><blockquote class="pause-zitat">${esc(ende(roman.gestern))}</blockquote>
       <label for="pause-vermutung">Was glaubst du, passiert heute? <span class="muted of-klein">(du kannst es auch nur denken)</span></label>
-      <textarea class="of-input pause-text" id="pause-vermutung" rows="3" maxlength="500"></textarea>`;
+      <input class="z-eingabe" id="pause-vermutung" type="text" maxlength="200" autocomplete="off">`;
     await new Promise((r) => { el.insertAdjacentHTML("beforeend", knopf("Gemerkt", "data-pause-weiter", true)); el.querySelector("[data-pause-weiter]").onclick = r; });
-    vermutungSpeichern({ kapitel: roman.heute.id, text: el.querySelector("#pause-vermutung").value.trim().slice(0, 500) });
+    vermutungSpeichern({ kapitel: roman.heute.id, text: el.querySelector("#pause-vermutung").value.trim().slice(0, 200) });
     return { satz: "Wenn du heute gelesen hast, zeigt dir der nächste Happen, wie es weiterging.", ergebnis: { vermutet: true } };
   },
 
@@ -140,7 +146,7 @@ export const FORMEN = {
     if (gestern.raetsel) {
       const k = gestern.raetsel;
       el.innerHTML = `<p class="pause-anleitung">Gestern war das Tagesrätsel:</p><blockquote class="pause-zitat">${esc(k.frage)}</blockquote>
-        <form class="tag-antwort" data-pause-form autocomplete="off"><label for="pause-antwort">Weißt du die Lösung noch?</label><div class="tag-antwort-zeile"><input id="pause-antwort" class="of-feld" type="text" maxlength="120" autocapitalize="off" spellcheck="false"><button type="submit" class="btn of-btn">Prüfen</button></div></form>
+        <form class="tag-antwort" data-pause-form autocomplete="off"><label for="pause-antwort">Weißt du die Lösung noch?</label><div class="tag-antwort-zeile"><input id="pause-antwort" class="z-eingabe" type="text" maxlength="120" autocapitalize="off" spellcheck="false"><button type="submit" class="z-haupt">Prüfen</button></div></form>
         ${knopf("Weiß ich nicht mehr", "data-pause-aufdecken")}<p class="pause-aufloesung" role="status" aria-live="polite"></p>`;
       const r = await new Promise((ja) => {
         el.querySelector("[data-pause-form]").onsubmit = (e) => { e.preventDefault(); ja(el.querySelector("#pause-antwort").value); };
@@ -153,7 +159,7 @@ export const FORMEN = {
       return { treffer: richtig ? 1 : 0, von: 1, satz: richtig ? "Aus dem Kopf geholt, nicht nachgeschaut." : "Morgen fragt dich vielleicht wieder jemand.", ergebnis: { treffer: richtig ? 1 : 0, von: 1, frage: "raetsel" } };
     }
     const ro = gestern.roman, wahl = mischen([ro.autor, ...ro.andere.slice(0, 2)], rnd);
-    el.innerHTML = `<p class="pause-anleitung">Zum Roman der Woche:</p><p>Von wem ist <strong>${esc(ro.werk)}</strong>?</p><div class="pause-wahl" role="group">${wahl.map((w, i) => `<button type="button" class="btn of-btn" data-wahl="${i}">${esc(w)}</button>`).join("")}</div><p class="pause-aufloesung" role="status" aria-live="polite"></p>`;
+    el.innerHTML = `<p class="pause-anleitung">Zum Roman der Woche:</p><p>Von wem ist <strong>${esc(ro.werk)}</strong>?</p><div class="pause-wahl" role="group">${wahl.map((w, i) => feld(esc(w), `data-wahl="${i}"`)).join("")}</div><p class="pause-aufloesung" role="status" aria-live="polite"></p>`;
     const kn = [...el.querySelectorAll("[data-wahl]")];
     const i = await new Promise((r) => kn.forEach((b, j) => { b.onclick = () => r(j); }));
     kn.forEach((b) => { b.disabled = true; });
@@ -165,12 +171,12 @@ export const FORMEN = {
   },
 
   async rueckwaerts(el, { daten, rahmen }) {
-    rahmen.classList.add("pause--abend");
+    rahmen.classList.add("happen--ruhig");
     const t = daten.texte.rueckwaerts;
     for (let i = 0; i < t.schritte.length; i++) {
-      el.innerHTML = `<p class="pause-anleitung">${i + 1} von ${t.schritte.length}</p><label for="pause-tag" class="pause-wort">${esc(t.schritte[i])}</label>
-        <textarea class="of-input pause-text" id="pause-tag" rows="2" maxlength="300" aria-describedby="pause-tag-hinweis"></textarea><p class="muted of-klein" id="pause-tag-hinweis">Du kannst es auch nur denken. Was du tippst, wird nicht gespeichert.</p>`;
-      await new Promise((r) => { el.insertAdjacentHTML("beforeend", knopf(i < t.schritte.length - 1 ? "Weiter" : "Fertig", "data-pause-weiter", true)); el.querySelector("[data-pause-weiter]").onclick = r; });
+      el.innerHTML = `<p class="pause-anleitung">${i + 1} von ${t.schritte.length}</p><p class="pause-wort">${esc(t.schritte[i])}</p><p class="z-leise">Nur im Kopf. Nichts wird aufgeschrieben.</p>`;
+      rahmen.fortschritt?.((i + 1) / t.schritte.length);
+      await new Promise((r) => { el.insertAdjacentHTML("beforeend", knopf("Ich hab's", "data-pause-weiter", true)); el.querySelector("[data-pause-weiter]").onclick = r; });
     }
     return { satz: t.ende, ergebnis: { schritte: t.schritte.length } };
   },
@@ -191,81 +197,87 @@ export const FORMEN = {
 
   async atem(el, { daten, rahmen }) {
     const t = daten.texte.atem, ruhig = ruhigBewegt();
-    rahmen.classList.add("pause--abend");
+    rahmen.classList.add("happen--ruhig");
     el.innerHTML = `<div class="pause-atem ${ruhig ? "pause-atem--ruhig" : ""}" aria-hidden="true"></div><p class="pause-wort" role="status" aria-live="polite"></p><p class="muted of-klein pause-zaehler"></p>`;
     const kreis = el.querySelector(".pause-atem"), text = el.querySelector(".pause-wort"), z = el.querySelector(".pause-zaehler");
     for (let i = 0; i < 4; i++) {
       z.textContent = `${i + 1}. Atemzug`;
       text.textContent = t.ein; kreis.classList.add("pause-atem--ein"); await warte(4000);
       text.textContent = t.aus; kreis.classList.remove("pause-atem--ein"); await warte(6000);
+      rahmen.fortschritt?.((i + 1) / 4);
     }
     return { satz: t.ende, ergebnis: { atemzuege: 4 } };
   },
 };
 
-// ---------- Der Rahmen um einen Happen ----------
+// ---------- Der Fokus-Bildschirm ----------
 /**
- * Zeigt Happen, bis man „Fertig“ oder „Nicht jetzt“ tippt. a (von der App):
- *   naechster() → { form, kontext } | null      wählt den nächsten Happen (Dirigent)
+ * Zeigt Happen in el (füllt den Inhaltsbereich, am Handy den ganzen Schirm), bis man ✕ oder „Zurück“ tippt. a (von der App):
+ *   erste: Form | null                         zuerst diese (im Raum gewählt oder von der Karte auf Heute)
+ *   naechster(ohne) → { form } | null          wählt den nächsten Happen (Dirigent)
  *   spielen(form, el, rahmen) → Ergebnis       ruft FORMEN[form.id] mit den Daten
- *   gespielt(form, ergebnis | null, sekunden)  ins Spiel-Log (null = übersprungen)
+ *   gespielt(form, ergebnis | null, sekunden)  ins Spiel-Log (null = abgebrochen)
  *   bewertet(form, art), schwierigkeit(form, urteil), rueckfrage() → Frage | null, beantwortet(id, antwort | null)
  *   schwierigkeitFragen() → bool               jeder fünfte Happen
- *   fertig()                                   Rahmen zu
+ *   zurueckText                                „Zurück zu Heute“ oder „Zurück zur Pause“
+ *   zu()                                       zurück dorthin, wo man herkam
+ * Gibt { abbrechen() } zurück: verlässt man den Bildschirm anders (Zurück im Browser, Navigation), zählt ein laufender
+ * Happen als abgebrochen.
  */
-export async function happenRahmen(a) {
-  const alt = document.activeElement;
-  const r = document.createElement("div");
-  r.className = "pause-rahmen";
-  r.innerHTML = `<div class="pause-karte" role="dialog" aria-modal="true" aria-labelledby="pause-titel">
-    <div class="pause-kopf"><span class="pause-marke" aria-hidden="true">⏸</span> <span class="muted of-klein"><strong>Pause</strong> · ein Happen für zwischendurch</span></div>
-    <h2 id="pause-titel" class="pause-titel"></h2><p class="pause-einladung"></p><div class="pause-inhalt"></div>
-    <div class="pause-fuss">${knopf("Nicht jetzt", "data-pause-zu")}</div></div>`;
-  document.body.appendChild(r);
-  let zu = false, aufZu;
-  const schliessen = () => { if (zu) return; zu = true; r.remove(); document.removeEventListener("keydown", taste); alt?.focus?.(); a.fertig(); aufZu?.(); };
+export function happenFokus(el, a) {
+  el.className = "happen";
+  el.setAttribute("role", "region");
+  el.setAttribute("aria-labelledby", "happen-name");
+  el.innerHTML = `<div class="happen-kopf"><button type="button" class="happen-zu" data-happen-zu aria-label="Schließen">${X}</button>
+    <div class="happen-striche" aria-hidden="true"><i></i><i></i><i></i></div><h2 class="happen-name" id="happen-name"></h2></div>
+    <p class="happen-einladung"></p><div class="happen-inhalt"></div>`;
+  const inhalt = el.querySelector(".happen-inhalt"), einl = el.querySelector(".happen-einladung"), name = el.querySelector(".happen-name");
+  const striche = [...el.querySelectorAll(".happen-striche i")];
+  el.fortschritt = (anteil) => { const n = Math.max(1, Math.min(3, Math.ceil(anteil * 3))); striche.forEach((s, i) => s.classList.toggle("an", i < n)); };
+  let zu = false, laeuft = null, beginn = 0, ohne = null;
+  const sek = () => Math.round((Date.now() - beginn) / 1000);
+  const aufraeumen = () => { zu = true; document.removeEventListener("keydown", taste); };
+  const schliessen = () => { if (zu) return; if (laeuft) a.gespielt(laeuft, null, sek()); aufraeumen(); a.zu(); };
   const taste = (e) => { if (e.key === "Escape") schliessen(); };
   document.addEventListener("keydown", taste);
-  r.querySelector("[data-pause-zu]").onclick = () => { if (laeuft) a.gespielt(laeuft, null, Math.round((Date.now() - beginn) / 1000)); schliessen(); };
-  let laeuft = null, beginn = 0, ohne = null;
-  const fertigVersprechen = new Promise((r2) => { aufZu = r2; });
+  el.querySelector("[data-happen-zu]").onclick = schliessen;
+  const fokus = () => setTimeout(() => { if (!zu) (inhalt.querySelector(".z-haupt:not([disabled]), button:not([disabled]), input, select") ?? el.querySelector("[data-happen-zu]"))?.focus?.({ preventScroll: true }); }, 60);
   (async () => {
+    let erste = a.erste ?? null;
     while (!zu) {
-      const n = a.naechster(ohne);
-      if (!n) { r.querySelector(".pause-titel").textContent = "Gerade passt kein Happen."; r.querySelector(".pause-inhalt").innerHTML = `<p>Schau später wieder vorbei.</p>`; break; }
+      const n = erste ? { form: erste } : a.naechster(ohne);
+      erste = null;
+      if (!n) {
+        name.textContent = "Pause"; einl.textContent = "Gerade passt kein Happen.";
+        inhalt.innerHTML = `<p class="z-leise">Schau später wieder vorbei.</p><div class="happen-fuss">${knopf(esc(a.zurueckText), "data-happen-zurueck")}</div>`;
+        inhalt.querySelector("[data-happen-zurueck]").onclick = schliessen; fokus(); return;
+      }
       const { form } = n; ohne = form.id;
-      r.classList.remove("pause--abend");
-      r.querySelector(".pause-titel").textContent = form.titel;
-      r.querySelector(".pause-einladung").textContent = form.einladung;
-      const el = r.querySelector(".pause-inhalt");
+      el.classList.remove("happen--ruhig", "happen--ende");
+      name.textContent = form.titel; einl.textContent = form.einladung; el.fortschritt(0);
       laeuft = form; beginn = Date.now();
-      setTimeout(() => (el.querySelector("button:not([disabled]), input, select, textarea") ?? r.querySelector("[data-pause-zu]"))?.focus?.(), 50);
+      fokus();
       let erg;
-      try { erg = await a.spielen(form, el, r); } catch (e) { console.error("Pause", form.id, e); erg = { satz: "Das hat nicht geklappt. Morgen wieder.", ergebnis: { fehler: true } }; }
+      try { erg = await a.spielen(form, inhalt, el); } catch (e) { console.error("Pause", form.id, e); erg = { satz: "Das hat nicht geklappt. Morgen wieder.", ergebnis: { fehler: true } }; }
       if (zu) return;
       laeuft = null;
-      a.gespielt(form, erg, Math.round((Date.now() - beginn) / 1000));
+      a.gespielt(form, erg, sek());
       const frage = a.rueckfrage(), schwer = !!form.zone && a.schwierigkeitFragen();
-      r.querySelector(".pause-einladung").textContent = "";
-      el.innerHTML = `<p class="pause-mitnehmen">${esc(erg.satz)}</p>${erg.mitnehmen ? `<p class="muted of-klein">Zum Mitnehmen: ${esc(erg.mitnehmen)}</p>` : ""}
-        <div class="pause-bewertung" role="group" aria-label="Wie war der Happen?">${[["mehr", "Mehr davon"], ["passt", "Passt"], ["nicht", "Nicht mehr"]].map(([k, l]) => `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause-bewerten="${k}" aria-pressed="false">${l}</button>`).join("")}</div>
-        ${schwer ? `<div class="pause-bewertung" role="group" aria-label="Wie schwer war es?">${[["leicht", "Zu leicht"], ["richtig", "Genau richtig"], ["schwer", "Zu schwer"]].map(([k, l]) => `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause-schwer="${k}" aria-pressed="false">${l}</button>`).join("")}</div>` : ""}
-        ${frage ? `<div class="pause-rueckfrage" role="group" aria-label="Kurze Frage"><p class="of-klein" style="margin:.6rem 0 .3rem">${esc(frage.frage)}</p>${Object.entries(frage.antworten).map(([k, l]) => `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause-antwort="${k}">${esc(l)}</button>`).join(" ")} <button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause-antwort="">Überspringen</button></div>` : ""}
-        <div class="pause-ende">${knopf("Noch einen?", "data-pause-noch")}${knopf("Fertig", "data-pause-fertig", true)}</div>`;
-      el.querySelectorAll("[data-pause-bewerten]").forEach((b) => { b.onclick = () => { el.querySelectorAll("[data-pause-bewerten]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); a.bewertet(form, b.dataset.pauseBewerten); }; });
-      el.querySelectorAll("[data-pause-schwer]").forEach((b) => { b.onclick = () => { el.querySelectorAll("[data-pause-schwer]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); a.schwierigkeit(form, b.dataset.pauseSchwer); }; });
-      el.querySelectorAll("[data-pause-antwort]").forEach((b) => { b.onclick = () => { a.beantwortet(frage.id, b.dataset.pauseAntwort || null); b.closest(".pause-rueckfrage").innerHTML = `<p class="muted of-klein">Danke. Du kannst es in „Deine Linie“ jederzeit ändern.</p>`; }; });
-      r.querySelector("[data-pause-zu]").hidden = true;
-      el.querySelector("[data-pause-noch]").focus();
-      const weiter = await new Promise((ja) => { el.querySelector("[data-pause-noch]").onclick = () => ja(true); el.querySelector("[data-pause-fertig]").onclick = () => ja(false); });
-      r.querySelector("[data-pause-zu]").hidden = false;
-      if (!weiter) break;
-    }
-    if (!zu) {
-      const el = r.querySelector(".pause-inhalt");
-      if (!el.querySelector(".pause-ende")) return; // „Gerade passt kein Happen“: offen lassen, „Nicht jetzt“ schließt
-      schliessen();
+      el.classList.add("happen--ende"); el.fortschritt(1); einl.textContent = "";
+      inhalt.innerHTML = `<p class="happen-satz">${esc(erg.satz)}</p>${erg.mitnehmen ? `<p class="z-mit">Zum Mitnehmen: ${esc(erg.mitnehmen)}</p>` : ""}
+        <p class="z-leise happen-frage">Wie war das?</p>
+        <div class="z-reihe" role="group" aria-label="Wie war der Happen?">${[["mehr", "Mehr davon"], ["passt", "Passt"], ["nicht", "Nicht mehr"]].map(([k, l]) => feld(l, `data-pause-bewerten="${k}" aria-pressed="false"`)).join("")}</div>
+        ${schwer ? `<p class="z-leise happen-frage">Und die Schwierigkeit?</p><div class="z-reihe" role="group" aria-label="Wie schwer war es?">${[["leicht", "Zu leicht"], ["richtig", "Genau richtig"], ["schwer", "Zu schwer"]].map(([k, l]) => feld(l, `data-pause-schwer="${k}" aria-pressed="false"`)).join("")}</div>` : ""}
+        ${frage ? `<div class="pause-rueckfrage" role="group" aria-label="Kurze Frage"><p class="z-leise happen-frage">${esc(frage.frage)}</p><div class="z-reihe">${Object.entries(frage.antworten).map(([k, l]) => feld(esc(l), `data-pause-antwort="${k}"`)).join("")}</div>${knopf("Überspringen", 'data-pause-antwort=""')}</div>` : ""}
+        <div class="happen-fuss">${knopf("Noch einen", "data-pause-noch", true)}${knopf(esc(a.zurueckText), "data-happen-zurueck")}</div>`;
+      inhalt.querySelectorAll("[data-pause-bewerten]").forEach((b) => { b.onclick = () => { inhalt.querySelectorAll("[data-pause-bewerten]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); a.bewertet(form, b.dataset.pauseBewerten); }; });
+      inhalt.querySelectorAll("[data-pause-schwer]").forEach((b) => { b.onclick = () => { inhalt.querySelectorAll("[data-pause-schwer]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); a.schwierigkeit(form, b.dataset.pauseSchwer); }; });
+      inhalt.querySelectorAll("[data-pause-antwort]").forEach((b) => { b.onclick = () => { a.beantwortet(frage.id, b.dataset.pauseAntwort || null); b.closest(".pause-rueckfrage").innerHTML = `<p class="z-leise">Danke. Du kannst es in „Deine Linie“ jederzeit ändern.</p>`; }; });
+      fokus();
+      const weiter = await new Promise((ja) => { inhalt.querySelector("[data-pause-noch]").onclick = () => ja(true); inhalt.querySelector("[data-happen-zurueck]").onclick = () => ja(false); });
+      if (zu) return;
+      if (!weiter) { schliessen(); return; }
     }
   })();
-  return fertigVersprechen;
+  return { abbrechen: () => { if (zu) return; if (laeuft) a.gespielt(laeuft, null, sek()); aufraeumen(); } };
 }

@@ -158,6 +158,10 @@ async function neu() {
   await gehe("#neues");
   const neues = await bis(() => js("return [...document.querySelectorAll('.neues-version h2')].map((h) => h.textContent)"), "Was ist neu", 15_000).catch(() => []);
   pruefe("Was ist neu", neues[0] === `Version ${version}`, neues.slice(0, 2).join(" · ") || "keine Einträge");
+  // Pause hat einen eigenen Raum (0.4.2): in der Navigation unter Heute; ist Pause aus, fünf Knöpfe fürs Alter, kein Fenster
+  await gehe("#pause");
+  const raum = await bis(() => js("const h = document.querySelector('main h1'); return h && h.textContent === 'Pause' ? { alter: document.querySelectorAll('[data-pause=alter]').length, an: !!document.querySelector('.pause-liste'), nav: [...document.querySelectorAll('#nav a')].slice(0, 2).map((a) => a.dataset.route).join(','), fenster: !!document.querySelector('[role=dialog], .pause-rahmen') } : null"), "Raum Pause", 15_000).catch(() => null);
+  pruefe("Raum Pause", !!raum && raum.nav === "start,pause" && !raum.fenster && (raum.an || raum.alter === 5), raum ? `Navigation ${raum.nav}, ${raum.an ? "Pause an, Liste da" : `${raum.alter} Altersknöpfe`}` : "kein Raum");
   await gehe("#start");
   pruefe("Checkliste erhalten", JSON.stringify(checks) === JSON.stringify(vorher.checks), `${Object.keys(checks ?? {}).length} Häkchen`);
   pruefe("Bestätigungen übernommen", v2 && v2["c-0-0"] === vorher.bestaetigungen.wasser && v2.radio === vorher.bestaetigungen.radio && v2.probeabend === vorher.bestaetigungen.probeabend, "Wasser, Radio, Probeabend mit altem Datum");

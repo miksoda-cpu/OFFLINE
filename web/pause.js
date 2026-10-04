@@ -103,7 +103,7 @@ export function zoneText(linie, form, log) {
 
 // ---------- Was gerade geht ----------
 /**
- * Kann diese Form jetzt gespielt werden? kontext: { jetzt, alter, funktionen (Set), abend (Tagesschluss vorbei oder ab 18 Uhr),
+ * Kann diese Form jetzt gespielt werden? kontext: { jetzt, alter, funktionen (Set), abend (Tagesschluss vorbei; der Abend selbst beginnt nie vor WERTE.abendAb),
  * hat: { roman, gestern } }. Ausgeschlossene Formen (Nicht mehr) zählt der Dirigent selbst aus.
  */
 export function verfuegbar(form, k) {
@@ -111,7 +111,7 @@ export function verfuegbar(form, k) {
   if (k.alter && !form.alter.includes(k.alter)) return false;
   const stunde = new Date(k.jetzt).getHours();
   if (form.tageszeit === "morgen" && stunde >= WERTE.morgenBis) return false;
-  if (form.tageszeit === "abend" && !(k.abend || stunde >= WERTE.abendAb)) return false;
+  if (form.tageszeit === "abend" && stunde < WERTE.abendAb) return false; // seit 0.4.2 nie vor 18 Uhr, auch nach dem Tagesschluss
   if (form.braucht && !k.hat?.[form.braucht]) return false;
   return true;
 }
@@ -169,6 +169,8 @@ export function waehle({ formen, linie, log, einstellungen, jetzt, kontext, rnd 
   if (kontext?.nurAbend) pool = pool.filter((f) => f.tageszeit === "abend");
   if (!pool.length) return null;
   if (pool.length > 1 && ohne) pool = pool.filter((f) => f.id !== ohne);
+  const heute = tagVon(jetzt), ersterHeute = !pauseEintraege(log).some((x) => !x.abgebrochen && tagVon(Date.parse(x.zeit)) === heute);
+  if (ersterHeute && pool.some((f) => !WERTE.nichtAlsErstes.includes(f.id))) pool = pool.filter((f) => !WERTE.nichtAlsErstes.includes(f.id));
   const af = auffrischungFaellig(l, pool, jetzt);
   if (af) return { form: pool.find((f) => f.id === af.form), grund: "auffrischung" };
   const gespielt = (id) => pauseEintraege(log).filter((x) => x.id === id).length;
@@ -293,3 +295,30 @@ export function lumischHeute(log, lumisch, heute) {
 }
 /** Gültige Antworten auf „Was heißt …?“: die Bedeutungen aus dem Wörterbuch, einzeln. */
 export const lumischAntworten = (deutsch) => String(deutsch ?? "").split(/,\s*|\s+oder\s+/).map((x) => x.replace(/\(.*?\)/g, "").trim()).filter(Boolean);
+
+// ---------- Der Raum „Pause“ (Auftrag 2026-10-04-pause-umbau) ----------
+const ZAHLWORT = ["", "eine", "zwei", "drei", "vier", "fünf"];
+/** Ungefähre Dauer in Worten: „40 Sekunden“, „eine Minute“, „zwei Minuten“ (Mitte aus dauer.von und dauer.bis). */
+export function dauerText(form) {
+  const s = ((form.dauer?.von ?? 60) + (form.dauer?.bis ?? form.dauer?.von ?? 60)) / 2;
+  if (s < 55) return `${Math.max(10, Math.round(s / 10) * 10)} Sekunden`;
+  const m = Math.max(1, Math.round(s / 60));
+  return m === 1 ? "eine Minute" : `${ZAHLWORT[m] ?? m} Minuten`;
+}
+/**
+ * Alle gebauten Formen für den Raum, in Paket-Reihenfolge. Wartende (Funktion fehlt) und solche außerhalb des Altersbands
+ * fehlen. Jede Form trägt { form, geht, stand }: geht = jetzt wählbar (der Abend erst ab WERTE.abendAb, was Roman oder
+ * Rätsel von gestern braucht, nur dann); stand = Dauer oder Stand („Tag 5 von 21“) bzw. warum es gerade nicht geht.
+ * Morgen-Formen darf man selbst auch später wählen; der Dirigent schlägt sie nur morgens vor.
+ * o: { formen, einstellungen, jetzt, kontext (wie bei verfuegbar), log, lumisch, heute }.
+ */
+export function raumFormen({ formen, einstellungen, jetzt, kontext, log, lumisch, heute }) {
+  const e = einstellungenLaden(einstellungen), stunde = new Date(jetzt).getHours();
+  return formen.filter((f) => !(f.bedingung?.funktion && !kontext?.funktionen?.has(f.bedingung.funktion)) && !(e.alter && !f.alter.includes(e.alter))).map((form) => {
+    if (form.tageszeit === "abend" && stunde < WERTE.abendAb) return { form, geht: false, stand: `ab ${WERTE.abendAb} Uhr` };
+    if (form.braucht === "roman" && !kontext?.hat?.roman) return { form, geht: false, stand: "wenn du im Roman der Woche liest" };
+    if (form.braucht === "gestern" && !kontext?.hat?.gestern) return { form, geht: false, stand: "nach einem Tag mit Rätsel" };
+    if (form.id === "lumisch" && lumisch?.plan) { const h = lumischHeute(log, lumisch, heute ?? tagVon(jetzt)); return { form, geht: true, stand: h.art === "plan" ? `Tag ${h.tag} von ${lumisch.plan.length}` : h.art === "neu" ? "ein neues Wort" : "Wiederholung" }; }
+    return { form, geht: true, stand: dauerText(form) };
+  });
+}

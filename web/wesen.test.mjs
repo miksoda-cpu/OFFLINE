@@ -355,6 +355,7 @@ test("Heft = Log mit Filter „gemerkt“: Merken setzt den Stern, kein zweiter 
 test("Eine Stimme und kein Tipp vor dem Namen: Namensfrage zuerst, nach „Später“ Sätze ohne „ich“, auch nach Neustart", () => {
   const { w, sp } = neuesWesen();
   w.einschalten = Wesen.prototype.einschalten; w.e.darstellung = "wesen"; w.namensfrage = true;
+  w.nachtruhe = () => false; // unabhängig von der Uhrzeit, zu der der Test läuft (ab 22 Uhr schläft sie)
   const ohne = tipps.find((t) => ohneIch(t.text) && !t.bedingung);
   w.zeigeTipp(ohne); assert.equal(w.aktuellerTipp, null, "während der Namensfrage kein Tipp");
   assert.equal(w.satzDesTages(ohne), false);
