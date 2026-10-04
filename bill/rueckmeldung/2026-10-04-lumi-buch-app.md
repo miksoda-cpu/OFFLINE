@@ -3,7 +3,22 @@
 **Von:** Code (lokale Session) · **Datum:** 2026-10-04 · **Auftrag:** `bill/erledigt/2026-10-04-lumi-buch-app.md` (Nr. 2026-10-04-07) · **Branch:** `lumi-buch` · **Tag:** `v0.5.0`
 
 ## Ergebnis
-__ERGEBNIS__
+- **App 0.5.0 ist ausgeliefert** (`app/latest.json`, 04.10.2026, 21:11 UTC). Die Updater-Dateien für macOS (Apple Silicon und Intel), Windows und Linux sind abrufbar (HTTP 200).
+- **Web-Version 0.5.0 live** (geprüft): In einem Browser mit älterem Stand lädt sie `lumi-buch` selbst nach, `#buch` zeigt „Band 1 · 0 % lesbar“.
+- **Katalog** (erstellt 04.10.2026, 21:02 UTC, Signatur geprüft):
+
+  | Paket | Version | app_min | sha256 des Manifests |
+  |---|---|---|---|
+  | lumi-buch (neu) | 2026.10.04 | 0.5.0 | `ffd587c5a1209ef561063d14dfbbfc978210e8148cdcfb9aa95e143b7d1187f2` |
+  | wir | 2026.10.04.4 | 0.2.0 | `556832ae3103e215a5850577f9f3a04ecaadf2495bb311a901b3379024c0ae99` |
+
+  - Die Web-Kopien stimmen mit beiden Prüfsummen überein.
+  - `wir` 2026.10.04.3 hatte noch den Änderungstext der Vorausgabe, den Nutzer unter Updates sehen. Ich habe ihn sofort durch 2026.10.04.4 mit eigenem Text ersetzt; der Inhalt ist gleich.
+  - Ältere Apps übergehen `buch` und sehen `lumi-buch` wegen `app_min` nicht.
+- **Bekannte Einschränkung:**
+  - Bei bestehenden Nutzern kommt die neue `wir`-Ausgabe mit den Absatznummern erst mit dem nächsten Update-Abo (Standard wöchentlich). Bis dahin ist das Buch da, aber unter den Sätzen fehlt der Link.
+  - Neue Nutzer haben ihn sofort.
+  - Vorschlag für eine kleine 0.5.1: Fehlt `buch` in den installierten Tipps, holt die App `wir` beim Start einmal still nach, wie jetzt schon das Buch. Bitte entscheiden.
 
 ## Was gebaut ist
 1. **Paket `lumi-buch`** (Art `inhalt`, `app_min` 0.5.0):
@@ -64,7 +79,20 @@ __ERGEBNIS__
 Folie 2 der Paket-Vorschau ist das Bild der Leseansicht. Die Mac-Bilder fehlen, weil die Bildschirmsteuerung abgelehnt wurde (siehe Rückmeldung 0.4.2).
 
 ## Geprüft
-__GEPRUEFT__
+- **Tests:**
+  - Web: 84 von 84. Neu ist `web/buch.test.mjs` mit sechs Tests.
+  - Werkzeug und Kit: 33 von 33. `lumi-buch` ohne Fehler.
+- **CI (Lauf `37233438738`):** Die Tests laufen grün unter Linux, macOS und Windows, dazu Kern und Modul-Sandbox.
+- **Windows-Probe (`37233438678`):** grün beim ersten Lauf.
+  - 48 von 48 Angriffe blockiert.
+  - „Raum Pause“ in Ordnung.
+  - „Lumi-Buch – ohne Paket“: Die Seite öffnet sich auch, solange das Paket noch nicht im Katalog war.
+  - Nach dem Lauf kam nur der Änderungstext von `wir` dazu (`paket.quelle.json`, kein App-Code).
+- **Release-Build `37234471484`:** alle vier Plattformen und das Veröffentlichen sind grün.
+- **Im Browser (360 px):**
+  - Der Link erscheint unter einem Satz der benannten Lumi. Ein Tipp öffnet die Leseansicht, der Absatz ist danach freigeschaltet und erscheint im Buch.
+  - Das Buch zeigt Anteil, Lücken und Vorlesen, ohne seitlichen Bildlauf.
+  - Links im Log: 10 bei 10 Einträgen; keine bei „Tipps aus“ und keine bei Textkarten.
 
 ## Vorrat
 Der Vorrat reicht bis 31. Jänner 2027, 119 Tage ab heute. Die 45-Tage-Grenze wird am 17. Dezember erreicht.
