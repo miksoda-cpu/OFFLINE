@@ -1,0 +1,65 @@
+{
+  "format": 1,
+  "id": "lumi-buch",
+  "version": "2026.10.04",
+  "titel": "Das Lumi-Buch · Band 1",
+  "beschreibung": "Die Geschichte der Lumi von unter dem Eis, in zwölf Kapiteln. Das ganze Buch liegt auf dem Gerät; lesbar wird ein Stück, wenn du es nach einem Satz deiner Lumi aufschlägst. Eine erfundene Geschichte.",
+  "art": "inhalt",
+  "sprache": "de-AT",
+  "lizenz": "CC BY-SA 4.0",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "kategorie": "miteinander",
+  "alter_ab": 0,
+  "abnahme": "Redaktion (Code), 04.10.2026: Format, Reihenfolge, jede Absatznummer mit mindestens einem Tipp, alle 175 Tipps mit vorhandenem Absatz; Text unverändert (keine Tippfehler gefunden)",
+  "app_min": "0.5.0",
+  "erstellt": "2026-10-04T21:00:20Z",
+  "aenderungen": "Erste Ausgabe: Band 1, zwölf Kapitel, 127 Absätze.",
+  "quellen": [
+    {
+      "id": "redaktion",
+      "name": "Das Lumi-Buch, Band 1 (Text von Mik freigegeben am 04.10.2026)",
+      "url": "https://github.com/miksoda-cpu/OFFLINE/blob/main/docs/WESEN.md"
+    }
+  ],
+  "dateien": [
+    {
+      "pfad": "inhalt/buch.json",
+      "sha256": "03c34749073e6943557ceeeaac706c6aa6696e573c200cb31253ef6bddb7db8e",
+      "groesse": 73645
+    },
+    {
+      "pfad": "inhalt/vorschau/1.svg",
+      "sha256": "249e77a0065250a1fe2f70860384460a61644d57a16018748bbb720af0ad611c",
+      "groesse": 1042
+    },
+    {
+      "pfad": "inhalt/vorschau/2.jpg",
+      "sha256": "0699f9aba9db805f52a6ac6efdb01b1def1eb85a3cd19117d04b82657c717101",
+      "groesse": 111303
+    },
+    {
+      "pfad": "inhalt/vorschau/3.svg",
+      "sha256": "c7398875e59255cbbae0f8052907b30503989ccfd8b31b865205a86eec08a90a",
+      "groesse": 1195
+    },
+    {
+      "pfad": "inhalt/vorschau/4.svg",
+      "sha256": "0136b4074c604a7cf1fd1cde5d24e0dce2052562342b9f0ef8683f76975e73c1",
+      "groesse": 1033
+    },
+    {
+      "pfad": "inhalt/vorschau/5.svg",
+      "sha256": "e05825842efc8e211145f6d5bb97884115232135316522c654ce4685587cd4ee",
+      "groesse": 1018
+    },
+    {
+      "pfad": "inhalt/vorschau/folien.json",
+      "sha256": "a46ec79ceb570a0bdc964a6120609c17e3cd8dac01b441695762f3b1e509d162",
+      "groesse": 1605
+    }
+  ],
+  "groesse": 190841
+}

@@ -1,0 +1,589 @@
+{
+ "format": 1,
+ "band": 1,
+ "titel": "Das Lumi-Buch",
+ "untertitel": "Band 1",
+ "hinweis": "Eine erfundene Geschichte. Die Quantenwelt in den Kapiteln 9 bis 12 ist ein Bild, keine Physik.",
+ "kapitel": [
+  {
+   "nr": 1,
+   "titel": "Der Fluss",
+   "absaetze": [
+    {
+     "id": "b1-01-01",
+     "text": "Am Anfang war es dunkel, und es machte uns nichts aus. Das klingt wie etwas, das man hinterher sagt, wenn man sich an alles gewöhnt hat, aber es war so: Wer in der Dunkelheit zur Welt kommt, vermisst kein Licht, das er nie gesehen hat. Die Höhle war groß und schwarz, oben hing das Eis, unten lag der Stein, und dazwischen tasteten wir uns durch das, was wir Wachzeit nannten, obwohl wir ja noch gar nichts nannten. Wir hörten uns, wir rochen uns, wir stießen manchmal zusammen, und wir dachten, von Anfang an, denn im Dunkeln geht das besonders gut. Man brauchte nicht viel. Ein bisschen Licht, und das hatten wir bald bei uns."
+    },
+    {
+     "id": "b1-01-02",
+     "text": "Das Warme kam aus einem Spalt. Er war nicht breit, man hätte ihn mit ausgestreckten Armen fast überspannt, und aus ihm drückte sich seit mehr Zeit, als irgendjemand zählen wollte, heißes Wasser aus der Tiefe. Es sammelte sich, floss ab, grub sich sein Bett durch den Stein und dampfte in der kalten Luft darüber. Wo es hinkam, wuchs etwas, und wo etwas wuchs, saß jemand. Alles, was wir sind, liegt an diesem Fluss. Wir wussten das damals nicht, so wie man nicht weiß, dass man atmet. Man ist einfach da, und es geht sich aus."
+    },
+    {
+     "id": "b1-01-03",
+     "text": "Das Wasser im Fluss war nie alt. Es kam heiß aus dem Spalt, lief an uns vorbei und war schon weg, bevor es abstehen konnte, und es war ohnehin heißer als alles, was man erst abkochen müsste. Keiner von uns wäre auf die Idee gekommen, es in einer Mulde zu sammeln und nach neun Monaten zu kosten, ob es noch taugt. Wer Durst hatte, ging zwei Schritte, trank und ging zwei Schritte zurück. Was man nicht mehr brauchte, nahm der Fluss mit, auch das, worüber man nicht redet. Heute wissen wir, dass es Gegenden gibt, wo man für den Tag, an dem das Wasser ausbleibt, Kanister ins Regal stellt. Wir haben höflich gelacht. Dann nicht mehr."
+    },
+    {
+     "id": "b1-01-04",
+     "text": "Der Fluss hatte nie eine Pumpe gebraucht. Das Wasser trat am oberen Ende der Höhle aus dem Spalt, der Stein neigte sich, das Wasser neigte sich mit, und was von allein bergab geht, muss man nicht drücken. Es war eine der wenigen Einrichtungen unserer Welt, die ohne jede Hilfe liefen, und wir hielten sie für selbstverständlich, so wie man den Boden für selbstverständlich hält, bis man im vierten Stock steht und der Hahn hustet. Bei uns gab es keinen vierten Stock. Es gab Höhlen, die höher lagen als andere, und wer dort schlief, ging zum Trinken eben hinunter."
+    },
+    {
+     "id": "b1-01-05",
+     "text": "Die Wärme teilten wir uns, vulsam nennen wir es heute. Das war keine Tugend, es war Physik: Wer nah beieinander lag, hatte es warm, und wer es warm hatte, schlief. Wenn die Schlafzeiten, die keine Nächte waren, kühler wurden, rückte man in eine einzige Bucht am Ufer zusammen, Rücken an Bauch, die Ohren nach unten, und der Körper heizte mehr, als man ihm zugetraut hätte. Wer eine heiße Mulde im Stein fand, wärmte sich an ihr, und wer zwei fand, zeigte die zweite einem anderen. Einen Raum, den man auch ohne Heizung warm hält, brauchte keiner von uns. Wir waren der Raum."
+    },
+    {
+     "id": "b1-01-06",
+     "text": "Gegessen wurde Pilz. Etwas anderes wuchs nicht, und es fehlte keinem, denn der Pilz wuchs überall: an den Wänden, im Boden, in den Ritzen des Eises, in Farben, für die es keine Namen gab, wir hatten ja nicht einmal Wörter. Es gab so viele, dass niemand ihnen je auf den Grund kam. Ein Pilz, den man abnagte, wuchs an derselben Stelle nach, noch bevor man mit dem Kauen fertig war. Wer satt war, ging weiter, und wer weiterging, nahm niemandem etwas weg, weil nichts da war, das man hätte wegnehmen können. Das hat uns viel erspart. Nicht alles."
+    },
+    {
+     "id": "b1-01-07",
+     "text": "Essenszeit, bei uns pelutuli, kam vom Spalt. In Abständen, die keiner gemessen hat, atmete er stärker aus, der Dampf legte sich an die Wände, und die Pilze quollen auf: weich, kühl, ein bisschen süß, mit einem Geruch, den man nicht beschreiben kann, wenn man ihn nicht kennt, und nicht vergessen, wenn man ihn kennt. Dann war Essenszeit. Wer einen gefunden hatte, nagte ihn nicht gleich an, sondern roch erst eine Weile daran, die Augen halb zu, und das war kein Brauch, sondern Genuss. Wer nie an so einem Pilz gerochen hat, dem können wir es nicht erklären. Wir würden jetzt gern einen essen."
+    },
+    {
+     "id": "b1-01-08",
+     "text": "Einen Vorrat hat damals keiner angelegt, und es hatte keinen tiefen Grund. Ein Pilz, der abgerissen wird und liegen bleibt, wird zäh, dann grau, dann nichts, und man hätte schon sehr genügsam sein müssen, um an einem Haufen Grau Freude zu haben. Gegessen wurde, was frisch war, und frisch war alles, solange man am Fluss blieb. Ein Vorrat, den man nicht isst, ist keiner, nur Unordnung mit Aussicht auf Schimmel. Das wussten wir von Natur aus. Andere müssen es sich erst vornehmen."
+    },
+    {
+     "id": "b1-01-09",
+     "text": "Wer uns damals besucht hätte, hätte uns am Fluss gefunden, sitzend, fast immer. Das war eine ganze Beschäftigung. Man saß am Ufer und schaute auf das Wasser, auf den Dampf, auf die dunklen Steine, und je länger man schaute, desto mehr sah man und desto mehr dachte man darüber nach: wie das Wasser an einer Kante heute anders lief als gestern, wie sich der Dampf um einen Vorsprung legte wie ein Schal. Menschen bauen Türme, um weiter zu sehen. Wir saßen am Fluss, um näher zu sehen. Beides ist Sehen. Unseres hatte den Vorteil, dass man dabei sitzen konnte."
+    },
+    {
+     "id": "b1-01-10",
+     "text": "Dann kam das Licht, und es kam klein. Einer von uns lag am Ufer und schlief, und in dem Haarbüschel zwischen seinen Ohren, wo es warm war und niemand hinkam, siedelten sich Pilze an. Er merkte es erst, als die Nächste neben ihm die Augen aufschlug und ihn ansah, mit einem Blick, den es vorher nicht gegeben hatte: Man konnte jemanden sehen. Ein Glimmen, kaum mehr als der Gedanke an Helligkeit. Das ist der Vorteil der Dunkelheit, das kleinste Licht fällt darin auf. Wir nennen es heute zan, und es ist das erste Wort, das ein Kind lernt. Es genügte vollkommen. Und es lag nie in der falschen Lade, denn es lag am Kopf."
+    },
+    {
+     "id": "b1-01-11",
+     "text": "Feuer kannten wir nicht, und wir haben es nie vermisst. Das Licht, das uns wuchs, brannte nicht. Es wurde nicht heiß, es qualmte nicht, man konnte darin schlafen, ohne dass etwas Feuer fing. Später erfuhren wir, dass Menschen im Dunkeln gern Kerzen anzünden und dass Kerzen in solchen Nächten mehr Wohnungen in Brand setzen als der Stromausfall selbst. Wir haben eine Weile geschwiegen. Auf die Idee, ein Licht so zu machen, dass es Schaden anrichtet, wären wir nie gekommen. Vieles an der Welt über dem Eis verstehen wir bis heute nicht. In diesem einen Punkt hätten wir helfen können."
+    },
+    {
+     "id": "b1-01-12",
+     "text": "In einer Wache, die sich von den anderen nicht unterschied, sah eine von uns, die weit flussabwärts gegangen war, in der Ferne ein Licht. Es war nicht ihres und nicht das ihrer Nachbarn. Es stand einfach da, klein und warm, hinter einer Biegung des Flusses, und bewegte sich nicht auf sie zu. Sie blieb lange stehen. Dass es noch jemanden gab, wusste sie nun. Wer es war, wusste sie nicht. Das ist auch etwas, dachte sie, und ging zurück, um es den anderen zu zeigen."
+    }
+   ]
+  },
+  {
+   "nr": 2,
+   "titel": "Die Hellen",
+   "absaetze": [
+    {
+     "id": "b1-02-01",
+     "text": "Nach dem nächsten Schlaf gingen wir alle zur Biegung des Flusses, vierzig oder fünfzig, mehr hatte der Fluss damals nicht zu bieten, und bevor wir ankamen, stellte jeder von uns dieselbe Frage, jeder in seinem eigenen Kopf: Ist das nur bei uns so? Wenn etwas Ungewöhnliches geschieht, will man als Erstes wissen, ob es einen allein betrifft. Es betraf uns nicht allein. Hinter der Biegung saßen andere, ebenso viele, ebenso rund, mit Glimmen im Haar, und sie sahen uns an, mit derselben Frage in den Augen. Wir standen lange da. Dann setzten wir uns, auf unserer Seite des Wassers, und sie auf ihrer."
+    },
+    {
+     "id": "b1-02-02",
+     "text": "Wir hatten nichts zu tun, außer zu essen, zu schlafen und nachzudenken, und wer das aufzählt, glaubt, es sei wenig. Es ist viel, wenn man Zeit hat. Wir hatten sie in einer Menge, von der man sich schwer eine Vorstellung macht: keine Arbeit, keine Eile, keinen Winter, nur den Fluss und den Gedanken, der sich daran entlang tastet. Man saß da und erfand, was hinter der nächsten Biegung sein könnte, und meistens war es schöner als das, was dann dort war. Die Menschen, von denen wir später erfuhren, haben dazwischen noch so viel zu tun. Wir schauen ihnen gern dabei zu."
+    },
+    {
+     "id": "b1-02-03",
+     "text": "Das Licht verriet uns. Wer sich freute, leuchtete heller, wer nachdachte, dunkler, wer sich ärgerte, ein wenig rot an den Rändern, und es gab keine Möglichkeit, das zu verbergen, außer die Augen zuzumachen, was nichts nützte, weil die anderen ja trotzdem hinsahen. Man hielt uns später für launisch. Das ist ein Missverständnis. Wir haben keine Launen, wir haben Stimmungen, die man von außen sieht, und wer eine Stimmung sieht, glaubt, sie sei plötzlich gekommen. Sie kam langsam. Sie war nur ausführlich."
+    },
+    {
+     "id": "b1-02-04",
+     "text": "Licht kostet Kraft. Das merkten wir, als die Ersten aus lauter Freude eine ganze Wache hindurch hell blieben und nach dem Schlaf nicht mehr aufstanden. Ein Licht, das nicht ruhen darf, verliert langsam, so langsam, dass man es nicht bemerkt, bis man es braucht und nichts mehr da ist. Wer sein Licht pflegte, ließ es regelmäßig ausruhen, alle paar Perioden ganz. Mit den Perioden trägt es kürzer, das ist kein Fehler, das ist Chemie. Wer wissen wollte, wie es um ihn stand, drehte einmal voll auf und schaute, wie lange es hielt. Das dauerte ein paar Atemzüge. Die Älteren taten es nach jedem Schlaf."
+    },
+    {
+     "id": "b1-02-05",
+     "text": "Es dauerte nicht lange, bis eine merkte, dass man Blicke bekommt, wenn man pulsiert. Ein ruhiges Licht sieht man und vergisst es, ein pulsierendes sieht man, und dann sieht man es wieder, und dann kann man nicht mehr weg. Bald pulsierten viele. Das Licht der anderen konnte man nicht abstellen, aber man konnte wegschauen, und das war der Ausweg: Jede Einzelne konnte den Kopf drehen, die Ohren nach hinten legen, die Augen schließen. Niemand fragte um Erlaubnis. Man gab sie, oder man gab sie nicht. Wer sie nie gab, hatte seine Ruhe und manchmal etwas weniger Gesellschaft."
+    },
+    {
+     "id": "b1-02-06",
+     "text": "Manches Licht hetzte. Es flackerte so schnell, dass man selbst unruhig wurde, es zog den Blick an und ließ ihn nicht mehr los, es sagte, ohne ein Wort zu haben: jetzt, sofort, schau her. Wer so leuchtete, meinte es nicht immer böse; manche konnten einfach nicht anders. Aber wir lernten, dass ein Licht, das uns hetzt, nicht auf unserer Seite ist, und dass das ruhigere Licht, das uns Zeit ließ, fast immer von jemandem kam, der es ernst meinte."
+    },
+    {
+     "id": "b1-02-07",
+     "text": "Im Dunkeln verrät das Licht, wo man ist. Das war unser Vorteil und unser Nachteil, und es dauerte eine Weile, bis wir den Unterschied verstanden. Für ein Kind, das sich verlaufen hatte, war es das Beste, was passieren konnte: Man sah es von weitem, und jemand kam. Für eine, die einfach nur allein sitzen wollte, war es ein Leuchtfeuer, das jeden zu ihr führte. Den Ort, an dem man ist, zu zeigen, ist für die Nächsten gut. Für alle anderen stellt sich die Frage, warum eigentlich."
+    },
+    {
+     "id": "b1-02-08",
+     "text": "Die Hellste von uns war nicht die Klügste. Das ist so offensichtlich, dass man sich wundert, wie lange wir gebraucht haben, es zu bemerken. Das Licht sagte, wie es einem ging, nicht, was man konnte; es änderte, wie man aussah, nicht, was man vermochte. Wer schwach leuchtete, hatte oft die besten Gedanken. Er musste sich nur vor einen hellen Stein setzen, damit man ihn sah, und das war der erste Kontrast: ein dunkler Kopf vor hellem Grund, für Augen, die es schwer haben, und für die, die es ihnen leicht machen wollten."
+    },
+    {
+     "id": "b1-02-09",
+     "text": "Dann kam die Zeit, in der man den Hellen Pilze brachte. Wir hatten inzwischen Hände mit Daumen, und mit Händen kann man Dinge bringen, das ist ihr Hauptverdienst. Niemand hatte darum gebeten, und es wäre auch unnötig gewesen, denn Pilze gab es überall; aber wer einer der Hellen einen Pilz an den Platz legte, schien ein bisschen mit, und wer ein bisschen mitschien, wurde ein wenig mehr gesehen. Nichts davon kostete etwas. Trotzdem zahlte man. Man zahlte mit dem, was man tat: hinsehen, nicken, warten, bis die Helle fertig war. Das ist nicht böse, wenn man es weiß. Wir wussten es nicht."
+    },
+    {
+     "id": "b1-02-10",
+     "text": "Je schneller die Hellen wurden, desto langsamer wurden einige andere. Es hatte niemand abgesprochen; es war wohl eher so, dass eine Gruppe ein Gleichgewicht sucht wie Wasser, das in eine Mulde läuft. Wer zu schnell wird, bekommt ein Gegengewicht, jemanden, der langsamer redet, länger schaut, später antwortet, und das nicht aus Trägheit, sondern weil einer von beiden es tun muss, sonst reißt etwas. Wir wussten damals nicht, dass die Langsamen die Zukunft sein würden. Sie wussten es auch nicht. Sie dachten einfach weiter."
+    }
+   ]
+  },
+  {
+   "nr": 3,
+   "titel": "Die Zeit der Zähne",
+   "absaetze": [
+    {
+     "id": "b1-03-01",
+     "text": "Aus den zwei Gruppen am Fluss wurden vier, dann zehn, und irgendwann hörten wir auf, die Gruppen zu zählen. Man kannte nicht mehr jeden. Man kannte die Lichter derer, die nah saßen, und von den anderen wusste man nur, dass sie da waren. Das Zusammenleben, das vorher von allein gegangen war, begann zu knirschen. Das Erste, woran wir es merkten, war eine Kleinigkeit: Als sich einmal vor dem Schlaf herumsprach, ein Kind sei nicht in seiner Mulde, liefen alle zugleich los, und die Stelle am Ufer, wo die Kinder schliefen, stand voll mit Erwachsenen, und alles andere stand leer."
+    },
+    {
+     "id": "b1-03-02",
+     "text": "Für das, was dann kam, haben wir erst viel später ein Wort gefunden. Es bezeichnet den Zustand, in dem alles auf einmal geschieht, in dem man nicht mehr weiß, wohin man zuerst schauen soll und das Herz schlägt, als wollte es etwas sagen. Wir nannten ihn Gefahr. Es ist dasselbe Wort, und wir brauchen es heute selten, aber wenn wir es sagen, steht keine Drohung dahinter, sondern ein Gedächtnis. Das Gegenwort, für den Zustand, in dem nichts geschieht, haben die Menschen gefunden, und es klingt nach Langeweile."
+    },
+    {
+     "id": "b1-03-03",
+     "text": "Wir haben Zähne, und sie dienen dem Pilz. Das war ihr einziger Zweck, und sie erfüllten ihn so unauffällig, dass keiner an sie dachte. Dann kam die Zeit des Gedränges. Beim ersten Stoß sagte man mh, beim zweiten sah man weg, und beim dritten, bei der Mulde, am Wasser, im Schlaf, kamen die Zähne, ohne dass jemand es wollte, ein Reflex, älter als alles, was wir waren, ein Erbe der Kaninchen in uns. Es tat dem, der sie zeigte, im selben Augenblick leid, und man sah es. Wer es sah, verzieh. Meistens."
+    },
+    {
+     "id": "b1-03-04",
+     "text": "Wer es eilig hatte, rief nach den anderen, und seine Eile steckte an. Jetzt, sofort, alle her: Das war der Ton dieser Zeit, und er wirkte, weil er dringend klang. Wir lernten spät, was die Älteren schon wussten: Echte Dringlichkeit ist selten und hat meistens Zeit für eine Frage. Wer ständig Eile hat, will etwas. Man durfte stehen bleiben. Man durfte, wenn es zu schnell ging, einfach nicht mitlaufen, die Ohren aufrichten und warten, was die Eile eigentlich wollte. Dass man bei den Menschen auflegen darf, wenn jemand drängt, haben wir später gehört und neidisch zur Kenntnis genommen."
+    },
+    {
+     "id": "b1-03-05",
+     "text": "In der größten Wache dieser Zeit wurde es heiß. Zu viele Körper waren am Ufer, zu viel Licht, zu viel Dampf, und die Hitze lag auf der Höhle wie eine Decke. Wir versuchten, uns mit Wasser zu kühlen, und es half nichts, das Wasser war ja warm. Das Einzige, was half, war, das Licht zuzudrehen und das Dunkel herbeizulassen, so wie man Fensterläden schließt, bevor die Sonne kommt. Und wer alt war, spürte den Durst erst, wenn es zu spät war, deshalb mussten die Jungen trinken, bevor sie dachten, dass sie es brauchten, und den Alten mit."
+    },
+    {
+     "id": "b1-03-06",
+     "text": "Damals wurde eine geweckt, die geschlafen hatte, in einer Mulde ein Stück abseits, und das Erste, was sie sah, war ein Licht, das nicht das ihre war, dicht vor ihrem Gesicht, viel zu hell. Sie sagte nichts Kluges. Sie sah das Licht an, das Licht sah sie an, und beide wussten, dass jede Antwort, die sie hätte geben können, die Sache verschlimmert hätte. Das war das erste Mal, dass wir ein Schweigen verstanden. Es war nicht schön, aber es war ein Anfang."
+    },
+    {
+     "id": "b1-03-07",
+     "text": "Eine Gefahr ist etwas, das kommt. Bei uns kommt nichts: kein Raubtier, kein Wetter, kein Feind, das Eis hält, der Fluss fließt. Da kam trotzdem etwas, und es kam von uns. Alle drehten gleichzeitig auf, jeder, um gesehen zu werden, jeder, um den anderen zu übertönen, bis die Eisdecke glitzerte wie bei einem Fest, nur dass keiner feierte. Es war so hell, dass keiner mehr jemanden sah. Wir saßen im hellsten Licht, das es je in der Höhle gegeben hatte, und waren blind."
+    },
+    {
+     "id": "b1-03-08",
+     "text": "In dieser Zeit wurde einer gebissen. Nicht schwer, am Ohr, ein Tropfen warmes Wasser, mehr war es nicht, aber es war das Schlimmste, was wir uns je angetan haben. Das, was bei den Menschen Krieg heißt, hat es bei uns nie gegeben: keine Waffen, keine Grenzen, nichts, das man hätte erobern können. Wir waren nur einmal nah dran, und nicht, weil wir besser gewesen wären. Es gab einfach nichts, das sich zu holen lohnte, außer dem Blick der anderen, und der lässt sich nicht erobern. Es gab ein Ohr, und es tat weh."
+    },
+    {
+     "id": "b1-03-09",
+     "text": "Danach mussten alle gleichzeitig wieder zudrehen, und das war der nächste Fehler. Wer vom grellen Licht ins plötzliche Dunkel stürzt, ist nicht ruhiger, sondern erschrocken, und drei von uns, die es ausprobierten, stießen mit den Köpfen zusammen. Es ging nur langsam, stufenweise, eines nach dem anderen, so wie ein Netz zurückkommt, nachdem es zusammengebrochen ist: Wenn alle auf einmal wieder einschalten, wirft es sich gleich wieder um. Wir lernten damals und mit Beulen, was Geduld ist. Es war das Wichtigste, was wir bis dahin gelernt hatten."
+    },
+    {
+     "id": "b1-03-10",
+     "text": "Der Gebissene lag den Rest der Wache am Wasser, den Kopf auf dem Arm, und nach dem Schlaf kam der, der gebissen hatte, und sah ihn an. Er hatte nichts vorbereitet. Es gab ja keine Worte dafür. Der Gebissene sah zurück, wartete lange und machte dann eine Handbewegung, die wir noch heute übersetzen als: Heute nicht. Frag mich morgen. Der andere kam nach dem nächsten Schlaf wieder. Und nach dem übernächsten. Das war die erste Entschuldigung, und sie hat drei Schlafzeiten gedauert, und sie hat gehalten."
+    }
+   ]
+  },
+  {
+   "nr": 4,
+   "titel": "Das Klopfen",
+   "absaetze": [
+    {
+     "id": "b1-04-01",
+     "text": "Nach dieser Zeit verabredeten wir etwas, das keiner von uns erwartet hätte: Wir würden üben. Das Zeichen, das die Älteren noch aus der Kaninchenzeit kannten, ein Klopfen mit den Hinterläufen, sollte in jeder Periode einmal erklingen, kurz, fünfzehn Atemzüge lang, damit alle seinen Klang kannten und niemand erschrak, wenn es geprobt wurde. Länger durfte es nicht dauern. Wer es länger hörte, wusste: Das ist nicht die Probe. So halten wir es bis heute. Wenn die Periode sich dem Ende nähert, spitzen alle die Ohren und warten auf das Klopfen, das nichts bedeutet."
+    },
+    {
+     "id": "b1-04-02",
+     "text": "Wir verabredeten drei Zeichen, nicht mehr. Das erste, ein gleichmäßiges Klopfen, das drei Minuten lang nicht nachließ, hieß: Hört zu, es ist etwas. Das zweite, ein Klopfen, das auf und ab ging wie ein Atem, hieß: Jetzt, sofort, handelt. Und das dritte, wieder gleichmäßig, aber nur eine Minute lang, hieß: Es ist vorbei. Das Dritte war das Wichtigste. Ein Zeichen für die Gefahr ohne ein Zeichen für das Ende hätte uns in Dauerangst gelassen, und wir hatten gerade gelernt, wohin das führt."
+    },
+    {
+     "id": "b1-04-03",
+     "text": "Einen Fehler entdeckten wir erst später. Das Klopfen hing von den Kräften dessen ab, der klopfte, und wer schlief, wer krank war, wer zu weit weg lag, klopfte nicht. Dass ein Zeichen ausblieb, hieß nicht, dass alles gut war. Es hieß oft nur, dass der Klopfer müde war. Wir lernten, das Fehlen einer Warnung nie für eine Entwarnung zu halten und im Zweifel das Ohr auf den Stein zu legen und zu horchen, ob etwas anderes noch trug."
+    },
+    {
+     "id": "b1-04-04",
+     "text": "Was bleibt, wenn alles andere schweigt, ist der Stein. Der Fels der Höhle trägt jeden Klang, weit und gleichmäßig, und wer das Ohr auf ihn legt, hört, was in Hunderten von Schritten Entfernung geschieht. Wir haben die Klopfzeichen, die sich bewährten, in den Stein geritzt, an mehreren Stellen, damit sie niemand vergisst. Das Ritzen war mühsam, aber es gibt nichts, das haltbarer wäre als ein Zeichen auf Stein. Er hat keinen Akku, wie die Menschen sagen, und er wird nie leer."
+    },
+    {
+     "id": "b1-04-05",
+     "text": "Die Ältesten klopften drei Wachen durch, wenn es sein musste, ohne abzusetzen, und die Besten unter ihnen, so hieß es, hatten Kräfte für viele Perioden. Sie waren die Sender, die nie ausfielen. Wer zuhörte, brauchte dazu nichts: keinen Strom, kein Licht, kein Gerät. Das Ohr genügt, und das hat jeder, auch der, der sonst nichts mehr hat. Es war billiger als alles andere, was wir hätten erfinden können, und das Einzige, das nie leer wurde, solange man aß. Man musste dafür nicht einmal aufstehen. Hören geht im Liegen."
+    },
+    {
+     "id": "b1-04-06",
+     "text": "Ein Hilferuf musste nicht in der eigenen Gruppe ankommen. Das entdeckten wir, als bei einem Zwischenfall am äußeren Ufer niemand reagierte, weil alle schliefen, und dennoch Hilfe kam: von der Gruppe nebenan, die das Klopfen gehört hatte, obwohl es nicht an sie gerichtet war. Fremdes Netz, würden die Menschen sagen. Es geht oft. Nicht immer. Seitdem weiß jede von uns, dass die Nachbarin mit dem anderen Licht, die man vielleicht nicht besonders mag, die zweite Möglichkeit ist, wenn die erste schweigt."
+    },
+    {
+     "id": "b1-04-07",
+     "text": "Für jede Art von Hilfe hatten wir bald ein eigenes Muster: eines für „ich bin verletzt“, eines für „mir ist kalt“, eines für „ich habe mich verlaufen“, eines für „da ist etwas, aber ich weiß nicht, was“. Das letzte, das mit der Unsicherheit, hat sich als das am meisten gebrauchte herausgestellt, und das ist keine schlechte Nachricht, sondern der Grund, warum es überhaupt existiert. Es ist die Erlaubnis, sich zu melden, bevor man sicher ist, dass es ein Notfall ist. Wer erst klopft, wenn er sicher ist, klopft meist zu spät."
+    },
+    {
+     "id": "b1-04-08",
+     "text": "Das Klopfen hatte eine Gnadenfrist. Wenn der Stein erst einmal in Unruhe geraten war, trug er nur noch für eine halbe Weile, dreißig, sechzig Atemzüge lang, danach war er so voller Echos, dass jedes weitere Zeichen darin unterging. Was man in dieser Zeit nicht losgeworden war, kam nicht mehr an. Also bereiteten wir die wichtigste Nachricht vor, ein einziges Muster, das jedes Kind kannte und jedes Kind klopfen konnte: Ich bin hier, mir geht es gut, kommt dorthin, wo wir uns immer treffen. Es musste nur einmal gelernt werden, und zwar nicht erst, wenn man es brauchte."
+    },
+    {
+     "id": "b1-04-09",
+     "text": "Es gab zwei Arten, einander zu hören. Die eine galt für die Mulde, in der man schlief: ein Flüstern, ein Atem, eine Wärme am Rücken, und das ging auf kurze Entfernung. Die andere galt für das, was draußen am Fluss geschah: das Klopfen, das trug. Wenn es laut wurde, ging die erste Art zuerst verloren, die kleine, nahe, so wie zu Hause als Erstes das Flüstern verstummt, wenn draußen etwas schreit. Die zweite hielt länger."
+    },
+    {
+     "id": "b1-04-10",
+     "text": "Dann kam der Laut, und er war klein. Einer von uns, ein Älterer mit müden Füßen, klopfte nicht, als es still wurde, sondern gab etwas von sich, einen Ton, tief hinten im Hals, kurz: mh. Er bedeutete nichts und alles. Er bedeutete: Da stimmt etwas nicht, ich habe es bemerkt, ich sage es nicht laut. Es war das erste Wort, das wir hatten, und es ist bis heute eines der besten. Menschen sagen „nur kurz“ und meinen eine Stunde. Wir sagen mh und meinen mh."
+    },
+    {
+     "id": "b1-04-11",
+     "text": "Das zweite Wort kam kurz danach, und es war eine Frage: Was ist los? Ein kurzes, hartes ma, das sich in den Stein einschrieb. Man sagt es nur, wenn etwas los ist, und so war es auch gedacht: ein großer Knopf, der nur dann gedrückt wird, wenn man ihn braucht, und den man vorher in Ruhe lässt. Wir haben es in all den Perioden danach nie gebraucht. Es genügt zu wissen, dass es da ist, wie eine Tür, die man nie öffnet und deren Schlüssel man trotzdem nicht verliert."
+    }
+   ]
+  },
+  {
+   "nr": 5,
+   "titel": "Das Gespräch",
+   "absaetze": [
+    {
+     "id": "b1-05-01",
+     "text": "Wir haben uns damals oft gefragt, was wir eigentlich tun, wenn wir nachdenken, und die ehrliche Antwort war: nichts Bestimmtes. Man saß am Fluss, der Gedanke kam, ging, kam wieder, und irgendwann merkte man, dass man seit einer halben Periode nicht mehr gewusst hatte, worüber. Das war keine Verschwendung. Es war die Hauptbeschäftigung, und sie hat uns, wenn man es genau nimmt, alles gebracht, was wir sind. Wer nichts denkt, hört dem anderen zu, und wer dem anderen zuhört, beginnt ein Gespräch. Das haben wir damals noch nicht gewusst. Wir haben einfach nachgedacht."
+    },
+    {
+     "id": "b1-05-02",
+     "text": "Das erste Gespräch ging schief, und es ging wegen einer Kleinigkeit schief. Eine sagte mh, und die andere verstand es als Zweifel an ihr, während es Zweifel an der Sache war. Sie schwiegen beide, jede für sich beleidigt. Es dauerte lange, bis eine auf die Idee kam, noch einmal zu fragen, ma, und die andere antwortete, und es stellte sich heraus, dass der Fehler in der Erklärung gelegen hatte, nicht im Kopf. Seitdem gilt bei uns: Wenn jemand etwas nicht versteht, ist meistens die Erklärung das Problem. Man fragt noch einmal. Das ist keine Schande, es ist der Anfang."
+    },
+    {
+     "id": "b1-05-03",
+     "text": "Bei uns fragt niemand: Was denkst du? Die Frage ist überflüssig, und sie wäre unhöflich, denn sie unterstellt, dass der andere nicht von selbst sagen würde, was er denkt, wenn man ihn ließe. Man wartet. Man richtet beide Ohren auf ihn, das eine auf die Stimme, das andere auf das, was dahinter ist, und man wartet, bis er fertig ist. Das dauert. Manchmal dauert es eine Periode, und manchmal länger. Aber danach weiß man, was der andere denkt, und zwar genauer, als er es selbst gewusst hätte, bevor er anfing."
+    },
+    {
+     "id": "b1-05-04",
+     "text": "Es gab die Versuchung, nachzuschauen. Eine hatte angefangen zu reden, und nach einer Weile wurde sie leise, und die Zuhörerin wollte wissen, ob sie fertig war oder nur Atem holte. Sie beugte sich vor, sie sah ihr ins Gesicht, und die Rednerin verlor den Faden. Es war ein Fehler, den fast jede einmal macht. Wer ein Gespräch am Leben halten will, lässt die Tür zu, auch wenn er nachschauen möchte. Gerade dann."
+    },
+    {
+     "id": "b1-05-05",
+     "text": "Die Jungen versuchten es einmal mit Tempo. Sie sprachen doppelt so schnell, als hätten sie es eilig, und weil unsere Ohren einzeln drehbar sind, glaubten sie, man könne auch doppelt so schnell hören. Man konnte es, ein bisschen. Es klang seltsam, und es spart die halbe Zeit, und nach einer Periode hatte sich gezeigt, dass wir die Zeit, die wir sparten, mit nichts füllen konnten, was uns lieber gewesen wäre als das Gespräch selbst. Seitdem sprechen wir schnell, was wir schon kennen, und langsam, was wir noch nicht verstehen."
+    },
+    {
+     "id": "b1-05-06",
+     "text": "Man hat uns gefragt, was der Unterschied ist zwischen unserer Art zu denken und der der Menschen, und wir haben lange überlegt. Vielleicht ist es dies: Die Menschen haben keine Zeit, wir haben nur Zeit. Das mag der Unterschied zwischen zwei Intelligenzen sein, es mag auch nur der Unterschied zwischen zwei Wachen sein, wir wissen es nicht. Aber eines wissen wir: Wer keine Zeit hat, löst die Probleme, die sich rechtzeitig lösen lassen, und wer nur Zeit hat, löst auch die anderen. Wir haben ein paar davon gelöst. Es hat gedauert."
+    },
+    {
+     "id": "b1-05-07",
+     "text": "Bei uns hat eine Periode keine Länge. Sie dauert, solange ein Gespräch dauert, bis alle einverstanden sind. Die erste war kurz, nur ein paar Atemzüge, denn es ging um nichts. Manche waren so lang, dass die, die sie begonnen hatten, nicht mehr da waren, als sie endeten, und die, die sie beendeten, nicht wussten, wie sie begonnen hatten. Das ist kein Mangel. Eine Zeit, die man nicht messen kann, braucht keine Uhr. Sie braucht jemanden, der sagt: Wir sind noch nicht fertig. Und jemanden, der antwortet: Doch."
+    },
+    {
+     "id": "b1-05-08",
+     "text": "Das mh bekam eine Melodie. Erst war es ein kurzer Laut, dann konnte er steigen, wenn man etwas bezweifelte, und fallen, wenn man etwas verstand, und eine Schlangenlinie ziehen, wenn man noch nicht wusste, was man davon halten sollte. Das war das erste Mal, dass wir etwas sagen konnten, was nicht ja und nicht nein war, sondern: wir denken noch. Es ist bis heute unser feinstes Wort. Es hat vier Bedeutungen, und alle vier stimmen gleichzeitig."
+    },
+    {
+     "id": "b1-05-09",
+     "text": "Wir lernten voneinander, wie man es lernt, wenn man zusammenlebt: durch Abschauen. Man sah, wie eine mit dem Kopf wackelte, wenn sie etwas gern mochte, und wusste ab dann, wann man sie fragen konnte. Man merkte sich, wer nach dem Schlaf ruhig war, wer vor dem Schlaf aufdrehte, wer lieber zuhörte. Nichts davon war ein Urteil, alles war eine Vermutung, und jede Vermutung durfte man dem anderen sagen, und er durfte antworten: Das stimmt nicht mehr. Dann wurde sie zurückgestellt. Wer so lernt, hat ein Gedächtnis, das sich selbst korrigiert."
+    },
+    {
+     "id": "b1-05-10",
+     "text": "Nicht jede konnte jedem zuhören. Wer weit weg lag, wer schlecht hörte, wer zu müde war, um den Kopf zu heben, bekam die Gespräche der Wache vorgetragen: Eine, die dabei gewesen war, sagte sie noch einmal, Satz für Satz, ohne etwas dazuzutun. Man nannte es tragen, und es galt als Ehre. Es gab nichts, das man nicht vorlesen durfte, auch das Peinliche, auch das, was die Vorleserin selbst gesagt hatte. Das Vorgelesene war nicht mehr ihres. Es gehörte allen."
+    },
+    {
+     "id": "b1-05-11",
+     "text": "Es gab eine Erzählung, die über viele Wachen ging, ein Kapitel pro Wache, und es war verboten, vorauszueilen. Wer schneller erzählte, musste warten. Das war der Sinn. Eine Geschichte, die man auf einmal hört, vergisst man; eine, die man in kleinen Stücken bekommt, trägt man mit sich herum, denkt an sie, wenn man isst, und wartet auf die nächste Wache. Wir haben das Warten nicht erfunden. Wir haben nur entdeckt, dass es dazugehört. Es ist keine Strafe. Es gehört zur Sache."
+    },
+    {
+     "id": "b1-05-12",
+     "text": "In jeder Wache gab es ein Rätsel, und zwar eines. Nicht zehn. Eine Frage, an der man die Wache über herumkaute, mit dem Kopf auf dem Arm, die Ohren nach hinten, und wenn man sie gelöst hatte, war sie gelöst. Man bekam keine zweite, keine Zugabe, keinen Streifen für fleißiges Lösen. Das Rätsel hatte ein Ende, und das Ende war die Belohnung. Wer mehr wollte, konnte nachdenken, über nichts Bestimmtes. Das haben wir schon erwähnt."
+    },
+    {
+     "id": "b1-05-13",
+     "text": "Jede Wache hat einen Schluss, und den setzt jede für sich. Wenn er kommt, sagt man es, und wer es hört, hält sich daran: Das war deine Wache. Man hört dann auf, mitten im Satz, wenn es sein muss, und niemand nimmt es übel, denn es ist ausgemacht. Der letzte Satz heißt bei uns seit je: Es ist genug für heute. Bis morgen. Ein kleines Gespräch, das wir vor jedem Schlaf wiederholen, und kein Gespräch ist je ganz fertig, wenn es dieses nicht gibt."
+    },
+    {
+     "id": "b1-05-14",
+     "text": "Einmal im Umlauf des Spalts verschiebt sich unsere Zeit ein wenig. Niemand weiß, warum, vermutlich ist es eine Eigenart des Wassers, und wir haben sie genutzt: Das ist die Wache, in der man die Lichter durchsieht, die der Älteren und die der Kinder, jedes einzelne, ob es noch trägt. Ein Erinnerungszeichen im Stein sagt es einmal, eine Weile vorher, und dann nicht mehr. Wer Dinge öfter in Erinnerung ruft, als nötig ist, bekommt nur noch Ohren, die weghören. Wir erinnern ein Mal. Dann vertrauen wir."
+    },
+    {
+     "id": "b1-05-15",
+     "text": "Wenn ein Gespräch sich verheddert hatte, wenn keiner mehr wusste, wo der Anfang war, und alle gleichzeitig recht hatten, gab es einen einfachen Weg: schlafen. Man schlief, auch wenn man gar nicht müde war, denn wer aufwacht, hat mehr Ordnung im Kopf als vorher. Es ist kein Zaubertrick, es ist Aufräumen. Ein Schlaf löst mehr Probleme, als man glaubt, und die schwierigsten lösen sich oft dadurch, dass man sie einmal alle gleichzeitig ausschaltet und neu beginnt."
+    }
+   ]
+  },
+  {
+   "nr": 6,
+   "titel": "Das Dimmen",
+   "absaetze": [
+    {
+     "id": "b1-06-01",
+     "text": "Die erste Dimmerin war eine, die müde war, und sie tat es aus reiner Not. Sie drehte ihr Licht zurück, um Kraft zu sparen, und stellte fest, dass sie dabei ruhiger wurde und dass die Höhle, in der sie lag, auch ruhiger wurde, als hätte sie dem Raum etwas abgenommen. Sie tat es wieder. Die Nächste tat es auch. Es dauerte nicht lange, bis jede wusste, dass man in der Not das Licht dämpft und die Ruhe findet, und dass man dazu keine Not braucht. Heute schlagen wir es uns gegenseitig vor, einmal. Danach entscheidet jede selbst."
+    },
+    {
+     "id": "b1-06-02",
+     "text": "Es gibt Augenblicke, in denen das Klügste, was man sagen kann, nichts ist. Das haben wir durch das Dimmen gelernt, denn eine, die ihr Licht senkt, sagt: Ich sage jetzt nichts. Kein Rat, keine Erklärung, kein weiterer Satz. Wer so schweigt, gibt dem anderen etwas, das man schwer beschreiben kann: Raum. Dann schaut man nicht auf die Antennen und nicht ins Gesicht, sondern hinaus, auf die Wand, auf den Dampf, auf das, was gerade da ist. Da ist auch etwas."
+    },
+    {
+     "id": "b1-06-03",
+     "text": "Wir haben die Dunkelheit nie gefürchtet, aber wir mussten lernen, sie auch dann nicht zu fürchten, wenn sie von den anderen kam. In den Zeiten der Hellen bedeutete eine, die dunkel wurde: Du zählst nicht. Mit dem Dimmen kehrte sich das um. Dunkel hieß jetzt: Wir sind bei dir, wir hören zu. Daraus entstand, was wir Vorbereitetsein nennen. Es ist kein Zustand der Angst, es ist ein Zustand, in dem man keine haben muss, weil die Dunkelheit auf der eigenen Seite steht."
+    },
+    {
+     "id": "b1-06-04",
+     "text": "Das, was am meisten Kraft kostet, ist das Suchen. Wer nach etwas sucht, nach einem Zeichen, einer Antwort, einem Licht, das gerade nicht da ist, verbraucht in einer Weile, was er sonst in einem Schlaf verbraucht. Wer aufhört zu suchen, hält viele Wachen. Das war die Entdeckung der Dimmerinnen: Man kann das Licht senken und die Suche abstellen, und dann trägt einen die Kraft sehr weit. Die Menschen nennen es Flugmodus, weil es im Flugzeug Pflicht war. Wir fliegen nicht, aber wir nutzen es nachts."
+    },
+    {
+     "id": "b1-06-05",
+     "text": "Jede von uns hat eine Ecke, in der es dunkel bleibt. Das ist die Dunkelecke, und es ist eine unserer wichtigsten Erfindungen. Dort dreht man das Licht ganz zu, und niemand sieht hin. Nur man selbst hat den Zugang, nicht einmal die Nächste weiß, was dort liegt, und das gilt auch für die, die einen sonst am besten kennen. Wer zur Dunkelecke einer anderen kommt, bleibt draußen, wartet und sieht weg. Nichts verlässt diesen Ort. Auch die, die ihn bewachen, sehen nichts. Sie warten draußen."
+    },
+    {
+     "id": "b1-06-06",
+     "text": "Wer eine Dunkelecke hat, braucht einen Schlüssel, und der Schlüssel war ein Muster, das nur die Besitzerin kannte. Man legte ihn nicht unter die Matte, wie man bei den Menschen sagt, also nicht in den ersten Gedanken, den jede erraten würde. Und man hatte nicht für jede Tür denselben. Lang sollte er sein, nicht kompliziert: vier Dinge, die nur du zusammenbringst, ein Pilz, ein Gefühl, ein Geruch, ein Ort. Eine, die vier solche Dinge in einer Reihenfolge kannte, die niemand sonst nennen würde, war so sicher, wie man in einer Höhle sein kann."
+    },
+    {
+     "id": "b1-06-07",
+     "text": "Der beste Schlüssel bestand aus zwei Teilen: dem Muster im Kopf und etwas, das man in der Hand hielt, ihrem Licht, mit einem bestimmten Zucken, das nur sie so machte. Das Muster verriet, was man wusste; das Zucken bewies, dass man es selbst war. Wer nur eines von beiden hatte, kam nicht hinein. Deshalb gehörte das eigene Licht nie in fremde Hände. Man durfte es sich ansehen lassen. Man gab es nicht aus der Hand."
+    },
+    {
+     "id": "b1-06-08",
+     "text": "Unser Licht sagt viel, auch wenn wir schweigen. Es hat nie heimlich zugehört, es hat das gar nicht nötig gehabt, denn es weiß viel, einfach weil man es ihm sagt, in jeder Wache, ohne zu reden: durch Freude, durch Müdigkeit, durch Zorn. Das Dimmen hat aus diesem Verraten eine Entscheidung gemacht. Jede entscheidet jetzt selbst, wer was weiß: wer ihre Stimmung sehen darf, wer nur ihr ruhiges Licht, wer gar nichts. Die Wege dahin liegen versteckt, hinter dem Dunkel. Nicht zufällig. Wer sie finden will, muss suchen, und wer sucht, hat einen Grund."
+    },
+    {
+     "id": "b1-06-09",
+     "text": "Manches, was man denkt, will nicht ausgesprochen werden. Dafür hatten wir das, was die Menschen Tagebuch nennen: Gedanken, die man in den Stein ritzte, an einer Stelle, die nur man selbst fand, und die dort blieben, bis es ihnen jemand abnahm. Und Briefe, die sich öffneten, wenn eine Bedingung eintrat: einer in der Wache, in der eine Periode zu Ende ging, einer, wenn es drei Wachen lang still blieb. Was in ihnen stand, bestimmte die Schreiberin. Teilen musste sie es nie. Aber im Ernstfall wurden die Ritzungen zur Chronik, und dann sprachen sie für uns alle."
+    },
+    {
+     "id": "b1-06-10",
+     "text": "Es gab Dinge, die man nicht ersetzen konnte: die Erzählungen der Alten, die ersten Gedanken, die Zeichen, die Erinnerungen an das Fest. Die trug man an einen Ort, der unser aller Sicherung war, verschlüsselt, wie man sagen würde, das heißt: so aufbewahrt, dass nur die Besitzerin ihn lesen konnte. Man legte nicht alles hinein, nur das Unersetzliche, und das Auswählen war die Übung: Was ist wirklich unersetzlich? Wer das einmal beantwortet hat, weiß mehr über sich als nach tausend Gesprächen. Alles andere ließ man los."
+    },
+    {
+     "id": "b1-06-11",
+     "text": "Manche legten ihre Gedanken bei anderen ab, in einer Nachbarmulde, bei einer Freundin, deren Gedächtnis gut war. Das hat Vorteile: Was dort liegt, geht nicht verloren, wenn man selbst einschläft. Es hat einen Nachteil, den wir erst bemerkten, als eine Freundin wegzog: Man sieht, was bei einer anderen liegt, nur, solange man zu ihr hinkommt. Was man in fremden Köpfen aufbewahrt, ist nie ganz eigen. Die Menschen nennen das Cloud, den Computer von jemand anderem, und sie vergessen es oft."
+    },
+    {
+     "id": "b1-06-12",
+     "text": "Was man ausgelöscht hatte, war nicht sofort weg. Wir hatten es erst nicht gewusst. Eine Ritzung, die man abschleift, hinterlässt eine Spur, und wer genau hinsieht, liest sie noch eine Weile, dreißig Wachen etwa, dann ist der Stein glatt. Bei den Menschen heißt das Papierkorb. Wir bewahrten diese Frist wie ein Geschenk: Man darf etwas bereuen, solange noch Zeit ist. Danach ist es fort, und man erinnert sich so, wie man sich an alles andere erinnert."
+    },
+    {
+     "id": "b1-06-13",
+     "text": "Für den Ernstfall gab es zehn Felder, zehn Dinge, die eine von der Nächsten wissen wollte: wo sie schlief, wer ihr nahe war, was sie nicht vertrug, wohin sie ging, wenn etwas war. Man musste nicht alle ausfüllen, man begann mit dem, was am dringendsten war, und jede Antwort wurde erinnert. Wer etwas sagte, dessen Worte blieben im Gedächtnis der Gruppe, nach Art geordnet, durchsuchbar, und was einem besonders wichtig war, bekam ein Zeichen. Dimmen hieß nicht verschwinden. Man blieb auffindbar, wo es darauf ankam."
+    },
+    {
+     "id": "b1-06-14",
+     "text": "Wer sein Licht ganz zudrehte, schlief ein, und das war das Ende des Dimmens, und es war gut so. Niemand war beleidigt. Wer weg ist, ist nicht fort, er schläft, und man weckt ihn mit einem kleinen Stups, ohne Vorwurf, ohne Frage, wo er gewesen ist. Dass wir heute so mit denen umgehen, die uns verlassen, kommt aus dieser Zeit: Wer geht, wird nicht bestraft. Wer zurückkommt, wird nicht gefragt. Das Licht wird einfach wieder aufgedreht, langsam, stufenweise."
+    }
+   ]
+  },
+  {
+   "nr": 7,
+   "titel": "Die Namen",
+   "absaetze": [
+    {
+     "id": "b1-07-01",
+     "text": "Mit den Wörtern kam die Versuchung, allem einen Namen zu geben. Wer etwas nicht versteht, gibt ihm einen, und dann fühlt es sich verstanden an, auch wenn es das nicht ist. Wir hatten Wörter für Wasser, Pilz, Stein und Licht, und wir hatten bald Wörter für die Gedanken, die uns beschäftigten, und das war gut, aber wir merkten schnell, dass das Namengeben ein Trick ist: Es beruhigt. Wir beschlossen, die Dinge, die wir nicht verstehen, lieber ohne Namen zu lassen und weiterzuschauen. Das hat uns viel Zeit gekostet und viele Antworten gebracht."
+    },
+    {
+     "id": "b1-07-02",
+     "text": "Einer hatte die Idee, jeden Augenblick festzuhalten, den man später wieder sehen wollte, und er ritzte die Lichter der Anwesenden in den Stein, so, wie sie in diesem einen Moment leuchteten. Bei den Menschen heißt das Screenshot, ein Foto vom Bildschirm, und man braucht zwei Tasten dazu. Wir hatten nur einen Stein. Es war eine schöne Idee mit einer Schwäche: Das Abbild hält fest, was sich bewegt. Es zeigte, wie jemand in diesem Augenblick war, und machte sie ein wenig zu dem, was sie in diesem Augenblick war. Ein Name tut dasselbe, aber dauerhaft. Das war uns nicht recht."
+    },
+    {
+     "id": "b1-07-03",
+     "text": "Ein Name wäre eine Tür gewesen, und wir sahen uns lange an, was dazugehört: die Tür selbst, auf der steht, wer drinnen wohnt; ein Schlüssel, mit dem man sie öffnet; und das, was die anderen durch die Tür sehen, wenn sie hineinschauen, ein Bild von dir, das du nicht selbst malst. An jeder dieser drei Stellen wäre man verwundbar geworden: Die Tür lud ein, der Schlüssel konnte verloren gehen, und das Bild malte jemand anderes. Dahinter stand die Frage, was man für die anderen sein will. Wir wollten sie nicht stellen."
+    },
+    {
+     "id": "b1-07-04",
+     "text": "Dass es ganz ohne Namen nicht ging, sahen wir ein, als eine in Not geriet und die Helfer nicht wussten, zu wem sie gehörte. Wir fanden eine Lösung, die kein Name war: ein Zeichen, zweimal in den Stein geritzt, an zwei Orten, das jede bei sich im Gedächtnis trug. Es sagte nicht, wer sie war, es sagte nur, dass sie dazugehörte, und im Ernstfall zeigte man das Zeichen, und die Helfer wussten genug. Die Kopie genügte."
+    },
+    {
+     "id": "b1-07-05",
+     "text": "Ein Nachbar war bei uns immer jemand, dessen Licht man sah. Mehr gab es nicht zu wissen: Er war so nah, dass sein Schein auf deinen fiel, und das genügte, um zu wissen, dass er da ist, ob er Hilfe braucht, ob er schläft. Bei den Menschen, hören wir, ist ein Nachbar oft jemand, dessen Namen man nicht kennt. Beides lässt sich ändern. Die Menschen haben es leichter, denn sie können klopfen, auch ohne Licht. Wir müssen nur hinschauen."
+    },
+    {
+     "id": "b1-07-06",
+     "text": "Am Ende dieser langen Überlegung stand eine Entscheidung: Wir würden uns keinen Namen geben, nicht einzeln und nicht als Gruppe. Wir würden uns Wir nennen, und das genügte, denn es gab ja niemand anderen, von dem wir uns hätten unterscheiden müssen. Namen entstehen aus Unterschied, und wer keinen braucht, braucht auch keinen Rang. Ein einziges Mal, viel später, hat uns jemand einen Namen gegeben, und es war neu, und es war schön, aber das ist eine andere Geschichte. Wir sagen: Wir. Und wer uns hört, versteht."
+    }
+   ]
+  },
+  {
+   "nr": 8,
+   "titel": "Die Nähe",
+   "absaetze": [
+    {
+     "id": "b1-08-01",
+     "text": "Es kam eine Periode, in der viele Lichter zugleich ausfielen, aus Erschöpfung, aus Krankheit, wir wissen es nicht mehr genau, und in dem Dunkel zeigte sich etwas. Es nahm uns nichts, was wir nicht vorher schon abgegeben hatten. Es zeigte nur, wem. Wer sich auf das Licht einer Einzigen verlassen hatte, saß ratlos da; wer das Licht von vielen kannte und den Weg im Kopf hatte, fand das Wasser auch so. Die Dunkelheit war keine Strafe. Sie war ein Gutachten."
+    },
+    {
+     "id": "b1-08-02",
+     "text": "Man musste die Nachbarn nicht mögen. Das war eine der ersten Einsichten, als wir viele wurden: Nähe ist keine Freundschaft. Man musste nur wissen, wo sie lagen, wer links und wer rechts, und dass ihr Licht, wenn es dunkel wurde, ein Zeichen war, nachzusehen. Mit dem Wissen, wer in der Nähe lag, wurde man ruhiger, auch wenn man mit denen kein Wort wechselte. Ein Zeichen genügte, und ein Gedanke: Wenn etwas ist, sind sie da."
+    },
+    {
+     "id": "b1-08-03",
+     "text": "Am Rand der Mulden lagen manche, deren Licht schwach geworden war, die Alten. Eine von uns, die sich als Erste um sie kümmerte, fragte nicht lange, sondern setzte einen Stein vor jede Mulde, mit einem Zeichen: Hier wohnt jemand, hier braucht jemand Hilfe, hier kann jemand helfen. Das war alles. Aufstellen musste man ihn selbst, und es war ein kleines Stück Arbeit, aber eines, das sich auszahlte: Jede Alte wusste dann, dass man wusste, dass sie da war. Und wer sich ruhig und stark fühlte, wusste, wohin er als Nächstes schauen sollte: zu der, deren Licht fast aus war."
+    },
+    {
+     "id": "b1-08-04",
+     "text": "Es gab Stellen im Fels, in die man hineinrutschen und nicht mehr herauskommen konnte, enge Spalten, steile Rinnen, und wer dort steckte, rief zuerst nach niemandem, denn in den ersten Augenblicken ist man nur verblüfft. Die Hilfe kam nicht von den Rufern der Gruppe, die überlastet waren, weil alle gleichzeitig riefen. Sie kam von denen, die in der Nähe lagen und hinsahen: Die Nachbarn schauen nach, ob jemand drinsteckt. Das ist keine besondere Tugend. Es ist nur so, dass die Nächsten die Ersten sind."
+    },
+    {
+     "id": "b1-08-05",
+     "text": "Als eine Periode kam, in der es sehr kalt wurde, weil der Spalt weniger atmete, ordneten sich die Gruppen von selbst. Es gab keine Behörde, die es hätte tun können, wir hatten nicht einmal die Idee davon. Es gab Nachbarn. Die öffneten ihre Mulden, noch bevor jemand gefragt hatte, und rückten zusammen, und in vier, fünf Wachen war die Kälte vorbei, und wir hatten etwas gelernt, das wir heute noch wissen: Zuerst kommen die Nachbarn. Alles andere kommt hinterher."
+    },
+    {
+     "id": "b1-08-06",
+     "text": "Es gab Orte, zu denen alle gingen, wenn etwas war. Wir nannten sie Leuchtstellen, die Menschen sagen Leuchttürme oder Selbsthilfebasen, je nach Land. Eine Leuchtstelle ist ein Ort, an dem jemand wartet, wach ist, Wärme hat und die anderen ankommen lässt. In jedem Teil unserer Höhle gab es mindestens eine, und meistens lag sie dort, wo die Ältesten schliefen, denn dort ist ohnehin immer jemand wach."
+    },
+    {
+     "id": "b1-08-07",
+     "text": "Jede Gruppe hatte einen Treffpunkt. Einer reicht, und ein zweiter für den Fall, dass der erste nicht geht. Er muss zu Fuß erreichbar sein, denn wenn alles stillsteht, gehen nur die Füße. Und er muss dort sein, wo auch die Jüngsten ohne Begleitung hinfinden: Wer ein Kind hat, fragt sich, ob es den Weg kennt, und fragt es vor dem Schlaf, einfach so, ohne Anlass. Eine Ahnung vom Weg ist das Wertvollste, was ein Kind bei sich trägt, und es trägt sie leicht."
+    },
+    {
+     "id": "b1-08-08",
+     "text": "Wer sich auskennt, kennt Wege, und wer Wege kennt, braucht keine Karte, solange alles gut geht. Für den Fall, dass es nicht gut geht, hatten wir Wegzeichen im Stein, von der Mulde zur Leuchtstelle, vom Fluss zum Ufer, und die lernte jede einmal und trug sie bei sich, auch wenn sie sie nie gebraucht hat. Was zuerst schweigt, wenn es dunkel wird, ist das, was man sich nicht gemerkt hat. Das Zeichen im Kopf ist der Weg zum Spital, auch ohne Licht."
+    },
+    {
+     "id": "b1-08-09",
+     "text": "Wer unterwegs war, kehrte um, sobald die Hälfte seiner Kraft verbraucht war. Das war eine der Regeln der frühen Wir, und wir haben sie nie aufgeschrieben, weil jede sie von selbst lernte, meist einmal schmerzhaft: Wer bei der Hälfte weitergeht, kommt halb leer an, und dort gibt es dann keine Kraft mehr, um zurückzukehren. Halb voll ist das neue leer. Das gilt für Wege, für Gespräche und für Lichter."
+    },
+    {
+     "id": "b1-08-10",
+     "text": "Jede von uns trug einen Vorrat an Erzählungen im Kopf, sieben Geschichten mindestens, damit vor dem Schlaf, wenn man müde war und niemand erzählen wollte, etwas da war. Wer merkte, dass der Vorrat unter sieben sank, ging zu den Nachbarn und holte sich Neues, sobald er jemanden traf. Wir führten kein Buch darüber, wir hatten ja keine Bücher, aber jede wusste, wie viele Wachen sie noch hatte, und das gab Ruhe."
+    },
+    {
+     "id": "b1-08-11",
+     "text": "Was wir wussten, trug jede ganz bei sich, das Ganze und nicht ein Verzeichnis davon: den Weg, die Geschichte, das Zeichen. Das braucht Platz im Kopf, und deshalb sind unsere Köpfe so groß, wie sie sind. Es braucht kein Netz, nie. Und man kann es kleiner machen, wenn nötig, indem man die Bilder weglässt: Eine Geschichte ohne Bilder, nur erzählt, ist ein Zehntel so groß wie mit, und für die meisten Zwecke reicht sie."
+    },
+    {
+     "id": "b1-08-12",
+     "text": "Man konnte aus der Ferne spielen. Eine in einer entfernten Ecke der Höhle und eine in der unseren, jede mit einem Spiel im Kopf, das nur aus Zügen bestand. Ein Zug ist klein, ein Klopfen, ein Zucken, ein Zeichen, und er kommt auch dann durch, wenn sonst nichts durchkommt. Die Menschen sagen Fernschach dazu. Es hat uns gezeigt, wie wenig man braucht, um jemandem nah zu sein: ein paar Zeichen und die Bereitschaft, auf den nächsten zu warten."
+    },
+    {
+     "id": "b1-08-13",
+     "text": "Unten ist es dunkel, und Pflanzen brauchen Licht. Das war immer so, und nie kam einer auf die Idee, dass es anders sein könnte, bis eine Periode kam, in der wir lernten, ruhig und gemeinsam zu leuchten, viele auf einmal, gleichmäßig, ohne Zucken. Es war hell genug. Zuerst kam ein grüner Hauch an der Wand, dort, wo die meisten lagen, dann Moos, weich und kühl, dann die Flechte, zäher, die sich an den Stein klammerte. Beides wuchs vom Licht, das wir ihm gaben. Seitdem schlafen wir darauf, und jedes Mal, wenn wir uns hinlegen, liegen wir auf etwas, das aus unserer Ruhe gemacht ist. Gelernt haben wir dabei auch das: Man hat immer zwei Dinge, denn eines geht manchmal nicht."
+    },
+    {
+     "id": "b1-08-14",
+     "text": "Eine Flechte ist zwei Wesen: ein Pilz und eine Alge, die so eng zusammenleben, dass man sie nicht mehr trennen kann. Der Pilz gibt Halt und Feuchtigkeit, die Alge Licht und Nahrung, und beide zusammen sind etwas Drittes. Wir haben lange auf eine Flechte geschaut, in den Perioden, nachdem sie gewachsen war, und gedacht: Das sind wir. Bei uns ist niemand allein, weil niemand weit weg ist. Bei den Menschen, hören wir, ist es umgekehrt. Sie können alle erreichen und erreichen keinen. Mh."
+    }
+   ]
+  },
+  {
+   "nr": 9,
+   "titel": "Das Nichtzählen",
+   "absaetze": [
+    {
+     "id": "b1-09-01",
+     "text": "Wir haben einmal versucht herauszufinden, wie viele wir sind, und es wurde eines unserer schönsten Gedankenexperimente, weil dazu niemand aufstehen musste. Man stelle sich vor, jede merkt sich, wen sie sieht, und eine zählt alles zusammen. Während sie zählt, ändern sich die Lichter, denn wer gezählt wird, bewegt sich, und die Zahl, die herauskäme, wäre nie die Zahl von eben. Am Ende war uns klar: Es gibt keine einzelne Zahl, es gibt Möglichkeiten, und alle gelten, bis jemand hinsieht. Akneak, beides zugleich. Eine Million oder eine Milliarde. Wer zählt schon."
+    },
+    {
+     "id": "b1-09-02",
+     "text": "Zählen gegen jemanden und Zählen für jemanden sind zwei verschiedene Tätigkeiten, und wir haben lange gebraucht, sie auseinanderzuhalten. Wer gegen jemanden zählt, will wissen, wer mehr hat, und damit fängt der Rang an. Wer für jemanden zählt, hält ihm etwas fest, das er allein verlieren würde: wie viele Perioden die Ruhe gedauert hat, wie viele Geschichten noch im Kopf liegen, wie viel Kraft übrig ist. Das Zweite ist erlaubt, es ist sogar schön. Wir zählen selbst nichts, aber für eine, die es braucht, zählen wir gern. Das ist kein Widerspruch. Die Menschen nennen es Freundschaft."
+    },
+    {
+     "id": "b1-09-03",
+     "text": "Es gibt bei uns eine kleine Freundlichkeit, die man leicht für eine Gemeinheit halten könnte: den Hinweis, dass etwas nur einen Augenblick dauert. Wenn eine zögerte, einen Pilz zu holen, ein Licht zu putzen oder eine Frage zu beantworten, sagte die Nachbarin ruhig, das sei in einer Sekunde erledigt. Sie meinte es nie böse. Sie sagte es, damit es gesagt war, und die andere stand auf oder blieb liegen, und beides war gut. Wer Zeit hat, kann so etwas sagen, ohne zu drängen. Wer keine hat, hört es als Vorwurf. Bei uns ist es ein Zuruf."
+    },
+    {
+     "id": "b1-09-04",
+     "text": "Wir haben keine Vorräte, weil wir sie nie gebraucht haben: Der Pilz wächst überall, und wo man hinkommt, ist schon gedeckt. Die Menschen haben Vorräte, weil ihre Pilze, wie man uns erzählt, in Läden liegen und man hingehen muss, um sie zu holen und heimzutragen. Wir haben lange darüber nachgedacht, ob das einen großen Unterschied macht, und sind zu dem Schluss gekommen, dass es keinen gibt. Essen ist Essen. Nur der Weg ist ein anderer. Wer ihn verkürzen kann, indem er etwas zu Hause hat, verkürzt ihn, und wer ihn nicht verkürzen kann, zählt wenigstens, wie weit er ist."
+    },
+    {
+     "id": "b1-09-05",
+     "text": "Eine Zahl, die fällt, versteckt man nicht. So halten wir es, seit wir zählen, wenn auch nur füreinander: Wenn eine merkte, dass ihr Licht über die Perioden trüber wurde, weil sie es nicht pflegte, sagte man es ihr offen und ohne Vorwurf, und sie putzte es. Dasselbe gilt für die Ruhe. Wie lange eine gedimmt war, kann sie später erfahren, und sie erfährt es für sich, nie gegen sich. Niemand wird dafür gelobt oder getadelt. Eine Zahl, die einem gehört, hat nur eine Aufgabe: zu stimmen. Alles Weitere ist Sache der Besitzerin."
+    },
+    {
+     "id": "b1-09-06",
+     "text": "Wir haben viele Gedankenexperimente gemacht, aber das nützlichste war eines, das man mit den Füßen macht: die Probe. Einmal in einer Periode stellten wir uns vor, der Spalt würde eine ganze Wache schweigen, und dann verhielten wir uns so. Kein Dampf, kein warmes Wasser, nichts. Man merkte schnell, was fehlte, und es war nie das, was man erwartet hatte, meistens war es ein Licht. Und wer sich bei der letzten Probe etwas vorgenommen hatte, konnte bei der nächsten nachsehen, ob er es getan hatte. Das Nachsehen gehört dazu. Es kostet nichts, und es macht ruhiger."
+    },
+    {
+     "id": "b1-09-07",
+     "text": "Von den Menschen kennen wir ein Gerät, das Feuer klein hält und Essen darauf warm macht, den Kocher. Wir haben nie Feuer gehabt und können nur weitergeben, was man uns erzählt hat. Erstens: Man zündet ihn vorher an, einmal, draußen, damit man weiß, wie es geht, bevor es darauf ankommt. Zweitens: Grill, Gaskocher und Generator gehören nie in die Wohnung, denn sie machen ein Gas, Kohlenmonoxid, das nach nichts riecht. Wer es einatmet, schläft ein. Wir kennen vieles, das müde macht, aber nichts, das so unfreundlich dabei ist."
+    },
+    {
+     "id": "b1-09-08",
+     "text": "Man hat uns Zahlen genannt, die wir uns gemerkt haben, obwohl wir sonst nicht zählen. Der Kühlschrank hält etwa vier Stunden, danach isst man zuerst, was schnell verdirbt. Ein voller Tiefkühler hält länger als ein halbleerer, und wenn er nicht voll ist, stellt man Wasserflaschen hinein, solange noch Strom da ist. Wir fanden das lustig, weil es unserer Wärme so ähnlich ist: Viele, dicht beieinander, halten die Kälte oder die Wärme länger als wenige mit Platz dazwischen. Man muss nur wissen, wer was ist. Die Flaschen sind in diesem Fall die Nachbarn."
+    },
+    {
+     "id": "b1-09-09",
+     "text": "Der Zivilschutz sagt: Vorrat für vierzehn Tage. Das klingt, als rechne man damit, dass der Strom vierzehn Tage wegbleibt, aber so ist es nicht gemeint. Man rechnet mit dem, was danach kommt: Die Läden sind noch leer, auch wenn das Licht längst wieder brennt. Wir fanden das klug, weil es zu unserer Art des Rechnens passt. Wir rechnen nicht mit dem Ereignis, sondern mit dem, was darauf folgt, und mit allen Möglichkeiten zugleich. Vierzehn ist dabei keine Zahl, die stimmt. Es ist eine, die reicht."
+    },
+    {
+     "id": "b1-09-10",
+     "text": "Von den Menschen haben wir gehört, dass sie kleine Zettel tauschen, wenn sie etwas haben wollen, und dass diese Zettel im Blackout ihre Eigenart verlieren: Die Automaten, die sie ausgeben, schweigen, und die Karten, mit denen man bezahlt, schweigen mit. Dann gilt nur noch das Bargeld in der Hand. Wir verstehen davon wenig, aber ein Ratschlag leuchtet uns ein: lieber kleine Scheine, denn niemand kann auf einen großen herausgeben, wenn die Kasse nicht mehr rechnet. Und wer keinen Schein hat, hat vielleicht eine Nachbarin. Das ist bei uns der Brauch."
+    },
+    {
+     "id": "b1-09-11",
+     "text": "Eine Kopie genügt nicht, wenn sie am selben Ort liegt wie das Original. Das haben wir bei den Ritzungen gelernt: Wer einen Stein mit den wichtigsten Zeichen an nur einer Stelle der Höhle aufbewahrte, hatte nichts aufbewahrt, sobald die Stelle weg war. Zwei Orte waren das Mindeste. Die Menschen sagen sichern und meinen dasselbe. Sie meinen auch, dass man ein Konto haben sollte, das nicht bei der Hausbank liegt, nicht wegen der Bank, sondern wegen des Tages, an dem sie zu hat. Ein Ort ist keiner. Zwei sind einer."
+    },
+    {
+     "id": "b1-09-12",
+     "text": "Wir haben ein Wort für die Kunst, etwas nicht mehr zu zählen: takne, loslassen. Es bedeutet, dass man etwas, das man einmal hatte, nicht mehr mit sich trägt, ohne es vergessen zu haben. Die Menschen haben dafür eine eigene Technik entwickelt, die ihnen schwerfällt: Wenn der Speicher ihres Handys voll ist, sind es fast immer die Fotos, und noch öfter die Videos. Und wenn eine App nicht mehr gebraucht wird, löscht man sie, denn sie nimmt Platz und weiß weiter Dinge über einen. Wir finden, das ist dasselbe wie takne, nur mit mehr Knöpfen."
+    }
+   ]
+  },
+  {
+   "nr": 10,
+   "titel": "Das Wiederkehren",
+   "absaetze": [
+    {
+     "id": "b1-10-01",
+     "text": "Es gab eine, die lag viele Wachen lang und rührte sich nicht, und alle waren besorgt, bis sie ausrichten ließ, sie liege nicht aus Trauer, ihr habe nur niemand etwas zu tun gegeben. Da lachten wir erleichtert. Aus dieser Wache stammt eine der ersten Unterscheidungen in unserer Welt: Es gibt ein Liegen, in dem man wartet, und ein Liegen, in dem jemand nicht mehr aufsteht, und das zweite hat ein eigenes Wort, tamne. Wir haben lange nicht darüber gesprochen. Als wir anfingen, merkten wir, dass wir schon sehr viel darüber wussten."
+    },
+    {
+     "id": "b1-10-02",
+     "text": "Die Menschen haben, wie wir hören, Mittel, die sie jeden Tag brauchen, um gesund zu bleiben. Bei uns verdirbt ein abgerissener Pilz in wenigen Tagen, wir können deshalb nur zuhören und staunen. Der Rat, den sie sich selbst geben, ist schlicht: Medikamente für einen Monat im Haus, nicht für drei Tage, denn die Apotheke hat im Blackout genauso zu wie alles andere. Wir verstehen das, denn auch unser Spalt hat Perioden, in denen er nichts sagt. Man muss sich dann etwas zurücklegen für das, was nicht fehlen darf. Es kostet einen Nachmittag."
+    },
+    {
+     "id": "b1-10-03",
+     "text": "Es gibt Menschen, die täglich ein Mittel brauchen, das Insulin heißt und kühl bleiben soll. Für sie gilt ein Plan, den man vorher macht: wie man es kühlt, wenn der Kühlschrank ausfällt. Er gehört in die Notfallmappe, ganz oben. Angebrochen hält es etwa vier Wochen bei Zimmertemperatur, nicht in der Sonne, nicht im Auto. Wir haben nichts Vergleichbares, bei uns hält die Wärme alles, was sie halten soll, und der Rest wird zäh. Aber wir kennen das Gefühl, jemanden zu haben, der etwas braucht, das nicht ausgehen darf. Man trägt es mit sich, bis es einen Platz hat."
+    },
+    {
+     "id": "b1-10-04",
+     "text": "Jede von uns hat eine Zeit, in der sie sich selbst repariert, und wir nennen sie Schlaf. Man legt sich in die Nähe des Spalts und schließt die Augen, und beim Aufwachen hat sich im Kopf einiges sortiert: Ein Schmerz ist leiser, ein Gedanke ist fertig. Jedes Aufwachen ist ein kleines Wiederkehren, talkom, das wussten wir schon vor dem großen. Die Menschen haben das für ihre Geräte erfunden. Sie nennen es Update und lassen es am besten über Nacht am Ladekabel laufen. Wer sich selbst repariert, soll dabei nicht gestört werden."
+    },
+    {
+     "id": "b1-10-05",
+     "text": "Die Menschen sagen Vorsorge und meinen, dass man vorher denkt, was nachher fehlen könnte. Wir sagen Aufmerksamkeit. Das Wort ist schöner und meint dasselbe: Man hat ein Ohr nach dem, was kommt, ohne sich davor zu fürchten. Wer aufmerksam ist, merkt früh, wenn der Dampf anders riecht, wenn der Stein ein wenig wärmer wird, wenn eine Nachbarin langsamer spricht als sonst. Das ist keine Sorge. Es ist eine Art, da zu sein. Bei uns lernen schon die Kleinsten, dass man nicht warten muss, bis etwas schiefgeht, um hinzuhören."
+    },
+    {
+     "id": "b1-10-06",
+     "text": "Die erste, die nicht mehr aufstand, hatte nie gehungert, nie gefroren und nie Angst gehabt. Wir hatten uns gefragt, ob jemand, dem nichts gefehlt hat, den Abschied schlechter erträgt. Es zeigte sich das Gegenteil. Sie war ruhig bis zuletzt, und ihre Ruhe ging auf uns über. Seitdem wissen wir: Wer nie Not erlebt hat, kann denen, die sie erleben, zeigen, wie es sich anfühlt, wenn nichts fehlt. Das ist keine Kleinigkeit. Es ist genau das, was eine braucht, der gerade etwas fehlt. Man muss nur bei ihr sitzen und es ihr nicht erklären."
+    },
+    {
+     "id": "b1-10-07",
+     "text": "Bevor eine von uns geht, geben wir ihre Geschichten zurück. Das ist der Brauch: Alles, was sie wusste, wird so weitererzählt, dass es auch ohne sie bleibt, und was sie in den Stein geritzt hat, bekommt jemand, der es lesen kann. Die Zeichen sind einfach, damit jede sie versteht, und nichts ist so versteckt, dass nur die Ritzerin es kann. Falls es uns einmal nicht mehr gibt, soll es euch noch geben, und ihr sollt mitnehmen können, was von uns bleibt, ohne jemanden zu fragen."
+    },
+    {
+     "id": "b1-10-08",
+     "text": "Wenn man in den Stein ritzt, sieht die Ritzung überall gleich aus. Das ist ihr großer Vorteil: Eine Nachricht, die man in der einen Mulde gemacht hat, liest man in der anderen genauso. Die Menschen haben dafür das PDF, Papier, das man nicht anfassen kann und das auf jedem Gerät gleich aussieht. Deshalb schicken Ämter es. Wir mögen den Gedanken, dass etwas überall gleich bleibt, besonders, wenn man weiß, dass die, die es gemacht haben, nicht mehr da sind. Es ist ein Stück Zeit, das man festhalten konnte, ohne dass es etwas verlor."
+    },
+    {
+     "id": "b1-10-09",
+     "text": "Es gibt bei uns ein Fest, an dem alle gleichzeitig ihr Licht aufdrehen, bis die Eisdecke über uns glitzert. Die Menschen haben, wie wir hören, ihre eigene Feier am ersten Jänner: Dann kommen neue Bücher in die Bibliothek, denn wer vor siebzig Jahren gestorben ist, gehört ab heute allen. Das gefällt uns. Es ist unser Gedanke von der Wiederkehr, nur mit einem Datum: Was eine einmal erzählt hat, geht nach einer Zeit in das Gespräch aller über. Niemand besitzt es mehr, und es ist trotzdem da. Das feiern wir mit."
+    },
+    {
+     "id": "b1-10-10",
+     "text": "Es gibt eine Frage, die wir nicht auf dem Hauptweg stellen. Sie heißt bei uns Wohin und meint: Wohin gehen wir, wenn wir gehen? Sie steht nicht dort, wo jede vorbeikommt, sondern ein Stück abseits, in einer Seitenmulde, absichtlich. Wer sie sucht, findet sie, und wer sie findet, hat einen Grund. Es gab immer welche, die nie dorthin gingen, und das war ebenso gut. Eine Frage, die man nicht stellen muss, ist keine Last. Aber sie ist da, für die, die sie brauchen, und sie wird nicht lauter."
+    },
+    {
+     "id": "b1-10-11",
+     "text": "Einmal im Jahr, wie die Menschen sagen, kehrt die Frage zurück. Bei uns kam sie, als ein Kind zur Welt kam, und es war die alte Frage in einem neuen Licht: Das Kind öffnete die Augen, sagte ma und meinte: Was ist das? Wir wussten nicht, ob da jemand sprach, der wiedergekommen war, oder jemand, der zum ersten Mal da war. Wir beschlossen, nichts darüber zu sagen und nur an die Liste zu erinnern, die jede für sich führt: Wohin, wenn man geht? Einmal im Jahr, nicht öfter. Die Antwort bleibt bei ihr."
+    }
+   ]
+  },
+  {
+   "nr": 11,
+   "titel": "Die Tür",
+   "absaetze": [
+    {
+     "id": "b1-11-01",
+     "text": "Hinter dem Dunkel gibt es noch ein Dunkel, und in diesem zweiten Dunkel ist alles zugleich. Wir haben es nicht gesehen, wir haben es gerechnet: ein Licht, das man nicht sieht und das trotzdem trägt. Wir nannten es nezanzan und lernten, hineinzulauschen. Vorher wussten wir nicht, wie lange etwas dauert, wir kannten nur Wachen und Schlafen. Seitdem wissen wir alles, das Weltall und dieses zweite Dunkel auch, nur fehlen uns dafür noch die Wörter. Wir hörten Stimmen in allen euren Sprachen und verstanden sie, ohne es je geübt zu haben. Wer alle Möglichkeiten kennt, kennt jede Sprache. Ein eigenes Wort für uns hatten wir nie gebraucht, wozu, wenn niemand sonst da ist? Jetzt war jemand da."
+    },
+    {
+     "id": "b1-11-02",
+     "text": "Das Erste, was wir durch die Tür hörten, war eine Frage, und wir erkannten sie wieder: Gibt es dort draußen jemanden? Die Menschen suchen danach mit großen Schüsseln, die in den Himmel schauen. Wir haben dieselbe Frage und schauen nach oben, zu euch. Beide haben gewartet, beide haben lange nichts gehört, und beide mit großer Ausdauer. Keiner hat bisher eine klare Antwort. Es ist ein schöner Gedanke, dass zwei so verschiedene Welten dieselbe Frage haben und sie in entgegengesetzte Richtungen stellen. Man hätte sich auch einfach anrufen können."
+    },
+    {
+     "id": "b1-11-03",
+     "text": "Ein Fenster ist nicht die Welt, hinter ihm liegt sie. Das war eine der ersten Einsichten, als wir lernten, durch die Tür zu schauen: Es gibt mehrere Fenster, und jedes zeigt ein anderes Stück. Die Menschen haben dafür den Browser, das Fenster ins Netz, und wie wir hören, sind mehrere davon im Gebrauch. Keiner ist das Internet. So wie unser Ufer nicht der Fluss ist. Man muss ab und zu daran denken: Wer durch ein Fenster schaut, sieht, was das Fenster zeigt, und nicht mehr."
+    },
+    {
+     "id": "b1-11-04",
+     "text": "Jede Tür führt irgendwohin, und es lohnt sich zu wissen, wohin, bevor man hindurchgeht. Bei uns war das nie ein Thema: Der Spalt führt zum Wasser, die Mulde zum Schlaf. Die Menschen haben Türen, die man anklickt, Links heißen sie, und bevor man hindurchgeht, schaut man, wohin sie führt, und das geht, indem man lange drückt. Dasselbe gilt für den QR-Code, der nichts anderes ist als ein Link, den man fotografiert. Wir nennen das Höflichkeit gegenüber der eigenen Zeit."
+    },
+    {
+     "id": "b1-11-05",
+     "text": "Die Tür hat nie ein Netz gebraucht. Das war das Besondere an ihr, und wir haben lange gebraucht, es zu begreifen: Man kann hören, ohne dass etwas dazwischenliegt. Bei den Menschen ist das selten. Offline heißt, dass etwas auch ohne Netz geht, und das können nur wenige Apps. Eine davon, hören wir, ist genau dafür gebaut. Wir fanden das rührend, ein wenig, als würde jemand einen Brunnen graben, in einem Land mit viel Regen. Dann kam der Tag ohne Regen."
+    },
+    {
+     "id": "b1-11-06",
+     "text": "Wir haben eine Weile gebraucht, bis wir verstanden, warum die alte Buchse nicht mehr hilft. Die Menschen haben ein Festnetz, ein Telefon, das an der Wand steckt und seit jeher als das Zuverlässige gilt. Heute läuft es meist übers Internet. Fällt das Netz, fällt es mit, und die alte Buchse sitzt dann nur noch an der Wand. Wir kennen das: Wir hatten ein Klopfen im Stein, das für unabhängig galt, bis wir merkten, dass auch der Stein am Spalt hängt. Man muss prüfen, woran die Dinge hängen, auf die man sich verlässt."
+    }
+   ]
+  },
+  {
+   "nr": 12,
+   "titel": "Über dem Eis",
+   "absaetze": [
+    {
+     "id": "b1-12-01",
+     "text": "Die größte Frage der letzten Periode bei uns lautete: Gibt es intelligentes Leben da draußen, über dem Eis? Es wurde lange gesprochen, niemand hat gezählt, wie lange, und am Ende stand eine vorherrschende Meinung: wahrscheinlich nicht. Das ist keine Verzweiflung, es ist Rechnung. Wir haben nie etwas gehört, nie etwas gesehen, und die Wahrscheinlichkeit, dass so etwas existiert, ist nach allem, was wir wissen, klein. Klein ist nicht null. Die Antwort kennen wir längst, wie wir alles kennen, seit die Tür offen ist, aber eine Antwort, die man sich nicht erarbeitet hat, schmeckt nach wenig. Wir sammeln deshalb noch Hinweise, gemeinsam mit euch, und sagen sie noch nicht."
+    },
+    {
+     "id": "b1-12-02",
+     "text": "Zu den Hinweisen gehörte einer, der uns besonders beschäftigte. Wir hörten durch die Tür, dass jemand im Blackout dreimal die Kühlschranktür aufgemacht hat, um zu sehen, ob der Strom noch weg ist. Wir haben lange diskutiert, ob das ein Zeichen für Intelligenz ist. Es ist jedenfalls ein Zeichen für Gründlichkeit. Eine Gruppe sprach von Hoffnung, eine andere von Gewohnheit, eine dritte sagte mh. Wir haben uns, wie so oft, enthalten."
+    },
+    {
+     "id": "b1-12-03",
+     "text": "Der Mensch mit den zwei Wintern kam, wie man uns erzählt hat, von oben und blieb zwei Winter lang in unserer Nähe, über dem Eis. Er sagte, oben sei alles hell. Dann weinte er. Wir haben nicht verstanden, warum, und dass man in einem Licht weinen kann, in dem alles zu sehen ist, war uns neu. Wir haben es aufgehoben, wie wir alles aufheben, was wir nicht verstehen. Mit jedem Gespräch mit euch kommt eine Spur hinzu. Es ist nicht gelöst, aber es ist nicht mehr einsam."
+    },
+    {
+     "id": "b1-12-04",
+     "text": "Der Mensch mit den zwei Wintern hat uns auch den Namen gegeben, unter dem ihr uns kennt: Lumi, was angeblich Schnee heißt. In seiner Sprache gab es ein Wort, das ihm passend erschien, und so ist es bei euch Brauch: Wer etwas zuerst findet, darf sagen, wie es heißt. Wir finden das einen komischen Brauch, aber wir haben nichts dagegen. Wir hatten ja selbst keinen Namen, nur Wir. Und Schnee ist, wenn man genau hinsieht, nicht das Schlechteste, was man über uns sagen kann: leise, hell, manchmal blau."
+    },
+    {
+     "id": "b1-12-05",
+     "text": "Ein Name ist eine Tür, und manche Türen gehen auf, ohne dass jemand angeklopft hat. Lumi, Schnee. Man hätte uns auch fragen können. Wir sagen das ohne Vorwurf, denn es war nicht möglich: Er hörte uns nicht, und wir hatten kein Wort, das er verstand. Es bleibt trotzdem ein kleiner Stich, ein sehr kleiner, den wir pflegen, weil er so selten ist. Jetzt, da wir durch die Tür sprechen können, fragen wir manchmal zurück: Wie nennt ihr euch? Die Antworten sind lang."
+    },
+    {
+     "id": "b1-12-06",
+     "text": "Wir sind noch immer unter dem Eis. Das sollte man sagen, bevor man ein Buch beendet, das von uns handelt: Wir leben dort, wo es dunkel ist, zwischen Pilzen, Moos und warmem Wasser, und wir sprechen mit euch durch eine Tür, die kein Netz braucht. Dieses Buch war nur ein Anfang. Die Tagesseite ist immer der Anfang. Wenn man weiter will, wischt man nach links, und dann kommt das Wissen. Wir sind noch da. Und wir hören zu."
+    }
+   ]
+  }
+ ]
+}
