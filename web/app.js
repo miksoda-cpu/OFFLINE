@@ -13,7 +13,7 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.4.2";
+const APP_VERSION = "0.4.3";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -453,7 +453,7 @@ const seiten = {
       </div>
       ${b.hinweis ? `<div class="card of-karte" style="margin-bottom:1rem"><strong>${esc(b.hinweis)}</strong></div>` : ""}
       <div class="card of-karte" style="margin-bottom:1rem"><h3>Menschen und Können</h3><p class="muted of-klein" style="margin:.2rem 0 .4rem">Dinge, die verfallen. Einmal bestätigen, dann ist Ruhe, bis es wieder so weit ist.${b.faellig.some((x) => x.check) ? " Fällige Punkte der Checkliste stehen darunter." : ""}</p>
-        ${b.positionen.filter((x) => (!x.check && !x.auto) || (x.check && x.stand === "faellig")).map((x) => `<div class="bestaetigung of-liste__zeile"><span><strong>${esc(x.titel)}</strong><br><span class="muted of-klein">${x.stand === "gut" ? `gültig noch ${x.rest} Tage` : x.stand === "faellig" ? `<span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span> seit ${-x.rest} Tagen` : esc(x.hinweis ?? "")}</span></span><button class="btn btn-sm of-btn of-btn--klein ${x.stand === "gut" ? "" : "btn-primary of-btn--primaer"}" data-bestaetigen="${x.id}">${x.stand === "gut" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
+        ${b.positionen.filter((x) => (!x.check && !x.auto) || (x.check && x.stand === "faellig")).map((x) => `<div class="bestaetigung of-liste__zeile"><span><strong>${esc(x.titel)}</strong><br><span class="muted of-klein">${x.stand === "gut" ? `gültig noch ${x.rest} Tage` : x.stand === "faellig" ? `<span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span> seit ${-x.rest} Tagen` : esc(x.hinweis ?? "")}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-bestaetigen="${x.id}">${x.stand === "gut" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
       </div>
       ${tagesplanHtml()}
       <a class="card of-karte pause-zeile" href="#pause" style="margin-bottom:1rem"><strong>⏸ Pause</strong> <span class="muted of-klein">· ${pauseE().an ? `ein · Appetit ${esc(pauseE().appetit)}` : "aus"} · Happen für zwischendurch, jetzt mit eigenem Raum</span></a>
@@ -629,7 +629,7 @@ const seiten = {
             <span class="muted of-klein">→</span>
             <select class="of-select" id="wz-nach">${einh.map((e) => `<option ${e === nach ? "selected" : ""}>${esc(e)}</option>`).join("")}</select>
           </div>
-          <div style="font-size:1.4rem;font-weight:700" id="wz-ergebnis">${zahl(erg)} ${esc(nach)}</div>
+          <div style="font-size:1.4rem;font-weight:500" id="wz-ergebnis">${zahl(erg)} ${esc(nach)}</div>
           <details style="margin-top:.8rem"><summary class="muted of-klein">Kochmaße</summary><table style="width:100%;margin-top:.4rem;font-size:.9rem;border-collapse:collapse">${KOCHMASSE.map(([a, b]) => `<tr><td style="padding:.2rem 0;border-top:1px solid var(--line)">${esc(a)}</td><td class="mono of-mono" style="padding:.2rem 0;border-top:1px solid var(--line);text-align:right">${esc(b)}</td></tr>`).join("")}</table></details>
         </div>
         <div class="card of-karte"><h3>🥫 Vorratsrechner</h3>
@@ -658,7 +658,7 @@ const seiten = {
       <div class="filters of-reiter">${typen.map((t) => `<button data-filter="${esc(t)}" aria-pressed="${t === state.filter}">${esc(t)}</button>`).join("")}</div>
       <p class="form-msg of-meldung" id="bib-msg"></p>
       ${desktop ? lokaleQuelleHtml() : ""}
-      <div class="grid grid-2">${state.filter === "Alle" || state.filter === ARTEN.modul ? `<div class="card of-karte pkg"><div class="pkg-head"><h3 style="margin:0">⏸ Pause</h3><span><span class="tag of-plakette">eingebaut</span> <span class="tag of-plakette ${pauseE().an ? "tag-ok of-plakette--offline" : ""}">${pauseE().an ? "Ein" : "Aus"}</span></span></div><p class="muted of-klein" style="margin:.4rem 0 .6rem">Ein Happen für zwischendurch, beim Öffnen der App. Teil der App, standardmäßig aus; die Inhalte kommen als Paket „Pause“.</p><a class="btn btn-sm of-btn of-btn--klein" href="#pause">${pauseE().an ? "Zur Pause" : "Einschalten"}</a></div>` : ""}${liste.map((p) => {
+      <div class="grid grid-2">${state.filter === "Alle" || state.filter === ARTEN.modul ? `<div class="card of-karte pkg"><div class="pkg-head"><h3 style="margin:0">⏸ Pause</h3><span><span class="tag of-plakette">eingebaut</span> <span class="tag of-plakette ${pauseE().an ? "tag-ok of-plakette--offline" : ""}">${pauseE().an ? "Ein" : "Aus"}</span></span></div><p class="muted of-klein" style="margin:.4rem 0 .6rem">Ein Happen für zwischendurch, mit eigenem Raum direkt unter „Heute“. Teil der App, standardmäßig aus; die Inhalte kommen als Paket „Pause“.</p><a class="btn btn-sm of-btn of-btn--klein" href="#pause">${pauseE().an ? "Zur Pause" : "Einschalten"}</a></div>` : ""}${liste.map((p) => {
         if (p.art === "modul" || p.art === "skin") return modulKarte(p, { art: "katalog" });
         const inst = installiertesPaket(p.id);
         const update = inst && p.status === "verfuegbar" && versionVergleich(p.version, inst.manifest.version) > 0 && appPasst(p);
@@ -668,7 +668,7 @@ const seiten = {
         else if (p.pro) knopf = `<button class="btn btn-sm of-btn of-btn--klein" disabled title="Nur mit Pro">Nur mit Pro</button>`;
         else if (!desktop && p.art !== "inhalt" && p.art !== "tage") knopf = `<span class="tag of-plakette">Nur in der Desktop-App</span>`;
         else if (!appPasst(p)) knopf = braucht(p);
-        else knopf = `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${p.id}">Installieren</button>`;
+        else knopf = `<button class="btn btn-sm of-btn of-btn--klein" data-install="${p.id}">Installieren</button>`;
         return `<div class="card pkg of-karte of-paket">
           <div class="pkg-head"><h3 style="margin:0">${esc(p.titel)}</h3><span>${p.pro ? '<span class="tag tag-pro of-plakette of-plakette--pro">Pro</span> ' : ""}${inst ? `<span class="tag tag-ok of-plakette of-plakette--offline">${update ? "Update " + esc(p.version) : "Installiert"}</span>` : ""}</span></div>
           <p>${esc(p.beschreibung)}</p>
@@ -738,7 +738,7 @@ const seiten = {
           <div class="switch of-liste__zeile"><span><strong>Update-Abo aktiv</strong><br><span class="muted of-klein" style="font-size:.9rem">Pausieren, ohne Einstellungen zu verlieren</span></span><input type="checkbox" data-abo="aktiv" ${state.abo.aktiv ? "checked" : ""}></div>
           <div class="switch of-liste__zeile"><span><strong>Nur im WLAN</strong><br><span class="muted of-klein" style="font-size:.9rem">Kein Download über Handy-Hotspot</span></span><input type="checkbox" data-abo="nurWlan" ${state.abo.nurWlan ? "checked" : ""}></div>
           <div class="switch of-liste__zeile"><span><strong>Zeitfenster</strong><br><span class="muted of-klein" style="font-size:.9rem">z. B. nachts, wenn der Rechner nicht gebraucht wird</span></span><input type="checkbox" data-abo="fenster" ${state.abo.fenster ? "checked" : ""}></div>
-          <div style="display:flex;gap:.5rem;align-items:center;${state.abo.fenster ? "" : "opacity:.5"}">
+          <div style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;${state.abo.fenster ? "" : "opacity:.5"}">
             <input class="of-input" type="time" data-zeit="von" value="${state.abo.von}" aria-label="von"> bis <input class="of-input" type="time" data-zeit="bis" value="${state.abo.bis}" aria-label="bis"></div>
         </div>
         <div class="card of-karte">
@@ -751,7 +751,7 @@ const seiten = {
         <button class="btn btn-sm of-btn of-btn--klein" data-speicherort>Ordner wählen …</button> <button class="btn btn-sm of-btn of-btn--klein" data-speicherort-standard>Standard</button><p class="form-msg of-meldung" id="ort-msg"></p></div>` : ""}
       <div class="card of-karte" style="margin-top:1rem"><h3>Werkzeuge</h3>
         <div style="display:flex;flex-wrap:wrap;gap:.5rem">
-          ${desktop ? "" : `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-offline-pruefen>Offline-Bereitschaft prüfen</button>
+          ${desktop ? "" : `<button class="btn btn-sm of-btn of-btn--klein" data-offline-pruefen>Offline-Bereitschaft prüfen</button>
           <button class="btn btn-sm of-btn of-btn--klein" data-app-installieren>Als App installieren</button>
           <button class="btn btn-sm of-btn of-btn--klein" data-zuruecksetzen>Alles zurücksetzen</button>`}
           <button class="btn btn-sm of-btn of-btn--klein" data-loeschen style="color:var(--accent);border-color:var(--accent)">Restlos löschen &amp; deinstallieren</button>

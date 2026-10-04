@@ -1,5 +1,14 @@
 # Änderungen
 
+## 0.4.3 · 04.10.2026 · Zart für die ganze App
+
+- **Grundlage** (Auftrag 2026-10-04-stil-zart-app): die Werte aus dem Pause-Umbau (`--z-*`, `--eis*`) gelten in der ganzen App (`.of-app`), die Startseite bleibt. Hauptknopf `.btn-primary` als zartes hellrotes Feld ohne Schatten (12,5 px, 500), Nebenknopf `.btn` als Haarlinien-Feld, Tippfläche 44 px. Karten weiß ohne Rand mit kaum sichtbarem Schatten (Bühne Heute ebenso). Überschriften in leichter Serif (h1 300, h2 und h3 400), `strong` 600, nichts schwerer als 600 außer den Notrufnummern; Bereit-Zahl groß und leicht (300). Fortschrittsbalken 4 px, Segment-Wahl und Filter als Haarlinien mit hellrotem Gewählt, Schieber feiner (40 × 22), Hinweis und Lösung beim Rätsel mit Haarlinie statt Kasten, Lumi-Einladung auf Eisblau statt dunkel.
+- **Je Bildschirm ein Hauptknopf:** „Bestätigen“ in Übersicht, „Installieren“ je Paket und „Offline-Bereitschaft prüfen“ sind Nebenknöpfe.
+- **Notfall bleibt deutlich:** Nummern 800 und rot, Karten mit sichtbarer Kante, Überschriften in der Grundschrift 600.
+- **Kontrast 4,5 : 1** hell und dunkel, als Test (`web/stil.test.mjs`, in der CI): Textfarben auf ihren Flächen, Kachel-Untertitel (Deckkraft .62 → .74), Lumi-Sorte (`--lumi-ton` statt #d06a1f), Skin Flechte. Dazu prüft der Test die Schriftgewichte und die Knopfwerte.
+- **Skin Flechte** (lokal, nicht veröffentlicht): gleiche Grundwerte (Knöpfe zart in Moos, Karten ohne Rand, Titel 500 – Alegreya liegt nur in 500 und 700 bei), vier Farben etwas dunkler bzw. heller für 4,5 : 1 (`tinte-3` hell und dunkel, Mohn, Hahnenfuß, Ziegel).
+- **Große Schrift:** Kacheln und Raster (`minmax(0, 1fr)`, `min(260px, 100%)`) und das Zeitfenster brechen um statt überzulaufen.
+
 ## 0.4.2 · 04.10.2026 · Pause bekommt einen Raum, Startseite ehrlich
 
 - **Raum „Pause“** (`#pause`, Auftrag 2026-10-04-pause-umbau): in der Seitenleiste unter „Heute“, am Handy in der Tableiste statt „Bibliothek“ (die liegt unter „Mehr“; weiter fünf Plätze). Oben der Vorschlag des Dirigenten (bleibt stehen, bis sich etwas ändert), darunter alle gebauten Formen als Haarlinien-Liste mit Dauer bzw. Stand (`raumFormen`, `dauerText` in `web/pause.js`); wartende Formen fehlen, was gerade nicht geht, steht mit Grund da („ab 18 Uhr“). Unten „Deine Linie“ und die Einstellungen. Übersicht und Bibliothek verweisen in den Raum.

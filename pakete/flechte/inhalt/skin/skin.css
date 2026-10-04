@@ -1,5 +1,5 @@
 /* ==========================================================================
-   OFFLINE – Skin „Flechte“  ·  Version 1 · 24.09.2026
+   OFFLINE – Skin „Flechte“  ·  Version 2 · 04.10.2026 (zarte Grundwerte der App 0.4.3, Kontrast 4,5 : 1)
    Alles lokal: Schriften, Icons und Bilder liegen neben dieser Datei.
    Einbinden:  <link rel="stylesheet" href="skin/skin.css">
    Icons:      <svg class="of-icon"><use href="skin/icons.svg#i-download"/></svg>
@@ -28,7 +28,7 @@
   /* Schrift */
   --of-tinte:        #1D2820;
   --of-tinte-2:      #4E5E51;
-  --of-tinte-3:      #7A8779;
+  --of-tinte-3:      #5D675C;   /* seit 2026.10.04: 4,5 : 1 auf allen Flächen (vorher #7A8779) */
 
   /* Akzent Moos, dazu die Wiesenfarben aus den Bildern */
   --of-moos:         #3F6B34;
@@ -36,15 +36,15 @@
   --of-moos-zart:    #DCE8D2;
   --of-auf-moos:     #FFFFFF;
 
-  --of-mohn:         #B8392A;   /* Notfall, Löschen */
+  --of-mohn:         #B13728;   /* Notfall, Löschen; seit 2026.10.04 etwas dunkler für 4,5 : 1 */
   --of-auf-mohn:     #FFFFFF;
   --of-mohn-zart:    #F6DDD7;
   --of-kornblume:    #3858A0;   /* Info, Links */
   --of-kornblume-zart:#DDE4F4;
-  --of-hahnenfuss:   #9A6A07;   /* Warnung (Text) */
+  --of-hahnenfuss:   #8B5F06;   /* Warnung (Text); seit 2026.10.04 etwas dunkler für 4,5 : 1 */
   --of-hahnenfuss-flaeche:#E8B83E;
   --of-hahnenfuss-zart:#F7ECCB;
-  --of-ziegel:       #A5532F;   /* Pro, Premium */
+  --of-ziegel:       #9B4E2C;   /* Pro, Premium; seit 2026.10.04 etwas dunkler für 4,5 : 1 */
   --of-ziegel-zart:  #F2E0D6;
 
   /* Schrift-Familien */
@@ -87,7 +87,7 @@
   :root:not([data-theme="light"]) {
     --of-grund: #131A15; --of-flaeche: #1B241D; --of-flaeche-2: #243026;
     --of-linie: #2F3C31; --of-linie-stark: #445446;
-    --of-tinte: #E6EBDD; --of-tinte-2: #AAB6A7; --of-tinte-3: #7E8B7D;
+    --of-tinte: #E6EBDD; --of-tinte-2: #AAB6A7; --of-tinte-3: #8A978A;
     --of-moos: #8CBF6C; --of-moos-hover: #A2CF86; --of-moos-zart: #25371F; --of-auf-moos: #102010;
     --of-mohn: #EE7361; --of-auf-mohn: #2A0D08; --of-mohn-zart: #3B1F1A;
     --of-kornblume: #8EA9EA; --of-kornblume-zart: #1D2740;
@@ -101,7 +101,7 @@
 :root[data-theme="dark"] {
   --of-grund: #131A15; --of-flaeche: #1B241D; --of-flaeche-2: #243026;
   --of-linie: #2F3C31; --of-linie-stark: #445446;
-  --of-tinte: #E6EBDD; --of-tinte-2: #AAB6A7; --of-tinte-3: #7E8B7D;
+  --of-tinte: #E6EBDD; --of-tinte-2: #AAB6A7; --of-tinte-3: #8A978A;
   --of-moos: #8CBF6C; --of-moos-hover: #A2CF86; --of-moos-zart: #25371F; --of-auf-moos: #102010;
   --of-mohn: #EE7361; --of-auf-mohn: #2A0D08; --of-mohn-zart: #3B1F1A;
   --of-kornblume: #8EA9EA; --of-kornblume-zart: #1D2740;
@@ -326,6 +326,19 @@
 @media (prefers-reduced-motion: reduce) {
   .of-app *, .of-app *::before, .of-app *::after { transition: none !important; animation: none !important; }
 }
+
+/* ==========================================================================
+   Zart (App 0.4.3, Auftrag 2026-10-04-stil-zart-app): gleiche Grundwerte wie das Grundaussehen, die Farben bleiben.
+   Hauptknopf zartes Moosfeld mit Moosschrift, Nebenknöpfe Haarlinie, Karten ohne Rand, Titel leichter (Alegreya liegt nur in
+   500 und 700 bei, also 500), nichts schwerer als 600; Notfall-Knopf bleibt kräftig. Tippfläche 44 px.
+   ========================================================================== */
+.of-btn { --b-bg: transparent; --b-rand: color-mix(in srgb, var(--of-tinte) 14%, transparent); --b-hover: transparent; border-width: 1px; font-weight: 400; font-size: var(--of-t-s); padding: 0 var(--of-a-3); }
+.of-btn--primaer { --b-bg: var(--of-moos-zart); --b-fg: var(--of-moos); --b-rand: transparent; --b-hover: var(--of-moos-zart); font-weight: 500; }
+.of-btn--notfall { font-weight: 600; }
+.of-karte { border-color: transparent; }
+.of-h1, .of-h2, .of-h3 { font-weight: 500; }
+.of-plakette, .of-marke, .of-status { font-weight: 500; }
+.of-leiste a, .of-leiste button { font-weight: 500; }
 
 /* ==========================================================================
    App-Brücke (OFFLINE 0.2.0, 29.09.2026): legt das Grundaussehen der App auf die Flechte.

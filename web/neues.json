@@ -2,6 +2,17 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.4.3",
+      "datum": "2026-10-04",
+      "punkte": [
+        "Die ganze App ist leichter geworden: helle Karten ohne Rahmen, feine Linien, leichte Überschriften und eine große, leichte Bereit-Zahl.",
+        "Je Bildschirm gibt es einen zarten roten Hauptknopf. Alles andere sind feine Felder oder Links.",
+        "Der Notfall bleibt deutlich: Die Notrufnummern sind groß und kräftig wie bisher.",
+        "Alle Texte sind gut lesbar, hell wie dunkel. Das prüft die App jetzt bei jeder Version.",
+        "Bei großer Schrift laufen die Kacheln der Übersicht und das Zeitfenster der Updates nicht mehr über den Rand."
+      ]
+    },
+    {
       "version": "0.4.2",
       "datum": "2026-10-04",
       "punkte": [
