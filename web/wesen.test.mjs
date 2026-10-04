@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { erzaehltVonSich, FUNKTIONEN, ZIELE, tippAktion, tippKnoepfeHtml, bewerten, bewertungLaden, sorteGewicht, GEWICHT, lumiEinstellungenLaden, einladungFaellig, mimikZustand, passtBedingung, tippPool, ohneIch, TEXTE, DARSTELLUNG, nachtsSchlaf, schlafenszeit, abendMerken, Wesen } from "./wesen.js";
+import { SORTEN, erzaehltVonSich, FUNKTIONEN, ZIELE, tippAktion, tippKnoepfeHtml, bewerten, bewertungLaden, sorteGewicht, GEWICHT, lumiEinstellungenLaden, einladungFaellig, mimikZustand, passtBedingung, tippPool, ohneIch, TEXTE, DARSTELLUNG, nachtsSchlaf, schlafenszeit, abendMerken, Wesen } from "./wesen.js";
 import { MIMIK } from "./lumi/mimik.js";
 
 const TAG = 86400000;
@@ -308,6 +308,7 @@ test("Bewertung: Mehr davon hebt die Sorte, Nicht mehr nimmt den Satz heraus und
   s = bewerten(s, { id: "laune-001", sorte: "laune" }, "nicht");
   assert.equal(sorteGewicht(s, "laune"), 0.85); assert.deepEqual(s.aus, ["laune-001"]);
   for (let i = 0; i < 30; i++) s = bewerten(s, { id: "laune-001", sorte: "laune" }, "nicht");
+  for (const sorte of Object.keys(SORTEN)) { let x = bewertungLaden(null); for (let i = 0; i < 100; i++) x = bewerten(x, { id: `${sorte}-${i}`, sorte }, "nicht"); assert.ok(sorteGewicht(x, sorte) > 0, `${sorte} fällt nie auf null`); }
   assert.equal(sorteGewicht(s, "laune"), GEWICHT.tief); assert.deepEqual(s.aus, ["laune-001"], "einmal ausgeschlossen, nicht doppelt");
   assert.deepEqual(bewertungLaden({ gewicht: { wissen: 99, quatsch: 2, app: -1 }, aus: ["x", "x", 3] }), { gewicht: { wissen: 3 }, aus: ["x"] });
   // Ausschluss wirkt auf den Pool
@@ -334,11 +335,15 @@ test("Bewertung wirkt auf die Auswahl der Lumi und lässt sich zurücknehmen", (
   } finally { Math.random = echt; }
 });
 
-test("Heft: Merken legt den Satz mit Datum ab, Stern im Log ist dasselbe, einzeln löschbar, durchsuchbar; alte Sterne werden übernommen", () => {
+test("Heft = Log mit Filter „gemerkt“: Merken setzt den Stern, kein zweiter Speicher, einzeln löschbar, durchsuchbar, Gemerktes fällt nie aus dem Log", () => {
   const { w, sp } = neuesWesen({ "wesen-log": [{ id: "wissen-002", sorte: "wissen", text: "Alter Stern", zeit: "2026-09-30T08:00:00Z", stern: true }] });
   assert.deepEqual(w.heft.map((h) => h.id), ["wissen-002"], "Sterne aus dem Log stehen im Heft");
   assert.ok(w.merken("wissen-001")); assert.ok(w.imHeft("wissen-001"));
-  assert.ok(sp.m.get("lumi-heft").some((h) => h.id === "wissen-001" && h.datum));
+  assert.ok(sp.m.get("wesen-log").some((l) => l.id === "wissen-001" && l.stern && l.zeit), "Merken = Stern im Log");
+  assert.equal(sp.m.has("lumi-heft"), false, "kein zweiter Speicher");
+  assert.match(w.logHtml("gemerkt"), /2 Tipps/);
+  for (let i = 0; i < 600; i++) w.log.push({ id: `x-${i}`, sorte: "app", text: "x", zeit: new Date().toISOString(), stern: false });
+  w.speichern(); assert.ok(w.imHeft("wissen-002") && w.log.length <= 502, "Gemerktes bleibt, Rest auf 500 gekürzt");
   w.merken("wissen-001"); assert.equal(w.heft.filter((h) => h.id === "wissen-001").length, 1, "nicht doppelt");
   const wort = tipps.find((t) => t.id === "wissen-001").text.split(" ")[1];
   assert.match(w.heftHtml(wort), /von 2/);

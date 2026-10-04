@@ -32,6 +32,8 @@ const KORREKTUR = {
   "alltag-004": "Ein Nachbar, den du im Notfall fragen kannst, und ich bin ruhiger. Man muss ihn nicht mögen. Man muss wissen, wo er wohnt.",
   "alltag-039": "Über 80. Du bist ruhig, ich bin ruhig. Jetzt ist die Zeit für die Nachbarin, die vielleicht noch nicht so weit ist.",
   "app-025": "Unter Werkzeuge trägst du die Frequenz deines Radiosenders ein. Schreib sie trotzdem auf Papier. Papier braucht keinen Akku.",
+  // Mik, 04.10.2026 (Nachtrag 2026-10-04-01a), wegen des Lumi-Buchs
+  "weisheit-002": "Wir kennen unten keine Kriege. Nicht, weil wir besser sind. Wir haben aufgehört, haben zu wollen, was ein anderer hat.",
   // Punktzahlen aus Bereit Version 1
   "alltag-001": "Dein Wasser ist neun Monate alt. Tauschen dauert zehn Minuten und hebt deine Bereit-Zahl.",
   "alltag-003": "Ein Probeabend ohne Strom hebt deine Bereit-Zahl. Und du weißt danach, was fehlt. Meistens die Taschenlampe.",

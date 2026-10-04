@@ -64,7 +64,10 @@ export function tippAktion(t) {
   return null;
 }
 export const BEWERTUNG = { mehr: "Mehr davon", passt: "Passt", nicht: "Nicht mehr" };
-/** Gewicht je Sorte: Start 1, „Mehr davon“ ×1,3 (höchstens 3), „Nicht mehr“ ×0,85 (mindestens 0,4). Keine Zählung, keine Serien. */
+/**
+ * Gewicht je Sorte: Start 1, „Mehr davon“ ×1,3 (höchstens 3), „Nicht mehr“ ×0,85 (mindestens 0,4). Keine Sorte fällt durch
+ * Bewertungen weg – ganz abschalten geht nur in den Einstellungen („Welche Tipps kommen“). Keine Zählung, keine Serien.
+ */
 export const GEWICHT = { start: 1, mehr: 1.3, nicht: 0.85, hoch: 3, tief: 0.4 };
 export function bewertungLaden(g) {
   const gewicht = {};
@@ -224,6 +227,8 @@ const rnd = (n) => Math.floor(Math.random() * n);
 
 /**
  * Knöpfe unter einem Satz: der erste je Sorte (Platz für einen zweiten, später „Aus dem Lumi-Buch“), darunter die Bewertung.
+ * Das Feld buch wird in 0.3.4 nirgends ausgewertet; das Lumi-Buch gehört zur eingeschalteten, benannten Lumi, bei Textkarten
+ * (ort toast/karte ohne Figur) gibt es auch später keinen Buch-Knopf (Nachtrag 2026-10-04-01a).
  * ort: blase | toast | karte. o.gemerkt / o.vorgemerkt: schon im Heft / schon Vorhaben.
  */
 export function tippKnoepfeHtml(t, o = {}) {
@@ -249,8 +254,6 @@ export class Wesen {
     this.bewertung = bewertungLaden(this.sp.get("lumi-bewertung", null));
     this.gelernt = this.sp.get("wesen-gelernt", { intervall: 90, gelesen: 0, weitergewischt: 0 });
     this.log = this.sp.get("wesen-log", []);
-    // Heft „Was Lumi gesagt hat“: gemerkte Sätze; beim ersten Start die bisher mit Stern gemerkten übernehmen
-    this.heft = this.sp.get("lumi-heft", null) ?? this.log.filter((l) => l.stern).map((l) => ({ id: l.id, sorte: l.sorte, text: l.text, datum: l.zeit }));
     this.score = 0; this.verfallen = []; this.zustand = "sitzt"; this.ansichtName = "start";
     this.frame = 0; this.blinzelt = 0; this.pokes = []; this.zaehneBis = 0; this.ohrenZurueckBis = 0;
     this.sitzung = { tipps: 0, start: Date.now() }; this.letzteEingabe = Date.now(); this.timer = null; this.tickTimer = null;
@@ -267,7 +270,9 @@ export class Wesen {
     addEventListener("keydown", eingabe);
   }
 
-  speichern() { this.sp.set("lumi-start", this.start); this.sp.set("wesen", this.e); this.sp.set("wesen-gelernt", this.gelernt); this.sp.set("wesen-log", this.log.slice(-500)); this.sp.set("lumi-bewertung", this.bewertung); this.sp.set("lumi-heft", this.heft); }
+  speichern() { this.sp.set("lumi-start", this.start); this.sp.set("wesen", this.e); this.sp.set("wesen-gelernt", this.gelernt); this.sp.set("wesen-log", this.logKuerzen()); this.sp.set("lumi-bewertung", this.bewertung); }
+  /** Log höchstens 500 Einträge, Gemerktes (Stern) fällt nie heraus – es ist das Heft. */
+  logKuerzen() { const n = this.log.length; this.log = this.log.filter((l, i) => l.stern || i >= n - 500); return this.log; }
   aktiv() { return this.e.darstellung !== "aus"; } // es kommen Tipps (als Lumi oder als Textkarte)
   mitFigur() { return this.e.darstellung === "wesen"; }
   benannt() { return this.e.name.trim() !== ""; }
@@ -410,7 +415,7 @@ export class Wesen {
     if (!this.aktiv() || this.nachtruhe() || this.fragtNachNamen() || name === vorher || this.ansichtTippGezeigt.has(name) || name === "notfall" || this.sitzung.tipps >= 12) return;
     const t = this.waehleTipp(name); if (t) { this.ansichtTippGezeigt.add(name); this.zeigeTipp(t); }
   }
-  /** Stern im Log = ins Heft legen oder wieder herausnehmen. */
+  /** Stern im Log = Merken (Nachtrag 2026-10-04-01a): ins Heft legen oder wieder herausnehmen. */
   stern(id) { if (this.imHeft(id)) this.heftLoeschen(id); else this.merken(id); }
 
   // ---------- Satz des Tages, Bewertung, Heft ----------
@@ -429,15 +434,25 @@ export class Wesen {
     if (this.aktuellerTipp?.id === id) this.tippSchliessen();
     return t;
   }
-  imHeft(id) { return this.heft.some((h) => h.id === id); }
+  /**
+   * Das Heft „Was Lumi gesagt hat“ ist das Log mit dem Filter „gemerkt“ (Nachtrag 2026-10-04-01a): kein zweiter Speicher.
+   * Je Satz einmal, mit dem Datum, an dem sie ihn gesagt hat, neueste oben.
+   */
+  get heft() {
+    const je = new Map();
+    for (const l of this.log) if (l.stern) je.set(l.id, { id: l.id, sorte: l.sorte, text: l.text, datum: l.zeit });
+    return [...je.values()].sort((a, b) => String(b.datum).localeCompare(String(a.datum)));
+  }
+  imHeft(id) { return this.log.some((l) => l.id === id && l.stern); }
+  /** Merken setzt den Stern im Log; stand der Satz noch nicht darin (Textkarte des Tages), kommt er jetzt hinein. */
   merken(id) {
     if (this.imHeft(id)) return true;
-    const t = this.tipp(id) ?? this.log.find((l) => l.id === id); if (!t) return false;
-    this.heft.unshift({ id: t.id, sorte: t.sorte, text: t.text, datum: new Date().toISOString() });
-    for (const l of this.log) if (l.id === id) l.stern = true;
-    this.speichern(); return true;
+    const eintraege = this.log.filter((l) => l.id === id);
+    if (eintraege.length) eintraege.at(-1).stern = true;
+    else { const t = this.tipp(id); if (!t) return false; this.log.push({ id: t.id, sorte: t.sorte, text: t.text, zeit: new Date().toISOString(), stern: true }); }
+    this.speichern(); this.onLog?.(); return true;
   }
-  heftLoeschen(id) { this.heft = this.heft.filter((h) => h.id !== id); for (const l of this.log) if (l.id === id) l.stern = false; this.speichern(); }
+  heftLoeschen(id) { for (const l of this.log) if (l.id === id) l.stern = false; this.speichern(); this.onLog?.(); }
   zurueckholen(id) { this.bewertung.aus = this.bewertung.aus.filter((x) => x !== id); this.speichern(); }
   lernenZuruecksetzen() { this.bewertung = bewertungLaden(null); this.speichern(); }
   /** Knöpfe einer offenen Sprechblase oder Meldung neu zeichnen (nach „Merken“ / „Mach ich“). */
@@ -642,13 +657,13 @@ export class Wesen {
     const q = suche.trim().toLowerCase();
     const liste = this.heft.filter((h) => !q || h.text.toLowerCase().includes(q));
     return `${this.heft.length ? `<p class="muted of-klein" style="margin:0 0 .6rem">${liste.length} von ${this.heft.length}</p>` : ""}
-      ${liste.length ? `<ul class="lumi-heft">${liste.map((h) => `<li><p style="margin:0 0 .3rem">${esc(h.text)}</p><span class="muted of-klein">${esc(SORTEN[h.sorte] ?? h.sorte)} · ${new Date(h.datum).toLocaleDateString("de-AT", { day: "numeric", month: "long", year: "numeric" })}</span> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-heft-weg="${esc(h.id)}" aria-label="Aus dem Heft löschen">Löschen</button></li>`).join("")}</ul>`
+      ${liste.length ? `<ul class="lumi-heft">${liste.map((h) => `<li><p style="margin:0 0 .3rem">${esc(h.text)}</p><span class="muted of-klein">${esc(SORTEN[h.sorte] ?? h.sorte)} · ${new Date(h.datum).toLocaleDateString("de-AT", { day: "numeric", month: "long", year: "numeric" })}</span> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-heft-weg="${esc(h.id)}" aria-label="Aus dem Heft nehmen (Stern entfernen)">Aus dem Heft</button></li>`).join("")}</ul>`
         : this.heft.length ? `<p class="muted">Nichts gefunden.</p>` : `<p class="muted">Noch leer. Unter einem Satz von ${esc(this.anzeigename())} legt „Merken“ ihn hierher.</p>`}`;
   }
   logHtml(filter = "", suche = "") {
     const q = suche.trim().toLowerCase();
-    const liste = [...this.log].reverse().filter((l) => (!filter || l.sorte === filter) && (!q || l.text.toLowerCase().includes(q)));
-    return `<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem"><select class="of-select" id="wesen-log-filter"><option value="">Alle Sorten</option>${Object.entries(SORTEN).map(([k, l]) => `<option value="${k}" ${filter === k ? "selected" : ""}>${l}</option>`).join("")}</select><input class="of-input" type="text" id="wesen-log-suche" placeholder="Suchen …" value="${esc(suche)}" autocomplete="off"><span class="muted of-klein" style="align-self:center">${liste.length} Tipp${liste.length === 1 ? "" : "s"}</span></div>
+    const liste = [...this.log].reverse().filter((l) => (!filter || (filter === "gemerkt" ? l.stern : l.sorte === filter)) && (!q || l.text.toLowerCase().includes(q)));
+    return `<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem"><select class="of-select" id="wesen-log-filter"><option value="">Alle Sorten</option><option value="gemerkt" ${filter === "gemerkt" ? "selected" : ""}>Gemerkt (Heft)</option>${Object.entries(SORTEN).map(([k, l]) => `<option value="${k}" ${filter === k ? "selected" : ""}>${l}</option>`).join("")}</select><input class="of-input" type="text" id="wesen-log-suche" placeholder="Suchen …" value="${esc(suche)}" autocomplete="off"><span class="muted of-klein" style="align-self:center">${liste.length} Tipp${liste.length === 1 ? "" : "s"}</span></div>
       ${liste.length ? `<ul class="wesen-log">${liste.slice(0, 200).map((l) => `<li><button class="wesen-stern ${this.imHeft(l.id) ? "an" : ""}" data-wesen-stern="${esc(l.id)}" aria-label="${this.imHeft(l.id) ? "Aus dem Heft nehmen" : "Ins Heft legen"}">${this.imHeft(l.id) ? "★" : "☆"}</button><span class="wesen-sorte">${esc(SORTEN[l.sorte] ?? l.sorte)}</span> ${esc(l.text)} <span class="muted of-klein" style="font-size:.8rem">${new Date(l.zeit).toLocaleString("de-AT", { dateStyle: "short", timeStyle: "short" })}</span></li>`).join("")}</ul>` : `<p class="muted of-klein">Noch nichts gesagt.</p>`}`;
   }
   einstellen(k, v) {
