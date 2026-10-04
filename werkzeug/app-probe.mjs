@@ -196,7 +196,13 @@ async function module() {
   if (!wName) throw new Error(`Wichteln fehlt in ${qOrdner}`);
   const wPfad = `${qOrdner.replace(/[\\/]$/, "")}${qOrdner.includes("\\") ? "\\" : "/"}${wName}`;
   // Derselbe Kernbefehl wie „Ordner wählen …“ (einspielen_ordner); eine Ablehnung steht so mit Grund im Bericht.
-  const ein = await invoke("einspielen_ordner", { pfad: wPfad, downgrade: false });
+  // Die frisch aktualisierte App lädt im Hintergrund Tagespakete; solange sperrt der Kern weitere Vorgänge („Ein anderer
+  // Vorgang läuft“, Lauf 37198971146). Dann warten und erneut versuchen, höchstens zwei Minuten.
+  let ein;
+  for (const bis = Date.now() + 120_000; ; await warte(3000)) {
+    ein = await invoke("einspielen_ordner", { pfad: wPfad, downgrade: false });
+    if (!/anderer Vorgang/.test(ein.fehler ?? "") || Date.now() > bis) break;
+  }
   if (ein.fehler) throw new Error(`Wichteln einspielen abgelehnt: ${ein.fehler}`);
   await neuLaden(); await gehe("#bibliothek");
   await bis(() => finde('[data-modul-start="wichteln"]'), "Wichteln geladen", 60_000);
@@ -217,10 +223,16 @@ async function module() {
   await gehe("#bibliothek");
   await klick('[data-modul-aktiv="wichteln"]');
   pruefe("Wichteln: inaktiv", await bis(() => js("const b = document.querySelector('[data-modul-start=\"wichteln\"]'); return b && b.disabled"), "Öffnen gesperrt", 15_000).catch(() => false), "Öffnen gesperrt");
-  await klick('[data-modul-loeschen="wichteln"]');
-  await tippe("#modul-loeschwort", "löschen");
-  await klick('[data-modul-loeschen-jetzt="wichteln"]');
-  pruefe("Wichteln: löschen", await bis(() => finde('[data-modul-laden="wichteln"]'), "wieder ladbar", 30_000).catch(() => false), "Karte zeigt wieder „laden“");
+  // Löschen wie ein Mensch; ist der Kern gerade mit einem Hintergrund-Download beschäftigt, zeigt die App das an – dann erneut.
+  let geloescht = false, meldung = "";
+  for (let versuch = 1; versuch <= 8 && !geloescht; versuch++) {
+    await klick('[data-modul-loeschen="wichteln"]');
+    await tippe("#modul-loeschwort", "löschen");
+    await klick('[data-modul-loeschen-jetzt="wichteln"]');
+    geloescht = !!(await bis(() => finde('[data-modul-laden="wichteln"]'), "wieder ladbar", 15_000).catch(() => null));
+    if (!geloescht) { meldung = (await js("return document.getElementById('bib-msg')?.textContent ?? ''")) || meldung; await warte(5000); await gehe("#start"); await gehe("#bibliothek"); }
+  }
+  pruefe("Wichteln: löschen", geloescht, geloescht ? "Karte zeigt wieder „laden“" : `nicht gelöscht: ${meldung}`);
 }
 
 let code = 0;
