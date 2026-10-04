@@ -8,6 +8,12 @@
    "frage": "Das Jahr 2027 ist kein Schaltjahr. Wie viele Tage hat es, und wie viele ganze Wochen sind das?",
    "hinweis": "Rechne 7 mal 52.",
    "loesung": "365 Tage, das sind 52 Wochen und ein Tag.",
+   "antworten": [
+    "365 Tage, 52 Wochen",
+    "365 und 52",
+    "365, 52",
+    "365 Tage und 52 Wochen"
+   ],
    "erklaerung": "52 mal 7 ergibt 364. Ein Tag bleibt übrig."
   },
   {
@@ -17,6 +23,9 @@
    "frage": "Welches Wort passt vor alle drei: …zapfen, …blume, …bär?",
    "hinweis": "Es ist kalt und hart.",
    "loesung": "Eis",
+   "antworten": [
+    "Eis"
+   ],
    "erklaerung": "Eiszapfen, Eisblume, Eisbär."
   },
   {
@@ -26,6 +35,11 @@
    "frage": "Je mehr davon da ist, desto weniger siehst du. Was ist es?",
    "hinweis": "Am Abend wird es immer mehr.",
    "loesung": "Die Dunkelheit",
+   "antworten": [
+    "Dunkelheit",
+    "Finsternis",
+    "Nebel"
+   ],
    "erklaerung": "Je dunkler es ist, desto weniger sieht man. Nebel geht auch."
   },
   {
@@ -35,6 +49,9 @@
    "frage": "Ein Rodelhang ist 240 Meter lang. Hinunter brauchst du 40 Sekunden, zu Fuß hinauf 4 Minuten. Wie viele ganze Runden, hinunter und wieder hinauf, schaffst du in einer Stunde?",
    "hinweis": "Rechne alles in Sekunden.",
    "loesung": "12 Runden",
+   "antworten": [
+    "12"
+   ],
    "erklaerung": "Eine Runde dauert 40 + 240 = 280 Sekunden. 12 Runden sind 3360 Sekunden, 13 wären 3640, mehr als eine Stunde (3600)."
   },
   {
@@ -44,6 +61,10 @@
    "frage": "Stell die Buchstaben von REGEN um. Heraus kommt ein Wort, das man sagt, wenn man jemandem hilft: »Bitte, …!«",
    "hinweis": "Es hat zwei E.",
    "loesung": "GERNE",
+   "antworten": [
+    "gerne",
+    "gern"
+   ],
    "erklaerung": "R, E, G, E, N ergibt G, E, R, N, E."
   },
   {
@@ -53,6 +74,9 @@
    "frage": "Drei Sternsinger singen in jeder Straße zwei Lieder, alle drei gemeinsam. Sie besuchen acht Straßen. Wie viele Lieder singen sie zusammen?",
    "hinweis": "Sie singen gemeinsam, nicht jeder für sich.",
    "loesung": "16 Lieder",
+   "antworten": [
+    "16"
+   ],
    "erklaerung": "8 Straßen mal 2 Lieder. Dass es drei Sänger sind, ändert nichts."
   },
   {
@@ -62,6 +86,9 @@
    "frage": "In einer Klasse mit 30 Kindern fahren 18 Schi und 15 laufen Eis. 7 machen beides. Wie viele machen keines von beiden?",
    "hinweis": "Wer beides macht, ist in beiden Gruppen gezählt.",
    "loesung": "4 Kinder",
+   "antworten": [
+    "4"
+   ],
    "erklaerung": "18 + 15 = 33, aber 7 Kinder sind doppelt gezählt: 33 − 7 = 26 machen mindestens eines. 30 − 26 = 4."
   },
   {
@@ -71,6 +98,9 @@
    "frage": "Der 1. Jänner 2027 ist ein Freitag. Wie viele Freitage hat der Jänner 2027?",
    "hinweis": "Zähle in Siebenerschritten weiter.",
    "loesung": "5 Freitage",
+   "antworten": [
+    "5"
+   ],
    "erklaerung": "Der 1., 8., 15., 22. und 29. Jänner."
   },
   {
@@ -80,6 +110,9 @@
    "frage": "Welches Wort passt hinter alle drei: Hand…, Fuß…, Masken…?",
    "hinweis": "Im Fasching tanzt man darauf.",
    "loesung": "Ball",
+   "antworten": [
+    "Ball"
+   ],
    "erklaerung": "Handball, Fußball, Maskenball."
   },
   {
@@ -98,6 +131,10 @@
    "frage": "Am Morgen zeigt das Thermometer minus 7 Grad. Zu Mittag ist es um 10 Grad wärmer. Wie warm ist es zu Mittag?",
    "hinweis": "Zähle von minus 7 nach oben.",
    "loesung": "3 Grad",
+   "antworten": [
+    "3",
+    "plus 3"
+   ],
    "erklaerung": "Von −7 sind es 7 Grad bis null, dann noch 3 darüber."
   },
   {
@@ -107,6 +144,9 @@
    "frage": "Lies NEBEL rückwärts. Was kommt heraus?",
    "hinweis": "Fang beim L an.",
    "loesung": "LEBEN",
+   "antworten": [
+    "Leben"
+   ],
    "erklaerung": "N-E-B-E-L rückwärts ist L-E-B-E-N."
   },
   {
@@ -116,6 +156,12 @@
    "frage": "Ein Eiszapfen wächst jede Nacht um 3 Zentimeter und schmilzt jeden Tag um 1 Zentimeter. In der ersten Nacht beginnt er bei null. In welcher Nacht wird er zum ersten Mal 10 Zentimeter lang?",
    "hinweis": "Schreib nach jeder Nacht und jedem Tag auf, wie lang er ist.",
    "loesung": "In der fünften Nacht.",
+   "antworten": [
+    "5",
+    "fünften",
+    "fünften Nacht",
+    "5. Nacht"
+   ],
    "erklaerung": "Nach Nacht und Tag ist er jeweils 2 Zentimeter länger: nach vier Tagen 8 Zentimeter. In der fünften Nacht wächst er auf 11 Zentimeter."
   },
   {
@@ -125,6 +171,12 @@
    "frage": "Was kann man brechen, ohne es anzufassen?",
    "hinweis": "Man gibt es jemandem.",
    "loesung": "Ein Versprechen",
+   "antworten": [
+    "Versprechen",
+    "Schweigen",
+    "Wort",
+    "sein Wort"
+   ],
    "erklaerung": "Ein Versprechen bricht man, indem man es nicht hält."
   },
   {
@@ -134,6 +186,9 @@
    "frage": "Im Vorratsschrank stehen 9 Gläser Marmelade. Jede Woche esst ihr zwei. Nach wie vielen Wochen ist nur mehr eines übrig?",
    "hinweis": "Wie viele Gläser werden gegessen?",
    "loesung": "Nach 4 Wochen",
+   "antworten": [
+    "4"
+   ],
    "erklaerung": "8 Gläser werden gegessen, 2 pro Woche: 4 Wochen."
   },
   {
@@ -143,6 +198,10 @@
    "frage": "Welches Wort passt vor alle drei: …vorsatz, …konzert, …tag?",
    "hinweis": "In Wien spielen die Philharmoniker.",
    "loesung": "Neujahr",
+   "antworten": [
+    "Neujahr",
+    "Neujahrs"
+   ],
    "erklaerung": "Neujahrsvorsatz, Neujahrskonzert, Neujahrstag."
   },
   {
@@ -152,6 +211,11 @@
    "frage": "Du siehst eine Uhr mit Zeigern im Spiegel. Dort scheint es 3:40 zu sein. Wie spät ist es wirklich?",
    "hinweis": "Echte und gespiegelte Zeit ergeben zusammen 12 Uhr.",
    "loesung": "8:20",
+   "antworten": [
+    "8:20",
+    "8 Uhr 20",
+    "20 nach 8"
+   ],
    "erklaerung": "Im Spiegel sind links und rechts vertauscht. 12:00 minus 3:40 ergibt 8:20."
   },
   {
@@ -161,6 +225,9 @@
    "frage": "Im Korb liegen drei Paar Fingerhandschuhe und vier Paar Fäustlinge. Wie viele Daumen haben sie zusammen?",
    "hinweis": "Jeder Handschuh hat genau einen Daumen.",
    "loesung": "14 Daumen",
+   "antworten": [
+    "14"
+   ],
    "erklaerung": "7 Paar sind 14 Handschuhe, jeder mit einem Daumen."
   },
   {
@@ -170,6 +237,9 @@
    "frage": "Welches Wort passt hinter alle drei: Winter…, Mittags…, Tief…?",
    "hinweis": "Der Bär macht es bis zum Frühling.",
    "loesung": "Schlaf",
+   "antworten": [
+    "Schlaf"
+   ],
    "erklaerung": "Winterschlaf, Mittagsschlaf, Tiefschlaf."
   },
   {
@@ -179,6 +249,11 @@
    "frage": "Um 22 Uhr hat das Zimmer 21 Grad. Die Heizung ist aus, und es kühlt jede Stunde um 2 Grad ab. Um wie viel Uhr hat es 12 Grad?",
    "hinweis": "Wie viele Grad muss es abkühlen?",
    "loesung": "Um 2:30",
+   "antworten": [
+    "2:30",
+    "2 Uhr 30",
+    "halb 3"
+   ],
    "erklaerung": "9 Grad bei 2 Grad pro Stunde dauern 4 Stunden 30 Minuten."
   },
   {
@@ -188,6 +263,13 @@
    "frage": "Ein Mann geht ohne Hut und Schirm durch den Schneeregen. Kein einziges Haar auf seinem Kopf wird nass. Wie geht das?",
    "hinweis": "Schau auf seinen Kopf.",
    "loesung": "Er hat eine Glatze.",
+   "antworten": [
+    "Glatze",
+    "eine Glatze",
+    "kahl",
+    "keine Haare",
+    "Glatzkopf"
+   ],
    "erklaerung": "Wo kein Haar ist, wird auch keines nass."
   },
   {
@@ -197,6 +279,11 @@
    "frage": "Wie viele Monate im Jahr haben 28 Tage?",
    "hinweis": "Nicht nur der Februar.",
    "loesung": "Alle zwölf",
+   "antworten": [
+    "alle",
+    "12",
+    "alle 12"
+   ],
    "erklaerung": "Jeder Monat hat mindestens 28 Tage."
   },
   {
@@ -206,6 +293,9 @@
    "frage": "Ein Bubenname mit vier Buchstaben beginnt und endet mit O und liest sich vorwärts wie rückwärts gleich. Wie heißt er?",
    "hinweis": "In der Mitte steht zweimal derselbe Buchstabe.",
    "loesung": "OTTO",
+   "antworten": [
+    "Otto"
+   ],
    "erklaerung": "O-T-T-O, von beiden Seiten gleich."
   },
   {
@@ -215,6 +305,9 @@
    "frage": "Eine Turmuhr schlägt zu jeder vollen Stunde so oft, wie es Uhr ist: um 1 Uhr einmal, um 12 Uhr zwölfmal. Wie oft schlägt sie an einem ganzen Tag?",
    "hinweis": "Rechne erst einen halben Tag.",
    "loesung": "156-mal",
+   "antworten": [
+    "156"
+   ],
    "erklaerung": "1 + 2 + … + 12 = 78 in zwölf Stunden. Zweimal am Tag: 156."
   },
   {
@@ -224,6 +317,9 @@
    "frage": "Ein Buch hat 210 Seiten. Du liest jeden Tag 30. An welchem Tag liest du die letzte Seite?",
    "hinweis": "Teile die Seiten durch 30.",
    "loesung": "Am 7. Tag",
+   "antworten": [
+    "7"
+   ],
    "erklaerung": "210 geteilt durch 30 ergibt 7."
   },
   {
@@ -233,6 +329,9 @@
    "frage": "Stell die Buchstaben von EIS um. Heraus kommt ein Wort, mit dem man von einer Frau spricht.",
    "hinweis": "Drei Buchstaben, das S kommt nach vorn.",
    "loesung": "SIE",
+   "antworten": [
+    "Sie"
+   ],
    "erklaerung": "E, I, S ergibt S, I, E."
   },
   {
@@ -242,6 +341,10 @@
    "frage": "Im Stall sind Hühner und Hasen, zusammen 10 Köpfe und 28 Beine. Wie viele Hasen sind es?",
    "hinweis": "Stell dir vor, alle wären Hühner.",
    "loesung": "4 Hasen (und 6 Hühner)",
+   "antworten": [
+    "4",
+    "4 Hasen und 6 Hühner"
+   ],
    "erklaerung": "Wären alle 10 Hühner, wären es 20 Beine. Die 8 Beine mehr kommen von Hasen, je 2 zusätzlich: 4 Hasen."
   },
   {
@@ -251,6 +354,10 @@
    "frage": "Was gehört dir, aber andere benutzen es öfter als du?",
    "hinweis": "Man ruft dich damit.",
    "loesung": "Dein Name",
+   "antworten": [
+    "Name",
+    "Namen"
+   ],
    "erklaerung": "Die anderen sagen deinen Namen viel öfter als du selbst."
   },
   {
@@ -260,6 +367,9 @@
    "frage": "Ein Schal soll 1,8 Meter lang werden. Die Oma strickt jeden Abend 15 Zentimeter. Wie viele Abende braucht sie?",
    "hinweis": "Rechne in Zentimetern.",
    "loesung": "12 Abende",
+   "antworten": [
+    "12"
+   ],
    "erklaerung": "180 Zentimeter geteilt durch 15 ergibt 12."
   },
   {
@@ -269,6 +379,10 @@
    "frage": "Welches Wort passt vor alle drei: …anzug, …brille, …hütte?",
    "hinweis": "Man braucht dazu Schnee und einen Berg.",
    "loesung": "Schi",
+   "antworten": [
+    "Schi",
+    "Ski"
+   ],
    "erklaerung": "Schianzug, Schibrille, Schihütte."
   },
   {
@@ -278,6 +392,9 @@
    "frage": "Im Jänner 2027 löst du jeden Tag ein Rätsel und an jedem Sonntag noch eines dazu. Der 3. Jänner ist ein Sonntag. Wie viele Rätsel sind es im ganzen Monat?",
    "hinweis": "Zähle die Sonntage.",
    "loesung": "36 Rätsel",
+   "antworten": [
+    "36"
+   ],
    "erklaerung": "31 Tage, dazu 5 Sonntage (3., 10., 17., 24. und 31. Jänner): 31 + 5 = 36."
   }
  ]

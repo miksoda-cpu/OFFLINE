@@ -2,6 +2,15 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.3.3",
+      "datum": "2026-10-04",
+      "punkte": [
+        "Beim Tagesrätsel kannst du deine Antwort jetzt eintippen und auf „Prüfen“ tippen. Ob du „3“ oder „drei“ schreibst, groß oder klein, ist egal.",
+        "Stimmt sie, siehst du gleich die Erklärung. Stimmt sie noch nicht, kannst du es noch einmal versuchen oder dir einen Hinweis holen. Gezählt wird nichts.",
+        "Rätsel, bei denen man einen Weg erklären muss, bleiben wie bisher: nachdenken, dann die Lösung aufdecken."
+      ]
+    },
+    {
       "version": "0.3.2",
       "datum": "2026-10-01",
       "punkte": [

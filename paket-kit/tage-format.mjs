@@ -4,7 +4,7 @@
 // inhalt/tage.json:
 //   { "format": 1, "tage": [ { "datum": "2026-10-01" | "tag": 1, "karten": [ Karte, … ] }, … ] }
 // Karten (Texte sind reiner Text, die App zeigt sie entschärft an):
-//   raetsel  { art, id, frage, loesung, hinweis?, erklaerung?, stufe? }
+//   raetsel  { art, id, frage, loesung, antworten?, hinweis?, erklaerung?, stufe? }  antworten: gültige Kurzantworten fürs Eingabefeld
 //   kapitel  { art, id, werk, autor, teil, teile, absaetze: [Text, …], quelle: { url, vorlage } }   – absaetze mit „## “ = Überschrift
 //   text     { art, id, text, titel? }
 //   lektion  { art, id, titel, absaetze: [Text, …] }   – vorgesehen, noch ohne Inhalte
@@ -55,6 +55,7 @@ function karteFehler(k, wo) {
     if (!text(k.frage, 600)) F("frage fehlt oder zu lang (600)");
     if (!text(k.loesung, 600)) F("loesung fehlt oder zu lang (600)");
     for (const x of ["hinweis", "erklaerung"]) if (k[x] !== undefined && !text(k[x], 800)) F(`${x} leer oder zu lang (800)`);
+    if (k.antworten !== undefined && (!Array.isArray(k.antworten) || !k.antworten.length || k.antworten.length > 20 || !k.antworten.every((a) => text(a, 120)))) F("antworten: nicht leere Liste von Texten (höchstens 20, je höchstens 120 Zeichen)");
   } else if (k.art === "kapitel" || k.art === "lektion") {
     if (k.art === "kapitel") {
       if (!text(k.werk, 120) || !text(k.autor, 120)) F("werk und autor nötig");

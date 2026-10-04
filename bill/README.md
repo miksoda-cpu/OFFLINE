@@ -30,7 +30,8 @@ Anlass: Vercel liefert jeden Push auf den Hauptbranch `claude/optimistic-hypatia
 
 1. Das Tagespaket für einen Monat (`tage-JJJJ-MM`) liegt **spätestens am 1. des Vormonats** im Katalog, besser zwei Monate voraus. Beispiel: Februar 2027 spätestens am 1. Jänner 2027, besser am 1. Dezember 2026.
 2. Jede Rückmeldung zu einem Release nennt, **bis wann der Vorrat reicht** (letzter Tag im Katalog) und wie viele Tage das ab heute sind. `node werkzeug/vorrat-stand.mjs` liest das aus dem öffentlichen Katalog.
-3. Fällt der Abstand **unter 45 Tage**, meldet sich Code von selbst mit einem Vorschlag für das nächste Paket (Rätsel, vier Werke mit Ausgabe), auch ohne Auftrag.
+3. **Lesemenge ab Februar 2027 (Festlegung Bill, 04.10.2026):** höchstens rund 3.500 Wörter pro Tag. `pakete/tage/bauen.mjs` bricht ab, wenn ein Tagesteil über 3.700 Wörter hat; dann mehr Teile oder ein kürzeres Werk.
+4. Fällt der Abstand **unter 45 Tage**, meldet sich Code von selbst mit einem Vorschlag für das nächste Paket (Rätsel, vier Werke mit Ausgabe), auch ohne Auftrag.
 
 ## Regeln
 

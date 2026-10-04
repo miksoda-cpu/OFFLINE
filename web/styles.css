@@ -330,6 +330,13 @@ textarea { border-radius: var(--radius-sm) !important; }
 .tag-text { font-size: 1.05rem; line-height: 1.55; margin: 0 0 .9rem; }
 .tag-anriss { margin: 0 0 .9rem; line-height: 1.55; }
 .tag-hinweis, .tag-loesung { margin: 0 0 .9rem; padding: .7rem .9rem; border-radius: 12px; background: var(--bg); border: 1px solid var(--line); }
+.tag-antwort { margin: 0 0 .9rem; }
+.tag-antwort label { display: block; font-size: .9rem; margin: 0 0 .3rem; }
+.tag-antwort-zeile { display: flex; gap: .5rem; }
+.tag-antwort-zeile input { flex: 1; min-width: 0; min-height: 44px; font-size: 1rem; padding: .5rem .7rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: inherit; }
+.tag-antwort-zeile .btn { min-height: 44px; min-width: 44px; }
+.tag-noch-nicht { margin: .5rem 0 0; }
+.tag-richtig { border-color: var(--ok, var(--line)); }
 .tag-knoepfe { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
 .tag-karte .btn, .tag-schluss .btn, .tag-gelernt .btn, .kapitel-kopf .btn, .kapitel-text .btn { min-height: 44px; min-width: 44px; }
 .tag-karte--fertig { display: flex; justify-content: space-between; align-items: center; gap: .6rem; flex-wrap: wrap; }

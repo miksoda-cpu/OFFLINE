@@ -1,36 +1,389 @@
 {
  "hinweis": "Tagesrätsel Dezember 2026, eigene Texte der Redaktion (The Digioneer, 30.09.2026). Keine Wiederholung aus Oktober und November; ab 24. Dezember nur leichte. Lizenz wie das Paket.",
  "raetsel": [
-  { "id": "r-101", "stufe": "mittel", "art": "zahlen", "frage": "Am Adventkranz brennt am 1. Advent eine Kerze eine Stunde lang. An jedem weiteren Adventsonntag kommt eine Kerze dazu, und alle bisherigen brennen wieder je eine Stunde. Wie viele Stunden hat die erste Kerze am Abend des 4. Advents gebrannt, und wie viele alle zusammen?", "hinweis": "Die erste Kerze brennt an jedem der vier Sonntage.", "loesung": "Die erste 4 Stunden, alle zusammen 10 Stunden.", "erklaerung": "Die erste Kerze brennt viermal. Zusammen: 1 + 2 + 3 + 4 = 10 Kerzenstunden." },
-  { "id": "r-102", "stufe": "einfach", "art": "zahlen", "frage": "Welche Zahl kommt als Nächstes? 1, 2, 4, 7, 11, 16, …", "hinweis": "Schau auf die Abstände zwischen den Zahlen.", "loesung": "22", "erklaerung": "Die Abstände wachsen um eins: 1, 2, 3, 4, 5, dann 6. 16 + 6 = 22." },
-  { "id": "r-103", "stufe": "einfach", "art": "zahlen", "frage": "Die Oma bäckt 60 Vanillekipferl. Ein Drittel verschenkt sie, von den übrigen isst die Familie die Hälfte. Wie viele bleiben?", "hinweis": "Rechne zuerst aus, wie viele nach dem Verschenken übrig sind.", "loesung": "20", "erklaerung": "Ein Drittel von 60 sind 20, es bleiben 40. Die Hälfte davon, 20, wird gegessen, 20 bleiben." },
-  { "id": "r-104", "stufe": "mittel", "art": "logik", "frage": "Drei Geschenke liegen nebeneinander: ein rotes, ein grünes und ein goldenes. Das rote liegt links vom goldenen. Das grüne liegt rechts vom roten. Das goldene liegt nicht in der Mitte. Wie liegen sie?", "hinweis": "Überleg zuerst, wo das goldene liegen kann.", "loesung": "Rot, grün, gold (von links).", "erklaerung": "Gold ist nicht in der Mitte und nicht ganz links (rot liegt links davon), also rechts. Grün liegt rechts von rot, also rot links, grün in der Mitte." },
-  { "id": "r-105", "stufe": "einfach", "art": "wort", "frage": "Welches Wort passt vor alle drei: …flocke, …mann, …ball?", "hinweis": "Im Winter liegt er auf der Wiese.", "loesung": "Schnee", "erklaerung": "Schneeflocke, Schneemann, Schneeball." },
-  { "id": "r-106", "stufe": "einfach", "art": "wort", "frage": "Stell die Buchstaben von ERNST um. Heraus kommt etwas, das am Nachthimmel leuchtet.", "hinweis": "Einer davon steht oft auf der Spitze des Christbaums.", "loesung": "STERN", "erklaerung": "E-R-N-S-T wird zu S-T-E-R-N." },
-  { "id": "r-107", "stufe": "einfach", "art": "zahlen", "frage": "Ein Adventmarkt hat fünf Reihen mit je acht Ständen. In jeder Reihe verkaufen zwei Stände Punsch. Wie viele Stände verkaufen keinen Punsch?", "hinweis": "Rechne zuerst pro Reihe.", "loesung": "30", "erklaerung": "In jeder Reihe sind es 8 − 2 = 6 Stände, bei fünf Reihen 30." },
-  { "id": "r-108", "stufe": "einfach", "art": "zahlen", "frage": "Nimm an, die Sonne geht am 21. Dezember um 7:43 auf und um 16:02 unter. Wie lang ist der Tag?", "hinweis": "Rechne bis 16:00 und zähle die zwei Minuten dazu.", "loesung": "8 Stunden 19 Minuten", "erklaerung": "Von 7:43 bis 15:43 sind 8 Stunden, bis 16:02 noch 19 Minuten." },
-  { "id": "r-109", "stufe": "mittel", "art": "zahlen", "frage": "Der 24. Dezember 2026 ist ein Donnerstag. Welcher Wochentag ist der 1. Jänner 2027?", "hinweis": "Eine Woche nach dem 24. ist der 31. Dezember.", "loesung": "Freitag", "erklaerung": "Der 31. Dezember ist genau eine Woche später, also wieder Donnerstag. Der 1. Jänner ist der Tag danach." },
-  { "id": "r-110", "stufe": "mittel", "art": "zahlen", "frage": "Vier Geschwister teilen 22 Nüsse. Jedes jüngere bekommt eine Nuss weniger als das nächstältere. Wie viele bekommt das älteste?", "hinweis": "Nenne die Zahl des ältesten x. Dann bekommen die anderen x − 1, x − 2 und x − 3.", "loesung": "7", "erklaerung": "x + (x − 1) + (x − 2) + (x − 3) = 4x − 6 = 22, also x = 7. Die vier bekommen 7, 6, 5 und 4." },
-  { "id": "r-111", "stufe": "einfach", "art": "wort", "frage": "Die erste Silbe leuchtet am Nachthimmel, die zweite macht Musik mit der Stimme. Zusammen ziehen sie Anfang Jänner von Haus zu Haus.", "hinweis": "Sie tragen oft Kronen.", "loesung": "Sternsinger", "erklaerung": "Stern + Singer." },
-  { "id": "r-112", "stufe": "einfach", "art": "zahlen", "frage": "Der Ofen braucht pro Abend vier Holzscheite. Im Korb liegen 30. Für wie viele Abende reicht das, und wie viele Scheite bleiben übrig?", "hinweis": "Wie oft passt vier in dreißig?", "loesung": "7 Abende, 2 Scheite bleiben", "erklaerung": "7 · 4 = 28, von 30 bleiben 2." },
-  { "id": "r-113", "stufe": "mittel", "art": "logik", "frage": "Du hast eine Sanduhr für 5 Minuten und eine für 3 Minuten. Wie misst du genau 7 Minuten ab?", "hinweis": "Dreh die kleine Sanduhr einmal um, während die große noch läuft.", "loesung": "Beide starten. Nach 3 Minuten die kleine umdrehen. Nach 5 Minuten ist die große leer; in der kleinen sind 2 Minuten durchgelaufen. Jetzt die kleine noch einmal umdrehen: Sie läuft genau 2 Minuten, dann sind es 7.", "erklaerung": "3 + 2 + 2 = 7: Das Umdrehen nach 5 Minuten schickt genau die 2 Minuten zurück, die schon durchgelaufen waren." },
-  { "id": "r-114", "stufe": "einfach", "art": "wort", "frage": "Welches Wort passt hinter alle drei: Advent…, Lorbeer…, Blumen…?", "hinweis": "Man hängt ihn an die Tür oder legt ihn auf den Tisch.", "loesung": "Kranz", "erklaerung": "Adventkranz, Lorbeerkranz, Blumenkranz." },
-  { "id": "r-115", "stufe": "mittel", "art": "zahlen", "frage": "Der 1. Adventsonntag 2026 ist der 29. November. Wie viele Tage sind es von diesem Sonntag bis einschließlich Heiligabend?", "hinweis": "Der November hat 30 Tage.", "loesung": "26 Tage", "erklaerung": "29. und 30. November sind zwei Tage, dazu der 1. bis 24. Dezember: 2 + 24 = 26." },
-  { "id": "r-116", "stufe": "mittel", "art": "logik", "frage": "Ein Schlitten und ein Paar Handschuhe kosten zusammen 55 Euro. Der Schlitten kostet 50 Euro mehr als die Handschuhe. Was kosten die Handschuhe?", "hinweis": "5 Euro ist die schnelle Antwort, aber rechne nach.", "loesung": "2,50 Euro", "erklaerung": "Handschuhe h, Schlitten h + 50. Zusammen 2h + 50 = 55, also h = 2,50. Der Schlitten kostet 52,50." },
-  { "id": "r-117", "stufe": "einfach", "art": "wort", "frage": "Wer nicht mehr arbeitet, heißt so. Das Wort liest sich vorwärts wie rückwärts gleich.", "hinweis": "Sieben Buchstaben.", "loesung": "RENTNER", "erklaerung": "R-E-N-T-N-E-R bleibt rückwärts R-E-N-T-N-E-R." },
-  { "id": "r-118", "stufe": "mittel", "art": "zahlen", "frage": "Im Zug zu den Feiertagen sitzen im ersten Wagen doppelt so viele Leute wie im zweiten, im dritten zehn weniger als im ersten. Zusammen sind es 90. Wie viele sitzen im zweiten Wagen?", "hinweis": "Nenne die Zahl im zweiten Wagen x.", "loesung": "20", "erklaerung": "2x + x + (2x − 10) = 5x − 10 = 90, also x = 20. Im ersten sitzen 40, im dritten 30." },
-  { "id": "r-119", "stufe": "einfach", "art": "zahlen", "frage": "Eine Kerze brennt fünf Stunden. Du zündest vier Kerzen nacheinander an, jede erst, wenn die vorige ausgebrannt ist. Die erste brennt ab 16 Uhr. Wann geht die letzte aus?", "hinweis": "Vier Kerzen brennen zusammen 20 Stunden.", "loesung": "Am nächsten Tag um 12 Uhr", "erklaerung": "16 Uhr plus 20 Stunden: Mitternacht ist nach 8 Stunden, dann noch 12 Stunden." },
-  { "id": "r-120", "stufe": "mittel", "art": "logik", "frage": "Zwei Uhren werden um Mitternacht richtig gestellt. Die eine geht jede Stunde eine Minute vor, die andere jede Stunde eine Minute nach. Wie weit liegen sie um 6 Uhr früh auseinander?", "hinweis": "Jede weicht in eine andere Richtung ab.", "loesung": "12 Minuten", "erklaerung": "Nach sechs Stunden geht die eine 6 Minuten vor, die andere 6 Minuten nach." },
-  { "id": "r-121", "stufe": "einfach", "art": "zahlen", "frage": "Du hast drei Sorten Kekse, von jeder 24 Stück. In jedes Säckchen kommen sechs Kekse, von jeder Sorte zwei. Wie viele Säckchen werden voll?", "hinweis": "Wie oft reichen 24 Kekse, wenn du jedes Mal zwei nimmst?", "loesung": "12", "erklaerung": "Jede Sorte reicht für 24 : 2 = 12 Säckchen, alle drei Sorten gleich." },
-  { "id": "r-122", "stufe": "einfach", "art": "wort", "frage": "Vorwärts gelesen ist es ein Getränk aus Zuckerrohr, rückwärts ein Fluss, der durch Graz fließt.", "hinweis": "Drei Buchstaben.", "loesung": "RUM und MUR", "erklaerung": "R-U-M rückwärts ist M-U-R." },
-  { "id": "r-123", "stufe": "mittel", "art": "zahlen", "frage": "Um Mitternacht zu Silvester schlägt die Glocke zwölfmal. Zwischen zwei Schlägen liegen zwei Sekunden. Wie lange dauert es vom ersten bis zum letzten Schlag?", "hinweis": "Zähle die Pausen, nicht die Schläge.", "loesung": "22 Sekunden", "erklaerung": "Zwischen zwölf Schlägen liegen elf Pausen: 11 · 2 = 22 Sekunden." },
-  { "id": "r-124", "stufe": "einfach", "art": "wort", "frage": "Welcher Monat hat den kürzesten Namen?", "hinweis": "Er liegt mitten im Frühling.", "loesung": "Mai", "erklaerung": "Mai hat drei Buchstaben, Juni und Juli haben vier." },
-  { "id": "r-125", "stufe": "einfach", "art": "zahlen", "frage": "Unter dem Christbaum liegen für jedes der vier Kinder drei Päckchen und für jeden der zwei Erwachsenen zwei. Wie viele Päckchen sind es?", "hinweis": "Rechne Kinder und Erwachsene getrennt.", "loesung": "16", "erklaerung": "4 · 3 = 12 und 2 · 2 = 4, zusammen 16." },
-  { "id": "r-126", "stufe": "einfach", "art": "logik", "frage": "Was wird größer, je mehr man davon wegnimmt?", "hinweis": "Man kann es graben.", "loesung": "Ein Loch", "erklaerung": "Je mehr Erde man wegnimmt, desto größer wird das Loch." },
-  { "id": "r-127", "stufe": "einfach", "art": "wort", "frage": "Welches Wort passt vor alle drei: …baum, …markt, …lied?", "hinweis": "Es ist bald so weit.", "loesung": "Weihnachts-", "erklaerung": "Weihnachtsbaum, Weihnachtsmarkt, Weihnachtslied." },
-  { "id": "r-128", "stufe": "einfach", "art": "zahlen", "frage": "Wie viele Tage sind es vom 24. Dezember bis zum 6. Jänner, beide Tage mitgezählt?", "hinweis": "Zähle den Dezember und den Jänner getrennt.", "loesung": "14", "erklaerung": "24. bis 31. Dezember sind 8 Tage, 1. bis 6. Jänner 6 Tage." },
-  { "id": "r-129", "stufe": "einfach", "art": "logik", "frage": "Ein Hirte hat zwölf Schafe und vier Hunde. Wie viele Füße sind es zusammen, den Hirten mitgezählt?", "hinweis": "Vergiss den Hirten nicht.", "loesung": "66", "erklaerung": "16 Tiere mit je vier Füßen sind 64, dazu die zwei Füße des Hirten." },
-  { "id": "r-130", "stufe": "einfach", "art": "wort", "frage": "Welcher Buchstabe kommt im Wort SCHNEEFLOCKE am häufigsten vor?", "hinweis": "Zähle langsam.", "loesung": "E (dreimal)", "erklaerung": "S-C-H-N-E-E-F-L-O-C-K-E: E dreimal, C zweimal, alle anderen einmal." },
-  { "id": "r-131", "stufe": "einfach", "art": "zahlen", "frage": "Wie viele Sekunden hat eine Stunde?", "hinweis": "60 Minuten mal …", "loesung": "3600", "erklaerung": "60 · 60 = 3600. Genug, um in Ruhe ins neue Jahr zu kommen." }
+  {
+   "id": "r-101",
+   "stufe": "mittel",
+   "art": "zahlen",
+   "frage": "Am Adventkranz brennt am 1. Advent eine Kerze eine Stunde lang. An jedem weiteren Adventsonntag kommt eine Kerze dazu, und alle bisherigen brennen wieder je eine Stunde. Wie viele Stunden hat die erste Kerze am Abend des 4. Advents gebrannt, und wie viele alle zusammen?",
+   "hinweis": "Die erste Kerze brennt an jedem der vier Sonntage.",
+   "loesung": "Die erste 4 Stunden, alle zusammen 10 Stunden.",
+   "antworten": [
+    "4 und 10",
+    "4, 10",
+    "4 Stunden und 10 Stunden",
+    "4 Stunden, 10 Stunden"
+   ],
+   "erklaerung": "Die erste Kerze brennt viermal. Zusammen: 1 + 2 + 3 + 4 = 10 Kerzenstunden."
+  },
+  {
+   "id": "r-102",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Welche Zahl kommt als Nächstes? 1, 2, 4, 7, 11, 16, …",
+   "hinweis": "Schau auf die Abstände zwischen den Zahlen.",
+   "loesung": "22",
+   "antworten": [
+    "22"
+   ],
+   "erklaerung": "Die Abstände wachsen um eins: 1, 2, 3, 4, 5, dann 6. 16 + 6 = 22."
+  },
+  {
+   "id": "r-103",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Die Oma bäckt 60 Vanillekipferl. Ein Drittel verschenkt sie, von den übrigen isst die Familie die Hälfte. Wie viele bleiben?",
+   "hinweis": "Rechne zuerst aus, wie viele nach dem Verschenken übrig sind.",
+   "loesung": "20",
+   "antworten": [
+    "20"
+   ],
+   "erklaerung": "Ein Drittel von 60 sind 20, es bleiben 40. Die Hälfte davon, 20, wird gegessen, 20 bleiben."
+  },
+  {
+   "id": "r-104",
+   "stufe": "mittel",
+   "art": "logik",
+   "frage": "Drei Geschenke liegen nebeneinander: ein rotes, ein grünes und ein goldenes. Das rote liegt links vom goldenen. Das grüne liegt rechts vom roten. Das goldene liegt nicht in der Mitte. Wie liegen sie?",
+   "hinweis": "Überleg zuerst, wo das goldene liegen kann.",
+   "loesung": "Rot, grün, gold (von links).",
+   "erklaerung": "Gold ist nicht in der Mitte und nicht ganz links (rot liegt links davon), also rechts. Grün liegt rechts von rot, also rot links, grün in der Mitte."
+  },
+  {
+   "id": "r-105",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Welches Wort passt vor alle drei: …flocke, …mann, …ball?",
+   "hinweis": "Im Winter liegt er auf der Wiese.",
+   "loesung": "Schnee",
+   "antworten": [
+    "Schnee"
+   ],
+   "erklaerung": "Schneeflocke, Schneemann, Schneeball."
+  },
+  {
+   "id": "r-106",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Stell die Buchstaben von ERNST um. Heraus kommt etwas, das am Nachthimmel leuchtet.",
+   "hinweis": "Einer davon steht oft auf der Spitze des Christbaums.",
+   "loesung": "STERN",
+   "antworten": [
+    "Stern"
+   ],
+   "erklaerung": "E-R-N-S-T wird zu S-T-E-R-N."
+  },
+  {
+   "id": "r-107",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Ein Adventmarkt hat fünf Reihen mit je acht Ständen. In jeder Reihe verkaufen zwei Stände Punsch. Wie viele Stände verkaufen keinen Punsch?",
+   "hinweis": "Rechne zuerst pro Reihe.",
+   "loesung": "30",
+   "antworten": [
+    "30"
+   ],
+   "erklaerung": "In jeder Reihe sind es 8 − 2 = 6 Stände, bei fünf Reihen 30."
+  },
+  {
+   "id": "r-108",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Nimm an, die Sonne geht am 21. Dezember um 7:43 auf und um 16:02 unter. Wie lang ist der Tag?",
+   "hinweis": "Rechne bis 16:00 und zähle die zwei Minuten dazu.",
+   "loesung": "8 Stunden 19 Minuten",
+   "antworten": [
+    "8 Stunden 19 Minuten",
+    "8 Stunden und 19 Minuten",
+    "8:19",
+    "8 h 19 min"
+   ],
+   "erklaerung": "Von 7:43 bis 15:43 sind 8 Stunden, bis 16:02 noch 19 Minuten."
+  },
+  {
+   "id": "r-109",
+   "stufe": "mittel",
+   "art": "zahlen",
+   "frage": "Der 24. Dezember 2026 ist ein Donnerstag. Welcher Wochentag ist der 1. Jänner 2027?",
+   "hinweis": "Eine Woche nach dem 24. ist der 31. Dezember.",
+   "loesung": "Freitag",
+   "antworten": [
+    "Freitag"
+   ],
+   "erklaerung": "Der 31. Dezember ist genau eine Woche später, also wieder Donnerstag. Der 1. Jänner ist der Tag danach."
+  },
+  {
+   "id": "r-110",
+   "stufe": "mittel",
+   "art": "zahlen",
+   "frage": "Vier Geschwister teilen 22 Nüsse. Jedes jüngere bekommt eine Nuss weniger als das nächstältere. Wie viele bekommt das älteste?",
+   "hinweis": "Nenne die Zahl des ältesten x. Dann bekommen die anderen x − 1, x − 2 und x − 3.",
+   "loesung": "7",
+   "antworten": [
+    "7"
+   ],
+   "erklaerung": "x + (x − 1) + (x − 2) + (x − 3) = 4x − 6 = 22, also x = 7. Die vier bekommen 7, 6, 5 und 4."
+  },
+  {
+   "id": "r-111",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Die erste Silbe leuchtet am Nachthimmel, die zweite macht Musik mit der Stimme. Zusammen ziehen sie Anfang Jänner von Haus zu Haus.",
+   "hinweis": "Sie tragen oft Kronen.",
+   "loesung": "Sternsinger",
+   "antworten": [
+    "Sternsinger"
+   ],
+   "erklaerung": "Stern + Singer."
+  },
+  {
+   "id": "r-112",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Der Ofen braucht pro Abend vier Holzscheite. Im Korb liegen 30. Für wie viele Abende reicht das, und wie viele Scheite bleiben übrig?",
+   "hinweis": "Wie oft passt vier in dreißig?",
+   "loesung": "7 Abende, 2 Scheite bleiben",
+   "antworten": [
+    "7 Abende, 2 Scheite",
+    "7 und 2",
+    "7, 2",
+    "7 Abende und 2 Scheite"
+   ],
+   "erklaerung": "7 · 4 = 28, von 30 bleiben 2."
+  },
+  {
+   "id": "r-113",
+   "stufe": "mittel",
+   "art": "logik",
+   "frage": "Du hast eine Sanduhr für 5 Minuten und eine für 3 Minuten. Wie misst du genau 7 Minuten ab?",
+   "hinweis": "Dreh die kleine Sanduhr einmal um, während die große noch läuft.",
+   "loesung": "Beide starten. Nach 3 Minuten die kleine umdrehen. Nach 5 Minuten ist die große leer; in der kleinen sind 2 Minuten durchgelaufen. Jetzt die kleine noch einmal umdrehen: Sie läuft genau 2 Minuten, dann sind es 7.",
+   "erklaerung": "3 + 2 + 2 = 7: Das Umdrehen nach 5 Minuten schickt genau die 2 Minuten zurück, die schon durchgelaufen waren."
+  },
+  {
+   "id": "r-114",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Welches Wort passt hinter alle drei: Advent…, Lorbeer…, Blumen…?",
+   "hinweis": "Man hängt ihn an die Tür oder legt ihn auf den Tisch.",
+   "loesung": "Kranz",
+   "antworten": [
+    "Kranz"
+   ],
+   "erklaerung": "Adventkranz, Lorbeerkranz, Blumenkranz."
+  },
+  {
+   "id": "r-115",
+   "stufe": "mittel",
+   "art": "zahlen",
+   "frage": "Der 1. Adventsonntag 2026 ist der 29. November. Wie viele Tage sind es von diesem Sonntag bis einschließlich Heiligabend?",
+   "hinweis": "Der November hat 30 Tage.",
+   "loesung": "26 Tage",
+   "antworten": [
+    "26"
+   ],
+   "erklaerung": "29. und 30. November sind zwei Tage, dazu der 1. bis 24. Dezember: 2 + 24 = 26."
+  },
+  {
+   "id": "r-116",
+   "stufe": "mittel",
+   "art": "logik",
+   "frage": "Ein Schlitten und ein Paar Handschuhe kosten zusammen 55 Euro. Der Schlitten kostet 50 Euro mehr als die Handschuhe. Was kosten die Handschuhe?",
+   "hinweis": "5 Euro ist die schnelle Antwort, aber rechne nach.",
+   "loesung": "2,50 Euro",
+   "antworten": [
+    "2,50",
+    "2,5",
+    "2 Euro 50"
+   ],
+   "erklaerung": "Handschuhe h, Schlitten h + 50. Zusammen 2h + 50 = 55, also h = 2,50. Der Schlitten kostet 52,50."
+  },
+  {
+   "id": "r-117",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Wer nicht mehr arbeitet, heißt so. Das Wort liest sich vorwärts wie rückwärts gleich.",
+   "hinweis": "Sieben Buchstaben.",
+   "loesung": "RENTNER",
+   "antworten": [
+    "Rentner"
+   ],
+   "erklaerung": "R-E-N-T-N-E-R bleibt rückwärts R-E-N-T-N-E-R."
+  },
+  {
+   "id": "r-118",
+   "stufe": "mittel",
+   "art": "zahlen",
+   "frage": "Im Zug zu den Feiertagen sitzen im ersten Wagen doppelt so viele Leute wie im zweiten, im dritten zehn weniger als im ersten. Zusammen sind es 90. Wie viele sitzen im zweiten Wagen?",
+   "hinweis": "Nenne die Zahl im zweiten Wagen x.",
+   "loesung": "20",
+   "antworten": [
+    "20"
+   ],
+   "erklaerung": "2x + x + (2x − 10) = 5x − 10 = 90, also x = 20. Im ersten sitzen 40, im dritten 30."
+  },
+  {
+   "id": "r-119",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Eine Kerze brennt fünf Stunden. Du zündest vier Kerzen nacheinander an, jede erst, wenn die vorige ausgebrannt ist. Die erste brennt ab 16 Uhr. Wann geht die letzte aus?",
+   "hinweis": "Vier Kerzen brennen zusammen 20 Stunden.",
+   "loesung": "Am nächsten Tag um 12 Uhr",
+   "antworten": [
+    "12",
+    "12 Uhr",
+    "Mittag",
+    "12 Uhr mittag"
+   ],
+   "erklaerung": "16 Uhr plus 20 Stunden: Mitternacht ist nach 8 Stunden, dann noch 12 Stunden."
+  },
+  {
+   "id": "r-120",
+   "stufe": "mittel",
+   "art": "logik",
+   "frage": "Zwei Uhren werden um Mitternacht richtig gestellt. Die eine geht jede Stunde eine Minute vor, die andere jede Stunde eine Minute nach. Wie weit liegen sie um 6 Uhr früh auseinander?",
+   "hinweis": "Jede weicht in eine andere Richtung ab.",
+   "loesung": "12 Minuten",
+   "antworten": [
+    "12"
+   ],
+   "erklaerung": "Nach sechs Stunden geht die eine 6 Minuten vor, die andere 6 Minuten nach."
+  },
+  {
+   "id": "r-121",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Du hast drei Sorten Kekse, von jeder 24 Stück. In jedes Säckchen kommen sechs Kekse, von jeder Sorte zwei. Wie viele Säckchen werden voll?",
+   "hinweis": "Wie oft reichen 24 Kekse, wenn du jedes Mal zwei nimmst?",
+   "loesung": "12",
+   "antworten": [
+    "12"
+   ],
+   "erklaerung": "Jede Sorte reicht für 24 : 2 = 12 Säckchen, alle drei Sorten gleich."
+  },
+  {
+   "id": "r-122",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Vorwärts gelesen ist es ein Getränk aus Zuckerrohr, rückwärts ein Fluss, der durch Graz fließt.",
+   "hinweis": "Drei Buchstaben.",
+   "loesung": "RUM und MUR",
+   "antworten": [
+    "Rum und Mur",
+    "Rum, Mur"
+   ],
+   "erklaerung": "R-U-M rückwärts ist M-U-R."
+  },
+  {
+   "id": "r-123",
+   "stufe": "mittel",
+   "art": "zahlen",
+   "frage": "Um Mitternacht zu Silvester schlägt die Glocke zwölfmal. Zwischen zwei Schlägen liegen zwei Sekunden. Wie lange dauert es vom ersten bis zum letzten Schlag?",
+   "hinweis": "Zähle die Pausen, nicht die Schläge.",
+   "loesung": "22 Sekunden",
+   "antworten": [
+    "22"
+   ],
+   "erklaerung": "Zwischen zwölf Schlägen liegen elf Pausen: 11 · 2 = 22 Sekunden."
+  },
+  {
+   "id": "r-124",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Welcher Monat hat den kürzesten Namen?",
+   "hinweis": "Er liegt mitten im Frühling.",
+   "loesung": "Mai",
+   "antworten": [
+    "Mai"
+   ],
+   "erklaerung": "Mai hat drei Buchstaben, Juni und Juli haben vier."
+  },
+  {
+   "id": "r-125",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Unter dem Christbaum liegen für jedes der vier Kinder drei Päckchen und für jeden der zwei Erwachsenen zwei. Wie viele Päckchen sind es?",
+   "hinweis": "Rechne Kinder und Erwachsene getrennt.",
+   "loesung": "16",
+   "antworten": [
+    "16"
+   ],
+   "erklaerung": "4 · 3 = 12 und 2 · 2 = 4, zusammen 16."
+  },
+  {
+   "id": "r-126",
+   "stufe": "einfach",
+   "art": "logik",
+   "frage": "Was wird größer, je mehr man davon wegnimmt?",
+   "hinweis": "Man kann es graben.",
+   "loesung": "Ein Loch",
+   "antworten": [
+    "Loch",
+    "Grube"
+   ],
+   "erklaerung": "Je mehr Erde man wegnimmt, desto größer wird das Loch."
+  },
+  {
+   "id": "r-127",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Welches Wort passt vor alle drei: …baum, …markt, …lied?",
+   "hinweis": "Es ist bald so weit.",
+   "loesung": "Weihnachts-",
+   "antworten": [
+    "Weihnachts",
+    "Weihnacht",
+    "Weihnachten"
+   ],
+   "erklaerung": "Weihnachtsbaum, Weihnachtsmarkt, Weihnachtslied."
+  },
+  {
+   "id": "r-128",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Wie viele Tage sind es vom 24. Dezember bis zum 6. Jänner, beide Tage mitgezählt?",
+   "hinweis": "Zähle den Dezember und den Jänner getrennt.",
+   "loesung": "14",
+   "antworten": [
+    "14"
+   ],
+   "erklaerung": "24. bis 31. Dezember sind 8 Tage, 1. bis 6. Jänner 6 Tage."
+  },
+  {
+   "id": "r-129",
+   "stufe": "einfach",
+   "art": "logik",
+   "frage": "Ein Hirte hat zwölf Schafe und vier Hunde. Wie viele Füße sind es zusammen, den Hirten mitgezählt?",
+   "hinweis": "Vergiss den Hirten nicht.",
+   "loesung": "66",
+   "antworten": [
+    "66"
+   ],
+   "erklaerung": "16 Tiere mit je vier Füßen sind 64, dazu die zwei Füße des Hirten."
+  },
+  {
+   "id": "r-130",
+   "stufe": "einfach",
+   "art": "wort",
+   "frage": "Welcher Buchstabe kommt im Wort SCHNEEFLOCKE am häufigsten vor?",
+   "hinweis": "Zähle langsam.",
+   "loesung": "E (dreimal)",
+   "antworten": [
+    "E"
+   ],
+   "erklaerung": "S-C-H-N-E-E-F-L-O-C-K-E: E dreimal, C zweimal, alle anderen einmal."
+  },
+  {
+   "id": "r-131",
+   "stufe": "einfach",
+   "art": "zahlen",
+   "frage": "Wie viele Sekunden hat eine Stunde?",
+   "hinweis": "60 Minuten mal …",
+   "loesung": "3600",
+   "antworten": [
+    "3600"
+   ],
+   "erklaerung": "60 · 60 = 3600. Genug, um in Ruhe ins neue Jahr zu kommen."
+  }
  ]
 }

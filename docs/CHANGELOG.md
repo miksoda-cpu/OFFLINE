@@ -1,5 +1,12 @@
 # Änderungen
 
+## 0.3.3 · 04.10.2026 · Antwortfeld beim Tagesrätsel
+
+- **Antwortfeld:** Rätsel mit eindeutiger Kurzantwort haben ein Feld „Deine Antwort“ mit „Prüfen“ (Enter prüft). Verglichen wird lokal (`antwortRichtig` in `web/tag.js`): Groß/klein, Leer- und Satzzeichen, ä/ae, ö/oe, ü/ue, ß/ss, Ziffer und Zahlwort bis 9999, Füllwörter vorn; bei einer reinen Zahl darf ein Wort folgen („12 Runden“). Richtig: Bestätigung mit Erklärung, Karte erledigt, bleibt sichtbar auch über dem Tagesschluss. Falsch: „Noch nicht. Magst du einen Hinweis?“ Keine Zählung, keine Punkte.
+- **Pakete:** Feld `antworten` (optional, nicht leere Liste von Texten; Kit-Prüfer, `PAKETFORMAT.md`, `PAKET-KIT.md`). 111 der 123 Rätsel von Oktober bis Jänner haben es, 12 Erklärrätsel nicht; neue Ausgaben von `tage-2026-10` bis `tage-2027-01`. Ältere Apps übergehen das Feld.
+- **Baukasten:** ab Februar 2027 höchstens rund 3.500 Wörter pro Tagesteil (Abbruch über 3.700).
+- **Windows-Probe:** Wichteln kommt aus der lokalen Quelle (Ordner-Weg, ohne Netz).
+
 ## 0.3.2 · 01.10.2026 · Tipps nach Grundsatz, Jänner
 
 - **Tipps** (Paket `wir`, 175 Tipps): Grundsatz „ein Tipp behauptet nie etwas, das die App nicht weiß, und nennt keine Funktion, die es nicht gibt“. Neues Bedingungswort `funktion` mit der Liste `FUNKTIONEN` in `web/wesen.js`; 19 Tipps warten auf ihre Funktion (ältere Apps lassen sie weg). Zustandsbehauptungen umformuliert, alte Punktzahlen durch „hebt deine Bereit-Zahl“ ersetzt, `app-005`, `app-010`, `app-020` an den Stand angepasst, `laune-010` gestrichen. Test: Jeder Tipp, der eine Funktion nennt, findet sie in der App oder hat eine `funktion`-Bedingung.

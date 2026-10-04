@@ -119,3 +119,49 @@ export function lernen(verlauf, heute, plan, gelernt = {}) {
   }
   return null;
 }
+
+// ---------- Antwort auf das Tagesrätsel prüfen (lokal, ohne Netz; Auftrag 2026-10-01-raetsel-eingabe) ----------
+// Gleich gelten: Groß/klein, Leerzeichen, Satzzeichen, ä/ae, ö/oe, ü/ue, ß/ss, Ziffer und Zahlwort („3“ = „drei“),
+// führende Füllwörter („der“, „ein“, „um“, „am“ …). Steht in den Antworten eine reine Zahl, darf ein Wort folgen („12 Runden“).
+const EINER = { null: 0, ein: 1, eins: 1, eine: 1, zwei: 2, zwo: 2, drei: 3, vier: 4, fuenf: 5, sechs: 6, sieben: 7, acht: 8, neun: 9 };
+const BIS_19 = { ...EINER, zehn: 10, elf: 11, zwoelf: 12, dreizehn: 13, vierzehn: 14, fuenfzehn: 15, sechzehn: 16, siebzehn: 17, achtzehn: 18, neunzehn: 19 };
+const ZEHNER = { zwanzig: 20, dreissig: 30, vierzig: 40, fuenfzig: 50, sechzig: 60, siebzig: 70, achtzig: 80, neunzig: 90 };
+const FUELL = new Set(["der", "die", "das", "den", "dem", "des", "ein", "eine", "einen", "einem", "einer", "um", "am", "im", "in", "nach", "es", "sind", "ist", "er", "sie", "hat", "dein", "deine", "mein", "meine"]);
+
+function unter100(w) {
+  if (w in BIS_19) return BIS_19[w];
+  if (w in ZEHNER) return ZEHNER[w];
+  const m = w.match(/^(.+?)und(.+)$/);
+  return m && m[1] in EINER && EINER[m[1]] > 0 && m[2] in ZEHNER ? EINER[m[1]] + ZEHNER[m[2]] : null;
+}
+/** „dreitausendsechshundert“ → 3600; kein Zahlwort → null. */
+export function zahlwort(w) {
+  if (!w || /\d/.test(w)) return null;
+  const teil = (s, wort, faktor, rest) => {
+    const i = s.indexOf(wort); if (i < 0) return undefined;
+    const vor = s.slice(0, i), nach = s.slice(i + wort.length);
+    const v = vor === "" ? 1 : rest(vor), n = nach === "" ? 0 : rest(nach);
+    return v == null || n == null ? null : v * faktor + n;
+  };
+  const bis999 = (s) => { const h = teil(s, "hundert", 100, unter100); return h === undefined ? unter100(s) : h; };
+  const t = teil(w, "tausend", 1000, bis999);
+  return t === undefined ? bis999(w) : t;
+}
+
+/** Text in die Vergleichsform: klein, Umlaute ausgeschrieben, Zahlwörter als Ziffern, ohne Füllwörter vorn, ohne Zeichen. */
+export function antwortNormal(s) {
+  let w = String(s ?? "").toLowerCase().normalize("NFC").replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
+    .replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter(Boolean);
+  while (w.length > 1 && FUELL.has(w[0])) w = w.slice(1);
+  return w.map((x) => { const z = zahlwort(x); return z == null ? x : String(z); }).join("");
+}
+
+/** Stimmt die eingegebene Antwort? antworten: Liste gültiger Varianten aus dem Paket. */
+export function antwortRichtig(eingabe, antworten) {
+  const e = antwortNormal(eingabe);
+  if (!e || !Array.isArray(antworten)) return false;
+  return antworten.some((a) => {
+    const v = antwortNormal(a);
+    return v === e || (/^\d+$/.test(v) && e.startsWith(v) && /^[a-z]+$/.test(e.slice(v.length)));
+  });
+}

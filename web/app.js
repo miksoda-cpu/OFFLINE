@@ -2,14 +2,14 @@
 import { versionVergleich } from "./paket-kern.js";
 import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUebertragen, wertV1 as bereitWertV1, POSITIONEN as BEREIT_POSITIONEN } from "./bereit.js";
 import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch, tippPool } from "./wesen.js";
-import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen } from "./tag.js";
+import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.3.2";
+const APP_VERSION = "0.3.3";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -192,12 +192,16 @@ function tagLernenPruefen() {
 const ersterAbsatz = (k) => (k.absaetze ?? []).find((a) => !a.startsWith("## ")) ?? "";
 function tagKarteHtml(k, status) {
   const titel = k.art === "raetsel" ? "Tagesrätsel" : k.art === "kapitel" ? "Roman der Woche" : k.art === "lumi" ? `${esc(wesen.anzeigename())} sagt` : k.art === "text" ? `Textkarte des Tages${k.sorte ? ` · ${esc(SORTEN[k.sorte] ?? k.sorte)}` : ""}` : "Lektion des Tages";
+  const r = state.tag.offen[k.id] ?? {};
+  if (status === "erledigt" && k.art === "raetsel" && r.richtig) return `<article class="card of-karte tag-karte" data-tag-karte="${esc(k.id)}"><p class="tag-art">${titel} <span class="tag tag-ok of-plakette of-plakette--offline">erledigt</span></p><p class="tag-frage">${esc(k.frage)}</p><div class="tag-loesung tag-richtig" role="status"><p style="margin:0"><strong>Richtig!</strong> ${esc(k.loesung)}</p>${k.erklaerung ? `<p class="muted of-klein" style="margin:.4rem 0 0">${esc(k.erklaerung)}</p>` : ""}</div></article>`;
   if (status) return `<div class="card of-karte tag-karte tag-karte--fertig" data-tag-karte="${esc(k.id)}"><span><span class="tag-art">${titel}</span> ${status === "erledigt" ? `<span class="tag tag-ok of-plakette of-plakette--offline">erledigt</span>` : `<span class="muted of-klein">weggelegt</span>`}</span><button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="zurueck" data-tag-id="${esc(k.id)}">Zurückholen</button></div>`;
   const o = state.tag.offen[k.id] ?? {};
   const weg = `<button type="button" class="btn of-btn" data-tag="weg" data-tag-id="${esc(k.id)}">Weglegen</button>`;
   let inhaltHtml = "", knoepfe = "";
   if (k.art === "raetsel") {
-    inhaltHtml = `<p class="tag-frage">${esc(k.frage)}</p>${o.hinweis && k.hinweis ? `<p class="tag-hinweis"><strong>Hinweis:</strong> ${esc(k.hinweis)}</p>` : ""}${o.loesung ? `<div class="tag-loesung"><p style="margin:0"><strong>Lösung:</strong> ${esc(k.loesung)}</p>${k.erklaerung ? `<p class="muted of-klein" style="margin:.4rem 0 0">${esc(k.erklaerung)}</p>` : ""}</div>` : ""}`;
+    const feld = Array.isArray(k.antworten) && k.antworten.length && !o.loesung
+      ? `<form class="tag-antwort" data-tag-pruefen="${esc(k.id)}" autocomplete="off"><label for="antwort-${esc(k.id)}">Deine Antwort</label><div class="tag-antwort-zeile"><input id="antwort-${esc(k.id)}" class="of-feld" name="antwort" type="text" enterkeyhint="done" autocapitalize="off" spellcheck="false" maxlength="120" value="${esc(o.eingabe ?? "")}" ${o.falsch ? 'aria-describedby="antwort-rm-' + esc(k.id) + '"' : ""}><button type="submit" class="btn of-btn">Prüfen</button></div>${o.falsch ? `<p class="tag-noch-nicht" id="antwort-rm-${esc(k.id)}" role="status">Noch nicht. Magst du einen Hinweis?</p>` : ""}</form>` : "";
+    inhaltHtml = `<p class="tag-frage">${esc(k.frage)}</p>${feld}${o.hinweis && k.hinweis ? `<p class="tag-hinweis"><strong>Hinweis:</strong> ${esc(k.hinweis)}</p>` : ""}${o.loesung ? `<div class="tag-loesung"><p style="margin:0"><strong>Lösung:</strong> ${esc(k.loesung)}</p>${k.erklaerung ? `<p class="muted of-klein" style="margin:.4rem 0 0">${esc(k.erklaerung)}</p>` : ""}</div>` : ""}`;
     knoepfe = o.loesung ? `<button type="button" class="btn btn-primary of-btn of-btn--primaer" data-tag="erledigt" data-tag-id="${esc(k.id)}">Erledigt</button>`
       : `${k.hinweis && !o.hinweis ? `<button type="button" class="btn of-btn" data-tag="hinweis" data-tag-id="${esc(k.id)}">Hinweis</button>` : ""}<button type="button" class="btn btn-primary of-btn of-btn--primaer" data-tag="loesung" data-tag-id="${esc(k.id)}">Lösung zeigen</button>`;
   } else if (k.art === "kapitel") {
@@ -320,7 +324,7 @@ const seiten = {
         <p class="lumi-einladung-klein">${esc(LUMI_TEXTE.einladungHinweis)} ${esc(LUMI_TEXTE.ki)}</p></div></div>` : ""}
       ${g.hinweis ? `<div class="card of-karte tag-gelernt" role="status"><p style="margin:0 0 .6rem">${esc(g.hinweis.text)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="lern-zurueck">Rückgängig</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="lern-ok">In Ordnung</button></div>` : ""}
       <section class="tag-karten" aria-label="Heute">
-        ${schluss ? `<div class="card of-karte tag-schluss" role="status"><p class="tag-schluss-satz">${esc(SCHLUSS)}</p>${karten.length ? `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="nochmal">Heute noch einmal ansehen</button>` : ""}</div>`
+        ${schluss ? `${karten.filter((k) => k.art === "raetsel" && zustand[k.id] === "erledigt" && state.tag.offen[k.id]?.richtig).map((k) => tagKarteHtml(k, "erledigt")).join("")}<div class="card of-karte tag-schluss" role="status"><p class="tag-schluss-satz">${esc(SCHLUSS)}</p>${karten.length ? `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="nochmal">Heute noch einmal ansehen</button>` : ""}</div>`
           : karten.length ? karten.map((k) => tagKarteHtml(k, zustand[k.id])).join("")
           : `<div class="card of-karte tag-leer"><p style="margin:0">${pakete.length ? "Für heute liegt nichts in der Vorratskammer." : "Die Vorratskammer ist noch leer."} ${navigator.onLine ? "OFFLINE holt die nächsten Tage, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."} Alles andere funktioniert weiter.</p></div>`}
       </section>
@@ -1563,6 +1567,24 @@ function lumiAktion(a) {
   render();
   if (a === "namensfrage" || a === "einladung-ja" || a === "einschalten") document.getElementById("lumi-name-feld")?.focus();
 }
+main.addEventListener("input", (e) => {
+  const f = e.target.closest?.("[data-tag-pruefen]");
+  if (f) state.tag.offen[f.dataset.tagPruefen] = { ...(state.tag.offen[f.dataset.tagPruefen] ?? {}), eingabe: e.target.value };
+});
+main.addEventListener("submit", (e) => {
+  const f = e.target.closest("[data-tag-pruefen]");
+  if (!f) return;
+  e.preventDefault();
+  const id = f.dataset.tagPruefen, eingabe = f.elements.antwort?.value ?? "";
+  const k = heutigeKarten().find((x) => x.id === id);
+  if (!k || !eingabe.trim()) return f.elements.antwort?.focus();
+  const o = { ...(state.tag.offen[id] ?? {}), eingabe };
+  // Richtig, wenn eine der Varianten aus dem Paket passt oder die ganze Lösung eingegeben wurde. Keine Zählung der Versuche.
+  if (antwortRichtig(eingabe, [...k.antworten, k.loesung])) { state.tag.offen[id] = { ...o, richtig: true, falsch: false, loesung: true }; tagSetzen(k, "erledigt"); }
+  else state.tag.offen[id] = { ...o, falsch: true };
+  render();
+  if (!state.tag.offen[id].richtig) { const feld = document.getElementById(`antwort-${id}`); if (feld) { feld.focus(); feld.select(); } }
+});
 main.addEventListener("submit", (e) => {
   if (!e.target.matches("[data-lumi-name-form]")) return;
   e.preventDefault();

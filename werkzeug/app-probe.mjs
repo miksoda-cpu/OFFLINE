@@ -14,7 +14,7 @@
 //
 // Endet mit 0, wenn alles passt, sonst mit 1. Der Bericht (JSON) steht in --aus.
 
-import { writeFile, readFile } from "node:fs/promises";
+import { writeFile, readFile, readdir } from "node:fs/promises";
 import { spawn } from "node:child_process";
 
 const argv = process.argv.slice(2);
@@ -188,11 +188,17 @@ async function module() {
   pruefe("Sandbox: alle Angriffe blockiert", b.offen.length === 0, `${b.versuche} Versuche, ${b.offen.length} gelungen`);
   await klick("[data-modul-zu]");
 
-  // 2. Wichteln aus der lokalen Quelle (signiert mit dem Redaktionsschlüssel)
+  // 2. Wichteln aus der lokalen Quelle (signiert mit dem Redaktionsschlüssel), ohne Netz: Seit Wichteln im Katalog steht, zeigt
+  // die Bibliothek nur die Katalogkarte, und „laden“ holt aus dem Netz (Zeitüberschreitung im Lauf 36911173315). Deshalb spielt die
+  // Probe den Ordner ein wie „Ordner wählen …“ oder ein Datenträger (Knopf data-stick, gleicher Weg: Kern prüft Signatur,
+  // Redaktionsschlüssel und jede Datei).
+  const qOrdner = opt("quelle"), wName = (await readdir(qOrdner)).find((n) => n.startsWith("wichteln-"));
+  if (!wName) throw new Error(`Wichteln fehlt in ${qOrdner}`);
+  const wPfad = `${qOrdner.replace(/[\\/]$/, "")}${qOrdner.includes("\\") ? "\\" : "/"}${wName}`;
   await gehe("#bibliothek");
-  await klick('[data-modul-laden="wichteln"]');
+  await js("const b = document.createElement('button'); b.type = 'button'; b.dataset.stick = arguments[0]; b.id = 'probe-einspielen'; document.getElementById('main').appendChild(b); b.click(); b.remove();", wPfad);
   await bis(() => finde('[data-modul-start="wichteln"]'), "Wichteln geladen", 60_000);
-  pruefe("Wichteln: laden", true, "Signatur und Redaktionsschlüssel geprüft, eingespielt");
+  pruefe("Wichteln: laden", true, `aus der lokalen Quelle ${wName}, Signatur und Redaktionsschlüssel geprüft, eingespielt`);
   await klick('[data-modul-start="wichteln"]');
   const f = await bis(() => finde("#modul-platz iframe"), "Wichteln-Rahmen");
   await rahmen(f);

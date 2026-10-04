@@ -8,6 +8,9 @@
    "frage": "Welche Zahl kommt als Nächstes? 3, 7, 15, 31, …",
    "hinweis": "Schau, wie du von einer Zahl zur nächsten kommst: Es ist jedes Mal dieselbe Rechnung.",
    "loesung": "63",
+   "antworten": [
+    "63"
+   ],
    "erklaerung": "Jede Zahl wird verdoppelt und um eins erhöht: 31 · 2 + 1 = 63."
   },
   {
@@ -17,6 +20,9 @@
    "frage": "Ein Haushalt mit drei Personen will Wasser für 14 Tage lagern, zwei Liter pro Person und Tag. Wie viele 1,5-Liter-Flaschen sind das?",
    "hinweis": "Rechne zuerst die Liter aus.",
    "loesung": "56 Flaschen",
+   "antworten": [
+    "56"
+   ],
    "erklaerung": "3 · 2 · 14 = 84 Liter. 84 : 1,5 = 56."
   },
   {
@@ -26,6 +32,9 @@
    "frage": "Vorgestern war Donnerstag. Welcher Tag ist übermorgen?",
    "hinweis": "Finde zuerst heraus, welcher Tag heute ist.",
    "loesung": "Montag",
+   "antworten": [
+    "Montag"
+   ],
    "erklaerung": "Wenn vorgestern Donnerstag war, ist heute Samstag. Übermorgen ist Montag."
   },
   {
@@ -35,6 +44,9 @@
    "frage": "Stell die Buchstaben von LAMPE um. Heraus kommt ein Baum, der im Süden wächst.",
    "hinweis": "Er hat große Blätter und steht gern am Strand.",
    "loesung": "PALME",
+   "antworten": [
+    "Palme"
+   ],
    "erklaerung": "L-A-M-P-E wird zu P-A-L-M-E."
   },
   {
@@ -53,6 +65,9 @@
    "frage": "Ein Batterieradio läuft mit vier Batterien 20 Stunden lang. Du hast zwölf Batterien. Wie viele Stunden kannst du Radio hören?",
    "hinweis": "Wie oft passen vier Batterien in zwölf?",
    "loesung": "60 Stunden",
+   "antworten": [
+    "60"
+   ],
    "erklaerung": "Zwölf Batterien sind drei Sätze zu je vier. 3 · 20 = 60 Stunden."
   },
   {
@@ -62,6 +77,10 @@
    "frage": "Welches Wort passt vor alle drei: …licht, …uhr, …schein?",
    "hinweis": "Sie steht am Himmel, wenn es hell ist.",
    "loesung": "Sonne",
+   "antworten": [
+    "Sonne",
+    "Sonnen"
+   ],
    "erklaerung": "Sonnenlicht, Sonnenuhr, Sonnenschein."
   },
   {
@@ -80,6 +99,9 @@
    "frage": "Anna ist älter als Ben. Ben ist älter als Cilli. Dora ist jünger als Cilli. Wer ist am jüngsten?",
    "hinweis": "Stell die vier in eine Reihe, von alt nach jung.",
    "loesung": "Dora",
+   "antworten": [
+    "Dora"
+   ],
    "erklaerung": "Anna, Ben, Cilli, Dora: Jede ist jünger als die vorige."
   },
   {
@@ -89,6 +111,9 @@
    "frage": "Welche Zahl passt nicht in die Reihe? 16, 25, 36, 48, 64",
    "hinweis": "Die anderen haben etwas gemeinsam, das man mit Malnehmen erklären kann.",
    "loesung": "48",
+   "antworten": [
+    "48"
+   ],
    "erklaerung": "16, 25, 36 und 64 sind Quadratzahlen (4·4, 5·5, 6·6, 8·8). 48 ist keine."
   },
   {
@@ -98,6 +123,9 @@
    "frage": "Aus REGAL wird durch Umstellen der Buchstaben ein Ort, an dem Vorräte liegen. Welcher?",
    "hinweis": "Firmen haben so etwas, und im Keller vielleicht du auch.",
    "loesung": "LAGER",
+   "antworten": [
+    "Lager"
+   ],
    "erklaerung": "R-E-G-A-L wird zu L-A-G-E-R."
   },
   {
@@ -107,6 +135,9 @@
    "frage": "Wenn gestern morgen wäre, dann wäre heute Freitag. Welcher Tag ist heute wirklich?",
    "hinweis": "Tu so, als wäre der echte gestrige Tag erst morgen. Wo stündest du dann?",
    "loesung": "Sonntag",
+   "antworten": [
+    "Sonntag"
+   ],
    "erklaerung": "Wäre der echte gestrige Tag »morgen«, stündest du zwei Tage früher als heute. Dieser Tag wäre Freitag, also ist heute Sonntag."
   },
   {
@@ -116,6 +147,9 @@
    "frage": "Ein Bauer hat 17 Schafe. Alle bis auf 9 laufen davon. Wie viele bleiben?",
    "hinweis": "Lies den Satz langsam.",
    "loesung": "9",
+   "antworten": [
+    "9"
+   ],
    "erklaerung": "»Alle bis auf 9« heißt: 9 laufen nicht davon."
   },
   {
@@ -125,6 +159,9 @@
    "frage": "Anna bekommt doppelt so viel Wasser wie Berta, Berta doppelt so viel wie Clemens. Zusammen sind es 42 Liter. Wie viel bekommt Clemens?",
    "hinweis": "Zähle, wie viele »Clemens-Teile« es insgesamt sind.",
    "loesung": "6 Liter",
+   "antworten": [
+    "6"
+   ],
    "erklaerung": "Clemens 1 Teil, Berta 2, Anna 4, zusammen 7 Teile. 42 : 7 = 6."
   },
   {
@@ -134,6 +171,9 @@
    "frage": "Welches Wort passt hinter alle drei: Wasser…, Tee…, Blech…?",
    "hinweis": "Daraus schenkt man ein.",
    "loesung": "Kanne",
+   "antworten": [
+    "Kanne"
+   ],
    "erklaerung": "Wasserkanne, Teekanne, Blechkanne."
   },
   {
@@ -152,6 +192,9 @@
    "frage": "Welche Zahl kommt als Nächstes? 1, 1, 2, 3, 5, 8, …",
    "hinweis": "Schau auf die beiden Zahlen davor.",
    "loesung": "13",
+   "antworten": [
+    "13"
+   ],
    "erklaerung": "Jede Zahl ist die Summe der zwei davor: 5 + 8 = 13."
   },
   {
@@ -170,6 +213,9 @@
    "frage": "Lies LESE rückwärts. Welches Tier kommt heraus?",
    "hinweis": "Es trägt gern Lasten und ist sprichwörtlich stur.",
    "loesung": "ESEL",
+   "antworten": [
+    "Esel"
+   ],
    "erklaerung": "L-E-S-E rückwärts ist E-S-E-L."
   },
   {
@@ -179,6 +225,9 @@
    "frage": "Zwischen Mittag und Mitternacht: Wie oft liegen Stunden- und Minutenzeiger einer Uhr genau übereinander? Mittag zählt nicht mit, Mitternacht schon.",
    "hinweis": "Um 1 Uhr decken sie sich noch nicht, erst etwas nach 1:05.",
    "loesung": "11-mal",
+   "antworten": [
+    "11"
+   ],
    "erklaerung": "Der Minutenzeiger überholt den Stundenzeiger in zwölf Stunden elfmal, zuletzt genau um Mitternacht."
   },
   {
@@ -188,6 +237,9 @@
    "frage": "Maria hat vier Brüder. Jeder ihrer Brüder hat genau eine Schwester. Wie viele Kinder sind es?",
    "hinweis": "Wer ist die Schwester der Brüder?",
    "loesung": "5",
+   "antworten": [
+    "5"
+   ],
    "erklaerung": "Die eine Schwester ist Maria selbst: vier Brüder und Maria."
   },
   {
@@ -197,6 +249,12 @@
    "frage": "Eine Kerze ist 15 Zentimeter lang und brennt einen Zentimeter pro Stunde. Du zündest sie um 18 Uhr an. Wann geht sie aus?",
    "hinweis": "Zähle 15 Stunden weiter.",
    "loesung": "Um 9 Uhr früh",
+   "antworten": [
+    "9",
+    "9:00",
+    "9 Uhr früh",
+    "neun Uhr in der Früh"
+   ],
    "erklaerung": "18 Uhr plus 15 Stunden ist 9 Uhr am nächsten Morgen."
   },
   {
@@ -206,6 +264,9 @@
    "frage": "Welcher Buchstabe fehlt? J, F, M, A, M, J, J, …",
    "hinweis": "Denk an einen Kalender.",
    "loesung": "A",
+   "antworten": [
+    "A"
+   ],
    "erklaerung": "Die Anfangsbuchstaben der Monate: Jänner, Februar, März, April, Mai, Juni, Juli, August."
   },
   {
@@ -215,6 +276,9 @@
    "frage": "In der Lade liegen zehn schwarze und zehn blaue Socken durcheinander. Es ist stockdunkel. Wie viele Socken musst du mindestens herausnehmen, damit sicher zwei gleiche dabei sind?",
    "hinweis": "Es gibt nur zwei Farben.",
    "loesung": "3",
+   "antworten": [
+    "3"
+   ],
    "erklaerung": "Nach zwei Socken können es zwei verschiedene sein. Die dritte passt dann sicher zu einer davon."
   },
   {
@@ -224,6 +288,9 @@
    "frage": "Ein Vater und sein Sohn sind zusammen 36 Jahre alt. Der Vater ist 30 Jahre älter als der Sohn. Wie alt ist der Sohn?",
    "hinweis": "Zieh die 30 Jahre zuerst ab.",
    "loesung": "3 Jahre",
+   "antworten": [
+    "3"
+   ],
    "erklaerung": "36 − 30 = 6, geteilt durch zwei ist 3. Der Vater ist 33."
   },
   {
@@ -233,6 +300,9 @@
    "frage": "Die erste Silbe ist gefrorenes Wasser, die zweite eine Strecke, auf der etwas fährt. Zusammen: ein Ort für Schlittschuhe.",
    "hinweis": "Die zweite Silbe gibt es auch mit Schienen.",
    "loesung": "Eisbahn",
+   "antworten": [
+    "Eisbahn"
+   ],
    "erklaerung": "Eis + Bahn."
   },
   {
@@ -242,6 +312,10 @@
    "frage": "Du stehst im dunklen Zimmer mit einer Kerze, einer Petroleumlampe und dem Holzofen. Du hast ein einziges Zündholz. Was zündest du zuerst an?",
    "hinweis": "Nimm die Frage wörtlich.",
    "loesung": "Das Zündholz",
+   "antworten": [
+    "Zündholz",
+    "Streichholz"
+   ],
    "erklaerung": "Ohne brennendes Zündholz brennt sonst nichts."
   },
   {
@@ -251,6 +325,9 @@
    "frage": "Ein Vorrat reicht für zwei Personen sieben Tage. Wie lange reicht er für sieben Personen?",
    "hinweis": "Rechne in »Personentagen«.",
    "loesung": "2 Tage",
+   "antworten": [
+    "2"
+   ],
    "erklaerung": "2 · 7 = 14 Personentage. 14 : 7 = 2."
   },
   {
@@ -260,6 +337,9 @@
    "frage": "Tausche in HAUS einen Buchstaben, sodass ein kleines Tier entsteht, das gern Käse frisst.",
    "hinweis": "Nur der erste Buchstabe ändert sich.",
    "loesung": "MAUS",
+   "antworten": [
+    "Maus"
+   ],
    "erklaerung": "H wird zu M."
   },
   {
@@ -278,6 +358,9 @@
    "frage": "Denk dir eine Zahl. Verdopple sie und zähle 5 dazu. Heraus kommt 27. Welche Zahl war es?",
    "hinweis": "Geh die Schritte rückwärts.",
    "loesung": "11",
+   "antworten": [
+    "11"
+   ],
    "erklaerung": "27 − 5 = 22, geteilt durch 2 ist 11."
   },
   {
@@ -287,6 +370,9 @@
    "frage": "KERZE verhält sich zu WACHS wie BROT zu …?",
    "hinweis": "Woraus ist es gemacht?",
    "loesung": "Mehl",
+   "antworten": [
+    "Mehl"
+   ],
    "erklaerung": "Eine Kerze ist aus Wachs, ein Brot vor allem aus Mehl."
   },
   {
@@ -296,6 +382,9 @@
    "frage": "Wie groß ist die Summe aller Zahlen von 1 bis 20?",
    "hinweis": "Bilde Paare: 1 und 20, 2 und 19 …",
    "loesung": "210",
+   "antworten": [
+    "210"
+   ],
    "erklaerung": "Zehn Paare mit jeweils der Summe 21: 10 · 21 = 210."
   },
   {
@@ -305,6 +394,9 @@
    "frage": "Ein Ziegelstein wiegt ein Kilo und einen halben Ziegelstein. Wie schwer ist ein ganzer Ziegelstein?",
    "hinweis": "Wenn ein halber Stein plus ein Kilo der ganze ist …",
    "loesung": "2 Kilo",
+   "antworten": [
+    "2"
+   ],
    "erklaerung": "Der halbe Stein wiegt ein Kilo, also der ganze zwei."
   },
   {
@@ -314,6 +406,9 @@
    "frage": "Welcher Buchstabe fehlt? M, D, M, D, F, S, …",
    "hinweis": "Eine Woche.",
    "loesung": "S",
+   "antworten": [
+    "S"
+   ],
    "erklaerung": "Montag, Dienstag, Mittwoch, Donnerstag, Freitag, Samstag, Sonntag."
   },
   {
@@ -323,6 +418,9 @@
    "frage": "Der 1. März ist ein Montag. Welcher Wochentag ist der 1. April?",
    "hinweis": "Der März hat 31 Tage. Vier volle Wochen sind 28.",
    "loesung": "Donnerstag",
+   "antworten": [
+    "Donnerstag"
+   ],
    "erklaerung": "31 Tage sind vier Wochen und drei Tage. Drei Tage nach Montag ist Donnerstag."
   },
   {
@@ -341,6 +439,9 @@
    "frage": "Ein Wasserfahrzeug heißt vorwärts und rückwärts gelesen gleich. Welches?",
    "hinweis": "Man paddelt darin, fünf Buchstaben.",
    "loesung": "KAJAK",
+   "antworten": [
+    "Kajak"
+   ],
    "erklaerung": "K-A-J-A-K bleibt rückwärts K-A-J-A-K."
   },
   {
@@ -359,6 +460,9 @@
    "frage": "Zehn Kerzen brennen. Drei bläst du aus. Wie viele Kerzen sind am Ende übrig?",
    "hinweis": "Was passiert mit denen, die weiterbrennen?",
    "loesung": "3",
+   "antworten": [
+    "3"
+   ],
    "erklaerung": "Die sieben brennenden Kerzen brennen ganz herunter. Übrig bleiben die drei ausgeblasenen."
   },
   {
@@ -368,6 +472,10 @@
    "frage": "Die erste Silbe ist das Gegenteil von Tag, die zweite ein Möbel zum Essen. Zusammen steht es neben dem Bett.",
    "hinweis": "Dort liegt oft die Taschenlampe.",
    "loesung": "Nachttisch",
+   "antworten": [
+    "Nachttisch",
+    "Nachtkästchen"
+   ],
    "erklaerung": "Nacht + Tisch."
   },
   {
@@ -377,6 +485,10 @@
    "frage": "Ein Zug fährt um 8:40 in Wien ab und braucht 2 Stunden 35 Minuten nach Salzburg. Heute hat er 20 Minuten Verspätung. Wann kommt er an?",
    "hinweis": "Rechne erst die planmäßige Ankunft aus.",
    "loesung": "Um 11:35",
+   "antworten": [
+    "11:35",
+    "11 Uhr 35"
+   ],
    "erklaerung": "8:40 plus 2:35 ist 11:15, plus 20 Minuten Verspätung 11:35."
   },
   {
@@ -386,6 +498,12 @@
    "frage": "Was wird nasser, je mehr es trocknet?",
    "hinweis": "Es hängt oft im Badezimmer.",
    "loesung": "Ein Handtuch",
+   "antworten": [
+    "Handtuch",
+    "Badetuch",
+    "Geschirrtuch",
+    "Tuch"
+   ],
    "erklaerung": "Je mehr es abtrocknet, desto nasser wird es selbst."
   },
   {
@@ -395,6 +513,9 @@
    "frage": "Welche Zahl kommt als Nächstes? 2, 6, 12, 20, 30, …",
    "hinweis": "Schau auf die Abstände.",
    "loesung": "42",
+   "antworten": [
+    "42"
+   ],
    "erklaerung": "Die Abstände wachsen um zwei: 4, 6, 8, 10, dann 12. 30 + 12 = 42."
   },
   {
@@ -404,6 +525,9 @@
    "frage": "Welches Wort wird kürzer, wenn man zwei Buchstaben dazugibt?",
    "hinweis": "Es geht um das Wort selbst, nicht um seine Länge.",
    "loesung": "»kurz« – daraus wird »kürzer«",
+   "antworten": [
+    "kurz"
+   ],
    "erklaerung": "Mit »-er« wird aus kurz das Wort kürzer."
   },
   {
@@ -422,6 +546,9 @@
    "frage": "Im Keller stehen Kisten mit je sechs Flaschen. Vier Kisten sind voll, aus einer fehlen zwei Flaschen. Wie viele Flaschen stehen da?",
    "hinweis": "Es sind fünf Kisten.",
    "loesung": "28",
+   "antworten": [
+    "28"
+   ],
    "erklaerung": "Vier volle Kisten sind 24, dazu vier Flaschen aus der fünften: 28."
   },
   {
@@ -431,6 +558,11 @@
    "frage": "Was hat Zähne, beißt aber nie?",
    "hinweis": "Morgens im Badezimmer.",
    "loesung": "Ein Kamm",
+   "antworten": [
+    "Kamm",
+    "Säge",
+    "Reißverschluss"
+   ],
    "erklaerung": "Die Zinken eines Kamms heißen auch Zähne."
   },
   {
@@ -440,6 +572,9 @@
    "frage": "Eine Powerbank hat genug Strom für drei volle Handyladungen. Ein volles Handy hält bei dir zwei Tage. Heute ist das Handy voll. Wie viele Tage kommst du ohne Steckdose aus?",
    "hinweis": "Die Ladung, die schon im Handy ist, zählt mit.",
    "loesung": "8 Tage",
+   "antworten": [
+    "8"
+   ],
    "erklaerung": "Die jetzige Ladung reicht zwei Tage, jede der drei Powerbank-Ladungen noch einmal zwei: 2 + 3 · 2 = 8."
   },
   {
@@ -449,6 +584,11 @@
    "frage": "Ein Lift fährt vom Erdgeschoß in den 3. Stock in 30 Sekunden. Wie lange braucht er vom Erdgeschoß in den 6. Stock, wenn er gleich schnell fährt und nicht hält?",
    "hinweis": "Zähle die Stockwerke, die er durchfährt.",
    "loesung": "60 Sekunden",
+   "antworten": [
+    "60",
+    "1 Minute",
+    "eine Minute"
+   ],
    "erklaerung": "Drei Stockwerke dauern 30 Sekunden, sechs dauern doppelt so lang."
   },
   {
@@ -458,6 +598,9 @@
    "frage": "Welches Wort ist in jedem Wörterbuch falsch geschrieben?",
    "hinweis": "Nimm die Frage wörtlich.",
    "loesung": "»falsch«",
+   "antworten": [
+    "falsch"
+   ],
    "erklaerung": "Das Wort »falsch« steht dort eben so: f-a-l-s-c-h."
   },
   {
@@ -467,6 +610,12 @@
    "frage": "Du stellst den Wecker um 22 Uhr auf 7 Stunden 45 Minuten später. Wann läutet er?",
    "hinweis": "Über Mitternacht zählst du einfach weiter.",
    "loesung": "Um 5:45",
+   "antworten": [
+    "5:45",
+    "5 Uhr 45",
+    "viertel vor 6",
+    "dreiviertel 6"
+   ],
    "erklaerung": "22 Uhr plus 2 Stunden ist Mitternacht, plus 5 Stunden 45 Minuten ist 5:45."
   },
   {
@@ -476,6 +625,9 @@
    "frage": "Es hat einen Hals, aber keinen Kopf, und trägt manchmal einen Korken. Was ist es?",
    "hinweis": "Im Kühlschrank steht vielleicht eine.",
    "loesung": "Eine Flasche",
+   "antworten": [
+    "Flasche"
+   ],
    "erklaerung": "Der schmale obere Teil einer Flasche heißt Hals."
   },
   {
@@ -485,6 +637,9 @@
    "frage": "Wie viele Minuten hat ein Tag?",
    "hinweis": "24 Stunden mal …",
    "loesung": "1440",
+   "antworten": [
+    "1440"
+   ],
    "erklaerung": "24 · 60 = 1440."
   },
   {
@@ -494,6 +649,9 @@
    "frage": "Welches Wort passt hinter alle drei: Taschen…, Tisch…, Stirn…?",
    "hinweis": "Sie macht Licht.",
    "loesung": "Lampe",
+   "antworten": [
+    "Lampe"
+   ],
    "erklaerung": "Taschenlampe, Tischlampe, Stirnlampe."
   },
   {
@@ -512,6 +670,9 @@
    "frage": "Welche Notrufnummer gilt in allen Ländern der EU?",
    "hinweis": "Drei Ziffern, zwei davon gleich.",
    "loesung": "112",
+   "antworten": [
+    "112"
+   ],
    "erklaerung": "Der Euronotruf 112 funktioniert in der ganzen EU, auch ohne Guthaben."
   },
   {
@@ -521,6 +682,9 @@
    "frage": "Welches Wort passt vor alle drei: …hose, …korb, …tuch?",
    "hinweis": "Im Sommer am See.",
    "loesung": "Bade",
+   "antworten": [
+    "Bade"
+   ],
    "erklaerung": "Badehose, Badekorb, Badetuch."
   },
   {
@@ -530,6 +694,9 @@
    "frage": "Ein Seil ist 12 Meter lang. Du schneidest es in Stücke zu je 2 Meter. Wie viele Schnitte brauchst du?",
    "hinweis": "Das letzte Stück entsteht ohne eigenen Schnitt.",
    "loesung": "5 Schnitte",
+   "antworten": [
+    "5"
+   ],
    "erklaerung": "Es werden sechs Stücke. Dafür braucht es einen Schnitt weniger als Stücke."
   },
   {
@@ -539,6 +706,10 @@
    "frage": "Welches Wort passt vor alle drei: …kammer, …keller, …dose?",
    "hinweis": "Genau darum geht es in dieser App.",
    "loesung": "Vorrat",
+   "antworten": [
+    "Vorrat",
+    "Vorrats"
+   ],
    "erklaerung": "Vorratskammer, Vorratskeller, Vorratsdose."
   },
   {
@@ -548,6 +719,9 @@
    "frage": "Hans ist doppelt so alt, wie Grete war, als Hans so alt war, wie Grete jetzt ist. Grete ist jetzt 18. Wie alt ist Hans?",
    "hinweis": "Der Altersunterschied bleibt immer gleich. Nenne ihn d.",
    "loesung": "24",
+   "antworten": [
+    "24"
+   ],
    "erklaerung": "Hans war 18, als Grete 18 − d war. Hans ist jetzt 18 + d = 2 · (18 − d), also 3d = 18, d = 6. Hans ist 24."
   }
  ]

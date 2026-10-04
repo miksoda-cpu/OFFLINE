@@ -4,7 +4,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
-import { datumVon, tageZwischen, plusTage, tagNummer, kartenFuer, vorratTage, bereichTrifft, bereichVorbei, vorzuladen, tagesKarten, schlussErreicht, textkarteFuer, lernen, SCHLUSS, PLAN_STANDARD } from "./tag.js";
+import { datumVon, tageZwischen, plusTage, tagNummer, kartenFuer, vorratTage, bereichTrifft, bereichVorbei, vorzuladen, tagesKarten, schlussErreicht, textkarteFuer, lernen, SCHLUSS, PLAN_STANDARD, antwortRichtig, antwortNormal, zahlwort } from "./tag.js";
 import { tageInhaltFehler } from "../paket-kit/tage-format.mjs";
 
 const r = (datum, id = datum) => ({ art: "raetsel", id: `r-${id}`, frage: "?", loesung: "!" });
@@ -167,4 +167,73 @@ test("Jänner 2027: 31 Rätsel ohne Wiederholung, vier Werke ab Montag, alle von
   assert.equal(kapitel.length, 28);
   // keine Titelzeile und kein leerer Absatz im Lesetext
   for (const k of kapitel) for (const a of k.absaetze) assert.ok(a.trim() && a !== "Unterm Birnbaum.", `${k.id}: Absatz leer oder Titel`);
+});
+
+test("Antwort prüfen: Groß/klein, Leer- und Satzzeichen, Umlaute, Ziffer und Zahlwort, Füllwörter, falsche Antworten", () => {
+  // Groß/klein, Leerzeichen, Satzzeichen
+  assert.ok(antwortRichtig("  palme! ", ["Palme"]));
+  assert.ok(antwortRichtig("P A L M E", ["Palme"]));
+  assert.ok(antwortRichtig("»Sonne«.", ["Sonne"]));
+  // Umlaute und ß in beiden Schreibweisen
+  assert.ok(antwortRichtig("Zuendholz", ["Zündholz"]));
+  assert.ok(antwortRichtig("Zündholz", ["Zuendholz"]));
+  assert.ok(antwortRichtig("Reissverschluss", ["Reißverschluss"]));
+  assert.ok(antwortRichtig("FÜNFTEN Nacht", ["fünften Nacht"]));
+  // Ziffer und Zahlwort, auch zusammengesetzt
+  assert.ok(antwortRichtig("drei", ["3"]));
+  assert.ok(antwortRichtig("3", ["drei"]));
+  assert.ok(antwortRichtig("sechsundfünfzig", ["56"]));
+  assert.ok(antwortRichtig("eintausendvierhundertvierzig", ["1440"]));
+  assert.ok(antwortRichtig("dreitausendsechshundert", ["3600"]));
+  assert.ok(antwortRichtig("zwölf", ["12"]));
+  assert.ok(antwortRichtig("zwoelf", ["12"]));
+  // reine Zahl: ein Wort danach ist erlaubt, eine andere Zahl nicht
+  assert.ok(antwortRichtig("12 Runden", ["12"]));
+  assert.ok(antwortRichtig("drei Grad", ["3"]));
+  assert.ok(!antwortRichtig("120", ["12"]));
+  assert.ok(!antwortRichtig("1 2", ["3"]));
+  // Füllwörter vorn
+  assert.ok(antwortRichtig("Die Dunkelheit", ["Dunkelheit"]));
+  assert.ok(antwortRichtig("Er hat eine Glatze.", ["Glatze"]));
+  assert.ok(antwortRichtig("Um 9 Uhr früh", ["9"]));
+  // Uhrzeiten und Beträge
+  assert.ok(antwortRichtig("8.20", ["8:20"]));
+  assert.ok(antwortRichtig("halb drei", ["halb 3"]));
+  assert.ok(antwortRichtig("2.50", ["2,50"]));
+  // falsch und leer
+  assert.ok(!antwortRichtig("Birne", ["Palme"]));
+  assert.ok(!antwortRichtig("vier", ["3"]));
+  assert.ok(!antwortRichtig("", ["3"]));
+  assert.ok(!antwortRichtig("   ", ["3"]));
+  assert.ok(!antwortRichtig("3", undefined));
+  // Zahlwörter
+  assert.equal(zahlwort("einhundertsechsundfuenfzig"), 156);
+  assert.equal(zahlwort("hundert"), 100);
+  assert.equal(zahlwort("palme"), null);
+  assert.equal(antwortNormal("Ein Handtuch"), "handtuch");
+});
+
+test("Rätsel Oktober bis Jänner: Kurzantworten vollständig, Erklärrätsel ohne Feld, jede Antwortliste passt zu sich selbst", async () => {
+  const ERKLAER = ["r-005", "r-008", "r-016", "r-018", "r-030", "r-037", "r-039", "r-046", "r-057", "r-104", "r-113", "r-141"];
+  let mit = 0;
+  for (const m of ["2026-10", "2026-11", "2026-12", "2027-01"]) {
+    const inhalt = JSON.parse(await readFile(new URL(`../pakete/tage-${m}/inhalt/tage.json`, import.meta.url), "utf8"));
+    for (const k of inhalt.tage.flatMap((t) => t.karten).filter((k) => k.art === "raetsel")) {
+      if (ERKLAER.includes(k.id)) { assert.equal(k.antworten, undefined, `${k.id}: Erklärrätsel ohne Feld`); continue; }
+      assert.ok(Array.isArray(k.antworten) && k.antworten.length, `${k.id}: antworten fehlen`);
+      for (const a of k.antworten) assert.ok(antwortRichtig(a, k.antworten), `${k.id}: „${a}“`);
+      assert.ok(antwortNormal(k.antworten[0]).length > 0, k.id);
+      assert.ok(!antwortRichtig("xyz", k.antworten), `${k.id}: nimmt alles`);
+      mit++;
+    }
+  }
+  assert.equal(mit, 111);
+});
+
+test("Kit: antworten ist optional, wenn vorhanden eine nicht leere Liste von Texten", () => {
+  const tag = (antworten) => ({ format: 1, tage: [{ datum: "2027-01-01", karten: [{ art: "raetsel", id: "r-x", frage: "?", loesung: "3", ...(antworten === undefined ? {} : { antworten }) }] }] });
+  const b = { von: "2027-01-01", bis: "2027-01-01" };
+  assert.deepEqual(tageInhaltFehler(tag(undefined), b), []);
+  assert.deepEqual(tageInhaltFehler(tag(["3", "drei"]), b), []);
+  for (const falsch of [[], "3", [""], [3], ["x".repeat(121)]]) assert.ok(tageInhaltFehler(tag(falsch), b).some((f) => /antworten/.test(f)), JSON.stringify(falsch));
 });

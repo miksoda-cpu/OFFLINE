@@ -42,6 +42,11 @@ const ROMANE = [
 ];
 // Datum der redaktionellen Abnahme je Monat (Standard: erste Ausgabe vom 30.09.2026)
 const ABNAHME = { "2027-01": "01.10.2026" };
+// Änderungstext einer neuen Ausgabe (Standard: erste Ausgabe)
+const ANTWORTEN = "Rätsel mit eindeutiger Kurzantwort lassen sich jetzt eintippen und prüfen (Antworten ergänzt).";
+const AENDERUNGEN = { "2026-10": ANTWORTEN, "2026-11": ANTWORTEN, "2026-12": ANTWORTEN, "2027-01": ANTWORTEN };
+// Lesemenge ab Februar 2027 (Festlegung Bill, 04.10.2026): höchstens rund 3.500 Wörter pro Tag; der Baukasten bricht über 3.700 ab
+const LESEN = { ab: "2027-02-01", ziel: 3500, grenze: 3700 };
 const TEILE = 7;
 
 const plus = (datum, n) => { const d = new Date(datum + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
@@ -92,7 +97,7 @@ for (const q of RAETSEL) {
   raetsel.forEach((r, i) => {
     if (rid.has(r.id)) throw new Error(`Rätsel ${r.id} doppelt`);
     rid.add(r.id);
-    karte(plus(q.ab, i), { art: "raetsel", id: r.id, stufe: r.stufe, frage: r.frage, hinweis: r.hinweis, loesung: r.loesung, erklaerung: r.erklaerung });
+    karte(plus(q.ab, i), { art: "raetsel", id: r.id, stufe: r.stufe, frage: r.frage, hinweis: r.hinweis, loesung: r.loesung, ...(r.antworten ? { antworten: r.antworten } : {}), erklaerung: r.erklaerung });
   });
 }
 
@@ -125,7 +130,12 @@ for (const r of ROMANE) {
   const absaetze = werke.flatMap((x, i) => (i === 0 ? x.absaetze : x.absaetze.filter((a) => !titel.has(a))));
   const vorlage = vorlageVon(w);
   const n = r.teile ?? TEILE;
-  teilen(absaetze, n).forEach((abs, i) => karte(plus(r.ab, i), {
+  const teile = teilen(absaetze, n);
+  if (r.ab >= LESEN.ab) teile.forEach((abs, i) => {
+    const w = abs.join(" ").split(/\s+/).length;
+    if (w > LESEN.grenze) throw new Error(`${r.id} Teil ${i + 1}: ${w} Wörter, ab ${LESEN.ab} höchstens rund ${LESEN.ziel} (mehr Teile oder ein kürzeres Werk)`);
+  });
+  teile.forEach((abs, i) => karte(plus(r.ab, i), {
     art: "kapitel", id: `${r.id}-${i + 1}`, werk: r.werk ?? w.werk.replace(/\.$/, ""), autor: w.autor, teil: i + 1, teile: n,
     absaetze: abs, quelle: { url: w.quelle.url, vorlage, revision: w.quelle.revision },
   }));
@@ -159,7 +169,7 @@ for (const [monat, daten] of monate) {
     art: "tage", tage: bereich, sprache: "de-AT",
     lizenz: "Rätsel CC BY-SA 4.0 (eigene Texte); Romane gemeinfrei (Wikisource), Herkunft in inhalt/herkunft.md",
     herausgeber: "The Digioneer / digitalworld Academy", pro: false, preis: "gratis", pruefstatus: "redaktion", kategorie: "jeden-tag", alter_ab: 10, braucht_netz: false, abnahme: `Redaktion (Code), ${ABNAHME[monat] ?? "30.09.2026"}: Rätsel nachgerechnet, Romane gegen die Wikisource-Textdaten geprüft`,
-    app_min: "0.3.0", aenderungen: `Erste Ausgabe: ${daten.length} Tage.`,
+    app_min: "0.3.0", aenderungen: AENDERUNGEN[monat] ?? `Erste Ausgabe: ${daten.length} Tage.`,
     quellen: [{ id: "redaktion", name: "Eigene Rätsel der Redaktion", url: "" }, { id: "wikisource", name: "Wikisource (gemeinfreie Texte)", url: "https://de.wikisource.org" }],
   }, null, 2) + "\n");
   console.log(`${id}: ${daten.length} Tage (${daten[0]} bis ${daten.at(-1)}), ${kapitel.length} Kapitel, ${(JSON.stringify(inhalt).length / 1024).toFixed(0)} kB`);

@@ -18,7 +18,7 @@
   "braucht_netz": false,
   "abnahme": "Redaktion (Code), 30.09.2026: Rätsel nachgerechnet, Romane gegen die Wikisource-Textdaten geprüft",
   "app_min": "0.3.0",
-  "aenderungen": "Erste Ausgabe: 30 Tage.",
+  "aenderungen": "Rätsel mit eindeutiger Kurzantwort lassen sich jetzt eintippen und prüfen (Antworten ergänzt).",
   "quellen": [
     {
       "id": "redaktion",
