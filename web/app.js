@@ -4,7 +4,7 @@ import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUeb
 import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch, tippPool, tippKnoepfeHtml, ZIELE, FUNKTIONEN } from "./wesen.js";
 import { WERTE as PAUSE_WERTE, LEBENSABSCHNITTE, APPETIT, ART_TEXT, angeboten as pauseAngeboten, einstellungenLaden as pauseEinstellungenLaden, linieLaden as pauseLinieLaden,
   logDazu as pauseLogDazu, happenFaellig, waehle as pauseWaehle, bewerten as pauseBewerten, schwierigkeit as pauseSchwierigkeit, zoneAnpassen, zoneText, zurueckholen as pauseZurueckholen,
-  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, soSeheIchDich, wochenSatz, rueckspiegel, imKennenlernen, gewichtVon, stufeVon, verfuegbar as pauseVerfuegbar, tagVon } from "./pause.js";
+  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, soSeheIchDich, wochenSatz, rueckspiegel, lumischHeute, imKennenlernen, gewichtVon, stufeVon, verfuegbar as pauseVerfuegbar, tagVon } from "./pause.js";
 import { FORMEN as PAUSE_FORMEN, happenRahmen } from "./pause-happen.js";
 import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
@@ -13,7 +13,7 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.4.0";
+const APP_VERSION = "0.4.1";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -364,7 +364,7 @@ const seiten = {
         <button type="button" class="btn btn-primary of-btn of-btn--primaer" data-lumi="einladung-ja">${esc(LUMI_TEXTE.einladungJa)}</button> <button type="button" class="btn of-btn" data-lumi="einladung-nein">${esc(LUMI_TEXTE.einladungNein)}</button>
         <p class="lumi-einladung-klein">${esc(LUMI_TEXTE.einladungHinweis)} ${esc(LUMI_TEXTE.ki)}</p></div></div>` : ""}
       ${g.hinweis ? `<div class="card of-karte tag-gelernt" role="status"><p style="margin:0 0 .6rem">${esc(g.hinweis.text)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="lern-zurueck">Rückgängig</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="lern-ok">In Ordnung</button></div>` : ""}
-      ${(() => { if (!pauseE().an || !pauseDaten()) return ""; const t = rueckspiegel(spielLog(), pauseL(), speicher.get("pause", null), testJetzt()); return t ? `<div class="card of-karte pause-rueckspiegel" role="status"><p class="muted of-klein" style="margin:0 0 .3rem">⏸ Pause · Rückspiegel</p><p style="margin:0 0 .6rem">${esc(t)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause="rueckspiegel-ok">Schön</button></div>` : ""; })()}
+      ${(() => { if (!pauseE().an || !pauseDaten()) return ""; const t = rueckspiegel(spielLog(), pauseL(), speicher.get("pause", null), testJetzt(), pauseDaten().formen); return t ? `<div class="card of-karte pause-rueckspiegel" role="status"><p class="muted of-klein" style="margin:0 0 .3rem">⏸ Pause · Rückspiegel</p><p style="margin:0 0 .6rem">${esc(t)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause="rueckspiegel-ok">Schön</button></div>` : ""; })()}
       <section class="tag-karten" aria-label="Heute">
         ${schluss ? `${karten.filter((k) => k.art === "raetsel" && zustand[k.id] === "erledigt" && state.tag.offen[k.id]?.richtig).map((k) => tagKarteHtml(k, "erledigt")).join("")}<div class="card of-karte tag-schluss" role="status"><p class="tag-schluss-satz">${esc(SCHLUSS)}</p>${karten.length ? `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="nochmal">Heute noch einmal ansehen</button>` : ""}</div>`
           : karten.length ? karten.map((k) => tagKarteHtml(k, zustand[k.id])).join("")
@@ -955,7 +955,7 @@ async function pauseStarten({ nurAbend = false } = {}) {
       return PAUSE_FORMEN[form.id](el, {
         form, linie: pauseL(), daten, rahmen, rnd: Math.random, jetzt: testJetzt, antwortRichtig,
         gesehen: new Set(log.filter((e) => e.id === "fehler").slice(-10).map((e) => e.ergebnis?.geschichte)),
-        gelernt: new Set(log.filter((e) => e.id === "lumisch" && e.ergebnis?.wort && tagVon(Date.parse(e.zeit)) < heute).map((e) => e.ergebnis.wort)),
+        heute: lumischHeute(spielLog(), daten.lumisch, heute),
         roman: pauseRoman(), vermutung: speicher.get("pause-vermutung", null), vermutungSpeichern: (v) => speicher.set("pause-vermutung", v), gestern: pauseGestern(),
       });
     },

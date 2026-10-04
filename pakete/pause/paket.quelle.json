@@ -12,7 +12,7 @@
   "kategorie": "jeden-tag",
   "alter_ab": 14,
   "app_min": "0.4.0",
-  "aenderungen": "Erste Ausgabe: acht Formen, 15 Geschichten, Lumisch in 21 Tagen.",
+  "aenderungen": "Lumisch geht nach Tag 21 weiter: Wiederholungen und neue Wörter aus den Beispielsätzen. Der Rückspiegel zählt keine Tage mehr.",
   "quellen": [
     {
       "id": "redaktion",
@@ -20,6 +20,6 @@
       "url": "https://github.com/miksoda-cpu/OFFLINE/blob/main/docs/PAUSE.md"
     }
   ],
-  "abnahme": "Redaktion (Code), 04.10.2026: Geschichten auf genau einen falschen Satz geprüft, Lumisch gegen das Wörterbuch",
+  "abnahme": "Redaktion (Code), 04.10.2026: Geschichten auf genau einen falschen Satz geprüft, Lumisch gegen das Wörterbuch (Plan und Beispielsätze)",
   "braucht_netz": false
 }

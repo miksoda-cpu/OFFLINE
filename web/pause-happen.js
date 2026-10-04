@@ -4,7 +4,7 @@
 // „Noch einen?“ muss man selbst tippen. Kein Falsch-Ton, keine rote Zahl: Falsches führt zu „Schau, so war's“.
 // Die Daten kommen aus dem Paket „pause“, die Auswahl aus web/pause.js.
 
-import { WERTE, stufeVon, zahlText } from "./pause.js";
+import { WERTE, stufeVon, zahlText, lumischAntworten } from "./pause.js";
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const warte = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -68,28 +68,53 @@ export const FORMEN = {
     return { treffer: richtig ? 1 : 0, von: 1, satz: richtig ? "Den Fehler hast du gefunden." : "Jetzt kennst du die Geschichte ganz.", ergebnis: { treffer: richtig ? 1 : 0, von: 1, geschichte: g.id } };
   },
 
-  async lumisch(el, { form, linie, daten, gelernt, rnd }) {
-    const plan = daten.lumisch.plan, tag = Math.min(plan.length, gelernt.size + 1);
-    const heute = plan[tag - 1], stufe = stufeVon(linie, form);
-    const bekannt = plan.filter((p) => p.wort && (gelernt.has(p.wort) || p.wort === heute.wort));
+  async lumisch(el, { form, linie, daten, heute, antwortRichtig, rnd }) {
+    // heute: lumischHeute(…) aus web/pause.js – Plan (Tag 1–21), neues Wort (jeder dritte Tag danach) oder Wiederholung
+    const plan = daten.lumisch.plan, stufe = stufeVon(linie, form), wb = daten.lumisch.woerterbuch ?? daten.lumisch.woerter;
+    const weiter = (text = "Weiter") => new Promise((r) => { el.insertAdjacentHTML("beforeend", knopf(text, "data-pause-weiter", true)); el.querySelector("[data-pause-weiter]").onclick = r; });
+    const beispiel = (w) => (w?.beispiel ? `<p class="muted of-klein">Zum Beispiel: <span lang="x-lumisch">${esc(w.beispiel.lumisch)}</span> – ${esc(w.beispiel.deutsch)}</p>` : "");
+    const abfrage = async (frage, richtigText, ziel) => {
+      const anzahl = 2 + Math.min(2, stufe); // 3 bis 4 Möglichkeiten
+      const falsch = mischen((daten.lumisch.woerter ?? wb).filter((w) => w.wort !== frage && w.deutsch !== richtigText), rnd).slice(0, anzahl - 1).map((w) => w.deutsch);
+      const wahl = mischen([richtigText, ...falsch], rnd);
+      ziel.innerHTML = `<p>Was heißt <strong lang="x-lumisch">${esc(frage)}</strong>?</p><div class="pause-wahl" role="group">${wahl.map((w, i) => `<button type="button" class="btn of-btn" data-wahl="${i}">${esc(w)}</button>`).join("")}</div><p class="pause-aufloesung" role="status" aria-live="polite"></p>`;
+      const kn = [...ziel.querySelectorAll("[data-wahl]")];
+      const i = await new Promise((r) => kn.forEach((b, j) => { b.onclick = () => r(j); }));
+      kn.forEach((b) => { b.disabled = true; });
+      const ok = wahl[i] === richtigText;
+      kn[wahl.indexOf(richtigText)].classList.add("pause-wahl--richtig");
+      ziel.querySelector(".pause-aufloesung").textContent = ok ? `Ak! ${frage} heißt ${richtigText}.` : `Schau, so war's: ${frage} heißt ${richtigText}.`;
+      return ok;
+    };
+    if (heute.art === "wiederholung") {
+      const w = heute.eintrag;
+      el.innerHTML = `<p class="pause-anleitung">Wiederholung · Tag ${heute.tag}</p><p class="pause-wort">Weißt du es noch? Was heißt <strong lang="x-lumisch">${esc(w.wort)}</strong>?</p>
+        <form class="tag-antwort" data-pause-form autocomplete="off"><label for="pause-antwort">Aus dem Kopf</label><div class="tag-antwort-zeile"><input id="pause-antwort" class="of-feld" type="text" maxlength="60" autocapitalize="off" spellcheck="false"><button type="submit" class="btn of-btn">Prüfen</button></div></form>
+        ${knopf("Weiß ich nicht mehr", "data-pause-aufdecken")}<div class="pause-aufloesung" role="status" aria-live="polite"></div>`;
+      const eingabe = await new Promise((ja) => { el.querySelector("[data-pause-form]").onsubmit = (e) => { e.preventDefault(); ja(el.querySelector("#pause-antwort").value); }; el.querySelector("[data-pause-aufdecken]").onclick = () => ja(null); });
+      const ok = eingabe !== null && antwortRichtig(eingabe, lumischAntworten(w.deutsch));
+      el.querySelector("[data-pause-form]").remove(); el.querySelector("[data-pause-aufdecken]").remove();
+      el.querySelector(".pause-aufloesung").innerHTML = `<p><strong>${ok ? "Ak! Gut erinnert." : "Schau, so war's:"}</strong> ${esc(w.wort)} heißt ${esc(w.deutsch)}.</p>${beispiel(w)}`;
+      await weiter();
+      return { treffer: ok ? 1 : 0, von: 1, satz: ok ? `${w.wort} sitzt.` : `Jetzt weißt du es wieder: ${w.wort} heißt ${w.deutsch}.`, ergebnis: { treffer: ok ? 1 : 0, von: 1, abgefragt: w.wort, wiederholung: true, tag: heute.tag } };
+    }
+    if (heute.art === "neu") {
+      const w = heute.eintrag;
+      el.innerHTML = `<p class="pause-anleitung">Neues Wort · ${esc(w.gruppe)}</p><p class="pause-wort"><span lang="x-lumisch">${esc(w.wort)}</span> heißt <strong>${esc(w.deutsch)}</strong>.</p>${beispiel(w)}<div class="pause-quiz"></div>`;
+      const ok = await abfrage(w.wort, w.deutsch, el.querySelector(".pause-quiz"));
+      await weiter();
+      return { treffer: ok ? 1 : 0, von: 1, satz: `Neues Wort: ${w.wort} heißt ${w.deutsch}.`, ergebnis: { treffer: ok ? 1 : 0, von: 1, wort: w.wort, abgefragt: w.wort, neu: true, tag: heute.tag } };
+    }
+    const tagE = heute.eintrag, tag = heute.tag;
+    const bekannt = plan.slice(0, tag).filter((x) => x.wort);
     const frage = bekannt.length ? bekannt[zufall(bekannt.length, rnd)] : null;
     el.innerHTML = `<p class="pause-anleitung">Tag ${tag} von ${plan.length}</p>
-      ${heute.wort ? `<p class="pause-wort"><span lang="x-lumisch">${esc(heute.wort)}</span> heißt <strong>${esc(heute.bedeutung)}</strong>.</p>` : `<p class="pause-wort">Heute: <strong>${esc(heute.bedeutung)}</strong>.</p>`}
-      <p>${esc(heute.aufgabe)}</p><div class="pause-quiz"></div>`;
-    if (!frage) { await new Promise((r) => { el.insertAdjacentHTML("beforeend", knopf("Weiter", "data-pause-weiter", true)); el.querySelector("[data-pause-weiter]").onclick = r; }); return { satz: "Heute: dein eigener Satz auf Lumisch.", mitnehmen: heute.aufgabe, ergebnis: { tag } }; }
-    const anzahl = 2 + Math.min(2, stufe); // 3 bis 4 Möglichkeiten
-    const falsch = mischen(daten.lumisch.woerter.filter((w) => w.wort !== frage.wort && w.deutsch !== frage.bedeutung), rnd).slice(0, anzahl - 1).map((w) => w.deutsch);
-    const wahl = mischen([frage.bedeutung, ...falsch], rnd);
-    const quiz = el.querySelector(".pause-quiz");
-    quiz.innerHTML = `<p>Was heißt <strong lang="x-lumisch">${esc(frage.wort)}</strong>?</p><div class="pause-wahl" role="group">${wahl.map((w, i) => `<button type="button" class="btn of-btn" data-wahl="${i}">${esc(w)}</button>`).join("")}</div><p class="pause-aufloesung" role="status" aria-live="polite"></p>`;
-    const kn = [...quiz.querySelectorAll("[data-wahl]")];
-    const i = await new Promise((r) => kn.forEach((b, j) => { b.onclick = () => r(j); }));
-    kn.forEach((b) => { b.disabled = true; });
-    const richtig = wahl[i] === frage.bedeutung;
-    kn[wahl.indexOf(frage.bedeutung)].classList.add("pause-wahl--richtig");
-    quiz.querySelector(".pause-aufloesung").textContent = richtig ? `Ak! ${frage.wort} heißt ${frage.bedeutung}.` : `Schau, so war's: ${frage.wort} heißt ${frage.bedeutung}.`;
-    await new Promise((r) => { el.insertAdjacentHTML("beforeend", knopf("Weiter", "data-pause-weiter", true)); el.querySelector("[data-pause-weiter]").onclick = r; });
-    return { treffer: richtig ? 1 : 0, von: 1, satz: heute.wort ? `Heute: ${heute.wort} heißt ${heute.bedeutung}.` : "Ein Satz auf Lumisch, ganz von dir.", mitnehmen: heute.aufgabe, ergebnis: { treffer: richtig ? 1 : 0, von: 1, wort: heute.wort || null, tag } };
+      ${tagE.wort ? `<p class="pause-wort"><span lang="x-lumisch">${esc(tagE.wort)}</span> heißt <strong>${esc(tagE.bedeutung)}</strong>.</p>` : `<p class="pause-wort">Heute: <strong>${esc(tagE.bedeutung)}</strong>.</p>`}
+      <p>${esc(tagE.aufgabe)}</p><div class="pause-quiz"></div>`;
+    if (!frage) { await weiter(); return { satz: "Heute: dein eigener Satz auf Lumisch.", mitnehmen: tagE.aufgabe, ergebnis: { tag } }; }
+    const ok = await abfrage(frage.wort, frage.bedeutung, el.querySelector(".pause-quiz"));
+    await weiter();
+    return { treffer: ok ? 1 : 0, von: 1, satz: tagE.wort ? `Heute: ${tagE.wort} heißt ${tagE.bedeutung}.` : "Ein Satz auf Lumisch, ganz von dir.", mitnehmen: tagE.aufgabe, ergebnis: { treffer: ok ? 1 : 0, von: 1, wort: tagE.wort || null, abgefragt: frage.wort, tag } };
   },
 
   async naechstes(el, { roman, vermutung, vermutungSpeichern }) {

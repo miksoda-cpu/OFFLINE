@@ -6,7 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { WERTE, einstellungenLaden, angeboten, happenFaellig, waehle, linieLaden, bewerten, zurueckholen, schwierigkeit, zoneAnpassen, verfuegbar,
-  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, rueckspiegel, soSeheIchDich, wochenSatz, logDazu, imKennenlernen, gewichtVon, stufeVon, tagVon } from "./pause.js";
+  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, rueckspiegel, lumischHeute, lumischAntworten, soSeheIchDich, wochenSatz, logDazu, imKennenlernen, gewichtVon, stufeVon, tagVon } from "./pause.js";
 import { pilzMs } from "./pause-happen.js";
 import { pruefeNachricht, pruefeSpielMeldung, GRENZEN } from "./modul-host.js";
 import { pauseFehler, GEBAUT } from "../paket-kit/pause-format.mjs";
@@ -176,4 +176,61 @@ test("Paket pause: Format geprüft, Geschichten mit genau einem falschen Satz, H
   assert.ok(pauseFehler(kaputt).some((f) => /höchstens 3 Minuten/.test(f)));
   const ohne = structuredClone(daten); ohne.formen.push({ ...ohne.formen[0], id: "neu-spiel" });
   assert.ok(pauseFehler(ohne).some((f) => /bedingung\.funktion/.test(f)), "eine Form ohne Spiel in der App muss warten");
+});
+
+// ---------- Nachtrag 2026-10-04-05 ----------
+const ZAEHLUNG = /\b(\d+|einen|eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf)\s+(Tag|Tage|Tagen|Mal|Besuch|Besuche|Besuchen|Pausen)\b|\bTage(n)?\b|\bBesuch|\bmal da\b/i;
+test("Rückspiegel zählt nie Tage oder Besuche: nur Fortschritt, sonst Lieblingsformen in Worten, sonst keine Karte", () => {
+  const e = { ...an, seit: "2026-08-01" }, jetzt = T("2026-10-05T10:00:00");
+  const ein = (id, zeit, ergebnis = {}) => ({ quelle: "pause", id, art: formen.find((f) => f.id === id).art, ergebnis, zeit });
+  const faelle = [
+    [],
+    [ein("atem", "2026-09-20T10:00:00"), ein("atem", "2026-09-25T10:00:00"), ein("atem", "2026-10-01T10:00:00")],
+    [ein("atem", "2026-09-20T10:00:00"), ein("atem", "2026-09-25T10:00:00"), ein("pilz", "2026-09-26T10:00:00", { treffer: 3, von: 3, ms: 500 }), ein("pilz", "2026-10-02T10:00:00", { treffer: 3, von: 3, ms: 500 })],
+    [ein("fehler", "2026-09-22T10:00:00"), ein("rueckwaerts", "2026-09-23T20:00:00")],
+    [ein("pilz", "2026-08-20T10:00:00", { treffer: 3, von: 3, ms: 660 }), ein("pilz", "2026-10-04T10:00:00", { treffer: 3, von: 3, ms: 450 })],
+    [ein("lumisch", "2026-08-20T10:00:00", { wort: "zan" }), ein("lumisch", "2026-10-03T10:00:00", { wort: "mo" }), ein("lumisch", "2026-10-04T10:00:00", { wort: "pelu" })],
+  ];
+  const saetze = faelle.map((log) => rueckspiegel(log, {}, e, jetzt, formen));
+  for (const t of saetze.filter(Boolean)) assert.doesNotMatch(t, ZAEHLUNG, t);
+  assert.equal(saetze[0], null, "nichts gespielt: keine Karte");
+  assert.equal(saetze[1], "Diesen Monat warst du am liebsten beim Atemfenster.");
+  assert.match(saetze[2], /^Diesen Monat warst du am liebsten beim (Atemfenster und beim Pilz|Pilz und beim Atemfenster)\.$/);
+  assert.equal(saetze[3], null, "nichts zweimal gespielt: keine Karte");
+  assert.match(saetze[4], /Pilz/); assert.match(saetze[5], /Lumisch-Wörter/);
+  assert.equal(rueckspiegel(faelle[1], { aus: ["atem"] }, e, jetzt, formen), null, "„Nicht mehr“ ist kein Liebling");
+  for (const f of formen.filter((x) => !x.bedingung)) assert.ok(f.beim, `${f.id}: „beim“ für den Rückspiegel`);
+});
+
+test("Lumisch Tag 1 bis 40: Plan bis 21, danach zwei Wiederholungen und ein neues Wort, zuletzt Falsches zuerst", () => {
+  const l = daten.lumisch, log = [];
+  const tag = (n) => { const d = new Date(2026, 9, 1 + n); return d.getTime() + 10 * 3600000; };
+  const heute = (n) => tagVon(tag(n));
+  const verlauf = [];
+  for (let n = 0; n < 40; n++) {
+    const h = lumischHeute(log, l, heute(n));
+    assert.equal(h.tag, n + 1, `Tag ${n + 1}`);
+    assert.deepEqual(lumischHeute(log, l, heute(n)), h, "am selben Tag dasselbe");
+    verlauf.push(h);
+    // gespielt: im Plan das Wort des Tages; neue Wörter merken; Tag 25 wird falsch beantwortet
+    const falsch = n + 1 === 25;
+    const ergebnis = h.art === "plan" ? { wort: h.eintrag.wort || null, abgefragt: h.eintrag.wort || "zan", treffer: 1, von: 1 }
+      : h.art === "neu" ? { wort: h.eintrag.wort, abgefragt: h.eintrag.wort, neu: true, treffer: 1, von: 1 }
+      : { abgefragt: h.eintrag.wort, wiederholung: true, treffer: falsch ? 0 : 1, von: 1 };
+    log.push({ quelle: "pause", id: "lumisch", art: ["kraft"], ergebnis, zeit: new Date(tag(n)).toISOString() });
+  }
+  assert.ok(verlauf.slice(0, 21).every((h) => h.art === "plan"));
+  const danach = verlauf.slice(21).map((h) => h.art);
+  assert.deepEqual(danach.slice(0, 6), ["wiederholung", "wiederholung", "neu", "wiederholung", "wiederholung", "neu"], "Tag 22–27");
+  assert.equal(danach.filter((a) => a === "neu").length, 6, "Tag 22–40: jeder dritte Tag ein neues Wort");
+  const neue = verlauf.filter((h) => h.art === "neu").map((h) => h.eintrag.wort);
+  assert.equal(new Set(neue).size, neue.length, "kein neues Wort doppelt");
+  assert.ok(neue.every((w) => l.woerterbuch.some((x) => x.wort === w && !x.im_plan)));
+  assert.equal(verlauf[25].eintrag.wort, verlauf[24].eintrag.wort, "Tag 26 wiederholt das Wort, das an Tag 25 falsch war");
+  assert.ok(verlauf.slice(21).every((h) => h.eintrag?.wort), "es gibt immer ein Wort");
+  // Daten: vorerst nur Plan und Beispielsätze
+  assert.equal(l.woerterbuch.filter((w) => w.im_plan).length, 20);
+  assert.ok(l.woerterbuch.length <= 40 && l.woerter.every((w) => l.woerterbuch.some((x) => x.wort === w.wort)), "auch die Ablenkwörter nur aus Plan und Beispielsätzen");
+  assert.deepEqual(lumischAntworten("bei, in, an, auf, hier"), ["bei", "in", "an", "auf", "hier"]);
+  assert.deepEqual(lumischAntworten("Eis, kalt"), ["Eis", "kalt"]);
 });

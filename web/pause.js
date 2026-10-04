@@ -260,6 +260,36 @@ export function rueckspiegel(log, linie, einstellungen, jetzt, formen = []) {
   const woerter = (bis) => new Set(p.filter((x) => x.id === "lumisch" && Date.parse(x.zeit) <= bis && x.ergebnis?.wort).map((x) => x.ergebnis.wort)).size;
   const a = woerter(vorMonat), b = woerter(jetzt);
   if (b > a) return a ? `Vor einem Monat kanntest du ${zahlText(a)} Lumisch-Wörter. Heute sind es ${zahlText(b)}.` : `Vor einem Monat war Lumisch noch fremd. Heute kennst du ${b === 1 ? "ein Wort" : `${zahlText(b)} Wörter`}.`;
-  const tage = new Set(p.filter((x) => Date.parse(x.zeit) > vorMonat).map((x) => tagVon(Date.parse(x.zeit)))).size;
-  return tage ? `Im letzten Monat hattest du an ${zahlText(tage)} Tagen eine Pause. Schön, dass du dir die Zeit nimmst.` : null;
+  // Kein Fortschritt: höchstens die Lieblingsformen des Monats, in Worten und ohne Zahl (nie Tage oder Besuche zählen)
+  const zaehl = {};
+  for (const x of p.filter((y) => Date.parse(y.zeit) > vorMonat && !y.abgebrochen)) zaehl[x.id] = (zaehl[x.id] ?? 0) + 1;
+  const lieb = formen.filter((f) => f.beim && !l.aus.includes(f.id) && (zaehl[f.id] ?? 0) >= 2).sort((a, b) => zaehl[b.id] - zaehl[a.id] || gewichtVon(l, b.id) - gewichtVon(l, a.id)).slice(0, 2);
+  return lieb.length ? `Diesen Monat warst du am liebsten ${lieb.map((f) => f.beim).join(" und ")}.` : null;
 }
+
+// ---------- Lumisch über Tag 21 hinaus (Nachtrag 2026-10-04-05) ----------
+/**
+ * Was ist heute bei Lumisch dran? Der Tag zählt die früheren Tage, an denen Lumisch gespielt wurde (heute bleibt es den
+ * ganzen Tag dasselbe). Bis Tag 21 der Plan. Danach an jedem dritten Tag ein neues Wort aus dem Wörterbuch (nach Gruppen
+ * geordnet), an den anderen eine Wiederholung: ein gelerntes Wort aus dem Kopf, das zuletzt falsche zuerst, sonst das am
+ * längsten nicht gefragte. Gibt { art: "plan" | "neu" | "wiederholung", tag, eintrag }.
+ */
+export function lumischHeute(log, lumisch, heute) {
+  const eintr = pauseEintraege(log).filter((e) => e.id === "lumisch" && !e.abgebrochen);
+  const frueher = eintr.filter((e) => tagVon(Date.parse(e.zeit)) < heute);
+  const tag = new Set(frueher.map((e) => tagVon(Date.parse(e.zeit)))).size + 1;
+  const plan = lumisch.plan;
+  if (tag <= plan.length) return { art: "plan", tag, eintrag: plan[tag - 1] };
+  const wb = lumisch.woerterbuch ?? lumisch.woerter ?? [];
+  const gelernt = new Set([...plan.filter((x) => x.wort).map((x) => x.wort), ...frueher.filter((e) => e.ergebnis?.wort).map((e) => e.ergebnis.wort)]);
+  const neu = wb.find((w) => !gelernt.has(w.wort));
+  if ((tag - plan.length) % 3 === 0 && neu) return { art: "neu", tag, eintrag: neu };
+  const zuletzt = new Map();
+  for (const e of eintr) { const w = e.ergebnis?.abgefragt ?? e.ergebnis?.wort; if (w) zuletzt.set(w, e); }
+  const bekannt = wb.filter((w) => gelernt.has(w.wort));
+  const falsch = bekannt.filter((w) => zuletzt.get(w.wort)?.ergebnis?.treffer === 0).sort((a, b) => Date.parse(zuletzt.get(b.wort).zeit) - Date.parse(zuletzt.get(a.wort).zeit));
+  const alt = [...bekannt].sort((a, b) => (Date.parse(zuletzt.get(a.wort)?.zeit ?? 0) || 0) - (Date.parse(zuletzt.get(b.wort)?.zeit ?? 0) || 0));
+  return { art: "wiederholung", tag, eintrag: falsch[0] ?? alt[0] ?? neu ?? plan[plan.length - 1] };
+}
+/** Gültige Antworten auf „Was heißt …?“: die Bedeutungen aus dem Wörterbuch, einzeln. */
+export const lumischAntworten = (deutsch) => String(deutsch ?? "").split(/,\s*|\s+oder\s+/).map((x) => x.replace(/\(.*?\)/g, "").trim()).filter(Boolean);

@@ -35,6 +35,7 @@ export function pauseFehler(j) {
     if (x.braucht !== undefined && !BRAUCHT.includes(x.braucht)) F(`braucht: ${BRAUCHT.join(", ")}`);
     if (x.zone !== undefined && !(Number.isInteger(x.zone?.stufen) && x.zone.stufen >= 1 && x.zone.stufen <= 20 && Number.isInteger(x.zone.start) && x.zone.start >= 1 && x.zone.start <= x.zone.stufen)) F("zone: { stufen 1–20, start }");
     if (x.auffrischung_monate !== undefined && !(Array.isArray(x.auffrischung_monate) && x.auffrischung_monate.every((m) => Number.isInteger(m) && m > 0))) F("auffrischung_monate: Liste ganzer Monate");
+    if (x.beim !== undefined && !text(x.beim, 40)) F("beim: kurze Wendung für den Rückspiegel (höchstens 40), z. B. „beim Pilz“");
     if (x.bedingung !== undefined && !(x.bedingung && typeof x.bedingung.funktion === "string" && Object.keys(x.bedingung).length === 1)) F("bedingung: nur { funktion }");
     if (!x.bedingung && !GEBAUT.includes(x.id)) F("diese Form gibt es in der App nicht: bedingung.funktion setzen");
   });
@@ -52,6 +53,13 @@ export function pauseFehler(j) {
   else {
     l.plan.forEach((p, i) => { if (p.tag !== i + 1 || typeof p.wort !== "string" || !text(p.bedeutung, 80) || !text(p.aufgabe, 200)) f.push(`lumisch.plan[${i}]: tag, wort, bedeutung, aufgabe`); });
     l.woerter.forEach((w, i) => { if (!/^[a-z]{1,12}$/.test(w?.wort ?? "") || !text(w.deutsch, 60)) f.push(`lumisch.woerter[${i}]: wort (a–z) und deutsch`); });
+    if (l.woerterbuch !== undefined) {
+      if (!Array.isArray(l.woerterbuch)) f.push("lumisch.woerterbuch: Liste");
+      else l.woerterbuch.forEach((w, i) => {
+        if (!/^[a-z]{1,12}$/.test(w?.wort ?? "") || !text(w.deutsch, 80) || !text(w.gruppe, 40)) f.push(`lumisch.woerterbuch[${i}]: wort, deutsch, gruppe`);
+        if (w.beispiel !== undefined && !(text(w.beispiel?.lumisch, 120) && text(w.beispiel?.deutsch, 160))) f.push(`lumisch.woerterbuch[${i}]: beispiel { lumisch, deutsch }`);
+      });
+    }
   }
   const ohneCode = !/<script\b|\son[a-z]+\s*=|javascript:/i.test(JSON.stringify(j));
   if (!ohneCode) f.push("enthält Code (Skript, Ereignis-Attribut oder javascript:)");

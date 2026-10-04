@@ -82,6 +82,12 @@ p { margin: 0 0 1em; }
 .plan ul { padding-left: 1.1rem; margin: .5rem 0 0; }
 .plan li { margin: .25rem 0; }
 .plan.featured { border: 2px solid var(--accent); }
+/* Preise: untereinander am Handy, zwei mal zwei auf mittleren, vier nebeneinander auf breiten Schirmen */
+.grid-preise { grid-template-columns: 1fr; }
+@media (min-width: 640px) { .grid-preise { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .grid-preise { grid-template-columns: repeat(4, 1fr); } }
+.plan .tag { font-size: .7rem; vertical-align: middle; }
+.grid-preise .price small { display: block; margin-top: .15rem; }
 .site-foot { padding: 2rem 0 3rem; color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line); }
 
 /* ---------- App ---------- */
@@ -378,7 +384,7 @@ textarea { border-radius: var(--radius-sm) !important; }
 
 /* ---------- Pause: Happen für zwischendurch (Auftrag 2026-10-04-pause-stufe1) ----------
    Ein Rahmen über der Tagesseite, ruhig, ohne Rot: „Schau, so war's“ ist blau umrandet, Gelingen grün. */
-.pause-rahmen { position: fixed; inset: 0; z-index: 200; background: rgb(20 18 16 / .45); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.pause-rahmen { position: fixed; inset: 0; z-index: 1100; /* über Kopfleiste (900), Tableiste (950) und Seitenleiste (1000) */ background: rgb(20 18 16 / .45); display: flex; align-items: center; justify-content: center; padding: 16px; }
 .pause-rahmen.pause--abend { background: rgb(8 8 14 / .78); }
 .pause-karte { width: 100%; max-width: 520px; max-height: calc(100vh - 32px); overflow: auto; background: var(--surface, #fff); color: var(--text, #1c1b19); border-radius: 18px; padding: 1rem 1.1rem 1.1rem; box-shadow: 0 10px 40px rgb(0 0 0 / .3); }
 .pause--abend .pause-karte { background: #1f1e26; color: #eceaf2; }

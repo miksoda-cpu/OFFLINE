@@ -14,7 +14,6 @@ OFFLINE ist ein Offline-Wissens- und Werkzeugpaket für Österreich. Es läuft o
 - **Österreich-Paket** – Notrufe, Sirenensignale, Blackout-Vorsorge, Behördenwege, Rechtsgrundlagen (RIS), regional nach Bundesland
 - **Karten** – Österreich offline (basemap.at / OpenStreetMap)
 - **KI-Assistent** – lokales Sprachmodell, das auf die installierten Inhalte zugreift (RAG)
-- **Kurse** – Offline-Kurse der digitalworld Academy
 - **Notizen** – lokal, Markdown
 - **Tresor und Notfallmappe** – verschlüsselter Bereich für Passwörter, Polizzen, Ausweisscans; wir haben keinen Schlüssel ([TRESOR.md](TRESOR.md))
 - **Bereit und das Wesen** – eine Zahl 0–100 aus vier Quellen mit Verfall, und ein Lumi von unter dem Eis, das Tipps gibt ([WESEN.md](WESEN.md))
@@ -44,7 +43,7 @@ Ablauf: Installer starten → Speicherort wählen → Pakete vom Stick oder aus 
 
 - **Intervall:** täglich, wöchentlich, monatlich – oder manuell
 - **Bedingungen:** nur wenn online, optional nur im WLAN/ohne getaktete Verbindung, optional Zeitfenster (z. B. 02:00–05:00)
-- **Delta-Updates** für eigene Inhalte (Österreich-Paket, Kurse): Es wird nur übertragen, was sich geändert hat.
+- **Delta-Updates** für eigene Inhalte (Österreich-Paket): Es wird nur übertragen, was sich geändert hat.
 - **Voll-Updates** für ZIM-Pakete (Kiwix veröffentlicht etwa monatlich komplette Dateien) – im Hintergrund, fortsetzbar, mit Prüfsumme; alte Version bleibt bis zum erfolgreichen Tausch erhalten.
 - **Signiert:** Jedes Paket und der Katalog sind mit Ed25519 signiert; die App prüft vor dem Einspielen. Format und Ablauf: [PAKETFORMAT.md](PAKETFORMAT.md).
 - **Änderungsprotokoll** in Klartext: „Was ist neu?“
@@ -100,7 +99,7 @@ Vorbild sind Spiele: täglich ein Ladebalken beim Start, dazwischen stille Korre
 
 | Routine | Was | Wie oft | Weg | iOS/iPadOS |
 |---|---|---|---|---|
-| 1. Inhalte | Pakete: Tipps, Bücher, Karten, Kurse, Skins des Wesens (Farben, Pixel, Laute als Dateien) | täglich bis wöchentlich | Abo im Hintergrund; sichtbarer Balken beim Start (offen) | ja |
+| 1. Inhalte | Pakete: Tipps, Bücher, Karten, Skins des Wesens (Farben, Pixel, Laute als Dateien) | täglich bis wöchentlich | Abo im Hintergrund; sichtbarer Balken beim Start (offen) | ja |
 | 2. Stille Korrekturen | kleine App-Änderungen: Layout, neue Bedingung im Wortschatz des Wesens, Fehlerbehebung | alle paar Wochen | Updater: beim Start prüfen, leise laden, beim nächsten Start aktiv (heute noch Knopf) | **nein**, Apple verbietet Selbständerung |
 | 3. Große Updates | neue Funktionen: Tresor, Wesen, Karte, KI | alle paar Monate | Installer, App Store | ja, nur so |
 
@@ -122,7 +121,7 @@ Regeln daraus:
 | data.gv.at | z. B. Apotheken, Krankenhäuser, Schutzräume | meist CC BY 4.0 | 🔶 je Datensatz prüfen |
 | Zivilschutzverband, oesterreich.gv.at, gesundheit.gv.at | Ratgeber, Behördenwege | urheberrechtlich geschützt | ❌ nur mit Freigabe → Kooperation anfragen |
 | ORF, Zeitungen | Nachrichten | geschützt | ❌ |
-| Eigene Texte (The Digioneer, digitalworld Academy) | Vorsorge, Kurse | eigene | ✅ |
+| Eigene Texte (The Digioneer, digitalworld Academy) | Vorsorge | eigene | ✅ |
 
 **Grundsatz:** Was wir nicht lizenzieren können, schreiben wir selbst – mit Quellenverweis auf die offiziellen Stellen.
 
@@ -158,24 +157,30 @@ Die Basis ist nicht nackt: Wikipedia, Karten, Erste Hilfe, Gemeinfreies und die 
 
 Gestaltung: [DESIGN.md](DESIGN.md). Sicherheit und Bedrohungsmodell: [SICHERHEIT.md](SICHERHEIT.md).
 
-| | **Frei** | **Pro** (Abo) | **Gemeinde / Schule / Betrieb** |
-|---|---|---|---|
-| App + Installer | ✅ | ✅ | ✅ |
-| Basis-Inhalte (Wikipedia, Karte AT) | ✅ | ✅ | ✅ |
-| Zugang | Anmeldung mit Name + E-Mail | Ghost-Abo | Vertrag |
-| Updates | manuell | automatisch, Deltas | automatisch, zentral verwaltet |
-| Österreich-Paket | Grundversion | laufend gepflegt, nach Bundesland | + eigene Gemeindeinhalte |
-| Blackout-/Krisenvorsorge-Paket | Checkliste | vollständig, mit Plänen | + Einsatzpläne, Aushänge |
-| KI-Modelle für Deutsch | Basis-Modell | optimierte Modelle | ✅ |
-| Kurse digitalworld Academy | Leseprobe | ✅ | ✅ + Mehrplatz |
-| Support | Community | E-Mail | Ansprechperson, Schulung |
-| Preisidee | 0 € | 4–6 €/Monat oder 39–49 €/Jahr | ab ~290 €/Jahr je Standort |
+Preise beschlossen von Mik am 04.10.2026 (Kalkulation im Projekt: `OFFLINE-Preise-Kalkulation.md`); auf der Startseite seit 0.4.1. Was es noch nicht gibt, steht dort mit „kommt“.
+
+| | **Gratis** | **Pro** (Abo) | **Pro+ Familie** (Abo) | **Gemeinde / Schule / Betrieb** |
+|---|---|---|---|---|
+| Preis | 0 € | 7,90 €/Monat oder 79 €/Jahr | 19,90 €/Monat oder 199 €/Jahr | ab 590 €/Jahr je Standort |
+| App + Installer | ✅ | ✅ | ✅ | ✅ |
+| Basis-Inhalte (Wikipedia, Karte AT) | ✅ | ✅ | ✅ | ✅ |
+| Zugang | Anmeldung mit Name + E-Mail | Ghost-Abo | Ghost-Abo, bis zu 5 Personen | Vertrag |
+| Updates | manuell | automatisch, Deltas | automatisch, Deltas | automatisch, zentral verwaltet |
+| Österreich-Paket | Grundversion | nach Bundesland | nach Bundesland | + eigene Gemeindeinhalte |
+| Blackout-/Krisenvorsorge-Paket | Checkliste | vollständig | vollständig | + Einsatzpläne, Aushänge |
+| RIS-Gesetzesauszug | – | wöchentlich | wöchentlich | wöchentlich |
+| Lumi mit Tipps | ✅ | ✅ | ✅ | ✅ |
+| Schließfach (kommt) | 500 MB | 50 GB | 500 GB | nach Vertrag |
+| Kinder-Modus am Elternkonto (kommt) | – | – | ✅ | – |
+| KI-Modelle für Deutsch (kommt) | Basis-Modell | optimierte Modelle | optimierte Modelle | ✅ |
+| Kurse digitalworld Academy | vorerst nicht in OFFLINE (Entscheidung Mik, 27.09.2026) | | | |
+| Support | Community | E-Mail | E-Mail | Ansprechperson, Schulung |
 
 **Zusatz:** vorbespielter USB-Stick/SSD („OFFLINE-Stick“) und Mini-PC als Komplettgerät – Einmalkauf, inklusive 12 Monate Pro.
 
 **Update-Server und Ablage großer Pakete (Entscheidung offen, Stand 24.09.2026):** Vercel liefert Katalog und kleine Textpakete. Für ZIM- und Kartenpakete (0,9–42 GB) braucht es einen Objektspeicher mit Bereichsanfragen und günstigem Datenverkehr. Vorschlag: **Cloudflare R2** (kein Entgelt für ausgehenden Verkehr, 10 GB Speicher frei, danach ca. 0,015 $/GB/Monat) oder **Hetzner Object Storage** (EU, ca. 5 €/Monat für 1 TB Speicher und 1 TB Verkehr inklusive). Die App braucht dafür keine Änderung, nur eine andere Katalog-Basis-URL. Die Pakete selbst werden in GitHub Actions gebaut (Download von kiwix.org bzw. Protomaps, Werkzeug, Signatur) und hochgeladen.
 
-**Große Pakete als In-App-Käufe (Entscheidung 24.09.2026):** Die großen Inhaltspakete (Wikipedia komplett, Karten in hoher Auflösung, KI-Modelle, Kurse, Österreich-Paket Pro) sind Pro-Inhalte. Verkauft wird der Dienst – Aufbereitung, Signatur, Update-Abo, Delta-Updates, Support –, nicht der Inhalt; Wikipedia und Wikivoyage bleiben CC BY-SA und werden mit Namensnennung ausgeliefert. Technik (Phase 5): Pro-Pakete liegen in einem privaten Bereich des Hetzner-Buckets; die App holt vor dem Download bei einer Vercel-Funktion mit ihrem Lizenzschlüssel eine zeitlich begrenzte Download-Adresse (vorsignierte S3-URL). Die Funktion prüft den Schlüssel gegen die Ghost-Mitgliedschaft „OFFLINE Pro“. Freie Pakete (Österreich-Paket Grundversion, Wikipedia kompakt, Karte Österreich, Wikivoyage) bleiben öffentlich, damit der Gratis-Einstieg ohne Hürde funktioniert.
+**Große Pakete als In-App-Käufe (Entscheidung 24.09.2026):** Die großen Inhaltspakete (Wikipedia komplett, Karten in hoher Auflösung, KI-Modelle, Österreich-Paket Pro) sind Pro-Inhalte. Verkauft wird der Dienst – Aufbereitung, Signatur, Update-Abo, Delta-Updates, Support –, nicht der Inhalt; Wikipedia und Wikivoyage bleiben CC BY-SA und werden mit Namensnennung ausgeliefert. Technik (Phase 5): Pro-Pakete liegen in einem privaten Bereich des Hetzner-Buckets; die App holt vor dem Download bei einer Vercel-Funktion mit ihrem Lizenzschlüssel eine zeitlich begrenzte Download-Adresse (vorsignierte S3-URL). Die Funktion prüft den Schlüssel gegen die Ghost-Mitgliedschaft „OFFLINE Pro“. Freie Pakete (Österreich-Paket Grundversion, Wikipedia kompakt, Karte Österreich, Wikivoyage) bleiben öffentlich, damit der Gratis-Einstieg ohne Hürde funktioniert.
 
 **Anmeldung und Abo über Ghost (The Digioneer):**
 - Das Gratis-Paket gibt es gegen Anmeldung mit Name und E-Mail (Double-Opt-In). Die bestätigte Adresse ist der Filter für ernsthaftes Interesse, der Newsletter ist optional und braucht ein eigenes Häkchen.

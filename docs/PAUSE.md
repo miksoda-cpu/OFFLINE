@@ -35,7 +35,7 @@ Eine Funktion im Kern, die man wie ein Modul ein- und ausschaltet: **Übersicht 
 |---|---|---|---|
 | Wo war der Pilz? | Tempo | Lumi-Welt, neun Felder; Blitzdauer je Stufe (800 ms bis 150 ms), außen erst ab Stufe 3 | 10 Stufen; Auffrischung nach 11 und 35 Monaten vorgemerkt |
 | Der eingebaute Fehler | Kraft, Tempo | 15 Geschichten von unten, je ein Satz widerspricht der Geschichte selbst | 3 Stufen |
-| Lumisch | Kraft, Beweglichkeit | ein Wort am Tag nach dem 21-Tage-Plan, dazu eine Abfrage mit 3 bis 4 Möglichkeiten | 3 Stufen |
+| Lumisch | Kraft, Beweglichkeit | Tag 1–21 ein Wort nach dem Plan, dazu eine Abfrage mit 3 bis 4 Möglichkeiten. Ab Tag 22 (seit 0.4.1, `lumischHeute`): an zwei von drei Tagen eine Wiederholung aus dem Kopf (zuletzt Falsches zuerst), an jedem dritten ein neues Wort aus dem Wörterbuch nach Gruppen (Welt, Haus, Menschen, Tun …), mit Beispielsatz. Vorerst nur Plan- und Beispielsatz-Wörter (37), der Rest nach der Wortprüfung. | 3 Stufen |
 | Was kommt als Nächstes? | Kraft | Roman der Woche: gestern das Ende zeigen, Vermutung (auch nur im Kopf), nach dem Lesen auflösen | – |
 | Türsteherfrage | Kraft | das Tagesrätsel von gestern (mit Antwortfeld) oder der Autor des Romans | – |
 | Der Tag rückwärts | Kraft | Abend: drei Fragen vom Abend zum Morgen, nichts wird gespeichert, der Rahmen wird dunkel | – |
@@ -56,7 +56,7 @@ Eine Funktion im Kern, die man wie ein Modul ein- und ausschaltet: **Übersicht 
 
 ## Deine Linie (`#linie`)
 
-Erreichbar aus Übersicht › Pause. Zeigt in Balken, was gemocht wird, die ausgeschlossenen Formen (Zurückholen), die Stufe je Form mit „leichter“/„schwerer“, den Wochensatz („Ich achte darauf, dass …“), die vorgemerkten Auffrischungen, die Antworten, die Einstellungen (Alter, Appetit, Vertraut ↔ Neues), „So sehe ich dich“ nach dem Kennenlernen, die Info zur Wirkung (nur die erlaubten Sätze) und „Linie zurücksetzen“ / „Spiel-Log löschen“. Der **Rückspiegel** kommt höchstens einmal im Monat als ruhige Karte auf der Tagesseite, in Worten, ohne Punkte.
+Erreichbar aus Übersicht › Pause. Zeigt in Balken, was gemocht wird, die ausgeschlossenen Formen (Zurückholen), die Stufe je Form mit „leichter“/„schwerer“, den Wochensatz („Ich achte darauf, dass …“), die vorgemerkten Auffrischungen, die Antworten, die Einstellungen (Alter, Appetit, Vertraut ↔ Neues), „So sehe ich dich“ nach dem Kennenlernen, die Info zur Wirkung (nur die erlaubten Sätze) und „Linie zurücksetzen“ / „Spiel-Log löschen“. Der **Rückspiegel** kommt höchstens einmal im Monat als ruhige Karte auf der Tagesseite, in Worten, ohne Punkte. Er spricht nur über **Fortschritt** (Pilz, Lumisch). Gibt es keinen, nennt er höchstens die Lieblingsformen des Monats ohne Zahl („Diesen Monat warst du am liebsten beim Pilz und beim Atemfenster.“, Feld `beim` je Form); sonst kommt keine Karte. Er zählt nie Tage oder Besuche (seit 0.4.1, Test in `web/pause.test.mjs`).
 
 ## Milde Zugkraft: die fünf Prüffragen je Form
 
@@ -74,6 +74,8 @@ Erreichbar aus Übersicht › Pause. Zeigt in Balken, was gemocht wird, die ausg
 Für alle gilt: keine Serien, kein Push, keine Ranglisten, keine Optimierung auf Nutzungszeit, Bewertungen privat, Spiel-Log nur am Gerät.
 
 ## Bedienbarkeit
+
+Der Rahmen liegt über Kopf- und Tableiste (seit 0.4.1; in 0.4.0 lagen am Handy beide Leisten über dem Dialog).
 
 Dialog mit `role="dialog"` und `aria-modal`, Fokus auf das erste Bedienelement, Escape = „Nicht jetzt“. Alle Knöpfe mindestens 44 px, bei 360 px kein seitliches Überlaufen. Texte sind Text (vorlesbar). Der Pilz ist ein Sehspiel; die Felder sind beschriftet („oben links“ …), das Blitzen selbst kann ein Bildschirmleser nicht ersetzen – wer nicht sieht, schließt die Form mit „Nicht mehr“ aus.
 

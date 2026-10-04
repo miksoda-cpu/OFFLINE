@@ -32,7 +32,8 @@
     11,
     35
    ],
-   "herkunft": "Übungskatalog 7.5 (L)"
+   "herkunft": "Übungskatalog 7.5 (L)",
+   "beim": "beim Pilz"
   },
   {
    "id": "fehler",
@@ -62,7 +63,8 @@
     "stufen": 3,
     "start": 1
    },
-   "herkunft": "Übungskatalog 7.6 (C)"
+   "herkunft": "Übungskatalog 7.6 (C)",
+   "beim": "bei den Geschichten von unten"
   },
   {
    "id": "lumisch",
@@ -92,7 +94,8 @@
     "stufen": 3,
     "start": 1
    },
-   "herkunft": "Übungskatalog 7.7 (C), Lumisch-Wörterbuch Abschnitt 8"
+   "herkunft": "Übungskatalog 7.7 (C), Lumisch-Wörterbuch Abschnitt 8",
+   "beim": "beim Lumisch"
   },
   {
    "id": "naechstes",
@@ -118,7 +121,8 @@
    "tageszeit": "jederzeit",
    "braucht": "roman",
    "einladung": "Zum Roman der Woche: Was glaubst du, wie es weitergeht?",
-   "herkunft": "Übungskatalog 7.9 (F)"
+   "herkunft": "Übungskatalog 7.9 (F)",
+   "beim": "beim Roman der Woche"
   },
   {
    "id": "tuersteher",
@@ -143,7 +147,8 @@
    "tageszeit": "jederzeit",
    "braucht": "gestern",
    "einladung": "Eine Frage zu etwas, das du gestern hier gelesen hast. Hol es aus dem Kopf.",
-   "herkunft": "Übungskatalog 7.1 (B)"
+   "herkunft": "Übungskatalog 7.1 (B)",
+   "beim": "bei der Türsteherfrage"
   },
   {
    "id": "rueckwaerts",
@@ -167,7 +172,8 @@
    ],
    "tageszeit": "abend",
    "einladung": "Drei Dinge vom Tag, vom Abend zurück zum Morgen. Du musst nichts aufschreiben.",
-   "herkunft": "Übungskatalog 7.12 (N)"
+   "herkunft": "Übungskatalog 7.12 (N)",
+   "beim": "beim Tag rückwärts"
   },
   {
    "id": "zeitgefuehl",
@@ -196,7 +202,8 @@
     "stufen": 3,
     "start": 1
    },
-   "herkunft": "Übungskatalog 7.4 (A)"
+   "herkunft": "Übungskatalog 7.4 (A)",
+   "beim": "beim Zeitgefühl"
   },
   {
    "id": "atem",
@@ -220,7 +227,8 @@
    ],
    "tageszeit": "jederzeit",
    "einladung": "Vier ruhige Atemzüge. Der Bildschirm wird dabei dunkler.",
-   "herkunft": "Übungskatalog 3.A"
+   "herkunft": "Übungskatalog 3.A",
+   "beim": "beim Atemfenster"
   },
   {
    "id": "sonnengruss",
@@ -678,27 +686,15 @@
   "woerter": [
    {
     "wort": "zan",
-    "deutsch": "Licht"
+    "deutsch": "Licht, hell, leuchten"
    },
    {
     "wort": "mo",
-    "deutsch": "Wasser"
-   },
-   {
-    "wort": "pelu",
-    "deutsch": "Brot"
-   },
-   {
-    "wort": "tiv",
-    "deutsch": "Weg"
-   },
-   {
-    "wort": "orr",
-    "deutsch": "Dach"
+    "deutsch": "Wasser, nass"
    },
    {
     "wort": "kir",
-    "deutsch": "Eis, kalt"
+    "deutsch": "Eis, kalt, frieren"
    },
    {
     "wort": "pim",
@@ -709,36 +705,24 @@
     "deutsch": "Beere"
    },
    {
-    "wort": "ne",
-    "deutsch": "nicht, kein"
-   },
-   {
-    "wort": "nu",
-    "deutsch": "wir"
-   },
-   {
-    "wort": "li",
-    "deutsch": "du"
-   },
-   {
-    "wort": "ke",
-    "deutsch": "früher"
-   },
-   {
-    "wort": "su",
-    "deutsch": "bald"
-   },
-   {
-    "wort": "ma",
-    "deutsch": "Fragewort"
+    "wort": "pelu",
+    "deutsch": "Brot, backen"
    },
    {
     "wort": "sen",
-    "deutsch": "essen"
+    "deutsch": "essen, Essen"
+   },
+   {
+    "wort": "tiv",
+    "deutsch": "Weg, Straße"
+   },
+   {
+    "wort": "orr",
+    "deutsch": "Dach"
    },
    {
     "wort": "lik",
-    "deutsch": "mögen"
+    "deutsch": "mögen, gern haben"
    },
    {
     "wort": "mi",
@@ -754,19 +738,47 @@
    },
    {
     "wort": "sum",
-    "deutsch": "gut"
+    "deutsch": "gut, schön"
    },
    {
-    "wort": "tul",
-    "deutsch": "danke"
+    "wort": "ne",
+    "deutsch": "nicht, kein, null, un-"
    },
    {
-    "wort": "sul",
-    "deutsch": "bitte"
+    "wort": "nu",
+    "deutsch": "wir"
    },
    {
-    "wort": "ak",
-    "deutsch": "ja"
+    "wort": "li",
+    "deutsch": "du"
+   },
+   {
+    "wort": "ke",
+    "deutsch": "früher, vorher"
+   },
+   {
+    "wort": "su",
+    "deutsch": "bald, später"
+   },
+   {
+    "wort": "ma",
+    "deutsch": "was, wer, wo, wann, wie viele, wie"
+   },
+   {
+    "wort": "nezan",
+    "deutsch": "dunkel, Dunkelheit"
+   },
+   {
+    "wort": "unu",
+    "deutsch": "unten, Zuhause"
+   },
+   {
+    "wort": "uvo",
+    "deutsch": "oben, Himmel"
+   },
+   {
+    "wort": "zel",
+    "deutsch": "Tag"
    },
    {
     "wort": "ora",
@@ -774,89 +786,406 @@
    },
    {
     "wort": "pok",
-    "deutsch": "Tür"
+    "deutsch": "Tür, öffnen"
    },
    {
-    "wort": "uvo",
-    "deutsch": "oben, Himmel"
+    "wort": "nem",
+    "deutsch": "Name"
    },
    {
-    "wort": "unu",
-    "deutsch": "unten, Zuhause"
+    "wort": "kom",
+    "deutsch": "kommen"
    },
    {
-    "wort": "zel",
-    "deutsch": "Tag"
+    "wort": "tevi",
+    "deutsch": "neu"
    },
    {
-    "wort": "nezel",
-    "deutsch": "Nacht"
+    "wort": "kiru",
+    "deutsch": "Angst"
    },
    {
-    "wort": "mili",
-    "deutsch": "Blume"
+    "wort": "ak",
+    "deutsch": "ja"
    },
    {
-    "wort": "tura",
-    "deutsch": "Baum"
+    "wort": "ko",
+    "deutsch": "hin, zu, nach"
    },
    {
-    "wort": "pinu",
-    "deutsch": "Pinguin"
+    "wort": "sul",
+    "deutsch": "bitte"
    },
    {
-    "wort": "sila",
-    "deutsch": "Fisch"
+    "wort": "ta",
+    "deutsch": "jetzt"
    },
    {
-    "wort": "tuk",
-    "deutsch": "Herz"
+    "wort": "tal",
+    "deutsch": "immer, jedes Mal"
    },
    {
-    "wort": "oki",
-    "deutsch": "Auge"
+    "wort": "to",
+    "deutsch": "dieses, das da, das"
    },
    {
-    "wort": "zik",
-    "deutsch": "Stern"
+    "wort": "ul",
+    "deutsch": "bei, in, an, auf, hier"
+   }
+  ],
+  "woerterbuch": [
+   {
+    "wort": "zan",
+    "deutsch": "Licht, hell, leuchten",
+    "gruppe": "Welt und Wetter",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "ul uvo zan zan.",
+     "deutsch": "Hier oben ist es hell."
+    }
    },
    {
-    "wort": "molu",
-    "deutsch": "Regen"
+    "wort": "mo",
+    "deutsch": "Wasser, nass",
+    "gruppe": "Welt und Wetter",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "ke zel3 nu ne mi mo.",
+     "deutsch": "Vor drei Tagen hatten wir kein Wasser."
+    }
    },
    {
-    "wort": "kirmulo",
-    "deutsch": "Schnee"
+    "wort": "kir",
+    "deutsch": "Eis, kalt, frieren",
+    "gruppe": "Welt und Wetter",
+    "im_plan": true
    },
    {
-    "wort": "lis",
-    "deutsch": "lesen, Buch"
+    "wort": "pim",
+    "deutsch": "Pilz",
+    "gruppe": "Pflanzen und Pilze",
+    "im_plan": true
    },
    {
-    "wort": "kami",
-    "deutsch": "Freund, Freundin"
+    "wort": "kuli",
+    "deutsch": "Beere",
+    "gruppe": "Pflanzen und Pilze",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "ta nu sen kuli12.",
+     "deutsch": "Wir essen zwölf Beeren."
+    }
    },
    {
-    "wort": "vul",
-    "deutsch": "warm"
+    "wort": "pelu",
+    "deutsch": "Brot, backen",
+    "gruppe": "Essen und Trinken",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "li mi pelu ma.",
+     "deutsch": "Hast du Brot?"
+    }
+   },
+   {
+    "wort": "sen",
+    "deutsch": "essen, Essen",
+    "gruppe": "Essen und Trinken",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "ta nu sen kuli12.",
+     "deutsch": "Wir essen zwölf Beeren."
+    }
+   },
+   {
+    "wort": "tiv",
+    "deutsch": "Weg, Straße",
+    "gruppe": "Haus und Dinge",
+    "im_plan": true
+   },
+   {
+    "wort": "orr",
+    "deutsch": "Dach",
+    "gruppe": "Haus und Dinge",
+    "im_plan": true
+   },
+   {
+    "wort": "lik",
+    "deutsch": "mögen, gern haben",
+    "gruppe": "Tun",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "Susi. ke to tevi. Susi lik.",
+     "deutsch": "Susi. Das war neu. Ich mag es."
+    }
+   },
+   {
+    "wort": "mi",
+    "deutsch": "haben",
+    "gruppe": "Tun",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "Susi mi kuli3.",
+     "deutsch": "Ich habe drei Beeren."
+    }
+   },
+   {
+    "wort": "pat",
+    "deutsch": "gehen",
+    "gruppe": "Tun",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "su nu pat ko unu.",
+     "deutsch": "Bald gehen wir nach unten."
+    }
+   },
+   {
+    "wort": "sumu",
+    "deutsch": "schlafen, müde",
+    "gruppe": "Tun",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "ke Susi sumu.",
+     "deutsch": "Ich habe geschlafen."
+    }
+   },
+   {
+    "wort": "sum",
+    "deutsch": "gut, schön",
+    "gruppe": "Wie etwas ist",
+    "im_plan": true
+   },
+   {
+    "wort": "ne",
+    "deutsch": "nicht, kein, null, un-",
+    "gruppe": "Kleine Wörter",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "ke zel3 nu ne mi mo.",
+     "deutsch": "Vor drei Tagen hatten wir kein Wasser."
+    }
+   },
+   {
+    "wort": "nu",
+    "deutsch": "wir",
+    "gruppe": "Kleine Wörter",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "ta nu sen kuli12.",
+     "deutsch": "Wir essen zwölf Beeren."
+    }
+   },
+   {
+    "wort": "li",
+    "deutsch": "du",
+    "gruppe": "Kleine Wörter",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "li mi pelu ma.",
+     "deutsch": "Hast du Brot?"
+    }
+   },
+   {
+    "wort": "ke",
+    "deutsch": "früher, vorher",
+    "gruppe": "Kleine Wörter",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "Susi. ke to tevi. Susi lik.",
+     "deutsch": "Susi. Das war neu. Ich mag es."
+    }
+   },
+   {
+    "wort": "su",
+    "deutsch": "bald, später",
+    "gruppe": "Kleine Wörter",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "su nu pat ko unu.",
+     "deutsch": "Bald gehen wir nach unten."
+    }
+   },
+   {
+    "wort": "ma",
+    "deutsch": "was, wer, wo, wann, wie viele, wie",
+    "gruppe": "Kleine Wörter",
+    "im_plan": true,
+    "beispiel": {
+     "lumisch": "li mi pelu ma.",
+     "deutsch": "Hast du Brot?"
+    }
    },
    {
     "wort": "nezan",
-    "deutsch": "dunkel"
+    "deutsch": "dunkel, Dunkelheit",
+    "gruppe": "Welt und Wetter",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "ul unu nezan tal.",
+     "deutsch": "Bei uns unten ist es immer dunkel."
+    }
    },
    {
-    "wort": "kik",
-    "deutsch": "lachen"
+    "wort": "unu",
+    "deutsch": "unten, Zuhause",
+    "gruppe": "Welt und Wetter",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "ul unu nezan tal.",
+     "deutsch": "Bei uns unten ist es immer dunkel."
+    }
    },
    {
-    "wort": "mimu",
-    "deutsch": "ruhig, still"
+    "wort": "uvo",
+    "deutsch": "oben, Himmel",
+    "gruppe": "Welt und Wetter",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "ul uvo zan zan.",
+     "deutsch": "Hier oben ist es hell."
+    }
    },
    {
-    "wort": "zip",
-    "deutsch": "schnell"
+    "wort": "zel",
+    "deutsch": "Tag",
+    "gruppe": "Welt und Wetter",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "ke zel3 nu ne mi mo.",
+     "deutsch": "Vor drei Tagen hatten wir kein Wasser."
+    }
+   },
+   {
+    "wort": "ora",
+    "deutsch": "Haus",
+    "gruppe": "Haus und Dinge",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "li kom ko ora.",
+     "deutsch": "Komm ins Haus."
+    }
+   },
+   {
+    "wort": "pok",
+    "deutsch": "Tür, öffnen",
+    "gruppe": "Haus und Dinge",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "pok sul.",
+     "deutsch": "Mach bitte die Tür auf."
+    }
+   },
+   {
+    "wort": "nem",
+    "deutsch": "Name",
+    "gruppe": "Menschen",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "ma nem li.",
+     "deutsch": "Wie heißt du?"
+    }
+   },
+   {
+    "wort": "kom",
+    "deutsch": "kommen",
+    "gruppe": "Tun",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "li kom ko ora.",
+     "deutsch": "Komm ins Haus."
+    }
+   },
+   {
+    "wort": "tevi",
+    "deutsch": "neu",
+    "gruppe": "Wie etwas ist",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "Susi. ke to tevi. Susi lik.",
+     "deutsch": "Susi. Das war neu. Ich mag es."
+    }
+   },
+   {
+    "wort": "kiru",
+    "deutsch": "Angst",
+    "gruppe": "Gefühle und Gedanken",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "li ne kiru.",
+     "deutsch": "Du hast keine Angst."
+    }
+   },
+   {
+    "wort": "ak",
+    "deutsch": "ja",
+    "gruppe": "Kleine Wörter",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "ak. Susi mi pelu2.",
+     "deutsch": "Ja. Ich habe zwei Brote."
+    }
+   },
+   {
+    "wort": "ko",
+    "deutsch": "hin, zu, nach",
+    "gruppe": "Kleine Wörter",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "su nu pat ko unu.",
+     "deutsch": "Bald gehen wir nach unten."
+    }
+   },
+   {
+    "wort": "sul",
+    "deutsch": "bitte",
+    "gruppe": "Kleine Wörter",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "pok sul.",
+     "deutsch": "Mach bitte die Tür auf."
+    }
+   },
+   {
+    "wort": "ta",
+    "deutsch": "jetzt",
+    "gruppe": "Kleine Wörter",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "ta nu sen kuli12.",
+     "deutsch": "Wir essen zwölf Beeren."
+    }
+   },
+   {
+    "wort": "tal",
+    "deutsch": "immer, jedes Mal",
+    "gruppe": "Kleine Wörter",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "ul unu nezan tal.",
+     "deutsch": "Bei uns unten ist es immer dunkel."
+    }
+   },
+   {
+    "wort": "to",
+    "deutsch": "dieses, das da, das",
+    "gruppe": "Kleine Wörter",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "Susi. ke to tevi. Susi lik.",
+     "deutsch": "Susi. Das war neu. Ich mag es."
+    }
+   },
+   {
+    "wort": "ul",
+    "deutsch": "bei, in, an, auf, hier",
+    "gruppe": "Kleine Wörter",
+    "im_plan": false,
+    "beispiel": {
+     "lumisch": "ul uvo zan zan.",
+     "deutsch": "Hier oben ist es hell."
+    }
    }
-  ]
+  ],
+  "hinweis": "Vorerst nur die 21 Wörter des Plans und die Wörter aus den Beispielsätzen (Wörterbuch, Abschnitt 4). Der Rest folgt nach der Prüfung auf Ähnlichkeit mit echten Wörtern."
  },
  "texte": {
   "rueckwaerts": {

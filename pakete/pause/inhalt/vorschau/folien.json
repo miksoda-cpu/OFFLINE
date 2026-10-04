@@ -11,10 +11,10 @@
   {
    "nr": 2,
    "rolle": "aussehen",
-   "bild": "2.svg",
+   "bild": "2.jpg",
    "titel": "Wo war der Pilz?",
    "text": "Ein Pilz blitzt kurz auf, du tippst, wo er war. Danach: Mehr davon, Passt oder Nicht mehr.",
-   "alt": "Skizze des Happens „Wo war der Pilz?“: neun Felder im Quadrat, darunter die drei Bewertungsknöpfe"
+   "alt": "Bildschirm der Web-Version bei 360 Pixel Breite: der Happen „Wo war der Pilz?“ mit neun Feldern, dem Punkt in der Mitte und den Knöpfen „Los“ und „Nicht jetzt“"
   },
   {
    "nr": 3,

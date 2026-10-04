@@ -1,5 +1,12 @@
 # Änderungen
 
+## 0.4.1 · 04.10.2026 · Preise, Pause-Nachtrag
+
+- **Startseite:** vier Stufen nach Miks Beschluss vom 04.10. (Gratis 0 €, Pro 7,90 €/Monat oder 79 €/Jahr, Pro+ Familie 19,90 €/Monat oder 199 €/Jahr, Gemeinde · Schule · Betrieb ab 590 €/Jahr), Satz zum Schließfach, Kurse raus (Kachel „Die Lumi“ statt „Kurse“), „kommt“ bei Schließfach, Kinder-Modus und KI-Assistent. Untereinander bei 360 px, zwei mal zwei ab 640 px, vier nebeneinander ab 1100 px. `docs/KONZEPT.md`, `docs/GHOST-SETUP.md`, `web/datenschutz.html` (Lizenzschlüssel für Pro und Pro+) nachgezogen. Keine Zahlung eingebaut.
+- **Pause, Rückspiegel:** keine Tageszählung mehr; nur Fortschritt, sonst Lieblingsformen in Worten ohne Zahl, sonst keine Karte. Test gegen jede Zählung.
+- **Pause, Lumisch ab Tag 22:** Wiederholung an zwei von drei Tagen (aus dem Kopf, zuletzt Falsches zuerst), neues Wort an jedem dritten aus dem Wörterbuch nach Gruppen (`lumischHeute`); Wörterbuch im Paket `pause` vorerst nur mit Plan- und Beispielsatz-Wörtern (37), auch die Ablenkwörter. Test Tag 1 bis 40.
+- **Pause, Rahmen:** liegt jetzt über Kopf- und Tableiste (am Handy verdeckten sie in 0.4.0 den Dialog). Folie 2 im Paket ist ein echtes Bild.
+
 ## 0.4.0 · 04.10.2026 · Pause, Stufe 1
 
 - **⏸ Pause** (`docs/PAUSE.md`): Happen beim Öffnen (30 s bis 3 min), höchstens einmal je Öffnen, 10-Minuten-Regel, Appetit 1/3/6 Angebote je Tag, nie im Notfall, nach dem Tagesschluss nur „Der Tag rückwärts“. Ein- und ausschalten in Übersicht › Pause und Bibliothek › Module, standardmäßig aus, unter 14 nicht angeboten.

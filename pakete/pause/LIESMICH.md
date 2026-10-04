@@ -2,7 +2,7 @@
 
 ## Was
 
-Die Inhalte für Pause (App ab 0.4.0): acht Formen von Happen mit Selbstbeschreibung (Trainingsart, Dauer, Altersband, Tageszeit, Zone), 15 kurze Geschichten von unten mit je einem falschen Satz, Lumisch in 21 Tagen mit einem kleinen Wortschatz und die Texte für Zeitgefühl, Atemfenster und den Tag rückwärts. Fünf weitere Formen aus dem Übungskatalog stehen mit `bedingung.funktion` darin und warten auf ihre Funktion.
+Die Inhalte für Pause (App ab 0.4.0): acht Formen von Happen mit Selbstbeschreibung (Trainingsart, Dauer, Altersband, Tageszeit, Zone), 15 kurze Geschichten von unten mit je einem falschen Satz, Lumisch in 21 Tagen und danach (Wiederholung an zwei von drei Tagen, ein neues Wort an jedem dritten) mit einem Wörterbuch aus den Plan-Wörtern und den Wörtern der Beispielsätze und die Texte für Zeitgefühl, Atemfenster und den Tag rückwärts. Fünf weitere Formen aus dem Übungskatalog stehen mit `bedingung.funktion` darin und warten auf ihre Funktion.
 
 ## Für wen
 
@@ -18,4 +18,4 @@ Jede Geschichte auf genau einen Satz geprüft, der der Geschichte selbst widersp
 
 ## Offene Punkte
 
-Folie 2 zeigt eine Skizze des Happens, ein echtes Bild folgt. Die Lumisch-Wörter sind auf zufällige Ähnlichkeit mit echten Wörtern noch nicht geprüft (Wörterbuch, Abschnitt 10).
+Folie 2 ist ein echtes Bild der Web-Version bei 360 Pixel. Die Lumisch-Wörter sind auf zufällige Ähnlichkeit mit echten Wörtern noch nicht geprüft (Wörterbuch, Abschnitt 10).

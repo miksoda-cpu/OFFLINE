@@ -14,11 +14,11 @@
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="stylesheet" href="/styles.css">
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"OFFLINE","applicationCategory":"ReferenceApplication","operatingSystem":"Windows, macOS, Linux","inLanguage":"de-AT","description":"Offline-Wissens- und Werkzeugpaket für Österreich.","offers":[{"@type":"Offer","name":"Frei","price":"0","priceCurrency":"EUR"}]}
+  {"@context":"https://schema.org","@type":"SoftwareApplication","name":"OFFLINE","applicationCategory":"ReferenceApplication","operatingSystem":"Windows, macOS, Linux","inLanguage":"de-AT","description":"Offline-Wissens- und Werkzeugpaket für Österreich.","offers":[{"@type":"Offer","name":"Gratis","price":"0","priceCurrency":"EUR"},{"@type":"Offer","name":"Pro","price":"7.90","priceCurrency":"EUR"},{"@type":"Offer","name":"Pro+ Familie","price":"19.90","priceCurrency":"EUR"}]}
   </script>
 </head>
 <body>
-  <div class="proto-banner">Prototyp · Stand 24.09.2026 · Preise und Inhalte sind Entwürfe</div>
+  <div class="proto-banner">Prototyp · Stand 04.10.2026 · Inhalte sind Entwürfe</div>
   <div class="wrap">
     <header class="site-head">
       <a class="brand" href="/"><span class="brand-flag" aria-hidden="true"></span>OFFLINE</a>
@@ -57,8 +57,8 @@
         <div class="card"><h3>Österreich-Paket</h3><p class="muted">Notrufe, Sirenensignale, Blackout-Vorsorge, Behördenwege – nach Bundesland.</p></div>
         <div class="card"><h3>Bibliothek</h3><p class="muted">Wikipedia, Wikivoyage und Wiktionary auf Deutsch, von kompakt bis komplett.</p></div>
         <div class="card"><h3>Karten</h3><p class="muted">Ganz Österreich bis zur Straße, auf Basis von basemap.at und OpenStreetMap.</p></div>
-        <div class="card"><h3>KI-Assistent</h3><p class="muted">Ein Sprachmodell, das auf deinem Rechner läuft und in deiner Bibliothek nachschlägt.</p></div>
-        <div class="card"><h3>Kurse</h3><p class="muted">Kurse der digitalworld Academy – KI-Management, digitales Marketing und mehr.</p></div>
+        <div class="card"><h3>KI-Assistent <span class="tag tag-warn">kommt</span></h3><p class="muted">Ein Sprachmodell, das auf deinem Rechner läuft und in deiner Bibliothek nachschlägt.</p></div>
+        <div class="card"><h3>Die Lumi</h3><p class="muted">Eine Begleiterin aus einer Höhle unter dem Eis. Sie gibt Tipps, wenn du willst, und schweigt, wenn nicht.</p></div>
         <div class="card"><h3>Keine Telemetrie</h3><p class="muted">OFFLINE schickt nichts nach Hause. Deine Notizen bleiben auf deinem Gerät.</p></div>
       </div>
     </section>
@@ -98,34 +98,47 @@
     </section>
 
     <section class="section" id="preise">
-      <h2>Frei und Pro</h2>
+      <h2>Gratis, Pro und Pro+</h2>
+      <p>Offline leben, aber nie ohne Sicherung: Das Schließfach ist der einzige Ort außerhalb deines Geräts. Verschlüsselt wird bei dir, wir sehen nur Bytes.</p>
       <p class="muted">Die Software ist frei. Bezahlt wird, was wir laufend leisten: Inhalte pflegen, Updates liefern, helfen.</p>
-      <div class="grid grid-3">
+      <div class="grid grid-preise">
         <div class="card plan">
-          <h3>Frei</h3>
+          <h3>Gratis</h3>
           <div class="price">0 €</div>
           <ul>
-            <li>Gegen Anmeldung mit Name und E-Mail</li>
+            <li>Anmeldung mit Name und E-Mail</li>
             <li>App und Offline-Installer</li>
             <li>Wikipedia, Karte Österreich</li>
             <li>Österreich-Paket Grundversion</li>
+            <li>Lumi mit Tipps</li>
+            <li>Schließfach 500 MB <span class="tag tag-warn">kommt</span></li>
             <li>Updates von Hand</li>
           </ul>
         </div>
         <div class="card plan featured">
           <span class="tag tag-pro">Pro</span>
-          <div class="price">4,90 € <small>/ Monat · oder 45 € / Jahr</small></div>
+          <div class="price">7,90 € <small>/ Monat · oder 79 € / Jahr</small></div>
           <ul>
             <li>Update-Abo mit Delta-Updates</li>
-            <li>Österreich-Paket Pro nach Bundesland</li>
+            <li>Österreich-Paket nach Bundesland</li>
             <li>Blackout- und Krisenvorsorge komplett</li>
             <li>RIS-Gesetzesauszug, wöchentlich</li>
-            <li>Kurse der digitalworld Academy</li>
+            <li>Schließfach 50 GB <span class="tag tag-warn">kommt</span></li>
+          </ul>
+        </div>
+        <div class="card plan">
+          <h3>Pro+ Familie</h3>
+          <div class="price">19,90 € <small>/ Monat · oder 199 € / Jahr</small></div>
+          <ul>
+            <li>Alles aus Pro</li>
+            <li>Für bis zu 5 Personen</li>
+            <li>Schließfach 500 GB <span class="tag tag-warn">kommt</span></li>
+            <li>Kinder-Modus am Elternkonto <span class="tag tag-warn">kommt</span></li>
           </ul>
         </div>
         <div class="card plan">
           <h3>Gemeinde · Schule · Betrieb</h3>
-          <div class="price">ab 290 € <small>/ Jahr und Standort</small></div>
+          <div class="price">ab 590 € <small>/ Jahr und Standort</small></div>
           <ul>
             <li>Alles aus Pro, für viele Geräte</li>
             <li>Eigene Inhalte der Gemeinde</li>

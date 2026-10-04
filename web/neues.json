@@ -2,6 +2,16 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.4.1",
+      "datum": "2026-10-04",
+      "punkte": [
+        "Lumisch geht nach drei Wochen weiter: An zwei von drei Tagen holst du ein gelerntes Wort aus dem Kopf, am dritten kommt ein neues dazu, mit Beispielsatz.",
+        "Der Rückspiegel der Pause zählt keine Tage mehr. Er sagt nur, was du besser kannst, oder was du diesen Monat am liebsten gespielt hast.",
+        "Am Handy liegt ein Happen jetzt ganz über der Kopf- und der unteren Leiste.",
+        "Auf der Startseite stehen die neuen Preise in vier Stufen: Gratis, Pro, Pro+ Familie und für Gemeinden, Schulen und Betriebe."
+      ]
+    },
+    {
       "version": "0.4.0",
       "datum": "2026-10-04",
       "punkte": [

@@ -56,11 +56,11 @@ Andere Adressen oder Namen? In Vercel unter Settings → Environment Variables s
 >
 > **Schon jetzt für dich:** Die Blackout-Checkliste im Prototyp. Druck sie aus und häng sie an den Kühlschrank.
 >
-> Du willst mehr? Mit **OFFLINE Pro** bekommst du das Update-Abo, das Österreich-Paket nach Bundesland und die Kurse der digitalworld Academy. (Kommt bald.)
+> Du willst mehr? Mit **OFFLINE Pro** (7,90 € im Monat oder 79 € im Jahr) bekommst du das Update-Abo mit Delta-Updates, das Österreich-Paket nach Bundesland, die komplette Blackout- und Krisenvorsorge und den RIS-Gesetzesauszug. **Pro+ Familie** (19,90 € im Monat oder 199 € im Jahr) gilt für bis zu fünf Personen. (Kommt bald.)
 
 ## Später: OFFLINE Pro als bezahlte Stufe in Ghost
 
-- **Settings → Membership → Tiers:** Stufe „OFFLINE Pro“, 4,90 €/Monat oder 45 €/Jahr (Stripe verbinden).
-- Die Pro-Download-Seite bekommt Sichtbarkeit „Specific tiers → OFFLINE Pro“.
+- **Settings → Membership → Tiers** (Preise beschlossen von Mik am 04.10.2026): Stufe „OFFLINE Pro“, 7,90 €/Monat oder 79 €/Jahr; Stufe „OFFLINE Pro+ Familie“, 19,90 €/Monat oder 199 €/Jahr, für bis zu 5 Personen (Stripe verbinden). Gemeinde, Schule, Betrieb ab 590 €/Jahr und Standort laufen über Vertrag, nicht über Ghost.
+- Die Pro-Download-Seite bekommt Sichtbarkeit „Specific tiers → OFFLINE Pro, OFFLINE Pro+ Familie“.
 - Der Lizenzschlüssel für die App wird später aus dem Ghost-Mitgliedsstatus abgeleitet (Phase 5 im Konzept).
 - **Umsatzsteuer beachten:** Digitale Leistungen an Privatpersonen in der EU – Steuersatz des Wohnsitzlandes (OSS-Verfahren). Mit Steuerberatung klären, ob Stripe Tax genügt oder ein Merchant of Record (z. B. Paddle) einfacher ist.
