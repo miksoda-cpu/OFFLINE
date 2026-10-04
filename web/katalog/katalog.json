@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-10-04T12:14:18Z",
-  "gueltig_bis": "2027-01-02T12:14:18Z",
+  "erstellt": "2026-10-04T13:07:33Z",
+  "gueltig_bis": "2027-01-02T13:07:33Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -21,6 +21,96 @@
       "aenderungen": "Sirenen: Hinweis zum Blackout korrigiert. Viele Sirenen brauchen Strom.",
       "pfad": "at-basis-2026.09.29.1/",
       "sha256_manifest": "7647f176312eb0658a494819003e5ea3b53f87318de70ca40b9bd866baa5406d",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "pause",
+      "version": "2026.10.04",
+      "titel": "Pause · Happen für zwischendurch",
+      "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten – Pilze finden, Geschichten von unten, Lumisch, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
+      "art": "inhalt",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "kategorie": "jeden-tag",
+      "alter_ab": 14,
+      "vorschau": {
+        "folien": [
+          {
+            "nr": 1,
+            "rolle": "wofuer",
+            "bild": "1.svg",
+            "titel": "Ein Happen für zwischendurch",
+            "text": "Beim Öffnen der App ein kurzer Happen: etwas, auf das man sich konzentriert, ein Gelingen, ein Satz zum Mitnehmen.",
+            "alt": "Titel „Ein Happen für zwischendurch“ mit drei Zeilen: kurz, freundlich, überspringbar"
+          },
+          {
+            "nr": 2,
+            "rolle": "aussehen",
+            "bild": "2.svg",
+            "titel": "Wo war der Pilz?",
+            "text": "Ein Pilz blitzt kurz auf, du tippst, wo er war. Danach: Mehr davon, Passt oder Nicht mehr.",
+            "alt": "Skizze des Happens „Wo war der Pilz?“: neun Felder im Quadrat, darunter die drei Bewertungsknöpfe"
+          },
+          {
+            "nr": 3,
+            "rolle": "inhalt",
+            "bild": "3.svg",
+            "titel": "Was drin ist",
+            "text": "Acht Happen: Pilz, eingebauter Fehler, Lumisch, Was kommt als Nächstes?, Türsteherfrage, Tag rückwärts, Zeitgefühl, Atemfenster.",
+            "alt": "Liste mit acht Happen-Formen"
+          },
+          {
+            "nr": 4,
+            "rolle": "platz",
+            "bild": "4.svg",
+            "titel": "Klein und ohne Netz",
+            "text": "Unter 50 kB, nur Text. Spiel-Log und deine Linie bleiben auf dem Gerät. Keine KI, keine Pushnachrichten.",
+            "alt": "Angaben zu Größe, Netz und Daten"
+          },
+          {
+            "nr": 5,
+            "rolle": "herkunft",
+            "bild": "5.svg",
+            "titel": "Von The Digioneer",
+            "text": "Eigene Inhalte der Redaktion, gratis, ab 14 Jahren. Pause selbst ist Teil der App und standardmäßig aus.",
+            "alt": "Angaben zu Herausgeber, Preis und Alter"
+          }
+        ],
+        "dateien": [
+          {
+            "pfad": "inhalt/vorschau/1.svg",
+            "groesse": 914,
+            "sha256": "99e6138fe048d5b474d88a9cd1a55a61ebd00b07b488d7fc7e9be65408018fa7"
+          },
+          {
+            "pfad": "inhalt/vorschau/2.svg",
+            "groesse": 1139,
+            "sha256": "4c6f6c1b6eb0e0d7c55faffa71cf248f264e4b3762b87e6b9e5c5f056411dfd6"
+          },
+          {
+            "pfad": "inhalt/vorschau/3.svg",
+            "groesse": 1393,
+            "sha256": "d03e5571c3623dbf9162eb65a23cb65c60adc6a56beee95d5729394433caa780"
+          },
+          {
+            "pfad": "inhalt/vorschau/4.svg",
+            "groesse": 1051,
+            "sha256": "e8bf1df4489a11620f9b5c8cc4bc328b0ce1d40e39e82e1091ad6d9ea4e7ba0a"
+          },
+          {
+            "pfad": "inhalt/vorschau/5.svg",
+            "groesse": 918,
+            "sha256": "172249490cc1fbed688c1fd5601622830e2b620e7f24265f4204d26a6d92af8f"
+          }
+        ]
+      },
+      "groesse": 24752,
+      "app_min": "0.4.0",
+      "erstellt": "2026-10-04T13:05:31Z",
+      "aenderungen": "Erste Ausgabe: acht Formen, 15 Geschichten, Lumisch in 21 Tagen.",
+      "pfad": "pause-2026.10.04/",
+      "sha256_manifest": "f9faf5b0ee2d32abb5afec02699afa7bf85e5e1a1c34e727493f1d1ea6a71360",
       "status": "verfuegbar"
     },
     {
@@ -117,7 +207,7 @@
     },
     {
       "id": "wir",
-      "version": "2026.10.04.1",
+      "version": "2026.10.04.2",
       "titel": "Wir · die Lumi und ihre Tipps",
       "beschreibung": "Die Tipps der Lumi von unter dem Eis: wie man sich in OFFLINE zurechtfindet, was die Bereitschaft hebt, und Dinge des Lebens. Nur Text, kein Code – die Lumi selbst ist Teil der App.",
       "art": "inhalt",
@@ -126,12 +216,12 @@
       "pruefstatus": "redaktion",
       "kategorie": "miteinander",
       "alter_ab": 0,
-      "groesse": 40389,
+      "groesse": 40519,
       "app_min": "0.2.0",
-      "erstellt": "2026-10-04T12:13:05Z",
-      "aenderungen": "Unter den Sätzen der Lumi: „Zeig mir“ führt bei 16 Tipps an die passende Stelle der App. Ein Satz über Kriege neu formuliert. Neues Feld für das künftige Lumi-Buch reserviert.",
-      "pfad": "wir-2026.10.04.1/",
-      "sha256_manifest": "568b9207b97c68d57760acd82a812c44a72b4878b385b97adaf8d051d6223ebd",
+      "erstellt": "2026-10-04T13:06:21Z",
+      "aenderungen": "Drei Tipps genauer: Die Bibliothek hat keine Kategorie „Wissen“; die Tipps zu Wikipedia ohne Bilder und zum Export warten, bis es diese Funktionen gibt.",
+      "pfad": "wir-2026.10.04.2/",
+      "sha256_manifest": "0b42ee29e1f05dc1fabd6d27b393f67933dc02136b0d72a88befe83cfabcbad7",
       "status": "verfuegbar"
     },
     {

@@ -1,0 +1,65 @@
+{
+  "format": 1,
+  "id": "pause",
+  "version": "2026.10.04",
+  "titel": "Pause · Happen für zwischendurch",
+  "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten – Pilze finden, Geschichten von unten, Lumisch, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
+  "art": "inhalt",
+  "sprache": "de-AT",
+  "lizenz": "CC BY-SA 4.0",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "kategorie": "jeden-tag",
+  "alter_ab": 14,
+  "abnahme": "Redaktion (Code), 04.10.2026: Geschichten auf genau einen falschen Satz geprüft, Lumisch gegen das Wörterbuch",
+  "app_min": "0.4.0",
+  "erstellt": "2026-10-04T13:05:31Z",
+  "aenderungen": "Erste Ausgabe: acht Formen, 15 Geschichten, Lumisch in 21 Tagen.",
+  "quellen": [
+    {
+      "id": "redaktion",
+      "name": "Eigene Inhalte der Redaktion nach OFFLINE-Modul-Pause-Konzept, Übungskatalog, Trainingsmodell und Lumisch-Wörterbuch (04.10.2026)",
+      "url": "https://github.com/miksoda-cpu/OFFLINE/blob/main/docs/PAUSE.md"
+    }
+  ],
+  "dateien": [
+    {
+      "pfad": "inhalt/pause.json",
+      "sha256": "d08e28fe12e3bfccb0e9596d2c025f4d27eb7b29166beba9ff16ba762918caa8",
+      "groesse": 17845
+    },
+    {
+      "pfad": "inhalt/vorschau/1.svg",
+      "sha256": "99e6138fe048d5b474d88a9cd1a55a61ebd00b07b488d7fc7e9be65408018fa7",
+      "groesse": 914
+    },
+    {
+      "pfad": "inhalt/vorschau/2.svg",
+      "sha256": "4c6f6c1b6eb0e0d7c55faffa71cf248f264e4b3762b87e6b9e5c5f056411dfd6",
+      "groesse": 1139
+    },
+    {
+      "pfad": "inhalt/vorschau/3.svg",
+      "sha256": "d03e5571c3623dbf9162eb65a23cb65c60adc6a56beee95d5729394433caa780",
+      "groesse": 1393
+    },
+    {
+      "pfad": "inhalt/vorschau/4.svg",
+      "sha256": "e8bf1df4489a11620f9b5c8cc4bc328b0ce1d40e39e82e1091ad6d9ea4e7ba0a",
+      "groesse": 1051
+    },
+    {
+      "pfad": "inhalt/vorschau/5.svg",
+      "sha256": "172249490cc1fbed688c1fd5601622830e2b620e7f24265f4204d26a6d92af8f",
+      "groesse": 918
+    },
+    {
+      "pfad": "inhalt/vorschau/folien.json",
+      "sha256": "b0bc944f9b044fc3f5619d79d12f2c257e83f06c226bfe057f61be798bb7e149",
+      "groesse": 1492
+    }
+  ],
+  "groesse": 24752
+}
