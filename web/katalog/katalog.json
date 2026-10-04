@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-10-04T13:07:33Z",
-  "gueltig_bis": "2027-01-02T13:07:33Z",
+  "erstellt": "2026-10-04T19:23:50Z",
+  "gueltig_bis": "2027-01-02T19:23:50Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -25,7 +25,7 @@
     },
     {
       "id": "pause",
-      "version": "2026.10.04",
+      "version": "2026.10.04.1",
       "titel": "Pause · Happen für zwischendurch",
       "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten – Pilze finden, Geschichten von unten, Lumisch, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
       "art": "inhalt",
@@ -47,10 +47,10 @@
           {
             "nr": 2,
             "rolle": "aussehen",
-            "bild": "2.svg",
+            "bild": "2.jpg",
             "titel": "Wo war der Pilz?",
             "text": "Ein Pilz blitzt kurz auf, du tippst, wo er war. Danach: Mehr davon, Passt oder Nicht mehr.",
-            "alt": "Skizze des Happens „Wo war der Pilz?“: neun Felder im Quadrat, darunter die drei Bewertungsknöpfe"
+            "alt": "Bildschirm der Web-Version bei 360 Pixel Breite: der Happen „Wo war der Pilz?“ mit neun Feldern, dem Punkt in der Mitte und den Knöpfen „Los“ und „Nicht jetzt“"
           },
           {
             "nr": 3,
@@ -84,9 +84,9 @@
             "sha256": "99e6138fe048d5b474d88a9cd1a55a61ebd00b07b488d7fc7e9be65408018fa7"
           },
           {
-            "pfad": "inhalt/vorschau/2.svg",
-            "groesse": 1139,
-            "sha256": "4c6f6c1b6eb0e0d7c55faffa71cf248f264e4b3762b87e6b9e5c5f056411dfd6"
+            "pfad": "inhalt/vorschau/2.jpg",
+            "groesse": 54477,
+            "sha256": "74d10f49e7ffcadf5dfa07eaba85bc63c71b406c81671d10504e56f92692c300"
           },
           {
             "pfad": "inhalt/vorschau/3.svg",
@@ -105,12 +105,12 @@
           }
         ]
       },
-      "groesse": 24752,
+      "groesse": 85865,
       "app_min": "0.4.0",
-      "erstellt": "2026-10-04T13:05:31Z",
-      "aenderungen": "Erste Ausgabe: acht Formen, 15 Geschichten, Lumisch in 21 Tagen.",
-      "pfad": "pause-2026.10.04/",
-      "sha256_manifest": "f9faf5b0ee2d32abb5afec02699afa7bf85e5e1a1c34e727493f1d1ea6a71360",
+      "erstellt": "2026-10-04T19:22:35Z",
+      "aenderungen": "Lumisch geht nach Tag 21 weiter: Wiederholungen und neue Wörter aus den Beispielsätzen. Der Rückspiegel zählt keine Tage mehr.",
+      "pfad": "pause-2026.10.04.1/",
+      "sha256_manifest": "b61724f2909af8efd0bf44b8504e5297b2957abc0b22bbfbe6c60a7b816fbc9e",
       "status": "verfuegbar"
     },
     {

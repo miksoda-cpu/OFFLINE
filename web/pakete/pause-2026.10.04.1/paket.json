@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "pause",
-  "version": "2026.10.04",
+  "version": "2026.10.04.1",
   "titel": "Pause · Happen für zwischendurch",
   "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten – Pilze finden, Geschichten von unten, Lumisch, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
   "art": "inhalt",
@@ -13,10 +13,10 @@
   "pruefstatus": "redaktion",
   "kategorie": "jeden-tag",
   "alter_ab": 14,
-  "abnahme": "Redaktion (Code), 04.10.2026: Geschichten auf genau einen falschen Satz geprüft, Lumisch gegen das Wörterbuch",
+  "abnahme": "Redaktion (Code), 04.10.2026: Geschichten auf genau einen falschen Satz geprüft, Lumisch gegen das Wörterbuch (Plan und Beispielsätze)",
   "app_min": "0.4.0",
-  "erstellt": "2026-10-04T13:05:31Z",
-  "aenderungen": "Erste Ausgabe: acht Formen, 15 Geschichten, Lumisch in 21 Tagen.",
+  "erstellt": "2026-10-04T19:22:35Z",
+  "aenderungen": "Lumisch geht nach Tag 21 weiter: Wiederholungen und neue Wörter aus den Beispielsätzen. Der Rückspiegel zählt keine Tage mehr.",
   "quellen": [
     {
       "id": "redaktion",
@@ -27,8 +27,8 @@
   "dateien": [
     {
       "pfad": "inhalt/pause.json",
-      "sha256": "d08e28fe12e3bfccb0e9596d2c025f4d27eb7b29166beba9ff16ba762918caa8",
-      "groesse": 17845
+      "sha256": "92525e0b332c0868e7df4ace49afe81b74adcf5ed7e5108b94bfb01d098c14be",
+      "groesse": 25550
     },
     {
       "pfad": "inhalt/vorschau/1.svg",
@@ -36,9 +36,9 @@
       "groesse": 914
     },
     {
-      "pfad": "inhalt/vorschau/2.svg",
-      "sha256": "4c6f6c1b6eb0e0d7c55faffa71cf248f264e4b3762b87e6b9e5c5f056411dfd6",
-      "groesse": 1139
+      "pfad": "inhalt/vorschau/2.jpg",
+      "sha256": "74d10f49e7ffcadf5dfa07eaba85bc63c71b406c81671d10504e56f92692c300",
+      "groesse": 54477
     },
     {
       "pfad": "inhalt/vorschau/3.svg",
@@ -57,9 +57,9 @@
     },
     {
       "pfad": "inhalt/vorschau/folien.json",
-      "sha256": "b0bc944f9b044fc3f5619d79d12f2c257e83f06c226bfe057f61be798bb7e149",
-      "groesse": 1492
+      "sha256": "37d7c9921d9ae57d14088b78e102e3fdc2cf85732891e3e557b20af7c959bb82",
+      "groesse": 1562
     }
   ],
-  "groesse": 24752
+  "groesse": 85865
 }
