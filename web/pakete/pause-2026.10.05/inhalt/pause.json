@@ -1,0 +1,4819 @@
+{
+ "format": 1,
+ "hinweis": "Inhalte der Pause (App ab 0.4.0): Formen der Happen mit Selbstbeschreibung (Trainingsart, Dauer, Altersband, Zone) und ihre Daten. Nur Text, kein Code; die Spiele selbst sind Teil der App. Format: paket-kit/pause-format.mjs.",
+ "formen": [
+  {
+   "id": "pilz",
+   "titel": "Wo war der Pilz?",
+   "gruppe": "spiel",
+   "art": [
+    "tempo"
+   ],
+   "trainiert": [
+    "Tp"
+   ],
+   "dauer": {
+    "von": 40,
+    "bis": 120
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Schau in die Mitte. Gleich blitzt irgendwo ein Pilz auf.",
+   "zone": {
+    "stufen": 10,
+    "start": 3
+   },
+   "auffrischung_monate": [
+    11,
+    35
+   ],
+   "herkunft": "Übungskatalog 7.5 (L)",
+   "beim": "beim Pilz"
+  },
+  {
+   "id": "fehler",
+   "titel": "Der eingebaute Fehler",
+   "gruppe": "geschichte",
+   "art": [
+    "kraft",
+    "tempo"
+   ],
+   "trainiert": [
+    "Tp",
+    "Gd"
+   ],
+   "dauer": {
+    "von": 30,
+    "bis": 90
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Eine kurze Geschichte von unten. In einem Satz stimmt etwas nicht.",
+   "zone": {
+    "stufen": 3,
+    "start": 1
+   },
+   "herkunft": "Übungskatalog 7.6 (C)",
+   "beim": "bei den Geschichten von unten"
+  },
+  {
+   "id": "lumisch",
+   "titel": "Lumisch",
+   "gruppe": "wort",
+   "art": [
+    "kraft",
+    "beweglichkeit"
+   ],
+   "trainiert": [
+    "Gd",
+    "Sp"
+   ],
+   "dauer": {
+    "von": 30,
+    "bis": 60
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Ein Wort aus der Sprache der Lumis, jeden Tag ein neues.",
+   "zone": {
+    "stufen": 3,
+    "start": 1
+   },
+   "herkunft": "Übungskatalog 7.7 (C), Lumisch-Wörterbuch Abschnitt 8",
+   "beim": "beim Lumisch"
+  },
+  {
+   "id": "naechstes",
+   "titel": "Was kommt als Nächstes?",
+   "gruppe": "geschichte",
+   "art": [
+    "kraft"
+   ],
+   "trainiert": [
+    "Gd",
+    "Sp"
+   ],
+   "dauer": {
+    "von": 30,
+    "bis": 120
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "braucht": "roman",
+   "einladung": "Zum Roman der Woche: Was glaubst du, wie es weitergeht?",
+   "herkunft": "Übungskatalog 7.9 (F)",
+   "beim": "beim Roman der Woche"
+  },
+  {
+   "id": "tuersteher",
+   "titel": "Türsteherfrage",
+   "gruppe": "raetsel",
+   "art": [
+    "kraft"
+   ],
+   "trainiert": [
+    "Gd"
+   ],
+   "dauer": {
+    "von": 20,
+    "bis": 60
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "braucht": "gestern",
+   "einladung": "Eine Frage zu etwas, das du gestern hier gelesen hast. Hol es aus dem Kopf.",
+   "herkunft": "Übungskatalog 7.1 (B)",
+   "beim": "bei der Türsteherfrage"
+  },
+  {
+   "id": "rueckwaerts",
+   "titel": "Der Tag rückwärts",
+   "gruppe": "ruhe",
+   "art": [
+    "kraft"
+   ],
+   "trainiert": [
+    "Gd"
+   ],
+   "dauer": {
+    "von": 60,
+    "bis": 180
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "abend",
+   "einladung": "Drei Dinge vom Tag, vom Abend zurück zum Morgen. Du musst nichts aufschreiben.",
+   "herkunft": "Übungskatalog 7.12 (N)",
+   "beim": "beim Tag rückwärts"
+  },
+  {
+   "id": "zeitgefuehl",
+   "titel": "Zeitgefühl",
+   "gruppe": "spiel",
+   "art": [
+    "beweglichkeit"
+   ],
+   "trainiert": [
+    "Gd",
+    "Pl"
+   ],
+   "dauer": {
+    "von": 20,
+    "bis": 40
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "morgen",
+   "einladung": "Wie spät ist es wohl? Schau dabei nicht auf die Uhr.",
+   "zone": {
+    "stufen": 3,
+    "start": 1
+   },
+   "herkunft": "Übungskatalog 7.4 (A)",
+   "beim": "beim Zeitgefühl"
+  },
+  {
+   "id": "atem",
+   "titel": "Atemfenster",
+   "gruppe": "ruhe",
+   "art": [
+    "ausdauer"
+   ],
+   "trainiert": [
+    "Tp"
+   ],
+   "dauer": {
+    "von": 40,
+    "bis": 60
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Vier ruhige Atemzüge. Der Bildschirm wird dabei dunkler.",
+   "herkunft": "Übungskatalog 3.A",
+   "beim": "beim Atemfenster"
+  },
+  {
+   "id": "sonnengruss",
+   "titel": "Sonnengruß-Kette",
+   "gruppe": "ruhe",
+   "art": [
+    "kraft",
+    "koordination"
+   ],
+   "trainiert": [
+    "Gd",
+    "Kp"
+   ],
+   "dauer": {
+    "von": 120,
+    "bis": 600
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "morgen",
+   "einladung": "Eine Haltung kommt jeden Tag dazu.",
+   "bedingung": {
+    "funktion": "bilderfolge"
+   },
+   "herkunft": "Übungskatalog 7.3 (A)"
+  },
+  {
+   "id": "wo-liegt-es",
+   "titel": "Wo liegt es? und Nachbar-Namen",
+   "gruppe": "raetsel",
+   "art": [
+    "kraft"
+   ],
+   "trainiert": [
+    "Gd",
+    "Mn"
+   ],
+   "dauer": {
+    "von": 20,
+    "bis": 60
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Wo ist die Taschenlampe?",
+   "bedingung": {
+    "funktion": "tresor-fragen"
+   },
+   "herkunft": "Übungskatalog 7.2 (B)"
+  },
+  {
+   "id": "rezept",
+   "titel": "Rezept nur einmal",
+   "gruppe": "raetsel",
+   "art": [
+    "kraft"
+   ],
+   "trainiert": [
+    "Gd",
+    "Pl"
+   ],
+   "dauer": {
+    "von": 300,
+    "bis": 1800
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Das Rezept erscheint einmal, dann kochst du aus dem Kopf.",
+   "bedingung": {
+    "funktion": "kochbuch"
+   },
+   "herkunft": "Übungskatalog 7.8 (E)"
+  },
+  {
+   "id": "weg-im-kopf",
+   "titel": "Weg im Kopf",
+   "gruppe": "spiel",
+   "art": [
+    "beweglichkeit"
+   ],
+   "trainiert": [
+    "Rm",
+    "Gd"
+   ],
+   "dauer": {
+    "von": 60,
+    "bis": 180
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Beschreibe den Weg zum Spital.",
+   "bedingung": {
+    "funktion": "karte-offline"
+   },
+   "herkunft": "Übungskatalog 7.10 (H)"
+  },
+  {
+   "id": "frag-jemanden",
+   "titel": "Frag jemanden",
+   "gruppe": "geschichte",
+   "art": [
+    "gruppe"
+   ],
+   "trainiert": [
+    "Mn",
+    "Gd"
+   ],
+   "dauer": {
+    "von": 300,
+    "bis": 1800
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Frag jemand Älteren, wie es damals ohne Handy war.",
+   "bedingung": {
+    "funktion": "tagebuch"
+   },
+   "herkunft": "Übungskatalog 7.11 (J)"
+  }
+ ],
+ "fehler": [
+  {
+   "id": "f-01",
+   "stufe": 1,
+   "saetze": [
+    "Gestern haben wir zwölf Beeren gesammelt.",
+    "Vier haben wir gleich gegessen.",
+    "Den Rest haben wir in die Vorratsnische gelegt.",
+    "Heute früh lagen dort zehn Beeren."
+   ],
+   "fehler": 3,
+   "erklaerung": "Zwölf weniger vier sind acht. Zehn Beeren können es nicht sein."
+  },
+  {
+   "id": "f-02",
+   "stufe": 1,
+   "saetze": [
+    "Unten ist es immer dunkel.",
+    "Nur unsere Antennen machen Licht.",
+    "Darum brauchen wir keine Fenster.",
+    "Mittags scheint die Sonne durch das Höhlendach und wärmt das Moos."
+   ],
+   "fehler": 3,
+   "erklaerung": "Unten ist es immer dunkel. Dort scheint keine Sonne."
+  },
+  {
+   "id": "f-03",
+   "stufe": 1,
+   "saetze": [
+    "Ein Pinguin ist durch eine Spalte im Eis zu uns gerutscht.",
+    "Er war nass und hatte Hunger.",
+    "Wir haben ihm einen Fisch aus dem Becken gegeben.",
+    "Danach ist er davongeflogen, zurück nach oben."
+   ],
+   "fehler": 3,
+   "erklaerung": "Pinguine können nicht fliegen. Er ist die Spalte wieder hinaufgewatschelt."
+  },
+  {
+   "id": "f-04",
+   "stufe": 2,
+   "saetze": [
+    "In unserer Höhle wohnen sieben von uns.",
+    "Drei schlafen immer, während vier wachen.",
+    "So ist nie jemand allein.",
+    "Gestern haben acht von uns gleichzeitig geschlafen."
+   ],
+   "fehler": 3,
+   "erklaerung": "Es sind nur sieben. Acht können nicht schlafen."
+  },
+  {
+   "id": "f-05",
+   "stufe": 2,
+   "saetze": [
+    "Unser Wasser kommt vom Eis über uns.",
+    "Es tropft langsam in ein Becken aus Stein.",
+    "Wenn es oben besonders kalt ist, tropft es am schnellsten.",
+    "Dann trinken wir sparsam."
+   ],
+   "fehler": 2,
+   "erklaerung": "Wenn es kalt ist, schmilzt weniger Eis. Dann tropft es langsamer, nicht schneller."
+  },
+  {
+   "id": "f-06",
+   "stufe": 1,
+   "saetze": [
+    "Mila hat ein helles, blaues Fell.",
+    "Sie singt gern beim Pilzesammeln.",
+    "Im Dunkeln finden wir sie sofort, weil ihr Fell so hell ist.",
+    "Gestern haben wir sie nicht gefunden, weil ihr dunkles Fell im Dunkeln verschwindet."
+   ],
+   "fehler": 3,
+   "erklaerung": "Milas Fell ist hell. Darum findet man sie im Dunkeln leicht."
+  },
+  {
+   "id": "f-07",
+   "stufe": 1,
+   "saetze": [
+    "Pilze wachsen bei uns auf dem feuchten Stein.",
+    "Sie brauchen kein Licht, nur Wasser und Wärme.",
+    "Darum stellen wir sie in die hellste Ecke, damit sie genug Licht bekommen.",
+    "Nach drei Tagen sind sie groß genug."
+   ],
+   "fehler": 2,
+   "erklaerung": "Pilze brauchen kein Licht. Das hat die Geschichte selbst gesagt."
+  },
+  {
+   "id": "f-08",
+   "stufe": 2,
+   "saetze": [
+    "Mit den Nachbarn aus der zweiten Höhle tauschen wir gern.",
+    "Für drei Beeren bekommen wir einen Pilz.",
+    "Heute hatten wir neun Beeren.",
+    "Dafür haben wir zwei Pilze bekommen, und keine Beere blieb übrig."
+   ],
+   "fehler": 3,
+   "erklaerung": "Neun Beeren sind dreimal drei. Das gibt drei Pilze."
+  },
+  {
+   "id": "f-09",
+   "stufe": 1,
+   "saetze": [
+    "Einmal im Jahr klettern wir nach oben, um die Sterne zu sehen.",
+    "Wir gehen in der Nacht, wenn es oben dunkel ist.",
+    "Die Sterne leuchten dann wie unsere Antennen, nur weiter weg.",
+    "Am liebsten schauen wir sie mittags an, wenn die Sonne am höchsten steht."
+   ],
+   "fehler": 3,
+   "erklaerung": "Mittags sieht man keine Sterne. Darum gehen wir in der Nacht."
+  },
+  {
+   "id": "f-10",
+   "stufe": 1,
+   "saetze": [
+    "Wenn wir in der großen Halle singen, kommt das Lied zurück.",
+    "Wir nennen das den zweiten Sänger.",
+    "Er singt immer dasselbe wie wir, nur etwas später.",
+    "Gestern hat er ein ganz anderes Lied gesungen als wir."
+   ],
+   "fehler": 3,
+   "erklaerung": "Das Echo singt immer dasselbe. Ein anderes Lied kann es nicht sein."
+  },
+  {
+   "id": "f-11",
+   "stufe": 2,
+   "saetze": [
+    "Opa Tok hat gesagt, er kommt in fünf Tagen.",
+    "Wir legen jeden Abend einen Stein in ein Körbchen.",
+    "Heute liegen drei Steine im Körbchen.",
+    "Also kommt er morgen."
+   ],
+   "fehler": 3,
+   "erklaerung": "Drei von fünf Steinen: Es fehlen noch zwei Tage. Er kommt übermorgen."
+  },
+  {
+   "id": "f-12",
+   "stufe": 2,
+   "saetze": [
+    "Je tiefer wir gehen, desto wärmer wird der Boden.",
+    "Ganz unten schlafen wir, weil es dort am wärmsten ist.",
+    "Oben am Eis ist es am kältesten.",
+    "Darum lagern wir unser Eis ganz unten, damit es nicht schmilzt."
+   ],
+   "fehler": 3,
+   "erklaerung": "Unten ist es am wärmsten. Dort würde das Eis schmelzen."
+  },
+  {
+   "id": "f-13",
+   "stufe": 1,
+   "saetze": [
+    "Wenn wir müde sind, wird das Licht in unseren Antennen schwächer.",
+    "Wenn wir uns freuen, leuchtet es heller.",
+    "Gestern hatten wir ein großes Fest.",
+    "Die ganze Höhle war dunkel vor lauter Freude."
+   ],
+   "fehler": 3,
+   "erklaerung": "Freude macht das Licht heller. Die Höhle war hell."
+  },
+  {
+   "id": "f-14",
+   "stufe": 2,
+   "saetze": [
+    "Wir sind vier und haben acht Nüsse.",
+    "Jeder bekommt gleich viele.",
+    "Also bekommt jeder drei Nüsse.",
+    "Keine Nuss bleibt übrig."
+   ],
+   "fehler": 2,
+   "erklaerung": "Acht Nüsse für vier: Jeder bekommt zwei."
+  },
+  {
+   "id": "f-15",
+   "stufe": 1,
+   "saetze": [
+    "Eine Lumi ohne Namen sagt nie „ich“.",
+    "Sie sagt dann „wir“.",
+    "Gestern rief eine kleine Lumi ohne Namen: „Ich habe einen Pilz gefunden!“",
+    "Alle haben sich mit ihr gefreut."
+   ],
+   "fehler": 2,
+   "erklaerung": "Ohne Namen sagt eine Lumi „wir“. Sie hätte gerufen: „Wir haben einen Pilz gefunden!“"
+  }
+ ],
+ "lumisch": {
+  "plan": [
+   {
+    "tag": 1,
+    "wort": "zan",
+    "bedeutung": "Licht",
+    "aufgabe": "Mach heute irgendwo das Licht an und sag dabei zan."
+   },
+   {
+    "tag": 2,
+    "wort": "mo",
+    "bedeutung": "Wasser",
+    "aufgabe": "Beim nächsten Glas Wasser: mo."
+   },
+   {
+    "tag": 3,
+    "wort": "pelu",
+    "bedeutung": "Essen",
+    "aufgabe": "Beim nächsten Essen sagst du pelu."
+   },
+   {
+    "tag": 4,
+    "wort": "tiv",
+    "bedeutung": "Weg",
+    "aufgabe": "Auf dem Weg zur Haustür: tiv."
+   },
+   {
+    "tag": 5,
+    "wort": "orr",
+    "bedeutung": "Dach",
+    "aufgabe": "Schau auf ein Dach und rolle das r."
+   },
+   {
+    "tag": 6,
+    "wort": "kiv",
+    "bedeutung": "Eis, kalt",
+    "aufgabe": "Was ist heute kiv? Der Kühlschrank, das Fenster?"
+   },
+   {
+    "tag": 7,
+    "wort": "pim",
+    "bedeutung": "Pilz",
+    "aufgabe": "Wiederholungstag: zan, mo, pelu, tiv, orr, kiv, pim."
+   },
+   {
+    "tag": 8,
+    "wort": "ro",
+    "bedeutung": "drei",
+    "aufgabe": "Zahl im Wort: pim3 sind drei Pilze. Zähle drei Dinge und schreibe sie mit Zahl."
+   },
+   {
+    "tag": 9,
+    "wort": "ne",
+    "bedeutung": "nicht, kein, 0",
+    "aufgabe": "Mach ein Gegenteil: nezan ist dunkel. Welches Wort kannst du umdrehen?"
+   },
+   {
+    "tag": 10,
+    "wort": "nu",
+    "bedeutung": "wir",
+    "aufgabe": "Sag nu, wenn du dich und jemanden meinst."
+   },
+   {
+    "tag": 11,
+    "wort": "li",
+    "bedeutung": "du",
+    "aufgabe": "Sag li zu einem Menschen, den du magst."
+   },
+   {
+    "tag": 12,
+    "wort": "ke",
+    "bedeutung": "früher",
+    "aufgabe": "ke zel: gestern. Was war gestern zan?"
+   },
+   {
+    "tag": 13,
+    "wort": "su",
+    "bedeutung": "bald",
+    "aufgabe": "su zel: morgen. Was wünschst du dir für morgen?"
+   },
+   {
+    "tag": 14,
+    "wort": "ma",
+    "bedeutung": "Frage",
+    "aufgabe": "Stell eine Frage mit ma, zum Beispiel ma mi pelu?"
+   },
+   {
+    "tag": 15,
+    "wort": "sen",
+    "bedeutung": "essen",
+    "aufgabe": "Bilde einen Satz: ta nu sen pelu."
+   },
+   {
+    "tag": 16,
+    "wort": "lik",
+    "bedeutung": "mögen",
+    "aufgabe": "Sag, was du magst: Name + lik + Ding."
+   },
+   {
+    "tag": 17,
+    "wort": "mi",
+    "bedeutung": "haben",
+    "aufgabe": "Susi mi pim3: Sag, was du hast, mit Zahl."
+   },
+   {
+    "tag": 18,
+    "wort": "pat",
+    "bedeutung": "gehen",
+    "aufgabe": "su nu pat ko tiv: ein Satz mit Zeit, Wer, Tun, Wohin."
+   },
+   {
+    "tag": 19,
+    "wort": "sumu",
+    "bedeutung": "schlafen",
+    "aufgabe": "Abends: ke zel sumu, su zel zan."
+   },
+   {
+    "tag": 20,
+    "wort": "sum",
+    "bedeutung": "gut",
+    "aufgabe": "Beende deinen Tag mit nezel sum."
+   },
+   {
+    "tag": 21,
+    "wort": "",
+    "bedeutung": "dein Satz",
+    "aufgabe": "Schreib einen eigenen Satz mit Zeit, Zahl und Verneinung."
+   }
+  ],
+  "woerter": [
+   {
+    "wort": "zan",
+    "deutsch": "Licht"
+   },
+   {
+    "wort": "nezan",
+    "deutsch": "dunkel"
+   },
+   {
+    "wort": "kivzan",
+    "deutsch": "blau"
+   },
+   {
+    "wort": "mo",
+    "deutsch": "Wasser"
+   },
+   {
+    "wort": "vul",
+    "deutsch": "warm"
+   },
+   {
+    "wort": "kiv",
+    "deutsch": "Eis"
+   },
+   {
+    "wort": "tok",
+    "deutsch": "Stein"
+   },
+   {
+    "wort": "umo",
+    "deutsch": "Höhle"
+   },
+   {
+    "wort": "tem",
+    "deutsch": "Erde"
+   },
+   {
+    "wort": "orr",
+    "deutsch": "Dach"
+   },
+   {
+    "wort": "vuku",
+    "deutsch": "Spalt"
+   },
+   {
+    "wort": "tivmo",
+    "deutsch": "Fluss"
+   },
+   {
+    "wort": "motem",
+    "deutsch": "Ufer"
+   },
+   {
+    "wort": "mulo",
+    "deutsch": "Dampf"
+   },
+   {
+    "wort": "tokvul",
+    "deutsch": "heiße Mulde"
+   },
+   {
+    "wort": "tiv",
+    "deutsch": "Weg"
+   },
+   {
+    "wort": "uvo",
+    "deutsch": "oben"
+   },
+   {
+    "wort": "unu",
+    "deutsch": "unten"
+   },
+   {
+    "wort": "tuli",
+    "deutsch": "Periode"
+   },
+   {
+    "wort": "pim",
+    "deutsch": "Pilz"
+   },
+   {
+    "wort": "pelu",
+    "deutsch": "Essen"
+   },
+   {
+    "wort": "sen",
+    "deutsch": "essen"
+   },
+   {
+    "wort": "lap",
+    "deutsch": "trinken"
+   },
+   {
+    "wort": "pelutuli",
+    "deutsch": "Essenszeit"
+   },
+   {
+    "wort": "tuvo",
+    "deutsch": "aufquellen"
+   },
+   {
+    "wort": "luvu",
+    "deutsch": "weich"
+   },
+   {
+    "wort": "mel",
+    "deutsch": "süß"
+   },
+   {
+    "wort": "zila",
+    "deutsch": "frisch"
+   },
+   {
+    "wort": "tazi",
+    "deutsch": "zäh"
+   },
+   {
+    "wort": "silum",
+    "deutsch": "Genuss"
+   },
+   {
+    "wort": "sol",
+    "deutsch": "voll"
+   },
+   {
+    "wort": "lisu",
+    "deutsch": "Flechte"
+   },
+   {
+    "wort": "mus",
+    "deutsch": "Moos"
+   },
+   {
+    "wort": "lomo",
+    "deutsch": "Lager"
+   },
+   {
+    "wort": "tokek",
+    "deutsch": "Abflussspalte"
+   },
+   {
+    "wort": "moek",
+    "deutsch": "ausscheiden"
+   },
+   {
+    "wort": "pati",
+    "deutsch": "Finger"
+   },
+   {
+    "wort": "patimak",
+    "deutsch": "Daumen"
+   },
+   {
+    "wort": "tap",
+    "deutsch": "Fuß"
+   },
+   {
+    "wort": "oki",
+    "deutsch": "Auge"
+   },
+   {
+    "wort": "ela",
+    "deutsch": "Ohr"
+   },
+   {
+    "wort": "zanpati",
+    "deutsch": "Antenne"
+   },
+   {
+    "wort": "nam",
+    "deutsch": "Mund"
+   },
+   {
+    "wort": "nes",
+    "deutsch": "Nase"
+   },
+   {
+    "wort": "kopu",
+    "deutsch": "Kopf"
+   },
+   {
+    "wort": "tuk",
+    "deutsch": "Herz"
+   },
+   {
+    "wort": "pumu",
+    "deutsch": "Bauch"
+   },
+   {
+    "wort": "luna",
+    "deutsch": "Haut"
+   },
+   {
+    "wort": "tokan",
+    "deutsch": "Knochen"
+   },
+   {
+    "wort": "vulmo",
+    "deutsch": "Blut"
+   },
+   {
+    "wort": "kit",
+    "deutsch": "Zahn"
+   },
+   {
+    "wort": "lelu",
+    "deutsch": "Haar"
+   },
+   {
+    "wort": "pal",
+    "deutsch": "Arm"
+   },
+   {
+    "wort": "nini",
+    "deutsch": "Kind"
+   },
+   {
+    "wort": "ama",
+    "deutsch": "tragende Rolle"
+   },
+   {
+    "wort": "apa",
+    "deutsch": "andere Rolle"
+   },
+   {
+    "wort": "kami",
+    "deutsch": "Freund"
+   },
+   {
+    "wort": "ulkami",
+    "deutsch": "Nachbar"
+   },
+   {
+    "wort": "vulsam",
+    "deutsch": "kuscheln"
+   },
+   {
+    "wort": "namsam",
+    "deutsch": "Gespräch"
+   },
+   {
+    "wort": "sumu",
+    "deutsch": "schlafen"
+   },
+   {
+    "wort": "pat",
+    "deutsch": "gehen"
+   },
+   {
+    "wort": "tapi",
+    "deutsch": "laufen"
+   },
+   {
+    "wort": "kom",
+    "deutsch": "kommen"
+   },
+   {
+    "wort": "tam",
+    "deutsch": "bleiben"
+   },
+   {
+    "wort": "sap",
+    "deutsch": "wissen"
+   },
+   {
+    "wort": "sapu",
+    "deutsch": "lernen"
+   },
+   {
+    "wort": "kolu",
+    "deutsch": "denken"
+   },
+   {
+    "wort": "lik",
+    "deutsch": "mögen"
+   },
+   {
+    "wort": "mi",
+    "deutsch": "haben"
+   },
+   {
+    "wort": "pek",
+    "deutsch": "geben"
+   },
+   {
+    "wort": "tak",
+    "deutsch": "nehmen"
+   },
+   {
+    "wort": "kel",
+    "deutsch": "machen"
+   },
+   {
+    "wort": "kil",
+    "deutsch": "suchen"
+   },
+   {
+    "wort": "lun",
+    "deutsch": "finden"
+   },
+   {
+    "wort": "tum",
+    "deutsch": "helfen"
+   },
+   {
+    "wort": "kik",
+    "deutsch": "lachen"
+   },
+   {
+    "wort": "moki",
+    "deutsch": "weinen"
+   },
+   {
+    "wort": "zepa",
+    "deutsch": "tanzen"
+   },
+   {
+    "wort": "lula",
+    "deutsch": "singen"
+   },
+   {
+    "wort": "mura",
+    "deutsch": "warten"
+   },
+   {
+    "wort": "okiko",
+    "deutsch": "zeigen"
+   },
+   {
+    "wort": "kuru",
+    "deutsch": "schicken"
+   },
+   {
+    "wort": "pera",
+    "deutsch": "anfangen"
+   },
+   {
+    "wort": "pil",
+    "deutsch": "spielen"
+   },
+   {
+    "wort": "kolutok",
+    "deutsch": "Rätsel"
+   },
+   {
+    "wort": "sum",
+    "deutsch": "gut"
+   },
+   {
+    "wort": "nesum",
+    "deutsch": "schlecht"
+   },
+   {
+    "wort": "mak",
+    "deutsch": "groß"
+   },
+   {
+    "wort": "nim",
+    "deutsch": "klein"
+   },
+   {
+    "wort": "tevi",
+    "deutsch": "neu"
+   },
+   {
+    "wort": "taso",
+    "deutsch": "alt"
+   },
+   {
+    "wort": "zip",
+    "deutsch": "schnell"
+   },
+   {
+    "wort": "tokal",
+    "deutsch": "stark"
+   },
+   {
+    "wort": "lon",
+    "deutsch": "lang"
+   },
+   {
+    "wort": "tomo",
+    "deutsch": "schwer"
+   },
+   {
+    "wort": "mimu",
+    "deutsch": "ruhig"
+   },
+   {
+    "wort": "tikal",
+    "deutsch": "scharf"
+   },
+   {
+    "wort": "sana",
+    "deutsch": "sicher"
+   },
+   {
+    "wort": "zansol",
+    "deutsch": "bereit"
+   },
+   {
+    "wort": "zanluna",
+    "deutsch": "Farbe"
+   },
+   {
+    "wort": "mulozan",
+    "deutsch": "weiß"
+   },
+   {
+    "wort": "nezanmo",
+    "deutsch": "schwarz"
+   },
+   {
+    "wort": "vulmozan",
+    "deutsch": "rot"
+   },
+   {
+    "wort": "muszan",
+    "deutsch": "grün"
+   },
+   {
+    "wort": "pimzan",
+    "deutsch": "gelb"
+   },
+   {
+    "wort": "kiru",
+    "deutsch": "Angst"
+   },
+   {
+    "wort": "tikvul",
+    "deutsch": "Wut"
+   },
+   {
+    "wort": "tikor",
+    "deutsch": "Gefahr"
+   },
+   {
+    "wort": "unuko",
+    "deutsch": "Heimweh"
+   },
+   {
+    "wort": "suzan",
+    "deutsch": "Hoffnung"
+   },
+   {
+    "wort": "kezan",
+    "deutsch": "Erinnerung"
+   },
+   {
+    "wort": "kesam",
+    "deutsch": "Geschichte"
+   },
+   {
+    "wort": "nu",
+    "deutsch": "wir"
+   },
+   {
+    "wort": "li",
+    "deutsch": "du"
+   },
+   {
+    "wort": "la",
+    "deutsch": "er"
+   },
+   {
+    "wort": "ke",
+    "deutsch": "früher"
+   },
+   {
+    "wort": "ta",
+    "deutsch": "jetzt"
+   },
+   {
+    "wort": "su",
+    "deutsch": "bald"
+   },
+   {
+    "wort": "ne",
+    "deutsch": "nicht"
+   },
+   {
+    "wort": "ma",
+    "deutsch": "was"
+   },
+   {
+    "wort": "ak",
+    "deutsch": "ja"
+   },
+   {
+    "wort": "ve",
+    "deutsch": "von"
+   },
+   {
+    "wort": "ul",
+    "deutsch": "bei"
+   },
+   {
+    "wort": "ko",
+    "deutsch": "hin"
+   },
+   {
+    "wort": "ek",
+    "deutsch": "weg"
+   },
+   {
+    "wort": "to",
+    "deutsch": "dieses"
+   },
+   {
+    "wort": "ol",
+    "deutsch": "oder"
+   },
+   {
+    "wort": "pu",
+    "deutsch": "weil"
+   },
+   {
+    "wort": "tan",
+    "deutsch": "wenn"
+   },
+   {
+    "wort": "zeku",
+    "deutsch": "also"
+   },
+   {
+    "wort": "ses",
+    "deutsch": "aber"
+   },
+   {
+    "wort": "ki",
+    "deutsch": "dass"
+   },
+   {
+    "wort": "tisu",
+    "deutsch": "können"
+   },
+   {
+    "wort": "kavu",
+    "deutsch": "müssen"
+   },
+   {
+    "wort": "sovi",
+    "deutsch": "sollen"
+   },
+   {
+    "wort": "kovi",
+    "deutsch": "wollen"
+   },
+   {
+    "wort": "mu",
+    "deutsch": "auch"
+   },
+   {
+    "wort": "mol",
+    "deutsch": "viel"
+   },
+   {
+    "wort": "lim",
+    "deutsch": "wenig"
+   },
+   {
+    "wort": "vi",
+    "deutsch": "mehr"
+   },
+   {
+    "wort": "tal",
+    "deutsch": "immer"
+   },
+   {
+    "wort": "sam",
+    "deutsch": "mit"
+   },
+   {
+    "wort": "pur",
+    "deutsch": "für"
+   },
+   {
+    "wort": "pas",
+    "deutsch": "nur"
+   },
+   {
+    "wort": "sul",
+    "deutsch": "bitte"
+   },
+   {
+    "wort": "tul",
+    "deutsch": "danke"
+   },
+   {
+    "wort": "mh",
+    "deutsch": "hm"
+   },
+   {
+    "wort": "o",
+    "deutsch": "oh"
+   },
+   {
+    "wort": "ka",
+    "deutsch": "eins"
+   },
+   {
+    "wort": "sa",
+    "deutsch": "zwei"
+   },
+   {
+    "wort": "ro",
+    "deutsch": "drei"
+   },
+   {
+    "wort": "le",
+    "deutsch": "vier"
+   },
+   {
+    "wort": "pa",
+    "deutsch": "fünf"
+   },
+   {
+    "wort": "ni",
+    "deutsch": "sechs"
+   },
+   {
+    "wort": "tu",
+    "deutsch": "sieben"
+   },
+   {
+    "wort": "vo",
+    "deutsch": "acht"
+   },
+   {
+    "wort": "ze",
+    "deutsch": "neun"
+   },
+   {
+    "wort": "mim",
+    "deutsch": "halb"
+   },
+   {
+    "wort": "uvozan",
+    "deutsch": "Sonne"
+   },
+   {
+    "wort": "silu",
+    "deutsch": "Mond"
+   },
+   {
+    "wort": "zik",
+    "deutsch": "Stern"
+   },
+   {
+    "wort": "zikzan",
+    "deutsch": "Sternenlicht"
+   },
+   {
+    "wort": "molu",
+    "deutsch": "Regen"
+   },
+   {
+    "wort": "usu",
+    "deutsch": "Wind"
+   },
+   {
+    "wort": "usumak",
+    "deutsch": "Sturm"
+   },
+   {
+    "wort": "kivmulo",
+    "deutsch": "Schnee"
+   },
+   {
+    "wort": "momak",
+    "deutsch": "Meer"
+   },
+   {
+    "wort": "kivtem",
+    "deutsch": "Gletscher"
+   },
+   {
+    "wort": "takor",
+    "deutsch": "Berg"
+   },
+   {
+    "wort": "turamol",
+    "deutsch": "Wald"
+   },
+   {
+    "wort": "temnim",
+    "deutsch": "Sand"
+   },
+   {
+    "wort": "vulzan",
+    "deutsch": "Feuer"
+   },
+   {
+    "wort": "zel",
+    "deutsch": "Tag"
+   },
+   {
+    "wort": "nezel",
+    "deutsch": "Nacht"
+   },
+   {
+    "wort": "ruma",
+    "deutsch": "Jahr"
+   },
+   {
+    "wort": "zelok",
+    "deutsch": "Uhr"
+   },
+   {
+    "wort": "tura",
+    "deutsch": "Baum"
+   },
+   {
+    "wort": "mili",
+    "deutsch": "Blume"
+   },
+   {
+    "wort": "pala",
+    "deutsch": "Blatt"
+   },
+   {
+    "wort": "sevi",
+    "deutsch": "Gras"
+   },
+   {
+    "wort": "tupa",
+    "deutsch": "Eichel"
+   },
+   {
+    "wort": "kuli",
+    "deutsch": "Beere"
+   },
+   {
+    "wort": "nuk",
+    "deutsch": "Nuss"
+   },
+   {
+    "wort": "semi",
+    "deutsch": "Samen"
+   },
+   {
+    "wort": "tosa",
+    "deutsch": "Wurzel"
+   },
+   {
+    "wort": "ani",
+    "deutsch": "Tier"
+   },
+   {
+    "wort": "pinu",
+    "deutsch": "Pinguin"
+   },
+   {
+    "wort": "sila",
+    "deutsch": "Fisch"
+   },
+   {
+    "wort": "silamak",
+    "deutsch": "Wal"
+   },
+   {
+    "wort": "mulu",
+    "deutsch": "Robbe"
+   },
+   {
+    "wort": "vau",
+    "deutsch": "Hund"
+   },
+   {
+    "wort": "miz",
+    "deutsch": "Katze"
+   },
+   {
+    "wort": "nip",
+    "deutsch": "Maus"
+   },
+   {
+    "wort": "zum",
+    "deutsch": "Biene"
+   },
+   {
+    "wort": "lul",
+    "deutsch": "Wurm"
+   },
+   {
+    "wort": "tirli",
+    "deutsch": "Vogel"
+   },
+   {
+    "wort": "teru",
+    "deutsch": "Pferd"
+   },
+   {
+    "wort": "muvo",
+    "deutsch": "Kuh"
+   },
+   {
+    "wort": "mema",
+    "deutsch": "Schaf"
+   },
+   {
+    "wort": "kako",
+    "deutsch": "Huhn"
+   },
+   {
+    "wort": "tokalu",
+    "deutsch": "Macht"
+   },
+   {
+    "wort": "sovitok",
+    "deutsch": "Gesetz"
+   },
+   {
+    "wort": "nusammak",
+    "deutsch": "Staat"
+   },
+   {
+    "wort": "mitok",
+    "deutsch": "Eigentum"
+   },
+   {
+    "wort": "pektak",
+    "deutsch": "Tausch"
+   },
+   {
+    "wort": "tokpek",
+    "deutsch": "Geld"
+   },
+   {
+    "wort": "kelmak",
+    "deutsch": "Arbeit"
+   },
+   {
+    "wort": "tikkel",
+    "deutsch": "Krieg"
+   },
+   {
+    "wort": "mimusam",
+    "deutsch": "Frieden"
+   },
+   {
+    "wort": "uvu",
+    "deutsch": "Mensch"
+   },
+   {
+    "wort": "nem",
+    "deutsch": "Name"
+   },
+   {
+    "wort": "nami",
+    "deutsch": "Wort"
+   },
+   {
+    "wort": "ora",
+    "deutsch": "Haus"
+   },
+   {
+    "wort": "pok",
+    "deutsch": "Tür"
+   },
+   {
+    "wort": "zanpok",
+    "deutsch": "Fenster"
+   },
+   {
+    "wort": "mur",
+    "deutsch": "Wand"
+   },
+   {
+    "wort": "tavo",
+    "deutsch": "Tisch"
+   },
+   {
+    "wort": "sela",
+    "deutsch": "Stuhl"
+   },
+   {
+    "wort": "kor",
+    "deutsch": "Seil"
+   },
+   {
+    "wort": "kelu",
+    "deutsch": "Schlüssel"
+   },
+   {
+    "wort": "kelumur",
+    "deutsch": "Tresor"
+   },
+   {
+    "wort": "polo",
+    "deutsch": "Vorrat"
+   },
+   {
+    "wort": "nepelu",
+    "deutsch": "Hunger"
+   },
+   {
+    "wort": "nemo",
+    "deutsch": "Durst"
+   },
+   {
+    "wort": "orra",
+    "deutsch": "bauen"
+   },
+   {
+    "wort": "lis",
+    "deutsch": "lesen"
+   },
+   {
+    "wort": "lipa",
+    "deutsch": "schreiben"
+   },
+   {
+    "wort": "pap",
+    "deutsch": "Papier"
+   },
+   {
+    "wort": "zelis",
+    "deutsch": "Tagebuch"
+   },
+   {
+    "wort": "tivpap",
+    "deutsch": "Karte"
+   },
+   {
+    "wort": "zanpa",
+    "deutsch": "Taschenlampe"
+   },
+   {
+    "wort": "elanam",
+    "deutsch": "Telefon"
+   },
+   {
+    "wort": "usuela",
+    "deutsch": "Radio"
+   },
+   {
+    "wort": "zansap",
+    "deutsch": "Wahrheit"
+   },
+   {
+    "wort": "nezansap",
+    "deutsch": "Irrtum"
+   },
+   {
+    "wort": "nesap",
+    "deutsch": "Nichtwissen"
+   },
+   {
+    "wort": "sapzan",
+    "deutsch": "Erkenntnis"
+   },
+   {
+    "wort": "sapsol",
+    "deutsch": "Weisheit"
+   },
+   {
+    "wort": "sanasap",
+    "deutsch": "Gewissheit"
+   },
+   {
+    "wort": "nesanasap",
+    "deutsch": "Ungewissheit"
+   },
+   {
+    "wort": "kolupum",
+    "deutsch": "Zweifel"
+   },
+   {
+    "wort": "kilsap",
+    "deutsch": "Neugier"
+   },
+   {
+    "wort": "okio",
+    "deutsch": "Staunen"
+   },
+   {
+    "wort": "tuksap",
+    "deutsch": "Glaube"
+   },
+   {
+    "wort": "kolunam",
+    "deutsch": "Meinung"
+   },
+   {
+    "wort": "kesap",
+    "deutsch": "Erfahrung"
+   },
+   {
+    "wort": "zankolu",
+    "deutsch": "Vernunft"
+   },
+   {
+    "wort": "uvokolu",
+    "deutsch": "Idee"
+   },
+   {
+    "wort": "zanoki",
+    "deutsch": "Schein"
+   },
+   {
+    "wort": "nezanluna",
+    "deutsch": "Schatten"
+   },
+   {
+    "wort": "toktam",
+    "deutsch": "Wirklichkeit"
+   },
+   {
+    "wort": "namkolu",
+    "deutsch": "Begriff"
+   },
+   {
+    "wort": "namtiv",
+    "deutsch": "Sprache"
+   },
+   {
+    "wort": "zannam",
+    "deutsch": "Bedeutung"
+   },
+   {
+    "wort": "okinam",
+    "deutsch": "Zeichen"
+   },
+   {
+    "wort": "kolutiv",
+    "deutsch": "Methode"
+   },
+   {
+    "wort": "zekukolu",
+    "deutsch": "Logik"
+   },
+   {
+    "wort": "tansap",
+    "deutsch": "Annahme"
+   },
+   {
+    "wort": "netansap",
+    "deutsch": "Gegenthese"
+   },
+   {
+    "wort": "namne",
+    "deutsch": "Widerspruch"
+   },
+   {
+    "wort": "neak",
+    "deutsch": "Paradox"
+   },
+   {
+    "wort": "punam",
+    "deutsch": "Argument"
+   },
+   {
+    "wort": "zekusap",
+    "deutsch": "Schluss"
+   },
+   {
+    "wort": "okisap",
+    "deutsch": "Beweis"
+   },
+   {
+    "wort": "neokisap",
+    "deutsch": "Widerlegung"
+   },
+   {
+    "wort": "okito",
+    "deutsch": "Beispiel"
+   },
+   {
+    "wort": "okitam",
+    "deutsch": "beobachten"
+   },
+   {
+    "wort": "kelkil",
+    "deutsch": "Versuch"
+   },
+   {
+    "wort": "kolusol",
+    "deutsch": "Theorie"
+   },
+   {
+    "wort": "tisumol",
+    "deutsch": "wahrscheinlich"
+   },
+   {
+    "wort": "tisulim",
+    "deutsch": "unwahrscheinlich"
+   },
+   {
+    "wort": "maek",
+    "deutsch": "Antwort"
+   },
+   {
+    "wort": "kolutak",
+    "deutsch": "Urteil"
+   },
+   {
+    "wort": "zanpu",
+    "deutsch": "Erklärung"
+   },
+   {
+    "wort": "sumuzan",
+    "deutsch": "Traum"
+   },
+   {
+    "wort": "lunak",
+    "deutsch": "spüren"
+   },
+   {
+    "wort": "zantam",
+    "deutsch": "Sein"
+   },
+   {
+    "wort": "nezantam",
+    "deutsch": "Nichts"
+   },
+   {
+    "wort": "tevimo",
+    "deutsch": "Werden"
+   },
+   {
+    "wort": "toktuli",
+    "deutsch": "Dauer"
+   },
+   {
+    "wort": "soltuli",
+    "deutsch": "Ewigkeit"
+   },
+   {
+    "wort": "motuli",
+    "deutsch": "Vergänglichkeit"
+   },
+   {
+    "wort": "okituli",
+    "deutsch": "Augenblick"
+   },
+   {
+    "wort": "solko",
+    "deutsch": "Ende"
+   },
+   {
+    "wort": "unupera",
+    "deutsch": "Ursprung"
+   },
+   {
+    "wort": "nesolko",
+    "deutsch": "Unendlichkeit"
+   },
+   {
+    "wort": "umotem",
+    "deutsch": "Raum"
+   },
+   {
+    "wort": "zikumo",
+    "deutsch": "Weltall"
+   },
+   {
+    "wort": "tempim",
+    "deutsch": "Natur"
+   },
+   {
+    "wort": "toku",
+    "deutsch": "Ding"
+   },
+   {
+    "wort": "tokzan",
+    "deutsch": "Wesen"
+   },
+   {
+    "wort": "tokluna",
+    "deutsch": "Eigenschaft"
+   },
+   {
+    "wort": "tokvu",
+    "deutsch": "Grenze"
+   },
+   {
+    "wort": "zesa",
+    "deutsch": "Ordnung"
+   },
+   {
+    "wort": "nezesa",
+    "deutsch": "Chaos"
+   },
+   {
+    "wort": "vini",
+    "deutsch": "Gegensatz"
+   },
+   {
+    "wort": "mimsol",
+    "deutsch": "Mitte"
+   },
+   {
+    "wort": "mimpa",
+    "deutsch": "Teil"
+   },
+   {
+    "wort": "kapu",
+    "deutsch": "Zufall"
+   },
+   {
+    "wort": "unutiv",
+    "deutsch": "Schicksal"
+   },
+   {
+    "wort": "tazan",
+    "deutsch": "Anschauung"
+   },
+   {
+    "wort": "zantuk",
+    "deutsch": "Leben"
+   },
+   {
+    "wort": "zanpera",
+    "deutsch": "Geburt"
+   },
+   {
+    "wort": "tamne",
+    "deutsch": "Tod"
+   },
+   {
+    "wort": "talkom",
+    "deutsch": "Wiederkehr"
+   },
+   {
+    "wort": "kolun",
+    "deutsch": "Geist"
+   },
+   {
+    "wort": "lunasol",
+    "deutsch": "Körper"
+   },
+   {
+    "wort": "zankolun",
+    "deutsch": "Bewusstsein"
+   },
+   {
+    "wort": "nemtam",
+    "deutsch": "Selbst"
+   },
+   {
+    "wort": "nenem",
+    "deutsch": "Nicht-Selbst"
+   },
+   {
+    "wort": "kovilik",
+    "deutsch": "Wunsch"
+   },
+   {
+    "wort": "kovitiv",
+    "deutsch": "Absicht"
+   },
+   {
+    "wort": "kovitak",
+    "deutsch": "wählen"
+   },
+   {
+    "wort": "nekor",
+    "deutsch": "Freiheit"
+   },
+   {
+    "wort": "pekma",
+    "deutsch": "Verantwortung"
+   },
+   {
+    "wort": "nepek",
+    "deutsch": "Schuld"
+   },
+   {
+    "wort": "nepekek",
+    "deutsch": "verzeihen"
+   },
+   {
+    "wort": "taltam",
+    "deutsch": "Gewohnheit"
+   },
+   {
+    "wort": "samli",
+    "deutsch": "Beziehung"
+   },
+   {
+    "wort": "likom",
+    "deutsch": "Begegnung"
+   },
+   {
+    "wort": "nusam",
+    "deutsch": "Gemeinschaft"
+   },
+   {
+    "wort": "nesam",
+    "deutsch": "Einsamkeit"
+   },
+   {
+    "wort": "sumuek",
+    "deutsch": "erwachen"
+   },
+   {
+    "wort": "takne",
+    "deutsch": "loslassen"
+   },
+   {
+    "wort": "sumkel",
+    "deutsch": "Tugend"
+   },
+   {
+    "wort": "sumtuk",
+    "deutsch": "Güte"
+   },
+   {
+    "wort": "nesumtuk",
+    "deutsch": "Bosheit"
+   },
+   {
+    "wort": "tukpum",
+    "deutsch": "Gewissen"
+   },
+   {
+    "wort": "uvosum",
+    "deutsch": "das Gute selbst"
+   },
+   {
+    "wort": "samsol",
+    "deutsch": "Gerechtigkeit"
+   },
+   {
+    "wort": "nesamsol",
+    "deutsch": "Ungerechtigkeit"
+   },
+   {
+    "wort": "sumsol",
+    "deutsch": "Glück"
+   },
+   {
+    "wort": "mimusol",
+    "deutsch": "Gelassenheit"
+   },
+   {
+    "wort": "mimusum",
+    "deutsch": "Zufriedenheit"
+   },
+   {
+    "wort": "tikluna",
+    "deutsch": "Schmerz"
+   },
+   {
+    "wort": "tikmoki",
+    "deutsch": "Leid"
+   },
+   {
+    "wort": "mokisam",
+    "deutsch": "Mitleid"
+   },
+   {
+    "wort": "vulpek",
+    "deutsch": "Trost"
+   },
+   {
+    "wort": "murasol",
+    "deutsch": "Langeweile"
+   },
+   {
+    "wort": "murasum",
+    "deutsch": "Geduld"
+   },
+   {
+    "wort": "tultuk",
+    "deutsch": "Dankbarkeit"
+   },
+   {
+    "wort": "kiruluna",
+    "deutsch": "Scham"
+   },
+   {
+    "wort": "nesuzan",
+    "deutsch": "Verzweiflung"
+   },
+   {
+    "wort": "likko",
+    "deutsch": "Sehnsucht"
+   },
+   {
+    "wort": "kirutam",
+    "deutsch": "Sorge"
+   },
+   {
+    "wort": "nemsol",
+    "deutsch": "Würde"
+   },
+   {
+    "wort": "zanek",
+    "deutsch": "Aufklärung"
+   },
+   {
+    "wort": "nezantok",
+    "deutsch": "Ding an sich"
+   },
+   {
+    "wort": "zantiv",
+    "deutsch": "Sinn"
+   },
+   {
+    "wort": "nezantiv",
+    "deutsch": "Sinnlosigkeit"
+   },
+   {
+    "wort": "kotiv",
+    "deutsch": "Zweck"
+   },
+   {
+    "wort": "neaktiv",
+    "deutsch": "Dialektik"
+   },
+   {
+    "wort": "tivsol",
+    "deutsch": "Regel"
+   },
+   {
+    "wort": "namtivpil",
+    "deutsch": "Sprachspiel"
+   },
+   {
+    "wort": "nenam",
+    "deutsch": "schweigen"
+   },
+   {
+    "wort": "zansum",
+    "deutsch": "Schönheit"
+   },
+   {
+    "wort": "nezansum",
+    "deutsch": "Hässlichkeit"
+   },
+   {
+    "wort": "uvomak",
+    "deutsch": "Erhabenheit"
+   },
+   {
+    "wort": "uvosol",
+    "deutsch": "Gott"
+   },
+   {
+    "wort": "kelsum",
+    "deutsch": "Kunst"
+   },
+   {
+    "wort": "lulatuk",
+    "deutsch": "Musik"
+   },
+   {
+    "wort": "kikkolu",
+    "deutsch": "Humor"
+   },
+   {
+    "wort": "namkik",
+    "deutsch": "Ironie"
+   },
+   {
+    "wort": "neakkik",
+    "deutsch": "das Absurde"
+   },
+   {
+    "wort": "tamnezan",
+    "deutsch": "Seele"
+   },
+   {
+    "wort": "tamnetok",
+    "deutsch": "sterben (Körper)"
+   },
+   {
+    "wort": "talzanpera",
+    "deutsch": "Wiedergeburt"
+   },
+   {
+    "wort": "talzankom",
+    "deutsch": "Wiederkehr der Seele"
+   },
+   {
+    "wort": "zanzik",
+    "deutsch": "Tor"
+   },
+   {
+    "wort": "nezanzan",
+    "deutsch": "Quantenwelt"
+   },
+   {
+    "wort": "nezannam",
+    "deutsch": "Quantensprache"
+   },
+   {
+    "wort": "zanlu",
+    "deutsch": "Unterwelt-Verbindung"
+   },
+   {
+    "wort": "zikmo",
+    "deutsch": "Ozean des Alles"
+   },
+   {
+    "wort": "tamsam",
+    "deutsch": "Einssein"
+   },
+   {
+    "wort": "telzanam",
+    "deutsch": "Vorfahre"
+   },
+   {
+    "wort": "telzanpa",
+    "deutsch": "Nachkomme"
+   },
+   {
+    "wort": "sumutel",
+    "deutsch": "Tiefes Träumen"
+   },
+   {
+    "wort": "zankol",
+    "deutsch": "Einsicht über den Tod"
+   },
+   {
+    "wort": "nezanluk",
+    "deutsch": "Jenseits"
+   },
+   {
+    "wort": "tel",
+    "deutsch": "Zahl"
+   },
+   {
+    "wort": "telkolu",
+    "deutsch": "Mathematik"
+   },
+   {
+    "wort": "telsol",
+    "deutsch": "Menge"
+   },
+   {
+    "wort": "telne",
+    "deutsch": "Null"
+   },
+   {
+    "wort": "telnesol",
+    "deutsch": "Unendliches"
+   },
+   {
+    "wort": "telzan",
+    "deutsch": "Quant"
+   },
+   {
+    "wort": "zanmo",
+    "deutsch": "Welle"
+   },
+   {
+    "wort": "toktelzan",
+    "deutsch": "Teilchen"
+   },
+   {
+    "wort": "akneak",
+    "deutsch": "Überlagerung"
+   },
+   {
+    "wort": "telzansam",
+    "deutsch": "Verschränkung"
+   },
+   {
+    "wort": "okitak",
+    "deutsch": "Messung"
+   },
+   {
+    "wort": "nesanazan",
+    "deutsch": "Unschärfe"
+   },
+   {
+    "wort": "tisutel",
+    "deutsch": "Wahrscheinlichkeit (Zahl)"
+   },
+   {
+    "wort": "tivtel",
+    "deutsch": "Funktion"
+   },
+   {
+    "wort": "telmimu",
+    "deutsch": "Gleichung"
+   },
+   {
+    "wort": "telvi",
+    "deutsch": "Summe"
+   },
+   {
+    "wort": "telnevi",
+    "deutsch": "Differenz"
+   },
+   {
+    "wort": "telsap",
+    "deutsch": "Beweis (mathematisch)"
+   },
+   {
+    "wort": "telnam",
+    "deutsch": "Formel"
+   },
+   {
+    "wort": "telok",
+    "deutsch": "Ort einer Zahl"
+   },
+   {
+    "wort": "telkik",
+    "deutsch": "Rätselzahl"
+   }
+  ],
+  "woerterbuch": [
+   {
+    "wort": "zan",
+    "deutsch": "Licht, hell, leuchten",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Das erste Wort, das man lernt. Die Lumi leuchtet mit ihren Antennen.",
+    "beispiel": {
+     "lumisch": "ul uvo zan zan.",
+     "deutsch": "Hier oben ist es hell."
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "nezan",
+    "deutsch": "dunkel, Dunkelheit",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "ne + zan. Unten ist es immer nezan, bis auf das, was leuchtet.",
+    "beispiel": {
+     "lumisch": "ul unu nezan tal.",
+     "deutsch": "Bei uns unten ist es immer dunkel."
+    }
+   },
+   {
+    "wort": "kivzan",
+    "deutsch": "blau",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Das Licht im Eis."
+   },
+   {
+    "wort": "mo",
+    "deutsch": "Wasser, nass",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Das heiße Wasser aus dem Spalt. Auch: Wasser trinken. Anderes Wasser gibt es unten nicht.",
+    "beispiel": {
+     "lumisch": "vuku mo vul vul.",
+     "deutsch": "Aus dem Spalt kommt heißes Wasser."
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "vul",
+    "deutsch": "warm, Wärme, wärmen",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "vul vul = heiß. Unten ist es warm.",
+    "beispiel": {
+     "lumisch": "vuku mo vul vul.",
+     "deutsch": "Aus dem Spalt kommt heißes Wasser."
+    }
+   },
+   {
+    "wort": "kiv",
+    "deutsch": "Eis, kalt, frieren",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Das Eis über der Höhle.",
+    "im_plan": true
+   },
+   {
+    "wort": "tok",
+    "deutsch": "Stein, hart",
+    "gruppe": "Unten: die Höhle"
+   },
+   {
+    "wort": "umo",
+    "deutsch": "Höhle",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Der Ort mehrere Kilometer unter dem Eis."
+   },
+   {
+    "wort": "tem",
+    "deutsch": "Erde, Boden, Land",
+    "gruppe": "Unten: die Höhle"
+   },
+   {
+    "wort": "orr",
+    "deutsch": "Dach, Decke",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Das r wird gerollt. Unten ist es die Decke der Höhle.",
+    "im_plan": true
+   },
+   {
+    "wort": "vuku",
+    "deutsch": "Spalt, Quelle",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Der schmale Spalt, aus dem das heiße Wasser kommt. Alles Leben liegt an ihm.",
+    "beispiel": {
+     "lumisch": "vuku mo vul vul.",
+     "deutsch": "Aus dem Spalt kommt heißes Wasser."
+    }
+   },
+   {
+    "wort": "tivmo",
+    "deutsch": "Fluss, Bach",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Weg aus Wasser. Am Fluss sitzen die Lumis fast immer.",
+    "beispiel": {
+     "lumisch": "ta nu tam ul tivmo.",
+     "deutsch": "Wir sitzen am Fluss."
+    }
+   },
+   {
+    "wort": "motem",
+    "deutsch": "Ufer, Bucht",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Wasser + Boden. Dort rückt man zum Schlafen zusammen."
+   },
+   {
+    "wort": "mulo",
+    "deutsch": "Dampf, Dunst, Wolke",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Der Atem des Spalts. Die Pilze quellen davon auf."
+   },
+   {
+    "wort": "tokvul",
+    "deutsch": "heiße Mulde",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Stein + Wärme. Ein warmer Platz im Stein. Wer zwei findet, zeigt die zweite einem anderen."
+   },
+   {
+    "wort": "tiv",
+    "deutsch": "Weg, Pfad",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Eines der ersten Wörter.",
+    "im_plan": true
+   },
+   {
+    "wort": "uvo",
+    "deutsch": "oben, Himmel",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Wo die Hellen wohnen.",
+    "beispiel": {
+     "lumisch": "ul uvo zan zan.",
+     "deutsch": "Hier oben ist es hell."
+    }
+   },
+   {
+    "wort": "unu",
+    "deutsch": "unten, Zuhause",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Wo die Lumis wohnen. Auch das Wort für Heimat.",
+    "beispiel": {
+     "lumisch": "ul unu nezan tal.",
+     "deutsch": "Bei uns unten ist es immer dunkel."
+    }
+   },
+   {
+    "wort": "tuli",
+    "deutsch": "Periode, Weile, Zeit",
+    "gruppe": "Unten: die Höhle",
+    "hinweis": "Die Lumis rechnen in Perioden, nicht in Tagen. Wie lang eine ist, sagen sie nicht."
+   },
+   {
+    "wort": "pim",
+    "deutsch": "Pilz",
+    "gruppe": "Unten: Pilz, Essen, Trinken",
+    "hinweis": "Das Lieblingswort der Lumi. Pilze wachsen überall: an den Wänden, im Boden, in den Ritzen des Eises.",
+    "beispiel": {
+     "lumisch": "ta nu sen pim12.",
+     "deutsch": "Wir essen zwölf Pilze."
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "pelu",
+    "deutsch": "Essen, Mahl",
+    "gruppe": "Unten: Pilz, Essen, Trinken",
+    "hinweis": "Alles Essen ist Pilz, trotzdem hat das Mahl ein eigenes Wort: pim wächst, pelu wird gegessen.",
+    "beispiel": {
+     "lumisch": "li mi pelu ma.",
+     "deutsch": "Hast du etwas zu essen?"
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "sen",
+    "deutsch": "essen",
+    "gruppe": "Unten: Pilz, Essen, Trinken",
+    "hinweis": "Wer sen sagt, hat meist schon gerochen.",
+    "beispiel": {
+     "lumisch": "ta nu sen pim12.",
+     "deutsch": "Wir essen zwölf Pilze."
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "lap",
+    "deutsch": "trinken",
+    "gruppe": "Unten: Pilz, Essen, Trinken",
+    "hinweis": "Das Wasser ist warm."
+   },
+   {
+    "wort": "pelutuli",
+    "deutsch": "Essenszeit",
+    "gruppe": "Unten: Pilz, Essen, Trinken",
+    "hinweis": "Sie kommt vom Spalt, wenn er stärker ausatmet."
+   },
+   {
+    "wort": "tuvo",
+    "deutsch": "aufquellen, schwellen",
+    "gruppe": "Unten: Pilz, Essen, Trinken",
+    "hinweis": "So werden die Pilze weich und kühl, wenn der Dampf kommt."
+   },
+   {
+    "wort": "luvu",
+    "deutsch": "weich",
+    "gruppe": "Unten: Pilz, Essen, Trinken",
+    "hinweis": "Ein frischer Pilz ist luvu."
+   },
+   {
+    "wort": "mel",
+    "deutsch": "süß",
+    "gruppe": "Unten: Pilz, Essen, Trinken",
+    "hinweis": "Frische Pilze schmecken ein wenig süß."
+   },
+   {
+    "wort": "zila",
+    "deutsch": "frisch",
+    "gruppe": "Unten: Pilz, Essen, Trinken",
+    "hinweis": "Ein Pilz, der an derselben Stelle nachwächst, ist immer zila."
+   },
+   {
+    "wort": "tazi",
+    "deutsch": "zäh, grau, verdorben",
+    "gruppe": "Unten: Pilz, Essen, Trinken",
+    "hinweis": "Wer einen Pilz abreißt und liegen lässt, bekommt nach einer Weile tazi. Deshalb legt unten keiner einen Vorrat an."
+   },
+   {
+    "wort": "silum",
+    "deutsch": "Genuss, genießen",
+    "gruppe": "Unten: Pilz, Essen, Trinken",
+    "hinweis": "Erst riechen, die Augen halb zu."
+   },
+   {
+    "wort": "sol",
+    "deutsch": "voll, satt, ganz, Ganzes, alle, fertig",
+    "gruppe": "Unten: Pilz, Essen, Trinken",
+    "hinweis": "nesol = leer. Satt ist man unten immer."
+   },
+   {
+    "wort": "lisu",
+    "deutsch": "Flechte",
+    "gruppe": "Unten: Lager und Abfluss",
+    "hinweis": "Wächst erst seit ein paar tausend Jahren in der Höhle. Darauf schlafen die Lumis."
+   },
+   {
+    "wort": "mus",
+    "deutsch": "Moos",
+    "gruppe": "Unten: Lager und Abfluss",
+    "hinweis": "Wie die Flechte erst seit ein paar tausend Jahren da. Weich, warm und zum Schlafen."
+   },
+   {
+    "wort": "lomo",
+    "deutsch": "Lager, Bett",
+    "gruppe": "Unten: Lager und Abfluss",
+    "hinweis": "Der Schlafplatz aus Flechte und Moos."
+   },
+   {
+    "wort": "tokek",
+    "deutsch": "Abflussspalte",
+    "gruppe": "Unten: Lager und Abfluss",
+    "hinweis": "Stein + weg. Die Felsspalte, in der das Wasser verschwindet und mit ihm alles, was die Lumis ausscheiden."
+   },
+   {
+    "wort": "moek",
+    "deutsch": "ausscheiden, Notdurft",
+    "gruppe": "Unten: Lager und Abfluss",
+    "hinweis": "Wasser + weg. Es geht mit dem Wasser fort, und niemand denkt weiter daran."
+   },
+   {
+    "wort": "pati",
+    "deutsch": "Finger",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Kleine Hand."
+   },
+   {
+    "wort": "patimak",
+    "deutsch": "Daumen",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Der große Finger. Lumis haben Hände mit Daumen."
+   },
+   {
+    "wort": "tap",
+    "deutsch": "Fuß",
+    "gruppe": "Unten: wir und unser Körper"
+   },
+   {
+    "wort": "oki",
+    "deutsch": "Auge, sehen",
+    "gruppe": "Unten: wir und unser Körper"
+   },
+   {
+    "wort": "ela",
+    "deutsch": "Ohr, hören",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Die Lumis haben lange Ohren."
+   },
+   {
+    "wort": "zanpati",
+    "deutsch": "Antenne",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Licht-Finger. Mit ihnen zeigt die Lumi, wie sie sich fühlt."
+   },
+   {
+    "wort": "nam",
+    "deutsch": "Mund, sagen",
+    "gruppe": "Unten: wir und unser Körper"
+   },
+   {
+    "wort": "nes",
+    "deutsch": "Nase, riechen",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Riechen ist für die Lumis fast so wichtig wie sehen."
+   },
+   {
+    "wort": "kopu",
+    "deutsch": "Kopf",
+    "gruppe": "Unten: wir und unser Körper"
+   },
+   {
+    "wort": "tuk",
+    "deutsch": "Herz",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Klingt wie sein Schlag."
+   },
+   {
+    "wort": "pumu",
+    "deutsch": "Bauch",
+    "gruppe": "Unten: wir und unser Körper"
+   },
+   {
+    "wort": "luna",
+    "deutsch": "Haut, Fell",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Das Fell der Lumi leuchtet leicht blau."
+   },
+   {
+    "wort": "tokan",
+    "deutsch": "Knochen",
+    "gruppe": "Unten: wir und unser Körper"
+   },
+   {
+    "wort": "vulmo",
+    "deutsch": "Blut",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Warmes Wasser."
+   },
+   {
+    "wort": "kit",
+    "deutsch": "Zahn",
+    "gruppe": "Unten: wir und unser Körper"
+   },
+   {
+    "wort": "lelu",
+    "deutsch": "Haar",
+    "gruppe": "Unten: wir und unser Körper"
+   },
+   {
+    "wort": "pal",
+    "deutsch": "Arm",
+    "gruppe": "Unten: wir und unser Körper"
+   },
+   {
+    "wort": "nini",
+    "deutsch": "Kind",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Kommt nach tu Monaten (sieben)."
+   },
+   {
+    "wort": "ama",
+    "deutsch": "tragende Rolle",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Eine von zwei Rollen, die jede Lumi einnehmen kann. Für Menschen: Mutter. Das Wort hat kein Geschlecht."
+   },
+   {
+    "wort": "apa",
+    "deutsch": "andere Rolle",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Die zweite Rolle. Für Menschen: Vater."
+   },
+   {
+    "wort": "kami",
+    "deutsch": "Freund, Freundin",
+    "gruppe": "Unten: wir und unser Körper"
+   },
+   {
+    "wort": "ulkami",
+    "deutsch": "Nachbar, Nachbarin",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Der Freund bei uns."
+   },
+   {
+    "wort": "vulsam",
+    "deutsch": "kuscheln, Wärme teilen",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Warm + mit. Rücken an Bauch, die Ohren nach unten."
+   },
+   {
+    "wort": "namsam",
+    "deutsch": "Gespräch, reden",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Sagen + zusammen. Das Hauptgeschäft der Lumis neben Essen und Schlafen."
+   },
+   {
+    "wort": "sumu",
+    "deutsch": "schlafen, müde",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "Ein Wort für den Zustand und die Tat.",
+    "beispiel": {
+     "lumisch": "ke Susi sumu.",
+     "deutsch": "Ich habe geschlafen."
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "pat",
+    "deutsch": "gehen",
+    "gruppe": "Unten: was man tut",
+    "beispiel": {
+     "lumisch": "su nu pat ko unu.",
+     "deutsch": "Bald gehen wir nach unten."
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "tapi",
+    "deutsch": "laufen, rennen",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "kom",
+    "deutsch": "kommen",
+    "gruppe": "Unten: was man tut",
+    "beispiel": {
+     "lumisch": "ke zel3 li ne kom.",
+     "deutsch": "Vor drei Tagen bist du nicht gekommen."
+    }
+   },
+   {
+    "wort": "tam",
+    "deutsch": "bleiben, sitzen",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "Am Fluss sitzen heißt tam ul tivmo.",
+    "beispiel": {
+     "lumisch": "ta nu tam ul tivmo.",
+     "deutsch": "Wir sitzen am Fluss."
+    }
+   },
+   {
+    "wort": "sap",
+    "deutsch": "wissen",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "sapu",
+    "deutsch": "lernen",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "Wissen, das gerade ankommt."
+   },
+   {
+    "wort": "kolu",
+    "deutsch": "denken, Gedanke",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "kolu kolu = tief nachdenken, philosophieren. Das tun die Lumis den ganzen Tag."
+   },
+   {
+    "wort": "lik",
+    "deutsch": "mögen, gern haben",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "lik lik = lieben. ne lik = nicht mögen.",
+    "beispiel": {
+     "lumisch": "Susi. ke to tevi. Susi lik.",
+     "deutsch": "Susi. Das war neu. Ich mag es."
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "mi",
+    "deutsch": "haben",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "Ein Besitz, kein Wort für „sein“: sein gibt es nicht.",
+    "beispiel": {
+     "lumisch": "Susi mi pim3.",
+     "deutsch": "Ich habe drei Pilze."
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "pek",
+    "deutsch": "geben",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "tak",
+    "deutsch": "nehmen",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "kel",
+    "deutsch": "machen",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "kil",
+    "deutsch": "suchen",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "lun",
+    "deutsch": "finden",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "tum",
+    "deutsch": "helfen, Hilfe",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "kik",
+    "deutsch": "lachen, Freude",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "moki",
+    "deutsch": "weinen, traurig, Trauer",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "Wasser + Auge."
+   },
+   {
+    "wort": "zepa",
+    "deutsch": "tanzen",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "lula",
+    "deutsch": "singen",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "mura",
+    "deutsch": "warten, langsam",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "okiko",
+    "deutsch": "zeigen",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "Auge hin."
+   },
+   {
+    "wort": "kuru",
+    "deutsch": "schicken",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "pera",
+    "deutsch": "anfangen, beginnen, Anfang",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "pil",
+    "deutsch": "spielen, Spiel",
+    "gruppe": "Unten: was man tut"
+   },
+   {
+    "wort": "kolutok",
+    "deutsch": "Rätsel",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "Denken + Stein: ein harter Brocken, den man knackt."
+   },
+   {
+    "wort": "sum",
+    "deutsch": "gut, schön",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "Guten Morgen = zel sum.",
+    "im_plan": true
+   },
+   {
+    "wort": "nesum",
+    "deutsch": "schlecht, hässlich",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "ne + sum."
+   },
+   {
+    "wort": "mak",
+    "deutsch": "groß",
+    "gruppe": "Wie etwas ist"
+   },
+   {
+    "wort": "nim",
+    "deutsch": "klein",
+    "gruppe": "Wie etwas ist"
+   },
+   {
+    "wort": "tevi",
+    "deutsch": "neu",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "„Das war neu“ = ke to tevi.",
+    "beispiel": {
+     "lumisch": "Susi. ke to tevi. Susi lik.",
+     "deutsch": "Susi. Das war neu. Ich mag es."
+    }
+   },
+   {
+    "wort": "taso",
+    "deutsch": "alt",
+    "gruppe": "Wie etwas ist"
+   },
+   {
+    "wort": "zip",
+    "deutsch": "schnell",
+    "gruppe": "Wie etwas ist"
+   },
+   {
+    "wort": "tokal",
+    "deutsch": "stark",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "netokal = schwach."
+   },
+   {
+    "wort": "lon",
+    "deutsch": "lang",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "nelon = kurz."
+   },
+   {
+    "wort": "tomo",
+    "deutsch": "schwer",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "netomo = leicht."
+   },
+   {
+    "wort": "mimu",
+    "deutsch": "ruhig, still",
+    "gruppe": "Wie etwas ist"
+   },
+   {
+    "wort": "tikal",
+    "deutsch": "scharf",
+    "gruppe": "Wie etwas ist"
+   },
+   {
+    "wort": "sana",
+    "deutsch": "sicher, geschützt",
+    "gruppe": "Wie etwas ist"
+   },
+   {
+    "wort": "zansol",
+    "deutsch": "bereit",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "Licht voll. So sieht man, wie bereit jemand ist."
+   },
+   {
+    "wort": "zanluna",
+    "deutsch": "Farbe",
+    "gruppe": "Farben",
+    "hinweis": "Licht + Haut. Wie ein Ding im Licht aussieht. Das Gegenstück ist nezanluna, der Schatten."
+   },
+   {
+    "wort": "mulozan",
+    "deutsch": "weiß",
+    "gruppe": "Farben",
+    "hinweis": "Dampf + Licht. Der Dampf aus dem Spalt im Antennenlicht."
+   },
+   {
+    "wort": "nezanmo",
+    "deutsch": "schwarz",
+    "gruppe": "Farben",
+    "hinweis": "Dunkel + Wasser. So sieht der Fluss aus, wo kein Licht hinfällt."
+   },
+   {
+    "wort": "vulmozan",
+    "deutsch": "rot",
+    "gruppe": "Farben",
+    "hinweis": "Blut + Licht."
+   },
+   {
+    "wort": "muszan",
+    "deutsch": "grün",
+    "gruppe": "Farben",
+    "hinweis": "Moos + Licht."
+   },
+   {
+    "wort": "pimzan",
+    "deutsch": "gelb",
+    "gruppe": "Farben",
+    "hinweis": "Pilz + Licht."
+   },
+   {
+    "wort": "kiru",
+    "deutsch": "Angst",
+    "gruppe": "Gefühle und Gedanken",
+    "hinweis": "nekiru = Mut.",
+    "beispiel": {
+     "lumisch": "li ne kiru.",
+     "deutsch": "Du hast keine Angst."
+    }
+   },
+   {
+    "wort": "tikvul",
+    "deutsch": "Wut, Zorn",
+    "gruppe": "Gefühle und Gedanken",
+    "hinweis": "Scharf und warm."
+   },
+   {
+    "wort": "tikor",
+    "deutsch": "Gefahr",
+    "gruppe": "Gefühle und Gedanken"
+   },
+   {
+    "wort": "unuko",
+    "deutsch": "Heimweh",
+    "gruppe": "Gefühle und Gedanken",
+    "hinweis": "Nach unten hin. Die Lumi am Handy hat es manchmal."
+   },
+   {
+    "wort": "suzan",
+    "deutsch": "Hoffnung",
+    "gruppe": "Gefühle und Gedanken",
+    "hinweis": "Das Licht, das bald kommt."
+   },
+   {
+    "wort": "kezan",
+    "deutsch": "Erinnerung",
+    "gruppe": "Gefühle und Gedanken",
+    "hinweis": "Das Licht von früher."
+   },
+   {
+    "wort": "kesam",
+    "deutsch": "Geschichte, Erzählung",
+    "gruppe": "Gefühle und Gedanken",
+    "hinweis": "Das, was früher mit uns war."
+   },
+   {
+    "wort": "nu",
+    "deutsch": "wir",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Die Lumis, alle zusammen. Mit Zahl: nu1 = einer von uns, nu7 = wir sieben. Ein „Ich“ gibt es nicht, solange man keinen Namen hat.",
+    "beispiel": {
+     "lumisch": "ta nu sen pim12.",
+     "deutsch": "Wir essen zwölf Pilze."
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "li",
+    "deutsch": "du",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "li2 = ihr beide, li5 = ihr fünf.",
+    "beispiel": {
+     "lumisch": "li mi pelu ma.",
+     "deutsch": "Hast du etwas zu essen?"
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "la",
+    "deutsch": "er, sie, es, man",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Kein Geschlecht. la3 = sie drei."
+   },
+   {
+    "wort": "ke",
+    "deutsch": "früher, vorher",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Vergangenheit. Steht am Satzanfang oder als Vorsilbe (kezan = Erinnerung).",
+    "beispiel": {
+     "lumisch": "Susi. ke to tevi. Susi lik.",
+     "deutsch": "Susi. Das war neu. Ich mag es."
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "ta",
+    "deutsch": "jetzt",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Gegenwart. Darf immer fehlen.",
+    "beispiel": {
+     "lumisch": "ta nu sen pim12.",
+     "deutsch": "Wir essen zwölf Pilze."
+    }
+   },
+   {
+    "wort": "su",
+    "deutsch": "bald, später",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Zukunft. Auch Vorsilbe (suzan = Hoffnung).",
+    "beispiel": {
+     "lumisch": "su nu pat ko unu.",
+     "deutsch": "Bald gehen wir nach unten."
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "ne",
+    "deutsch": "nicht, kein, null, un-",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Verneint Verben, macht Gegenteile (nezan = dunkel) und ist die Ziffer 0.",
+    "beispiel": {
+     "lumisch": "ke zel3 li ne kom.",
+     "deutsch": "Vor drei Tagen bist du nicht gekommen."
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "ma",
+    "deutsch": "was, wer, wo, wann, wie viele, wie, Frage",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Das Fragewort. Es steht dort, wo die Antwort stehen würde. Am Ende eines ganzen Satzes macht es eine Ja-Nein-Frage.",
+    "beispiel": {
+     "lumisch": "li mi pelu ma.",
+     "deutsch": "Hast du etwas zu essen?"
+    },
+    "im_plan": true
+   },
+   {
+    "wort": "ak",
+    "deutsch": "ja",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Das Nicken. Ein Nein ist ne.",
+    "beispiel": {
+     "lumisch": "ak. Susi mi pim2.",
+     "deutsch": "Ja. Ich habe zwei Pilze."
+    }
+   },
+   {
+    "wort": "ve",
+    "deutsch": "von, gehört zu, aus",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Besitz: ora ve nu = unser Haus."
+   },
+   {
+    "wort": "ul",
+    "deutsch": "bei, in, an, auf, hier",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Ein einziges Ortswort für alle Orte.",
+    "beispiel": {
+     "lumisch": "ul uvo zan zan.",
+     "deutsch": "Hier oben ist es hell."
+    }
+   },
+   {
+    "wort": "ko",
+    "deutsch": "hin, zu, nach",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Richtung. pat ko unu = nach unten gehen.",
+    "beispiel": {
+     "lumisch": "su nu pat ko unu.",
+     "deutsch": "Bald gehen wir nach unten."
+    }
+   },
+   {
+    "wort": "ek",
+    "deutsch": "weg, aus, heraus",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Richtung weg von etwas."
+   },
+   {
+    "wort": "to",
+    "deutsch": "dieses, das da, das",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Zeigewort. Ersetzt jeden Artikel, wenn man etwas zeigen muss.",
+    "beispiel": {
+     "lumisch": "Susi. ke to tevi. Susi lik.",
+     "deutsch": "Susi. Das war neu. Ich mag es."
+    }
+   },
+   {
+    "wort": "ol",
+    "deutsch": "oder",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "„Und“ gibt es nicht, man reiht einfach auf."
+   },
+   {
+    "wort": "pu",
+    "deutsch": "weil, damit, Grund, Ursache",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Auch als Hauptwort: pu ist der Grund. Die Wirkung dazu heißt zeku."
+   },
+   {
+    "wort": "tan",
+    "deutsch": "wenn, falls",
+    "gruppe": "Kleine Wörter"
+   },
+   {
+    "wort": "zeku",
+    "deutsch": "also, folglich, Wirkung, Folge",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Der Gegenpart zu pu: pu zeku = Ursache und Wirkung."
+   },
+   {
+    "wort": "ses",
+    "deutsch": "aber, doch",
+    "gruppe": "Kleine Wörter"
+   },
+   {
+    "wort": "ki",
+    "deutsch": "dass",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Leitet einen ganzen Satz ein: Susi sap ki li kom = Susi weiß, dass du kommst."
+   },
+   {
+    "wort": "tisu",
+    "deutsch": "können, möglich, vielleicht",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Kurzwort vor dem Verb. netisu = unmöglich."
+   },
+   {
+    "wort": "kavu",
+    "deutsch": "müssen, notwendig",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Kurzwort vor dem Verb."
+   },
+   {
+    "wort": "sovi",
+    "deutsch": "sollen, Pflicht",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Kurzwort vor dem Verb. Als Hauptwort die Pflicht."
+   },
+   {
+    "wort": "kovi",
+    "deutsch": "wollen, Wille",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Kurzwort vor dem Verb. Als Hauptwort der Wille."
+   },
+   {
+    "wort": "mu",
+    "deutsch": "auch, noch",
+    "gruppe": "Kleine Wörter"
+   },
+   {
+    "wort": "mol",
+    "deutsch": "viel, viele",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Mehr, als man zählen will. Als Zahlzeichen +: pim+ = viele Pilze. „Wer zählt schon“ heißt ma sap."
+   },
+   {
+    "wort": "lim",
+    "deutsch": "wenig, wenige",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Als Zahlzeichen -: pim- = ein paar Pilze."
+   },
+   {
+    "wort": "vi",
+    "deutsch": "mehr",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "A vi B = A mehr als B."
+   },
+   {
+    "wort": "tal",
+    "deutsch": "immer, jedes Mal",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "ne tal = nie.",
+    "beispiel": {
+     "lumisch": "ul unu nezan tal.",
+     "deutsch": "Bei uns unten ist es immer dunkel."
+    }
+   },
+   {
+    "wort": "sam",
+    "deutsch": "mit, zusammen",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "ne sam = ohne."
+   },
+   {
+    "wort": "pur",
+    "deutsch": "für",
+    "gruppe": "Kleine Wörter"
+   },
+   {
+    "wort": "pas",
+    "deutsch": "nur, bloß",
+    "gruppe": "Kleine Wörter"
+   },
+   {
+    "wort": "sul",
+    "deutsch": "bitte",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Steht am Ende: pok sul = Tür auf, bitte.",
+    "beispiel": {
+     "lumisch": "pok sul.",
+     "deutsch": "Mach bitte die Tür auf."
+    }
+   },
+   {
+    "wort": "tul",
+    "deutsch": "danke",
+    "gruppe": "Kleine Wörter"
+   },
+   {
+    "wort": "mh",
+    "deutsch": "hm",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Da stimmt etwas nicht. Ein Laut, kein Wort. Er ist der Zweifel der Lumi. Wer ihn hört, schaut noch einmal hin.",
+    "beispiel": {
+     "lumisch": "mh. pim0.",
+     "deutsch": "Mh. Kein Pilz."
+    }
+   },
+   {
+    "wort": "o",
+    "deutsch": "oh",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "Das Staunen."
+   },
+   {
+    "wort": "ka",
+    "deutsch": "eins, 1",
+    "gruppe": "Zahlen",
+    "hinweis": "Gesprochen wird jede Ziffer einzeln: 12 = ka sa."
+   },
+   {
+    "wort": "sa",
+    "deutsch": "zwei, 2",
+    "gruppe": "Zahlen"
+   },
+   {
+    "wort": "ro",
+    "deutsch": "drei, 3",
+    "gruppe": "Zahlen",
+    "im_plan": true
+   },
+   {
+    "wort": "le",
+    "deutsch": "vier, 4",
+    "gruppe": "Zahlen"
+   },
+   {
+    "wort": "pa",
+    "deutsch": "fünf, 5, Hand",
+    "gruppe": "Zahlen",
+    "hinweis": "Mit Absicht doppelt: Die Hand hat fünf Finger."
+   },
+   {
+    "wort": "ni",
+    "deutsch": "sechs, 6",
+    "gruppe": "Zahlen"
+   },
+   {
+    "wort": "tu",
+    "deutsch": "sieben, 7",
+    "gruppe": "Zahlen",
+    "hinweis": "Sieben Monate trägt eine Lumi ihr Kind."
+   },
+   {
+    "wort": "vo",
+    "deutsch": "acht, 8",
+    "gruppe": "Zahlen"
+   },
+   {
+    "wort": "ze",
+    "deutsch": "neun, 9",
+    "gruppe": "Zahlen",
+    "hinweis": "Die Null ist ne."
+   },
+   {
+    "wort": "mim",
+    "deutsch": "halb, die Hälfte",
+    "gruppe": "Zahlen",
+    "hinweis": "pim mim = ein halber Pilz."
+   },
+   {
+    "wort": "uvozan",
+    "deutsch": "Sonne",
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "hinweis": "Das Licht von oben. Die Lumis kennen sie nur aus Berichten."
+   },
+   {
+    "wort": "silu",
+    "deutsch": "Mond, Monat",
+    "gruppe": "Oben: Himmel, Wetter, Land"
+   },
+   {
+    "wort": "zik",
+    "deutsch": "Stern",
+    "gruppe": "Oben: Himmel, Wetter, Land"
+   },
+   {
+    "wort": "zikzan",
+    "deutsch": "Sternenlicht, Polarlicht",
+    "gruppe": "Oben: Himmel, Wetter, Land"
+   },
+   {
+    "wort": "molu",
+    "deutsch": "Regen",
+    "gruppe": "Oben: Himmel, Wetter, Land"
+   },
+   {
+    "wort": "usu",
+    "deutsch": "Wind",
+    "gruppe": "Oben: Himmel, Wetter, Land"
+   },
+   {
+    "wort": "usumak",
+    "deutsch": "Sturm",
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "hinweis": "Großer Wind."
+   },
+   {
+    "wort": "kivmulo",
+    "deutsch": "Schnee",
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "hinweis": "Eis-Wolke."
+   },
+   {
+    "wort": "momak",
+    "deutsch": "Meer, See",
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "hinweis": "Großes Wasser."
+   },
+   {
+    "wort": "kivtem",
+    "deutsch": "Gletscher",
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "hinweis": "Eis-Land. Darunter wohnen die Lumis."
+   },
+   {
+    "wort": "takor",
+    "deutsch": "Berg",
+    "gruppe": "Oben: Himmel, Wetter, Land"
+   },
+   {
+    "wort": "turamol",
+    "deutsch": "Wald",
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "hinweis": "Viel Baum."
+   },
+   {
+    "wort": "temnim",
+    "deutsch": "Sand",
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "hinweis": "Kleine Erde: tem + nim."
+   },
+   {
+    "wort": "vulzan",
+    "deutsch": "Feuer",
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "hinweis": "Wärme + Licht. Unten gibt es keines."
+   },
+   {
+    "wort": "zel",
+    "deutsch": "Tag",
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "hinweis": "ta zel = heute, ke zel = gestern, su zel = morgen. zel3 = drei Tage. Tage zählen die Lumis nur, wenn sie mit Menschen sprechen.",
+    "beispiel": {
+     "lumisch": "ke zel3 li ne kom.",
+     "deutsch": "Vor drei Tagen bist du nicht gekommen."
+    }
+   },
+   {
+    "wort": "nezel",
+    "deutsch": "Nacht",
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "hinweis": "Unten sind die „Nächte“ keine."
+   },
+   {
+    "wort": "ruma",
+    "deutsch": "Jahr",
+    "gruppe": "Oben: Himmel, Wetter, Land"
+   },
+   {
+    "wort": "zelok",
+    "deutsch": "Uhr",
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "hinweis": "Das Auge des Tages."
+   },
+   {
+    "wort": "tura",
+    "deutsch": "Baum",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "mili",
+    "deutsch": "Blume",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "pala",
+    "deutsch": "Blatt",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "sevi",
+    "deutsch": "Gras",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "tupa",
+    "deutsch": "Eichel",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "kuli",
+    "deutsch": "Beere",
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "hinweis": "kuli12 = zwölf Beeren, so wie Mik es als Beispiel geschrieben hat."
+   },
+   {
+    "wort": "nuk",
+    "deutsch": "Nuss",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "semi",
+    "deutsch": "Samen",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "tosa",
+    "deutsch": "Wurzel",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "ani",
+    "deutsch": "Tier",
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "hinweis": "Unten gibt es keine, nur uns."
+   },
+   {
+    "wort": "pinu",
+    "deutsch": "Pinguin",
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "hinweis": "Der Nachbar von oben."
+   },
+   {
+    "wort": "sila",
+    "deutsch": "Fisch",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "silamak",
+    "deutsch": "Wal",
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "hinweis": "Großer Fisch."
+   },
+   {
+    "wort": "mulu",
+    "deutsch": "Robbe",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "vau",
+    "deutsch": "Hund",
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "hinweis": "Klingt wie er."
+   },
+   {
+    "wort": "miz",
+    "deutsch": "Katze",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "nip",
+    "deutsch": "Maus",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "zum",
+    "deutsch": "Biene, summen",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "lul",
+    "deutsch": "Wurm",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "tirli",
+    "deutsch": "Vogel",
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "hinweis": "Wie sein Ruf, „tirili“."
+   },
+   {
+    "wort": "teru",
+    "deutsch": "Pferd",
+    "gruppe": "Oben: Pflanzen und Tiere"
+   },
+   {
+    "wort": "muvo",
+    "deutsch": "Kuh",
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "hinweis": "Fängt an wie ihr Muh."
+   },
+   {
+    "wort": "mema",
+    "deutsch": "Schaf",
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "hinweis": "Klingt wie es."
+   },
+   {
+    "wort": "kako",
+    "deutsch": "Huhn",
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "hinweis": "Klingt wie es."
+   },
+   {
+    "wort": "tokalu",
+    "deutsch": "Macht",
+    "gruppe": "Oben: Macht, Recht, Geld",
+    "hinweis": "Stark + u. Wer sie hat, hat wenig anderes."
+   },
+   {
+    "wort": "sovitok",
+    "deutsch": "Gesetz",
+    "gruppe": "Oben: Macht, Recht, Geld",
+    "hinweis": "Pflicht + Stein. Das in Stein Gemeißelte."
+   },
+   {
+    "wort": "nusammak",
+    "deutsch": "Staat",
+    "gruppe": "Oben: Macht, Recht, Geld",
+    "hinweis": "Gemeinschaft + groß."
+   },
+   {
+    "wort": "mitok",
+    "deutsch": "Eigentum, besitzen",
+    "gruppe": "Oben: Macht, Recht, Geld",
+    "hinweis": "Haben + Stein. Unten gibt es das nicht."
+   },
+   {
+    "wort": "pektak",
+    "deutsch": "Tausch, Handel",
+    "gruppe": "Oben: Macht, Recht, Geld",
+    "hinweis": "Geben + nehmen."
+   },
+   {
+    "wort": "tokpek",
+    "deutsch": "Geld",
+    "gruppe": "Oben: Macht, Recht, Geld",
+    "hinweis": "Stein + geben."
+   },
+   {
+    "wort": "kelmak",
+    "deutsch": "Arbeit",
+    "gruppe": "Oben: Macht, Recht, Geld",
+    "hinweis": "Machen + groß. Was die Menschen den ganzen Tag tun."
+   },
+   {
+    "wort": "tikkel",
+    "deutsch": "Krieg, Gewalt",
+    "gruppe": "Oben: Macht, Recht, Geld",
+    "hinweis": "Scharf + machen."
+   },
+   {
+    "wort": "mimusam",
+    "deutsch": "Frieden",
+    "gruppe": "Oben: Macht, Recht, Geld",
+    "hinweis": "Ruhig + mit."
+   },
+   {
+    "wort": "uvu",
+    "deutsch": "Mensch",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Wesen von oben."
+   },
+   {
+    "wort": "nem",
+    "deutsch": "Name",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Namen gibt es unten nicht. Der Mensch gibt ihn, und dann hat die Lumi ein Ich: Susi lik = ich mag.",
+    "beispiel": {
+     "lumisch": "ma nem li.",
+     "deutsch": "Wie heißt du?"
+    }
+   },
+   {
+    "wort": "nami",
+    "deutsch": "Wort",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Kleiner Mund."
+   },
+   {
+    "wort": "ora",
+    "deutsch": "Haus",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Von orr, dem Dach.",
+    "beispiel": {
+     "lumisch": "li kom ko ora.",
+     "deutsch": "Komm ins Haus."
+    }
+   },
+   {
+    "wort": "pok",
+    "deutsch": "Tür, öffnen",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "nepok = schließen.",
+    "beispiel": {
+     "lumisch": "pok sul.",
+     "deutsch": "Mach bitte die Tür auf."
+    }
+   },
+   {
+    "wort": "zanpok",
+    "deutsch": "Fenster",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Lichttür."
+   },
+   {
+    "wort": "mur",
+    "deutsch": "Wand, Mauer",
+    "gruppe": "Oben: Menschen und ihre Dinge"
+   },
+   {
+    "wort": "tavo",
+    "deutsch": "Tisch",
+    "gruppe": "Oben: Menschen und ihre Dinge"
+   },
+   {
+    "wort": "sela",
+    "deutsch": "Stuhl",
+    "gruppe": "Oben: Menschen und ihre Dinge"
+   },
+   {
+    "wort": "kor",
+    "deutsch": "Seil, Zwang",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Wer am Seil hängt, wird gezogen. Das Gegenteil heißt nekor."
+   },
+   {
+    "wort": "kelu",
+    "deutsch": "Schlüssel",
+    "gruppe": "Oben: Menschen und ihre Dinge"
+   },
+   {
+    "wort": "kelumur",
+    "deutsch": "Tresor",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Schlüssel-Wand."
+   },
+   {
+    "wort": "polo",
+    "deutsch": "Vorrat, Vorratskammer",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Unten legt keiner einen an. Für die Menschen ist er der halbe Plan."
+   },
+   {
+    "wort": "nepelu",
+    "deutsch": "Hunger",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Kein Essen. Unten hat nie jemand gehungert, das Wort gibt es nur für die Menschen."
+   },
+   {
+    "wort": "nemo",
+    "deutsch": "Durst, trocken",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Kein Wasser. Auch das kennt unten niemand."
+   },
+   {
+    "wort": "orra",
+    "deutsch": "bauen",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Ein Dach machen."
+   },
+   {
+    "wort": "lis",
+    "deutsch": "lesen, Buch",
+    "gruppe": "Oben: Menschen und ihre Dinge"
+   },
+   {
+    "wort": "lipa",
+    "deutsch": "schreiben",
+    "gruppe": "Oben: Menschen und ihre Dinge"
+   },
+   {
+    "wort": "pap",
+    "deutsch": "Papier",
+    "gruppe": "Oben: Menschen und ihre Dinge"
+   },
+   {
+    "wort": "zelis",
+    "deutsch": "Tagebuch",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Tag + lesen."
+   },
+   {
+    "wort": "tivpap",
+    "deutsch": "Karte, Landkarte",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Weg-Papier."
+   },
+   {
+    "wort": "zanpa",
+    "deutsch": "Taschenlampe",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Hand-Licht."
+   },
+   {
+    "wort": "elanam",
+    "deutsch": "Telefon",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Ohr + Mund."
+   },
+   {
+    "wort": "usuela",
+    "deutsch": "Radio",
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "hinweis": "Das Ohr im Wind."
+   },
+   {
+    "wort": "zansap",
+    "deutsch": "Wahrheit, wahr",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Licht + Wissen. Was klar zu sehen ist."
+   },
+   {
+    "wort": "nezansap",
+    "deutsch": "Irrtum, falsch",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "ne + zansap."
+   },
+   {
+    "wort": "nesap",
+    "deutsch": "Nichtwissen, Unwissen",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Der Anfang jedes Gesprächs. Susi sap nesap = ich weiß, dass ich nichts weiß."
+   },
+   {
+    "wort": "sapzan",
+    "deutsch": "Erkenntnis, Einsicht",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Wissen + Licht. Wenn das Wissen aufleuchtet."
+   },
+   {
+    "wort": "sapsol",
+    "deutsch": "Weisheit",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Wissen, das ganz ist."
+   },
+   {
+    "wort": "sanasap",
+    "deutsch": "Gewissheit",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Sicher + Wissen."
+   },
+   {
+    "wort": "nesanasap",
+    "deutsch": "Ungewissheit",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "ne + sanasap."
+   },
+   {
+    "wort": "kolupum",
+    "deutsch": "Zweifel",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Denken + Zögern. Der Laut dazu ist mh."
+   },
+   {
+    "wort": "kilsap",
+    "deutsch": "Neugier",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Suchen + Wissen."
+   },
+   {
+    "wort": "okio",
+    "deutsch": "Staunen, Wunder",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Sehen + oh. Nach Aristoteles der Anfang der Philosophie."
+   },
+   {
+    "wort": "tuksap",
+    "deutsch": "Glaube, glauben",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Herz + Wissen."
+   },
+   {
+    "wort": "kolunam",
+    "deutsch": "Meinung",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Denken + sagen. Ein Gedanke, den man ausspricht."
+   },
+   {
+    "wort": "kesap",
+    "deutsch": "Erfahrung",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Früher + Wissen."
+   },
+   {
+    "wort": "zankolu",
+    "deutsch": "Vernunft, Verstand",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Licht + Denken."
+   },
+   {
+    "wort": "uvokolu",
+    "deutsch": "Idee, Ideal",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Oben + Denken. Platons Idee."
+   },
+   {
+    "wort": "zanoki",
+    "deutsch": "Schein, Erscheinung",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Licht + Auge. Was dem Auge erscheint."
+   },
+   {
+    "wort": "nezanluna",
+    "deutsch": "Schatten",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Dunkel + Haut. Das, was an der Wand tanzt."
+   },
+   {
+    "wort": "toktam",
+    "deutsch": "Wirklichkeit",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Stein + bleiben. Was bleibt, ist wirklich."
+   },
+   {
+    "wort": "namkolu",
+    "deutsch": "Begriff",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Wort + Gedanke."
+   },
+   {
+    "wort": "namtiv",
+    "deutsch": "Sprache",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Sagen + Weg."
+   },
+   {
+    "wort": "zannam",
+    "deutsch": "Bedeutung",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Licht + sagen. Was ein Wort erhellt."
+   },
+   {
+    "wort": "okinam",
+    "deutsch": "Zeichen, Symbol",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Sehen + sagen."
+   },
+   {
+    "wort": "kolutiv",
+    "deutsch": "Methode, Gedankengang",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Denken + Weg."
+   },
+   {
+    "wort": "zekukolu",
+    "deutsch": "Logik",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Also + Denken."
+   },
+   {
+    "wort": "tansap",
+    "deutsch": "Annahme, These, Hypothese",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Wenn + Wissen."
+   },
+   {
+    "wort": "netansap",
+    "deutsch": "Gegenthese",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "ne + tansap."
+   },
+   {
+    "wort": "namne",
+    "deutsch": "Widerspruch",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Sagen + nicht."
+   },
+   {
+    "wort": "neak",
+    "deutsch": "Paradox",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Nein und Ja zugleich."
+   },
+   {
+    "wort": "punam",
+    "deutsch": "Argument",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Grund + sagen."
+   },
+   {
+    "wort": "zekusap",
+    "deutsch": "Schluss, Folgerung",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Also + Wissen."
+   },
+   {
+    "wort": "okisap",
+    "deutsch": "Beweis, Beleg",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Sehen + wissen."
+   },
+   {
+    "wort": "neokisap",
+    "deutsch": "Widerlegung",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "ne + okisap."
+   },
+   {
+    "wort": "okito",
+    "deutsch": "Beispiel, Fall",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Sehen + dieses."
+   },
+   {
+    "wort": "okitam",
+    "deutsch": "beobachten, Beobachtung",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Sehen + bleiben."
+   },
+   {
+    "wort": "kelkil",
+    "deutsch": "Versuch, Experiment",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Machen + suchen."
+   },
+   {
+    "wort": "kolusol",
+    "deutsch": "Theorie",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Denken + ganz."
+   },
+   {
+    "wort": "tisumol",
+    "deutsch": "wahrscheinlich",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Möglich + viel."
+   },
+   {
+    "wort": "tisulim",
+    "deutsch": "unwahrscheinlich",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Möglich + wenig."
+   },
+   {
+    "wort": "maek",
+    "deutsch": "Antwort",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Frage + weg. Die Frage geht fort."
+   },
+   {
+    "wort": "kolutak",
+    "deutsch": "Urteil, urteilen",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Denken + nehmen."
+   },
+   {
+    "wort": "zanpu",
+    "deutsch": "Erklärung",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Licht + Grund."
+   },
+   {
+    "wort": "sumuzan",
+    "deutsch": "Traum, Fantasie",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Schlaf + Licht. Das Licht im Schlaf."
+   },
+   {
+    "wort": "lunak",
+    "deutsch": "spüren, fühlen, Empfindung",
+    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
+    "hinweis": "Von luna, der Haut."
+   },
+   {
+    "wort": "zantam",
+    "deutsch": "Sein, Dasein, Existenz",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Licht + bleiben. Als Verb gibt es „sein“ nicht, als Hauptwort schon."
+   },
+   {
+    "wort": "nezantam",
+    "deutsch": "Nichts",
+    "gruppe": "Sein und Werden",
+    "hinweis": "ne + zantam."
+   },
+   {
+    "wort": "tevimo",
+    "deutsch": "Werden, Veränderung",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Neu + Wasser. Alles fließt, und die Lumis sitzen am Fluss."
+   },
+   {
+    "wort": "toktuli",
+    "deutsch": "Dauer, Beständigkeit",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Stein + Zeit."
+   },
+   {
+    "wort": "soltuli",
+    "deutsch": "Ewigkeit",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Ganz + Zeit."
+   },
+   {
+    "wort": "motuli",
+    "deutsch": "Vergänglichkeit",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Wasser + Zeit."
+   },
+   {
+    "wort": "okituli",
+    "deutsch": "Augenblick",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Auge + Zeit."
+   },
+   {
+    "wort": "solko",
+    "deutsch": "Ende",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Fertig + hin."
+   },
+   {
+    "wort": "unupera",
+    "deutsch": "Ursprung",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Unten + Anfang."
+   },
+   {
+    "wort": "nesolko",
+    "deutsch": "Unendlichkeit",
+    "gruppe": "Sein und Werden",
+    "hinweis": "ne + Ende."
+   },
+   {
+    "wort": "umotem",
+    "deutsch": "Raum",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Höhle + Land."
+   },
+   {
+    "wort": "zikumo",
+    "deutsch": "Weltall, All",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Stern + Höhle."
+   },
+   {
+    "wort": "tempim",
+    "deutsch": "Natur",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Land + Pilz. Das Gewachsene."
+   },
+   {
+    "wort": "toku",
+    "deutsch": "Ding, Sache",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Ein Stein, der alles sein kann."
+   },
+   {
+    "wort": "tokzan",
+    "deutsch": "Wesen, Kern",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Stein + Licht. Was bleibt und leuchtet."
+   },
+   {
+    "wort": "tokluna",
+    "deutsch": "Eigenschaft",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Stein + Haut. Wie ein Ding sich zeigt."
+   },
+   {
+    "wort": "tokvu",
+    "deutsch": "Grenze",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Stein + Rand."
+   },
+   {
+    "wort": "zesa",
+    "deutsch": "Ordnung",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Hat Platz für alles."
+   },
+   {
+    "wort": "nezesa",
+    "deutsch": "Chaos, Unordnung",
+    "gruppe": "Sein und Werden",
+    "hinweis": "ne + zesa."
+   },
+   {
+    "wort": "vini",
+    "deutsch": "Gegensatz, Unterschied",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Zwei, die sich anschauen."
+   },
+   {
+    "wort": "mimsol",
+    "deutsch": "Mitte, Maß",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Hälfte + ganz. Das richtige Maß."
+   },
+   {
+    "wort": "mimpa",
+    "deutsch": "Teil, Stück",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Halb + Hand. So viel, wie die Hand hält."
+   },
+   {
+    "wort": "kapu",
+    "deutsch": "Zufall",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Fällt vom Himmel."
+   },
+   {
+    "wort": "unutiv",
+    "deutsch": "Schicksal",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Unten + Weg. Der Weg, der unten festliegt."
+   },
+   {
+    "wort": "tazan",
+    "deutsch": "Anschauung, Gegenwart",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Jetzt + Licht. Nach Augustinus gibt es drei Gegenwarten: tazan (das Anschauen), kezan (das Erinnern) und suzan (das Erwarten)."
+   },
+   {
+    "wort": "zantuk",
+    "deutsch": "Leben",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Licht + Herz."
+   },
+   {
+    "wort": "zanpera",
+    "deutsch": "Geburt",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Licht + anfangen."
+   },
+   {
+    "wort": "tamne",
+    "deutsch": "Tod, sterben",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Bleiben + nicht. Die Lumis sprechen selten davon, aber sie sprechen davon."
+   },
+   {
+    "wort": "talkom",
+    "deutsch": "Wiederkehr, wiederkommen",
+    "gruppe": "Sein und Werden",
+    "hinweis": "Immer + kommen."
+   },
+   {
+    "wort": "kolun",
+    "deutsch": "Geist",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Das, was denkt, ohne Körper gedacht."
+   },
+   {
+    "wort": "lunasol",
+    "deutsch": "Körper",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Haut + ganz."
+   },
+   {
+    "wort": "zankolun",
+    "deutsch": "Bewusstsein",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Licht + Geist."
+   },
+   {
+    "wort": "nemtam",
+    "deutsch": "Selbst, Person, Identität",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Name + bleiben. Wer einen Namen hat, bleibt jemand."
+   },
+   {
+    "wort": "nenem",
+    "deutsch": "Nicht-Selbst",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "ne + Name. Die Lumi ohne Namen, die nur „nu“ sagt."
+   },
+   {
+    "wort": "kovilik",
+    "deutsch": "Wunsch",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Wille + mögen."
+   },
+   {
+    "wort": "kovitiv",
+    "deutsch": "Absicht",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Wille + Weg."
+   },
+   {
+    "wort": "kovitak",
+    "deutsch": "wählen, Wahl, entscheiden",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Wille + nehmen."
+   },
+   {
+    "wort": "nekor",
+    "deutsch": "Freiheit",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "ne + Seil. Wer nicht am Seil hängt, ist frei."
+   },
+   {
+    "wort": "pekma",
+    "deutsch": "Verantwortung",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Geben + Frage. Wer verantwortlich ist, gibt Antwort."
+   },
+   {
+    "wort": "nepek",
+    "deutsch": "Schuld",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Noch nicht gegeben."
+   },
+   {
+    "wort": "nepekek",
+    "deutsch": "verzeihen, Vergebung",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Die Schuld geht weg."
+   },
+   {
+    "wort": "taltam",
+    "deutsch": "Gewohnheit",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Immer + bleiben."
+   },
+   {
+    "wort": "samli",
+    "deutsch": "Beziehung",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Mit + du."
+   },
+   {
+    "wort": "likom",
+    "deutsch": "Begegnung",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Du + kommen."
+   },
+   {
+    "wort": "nusam",
+    "deutsch": "Gemeinschaft",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Wir + mit."
+   },
+   {
+    "wort": "nesam",
+    "deutsch": "Einsamkeit",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Ohne."
+   },
+   {
+    "wort": "sumuek",
+    "deutsch": "erwachen, aufwachen",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Schlaf + weg."
+   },
+   {
+    "wort": "takne",
+    "deutsch": "loslassen",
+    "gruppe": "Ich, Du, Wir",
+    "hinweis": "Nehmen + nicht."
+   },
+   {
+    "wort": "sumkel",
+    "deutsch": "Tugend",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Gut + machen."
+   },
+   {
+    "wort": "sumtuk",
+    "deutsch": "Güte",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Gut + Herz."
+   },
+   {
+    "wort": "nesumtuk",
+    "deutsch": "Bosheit, böse",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "ne + sumtuk."
+   },
+   {
+    "wort": "tukpum",
+    "deutsch": "Gewissen",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Herz + Zögern. Das Herz sagt mh."
+   },
+   {
+    "wort": "uvosum",
+    "deutsch": "das Gute selbst",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Oben + gut."
+   },
+   {
+    "wort": "samsol",
+    "deutsch": "Gerechtigkeit",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Mit + ganz. Für alle gleich."
+   },
+   {
+    "wort": "nesamsol",
+    "deutsch": "Ungerechtigkeit",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "ne + samsol."
+   },
+   {
+    "wort": "sumsol",
+    "deutsch": "Glück, Glückseligkeit",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Gut + voll."
+   },
+   {
+    "wort": "mimusol",
+    "deutsch": "Gelassenheit",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Ruhig + ganz."
+   },
+   {
+    "wort": "mimusum",
+    "deutsch": "Zufriedenheit",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Ruhig + gut."
+   },
+   {
+    "wort": "tikluna",
+    "deutsch": "Schmerz",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Scharf + Haut."
+   },
+   {
+    "wort": "tikmoki",
+    "deutsch": "Leid",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Scharf + Trauer."
+   },
+   {
+    "wort": "mokisam",
+    "deutsch": "Mitleid, Mitgefühl",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Trauer + mit."
+   },
+   {
+    "wort": "vulpek",
+    "deutsch": "Trost, trösten",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Wärme + geben."
+   },
+   {
+    "wort": "murasol",
+    "deutsch": "Langeweile",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Warten + ganz."
+   },
+   {
+    "wort": "murasum",
+    "deutsch": "Geduld",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Warten + gut."
+   },
+   {
+    "wort": "tultuk",
+    "deutsch": "Dankbarkeit",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Danke + Herz."
+   },
+   {
+    "wort": "kiruluna",
+    "deutsch": "Scham",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Angst + Haut."
+   },
+   {
+    "wort": "nesuzan",
+    "deutsch": "Verzweiflung",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "ne + Hoffnung."
+   },
+   {
+    "wort": "likko",
+    "deutsch": "Sehnsucht, Streben",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Mögen + hin."
+   },
+   {
+    "wort": "kirutam",
+    "deutsch": "Sorge",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Angst + bleiben."
+   },
+   {
+    "wort": "nemsol",
+    "deutsch": "Würde",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Name + ganz. Wer einen Namen hat, hat Würde."
+   },
+   {
+    "wort": "zanek",
+    "deutsch": "Aufklärung, aufklären",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Licht + heraus."
+   },
+   {
+    "wort": "nezantok",
+    "deutsch": "Ding an sich",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Dunkel + Ding. Das, was im Dunkel bleibt."
+   },
+   {
+    "wort": "zantiv",
+    "deutsch": "Sinn, Richtung des Lebens",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Licht + Weg."
+   },
+   {
+    "wort": "nezantiv",
+    "deutsch": "Sinnlosigkeit",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "ne + zantiv."
+   },
+   {
+    "wort": "kotiv",
+    "deutsch": "Zweck, Ziel",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Hin + Weg."
+   },
+   {
+    "wort": "neaktiv",
+    "deutsch": "Dialektik",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Nein + Ja + Weg. Der Weg durch den Widerspruch."
+   },
+   {
+    "wort": "tivsol",
+    "deutsch": "Regel",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Weg + ganz."
+   },
+   {
+    "wort": "namtivpil",
+    "deutsch": "Sprachspiel",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Sprache + spielen."
+   },
+   {
+    "wort": "nenam",
+    "deutsch": "schweigen, Stille",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Nicht + Mund."
+   },
+   {
+    "wort": "zansum",
+    "deutsch": "Schönheit",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Licht + gut."
+   },
+   {
+    "wort": "nezansum",
+    "deutsch": "Hässlichkeit",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "ne + zansum."
+   },
+   {
+    "wort": "uvomak",
+    "deutsch": "Erhabenheit",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Oben + groß."
+   },
+   {
+    "wort": "uvosol",
+    "deutsch": "Gott, das Ganze",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Oben + ganz. Wer es sagt, meint oft das Ganze, nicht eine Person."
+   },
+   {
+    "wort": "kelsum",
+    "deutsch": "Kunst",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Machen + gut."
+   },
+   {
+    "wort": "lulatuk",
+    "deutsch": "Musik",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Gesang + Herz."
+   },
+   {
+    "wort": "kikkolu",
+    "deutsch": "Humor",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Lachen + Denken."
+   },
+   {
+    "wort": "namkik",
+    "deutsch": "Ironie",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Sagen + lachen."
+   },
+   {
+    "wort": "neakkik",
+    "deutsch": "das Absurde",
+    "gruppe": "Gut, Böse, Glück",
+    "hinweis": "Nein-und-Ja + lachen. Sisyphos lacht."
+   },
+   {
+    "wort": "tamnezan",
+    "deutsch": "Seele, Lebensfunke",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "Bleiben + Dunkel + Licht. Das, was nach dem Körper weiterlebt."
+   },
+   {
+    "wort": "tamnetok",
+    "deutsch": "sterben (Körper)",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "Bleiben + nicht Stein. Der Körper vergeht."
+   },
+   {
+    "wort": "talzanpera",
+    "deutsch": "Wiedergeburt",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "Immer + Geburt."
+   },
+   {
+    "wort": "talzankom",
+    "deutsch": "Wiederkehr der Seele",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "Immer + Licht + kommen."
+   },
+   {
+    "wort": "zanzik",
+    "deutsch": "Tor, Übergang",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "Licht + Stern. Der Ort, an dem Seelen wechseln."
+   },
+   {
+    "wort": "nezanzan",
+    "deutsch": "Quantenwelt",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "Dunkel + Licht. Kein Bild, sondern Physik: ein wirklicher Bereich der Natur, in dem alles zugleich ist. Die Lumis rechnen ihn und kennen den Zugang, die Wissenschaft der Menschen ist noch nicht so weit."
+   },
+   {
+    "wort": "nezannam",
+    "deutsch": "Quantensprache, Fernsprechen",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "Quantenwelt + sagen. Echte Verbindung über die Quantenwelt, ohne Weg dazwischen, auch zu uns Menschen."
+   },
+   {
+    "wort": "zanlu",
+    "deutsch": "Unterwelt-Verbindung, Kontakt",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "Licht + Hörer. Wenn ein Gedanke ankommt."
+   },
+   {
+    "wort": "zikmo",
+    "deutsch": "Ozean des Alles, Urgrund",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "All + Wasser. Das, woraus alles wird."
+   },
+   {
+    "wort": "tamsam",
+    "deutsch": "Einssein, Einheit",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "Bleiben + mit."
+   },
+   {
+    "wort": "telzanam",
+    "deutsch": "Vorfahre, Ahne",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "Zahl + Licht + Haut. Wer vor uns war und weiterlebt."
+   },
+   {
+    "wort": "telzanpa",
+    "deutsch": "Nachkomme, kommende Seele",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "Der, der kommt."
+   },
+   {
+    "wort": "sumutel",
+    "deutsch": "Tiefes Träumen, Meditation",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "Schlaf + Zahl."
+   },
+   {
+    "wort": "zankol",
+    "deutsch": "Einsicht über den Tod",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "Licht + Gedanke. Die Ruhe, die man danach hat."
+   },
+   {
+    "wort": "nezanluk",
+    "deutsch": "Jenseits",
+    "gruppe": "Tod, Wiederkehr, Quantenwelt",
+    "hinweis": "Dunkel + Licht + Ende. Das, was hinter dem Ende liegt."
+   },
+   {
+    "wort": "tel",
+    "deutsch": "Zahl, zählen",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Auch Ziffernfolge. pim3 sind drei Pilze, die Zahl 3 heißt zel3."
+   },
+   {
+    "wort": "telkolu",
+    "deutsch": "Mathematik",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Zahl + Denken."
+   },
+   {
+    "wort": "telsol",
+    "deutsch": "Menge, Gesamtzahl",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Zahl + ganz."
+   },
+   {
+    "wort": "telne",
+    "deutsch": "Null, Leere",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Zahl + nicht. Die Null, die etwas ist."
+   },
+   {
+    "wort": "telnesol",
+    "deutsch": "Unendliches, grenzenlose Zahl",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Zahl + unendlich."
+   },
+   {
+    "wort": "telzan",
+    "deutsch": "Quant, kleinste Einheit",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Zahl + Licht. Das kleinste Licht, wörtlich gemeint."
+   },
+   {
+    "wort": "zanmo",
+    "deutsch": "Welle",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Licht + Wasser."
+   },
+   {
+    "wort": "toktelzan",
+    "deutsch": "Teilchen",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Stein + Quant."
+   },
+   {
+    "wort": "akneak",
+    "deutsch": "Überlagerung, beides zugleich",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Ja + Nein + Ja. Das Ding ist hier und dort."
+   },
+   {
+    "wort": "telzansam",
+    "deutsch": "Verschränkung",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Quanten + mit. Zwei, die eins sind, auch wenn Weg dazwischen liegt."
+   },
+   {
+    "wort": "okitak",
+    "deutsch": "Messung, messen",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Sehen + nehmen. Wer hinsieht, legt fest."
+   },
+   {
+    "wort": "nesanazan",
+    "deutsch": "Unschärfe",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "ne + sicher + Licht."
+   },
+   {
+    "wort": "tisutel",
+    "deutsch": "Wahrscheinlichkeit (Zahl)",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Möglich + Zahl."
+   },
+   {
+    "wort": "tivtel",
+    "deutsch": "Funktion, Abbildung",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Weg + Zahl."
+   },
+   {
+    "wort": "telmimu",
+    "deutsch": "Gleichung",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Zahl + Ruhe. Beide Seiten ruhen gleich."
+   },
+   {
+    "wort": "telvi",
+    "deutsch": "Summe, vermehren",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Zahl + mehr."
+   },
+   {
+    "wort": "telnevi",
+    "deutsch": "Differenz, verringern",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Zahl + weniger."
+   },
+   {
+    "wort": "telsap",
+    "deutsch": "Beweis (mathematisch)",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Zahl + wissen."
+   },
+   {
+    "wort": "telnam",
+    "deutsch": "Formel",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Zahl + sagen."
+   },
+   {
+    "wort": "telok",
+    "deutsch": "Ort einer Zahl, Koordinate",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Zahl + Platz."
+   },
+   {
+    "wort": "telkik",
+    "deutsch": "Rätselzahl, Aufgabe",
+    "gruppe": "Zahl und Quant",
+    "hinweis": "Zahl + Spiel."
+   }
+  ],
+  "hinweis": "Lumisch nach der Wortprüfung vom 05.10.2026: alle 401 Wörter des Wörterbuchs, Plan in 21 Tagen. Neue Wörter nach Tag 21 kommen nach Gruppen: Unten, Wie etwas ist, Farben, Gefühle, die Philosophie und „Zahl und Quant“ zuletzt."
+ },
+ "texte": {
+  "rueckwaerts": {
+   "schritte": [
+    "Was war heute Abend?",
+    "Und am Nachmittag?",
+    "Und am Morgen?"
+   ],
+   "ende": "nezel sum. Gute Nacht."
+  },
+  "zeitgefuehl": {
+   "frage": "Wie spät ist es wohl gerade?",
+   "knapp": "Fast genau.",
+   "nah": "Gutes Gefühl für die Zeit.",
+   "weit": "Die Zeit läuft manchmal anders, als man denkt."
+  },
+  "atem": {
+   "ein": "Einatmen …",
+   "aus": "… und langsam aus.",
+   "ende": "Vier Atemzüge. Schön, dass du da warst."
+  },
+  "mitnehmen": [
+   "Heute Abend: einmal das Licht ausmachen und still zan sagen.",
+   "Nimm dir draußen einen Moment und schau dich bewusst um.",
+   "Erzähl heute jemandem von dem Happen."
+  ]
+ }
+}
