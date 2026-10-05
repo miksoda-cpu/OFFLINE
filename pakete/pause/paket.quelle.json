@@ -12,7 +12,7 @@
   "kategorie": "jeden-tag",
   "alter_ab": 14,
   "app_min": "0.4.0",
-  "aenderungen": "Lumisch geht nach Tag 21 weiter: Wiederholungen und neue Wörter aus den Beispielsätzen. Der Rückspiegel zählt keine Tage mehr.",
+  "aenderungen": "Lumisch: 401 Wörter, ein paar neue Namen. Alle Wörter sind geprüft, Eis heißt jetzt kiv.",
   "quellen": [
     {
       "id": "redaktion",
@@ -20,6 +20,6 @@
       "url": "https://github.com/miksoda-cpu/OFFLINE/blob/main/docs/PAUSE.md"
     }
   ],
-  "abnahme": "Redaktion (Code), 04.10.2026: Geschichten auf genau einen falschen Satz geprüft, Lumisch gegen das Wörterbuch (Plan und Beispielsätze)",
+  "abnahme": "Redaktion (Code), 05.10.2026: Lumisch gegen die Beilage der Wortprüfung vom 05.10.2026 (401 Wörter, Plan in 21 Tagen, von Mik freigegeben); Geschichten auf genau einen falschen Satz geprüft",
   "braucht_netz": false
 }

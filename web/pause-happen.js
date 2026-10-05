@@ -74,10 +74,13 @@ export const FORMEN = {
     return { treffer: richtig ? 1 : 0, von: 1, satz: richtig ? "Den Fehler hast du gefunden." : "Jetzt kennst du die Geschichte ganz.", ergebnis: { treffer: richtig ? 1 : 0, von: 1, geschichte: g.id } };
   },
 
-  async lumisch(el, { form, linie, daten, heute, antwortRichtig, rnd }) {
+  async lumisch(el, { form, linie, daten, heute, antwortRichtig, rnd, umbenannt, umbenanntGezeigt }) {
     // heute: lumischHeute(…) aus web/pause.js – Plan (Tag 1–21), neues Wort (jeder dritte Tag danach) oder Wiederholung
     const plan = daten.lumisch.plan, stufe = stufeVon(linie, form), wb = daten.lumisch.woerterbuch ?? daten.lumisch.woerter;
     const weiter = (text = "Weiter") => new Promise((r) => { el.insertAdjacentHTML("beforeend", knopf(text, "data-pause-weiter", true)); el.querySelector("[data-pause-weiter]").onclick = r; });
+    // Wortprüfung 05.10.2026: wer ein ersetztes Wort gelernt hat, sieht einmal, wie es jetzt heißt
+    const neuName = umbenannt ? `<p class="z-mit lumisch-umbenannt">${esc(umbenannt.text)}</p>` : "";
+    if (umbenannt) umbenanntGezeigt?.(umbenannt.alt);
     const beispiel = (w) => (w?.beispiel ? `<p class="muted of-klein">Zum Beispiel: <span lang="x-lumisch">${esc(w.beispiel.lumisch)}</span> – ${esc(w.beispiel.deutsch)}</p>` : "");
     const abfrage = async (frage, richtigText, ziel) => {
       const anzahl = 2 + Math.min(2, stufe); // 3 bis 4 Möglichkeiten
@@ -94,7 +97,7 @@ export const FORMEN = {
     };
     if (heute.art === "wiederholung") {
       const w = heute.eintrag;
-      el.innerHTML = `<p class="pause-anleitung">Wiederholung · Tag ${heute.tag}</p><p class="pause-wort">Weißt du es noch? Was heißt <strong lang="x-lumisch">${esc(w.wort)}</strong>?</p>
+      el.innerHTML = `${neuName}<p class="pause-anleitung">Wiederholung · Tag ${heute.tag}</p><p class="pause-wort">Weißt du es noch? Was heißt <strong lang="x-lumisch">${esc(w.wort)}</strong>?</p>
         <form class="tag-antwort" data-pause-form autocomplete="off"><label for="pause-antwort">Aus dem Kopf</label><div class="tag-antwort-zeile"><input id="pause-antwort" class="z-eingabe" type="text" maxlength="60" autocapitalize="off" spellcheck="false"><button type="submit" class="z-haupt">Prüfen</button></div></form>
         ${knopf("Weiß ich nicht mehr", "data-pause-aufdecken")}<div class="pause-aufloesung" role="status" aria-live="polite"></div>`;
       const eingabe = await new Promise((ja) => { el.querySelector("[data-pause-form]").onsubmit = (e) => { e.preventDefault(); ja(el.querySelector("#pause-antwort").value); }; el.querySelector("[data-pause-aufdecken]").onclick = () => ja(null); });
@@ -106,7 +109,7 @@ export const FORMEN = {
     }
     if (heute.art === "neu") {
       const w = heute.eintrag;
-      el.innerHTML = `<p class="pause-anleitung">Neues Wort · ${esc(w.gruppe)}</p><p class="pause-wort"><span lang="x-lumisch">${esc(w.wort)}</span> heißt <strong>${esc(w.deutsch)}</strong>.</p>${beispiel(w)}<div class="pause-quiz"></div>`;
+      el.innerHTML = `${neuName}<p class="pause-anleitung">Neues Wort · ${esc(w.gruppe)}</p><p class="pause-wort"><span lang="x-lumisch">${esc(w.wort)}</span> heißt <strong>${esc(w.deutsch)}</strong>.</p>${w.hinweis ? `<p class="muted of-klein">${esc(w.hinweis)}</p>` : ""}${beispiel(w)}<div class="pause-quiz"></div>`;
       const ok = await abfrage(w.wort, w.deutsch, el.querySelector(".pause-quiz"));
       await weiter();
       return { treffer: ok ? 1 : 0, von: 1, satz: `Neues Wort: ${w.wort} heißt ${w.deutsch}.`, ergebnis: { treffer: ok ? 1 : 0, von: 1, wort: w.wort, abgefragt: w.wort, neu: true, tag: heute.tag } };
@@ -114,7 +117,7 @@ export const FORMEN = {
     const tagE = heute.eintrag, tag = heute.tag;
     const bekannt = plan.slice(0, tag).filter((x) => x.wort);
     const frage = bekannt.length ? bekannt[zufall(bekannt.length, rnd)] : null;
-    el.innerHTML = `<p class="pause-anleitung">Tag ${tag} von ${plan.length}</p>
+    el.innerHTML = `${neuName}<p class="pause-anleitung">Tag ${tag} von ${plan.length}</p>
       ${tagE.wort ? `<p class="pause-wort"><span lang="x-lumisch">${esc(tagE.wort)}</span> heißt <strong>${esc(tagE.bedeutung)}</strong>.</p>` : `<p class="pause-wort">Heute: <strong>${esc(tagE.bedeutung)}</strong>.</p>`}
       <p>${esc(tagE.aufgabe)}</p><div class="pause-quiz"></div>`;
     if (!frage) { await weiter(); return { satz: "Heute: dein eigener Satz auf Lumisch.", mitnehmen: tagE.aufgabe, ergebnis: { tag } }; }

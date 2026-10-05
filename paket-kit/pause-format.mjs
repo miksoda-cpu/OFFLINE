@@ -57,6 +57,7 @@ export function pauseFehler(j) {
       if (!Array.isArray(l.woerterbuch)) f.push("lumisch.woerterbuch: Liste");
       else l.woerterbuch.forEach((w, i) => {
         if (!/^[a-z]{1,12}$/.test(w?.wort ?? "") || !text(w.deutsch, 80) || !text(w.gruppe, 40)) f.push(`lumisch.woerterbuch[${i}]: wort, deutsch, gruppe`);
+        if (w.hinweis !== undefined && !text(w.hinweis, 300)) f.push(`lumisch.woerterbuch[${i}]: hinweis höchstens 300 Zeichen`);
         if (w.beispiel !== undefined && !(text(w.beispiel?.lumisch, 120) && text(w.beispiel?.deutsch, 160))) f.push(`lumisch.woerterbuch[${i}]: beispiel { lumisch, deutsch }`);
       });
     }

@@ -38,7 +38,7 @@ export function umwandeln(md) {
     band: 1,
     titel: "Das Lumi-Buch",
     untertitel: "Band 1",
-    hinweis: "Eine erfundene Geschichte. Die Quantenwelt in den Kapiteln 9 bis 12 ist ein Bild, keine Physik.",
+    hinweis: "Eine erfundene Geschichte.", // Mik, 05.10.2026: In der Welt der Lumis ist die Quantenwelt wirklich
     kapitel,
   };
 }

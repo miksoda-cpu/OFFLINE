@@ -276,6 +276,25 @@ export function rueckspiegel(log, linie, einstellungen, jetzt, formen = []) {
  * geordnet), an den anderen eine Wiederholung: ein gelerntes Wort aus dem Kopf, das zuletzt falsche zuerst, sonst das am
  * längsten nicht gefragte. Gibt { art: "plan" | "neu" | "wiederholung", tag, eintrag }.
  */
+/**
+ * Wortprüfung vom 05.10.2026 (Auftrag 2026-10-05-03): ersetzte Wörter, alt → neu. Wer ein altes Wort gelernt hat, verliert
+ * nichts: Im Spiel-Log gilt es als das neue. Die einzige Stelle, an der die alten Wörter stehen dürfen (Test).
+ */
+export const LUMISCH_ALT = { kir: "kiv", kirzan: "kivzan", kirmulo: "kivmulo", kirtem: "kivtem", nik: "lim", tisunik: "tisulim", kus: "pur", kon: "kopu", pipi: "tirli", mumu: "muvo" };
+const lumischNeu = (w) => (w && LUMISCH_ALT[w]) || w;
+const UMBENANNT_TEXT = { kiv: "Neu heißt es kiv. Gleiches Eis, anderer Klang." }; // nach dem neuen Wort
+/**
+ * Hat jemand ein ersetztes Wort gelernt (es steht im Spiel-Log) und den Hinweis noch nicht gesehen? Dann einmal die Karte
+ * „Neu heißt es kiv. Gleiches Eis, anderer Klang.“ gezeigt: Liste der alten Wörter, deren Hinweis schon kam.
+ * Gibt { alt, neu, text } oder null.
+ */
+export function lumischUmbenannt(log, gezeigt = []) {
+  const alt = new Set();
+  for (const e of pauseEintraege(log)) if (e.id === "lumisch") for (const w of [e.ergebnis?.wort, e.ergebnis?.abgefragt]) if (w && LUMISCH_ALT[w]) alt.add(w);
+  const w = [...alt].find((x) => !gezeigt.includes(x));
+  return w ? { alt: w, neu: LUMISCH_ALT[w], text: UMBENANNT_TEXT[LUMISCH_ALT[w]] ?? `Neu heißt es ${LUMISCH_ALT[w]}.` } : null;
+}
+
 export function lumischHeute(log, lumisch, heute) {
   const eintr = pauseEintraege(log).filter((e) => e.id === "lumisch" && !e.abgebrochen);
   const frueher = eintr.filter((e) => tagVon(Date.parse(e.zeit)) < heute);
@@ -283,11 +302,11 @@ export function lumischHeute(log, lumisch, heute) {
   const plan = lumisch.plan;
   if (tag <= plan.length) return { art: "plan", tag, eintrag: plan[tag - 1] };
   const wb = lumisch.woerterbuch ?? lumisch.woerter ?? [];
-  const gelernt = new Set([...plan.filter((x) => x.wort).map((x) => x.wort), ...frueher.filter((e) => e.ergebnis?.wort).map((e) => e.ergebnis.wort)]);
+  const gelernt = new Set([...plan.filter((x) => x.wort).map((x) => x.wort), ...frueher.filter((e) => e.ergebnis?.wort).map((e) => lumischNeu(e.ergebnis.wort))]);
   const neu = wb.find((w) => !gelernt.has(w.wort));
   if ((tag - plan.length) % 3 === 0 && neu) return { art: "neu", tag, eintrag: neu };
   const zuletzt = new Map();
-  for (const e of eintr) { const w = e.ergebnis?.abgefragt ?? e.ergebnis?.wort; if (w) zuletzt.set(w, e); }
+  for (const e of eintr) { const w = lumischNeu(e.ergebnis?.abgefragt ?? e.ergebnis?.wort); if (w) zuletzt.set(w, e); }
   const bekannt = wb.filter((w) => gelernt.has(w.wort));
   const falsch = bekannt.filter((w) => zuletzt.get(w.wort)?.ergebnis?.treffer === 0).sort((a, b) => Date.parse(zuletzt.get(b.wort).zeit) - Date.parse(zuletzt.get(a.wort).zeit));
   const alt = [...bekannt].sort((a, b) => (Date.parse(zuletzt.get(a.wort)?.zeit ?? 0) || 0) - (Date.parse(zuletzt.get(b.wort)?.zeit ?? 0) || 0));

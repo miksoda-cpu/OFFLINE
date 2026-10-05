@@ -6,7 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { WERTE, einstellungenLaden, angeboten, happenFaellig, waehle, linieLaden, bewerten, zurueckholen, schwierigkeit, zoneAnpassen, verfuegbar,
-  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, rueckspiegel, lumischHeute, lumischAntworten, soSeheIchDich, wochenSatz, logDazu, imKennenlernen, gewichtVon, stufeVon, tagVon, raumFormen, dauerText } from "./pause.js";
+  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, rueckspiegel, lumischHeute, lumischAntworten, soSeheIchDich, wochenSatz, logDazu, imKennenlernen, gewichtVon, stufeVon, tagVon, raumFormen, dauerText, LUMISCH_ALT, lumischUmbenannt } from "./pause.js";
 import { pilzMs } from "./pause-happen.js";
 import { pruefeNachricht, pruefeSpielMeldung, GRENZEN } from "./modul-host.js";
 import { pauseFehler, GEBAUT } from "../paket-kit/pause-format.mjs";
@@ -265,9 +265,73 @@ test("Lumisch Tag 1 bis 40: Plan bis 21, danach zwei Wiederholungen und ein neue
   assert.ok(neue.every((w) => l.woerterbuch.some((x) => x.wort === w && !x.im_plan)));
   assert.equal(verlauf[25].eintrag.wort, verlauf[24].eintrag.wort, "Tag 26 wiederholt das Wort, das an Tag 25 falsch war");
   assert.ok(verlauf.slice(21).every((h) => h.eintrag?.wort), "es gibt immer ein Wort");
-  // Daten: vorerst nur Plan und Beispielsätze
+  // Daten (seit 0.5.3): das ganze geprüfte Wörterbuch; die Ablenkwörter stammen daraus
   assert.equal(l.woerterbuch.filter((w) => w.im_plan).length, 20);
-  assert.ok(l.woerterbuch.length <= 40 && l.woerter.every((w) => l.woerterbuch.some((x) => x.wort === w.wort)), "auch die Ablenkwörter nur aus Plan und Beispielsätzen");
+  assert.ok(l.woerter.every((w) => l.woerterbuch.some((x) => x.wort === w.wort)), "die Ablenkwörter stammen aus dem Wörterbuch");
+  assert.ok(neue.every((w, i) => i === 0 || true) && l.woerterbuch.find((w) => w.wort === neue[0]).gruppe.startsWith("Unten"), "neue Wörter beginnen mit „Unten“");
   assert.deepEqual(lumischAntworten("bei, in, an, auf, hier"), ["bei", "in", "an", "auf", "hier"]);
   assert.deepEqual(lumischAntworten("Eis, kalt"), ["Eis", "kalt"]);
+});
+
+// ---------- Lumisch nach der Wortprüfung (Auftrag 2026-10-05-03, 0.5.3) ----------
+const beilage = await readFile(new URL("../pakete/pause/quelle/OFFLINE-Lumisch-Woerterbuch-2026-10-05.md", import.meta.url), "utf8");
+
+test("Lumisch: Wörterbuch im Paket entspricht der Beilage (401, keine Doppelten, kein altes Wort), Plan nach Abschnitt 8", () => {
+  const l = daten.lumisch;
+  const abschnitt6 = beilage.slice(beilage.indexOf("## 6. Wörterbuch"), beilage.indexOf("## 7. Register"));
+  const soll = [...abschnitt6.matchAll(/^\| \*\*([a-z]+)\*\* \| ([^|]+) \|/gm)].map((m) => [m[1], m[2].trim()]);
+  assert.equal(soll.length, 401);
+  assert.equal(l.woerterbuch.length, 401);
+  assert.equal(new Set(l.woerterbuch.map((w) => w.wort)).size, 401, "keine Doppelten");
+  assert.deepEqual(l.woerterbuch.map((w) => [w.wort, w.deutsch]).sort(), soll.sort(), "Wort und Deutsch wie in der Beilage");
+  for (const alt of Object.keys(LUMISCH_ALT)) assert.ok(!l.woerterbuch.some((w) => w.wort === alt), `${alt} ist ersetzt`);
+  const plan = Object.fromEntries(l.plan.map((p) => [p.tag, p]));
+  assert.deepEqual([plan[3].wort, plan[3].bedeutung, plan[3].aufgabe], ["pelu", "Essen", "Beim nächsten Essen sagst du pelu."]);
+  assert.deepEqual([plan[6].wort, plan[6].aufgabe], ["kiv", "Was ist heute kiv? Der Kühlschrank, das Fenster?"]);
+  assert.match(plan[7].aufgabe, /\bkiv\b/);
+  assert.ok(l.woerterbuch.every((w) => w.gruppe && w.deutsch), "jedes Wort mit Gruppe und Deutsch");
+  assert.ok(l.woerterbuch.find((w) => w.wort === "lim").hinweis.includes("Zahlzeichen -"), "Zahlzeichen „-“ heißt lim");
+  // Reihenfolge der Gruppen: Unten zuerst, Philosophie und „Zahl und Quant“ zuletzt
+  const gruppen = [...new Set(l.woerterbuch.map((w) => w.gruppe))];
+  assert.ok(gruppen.slice(0, 5).every((g) => g.startsWith("Unten")));
+  assert.deepEqual(gruppen.slice(5, 8), ["Wie etwas ist", "Farben", "Gefühle und Gedanken"]);
+  assert.equal(gruppen.at(-1), "Zahl und Quant");
+});
+
+test("Lumisch: kein ersetztes Wort in App, Paketen oder Tests (außer der Zuordnung alt → neu)", async () => {
+  const { readdir } = await import("node:fs/promises");
+  const dateien = [];
+  for (const d of ["../web/", "../pakete/"]) {
+    const gehe = async (u) => { for (const e of await readdir(u, { withFileTypes: true })) {
+      const n = new URL(e.name + (e.isDirectory() ? "/" : ""), u);
+      if (e.isDirectory()) { if (!["lib", "pakete", "katalog", "quelle", "node_modules", "lumi"].includes(e.name)) await gehe(n); }
+      else if (/\.(js|mjs|json|html|md)$/.test(e.name)) dateien.push(n);
+    } };
+    await gehe(new URL(d, import.meta.url));
+  }
+  const alt = Object.keys(LUMISCH_ALT);
+  const funde = [];
+  for (const f of dateien) {
+    const t = (await readFile(f, "utf8")).replace(/export const LUMISCH_ALT = \{[^}]*\};/, "");
+    for (const w of alt) if (new RegExp(`(^|[^a-zäöüß])${w}([^a-zäöüß]|$)`).test(t)) funde.push(`${f.pathname.split("/").slice(-2).join("/")}: ${w}`);
+  }
+  assert.deepEqual(funde, []);
+});
+
+test("Lumisch: wer das alte Wort für Eis gelernt hat, verliert nichts; die Karte „Neu heißt es kiv“ kommt genau einmal", () => {
+  const KIR = Object.keys(LUMISCH_ALT).find((k) => LUMISCH_ALT[k] === "kiv"); // das alte Wort, nur aus der Zuordnung
+  const l = daten.lumisch;
+  const tag = (n) => Date.parse("2026-09-01T10:00:00") + n * 86400000;
+  const log = [];
+  for (let n = 0; n < 21; n++) {
+    const p = l.plan[n];
+    log.push({ quelle: "pause", id: "lumisch", art: ["kraft"], zeit: new Date(tag(n)).toISOString(), ergebnis: { tag: n + 1, wort: n === 5 ? KIR : p.wort || null, abgefragt: n === 6 ? KIR : l.plan[0].wort, treffer: n === 6 ? 0 : 1, von: 1 } });
+  }
+  const h = lumischHeute(log, l, "2026-09-23");
+  assert.equal(h.art, "wiederholung");
+  assert.equal(h.eintrag.wort, "kiv", "das an Tag 7 falsch beantwortete alte Wort kommt als kiv wieder");
+  const k = lumischUmbenannt(log, []);
+  assert.deepEqual(k, { alt: KIR, neu: "kiv", text: "Neu heißt es kiv. Gleiches Eis, anderer Klang." });
+  assert.equal(lumischUmbenannt(log, [KIR]), null, "danach nie wieder");
+  assert.equal(lumischUmbenannt(log.map((e) => ({ ...e, ergebnis: { ...e.ergebnis, wort: e.ergebnis.wort === KIR ? "kiv" : e.ergebnis.wort, abgefragt: "zan" } })), []), null, "wer kiv gelernt hat, sieht nichts");
 });

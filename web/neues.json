@@ -2,6 +2,16 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.5.3",
+      "datum": "2026-10-05",
+      "punkte": [
+        "Lumisch hat jetzt 401 Wörter. Alle sind geprüft, ein paar haben neue Namen: Eis heißt jetzt kiv.",
+        "Wer ein Wort mit altem Namen gelernt hat, verliert nichts. Einmal steht da: „Neu heißt es kiv. Gleiches Eis, anderer Klang.“",
+        "Neue Wörter nach den ersten drei Wochen kommen nach Gruppen, zuerst alles von unten. Zu jedem Wort steht ein kurzer Hinweis.",
+        "Auf der Titelseite des Lumi-Buchs steht nur noch: Eine erfundene Geschichte."
+      ]
+    },
+    {
       "version": "0.5.2",
       "datum": "2026-10-05",
       "punkte": [

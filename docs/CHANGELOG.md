@@ -1,5 +1,12 @@
 # Änderungen
 
+## 0.5.3 · 05.10.2026 · Lumisch auf geprüftem Stand, Hinweis im Lumi-Buch
+
+- **Paket `pause` 2026.10.05** (Auftrag 2026-10-05-03): Lumisch aus der Beilage der Wortprüfung vom 05.10.2026 (`pakete/pause/quelle/`, übernommen mit `pakete/pause/lumisch-umwandeln.mjs`). Plan nach Abschnitt 8 (Tag 3 `pelu` = Essen, Tag 6 `kiv`, Tag 7 Wiederholung mit kiv). Wörterbuch mit allen 401 Wörtern, je Gruppe, Deutsch, Hinweis, Beispiel nur aus den Beispielsätzen der Beilage; Reihenfolge für neue Wörter: Unten, Wie etwas ist, Farben, Gefühle, …, die Philosophie-Gruppen und „Zahl und Quant“ zuletzt. Kit prüft `hinweis`.
+- **Ersetzte Wörter** (kir, kirzan, kirmulo, kirtem, nik, tisunik, kus, kon, pipi, mumu → kiv, kivzan, kivmulo, kivtem, lim, tisulim, pur, kopu, tirli, muvo): nur noch in der Zuordnung `LUMISCH_ALT` (`web/pause.js`). Im Spiel-Log gelten alte Wörter als die neuen; wer eines gelernt hat, sieht einmal „Neu heißt es kiv. Gleiches Eis, anderer Klang.“ (`lumischUmbenannt`). Neue Wörter zeigen ihren Hinweis.
+- **Tests:** Paket gegen Beilage (401, keine Doppelten, kein altes Wort, Plan), kein ersetztes Wort in App, Paketen und Tests, `kir`-Lernende verlieren nichts und sehen die Karte genau einmal.
+- **Paket `lumi-buch` 2026.10.05.1:** `hinweis` nur noch „Eine erfundene Geschichte.“ (Mik, 05.10.: die Quantenwelt ist in der Welt der Lumis wirklich). Text der Kapitel unverändert.
+
 ## 0.5.2 · 05.10.2026 · Seite „Updates & Abo“ aufgeräumt
 
 - **Neue Reihenfolge** (Auftrag 2026-10-05-updates-seite): Stand (ein Satz, „Jetzt prüfen“, verfügbare Updates, am Desktop die App-Version mit „Nach neuer Version suchen“) · Was ist neu · Einstellungen (zugeklappt, mit Zeile zum aktuellen Stand; Wie oft?, Update-Abo, Nur im WLAN, Zeitfenster, am Desktop Speicherort) · Werkzeuge (Offline-Bereitschaft, Als App installieren) · Info und Hilfe · Daten löschen (abgesetzt mit Haarlinie, doppelt gesichert wie bisher). Signatur- und Schlüsseldetails und der lange Satz am Ende sind weg; die Meldung nach „Jetzt prüfen“ ist kurz.
