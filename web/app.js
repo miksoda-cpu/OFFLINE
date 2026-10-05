@@ -6,7 +6,7 @@ import { WERTE as PAUSE_WERTE, LEBENSABSCHNITTE, APPETIT, ART_TEXT, angeboten as
   logDazu as pauseLogDazu, happenFaellig, waehle as pauseWaehle, bewerten as pauseBewerten, schwierigkeit as pauseSchwierigkeit, zoneAnpassen, zoneText, zurueckholen as pauseZurueckholen,
   rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, soSeheIchDich, wochenSatz, rueckspiegel, lumischHeute, imKennenlernen, gewichtVon, stufeVon, verfuegbar as pauseVerfuegbar, tagVon, raumFormen, dauerText } from "./pause.js";
 import { FORMEN as PAUSE_FORMEN, happenFokus } from "./pause-happen.js";
-import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE } from "./buch.js";
+import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE, LUECKE_WARTET as BUCH_LUECKE_WARTET, wartendeAbsaetze as buchWartend, mitSchluss as buchMitSchluss } from "./buch.js";
 import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
 
@@ -14,7 +14,7 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.5.0";
+const APP_VERSION = "0.5.1";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -1132,7 +1132,7 @@ function linieHtml() {
 // ---------- Das Lumi-Buch (Auftrag 2026-10-04-lumi-buch-app): lesbar wird, was man unter einem Satz der Lumi öffnet ----------
 // Logik in web/buch.js. Milde Zugkraft: oben nur der Anteil in Prozent, keine Liste fehlender Tipps, kein Hinweis aufs
 // schnellere Freischalten. Gespeichert wird nur, welche Absätze lesbar sind ("lumi-buch-frei").
-const buchFrei = () => buchFreiLaden(speicher.get("lumi-buch-frei", null));
+const buchFrei = () => buchMitSchluss(speicher.get("lumi-buch-frei", null), buchDaten()); // Schlussstück frei, wenn der Rest von Kapitel 12 gelesen ist
 let buchLesen = null; // { id, zurueck } – der zuletzt geöffnete Absatz und wohin „Zurück“ führt
 /** „Aus dem Lumi-Buch“ unter einem Satz oder im Log: Absatz öffnen und damit lesbar machen (nicht bei „Tipps aus“). */
 function buchOeffnen(id) {
@@ -1163,7 +1163,7 @@ function buchHtml() {
       <p class="buch-hinweis">${esc(b.hinweis)}</p>
       <p class="buch-werkzeug">${frei.absaetze.length ? `<button type="button" class="z-neben" data-buch="vorlesen">${state.buchLiest ? "Anhalten" : "Vorlesen"}</button>` : ""}<a class="z-neben" href="#uebersicht">Zurück</a></p></header>
     ${frei.absaetze.length ? "" : `<p class="buch-leer">Unter einem Satz deiner Lumi steht „Aus dem Lumi-Buch“. Was du dort aufschlägst, steht danach hier.</p>`}
-    ${buchMitLuecken(b, frei).map((k) => `<section class="buch-kapitel"><h2>Kapitel ${k.nr}: ${esc(k.titel)}</h2>${k.teile.map((t) => t.art === "absatz" ? `<p class="buch-text" id="${esc(t.id)}">${esc(t.text)}</p>` : `<p class="buch-luecke">${esc(BUCH_LUECKE)}</p>`).join("")}</section>`).join("")}
+    ${buchMitLuecken(b, frei, buchWartend(wesen.tippsQuelle() ?? [], FUNKTIONEN)).map((k) => `<section class="buch-kapitel"><h2>Kapitel ${k.nr}: ${esc(k.titel)}</h2>${k.teile.map((t) => t.art === "absatz" ? `<p class="buch-text" id="${esc(t.id)}">${esc(t.text)}</p>` : `<p class="buch-luecke">${esc(t.art === "wartet" ? BUCH_LUECKE_WARTET : BUCH_LUECKE)}</p>`).join("")}</section>`).join("")}
   </article>`;
 }
 function buchVorlesen() {
@@ -2178,6 +2178,8 @@ if (desktop) (async () => {
   vorratAuffuellen(); // danach die Vorratskammer der Tagesseite
   // Lumi-Buch (0.5.0): liegt ganz auf dem Gerät; wer es noch nicht hat (Update von 0.4), bekommt es still dazu
   if (!PB() && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "lumi-buch" && p.status === "verfuegbar"); if (e && appPasst(e)) await installiere(k, e); } catch (err) { console.error("Lumi-Buch", err); } }
+  // 0.5.1: Tipps ohne Absatznummern (wir vor 2026.10.04.3) einmal still auffrischen, damit „Aus dem Lumi-Buch“ sofort kommt
+  if (PW() && !(inhalt(PW(), "inhalt/tipps.json")?.tipps ?? []).some((t) => t.buch) && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "wir" && p.status === "verfuegbar"); if (e && appPasst(e) && versionVergleich(e.version, PW().manifest.version) > 0) { await installiere(k, e); render(); } } catch (err) { console.error("wir", err); } }
   // Pause: ist sie an und das Paket fehlt, still holen; dann der Happen beim Öffnen
   if (pauseE().an && !PP() && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "pause" && p.status === "verfuegbar"); if (e && appPasst(e)) await installiere(k, e); } catch (err) { console.error("Pause", err); } }
   pauseBeimOeffnen();

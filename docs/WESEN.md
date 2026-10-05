@@ -103,6 +103,7 @@
 - **Freischalten:** Unter jedem Satz der eingeschalteten, benannten Lumi (Sprechblase, Meldung) und an jedem Logeintrag steht „Aus dem Lumi-Buch“. Erst das Öffnen macht den Absatz lesbar (`lumi-buch-frei` am Gerät). Bei Textkarten und bei „Tipps aus“ gibt es den Link nicht, und das Buch wächst nicht.
 - **Lesen:** `#absatz` zeigt einen Absatz ruhig mit Kapitelname (nur ✕ und „Zurück“). `#buch` zeigt „Band 1 · N % lesbar“, die Kapitel in Reihenfolge, Lücken als „Dieses Stück hat dir deine Lumi noch nicht erzählt.“ und Vorlesen. Erreichbar aus der Übersicht (unter den Lumi-Einstellungen) und der Bibliothek.
 - **Milde Zugkraft:** keine Liste fehlender Tipps, kein Hinweis aufs schnellere Freischalten, keine Zählung von Tagen.
+- **Seit 0.5.1:** Absätze, deren Tipps alle auf eine fehlende Funktion warten, haben die Lücke „Dieses Stück erzählt sie, sobald OFFLINE so weit ist.“ (berechnet aus den Bedingungen, `wartendeAbsaetze`). Das Schlussstück `b1-12-06` wird frei, sobald der Rest von Kapitel 12 gelesen ist. Fehlt `buch` in den installierten Tipps, holt die App `wir` beim Start einmal still nach.
 
 ## A. Konzept (Entwurf 3, 29.09.2026, aus der Session Lumi-Mimik übernommen)
 

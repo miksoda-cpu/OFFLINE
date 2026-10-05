@@ -5,6 +5,8 @@
 // Gespeichert wird nur die Liste der lesbaren Absätze (speicher "lumi-buch-frei"), am Gerät.
 
 export const LUECKE = "Dieses Stück hat dir deine Lumi noch nicht erzählt.";
+/** Lücke für Absätze, deren Tipps alle auf eine Funktion warten (0.5.1, Auftrag 2026-10-05-01). */
+export const LUECKE_WARTET = "Dieses Stück erzählt sie, sobald OFFLINE so weit ist.";
 export const LINK_TEXT = "Aus dem Lumi-Buch";
 
 /** Gespeicherten Stand laden: { absaetze: [Nummern], seit }. */
@@ -19,11 +21,30 @@ export function absaetze(buch) {
 }
 export const absatz = (buch, id) => absaetze(buch).find((a) => a.id === id) ?? null;
 
-/** Einen Absatz lesbar machen (nur einen, den es im Buch gibt). Gibt den neuen Stand zurück. */
+/**
+ * Absätze, die heute niemand erreichen kann: Alle Tipps, die auf sie zeigen, warten auf eine Funktion, die die App noch
+ * nicht hat (bedingung.funktion nicht in funktionen). Berechnet aus den Tipps, nicht fest im Code.
+ */
+export function wartendeAbsaetze(tipps, funktionen) {
+  const je = new Map();
+  for (const t of tipps ?? []) if (t.buch) je.set(t.buch, [...(je.get(t.buch) ?? []), t]);
+  return new Set([...je].filter(([, l]) => l.every((t) => t.bedingung?.funktion && !funktionen?.has(t.bedingung.funktion))).map(([id]) => id));
+}
+
+/** Das Schlussstück (letzter Absatz des letzten Kapitels) wird frei, sobald die anderen Absätze dieses Kapitels gelesen sind. */
+export function mitSchluss(frei, buch, jetzt = Date.now()) {
+  const f = freiLaden(frei), letztes = buch?.kapitel?.at(-1), schluss = letztes?.absaetze?.at(-1);
+  if (!schluss || f.absaetze.includes(schluss.id)) return f;
+  const andere = letztes.absaetze.slice(0, -1);
+  if (!andere.length || !andere.every((a) => f.absaetze.includes(a.id))) return f;
+  return { absaetze: [...f.absaetze, schluss.id], seit: f.seit ?? new Date(jetzt).toISOString() };
+}
+
+/** Einen Absatz lesbar machen (nur einen, den es im Buch gibt); danach ggf. das Schlussstück. Gibt den neuen Stand zurück. */
 export function freischalten(frei, buch, id, jetzt = Date.now()) {
   const f = freiLaden(frei);
-  if (!absatz(buch, id) || f.absaetze.includes(id)) return f;
-  return { absaetze: [...f.absaetze, id], seit: f.seit ?? new Date(jetzt).toISOString() };
+  if (!absatz(buch, id) || f.absaetze.includes(id)) return mitSchluss(f, buch, jetzt);
+  return mitSchluss({ absaetze: [...f.absaetze, id], seit: f.seit ?? new Date(jetzt).toISOString() }, buch, jetzt);
 }
 
 /** Anteil lesbarer Absätze in ganzen Prozent (abgerundet, damit 100 % erst bei allen steht). */
@@ -35,15 +56,17 @@ export function anteil(buch, frei) {
 
 /**
  * Das Buch zum Lesen: Kapitel in Reihenfolge, darin lesbare Absätze und stille Lücken. Mehrere fehlende Absätze
- * hintereinander sind eine Lücke. teile: [{ art: "absatz", id, text } | { art: "luecke" }].
+ * derselben Art hintereinander sind eine Lücke. wartend: Absätze, die heute niemand erreichen kann (wartendeAbsaetze).
+ * teile: [{ art: "absatz", id, text } | { art: "luecke" } | { art: "wartet" }].
  */
-export function buchMitLuecken(buch, frei) {
+export function buchMitLuecken(buch, frei, wartend = new Set()) {
   const f = new Set(freiLaden(frei).absaetze);
   return (buch?.kapitel ?? []).map((k) => {
     const teile = [];
     for (const a of k.absaetze ?? []) {
-      if (f.has(a.id)) teile.push({ art: "absatz", id: a.id, text: a.text });
-      else if (teile.at(-1)?.art !== "luecke") teile.push({ art: "luecke" });
+      const art = f.has(a.id) ? "absatz" : wartend.has(a.id) ? "wartet" : "luecke";
+      if (art === "absatz") teile.push({ art, id: a.id, text: a.text });
+      else if (teile.at(-1)?.art !== art) teile.push({ art });
     }
     return { nr: k.nr, titel: k.titel, teile };
   });

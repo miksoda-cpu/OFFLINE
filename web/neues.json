@@ -2,6 +2,17 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.5.1",
+      "datum": "2026-10-05",
+      "punkte": [
+        "Wer OFFLINE schon hatte, sieht „Aus dem Lumi-Buch“ jetzt gleich nach dem Start. Die Tipps holen sich ihre Absätze still dazu.",
+        "Manche Stücke im Lumi-Buch hängen an Funktionen, die noch kommen. Dort steht jetzt: „Dieses Stück erzählt sie, sobald OFFLINE so weit ist.“",
+        "Das letzte Stück des Buchs öffnet sich, sobald du den Rest des zwölften Kapitels gelesen hast.",
+        "Bei großer Schrift laufen die Radio-Zeile in Werkzeuge und die Notrufkarten nicht mehr über den Rand.",
+        "Auf der Startseite steht, wann man Pro und Pro+ buchen kann: sobald die App erscheint. Bis dahin ist alles gratis."
+      ]
+    },
+    {
       "version": "0.5.0",
       "datum": "2026-10-04",
       "punkte": [

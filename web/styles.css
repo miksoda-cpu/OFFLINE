@@ -141,7 +141,7 @@ p { margin: 0 0 1em; }
 .notruf-nr.long { font-size: 1rem; padding-top: .45rem; }
 .notruf h3 { margin: .1rem 0 .2rem; overflow-wrap: anywhere; hyphens: auto; }
 .notruf > div { min-width: 0; }
-.notruf p { margin: 0; color: var(--muted); font-size: .92rem; }
+.notruf p { margin: 0; color: var(--muted); font-size: .92rem; overflow-wrap: anywhere; hyphens: auto; -webkit-hyphens: auto; } /* große Schrift: lange Wörter trennen */
 
 /* Sirenen */
 .siren svg { width: 100%; height: 44px; display: block; margin: .5rem 0 .75rem; }
@@ -183,7 +183,7 @@ p { margin: 0 0 1em; }
 .seg { display: inline-flex; border: 1px solid var(--z-hair); border-radius: var(--z-radius); padding: 2px; background: transparent; flex-wrap: wrap; }
 .seg button { border: 0; background: transparent; color: var(--muted); padding: 0 .8rem; min-height: 40px; border-radius: 4px; font: inherit; font-size: .9rem; font-weight: 400; cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
-.switch { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .7rem 0; border-top: 1px solid var(--line); }
+.switch { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; padding: .7rem 0; border-top: 1px solid var(--line); } /* große Schrift: umbrechen statt überlaufen */
 .switch input { width: 2.6rem; height: 1.4rem; accent-color: var(--accent); }
 input[type="time"], select, input[type="text"], input[type="email"], textarea { font: inherit; padding: .6rem 1rem; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--text); }
 .changelog { list-style: none; padding: 0; margin: 0; }

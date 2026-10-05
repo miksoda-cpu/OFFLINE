@@ -1,5 +1,15 @@
 # Änderungen
 
+## 0.5.1 · 05.10.2026 · Nacharbeiten zu 0.4.2 bis 0.5.0
+
+- **`wir` still nachladen** (Auftrag 2026-10-05-01): Fehlt `buch` in den installierten Tipps, holt die App beim Start einmal die neuere Ausgabe aus dem Katalog. Bestehende Nutzer sehen „Aus dem Lumi-Buch“ sofort.
+- **Absätze, die heute niemand erreichen kann:** `wartendeAbsaetze` in `web/buch.js` berechnet sie aus den Bedingungen der Tipps (alle Tipps eines Absatzes warten auf eine Funktion, die `FUNKTIONEN` nicht hat). Stand 0.5.1: zwölf. Ihre Lücken sagen „Dieses Stück erzählt sie, sobald OFFLINE so weit ist.“ Test gegen eine feste Liste im Code.
+- **Schlussstück** `b1-12-06` wird frei, sobald die anderen fünf Absätze von Kapitel 12 gelesen sind (`mitSchluss`, auch für schon gelesene Stände).
+- **Paket `lumi-buch` 2026.10.05:** ein Satz in `b1-12-06` nach Bills Entscheidung („geht man ein Stück weiter“ statt der Wischgeste), als `KORREKTUR` im Umwandler; die Vorlage bleibt.
+- **Startseite:** „Für bis zu 5 Personen in einem Haushalt“; unter den Preiskarten „Pro und Pro+ kann man buchen, sobald die App erscheint. Bis dahin ist alles gratis.“; der Anmeldesatz trägt „Bald“ wie die Karte daneben. Test in `web/neues.test.mjs`.
+- **Große Schrift:** `.switch`-Zeilen (Radio in Werkzeuge) brechen um, lange Wörter in den Notrufkarten werden getrennt. Bei 16, 20 und 24 px auf zwölf Seiten kein seitlicher Bildlauf.
+- **`bill/STATUS.md`** aufgeräumt.
+
 ## 0.5.0 · 04.10.2026 · Das Lumi-Buch
 
 - **Paket `lumi-buch`** (neu, Art `inhalt`, `app_min` 0.5.0, Auftrag 2026-10-04-lumi-buch-app): Band 1, zwölf Kapitel, 127 Absätze `b1-KK-PP`, Titelseite mit „Eine erfundene Geschichte“ (Anwaltsfrage 35). Gebaut aus der freigegebenen Vorlage mit `pakete/lumi-buch/buch-umwandeln.mjs`, Format `paket-kit/buch-format.mjs`; Band 2 kann als eigenes Paket mit `band: 2` folgen. Wird bei der Erstinstallation und still bei bestehenden Nutzern geladen.

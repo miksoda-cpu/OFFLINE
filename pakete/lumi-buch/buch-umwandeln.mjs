@@ -11,8 +11,11 @@ import { buchFehler } from "../../paket-kit/buch-format.mjs";
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const QUELLE = path.join(HIER, "quelle", "OFFLINE-Lumi-Buch-Band1.md");
 const ZIEL = path.join(HIER, "inhalt", "buch.json");
-/** Kleine Tippfehler, wörtlich ersetzt: [Absatz, falsch, richtig] */
-export const KORREKTUR = [];
+/** Wörtliche Ersetzungen: [Absatz, alt, neu]. Tippfehler und von Bill entschiedene Änderungen. */
+export const KORREKTUR = [
+  // Auftrag 2026-10-05-01: Eine Wischgeste gibt es in der App nicht
+  ["b1-12-06", "Wenn man weiter will, wischt man nach links, und dann kommt das Wissen.", "Wenn man weiter will, geht man ein Stück weiter, und dann kommt das Wissen."],
+];
 
 export function umwandeln(md) {
   const kapitel = [];
@@ -28,7 +31,7 @@ export function umwandeln(md) {
   for (const k of kapitel) for (const a of k.absaetze) {
     a.text = a.teile.join("\n").trim().replace(/\n{2,}/g, "\n\n");
     delete a.teile;
-    for (const [id, falsch, richtig] of KORREKTUR) if (id === a.id) a.text = a.text.replace(falsch, richtig);
+    for (const [id, alt, neu] of KORREKTUR) if (id === a.id) { if (!a.text.includes(alt)) throw new Error(`${id}: „${alt}“ nicht gefunden`); a.text = a.text.replace(alt, neu); }
   }
   return {
     format: 1,

@@ -46,4 +46,9 @@ test("Startseite: kein KI-Versprechen im Startbild, Geplantes mit „kommt“", 
   assert.match(html, /Wikivoyage, Österreich-Paket Grundversion<\/li>\s*<li class="muted">Wikipedia und Karte kommen<\/li>/);
   assert.match(html, /Was mit „kommt“ markiert ist, bauen wir gerade\. Du zahlst für das, was es gibt\./);
   for (const p of ["7,90 €", "79 € / Jahr", "19,90 €", "199 € / Jahr", "ab 590 €"]) assert.ok(html.includes(p), `Preis ${p} unverändert`);
+  // 0.5.1 (Auftrag 2026-10-05-01): Lizenzbedingung, Satz zur Buchbarkeit unter den Karten, Anmeldesatz „bald“ wie die Karte
+  assert.match(html, /<li>Für bis zu 5 Personen in einem Haushalt<\/li>/);
+  const preise = html.slice(html.indexOf('id="preise"'), html.indexOf("</section>", html.indexOf('id="preise"')));
+  assert.match(preise, /<\/div>\s*<\/div>\s*<p[^>]*>Pro und Pro\+ kann man buchen, sobald die App erscheint\. Bis dahin ist alles gratis\.<\/p>\s*$/, "Satz unter den Preiskarten");
+  assert.match(html, /<p class="muted"><span class="tag tag-warn">Bald<\/span> Melde dich/);
 });

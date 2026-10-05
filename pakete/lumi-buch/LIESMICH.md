@@ -14,8 +14,8 @@ Nur Daten (`inhalt/buch.json`, Format `paket-kit/buch-format.mjs`). Das ganze Bu
 
 ## Wie geprüft
 
-Format mit dem Kit; alle 175 Tipps zeigen auf einen vorhandenen Absatz, jeder Absatz hat mindestens einen Tipp (Test `web/buch.test.mjs`, Kit `pruefen.mjs`). Text gegen die Vorlage: unverändert, keine Tippfehler gefunden.
+Format mit dem Kit; alle 175 Tipps zeigen auf einen vorhandenen Absatz, jeder Absatz hat mindestens einen Tipp (Test `web/buch.test.mjs`, Kit `pruefen.mjs`). Text gegen die Vorlage: keine Tippfehler gefunden; ein Satz in b1-12-06 nach Bills Entscheidung geändert (`KORREKTUR` im Umwandler).
 
 ## Offene Punkte
 
-Anwaltsfrage 35 (bis dahin der Hinweis „Eine erfundene Geschichte“). Absatz b1-12-06 sagt „Wenn man weiter will, wischt man nach links, und dann kommt das Wissen“ – eine Wischgeste gibt es in der App nicht (gemeldet, nicht geändert).
+Anwaltsfrage 35 (bis dahin der Hinweis „Eine erfundene Geschichte“). Zwölf Absätze hängen nur an Tipps, die auf eine Funktion warten; die App zeigt dort eine eigene Lücke. Das Schlussstück b1-12-06 wird zusätzlich frei, wenn der Rest von Kapitel 12 gelesen ist.

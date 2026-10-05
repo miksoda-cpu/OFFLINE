@@ -3,10 +3,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { freiLaden, freischalten, anteil, buchMitLuecken, linkErlaubt, vorleseTeile, absaetze, LUECKE, LINK_TEXT } from "./buch.js";
+import { freiLaden, freischalten, anteil, buchMitLuecken, linkErlaubt, vorleseTeile, absaetze, absatz, wartendeAbsaetze, mitSchluss, LUECKE, LUECKE_WARTET, LINK_TEXT } from "./buch.js";
 import { buchFehler, zuordnungFehler, absatzIds } from "../paket-kit/buch-format.mjs";
 import { tippsFehler } from "../paket-kit/tipps-format.mjs";
-import { tippKnoepfeHtml } from "./wesen.js";
+import { tippKnoepfeHtml, FUNKTIONEN } from "./wesen.js";
 
 const json = async (p) => JSON.parse(await readFile(new URL(p, import.meta.url), "utf8"));
 const buch = await json("../pakete/lumi-buch/inhalt/buch.json");
@@ -77,4 +77,37 @@ test("Milde Zugkraft: keine Zahlen außer dem Anteil, kein Druck in den Texten",
   assert.ok(teil.length > 200, "Abschnitt in app.js gefunden");
   assert.doesNotMatch(teil, /nur noch|noch \$\{|fehlen noch|schneller|Tage(n)? in Folge|Serie/, "kein Hinweis aufs schnellere Freischalten, keine Zählung");
   assert.match(teil, /% lesbar/);
+});
+
+test("0.5.1: Absätze, die heute niemand erreichen kann, aus den Bedingungen berechnet, mit eigener Lücke", async () => {
+  const w = wartendeAbsaetze(tipps, FUNKTIONEN);
+  // erwartet: genau die Absätze, deren Tipps alle auf eine fehlende Funktion warten (Stand 0.5.1: zwölf)
+  const je = {}; for (const t of tipps) (je[t.buch] ??= []).push(t);
+  const soll = Object.keys(je).filter((id) => je[id].every((t) => t.bedingung?.funktion && !FUNKTIONEN.has(t.bedingung.funktion))).sort();
+  assert.deepEqual([...w].sort(), soll);
+  assert.equal(w.size, 12);
+  assert.ok(w.has("b1-12-06") && !w.has("b1-05-09"), "b1-05-09 hängt an app-004 (Funktion „gelernt“ gibt es)");
+  // nicht fest im Code: mit der fehlenden Funktion wird der Absatz erreichbar
+  const funktion = je["b1-01-12"][0].bedingung.funktion;
+  assert.ok(!wartendeAbsaetze(tipps, new Set([...FUNKTIONEN, funktion])).has("b1-01-12"));
+  const quelle = await readFile(new URL("./buch.js", import.meta.url), "utf8") + await readFile(new URL("./app.js", import.meta.url), "utf8");
+  assert.doesNotMatch(quelle, /"b1-(01-12|02-08|10-07)"/, "keine feste Liste im Code");
+  // zwei Arten von Lücken
+  const k = buchMitLuecken(buch, { absaetze: ["b1-01-11"] }, w);
+  assert.deepEqual(k[0].teile.map((t) => t.art), ["luecke", "absatz", "wartet"]);
+  assert.equal(LUECKE_WARTET, "Dieses Stück erzählt sie, sobald OFFLINE so weit ist.");
+  assert.deepEqual(buchMitLuecken(buch, null)[0].teile, [{ art: "luecke" }], "ohne Liste wie bisher");
+});
+
+test("0.5.1: Schlussstück b1-12-06 wird frei, sobald die anderen fünf Absätze von Kapitel 12 gelesen sind; neuer Satz", () => {
+  const k12 = buch.kapitel.at(-1).absaetze.map((a) => a.id);
+  assert.deepEqual(k12, ["b1-12-01", "b1-12-02", "b1-12-03", "b1-12-04", "b1-12-05", "b1-12-06"]);
+  let f = freiLaden(null);
+  for (const id of k12.slice(0, 4)) f = freischalten(f, buch, id);
+  assert.ok(!f.absaetze.includes("b1-12-06"), "vier von fünf reichen nicht");
+  f = freischalten(f, buch, "b1-12-05");
+  assert.ok(f.absaetze.includes("b1-12-06"), "nach dem fünften kommt das Schlussstück");
+  assert.ok(mitSchluss({ absaetze: k12.slice(0, 5) }, buch).absaetze.includes("b1-12-06"), "auch für schon gelesene Stände");
+  assert.match(absatz(buch, "b1-12-06").text, /Die Tagesseite ist immer der Anfang\. Wenn man weiter will, geht man ein Stück weiter, und dann kommt das Wissen\./);
+  assert.doesNotMatch(absatz(buch, "b1-12-06").text, /wischt/);
 });
