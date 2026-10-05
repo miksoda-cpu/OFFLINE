@@ -16,6 +16,7 @@
 
 import { writeFile, readFile, readdir } from "node:fs/promises";
 import { spawn } from "node:child_process";
+import { HILFE } from "../web/hilfe.js";
 
 const argv = process.argv.slice(2);
 const SCHRITT = argv[0];
@@ -171,7 +172,7 @@ async function neu() {
   const upd = await bis(() => js("const m = document.querySelector('main'); if (!m.querySelector('#upd-einstellungen')) return null; const reihe = ['[aria-label=Stand]', '.upd-neu', '#upd-einstellungen', '[data-hilfe=updates]', '[aria-label=\"Daten löschen\"]'].map((s) => m.querySelector(s)); return { da: reihe.every(Boolean), geordnet: reihe.every((e, i) => !i || (reihe[i - 1].compareDocumentPosition(e) & 4)), zu: !m.querySelector('#upd-einstellungen').open }"), "Updates-Seite", 15_000).catch(() => null);
   let blatt = null;
   if (upd) { await js("document.querySelector('[data-hilfe=updates]').click()"); await warte(400); const auf = await js("return document.querySelectorAll('.blatt .hilfe-frage').length"); await js("history.back()"); await warte(500); blatt = { auf, zu: await js("return !document.querySelector('.blatt') && location.hash === '#updates'") }; }
-  pruefe("Updates & Abo", !!upd && upd.da && upd.geordnet && upd.zu && blatt?.auf === 10 && blatt?.zu, upd ? `Reihenfolge ${upd.geordnet ? "richtig" : "falsch"}, Einstellungen ${upd.zu ? "zu" : "offen"}, Blatt ${blatt?.auf ?? 0} Fragen, Zurück ${blatt?.zu ? "schließt" : "schließt nicht"}` : "keine Seite");
+  pruefe("Updates & Abo", !!upd && upd.da && upd.geordnet && upd.zu && blatt?.auf === HILFE.updates.length && blatt?.zu, upd ? `Reihenfolge ${upd.geordnet ? "richtig" : "falsch"}, Einstellungen ${upd.zu ? "zu" : "offen"}, Blatt ${blatt?.auf ?? 0} Fragen, Zurück ${blatt?.zu ? "schließt" : "schließt nicht"}` : "keine Seite");
   await gehe("#start");
   pruefe("Checkliste erhalten", JSON.stringify(checks) === JSON.stringify(vorher.checks), `${Object.keys(checks ?? {}).length} Häkchen`);
   pruefe("Bestätigungen übernommen", v2 && v2["c-0-0"] === vorher.bestaetigungen.wasser && v2.radio === vorher.bestaetigungen.radio && v2.probeabend === vorher.bestaetigungen.probeabend, "Wasser, Radio, Probeabend mit altem Datum");
