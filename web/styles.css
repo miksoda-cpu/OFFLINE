@@ -575,3 +575,49 @@ body.happen-offen .wesen-toast { display: none; } /* im Happen meldet sich die L
 .lumi-buch-link { margin-left: 6px; font-size: .8rem; }
 a.buch-zeile { display: block; color: inherit; text-decoration: none; }
 @media (max-width: 400px) { .buch-text { font-size: 1.06rem; line-height: 1.7; } }
+
+/* ---------- Updates & Abo (0.5.2): Stand, Was ist neu mit Reitern, Einstellungen zugeklappt, Löschen abgesetzt ---------- */
+.upd-neu, .upd-einst, .upd-stand ~ section.card { margin-top: 1rem; }
+.upd-stand { display: grid; gap: .6rem; }
+.upd-satz { margin: 0; font-size: 1.05rem; }
+.upd-stand > .btn-primary { justify-self: start; }
+.upd-zeile { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; padding-top: .6rem; border-top: 1px solid var(--z-hair); }
+.upd-h2 { font-family: var(--z-serif); font-weight: 400; font-size: 1.2rem; margin: 0 0 .6rem; }
+.upd-reiter { display: flex; gap: 18px; border-bottom: 1px solid var(--z-hair); margin: 0 0 .6rem; }
+.upd-reiter button { background: none; border: 0; padding: 0 2px; min-height: 44px; font: inherit; font-size: .95rem; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.upd-reiter button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
+.upd-liste { list-style: none; margin: 0; padding: 0; }
+.upd-liste > li { padding: .6rem 0; border-bottom: 1px solid var(--z-hair); }
+.upd-liste > li:last-child { border-bottom: 0; }
+.upd-liste ul { margin: .3rem 0 0; padding-left: 1.1rem; line-height: 1.5; }
+.upd-kopf { margin: 0 0 .15rem; }
+.upd-einst summary { cursor: pointer; display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .8rem; min-height: 44px; list-style: none; position: relative; padding-right: 28px; }
+.upd-einst summary::-webkit-details-marker { display: none; }
+.upd-einst summary .upd-h2 { margin: 0; }
+.upd-einst summary::after { content: "›"; position: absolute; right: 4px; top: .35rem; font-size: 1.3rem; color: var(--muted); transition: transform .15s; }
+.upd-einst[open] summary::after { transform: rotate(90deg); }
+.upd-info { margin: 1.4rem 0 0; }
+.upd-loeschen { margin: 2.4rem 0 1rem; padding-top: 1.4rem; border-top: 1px solid var(--z-hair); }
+.of-app .upd-gefahr { color: var(--accent); }
+.of-app .upd-gefahr::before { border-color: var(--accent-soft); }
+.neu-punkt { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-left: .4rem; vertical-align: .15em; }
+.hilfe-frage { font-family: var(--z-serif); font-weight: 400; font-size: 1.05rem; margin: 1.1rem 0 .25rem; }
+.hilfe-frage:first-child { margin-top: 0; }
+.hilfe-antwort { margin: 0; line-height: 1.6; }
+
+/* ---------- Das Blatt: am Handy von unten, breit in der Mitte; eigener Bildlauf, ✕ ---------- */
+.blatt-hinter { position: fixed; inset: 0; z-index: 1150; background: rgb(20 18 16 / .35); display: flex; align-items: flex-end; justify-content: center; animation: blatt-hinter .18s ease-out; }
+.blatt { background: var(--surface); color: var(--text); width: 100%; max-height: 88vh; border-radius: 18px 18px 0 0; display: flex; flex-direction: column; box-shadow: 0 -8px 30px rgb(0 0 0 / .15); animation: blatt-auf .22s ease-out; }
+.blatt-kopf { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: 10px 8px 6px 18px; border-bottom: 1px solid var(--z-hair); }
+.blatt-kopf h2 { font-family: var(--z-serif); font-weight: 400; font-size: 1.15rem; margin: 0; }
+.blatt-zu { width: 44px; height: 44px; display: grid; place-items: center; background: none; border: 0; color: var(--muted); cursor: pointer; border-radius: var(--z-radius); }
+.blatt-inhalt { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; touch-action: pan-y; padding: 14px 18px max(24px, env(safe-area-inset-bottom)); }
+body.blatt-offen { overflow: hidden; }
+@media (min-width: 821px) {
+  .blatt-hinter { align-items: center; }
+  .blatt { width: min(640px, calc(100vw - 48px)); max-height: min(80vh, 760px); border-radius: 18px; box-shadow: 0 16px 50px rgb(0 0 0 / .2); }
+}
+@keyframes blatt-auf { from { transform: translateY(24px); opacity: .6; } to { transform: none; opacity: 1; } }
+@keyframes blatt-hinter { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .blatt, .blatt-hinter { animation: none; } }
+.blatt-zu:focus { outline: none; } .blatt-zu:focus-visible { outline: 1.5px solid var(--eis-ink); outline-offset: -4px; }

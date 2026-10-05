@@ -6,6 +6,9 @@ import { WERTE as PAUSE_WERTE, LEBENSABSCHNITTE, APPETIT, ART_TEXT, angeboten as
   logDazu as pauseLogDazu, happenFaellig, waehle as pauseWaehle, bewerten as pauseBewerten, schwierigkeit as pauseSchwierigkeit, zoneAnpassen, zoneText, zurueckholen as pauseZurueckholen,
   rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, soSeheIchDich, wochenSatz, rueckspiegel, lumischHeute, imKennenlernen, gewichtVon, stufeVon, verfuegbar as pauseVerfuegbar, tagVon, raumFormen, dauerText } from "./pause.js";
 import { FORMEN as PAUSE_FORMEN, happenFokus } from "./pause-happen.js";
+import { ungesehen as neuUngesehen, alsGesehen as neuAlsGesehen, inhaltsAenderungen, inhalteStart } from "./neuigkeiten.js";
+import { HILFE } from "./hilfe.js";
+import { blattOeffnen, blattWeg } from "./blatt.js";
 import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE, LUECKE_WARTET as BUCH_LUECKE_WARTET, wartendeAbsaetze as buchWartend, mitSchluss as buchMitSchluss } from "./buch.js";
 import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
@@ -14,7 +17,7 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.5.1";
+const APP_VERSION = "0.5.2";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -721,59 +724,83 @@ const seiten = {
       </div>`;
   },
 
+  /**
+   * Updates & Abo (neu geordnet in 0.5.2, Auftrag 2026-10-05-updates-seite): Stand mit „Jetzt prüfen“ · Was ist neu (Reiter
+   * App und Inhalte, drei Einträge, „Alle anzeigen“ im Blatt) · Einstellungen (zugeklappt) · Werkzeuge · Info und Hilfe
+   * (Blatt) · Daten löschen, abgesetzt am Ende.
+   */
   updates() {
     const opt = [["taeglich", "Täglich"], ["woechentlich", "Wöchentlich"], ["monatlich", "Monatlich"], ["manuell", "Manuell"]];
     const ks = katalogAusSpeicher();
     const k = ks?.katalog;
     const updates = k ? verfuegbareUpdates(k) : [];
-    const aenderungen = (k?.pakete ?? []).filter((p) => p.aenderungen).sort((a, b) => (a.erstellt < b.erstellt ? 1 : -1));
     const m = state.meldung;
+    if (!state.neues) neuesLaden();
+    const reiter = state.neuReiter ?? "app";
+    speicher.set(...(reiter === "app" ? ["neues-gesehen", appVersion()] : ["inhalte-gesehen", neuAlsGesehen("inhalte", { katalog: k }).inhalteGesehen ?? ""]));
+    const nachher = neuStand();
+    const punkt = (an) => (an ? '<span class="neu-punkt" aria-label="ungelesen"></span>' : "");
+    const abo = state.abo;
+    const stand = !abo.aktiv ? "Update-Abo pausiert" : [opt.find(([x]) => x === abo.intervall)?.[1] ?? "", abo.nurWlan ? "nur im WLAN" : "", abo.fenster ? `${abo.von}–${abo.bis} Uhr` : ""].filter(Boolean).join(" · ");
     return `
-      ${kopf("Updates & Abo", "Geladen wird nur, wenn du online bist – und nur, was sich geändert hat.", '<button class="btn btn-primary of-btn of-btn--primaer" id="jetzt">Jetzt prüfen</button>')}
-      ${state.fortschritt ? `<div class="card of-karte" style="margin-bottom:1rem"><div style="display:flex;justify-content:space-between;gap:1rem;align-items:center"><span><strong>Lädt</strong> <span class="muted mono of-klein of-mono" style="font-size:.85rem">${esc(state.fortschritt.pfad)}</span></span><span class="muted of-klein">${groesse(state.fortschritt.geladen)} / ${groesse(state.fortschritt.gesamt)}</span></div>
-        <div class="progress of-balken" style="margin:.5rem 0"><div style="width:${state.fortschritt.gesamt ? Math.min(100, (100 * state.fortschritt.geladen) / state.fortschritt.gesamt) : 0}%"></div></div>
-        ${desktop ? '<button class="btn btn-sm of-btn of-btn--klein" data-abbrechen>Abbrechen – wird später fortgesetzt</button>' : ""}</div>` : ""}
-      <div class="card of-karte" id="pruef" style="margin-bottom:1rem">${m ? `<span class="tag of-plakette ${m.art === "ok" ? "tag-ok of-plakette--offline" : m.art === "warn" ? "tag-warn of-plakette--warnung" : "tag-pro"}">${esc(m.titel)}</span> ${m.text}` :
-        k ? `<span class="muted of-klein">Katalog vom ${datum(k.erstellt)}, geladen ${datum(ks.geladen)}, signiert mit Schlüssel <span class="mono of-mono">${esc(ks.schluessel)}</span>. ${updates.length ? `<strong>${updates.length} Update${updates.length > 1 ? "s" : ""} verfügbar.</strong>` : "Alle installierten Pakete sind aktuell."}</span>` :
-        '<span class="muted of-klein">Noch kein Katalog geladen.</span>'}
-        ${desktop?.aboStatus !== undefined ? `<div class="muted of-klein" style="margin-top:.5rem;font-size:.9rem">Hintergrund-Abo: ${desktop.aboStatus ? esc(desktop.aboStatus) : "fällig – läuft beim nächsten Takt"}</div>` : ""}
-        ${updates.map((u) => `<div style="margin-top:.75rem"><strong>${esc(u.eintrag.titel)}</strong> <span class="muted of-klein">${esc(u.installiert)} → ${esc(u.eintrag.version)}</span> <button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${u.eintrag.id}" style="margin-left:.5rem">Aktualisieren</button></div>`).join("")}
-      </div>
-      <div class="grid grid-2">
-        <div class="card of-karte">
-          <div class="field"><span class="legend">Wie oft?</span>
-            <div class="seg" role="group" aria-label="Intervall">${opt.map(([kk, n]) => `<button data-intervall="${kk}" aria-pressed="${state.abo.intervall === kk}">${n}</button>`).join("")}</div></div>
-          <div class="switch of-liste__zeile"><span><strong>Update-Abo aktiv</strong><br><span class="muted of-klein" style="font-size:.9rem">Pausieren, ohne Einstellungen zu verlieren</span></span><input type="checkbox" data-abo="aktiv" ${state.abo.aktiv ? "checked" : ""}></div>
-          <div class="switch of-liste__zeile"><span><strong>Nur im WLAN</strong><br><span class="muted of-klein" style="font-size:.9rem">Kein Download über Handy-Hotspot</span></span><input type="checkbox" data-abo="nurWlan" ${state.abo.nurWlan ? "checked" : ""}></div>
-          <div class="switch of-liste__zeile"><span><strong>Zeitfenster</strong><br><span class="muted of-klein" style="font-size:.9rem">z. B. nachts, wenn der Rechner nicht gebraucht wird</span></span><input type="checkbox" data-abo="fenster" ${state.abo.fenster ? "checked" : ""}></div>
-          <div style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;${state.abo.fenster ? "" : "opacity:.5"}">
-            <input class="of-input" type="time" data-zeit="von" value="${state.abo.von}" aria-label="von"> bis <input class="of-input" type="time" data-zeit="bis" value="${state.abo.bis}" aria-label="bis"></div>
+      <div class="page-head of-seitenkopf"><div><h1>Updates &amp; Abo</h1></div></div>
+      <section class="card of-karte upd-stand" aria-label="Stand">
+        <p class="upd-satz">${m ? `<span class="tag of-plakette ${m.art === "ok" ? "tag-ok of-plakette--offline" : m.art === "warn" ? "tag-warn of-plakette--warnung" : "tag-pro"}">${esc(m.titel)}</span> ${m.text}`
+          : k ? `${updates.length ? `${updates.length} Update${updates.length > 1 ? "s" : ""} verfügbar.` : "Alles aktuell."} Katalog vom ${datum(k.erstellt)}.` : "Noch kein Katalog geladen."}</p>
+        <button class="btn btn-primary of-btn of-btn--primaer" id="jetzt">Jetzt prüfen</button>
+        ${state.fortschritt ? `<div style="margin-top:.8rem"><span class="muted of-klein">Lädt ${esc(state.fortschritt.pfad)} · ${groesse(state.fortschritt.geladen)} / ${groesse(state.fortschritt.gesamt)}</span>
+          <div class="progress of-balken" style="margin:.5rem 0"><div style="width:${state.fortschritt.gesamt ? Math.min(100, (100 * state.fortschritt.geladen) / state.fortschritt.gesamt) : 0}%"></div></div>
+          ${desktop ? '<button class="btn btn-sm of-btn of-btn--klein" data-abbrechen>Abbrechen – wird später fortgesetzt</button>' : ""}</div>` : ""}
+        ${updates.map((u) => `<div class="upd-zeile"><span><strong>${esc(u.eintrag.titel)}</strong> <span class="muted of-klein">${esc(u.installiert)} → ${esc(u.eintrag.version)}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-install="${u.eintrag.id}">Aktualisieren</button></div>`).join("")}
+        ${desktop ? appUpdateZeile() : ""}
+      </section>
+
+      <section class="card of-karte upd-neu" aria-labelledby="upd-neu-titel">
+        <h2 id="upd-neu-titel" class="upd-h2">Was ist neu${punkt(nachher.irgendwas)}</h2>
+        <div class="upd-reiter" role="tablist" aria-label="Was ist neu">
+          ${[["app", "App", nachher.app], ["inhalte", "Inhalte", nachher.inhalte]].map(([id, name, neu]) => `<button type="button" role="tab" aria-selected="${reiter === id}" data-neu-reiter="${id}">${name}${punkt(neu)}</button>`).join("")}
         </div>
-        <div class="card of-karte">
-          <h3>Neu in den Paketen</h3>
-          <ul class="changelog">${aenderungen.length ? aenderungen.map((a) => `<li><span class="muted mono of-klein of-mono" style="font-size:.85rem">${datum(a.erstellt)}</span><span><strong>${esc(a.titel)}</strong> <span class="muted of-klein">${esc(a.version)}</span><br><span class="muted of-klein">${esc(a.aenderungen)}</span></span></li>`).join("") : '<li><span class="muted of-klein">Noch nichts – Katalog laden.</span></li>'}</ul>
-        </div>
-      </div>
-      ${desktop ? appUpdateKarte() : webAppKarte()}
-      ${desktop ? `<div class="card of-karte" style="margin-top:1rem"><h3>Speicherort</h3><p class="muted of-klein" style="margin:0 0 .5rem">Pakete liegen in <span class="mono of-mono" style="font-size:.85rem">${esc(desktop.datenordner)}</span>. Für große Pakete (Wikipedia, Karten) kann das eine externe Platte sein.</p>
-        <button class="btn btn-sm of-btn of-btn--klein" data-speicherort>Ordner wählen …</button> <button class="btn btn-sm of-btn of-btn--klein" data-speicherort-standard>Standard</button><p class="form-msg of-meldung" id="ort-msg"></p></div>` : ""}
-      <div class="card of-karte" style="margin-top:1rem"><h3>Werkzeuge</h3>
+        <div role="tabpanel">${neuListe(reiter, 3, k)}</div>
+        <p style="margin:.4rem 0 0"><button type="button" class="z-neben" data-neu-alle="${reiter}">Alle anzeigen</button></p>
+      </section>
+
+      <details class="card of-karte upd-einst" id="upd-einstellungen">
+        <summary><span class="upd-h2">Einstellungen</span><span class="muted of-klein upd-stand-zeile">${esc(stand)}</span></summary>
+        <div class="field" style="margin-top:.8rem"><span class="legend">Wie oft?</span>
+          <div class="seg" role="group" aria-label="Intervall">${opt.map(([kk, n]) => `<button data-intervall="${kk}" aria-pressed="${abo.intervall === kk}">${n}</button>`).join("")}</div></div>
+        <div class="switch of-liste__zeile"><span><strong>Update-Abo aktiv</strong></span><input type="checkbox" data-abo="aktiv" ${abo.aktiv ? "checked" : ""}></div>
+        <div class="switch of-liste__zeile"><span><strong>Nur im WLAN</strong></span><input type="checkbox" data-abo="nurWlan" ${abo.nurWlan ? "checked" : ""}></div>
+        <div class="switch of-liste__zeile"><span><strong>Zeitfenster</strong></span><input type="checkbox" data-abo="fenster" ${abo.fenster ? "checked" : ""}></div>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;${abo.fenster ? "" : "opacity:.5"}">
+          <input class="of-input" type="time" data-zeit="von" value="${abo.von}" aria-label="von"> bis <input class="of-input" type="time" data-zeit="bis" value="${abo.bis}" aria-label="bis"></div>
+        ${desktop?.aboStatus !== undefined ? `<p class="muted of-klein" style="margin:.6rem 0 0">Hintergrund-Abo: ${desktop.aboStatus ? esc(desktop.aboStatus) : "fällig – läuft beim nächsten Takt"}</p>` : ""}
+        ${desktop ? `<div style="margin-top:.8rem;border-top:1px solid var(--z-hair);padding-top:.8rem"><strong>Speicherort</strong><p class="muted of-klein" style="margin:.2rem 0 .5rem"><span class="mono of-mono" style="font-size:.85rem">${esc(desktop.datenordner)}</span></p>
+          <button class="btn btn-sm of-btn of-btn--klein" data-speicherort>Ordner wählen …</button> <button class="btn btn-sm of-btn of-btn--klein" data-speicherort-standard>Standard</button><p class="form-msg of-meldung" id="ort-msg"></p></div>` : ""}
+      </details>
+
+      ${desktop ? "" : `<section class="card of-karte" aria-label="Werkzeuge"><h2 class="upd-h2">Werkzeuge</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:.5rem"><button class="btn btn-sm of-btn of-btn--klein" data-offline-pruefen>Offline-Bereitschaft prüfen</button>
+        <button class="btn btn-sm of-btn of-btn--klein" data-app-installieren>Als App installieren</button></div>
+        <p class="form-msg of-meldung" id="werkzeug-msg" role="status" aria-live="polite"></p></section>`}
+
+      <p class="upd-info"><button type="button" class="z-neben" data-hilfe="updates">Info und Hilfe</button></p>
+
+      <section class="upd-loeschen" aria-label="Daten löschen">
+        <h2 class="upd-h2">Daten löschen</h2>
         <div style="display:flex;flex-wrap:wrap;gap:.5rem">
-          ${desktop ? "" : `<button class="btn btn-sm of-btn of-btn--klein" data-offline-pruefen>Offline-Bereitschaft prüfen</button>
-          <button class="btn btn-sm of-btn of-btn--klein" data-app-installieren>Als App installieren</button>
-          <button class="btn btn-sm of-btn of-btn--klein" data-zuruecksetzen>Alles zurücksetzen</button>`}
-          <button class="btn btn-sm of-btn of-btn--klein" data-loeschen style="color:var(--accent);border-color:var(--accent)">Restlos löschen &amp; deinstallieren</button>
+          ${desktop ? "" : `<button class="btn btn-sm of-btn of-btn--klein" data-zuruecksetzen>Alles zurücksetzen</button>`}
+          <button class="btn btn-sm of-btn of-btn--klein upd-gefahr" data-loeschen>Restlos löschen &amp; deinstallieren</button>
         </div>
-        ${state.loeschenOffen ? `<div class="card of-karte" style="margin-top:.75rem;border-color:var(--accent)"><strong>Wirklich alles löschen?</strong>
+        ${state.loeschenOffen ? `<div class="card of-karte" style="margin-top:.75rem"><strong>Wirklich alles löschen?</strong>
           <p class="muted of-klein" style="margin:.3rem 0 .6rem">Pakete, Notizen, Checkliste und Einstellungen verschwinden von diesem Gerät. Das lässt sich nicht rückgängig machen. Zur Sicherheit bitte <strong>LÖSCHEN</strong> eintippen:</p>
           <div style="display:flex;gap:.5rem;flex-wrap:wrap"><input class="of-input" type="text" id="loeschen-wort" autocomplete="off" placeholder="LÖSCHEN" style="min-width:12rem"><button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-loeschen-jetzt>Jetzt löschen</button><button class="btn btn-sm of-btn of-btn--klein" data-loeschen-abbrechen>Abbrechen</button></div></div>` : ""}
-        <p class="muted of-klein" style="font-size:.85rem;margin:.6rem 0 0">${desktop ? "„Restlos löschen“ entfernt alle Pakete und Einstellungen der App – doppelt gesichert. Das Programm selbst deinstallierst du danach über das Betriebssystem." : "„Zurücksetzen“ löscht alles und lädt OFFLINE frisch. „Restlos löschen“ entfernt alle Daten und die Offline-Kopie – doppelt gesichert, damit nichts aus Versehen verschwindet."}</p>
-        <p class="form-msg of-meldung" id="werkzeug-msg" role="status" aria-live="polite"></p></div>
-      <p class="muted of-klein" style="margin-top:1rem;font-size:.9rem">So läuft ein Update: Katalog laden → Signatur prüfen → Manifest gegen Katalog und Signatur prüfen → nur geänderte Dateien laden → jede Datei gegen ihre Prüfsumme prüfen → erst dann den alten Stand ersetzen. Details: <a href="https://github.com/miksoda-cpu/OFFLINE/blob/claude/optimistic-hypatia-yymcne/docs/PAKETFORMAT.md" rel="noopener">Paketformat</a>.</p>`;
+        ${desktop ? '<p class="form-msg of-meldung" id="werkzeug-msg" role="status" aria-live="polite"></p>' : ""}
+      </section>`;
   },
 };
 
-function appUpdateKarte() {
+/** Desktop: App-Version und Suche nach einer neuen Version, als Teil von „Stand“ (seit 0.5.2). */
+function appUpdateZeile() {
   const u = state.appUpdate ?? { status: "" };
   let inhalt;
   switch (u.status) {
@@ -791,27 +818,50 @@ function appUpdateKarte() {
   const ortProblem = desktop?.info?.ort_problem;
   if (ortProblem) inhalt = `<span class="tag tag-warn of-plakette of-plakette--warnung">Falscher Ort</span> <span>${esc(ortProblem)}</span><br><span class="muted mono of-klein of-mono" style="font-size:.8rem">${esc(desktop.info.ort)}</span>`;
   const laeuft = u.status === "pruefe" || u.status === "laedt" || !!ortProblem;
-  return `<div class="card of-karte" style="margin-top:1rem"><div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap"><h3 style="margin:0">App-Update</h3>
-    <button class="btn btn-sm of-btn of-btn--klein" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>
-    <p style="margin:.6rem 0 0" id="app-update-inhalt">${inhalt}</p>${neuesKnopf()}</div>`;
-}
-/** Web-Version: dieselbe Box ohne Updater (die Seite ist nach dem Neuladen aktuell), mit „Was ist neu“. */
-function webAppKarte() {
-  return `<div class="card of-karte" style="margin-top:1rem"><h3 style="margin:0">App-Update</h3>
-    <p style="margin:.6rem 0 0"><span class="muted of-klein">Web-App ${esc(APP_VERSION)}. Im Browser ist die App nach dem Neuladen der Seite aktuell.</span></p>${neuesKnopf()}</div>`;
+  return `<div class="upd-zeile upd-app"><span>App ${esc(APP_VERSION)} · <span id="app-update-inhalt">${inhalt}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>`;
 }
 
-// ---------- Was ist neu (web/neues.json, kommt mit der App, ohne Netz lesbar) ----------
-// Kein Aufdrängen: nichts geht von selbst auf. Ein kleiner Punkt am Knopf, bis man die Seite zur aktuellen Version geöffnet hat.
-const neuesUngesehen = () => speicher.get("neues-gesehen", null) !== appVersion();
-function neuesKnopf() {
-  return `<div class="neues-fuss"><a class="btn btn-sm of-btn of-btn--klein neues-knopf" href="#neues">Was ist neu${neuesUngesehen() ? '<span class="neues-punkt" aria-label="neu"></span>' : ""}</a></div>`;
+// ---------- Was ist neu (0.5.2): Reiter App (web/neues.json, kommt mit der App) und Inhalte (Katalog), roter Punkt ----------
+/** Was ist noch nicht angesehen? Beim ersten Mal gelten die Inhalte des Katalogs als gesehen (kein Punkt für Altes). */
+function neuStand() {
+  const k = katalogAusSpeicher()?.katalog;
+  if (k && speicher.get("inhalte-gesehen", null) === null) speicher.set("inhalte-gesehen", inhalteStart(k));
+  return neuUngesehen({ appVersion: appVersion(), neuesGesehen: speicher.get("neues-gesehen", null), katalog: k, inhalteGesehen: speicher.get("inhalte-gesehen", null) });
 }
+const datumLang = (d) => new Date(String(d).length === 10 ? d + "T12:00:00" : d).toLocaleDateString("de-AT", { day: "numeric", month: "long", year: "numeric" });
+/** Einträge eines Reiters; n = wie viele (null = alle). */
+function neuListe(reiter, n, k) {
+  if (reiter === "app") {
+    if (!state.neues) return `<p class="muted of-klein">Einen Moment …</p>`;
+    const v = (state.neues.versionen ?? []).slice(0, n ?? undefined);
+    if (!v.length) return `<p class="muted of-klein">Die Liste lässt sich gerade nicht lesen.</p>`;
+    return `<ul class="upd-liste">${v.map((x) => `<li><p class="upd-kopf"><strong>Version ${esc(x.version)}</strong> <span class="muted of-klein">${esc(datumLang(x.datum))}</span></p><ul>${x.punkte.map((p) => `<li>${esc(p)}</li>`).join("")}</ul></li>`).join("")}</ul>`;
+  }
+  const a = inhaltsAenderungen(k).slice(0, n ?? undefined);
+  if (!a.length) return `<p class="muted of-klein">Noch keine Änderungen aus dem Katalog.</p>`;
+  return `<ul class="upd-liste">${a.map((x) => `<li><p class="upd-kopf"><strong>${esc(x.titel)}</strong> <span class="muted of-klein">${esc(x.version)} · ${esc(datumLang(x.erstellt))}</span></p><p class="muted of-klein" style="margin:0">${esc(x.aenderungen)}</p></li>`).join("")}</ul>`;
+}
+/** Punkt am Menüpunkt „Updates & Abo“, solange etwas Neues nicht angesehen ist. */
+function neuPunktMenue() {
+  const a = document.querySelector('#nav a[data-route="updates"]');
+  if (!a) return;
+  const an = neuStand().irgendwas, p = a.querySelector(".neu-punkt");
+  if (an && !p) a.insertAdjacentHTML("beforeend", '<span class="neu-punkt" aria-label="ungelesen"></span>');
+  if (!an && p) p.remove();
+}
+function neuAlleZeigen(reiter) {
+  blattOeffnen(reiter === "app" ? "Was ist neu · App" : "Was ist neu · Inhalte", neuListe(reiter, null, katalogAusSpeicher()?.katalog));
+}
+function hilfeZeigen(seite) {
+  const t = HILFE[seite]; if (!t) return;
+  blattOeffnen("Info und Hilfe", t.map(([f, a]) => `<h3 class="hilfe-frage">${esc(f)}</h3><p class="hilfe-antwort">${esc(a)}</p>`).join(""));
+}
+
 async function neuesLaden() {
   if (state.neues) return;
   try { state.neues = await (await fetch("/neues.json", { cache: "no-cache" })).json(); }
   catch { state.neues = { versionen: [], fehler: true }; }
-  if (location.hash === "#neues") render();
+  if (location.hash === "#neues" || location.hash === "#updates") render();
 }
 
 async function appUpdatePruefen() {
@@ -846,11 +896,11 @@ function intervallText() {
 async function pruefeUpdates({ still = false } = {}) {
   if (!navigator.onLine) { state.meldung = { art: "warn", titel: "Offline", text: "Kein Internet – das Abo prüft beim nächsten Mal, wenn du online bist." }; if (!still) render(); return null; }
   try {
-    const { katalog: k, veraltet, schluessel } = await ladeKatalog();
+    const { katalog: k, veraltet } = await ladeKatalog();
     const updates = verfuegbareUpdates(k);
     state.meldung = veraltet
       ? { art: "warn", titel: "Katalog veraltet", text: "Der Katalog ist abgelaufen. Installierte Inhalte funktionieren weiter." }
-      : { art: "ok", titel: "Geprüft", text: `Katalog signiert mit <span class="mono of-mono">${esc(schluessel)}</span>. ${updates.length ? `${updates.length} Update${updates.length > 1 ? "s" : ""} verfügbar.` : `Alle Pakete aktuell. Nächste Prüfung: ${intervallText()}.`}` };
+      : { art: "ok", titel: "Geprüft", text: `${updates.length ? `${updates.length} Update${updates.length > 1 ? "s" : ""} verfügbar.` : "Alles aktuell."} Katalog vom ${datum(k.erstellt)}.` }; // Signatur und Schlüssel: „Info und Hilfe“ (0.5.2)
     return k;
   } catch (e) {
     state.meldung = { art: "fehler", titel: "Abgelehnt", text: esc(e.message) };
@@ -1806,6 +1856,7 @@ const menu = document.getElementById("menu");
 
 function render() {
   const route = location.hash.slice(1) || "start";
+  blattWeg();
   if (route === "modul") { modulAnsichtZeigen(); return; }
   modulAnsichtVerbergen();
   if (route !== "happen" && pauseFokus) { pauseFokus.ctrl?.abbrechen(); pauseFokus = null; } // Happen verlassen (Zurück, Navigation): zählt als abgebrochen
@@ -1840,6 +1891,7 @@ function render() {
   menu.setAttribute("aria-expanded", "false");
   document.getElementById("tab-mehr")?.setAttribute("aria-expanded", "false"); document.getElementById("sheet-hinter").hidden = true;
   document.querySelectorAll("#tabbar a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
+  neuPunktMenue();
 }
 
 main.addEventListener("change", (e) => {
@@ -1902,6 +1954,9 @@ function beiKlick(e) {
   if (b.hasAttribute("data-app-neustart")) client.appNeustart();
   if (b.id === "jetzt") { b.disabled = true; b.textContent = "Prüfe …"; desktop ? updatesJetztDesktop() : pruefeUpdates(); }
   if (b.hasAttribute("data-abbrechen")) client.abbrechen();
+  if (b.dataset.neuReiter) { state.neuReiter = b.dataset.neuReiter; return render(); }
+  if (b.dataset.neuAlle) return neuAlleZeigen(b.dataset.neuAlle);
+  if (b.dataset.hilfe) return hilfeZeigen(b.dataset.hilfe);
   if (b.hasAttribute("data-offline-pruefen")) offlinePruefen();
   if (b.hasAttribute("data-app-installieren")) appInstallieren();
   if (b.hasAttribute("data-zuruecksetzen")) zuruecksetzen();

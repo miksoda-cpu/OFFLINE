@@ -1,5 +1,14 @@
 # Änderungen
 
+## 0.5.2 · 05.10.2026 · Seite „Updates & Abo“ aufgeräumt
+
+- **Neue Reihenfolge** (Auftrag 2026-10-05-updates-seite): Stand (ein Satz, „Jetzt prüfen“, verfügbare Updates, am Desktop die App-Version mit „Nach neuer Version suchen“) · Was ist neu · Einstellungen (zugeklappt, mit Zeile zum aktuellen Stand; Wie oft?, Update-Abo, Nur im WLAN, Zeitfenster, am Desktop Speicherort) · Werkzeuge (Offline-Bereitschaft, Als App installieren) · Info und Hilfe · Daten löschen (abgesetzt mit Haarlinie, doppelt gesichert wie bisher). Signatur- und Schlüsseldetails und der lange Satz am Ende sind weg; die Meldung nach „Jetzt prüfen“ ist kurz.
+- **Was ist neu** in einem Block: Reiter App (`web/neues.json`) und Inhalte (Änderungen im Katalog), je drei Einträge, „Alle anzeigen“ im Blatt.
+- **Roter Punkt** am Block, am Reiter und am Menüpunkt „Updates & Abo“, solange etwas nicht angesehen ist (`web/neuigkeiten.js`); weg nach dem Ansehen des Reiters. Keine Zahl, kein Abzeichen. Wer neu ist, bekommt keinen Punkt für alte Paketänderungen.
+- **Das Blatt** (`web/blatt.js`): am Handy von unten, ab 821 px als Fenster in der Mitte, eigener Bildlauf (`overscroll-behavior: contain`), ✕, Escape und die Zurück-Taste schließen. Seite dahinter gesperrt.
+- **Info und Hilfe** (`web/hilfe.js`): Bills zehn Fragen nach ASD-STE100, als Blatt. Muster für weitere Seiten.
+- Tests `web/neuigkeiten.test.mjs` (in der CI), Windows-Probe prüft die Seite und das Blatt.
+
 ## 0.5.1 · 05.10.2026 · Nacharbeiten zu 0.4.2 bis 0.5.0
 
 - **`wir` still nachladen** (Auftrag 2026-10-05-01): Fehlt `buch` in den installierten Tipps, holt die App beim Start einmal die neuere Ausgabe aus dem Katalog. Bestehende Nutzer sehen „Aus dem Lumi-Buch“ sofort.
