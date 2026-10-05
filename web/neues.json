@@ -2,6 +2,15 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.6.1",
+      "datum": "2026-10-05",
+      "punkte": [
+        "Die App kann jetzt auch Pakete mit Bildern sicher auf dem Gerät ablegen, im Browser in einem eigenen Speicher für Bilder.",
+        "Für dich ändert sich in dieser Version sonst wenig: Sie bereitet weitere Inhalte vor, die Fachleute vor der Veröffentlichung prüfen.",
+        "Deine Daten, Einstellungen und Pakete bleiben beim Update unverändert."
+      ]
+    },
+    {
       "version": "0.6.0",
       "datum": "2026-10-05",
       "punkte": [

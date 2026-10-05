@@ -169,20 +169,45 @@ export async function installiereAusDateien(eintrag, dateien) {
   const fehler = manifestPruefenStruktur(manifest);
   if (fehler.length) throw new Error("Manifest ungültig: " + fehler[0]);
   if (manifest.id !== eintrag.id || manifest.version !== eintrag.version) throw new Error("Manifest gehört zu einem anderen Paket");
-  const inhalt = {};
+  const inhalt = {}, binaer = [];
   for (const datei of manifest.dateien) {
     const b = finde(datei.pfad);
     if (!b || b.length !== datei.groesse || (await sha256Hex(b)) !== datei.sha256) throw new Error(`Prüfsumme falsch: ${datei.pfad}`);
-    inhalt[datei.pfad] = new TextDecoder().decode(b);
+    if (BINAER.test(datei.pfad)) binaer.push(datei.pfad); else inhalt[datei.pfad] = new TextDecoder().decode(b);
   }
-  const paket = { manifest, inhalt, installiert: new Date().toISOString(), schluessel: s.schluessel };
+  // Bilder (0.6.1) nicht in localStorage, sondern in den Cache-Speicher des Browsers (Binärdaten, mehr Platz)
+  if (binaer.length) {
+    const c = await caches.open(BILD_SPEICHER);
+    for (const pfad of binaer) await c.put(bildSchluessel(eintrag.id, pfad), new Response(finde(pfad), { headers: { "Content-Type": MIME[pfad.split(".").pop().toLowerCase()] ?? "application/octet-stream" } }));
+    for (const alt of installiertesPaket(eintrag.id)?.binaer ?? []) if (!binaer.includes(alt)) await c.delete(bildSchluessel(eintrag.id, alt));
+  }
+  const paket = { manifest, inhalt, ...(binaer.length ? { binaer } : {}), installiert: new Date().toISOString(), schluessel: s.schluessel };
   speicher.set("paket:" + eintrag.id, paket);
   if (!installiertesPaket(eintrag.id)) throw new Error("Der Speicher des Browsers ist voll");
   return { paket };
 }
 
 export function entferne(id) {
+  const binaer = installiertesPaket(id)?.binaer ?? [];
   speicher.del("paket:" + id);
+  if (binaer.length && typeof caches !== "undefined") caches.open(BILD_SPEICHER).then((c) => Promise.all(binaer.map((p) => c.delete(bildSchluessel(id, p))))).catch(() => {});
+}
+
+// ---------- Bilder aus Paketen (0.6.1) ----------
+const BINAER = /\.(webp|png|jpe?g|gif)$/i;
+const MIME = { webp: "image/webp", png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif" };
+export const BILD_SPEICHER = "offline-paket-bilder";
+const bildSchluessel = (id, pfad) => `/paket-bild/${encodeURIComponent(id)}/${pfad.split("/").map(encodeURIComponent).join("/")}`;
+const bildUrls = new Map();
+/** Adresse eines Bildes aus einem installierten Paket (Blob-URL aus dem Cache-Speicher), sonst null. */
+export async function bildUrl(id, pfad) {
+  const k = bildSchluessel(id, pfad);
+  if (bildUrls.has(k)) return bildUrls.get(k);
+  try {
+    const r = await (await caches.open(BILD_SPEICHER)).match(k);
+    if (!r) return null;
+    const url = URL.createObjectURL(await r.blob()); bildUrls.set(k, url); return url;
+  } catch { return null; }
 }
 
 /** Welche installierten Pakete haben im Katalog eine neuere Version? */

@@ -1,0 +1,21 @@
+{
+  "id": "naturheilkunde-bilder",
+  "kanal": "intern",
+  "titel": "Naturheilkunde: Bilder (in Prüfung)",
+  "beschreibung": "Alte Pflanzentafeln (Köhler, Thomé) und freie Fotos von Wikimedia Commons zum Paket Naturheilkunde. Jedes Bild mit Urheber, Lizenz und Quelle.",
+  "art": "inhalt",
+  "sprache": "de-AT",
+  "lizenz": "Tafeln gemeinfrei; Fotos CC0, CC BY oder CC BY-SA laut bildnachweise.json",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "kategorie": "wissen",
+  "alter_ab": 18,
+  "app_min": "0.6.1",
+  "aenderungen": "Erste interne Fassung der Bilder.",
+  "quellen": [
+    { "id": "commons", "name": "Wikimedia Commons (Einzelnachweise in inhalt/bildnachweise.json)", "url": "https://commons.wikimedia.org" }
+  ],
+  "braucht_netz": false
+}

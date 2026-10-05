@@ -222,6 +222,8 @@ export function abendMerken(gelernt, jetzt) {
   for (const alt of Object.keys(a).sort().slice(0, -14)) delete a[alt];
   return true;
 }
+/** Hier schweigt die Lumi: Notfall und (0.6.1) Naturheilkunde mit der Erste-Hilfe-Karte. */
+export const STILL = ["notfall", "natur"];
 const WACH_MS = 60000; // ein Stups weckt sie für eine Minute
 const TAKT = { normal: 90, seltener: 180, aus: 0 };
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -403,7 +405,7 @@ export class Wesen {
     clearTimeout(this.timer); clearInterval(this.tickTimer);
     if (!this.aktiv() || this.e.takt === "aus") return;
     const versuch = () => {
-      if (this.sitzung.tipps >= 12 || this.ansichtName === "notfall" || document.hidden) return;
+      if (this.sitzung.tipps >= 12 || STILL.includes(this.ansichtName) || document.hidden) return;
       if (Date.now() - this.letzteEingabe > 120000) return; // Stillstand: pausieren
       if (this.nachtruhe()) return; // sie schläft
       if (this.fragtNachNamen() || this.aktuellerTipp) return; // vor dem Namen nur die Frage; nie zwei Sätze zugleich
@@ -416,7 +418,7 @@ export class Wesen {
   ansicht(name) {
     const vorher = this.ansichtName; this.ansichtName = name;
     if (name === "start") { const toast = document.getElementById("wesen-toast"); if (toast) { toast.remove(); this.aktuellerTipp = null; } this.planen(); return; }
-    if (!this.aktiv() || this.nachtruhe() || this.fragtNachNamen() || name === vorher || this.ansichtTippGezeigt.has(name) || name === "notfall" || this.sitzung.tipps >= 12) return;
+    if (!this.aktiv() || this.nachtruhe() || this.fragtNachNamen() || name === vorher || this.ansichtTippGezeigt.has(name) || STILL.includes(name) || this.sitzung.tipps >= 12) return;
     const t = this.waehleTipp(name); if (t) { this.ansichtTippGezeigt.add(name); this.zeigeTipp(t); }
   }
   /** Stern im Log = Merken (Nachtrag 2026-10-04-01a): ins Heft legen oder wieder herausnehmen. */

@@ -88,6 +88,14 @@ export async function installiereAusDateien(eintrag, dateien) {
   return { paket: cache.get(eintrag.id) };
 }
 /** Schlüssel des internen Kanals: nur im Datenordner dieses Geräts (nie im Tresor, nie in einer Sicherung). */
+/** Bild aus einem installierten Paket (0.6.1): über den lokalen Dateiserver des Kerns (nur 127.0.0.1). */
+let lokalWurzel = null;
+export async function bildUrl(id, pfad) {
+  const p = cache.get(id); if (!p) return null;
+  lokalWurzel ??= await invoke("lokal_url");
+  if (!lokalWurzel) return null;
+  return `${lokalWurzel}${encodeURIComponent(p.ordner.split(/[\\/]/).pop())}/${pfad.split("/").map(encodeURIComponent).join("/")}`;
+}
 export const internLesen = () => invoke("intern_lesen");
 export const internSetzen = (stand) => invoke("intern_setzen", { stand });
 

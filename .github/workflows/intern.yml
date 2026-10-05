@@ -42,6 +42,14 @@ jobs:
           for v in pakete/*/verschluesselt; do node werkzeug/intern.mjs entschluesseln "$v" "$(dirname "$v")" > /dev/null; done
           node --test web/naturheilkunde.test.mjs web/intern.test.mjs
 
+      # Bilder (0.6.1): nach der geprüften Auswahl von Commons laden (sha1 muss stimmen, Lizenz wird erneut geprüft), WebP
+      - name: Bilder von Wikimedia Commons laden
+        run: |
+          set -euo pipefail
+          pip install --quiet pillow
+          for b in pakete/*/bilder-holen.mjs; do [ -f "$(dirname "$b")/auswahl.json" ] && node "$b" laden; done
+          node --test web/naturbilder.test.mjs
+
       - name: Interne Pakete bauen, prüfen, Katalog signieren
         env:
           OFFLINE_SCHLUESSEL_NAME: offline-ci

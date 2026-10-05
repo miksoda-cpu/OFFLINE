@@ -10,3 +10,9 @@ app/src-tauri/binaries/*
 pakete/naturheilkunde/quelle/
 pakete/naturheilkunde/inhalt/
 pakete/naturheilkunde/unzugeordnet.md
+pakete/naturheilkunde-bilder/inhalt/
+pakete/naturheilkunde-bilder/auswahl.json
+pakete/naturheilkunde-bilder/verworfen.json
+pakete/naturheilkunde-bilder/laden-fehlt.json
+pakete/naturheilkunde-bilder/bilder-bericht.md
+pakete/naturheilkunde-bilder/.roh/

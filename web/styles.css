@@ -672,3 +672,23 @@ body.blatt-offen { overflow: hidden; }
 .intern-feld input { flex: 1; min-width: 12rem; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .natur-text ul, .natur-text ol { padding-left: 1.1rem; margin: .4rem 0; }
+
+/* Naturheilkunde-Bilder (0.6.1): Tafel oben, Foto darunter; giftiger Doppelgänger mit rotem Rand */
+.natur-bilder { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin: .4rem 0 .8rem; align-items: start; }
+.natur-bilder .natur-bild--tafel { grid-column: 1 / -1; }
+.natur-bilder .natur-bild--foto img { aspect-ratio: 1; object-fit: cover; }
+.natur-bild { margin: 0; }
+.natur-bild-knopf { display: block; width: 100%; padding: 0; border: 1px solid var(--z-hair); border-radius: var(--z-radius); background: var(--z-karte); cursor: zoom-in; overflow: hidden; }
+.natur-bild img { display: block; width: 100%; height: auto; max-height: 70vh; object-fit: contain; }
+.natur-bild figcaption { font-size: .78rem; color: var(--muted); margin-top: .25rem; }
+.natur-bild--gift .natur-bild-knopf { border: 3px solid var(--accent); }
+.natur-bild--fehlt { display: none; }
+.natur-bild--klein { width: 64px; flex: 0 0 64px; }
+.natur-bild--klein img { height: 64px; object-fit: cover; }
+.natur-mitbild { flex-direction: row !important; align-items: center; gap: .6rem; }
+.natur-bildsatz { font-weight: 600; margin: .2rem 0 .8rem; }
+.natur-nachweise { list-style: none; margin: .4rem 0 0; padding: 0; }
+.natur-nachweise li { display: flex; gap: .7rem; align-items: flex-start; padding: .5rem 0; border-bottom: 1px solid var(--z-hair); overflow-wrap: anywhere; }
+.natur-gross { margin: 0; }
+.natur-gross img { width: 100%; height: auto; }
+.natur-text .natur-nachweise { padding-left: 0; }

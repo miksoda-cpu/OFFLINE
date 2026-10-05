@@ -68,6 +68,37 @@ export function ausschnitt(text, q) {
   return (i ? "… " : "") + s.slice(i, i + 180) + (s.length > i + 180 ? " …" : "");
 }
 
+// ---------- Bilder (0.6.1, Paket „naturheilkunde-bilder“, Auftrag 2026-10-05-11) ----------
+// Tafeln (Köhler, Thomé) und freie Fotos von Commons, jedes mit vollständigem Nachweis aus bildnachweise.json. Ohne das
+// Bilderpaket geht alles weiter, nur ohne Bilder. Bilder lädt app.js nach dem Zeichnen (img[data-natur-bild]).
+export const BILD_SATZ = "Ein Bild reicht zum Bestimmen nicht. Im Zweifel nicht essen.";
+export const ERLAUBTE_LIZENZ = /^(gemeinfrei|CC0|CC BY( \d(\.\d)?)?|CC BY-SA( \d(\.\d)?)?)$/;
+/** Bilder je Eintrag: { nachEintrag: Map(id → [bild]), alle } aus bildnachweise.json. Bilder ohne erlaubte Lizenz fallen weg. */
+export function bilderIndex(nachweise) {
+  const alle = (nachweise?.bilder ?? []).filter((b) => b.datei && b.urheber && b.quelle && ERLAUBTE_LIZENZ.test(b.lizenz));
+  const nachEintrag = new Map();
+  for (const b of alle) for (const id of b.eintraege ?? []) nachEintrag.set(id, [...(nachEintrag.get(id) ?? []), b]);
+  return { alle, nachEintrag };
+}
+/**
+ * Arten einer Warnkarte, die giftige Doppelgänger sind: alle ohne eigene Pflanzenkarte in Teil 2–5 (Bäume, Kräuter, Beeren,
+ * Außereuropäisches), die nicht auf „Warnung“ steht. Die Marke „giftig“ zählt hier nicht: Der Umwandler setzt sie auch bei
+ * Pflanzen, deren Karte einen giftigen Doppelgänger nennt (Bärlauch). Teil 7–9 (Überlieferung) zählt nicht.
+ */
+export function giftigeArt(d, art) {
+  return !d.eintraege.some((e) => e.teil >= 2 && e.teil <= 5 && e.belegbarkeit !== "warnung" && String(e.wiss_name ?? "").includes(art));
+}
+/** Bilder eines Eintrags in der Reihenfolge der Anzeige: bei Warnkarten giftige Arten zuerst; sonst Tafel vor Foto. */
+export function eintragBilder(d, e, bi) {
+  const liste = [...(bi?.nachEintrag.get(e.id) ?? [])];
+  const gift = (b) => istWarnung(e) && giftigeArt(d, b.art);
+  return liste.map((b) => ({ ...b, gift: gift(b) })).sort((a, b) => (b.gift - a.gift) || ((a.typ === "tafel" ? 0 : 1) - (b.typ === "tafel" ? 0 : 1)));
+}
+const urheberText = (u) => String(u ?? "").replace(/[\s;,·]+$/, "");
+const lesbar = (url) => { try { return decodeURI(url); } catch { return url; } };
+export const bildZeile = (b) => b.typ === "tafel" ? `Tafel: ${b.werk ?? ""}${b.jahr ? `, ${b.jahr}` : ""} · ${b.lizenz}` : `Foto: ${urheberText(b.urheber)} · ${b.lizenz}`;
+const bildHtml = (b, klein = false) => `<figure class="natur-bild natur-bild--${b.typ === "tafel" ? "tafel" : "foto"}${b.gift ? " natur-bild--gift" : ""}${klein ? " natur-bild--klein" : ""}"><button type="button" class="natur-bild-knopf" data-natur-gross="${esc(b.datei)}" aria-label="Bild vergrößern: ${esc(b.art)}"><img data-natur-bild="${esc(b.datei)}" alt="${esc(`${b.typ === "tafel" ? "Pflanzentafel" : "Foto"}: ${b.art}`)}" loading="lazy"></button>${klein ? "" : `<figcaption>${esc(bildZeile(b))}</figcaption>`}</figure>`;
+
 // ---------- Markdown (klein, sicher: erst escapen, dann wenige Formen) ----------
 const inline = (t) => esc(t).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/(^|[^*])\*([^*\s][^*]*?)\*(?!\*)/g, "$1<em>$2</em>").replace(/`([^`]+)`/g, "<code>$1</code>");
 export function mdHtml(md) {
@@ -131,14 +162,22 @@ function mittelUndWarnungen(r, handbuchLink, warum) {
 }
 
 /** Die ganze Seite. z: { weg, beschwerde, mit, merkmal, anwendung, teil, eintrag, kapitel, q, liest } */
-export function naturHtml(d, z) {
+export function naturHtml(d, z, bi = null) {
+  /** Listenzeile mit kleinem Bild (giftig: das Bild der giftigen Art, roter Rand). */
+  const mitBild = (e, warn) => {
+    const b = bi ? eintragBilder(d, e, bi)[0] : null;
+    return b ? `<li class="natur-mitbild">${bildHtml({ ...b, gift: warn }, true)}<span>${eintragZeile(e, warn).replace(/^<li>|<\/li>$/g, "")}</span></li>` : eintragZeile(e, warn);
+  };
   const kopf = `<div class="page-head of-seitenkopf"><div><h1 style="font-size:2rem">Naturheilkunde</h1></div></div>${ersteHilfeHtml(d, (z.weg ?? "start") !== "start")}`;
   const zurueckZu = `<p class="natur-zurueck"><button type="button" class="z-neben" data-natur-zurueck>← zurück</button></p>`;
   const vorlesen = (an) => `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-natur-vorlesen>${an ? "Vorlesen beenden" : "Vorlesen"}</button>`;
   if (z.weg === "eintrag") {
     const e = d.eintraege.find((x) => x.id === z.eintrag);
     if (!e) return kopf + zurueck();
-    return `${kopf}${zurueckZu}<article class="card of-karte natur-text"><h2>${esc(e.name)}</h2>${e.wiss_name ? `<p class="muted"><em>${esc(e.wiss_name)}</em></p>` : ""}${plaketten(e)}${istWarnung(e) ? `<p class="natur-warnhinweis">Nur als Warnung. Nie als Mittel.</p>` : ""}<p>${vorlesen(z.liest)}</p>${mdHtml(e.text)}</article>`;
+    const bilder = eintragBilder(d, e, bi);
+    return `${kopf}${zurueckZu}<article class="card of-karte natur-text"><h2>${esc(e.name)}</h2>${e.wiss_name ? `<p class="muted"><em>${esc(e.wiss_name)}</em></p>` : ""}${plaketten(e)}${istWarnung(e) ? `<p class="natur-warnhinweis">Nur als Warnung. Nie als Mittel.</p>` : ""}
+      ${bilder.length ? `<div class="natur-bilder">${bilder.map((b) => bildHtml(b)).join("")}</div>${bilder.some((b) => b.gift) || istWarnung(e) ? `<p class="natur-bildsatz">${esc(BILD_SATZ)}</p>` : ""}` : ""}
+      <p>${vorlesen(z.liest)}</p>${mdHtml(e.text)}</article>`;
   }
   if (z.weg === "kapitel") {
     const k = d.kapitel.find((x) => x.id === z.kapitel);
@@ -159,8 +198,8 @@ export function naturHtml(d, z) {
     const r = z.merkmal ? findeErgebnis(d, z.merkmal) : null;
     return `${kopf}${zurueck()}<section class="card of-karte"><h2>Ich finde …</h2><p class="muted of-klein">Nach Aussehen. Kein Foto, keine Bestimmung per Kamera. Nur sammeln, was du sicher kennst.</p>
       ${chips(d.waldfunde_index.map((w) => [w.merkmal, w.merkmal]), "data-natur-merkmal", z.merkmal)}
-      ${r ? `${r.doppelgaenger.length ? `<h3>Giftige Doppelgänger zuerst</h3><ul class="natur-liste">${r.doppelgaenger.map((e) => eintragZeile(e, true)).join("")}</ul>` : ""}
-        <h3>Was es sein kann</h3>${r.kandidaten.length ? `<ul class="natur-liste">${r.kandidaten.map((e) => eintragZeile(e, istWarnung(e))).join("")}</ul>` : `<p class="muted">Keine Einträge.</p>`}
+      ${r ? `${r.doppelgaenger.length ? `<h3>Giftige Doppelgänger zuerst</h3><ul class="natur-liste">${r.doppelgaenger.map((e) => mitBild(e, true)).join("")}</ul>${bi ? `<p class="natur-bildsatz">${esc(BILD_SATZ)}</p>` : ""}` : ""}
+        <h3>Was es sein kann</h3>${r.kandidaten.length ? `<ul class="natur-liste">${r.kandidaten.map((e) => mitBild(e, istWarnung(e))).join("")}</ul>` : `<p class="muted">Keine Einträge.</p>`}
         <p class="muted of-klein">${esc(NICHTS_GEPRUEFT)} Die Einträge sind zum Nachlesen, nicht zur Anwendung.</p>
         <p><button type="button" class="z-neben" data-natur-index="finde">Im Handbuch nachlesen: ${esc(r.index.merkmal)}</button></p>` : ""}</section>`;
   }
@@ -168,6 +207,13 @@ export function naturHtml(d, z) {
     const r = z.anwendung ? anwendungErgebnis(d, z.anwendung) : null;
     return `${kopf}${zurueck()}<section class="card of-karte"><h2>Anwendung</h2>${chips(ANWENDUNGEN, "data-natur-anwendung", z.anwendung)}
       ${r ? mittelUndWarnungen(r, `<p><button type="button" class="z-neben" data-natur-weg="handbuch">Im Handbuch nachlesen</button></p>`, "Pflanzen mit dieser Anwendung, die giftig oder gefährlich sind.") : ""}</section>`;
+  }
+  if (z.weg === "bildnachweise") {
+    const liste = [...(bi?.alle ?? [])].sort((a, b) => a.art.localeCompare(b.art) || a.typ.localeCompare(b.typ));
+    return `${kopf}${zurueck("handbuch", "Handbuch")}<section class="card of-karte natur-text"><h2>Bildnachweise</h2>
+      <p class="muted of-klein">Alle Bilder kommen von Wikimedia Commons: alte Pflanzentafeln (gemeinfrei) und freie Fotos (CC0, CC BY, CC BY-SA). Keine KI-Bilder.</p>
+      <ul class="natur-nachweise">${liste.map((b) => `<li>${bildHtml(b, true)}<div><strong>${esc(b.art)}</strong> · ${b.typ === "tafel" ? "Tafel" : "Foto"}<br>
+        <span class="of-klein">${b.typ === "tafel" ? `${esc(b.werk ?? "")}${b.jahr ? `, ${b.jahr}` : ""}${b.jahr_laut ? ` (Jahr laut ${esc(b.jahr_laut)})` : ""} · ` : ""}Urheber: ${esc(urheberText(b.urheber))}${b.urheber_laut && b.urheber_laut !== "Dateiblatt" ? ` (laut ${esc(b.urheber_laut)})` : ""} · Lizenz: ${esc(b.lizenz)}<br>Quelle: ${esc(lesbar(b.quelle))}</span></div></li>`).join("")}</ul></section>`;
   }
   if (z.weg === "handbuch") {
     const treffer = z.q ? suche(d, z.q) : null;
@@ -179,7 +225,8 @@ export function naturHtml(d, z) {
         : teil ? `<p><button type="button" class="z-neben" data-natur-teil="">← Inhalt</button></p><h3>Teil ${teil.nr}: ${esc(teil.titel)}</h3>
           ${teil.kapitel.length ? `<h4>Kapitel</h4><ul class="natur-liste">${teil.kapitel.map(kapitel).filter(Boolean).map((k) => `<li><button type="button" class="natur-link" data-natur-kapitel="${esc(k.id)}">${esc(k.titel)}</button></li>`).join("")}</ul>` : ""}
           ${teil.eintraege.length ? `<h4>Einträge</h4><ul class="natur-liste">${teil.eintraege.map(eintrag).filter(Boolean).map((e) => eintragZeile(e, istWarnung(e))).join("")}</ul>` : ""}`
-        : `<ol class="natur-inhalt" start="0">${d.teile.map((t) => `<li><button type="button" class="natur-link" data-natur-teil="${t.nr}">${esc(t.titel)}</button> <span class="muted of-klein">${t.eintraege.length ? `${t.eintraege.length} Einträge` : `${t.kapitel.length} Kapitel`}</span></li>`).join("")}</ol>`}
+        : `<ol class="natur-inhalt" start="0">${d.teile.map((t) => `<li><button type="button" class="natur-link" data-natur-teil="${t.nr}">${esc(t.titel)}</button> <span class="muted of-klein">${t.eintraege.length ? `${t.eintraege.length} Einträge` : `${t.kapitel.length} Kapitel`}</span></li>`).join("")}</ol>
+          ${bi?.alle.length ? `<p><button type="button" class="natur-link" data-natur-weg="bildnachweise">Bildnachweise</button> <span class="muted of-klein">${bi.alle.length} Bilder</span></p>` : ""}`}
       </section>`;
   }
   return `${kopf}<section class="natur-wege">

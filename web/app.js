@@ -10,7 +10,7 @@ import { ungesehen as neuUngesehen, alsGesehen as neuAlsGesehen, inhaltsAenderun
 import { HILFE } from "./hilfe.js";
 import { pruefeSignatur } from "./paket-client.js";
 import { schluesselAusLink, internKatalog, internPaketDateien, KanalAbgelaufen, kanalZeile, WEB_BASIS as INTERN_WEB_BASIS } from "./intern.js";
-import { naturHtml, naturKlick, vorleseTeile as naturVorleseTeile } from "./natur.js";
+import { naturHtml, naturKlick, vorleseTeile as naturVorleseTeile, bilderIndex as naturBilderIndexBauen, bildZeile as naturBildZeile } from "./natur.js";
 import { meinTag, schlussVorbei as meinTagSchlussVorbei, SCHLUSS_ZEITEN, AUFSTEHEN_ZEITEN, ARTEN as MEIN_TAG_ARTEN, zeitText, vorschlag as meinTagVorschlag, vorschlagText, vorschlagAntwort } from "./meintag.js";
 import { blattOeffnen, blattWeg } from "./blatt.js";
 import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE, LUECKE_WARTET as BUCH_LUECKE_WARTET, wartendeAbsaetze as buchWartend, mitSchluss as buchMitSchluss } from "./buch.js";
@@ -37,7 +37,7 @@ async function internFreischalten(schluessel) {
   if (k) { history.replaceState(null, "", `${location.pathname}${location.search}#updates`); await internFreischalten(k); }
   else if (location.hash.startsWith("#kanal=")) history.replaceState(null, "", `${location.pathname}${location.search}#updates`);
 }
-const APP_VERSION = "0.6.0";
+const APP_VERSION = "0.6.1";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -185,6 +185,21 @@ if (desktop) document.getElementById("proto-banner")?.remove();
 // Naturheilkunde (0.6.0): im Menü nur, wenn das Paket auf diesem Gerät liegt – sonst gibt es den Bereich nicht, auch nicht leer.
 const naturPaket = () => installiertesPaket("naturheilkunde");
 const naturDaten = () => inhalt(naturPaket(), "inhalt/naturheilkunde.json");
+// Bilder (0.6.1): eigenes Paket „naturheilkunde-bilder“; ohne es geht alles weiter, nur ohne Bilder
+const NATUR_BILDER = "naturheilkunde-bilder";
+let naturBilderMerk = null;
+function naturBilder() {
+  const p = installiertesPaket(NATUR_BILDER); if (!p) return null;
+  if (naturBilderMerk?.version !== p.manifest.version) naturBilderMerk = { version: p.manifest.version, index: naturBilderIndexBauen(inhalt(p, "inhalt/bildnachweise.json")) };
+  return naturBilderMerk.index;
+}
+/** Nach dem Zeichnen: Bilder einhängen (Desktop: lokaler Dateiserver, Web: Cache-Speicher). */
+async function naturBilderLaden() {
+  for (const img of main.querySelectorAll("img[data-natur-bild]:not([src])")) {
+    const url = await client.bildUrl?.(NATUR_BILDER, `inhalt/${img.dataset.naturBild}`);
+    if (url) img.src = url; else img.closest("figure")?.classList.add("natur-bild--fehlt");
+  }
+}
 function naturMenue() {
   const nav = document.getElementById("nav"), da = nav.querySelector('a[data-route="natur"]');
   if (naturPaket() && !da) nav.querySelector('a[data-route="bibliothek"]')?.insertAdjacentHTML("afterend", `<a href="#natur" data-route="natur">${icon("natur")}Naturheilkunde</a>`);
@@ -447,7 +462,7 @@ const seiten = {
   linie() { return linieHtml(); },
   /** Das Lumi-Buch: Titelseite, Anteil, Kapitel mit Lücken, Vorlesen. */
   buch() { return buchHtml(); },
-  natur() { const d = naturDaten(); return d ? naturHtml(d, state.natur) : seiten.start(); },
+  natur() { const d = naturDaten(); return d ? naturHtml(d, state.natur, naturBilder()) : seiten.start(); },
   /** Ein Absatz aus dem Lumi-Buch: ruhige Leseansicht, nur ✕ und „Zurück“. */
   absatz() { return absatzHtml(); },
 
@@ -2052,7 +2067,7 @@ function render() {
   main.classList.toggle("main-lesen", seite === "lesen");
   if ((seite === "kapitel" || seite === "neues" || seite === "heft" || seite === "linie" || seite === "pause" || seite === "buch" || seite === "absatz") && state.tag.seiteVorher !== seite) { window.scrollTo(0, 0); main.scrollTop = 0; } // beginnt oben
   state.tag.seiteVorher = seite;
-  if (seite === "natur") { document.title = "OFFLINE – Naturheilkunde"; document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === "natur" ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"))); }
+  if (seite === "natur") { naturBilderLaden(); document.title = "OFFLINE – Naturheilkunde"; document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === "natur" ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"))); }
   else document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : seite === "heft" ? `Was ${wesen.anzeigename()} gesagt hat` : seite === "linie" ? "Deine Linie" : seite === "buch" || seite === "absatz" ? "Das Lumi-Buch" : state.lesen?.titel ?? "Lesen")}`;
   if (seite === "karte") karteStarten();
   if (seite === "bibliothek") vorschauenNachladen();
@@ -2201,6 +2216,7 @@ document.addEventListener("click", (e) => {
   const b = e.target.closest("button"); if (!b) return;
   if (location.hash === "#natur" && main.contains(b)) {
     if (b.hasAttribute("data-natur-vorlesen")) return naturVorlesen();
+    if (b.dataset.naturGross) { const bild = naturBilder()?.alle.find((x) => x.datei === b.dataset.naturGross), src = b.querySelector("img")?.src; if (bild && src) blattOeffnen(bild.art, `<figure class="natur-gross"><img src="${esc(src)}" alt="${esc(bild.art)}"><figcaption class="muted of-klein">${esc(naturBildZeile(bild))}</figcaption></figure>`); return; }
     const n = naturKlick(b, state.natur);
     if (n) { if (state.natur.liest) naturVorlesenStop(); state.natur = n; render(); window.scrollTo(0, 0); main.scrollTop = 0; return; }
   }
