@@ -1,3 +1,16 @@
 {
-  "regions": ["fra1"]
+  "regions": ["fra1"],
+  "rewrites": [
+    { "source": "/intern/:pfad*", "destination": "https://offline-pakete.fsn1.your-objectstorage.com/intern/:pfad*" }
+  ],
+  "headers": [
+    {
+      "source": "/intern/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cache-Control", "value": "no-store" },
+        { "key": "X-Robots-Tag", "value": "noindex" }
+      ]
+    }
+  ]
 }

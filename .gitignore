@@ -5,3 +5,8 @@ target/
 # Mitgelieferte Programme (kiwix-serve) lädt der Build-Workflow herunter
 app/src-tauri/binaries/*
 !app/src-tauri/binaries/README.md
+
+# Naturheilkunde (0.6.0): Inhalte nur intern – im öffentlichen Repo nur verschlüsselt (pakete/naturheilkunde/verschluesselt/)
+pakete/naturheilkunde/quelle/
+pakete/naturheilkunde/inhalt/
+pakete/naturheilkunde/unzugeordnet.md

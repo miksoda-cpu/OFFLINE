@@ -4,6 +4,8 @@ identifier = "app-befehle"
 description = "Alle Befehle der OFFLINE-App, nur für das App-Fenster"
 permissions = [
   "allow-datenordner",
+  "allow-intern-lesen",
+  "allow-intern-setzen",
   "allow-installierte",
   "allow-paket-lesen",
   "allow-einspielen-ordner",

@@ -8,6 +8,9 @@ import { WERTE as PAUSE_WERTE, LEBENSABSCHNITTE, APPETIT, ART_TEXT, angeboten as
 import { FORMEN as PAUSE_FORMEN, happenFokus } from "./pause-happen.js";
 import { ungesehen as neuUngesehen, alsGesehen as neuAlsGesehen, inhaltsAenderungen, inhalteStart, webVersionPruefen, stillPruefenFaellig, webNeuerDa } from "./neuigkeiten.js";
 import { HILFE } from "./hilfe.js";
+import { pruefeSignatur } from "./paket-client.js";
+import { schluesselAusLink, internKatalog, internPaketDateien, KanalAbgelaufen, kanalZeile, WEB_BASIS as INTERN_WEB_BASIS } from "./intern.js";
+import { naturHtml, naturKlick, vorleseTeile as naturVorleseTeile } from "./natur.js";
 import { meinTag, schlussVorbei as meinTagSchlussVorbei, SCHLUSS_ZEITEN, AUFSTEHEN_ZEITEN, ARTEN as MEIN_TAG_ARTEN, zeitText, vorschlag as meinTagVorschlag, vorschlagText, vorschlagAntwort } from "./meintag.js";
 import { blattOeffnen, blattWeg } from "./blatt.js";
 import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE, LUECKE_WARTET as BUCH_LUECKE_WARTET, wartendeAbsaetze as buchWartend, mitSchluss as buchMitSchluss } from "./buch.js";
@@ -18,7 +21,23 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.5.6";
+// ---------- Interner Kanal (0.6.0): Schlüssel aus dem Link-Fragment, nur auf diesem Gerät, sofort aus der Adresszeile ----------
+const internBasis = desktop ? INTERN_WEB_BASIS : `${location.origin}/intern/`;
+let internStand = desktop ? await client.internLesen().catch(() => null) : client.speicher.get("intern-kanal", null);
+async function internSpeichern(stand) {
+  internStand = stand;
+  if (desktop) await client.internSetzen(stand).catch(() => {});
+  else if (stand) client.speicher.set("intern-kanal", stand); else client.speicher.del("intern-kanal");
+}
+async function internFreischalten(schluessel) {
+  await internSpeichern({ schluessel, pakete: internStand?.schluessel === schluessel ? internStand.pakete ?? [] : [], zuletzt: null });
+}
+{
+  const k = schluesselAusLink(location.hash);
+  if (k) { history.replaceState(null, "", `${location.pathname}${location.search}#updates`); await internFreischalten(k); }
+  else if (location.hash.startsWith("#kanal=")) history.replaceState(null, "", `${location.pathname}${location.search}#updates`);
+}
+const APP_VERSION = "0.6.0";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -50,6 +69,7 @@ function notizbuchLaden() {
 const notizId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 
 const state = {
+  natur: { weg: "start" }, internFeld: null, internMeldung: null, // 0.6.0: Naturheilkunde, interner Kanal
   checks: speicher.get("checks", {}),
   bestaetigt: null, // Bereit Version 2: positionId → ISO-Datum der letzten Bestätigung (siehe bereit.js), unten geladen
   wesenLog: { filter: "", suche: "" },
@@ -150,6 +170,7 @@ const I = {
   notizen: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
   tresor: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
   updates: '<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
+  natur: '<path d="M5 21c0-9 6-15 15-16-1 9-7 15-15 16z"/><path d="M5 21l9-9"/>',
 };
 const ROUTEN = [
   ["start", "Heute"], ["pause", "Pause"], ["uebersicht", "Übersicht"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
@@ -161,6 +182,14 @@ const TABS = ["start", "pause", "notfall", "vorsorge"]; // seit 0.4.2 Pause stat
 document.getElementById("tabbar").innerHTML = TABS.map((id) => { const n = ROUTEN.find((r) => r[0] === id)[1]; return `<a href="#${id}" data-route="${id}">${icon(id)}${n}</a>`; }).join("")
   + `<button type="button" id="tab-mehr" aria-controls="sidebar" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Mehr</button>`;
 if (desktop) document.getElementById("proto-banner")?.remove();
+// Naturheilkunde (0.6.0): im Menü nur, wenn das Paket auf diesem Gerät liegt – sonst gibt es den Bereich nicht, auch nicht leer.
+const naturPaket = () => installiertesPaket("naturheilkunde");
+const naturDaten = () => inhalt(naturPaket(), "inhalt/naturheilkunde.json");
+function naturMenue() {
+  const nav = document.getElementById("nav"), da = nav.querySelector('a[data-route="natur"]');
+  if (naturPaket() && !da) nav.querySelector('a[data-route="bibliothek"]')?.insertAdjacentHTML("afterend", `<a href="#natur" data-route="natur">${icon("natur")}Naturheilkunde</a>`);
+  if (!naturPaket() && da) da.remove();
+}
 
 const kachel = (route, farbe, titel, text) => `<a class="kachel kachel- of-karte of-karte--klick ${farbe}" href="#${route}"><span class="kachel-ikon">${icon(route)}</span><svg class="kachel-pfeil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg><span><strong>${titel}</strong><span class="muted of-klein">${text}</span></span></a>`;
 const kopf = (titel, text, extra = "") => `<div class="page-head of-seitenkopf"><div><h1 style="font-size:2rem">${titel}</h1><p>${text}</p></div>${extra}</div>`;
@@ -418,6 +447,7 @@ const seiten = {
   linie() { return linieHtml(); },
   /** Das Lumi-Buch: Titelseite, Anteil, Kapitel mit Lücken, Vorlesen. */
   buch() { return buchHtml(); },
+  natur() { const d = naturDaten(); return d ? naturHtml(d, state.natur) : seiten.start(); },
   /** Ein Absatz aus dem Lumi-Buch: ruhige Leseansicht, nur ✕ und „Zurück“. */
   absatz() { return absatzHtml(); },
 
@@ -849,7 +879,50 @@ function appUpdateZeile() {
   const ortProblem = desktop?.info?.ort_problem;
   if (ortProblem) inhalt = `<span class="tag tag-warn of-plakette of-plakette--warnung">Falscher Ort</span> <span>${esc(ortProblem)}</span><br><span class="muted mono of-klein of-mono" style="font-size:.8rem">${esc(desktop.info.ort)}</span>`;
   const laeuft = u.status === "pruefe" || u.status === "laedt" || !!ortProblem;
-  return `<div class="upd-zeile upd-app"><span>App ${esc(APP_VERSION)} · <span id="app-update-inhalt">${inhalt}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>`;
+  return `<div class="upd-zeile upd-app"><span>${versionKnopf()} · <span id="app-update-inhalt">${inhalt}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>${internZeileHtml()}`;
+}
+/** Die Versionsnummer; siebenmal Tippen öffnet das Feld für einen Freischalt-Link (Desktop, wo es keinen Link-Aufruf gibt). */
+const versionKnopf = () => `<button type="button" class="upd-version" data-version-tippen>App ${esc(APP_VERSION)}</button>`;
+let versionTipps = [];
+function versionTippen() {
+  const jetzt = Date.now(); versionTipps = [...versionTipps.filter((t) => jetzt - t < 4000), jetzt];
+  if (versionTipps.length >= 7) { versionTipps = []; state.internFeld = state.internFeld ?? ""; render(); document.getElementById("intern-link")?.focus(); }
+}
+/** Zeile „Interner Kanal“: nur, wenn freigeschaltet (oder abgelaufen); sonst nichts, auch kein leerer Platz. */
+function internZeileHtml() {
+  const feld = state.internFeld != null ? `<div class="upd-zeile intern-feld"><label for="intern-link" class="muted of-klein">Freischalt-Link</label><input id="intern-link" class="of-feld" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="button" class="btn btn-sm of-btn of-btn--klein" data-intern-freischalten>Freischalten</button>${state.internFeld ? `<p class="muted of-klein" role="status">${esc(state.internFeld)}</p>` : ""}</div>` : "";
+  const z = kanalZeile(internStand);
+  return (z ? `<div class="upd-zeile intern-zeile"><span>${esc(z.text)}${state.internMeldung ? ` <span class="muted of-klein">${esc(state.internMeldung)}</span>` : ""}</span><button type="button" class="btn btn-sm of-btn of-btn--klein" data-intern-entfernen>Entfernen</button></div>` : "") + feld;
+}
+/** Abgleich mit dem internen Kanal: still, nur mit Schlüssel und Netz. Neuere Pakete werden eingespielt. */
+async function internAbgleichen({ zeigen = false } = {}) {
+  const st = internStand;
+  if (!st?.schluessel || st.abgelaufen || !navigator.onLine) return;
+  try {
+    const k = await internKatalog({ basis: internBasis, schluessel: st.schluessel, pruefe: pruefeSignatur, zuletzt: st.zuletzt });
+    const ids = [];
+    for (const e of k.pakete.filter((p) => p.status === "verfuegbar" && appPasst(p))) {
+      ids.push(e.id);
+      const da = installiertesPaket(e.id);
+      if (da && versionVergleich(e.version, da.manifest.version) <= 0) continue;
+      const { dateien } = await internPaketDateien({ basis: internBasis, schluessel: st.schluessel, eintrag: e });
+      await client.installiereAusDateien(e, dateien);
+    }
+    await internSpeichern({ ...st, zuletzt: k.erstellt, pakete: [...new Set([...(st.pakete ?? []), ...ids])] });
+    state.internMeldung = zeigen ? `${ids.length} Paket${ids.length === 1 ? "" : "e"} aktuell.` : null;
+  } catch (err) {
+    if (err instanceof KanalAbgelaufen) await internSpeichern({ ...st, abgelaufen: true });
+    else { console.error("Interner Kanal", err); if (zeigen) state.internMeldung = `Gerade nicht erreichbar: ${err.message}`; }
+  }
+  render();
+}
+/** „Entfernen“: Schlüssel und alle Pakete des Kanals weg. */
+async function internEntfernen() {
+  for (const id of internStand?.pakete ?? []) { try { await entferne(id); } catch (err) { console.error("Entfernen", id, err); } }
+  await internSpeichern(null);
+  state.internMeldung = null; state.internFeld = null;
+  if (client.neuLesen) await client.neuLesen().catch(() => {});
+  render();
 }
 
 /** Web (iPad, iPhone, Browser): Version vom Server abfragen; ist sie neuer, lädt „Jetzt laden“ sie über den Service Worker. */
@@ -867,7 +940,7 @@ function webUpdateZeile() {
     default: inhalt = `<span class="muted of-klein">Die App holt sich neue Versionen selbst.</span>`;
   }
   const laeuft = u.status === "pruefe" || u.status === "laedt";
-  return `<div class="upd-zeile upd-app"><span>App ${esc(APP_VERSION)} · <span id="app-update-inhalt">${inhalt}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>`;
+  return `<div class="upd-zeile upd-app"><span>${versionKnopf()} · <span id="app-update-inhalt">${inhalt}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>${internZeileHtml()}`;
 }
 const heuteTag = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
 const versionHolen = async () => { const r = await fetch(`/version.json?t=${Date.now()}`, { cache: "no-store" }); if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); };
@@ -1308,6 +1381,20 @@ function buchVorlesen() {
   render();
 }
 // ---------- Das Lumi-Buch ende ----------
+function naturVorlesenStop() { try { speechSynthesis.cancel(); } catch { /* egal */ } state.natur = { ...state.natur, liest: false }; }
+function naturVorlesen() {
+  if (state.natur.liest) { naturVorlesenStop(); return render(); }
+  const d = naturDaten(), z = state.natur;
+  const md = z.weg === "eintrag" ? d?.eintraege.find((e) => e.id === z.eintrag)?.text : d?.kapitel.find((k) => k.id === z.kapitel)?.text;
+  const teile = naturVorleseTeile(md);
+  if (!teile.length) return;
+  try {
+    speechSynthesis.cancel();
+    teile.forEach((t, i) => { const u = new SpeechSynthesisUtterance(t); u.lang = "de-AT"; if (i === teile.length - 1) u.onend = () => { state.natur = { ...state.natur, liest: false }; if (location.hash === "#natur") render(); }; speechSynthesis.speak(u); });
+    state.natur = { ...state.natur, liest: true };
+  } catch { state.natur = { ...state.natur, liest: false }; }
+  render();
+}
 
 // ---------- Module (art = "modul"): Katalogkarte, Schieber, aktiv/inaktiv, löschen, Ansicht in der Sandbox ----------
 // Sicherheit: SICHERHEIT.md, Abschnitt Module. Das Modul läuft in einem eigenen Rahmen (web/modul-host.js) und erreicht
@@ -1951,7 +2038,9 @@ function render() {
     return;
   }
   if (desktop && route === "updates") client.aboStatus().then((st) => { if (st !== desktop.aboStatus) { desktop.aboStatus = st; render(); } }).catch(() => {});
-  const seite = seiten[route] ? route : "start";
+  naturMenue();
+  const seite = seiten[route] && (route !== "natur" || naturDaten()) ? route : "start";
+  if (seite !== "natur" && state.natur.liest) naturVorlesenStop();
   main.innerHTML = seiten[seite]() + hilfeZeile(HILFE_SEITE[seite]);
   if (seite === "start") wesen.einbauen(); else wesen.setScore(bereit());
   wesen.ansicht(seite);
@@ -1963,7 +2052,8 @@ function render() {
   main.classList.toggle("main-lesen", seite === "lesen");
   if ((seite === "kapitel" || seite === "neues" || seite === "heft" || seite === "linie" || seite === "pause" || seite === "buch" || seite === "absatz") && state.tag.seiteVorher !== seite) { window.scrollTo(0, 0); main.scrollTop = 0; } // beginnt oben
   state.tag.seiteVorher = seite;
-  document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : seite === "heft" ? `Was ${wesen.anzeigename()} gesagt hat` : seite === "linie" ? "Deine Linie" : seite === "buch" || seite === "absatz" ? "Das Lumi-Buch" : state.lesen?.titel ?? "Lesen")}`;
+  if (seite === "natur") { document.title = "OFFLINE – Naturheilkunde"; document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === "natur" ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"))); }
+  else document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : seite === "heft" ? `Was ${wesen.anzeigename()} gesagt hat` : seite === "linie" ? "Deine Linie" : seite === "buch" || seite === "absatz" ? "Das Lumi-Buch" : state.lesen?.titel ?? "Lesen")}`;
   if (seite === "karte") karteStarten();
   if (seite === "bibliothek") vorschauenNachladen();
   skinFuerSeite();
@@ -2033,7 +2123,7 @@ function beiKlick(e) {
   if (b.hasAttribute("data-web-update-laden")) webVersionLaden();
   if (b.hasAttribute("data-app-update-installieren")) appUpdateInstallieren();
   if (b.hasAttribute("data-app-neustart")) client.appNeustart();
-  if (b.id === "jetzt") { b.disabled = true; b.textContent = "Prüfe …"; desktop ? updatesJetztDesktop() : pruefeUpdates(); }
+  if (b.id === "jetzt") { b.disabled = true; b.textContent = "Prüfe …"; desktop ? updatesJetztDesktop() : pruefeUpdates(); internAbgleichen({ zeigen: true }); }
   if (b.hasAttribute("data-abbrechen")) client.abbrechen();
   if (b.dataset.neuReiter) { state.neuReiter = b.dataset.neuReiter; return render(); }
   if (b.dataset.neuAlle) return neuAlleZeigen(b.dataset.neuAlle);
@@ -2067,6 +2157,8 @@ main.addEventListener("input", (e) => {
   if (f) state.tag.offen[f.dataset.tagPruefen] = { ...(state.tag.offen[f.dataset.tagPruefen] ?? {}), eingabe: e.target.value };
 });
 main.addEventListener("submit", (e) => {
+  const n = e.target.closest("[data-natur-suche]");
+  if (n) { e.preventDefault(); const q = n.querySelector("input").value.trim(); state.natur = { ...state.natur, weg: "handbuch", q: q || null, teil: null }; render(); document.getElementById("natur-q")?.focus(); return; }
   const f = e.target.closest("[data-tag-pruefen]");
   if (!f) return;
   e.preventDefault();
@@ -2107,6 +2199,14 @@ document.addEventListener("click", (e) => {
   const anker = e.target.closest("a[data-anker]");
   if (anker) setTimeout(() => { const el = document.getElementById(anker.dataset.anker); if (el) { if (el.tagName === "DETAILS") el.open = true; el.scrollIntoView({ block: "start" }); } }, 60);
   const b = e.target.closest("button"); if (!b) return;
+  if (location.hash === "#natur" && main.contains(b)) {
+    if (b.hasAttribute("data-natur-vorlesen")) return naturVorlesen();
+    const n = naturKlick(b, state.natur);
+    if (n) { if (state.natur.liest) naturVorlesenStop(); state.natur = n; render(); window.scrollTo(0, 0); main.scrollTop = 0; return; }
+  }
+  if (b.hasAttribute("data-intern-entfernen")) return internEntfernen();
+  if (b.hasAttribute("data-intern-freischalten")) { const k = schluesselAusLink(document.getElementById("intern-link")?.value); if (!k) { state.internFeld = "Das ist kein Freischalt-Link."; return render(); } state.internFeld = null; return internFreischalten(k).then(() => internAbgleichen({ zeigen: true })); }
+  if (b.hasAttribute("data-version-tippen")) { versionTippen(); return; }
   if (b.hasAttribute("data-wesen-zu")) { const satz = wesen.tagesSatz; wesen.tippSchliessen(); if (satz) tagSetzen({ id: `lumi-${satz}`, art: "lumi" }, "weg"); }
   if (b.dataset.lumiBuch) return buchOeffnen(b.dataset.lumiBuch);
   if (b.dataset.meinTagArt) { const a = MEIN_TAG_ARTEN.find((x) => x.id === b.dataset.meinTagArt); if (a) { planSpeichern({ ...tagesplan(), schluss: a.schluss, aufstehen: a.aufstehen }); wesen.zustandBerechnen?.(); render(); } return; }
@@ -2274,7 +2374,12 @@ async function neuLaden() {
 document.getElementById("net-neu").addEventListener("click", neuLaden);
 addEventListener("online", netz);
 addEventListener("offline", netz);
-addEventListener("hashchange", render);
+addEventListener("hashchange", () => {
+  // Freischalt-Link bei schon offener App (nur das Fragment ändert sich): Schlüssel merken, sofort aus der Adresszeile
+  const k = schluesselAusLink(location.hash);
+  if (k || location.hash.startsWith("#kanal=")) { history.replaceState(null, "", `${location.pathname}${location.search}#updates`); if (k) internFreischalten(k).then(() => internAbgleichen({ zeigen: true })); render(); return; }
+  render();
+});
 netz();
 appAngaben();
 render();
@@ -2327,6 +2432,7 @@ if (desktop) (async () => {
   if (pauseE().an && !PP() && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "pause" && p.status === "verfuegbar"); if (e && appPasst(e)) await installiere(k, e); } catch (err) { console.error("Pause", err); } }
   pauseBeimOeffnen();
   webVersionStill(); // 0.5.5: Web still nach neuer Version fragen, höchstens einmal am Tag
+  internAbgleichen(); // 0.6.0: interner Kanal, nur mit Schlüssel
 });
 document.addEventListener("visibilitychange", () => { if (!document.hidden) { pauseBeimOeffnen(); webVersionStill(); } });
 addEventListener("online", () => vorratAuffuellen());

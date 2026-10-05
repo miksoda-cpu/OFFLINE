@@ -1,8 +1,8 @@
 // OFFLINE Service Worker: App-Hülle vorab speichern, Kartenkacheln beim Ansehen merken.
-const VERSION = "offline-v24";
+const VERSION = "offline-v25";
 const HUELLE = [
   "/", "/index.html", "/app.html", "/app.js", "/styles.css", "/icon.svg",
-  "/manifest.webmanifest", "/anmeldung.js", "/datenschutz.html", "/paket-kern.js", "/paket-client.js", "/bereit.js", "/wesen.js", "/wesen.css", "/modul-host.js", "/tag.js", "/pause.js", "/pause-werte.js", "/pause-happen.js", "/buch.js", "/neuigkeiten.js", "/hilfe.js", "/blatt.js", "/meintag.js", "/stimme.js", "/neues.json", "/schluessel/oeffentlich.json",
+  "/manifest.webmanifest", "/anmeldung.js", "/datenschutz.html", "/paket-kern.js", "/paket-client.js", "/bereit.js", "/wesen.js", "/wesen.css", "/modul-host.js", "/tag.js", "/pause.js", "/pause-werte.js", "/pause-happen.js", "/buch.js", "/neuigkeiten.js", "/hilfe.js", "/blatt.js", "/meintag.js", "/stimme.js", "/intern.js", "/natur.js", "/neues.json", "/schluessel/oeffentlich.json",
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css",
   "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js",
 ];
@@ -31,7 +31,7 @@ self.addEventListener("fetch", (e) => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   // Versionsnummer (0.5.5): immer vom Netz, nie aus dem Speicher – ohne Netz soll die App „kein Internet“ sagen können
-  if (url.origin === location.origin && url.pathname === "/version.json") return;
+  if (url.origin === location.origin && (url.pathname === "/version.json" || url.pathname.startsWith("/intern/"))) return; // 0.6.0: interner Kanal nie aus dem Speicher
 
   // Kartenkacheln: zuerst Speicher, sonst Netz und merken
   if (url.hostname.endsWith("wien.gv.at")) {

@@ -1,0 +1,85 @@
+# Interner Kanal (0.6.0, Auftrag 2026-10-05-08, Weg A): Pakete mit "kanal": "intern" bauen, signieren (Paketschlüssel der
+# CI, wie öffentlich), als eigenen Katalog signieren, dann jede Datei mit dem Kanal-Schlüssel (AES-256-GCM) verschlüsseln
+# und nach intern/<kennung>/ hochladen. Der Kanal-Schlüssel liegt nur in den Secrets und im Freischalt-Link für Mik.
+# Schlüsselwechsel: Secret ändern und diesen Workflow laufen lassen; alte Kennungen werden gelöscht, Geräte mit altem
+# Schlüssel melden still „Interner Kanal abgelaufen“. Nur auf Knopfdruck.
+name: Interner Kanal
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version, wenn es heute schon eine Ausgabe gibt (z. B. 2026.10.05.1); leer = Datum"
+        type: string
+        default: ""
+
+jobs:
+  bauen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: { node-version: 22 }
+
+      - name: Schlüssel bereitstellen
+        env:
+          SCHLUESSEL: ${{ secrets.OFFLINE_SIGNIERSCHLUESSEL }}
+          KANAL: ${{ secrets.OFFLINE_INTERN_SCHLUESSEL }}
+        run: |
+          set -euo pipefail
+          [ -n "$SCHLUESSEL" ] || { echo "Secret OFFLINE_SIGNIERSCHLUESSEL fehlt"; exit 1; }
+          [ -n "$KANAL" ] || { echo "Secret OFFLINE_INTERN_SCHLUESSEL fehlt"; exit 1; }
+          mkdir -p ~/.offline/schluessel && chmod 700 ~/.offline/schluessel
+          printf '%s\n' "$SCHLUESSEL" > ~/.offline/schluessel/offline-ci.key
+          chmod 600 ~/.offline/schluessel/offline-ci.key
+
+      # Das Repo ist öffentlich: Inhalte interner Pakete liegen dort nur verschlüsselt (gleicher Kanal-Schlüssel)
+      - name: Inhalte entschlüsseln und prüfen
+        env:
+          OFFLINE_INTERN_SCHLUESSEL: ${{ secrets.OFFLINE_INTERN_SCHLUESSEL }}
+        run: |
+          set -euo pipefail
+          for v in pakete/*/verschluesselt; do node werkzeug/intern.mjs entschluesseln "$v" "$(dirname "$v")" > /dev/null; done
+          node --test web/naturheilkunde.test.mjs web/intern.test.mjs
+
+      - name: Interne Pakete bauen, prüfen, Katalog signieren
+        env:
+          OFFLINE_SCHLUESSEL_NAME: offline-ci
+          OFFLINE_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          [ -n "$OFFLINE_VERSION" ] || unset OFFLINE_VERSION
+          mkdir -p klar/pakete
+          for q in pakete/*/; do
+            grep -qE '"kanal": *"intern"' "$q/paket.quelle.json" 2>/dev/null || continue
+            node werkzeug/paket.mjs bauen "$q" klar/pakete
+          done
+          ls klar/pakete | grep . || { echo "Keine internen Pakete"; exit 1; }
+          for o in klar/pakete/*/; do node werkzeug/paket.mjs pruefen "$o"; (cd "$o" && sha256sum paket.json); done
+          export OFFLINE_BASIS="intern/"
+          node werkzeug/paket.mjs katalog klar/katalog klar/pakete/*/
+          rm -f ~/.offline/schluessel/offline-ci.key
+
+      - name: Verschlüsseln
+        env:
+          OFFLINE_INTERN_SCHLUESSEL: ${{ secrets.OFFLINE_INTERN_SCHLUESSEL }}
+        run: |
+          set -euo pipefail
+          kennung=$(node werkzeug/intern.mjs verschluesseln klar zu)
+          echo "KENNUNG=$kennung" >> "$GITHUB_ENV"
+          rm -rf klar
+          find zu -type f | sed 's#^zu/##' | sort
+
+      - name: Hochladen (alte Kennungen löschen)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.HETZNER_S3_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.HETZNER_S3_SECRET_KEY }}
+          AWS_DEFAULT_REGION: eu-central-1
+          ENDPOINT: ${{ secrets.HETZNER_S3_ENDPOINT }}
+          BUCKET: ${{ secrets.HETZNER_S3_BUCKET }}
+        run: |
+          set -euo pipefail
+          aws --version || pip install awscli
+          aws s3 sync zu "s3://$BUCKET/intern/$KENNUNG" --endpoint-url "$ENDPOINT" --acl public-read --content-type application/octet-stream --cache-control "no-cache" --no-progress
+          aws s3 rm "s3://$BUCKET/intern/" --recursive --exclude "$KENNUNG/*" --endpoint-url "$ENDPOINT"
+          echo "Interner Kanal hochgeladen."

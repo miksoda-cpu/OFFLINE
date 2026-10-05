@@ -1,0 +1,26 @@
+{
+  "id": "naturheilkunde",
+  "kanal": "intern",
+  "titel": "Naturheilkunde (in Prüfung)",
+  "beschreibung": "Ich gehe in den Wald und finde …: Waldfunde, Giftiges und Verwechslungen, Pflanzenkarten, Wechselwirkungen und Überlieferung. Entwurf, fachlich noch nicht geprüft, nicht zur Anwendung.",
+  "art": "inhalt",
+  "sprache": "de-AT",
+  "lizenz": "CC BY-SA 4.0",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "kategorie": "wissen",
+  "alter_ab": 18,
+  "app_min": "0.6.0",
+  "quellen": [
+    {
+      "id": "redaktion",
+      "name": "OFFLINE Naturheilkunde, Inhalt Teil 0 bis 10 (Entwurf, in Prüfung, Fassungen vom 05.10.2026)",
+      "url": ""
+    }
+  ],
+  "abnahme": "ausstehend: Pharmazie (Monographien), Botanik/Pilzsachverständige (Merkmale, Doppelgänger), Vergiftungsinformationszentrale (Giftkapitel, Erste Hilfe); KI-Prüfung Stufe 1 läuft (Stand 05.10.2026)",
+  "braucht_netz": false,
+  "aenderungen": "Erste interne Fassung zur Prüfung."
+}

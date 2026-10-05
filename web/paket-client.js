@@ -154,6 +154,33 @@ export async function installiere(katalog, eintrag, fortschritt = () => {}) {
   return { paket, delta: d, geladen };
 }
 
+/**
+ * Interner Kanal (0.6.0): Paket aus schon geladenen, entschlüsselten Dateien einspielen. Prüft wie installiere():
+ * Manifest-Prüfsumme gegen den (signierten) Katalogeintrag, Signatur, Größe und Prüfsumme jeder Datei.
+ */
+export async function installiereAusDateien(eintrag, dateien) {
+  const finde = (p) => dateien.find((d) => d.pfad === p)?.bytes;
+  const bytes = finde("paket.json"), sigBytes = finde("paket.sig");
+  if (!bytes || !sigBytes) throw new Error("Paket unvollständig");
+  if ((await sha256Hex(bytes)) !== eintrag.sha256_manifest) throw new Error("Manifest passt nicht zum Katalog (Prüfsumme)");
+  const s = await pruefeSignatur(bytes, JSON.parse(new TextDecoder().decode(sigBytes)), "pakete");
+  if (!s.ok) throw new Error("Paket: " + s.grund);
+  const manifest = JSON.parse(new TextDecoder().decode(bytes));
+  const fehler = manifestPruefenStruktur(manifest);
+  if (fehler.length) throw new Error("Manifest ungültig: " + fehler[0]);
+  if (manifest.id !== eintrag.id || manifest.version !== eintrag.version) throw new Error("Manifest gehört zu einem anderen Paket");
+  const inhalt = {};
+  for (const datei of manifest.dateien) {
+    const b = finde(datei.pfad);
+    if (!b || b.length !== datei.groesse || (await sha256Hex(b)) !== datei.sha256) throw new Error(`Prüfsumme falsch: ${datei.pfad}`);
+    inhalt[datei.pfad] = new TextDecoder().decode(b);
+  }
+  const paket = { manifest, inhalt, installiert: new Date().toISOString(), schluessel: s.schluessel };
+  speicher.set("paket:" + eintrag.id, paket);
+  if (!installiertesPaket(eintrag.id)) throw new Error("Der Speicher des Browsers ist voll");
+  return { paket };
+}
+
 export function entferne(id) {
   speicher.del("paket:" + id);
 }

@@ -78,6 +78,19 @@ export async function installiere(katalog, eintrag, fortschritt = () => {}) {
   }
 }
 
+/** Interner Kanal (0.6.0): entschlüsselte Dateien an den Kern; er prüft Signatur und Prüfsummen und spielt ein. */
+export async function installiereAusDateien(eintrag, dateien) {
+  const manifestBytes = dateien.find((d) => d.pfad === "paket.json")?.bytes;
+  if (!manifestBytes || (await sha256Hex(manifestBytes)) !== eintrag.sha256_manifest) throw new Error("Manifest passt nicht zum Katalog (Prüfsumme)");
+  const b64 = (u8) => { let s = ""; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode(...u8.subarray(i, i + 0x8000)); return btoa(s); };
+  await invoke("einspielen_bytes", { dateien: dateien.map((d) => ({ pfad: d.pfad, daten: b64(d.bytes) })), downgrade: false });
+  await cacheLaden();
+  return { paket: cache.get(eintrag.id) };
+}
+/** Schlüssel des internen Kanals: nur im Datenordner dieses Geräts (nie im Tresor, nie in einer Sicherung). */
+export const internLesen = () => invoke("intern_lesen");
+export const internSetzen = (stand) => invoke("intern_setzen", { stand });
+
 export async function entferne(id) {
   await invoke("entfernen", { id });
   cache.delete(id);

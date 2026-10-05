@@ -139,7 +139,7 @@ test("0.5.5: version.json = App-Version, Zeile auch im Web, Service Worker läss
   assert.match(app, /webNeuerDa\(speicher\.get\("web-version-server", null\), APP_VERSION\)\), p = a\.querySelector/, "roter Punkt bei Updates & Abo");
   assert.match(app, /reg\.update\(\)/);
   const sw = await readFile(new URL("./sw.js", import.meta.url), "utf8");
-  assert.match(sw, /url\.pathname === "\/version\.json"\) return;/);
+  assert.match(sw, /url\.pathname === "\/version\.json"[^\n]*\) return;/);
   assert.match(sw, /new Request\(u, \{ cache: "reload" \}\)/, "neue Hülle an Zwischenspeichern vorbei");
   assert.match(sw, /new Request\(req, \{ cache: "no-cache" \}\)/, "eigene Dateien beim Server nachfragen");
   assert.doesNotMatch(sw.match(/const HUELLE = \[[\s\S]*?\];/)[0], /version\.json/, "nicht im Speicher");

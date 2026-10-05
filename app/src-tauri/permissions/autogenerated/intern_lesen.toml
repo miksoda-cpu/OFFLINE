@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-intern-lesen"
+description = "Enables the intern_lesen command without any pre-configured scope."
+commands.allow = ["intern_lesen"]
+
+[[permission]]
+identifier = "deny-intern-lesen"
+description = "Denies the intern_lesen command without any pre-configured scope."
+commands.deny = ["intern_lesen"]

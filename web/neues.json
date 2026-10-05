@@ -2,6 +2,15 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.6.0",
+      "datum": "2026-10-05",
+      "punkte": [
+        "Für dich ändert sich in dieser Version wenig: Sie bereitet neue Inhalte vor, die Fachleute vor der Veröffentlichung prüfen.",
+        "Wer eine ältere Version hat, findet 0.6.0 wie gewohnt unter „Nach neuer Version suchen“.",
+        "Deine Daten, Einstellungen und Pakete bleiben beim Update unverändert."
+      ]
+    },
+    {
       "version": "0.5.6",
       "datum": "2026-10-05",
       "punkte": [

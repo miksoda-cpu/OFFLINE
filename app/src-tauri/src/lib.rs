@@ -626,6 +626,31 @@ fn app_info() -> AppInfo {
     AppInfo { version: env!("CARGO_PKG_VERSION"), tauri: tauri::VERSION, system, arch, ort: ort.display().to_string(), ort_problem, entwickler: cfg!(debug_assertions) }
 }
 
+/// Interner Kanal (0.6.0): Schlüssel und Stand nur im Datenordner dieses Geräts, nie im Tresor, in keiner Sicherung.
+fn intern_datei(z: &Zustand) -> PathBuf {
+    z.datenordner.join("intern-kanal.json")
+}
+
+#[tauri::command]
+fn intern_lesen(z: State<Zustand>) -> Option<serde_json::Value> {
+    std::fs::read(intern_datei(&z)).ok().and_then(|b| serde_json::from_slice(&b).ok())
+}
+
+/// stand = null löscht den Schlüssel („Entfernen“).
+#[tauri::command]
+fn intern_setzen(z: State<Zustand>, stand: Option<serde_json::Value>) -> Result<(), String> {
+    match stand {
+        None => match std::fs::remove_file(intern_datei(&z)) {
+            Err(e) if e.kind() != std::io::ErrorKind::NotFound => Err(e.to_string()),
+            _ => Ok(()),
+        },
+        Some(v) => {
+            std::fs::create_dir_all(&z.datenordner).map_err(|e| e.to_string())?;
+            std::fs::write(intern_datei(&z), serde_json::to_vec(&v).map_err(|e| e.to_string())?).map_err(|e| e.to_string())
+        }
+    }
+}
+
 #[tauri::command]
 fn datenordner(z: State<Zustand>) -> String {
     z.wurzel().display().to_string()
@@ -950,6 +975,7 @@ fn alles_loeschen(z: State<Zustand>, bestaetigung: String) -> Result<String, Str
     if let Ok(mut t) = z.tresor.lock() { *t = None; }
     let _ = std::fs::remove_dir_all(tresor::ordner(&z.datenordner));
     let _ = std::fs::remove_dir_all(z.datenordner.join("notizen"));
+    let _ = std::fs::remove_file(intern_datei(&z));
     if let Ok(mut a) = z.abo.lock() { *a = Abo::default(); }
     let anleitung = if cfg!(target_os = "windows") { "Einstellungen → Apps → OFFLINE → Deinstallieren." }
         else if cfg!(target_os = "macos") { "OFFLINE aus dem Ordner „Programme“ in den Papierkorb ziehen." }
@@ -1030,7 +1056,7 @@ pub fn start() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            datenordner, installierte, paket_lesen, einspielen_ordner, einspielen_bytes, entfernen, stick_suchen, aufraeumen_start,
+            datenordner, intern_lesen, intern_setzen, installierte, paket_lesen, einspielen_ordner, einspielen_bytes, entfernen, stick_suchen, aufraeumen_start,
             abo_lesen, abo_schreiben, verbindung_melden, speicherort_setzen, katalog_laden, paket_laden, download_abbrechen, updates_jetzt, abo_status,
             lokal_url, kiwix_url, fenster_oeffnen, alles_loeschen, app_info, downloads_offen,
             tresor_status, tresor_anlegen, tresor_oeffnen, tresor_oeffnen_code, tresor_sperren, tresor_sperre_setzen, tresor_notizen,

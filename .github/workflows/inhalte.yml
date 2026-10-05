@@ -103,6 +103,9 @@ jobs:
           for q in pakete/*/; do
             [ -f "$q/paket.quelle.json" ] || continue
             if grep -qE '"art": *"(modul|skin)"' "$q/paket.quelle.json"; then echo "Übersprungen: $q"; continue; fi
+            # Interne Pakete (Feld "kanal": "intern") nie in den öffentlichen Katalog; die baut der Workflow „Interner Kanal“.
+            # Freigeben heißt: die Zeile "kanal" löschen, dann kommt das Paket hier mit.
+            if grep -qE '"kanal": *"intern"' "$q/paket.quelle.json"; then echo "Intern, nicht öffentlich: $q"; continue; fi
             case "$(basename "$q")" in "$NUR"*) ;; *) echo "Nicht ausgewählt: $q"; continue ;; esac
             node werkzeug/paket.mjs bauen "$q" ausgabe
           done

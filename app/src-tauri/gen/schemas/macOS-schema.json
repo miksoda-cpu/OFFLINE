@@ -345,10 +345,10 @@
       "description": "Permission identifier",
       "oneOf": [
         {
-          "description": "Alle Befehle der OFFLINE-App, nur für das App-Fenster\n#### This permission set includes:\n\n- `allow-datenordner`\n- `allow-installierte`\n- `allow-paket-lesen`\n- `allow-einspielen-ordner`\n- `allow-einspielen-bytes`\n- `allow-entfernen`\n- `allow-stick-suchen`\n- `allow-aufraeumen-start`\n- `allow-abo-lesen`\n- `allow-abo-schreiben`\n- `allow-verbindung-melden`\n- `allow-speicherort-setzen`\n- `allow-katalog-laden`\n- `allow-paket-laden`\n- `allow-download-abbrechen`\n- `allow-updates-jetzt`\n- `allow-abo-status`\n- `allow-lokal-url`\n- `allow-kiwix-url`\n- `allow-fenster-oeffnen`\n- `allow-alles-loeschen`\n- `allow-app-info`\n- `allow-downloads-offen`\n- `allow-tresor-status`\n- `allow-tresor-anlegen`\n- `allow-tresor-oeffnen`\n- `allow-tresor-oeffnen-code`\n- `allow-tresor-sperren`\n- `allow-tresor-sperre-setzen`\n- `allow-tresor-notizen`\n- `allow-tresor-notiz-schreiben`\n- `allow-tresor-notiz-loeschen`\n- `allow-tresor-notfallmappe`\n- `allow-tresor-anhang-aus-datei`\n- `allow-tresor-anhang-lesen`\n- `allow-tresor-anhang-loeschen`\n- `allow-tresor-passwort-aendern`\n- `allow-tresor-code-erneuern`\n- `allow-tresor-sichern`\n- `allow-tresor-zurueckspielen`\n- `allow-tresor-anhang-bytes`\n- `allow-notiz-anhang-aus-datei`\n- `allow-notiz-anhang-bytes`\n- `allow-notiz-anhang-lesen`\n- `allow-notiz-anhang-loeschen`\n- `allow-app-update-pruefen`\n- `allow-app-update-installieren`\n- `allow-app-neustart`\n- `allow-modul-oeffnen`\n- `allow-modul-schliessen`\n- `allow-modul-speicher-lesen`\n- `allow-modul-speicher-schreiben`\n- `allow-module-stand`\n- `allow-modul-aktiv-setzen`\n- `allow-modul-loeschen`\n- `allow-modul-test-oeffnen`\n- `allow-drucken`\n- `allow-vorschau-katalog`\n- `allow-vorschau-ordner`\n- `allow-vorschau-installiert`\n- `allow-lokale-pakete`\n- `allow-skin-stand`\n- `allow-skin-aktivieren`\n- `allow-skin-css`",
+          "description": "Alle Befehle der OFFLINE-App, nur für das App-Fenster\n#### This permission set includes:\n\n- `allow-datenordner`\n- `allow-intern-lesen`\n- `allow-intern-setzen`\n- `allow-installierte`\n- `allow-paket-lesen`\n- `allow-einspielen-ordner`\n- `allow-einspielen-bytes`\n- `allow-entfernen`\n- `allow-stick-suchen`\n- `allow-aufraeumen-start`\n- `allow-abo-lesen`\n- `allow-abo-schreiben`\n- `allow-verbindung-melden`\n- `allow-speicherort-setzen`\n- `allow-katalog-laden`\n- `allow-paket-laden`\n- `allow-download-abbrechen`\n- `allow-updates-jetzt`\n- `allow-abo-status`\n- `allow-lokal-url`\n- `allow-kiwix-url`\n- `allow-fenster-oeffnen`\n- `allow-alles-loeschen`\n- `allow-app-info`\n- `allow-downloads-offen`\n- `allow-tresor-status`\n- `allow-tresor-anlegen`\n- `allow-tresor-oeffnen`\n- `allow-tresor-oeffnen-code`\n- `allow-tresor-sperren`\n- `allow-tresor-sperre-setzen`\n- `allow-tresor-notizen`\n- `allow-tresor-notiz-schreiben`\n- `allow-tresor-notiz-loeschen`\n- `allow-tresor-notfallmappe`\n- `allow-tresor-anhang-aus-datei`\n- `allow-tresor-anhang-lesen`\n- `allow-tresor-anhang-loeschen`\n- `allow-tresor-passwort-aendern`\n- `allow-tresor-code-erneuern`\n- `allow-tresor-sichern`\n- `allow-tresor-zurueckspielen`\n- `allow-tresor-anhang-bytes`\n- `allow-notiz-anhang-aus-datei`\n- `allow-notiz-anhang-bytes`\n- `allow-notiz-anhang-lesen`\n- `allow-notiz-anhang-loeschen`\n- `allow-app-update-pruefen`\n- `allow-app-update-installieren`\n- `allow-app-neustart`\n- `allow-modul-oeffnen`\n- `allow-modul-schliessen`\n- `allow-modul-speicher-lesen`\n- `allow-modul-speicher-schreiben`\n- `allow-module-stand`\n- `allow-modul-aktiv-setzen`\n- `allow-modul-loeschen`\n- `allow-modul-test-oeffnen`\n- `allow-drucken`\n- `allow-vorschau-katalog`\n- `allow-vorschau-ordner`\n- `allow-vorschau-installiert`\n- `allow-lokale-pakete`\n- `allow-skin-stand`\n- `allow-skin-aktivieren`\n- `allow-skin-css`",
           "type": "string",
           "const": "app-befehle",
-          "markdownDescription": "Alle Befehle der OFFLINE-App, nur für das App-Fenster\n#### This permission set includes:\n\n- `allow-datenordner`\n- `allow-installierte`\n- `allow-paket-lesen`\n- `allow-einspielen-ordner`\n- `allow-einspielen-bytes`\n- `allow-entfernen`\n- `allow-stick-suchen`\n- `allow-aufraeumen-start`\n- `allow-abo-lesen`\n- `allow-abo-schreiben`\n- `allow-verbindung-melden`\n- `allow-speicherort-setzen`\n- `allow-katalog-laden`\n- `allow-paket-laden`\n- `allow-download-abbrechen`\n- `allow-updates-jetzt`\n- `allow-abo-status`\n- `allow-lokal-url`\n- `allow-kiwix-url`\n- `allow-fenster-oeffnen`\n- `allow-alles-loeschen`\n- `allow-app-info`\n- `allow-downloads-offen`\n- `allow-tresor-status`\n- `allow-tresor-anlegen`\n- `allow-tresor-oeffnen`\n- `allow-tresor-oeffnen-code`\n- `allow-tresor-sperren`\n- `allow-tresor-sperre-setzen`\n- `allow-tresor-notizen`\n- `allow-tresor-notiz-schreiben`\n- `allow-tresor-notiz-loeschen`\n- `allow-tresor-notfallmappe`\n- `allow-tresor-anhang-aus-datei`\n- `allow-tresor-anhang-lesen`\n- `allow-tresor-anhang-loeschen`\n- `allow-tresor-passwort-aendern`\n- `allow-tresor-code-erneuern`\n- `allow-tresor-sichern`\n- `allow-tresor-zurueckspielen`\n- `allow-tresor-anhang-bytes`\n- `allow-notiz-anhang-aus-datei`\n- `allow-notiz-anhang-bytes`\n- `allow-notiz-anhang-lesen`\n- `allow-notiz-anhang-loeschen`\n- `allow-app-update-pruefen`\n- `allow-app-update-installieren`\n- `allow-app-neustart`\n- `allow-modul-oeffnen`\n- `allow-modul-schliessen`\n- `allow-modul-speicher-lesen`\n- `allow-modul-speicher-schreiben`\n- `allow-module-stand`\n- `allow-modul-aktiv-setzen`\n- `allow-modul-loeschen`\n- `allow-modul-test-oeffnen`\n- `allow-drucken`\n- `allow-vorschau-katalog`\n- `allow-vorschau-ordner`\n- `allow-vorschau-installiert`\n- `allow-lokale-pakete`\n- `allow-skin-stand`\n- `allow-skin-aktivieren`\n- `allow-skin-css`"
+          "markdownDescription": "Alle Befehle der OFFLINE-App, nur für das App-Fenster\n#### This permission set includes:\n\n- `allow-datenordner`\n- `allow-intern-lesen`\n- `allow-intern-setzen`\n- `allow-installierte`\n- `allow-paket-lesen`\n- `allow-einspielen-ordner`\n- `allow-einspielen-bytes`\n- `allow-entfernen`\n- `allow-stick-suchen`\n- `allow-aufraeumen-start`\n- `allow-abo-lesen`\n- `allow-abo-schreiben`\n- `allow-verbindung-melden`\n- `allow-speicherort-setzen`\n- `allow-katalog-laden`\n- `allow-paket-laden`\n- `allow-download-abbrechen`\n- `allow-updates-jetzt`\n- `allow-abo-status`\n- `allow-lokal-url`\n- `allow-kiwix-url`\n- `allow-fenster-oeffnen`\n- `allow-alles-loeschen`\n- `allow-app-info`\n- `allow-downloads-offen`\n- `allow-tresor-status`\n- `allow-tresor-anlegen`\n- `allow-tresor-oeffnen`\n- `allow-tresor-oeffnen-code`\n- `allow-tresor-sperren`\n- `allow-tresor-sperre-setzen`\n- `allow-tresor-notizen`\n- `allow-tresor-notiz-schreiben`\n- `allow-tresor-notiz-loeschen`\n- `allow-tresor-notfallmappe`\n- `allow-tresor-anhang-aus-datei`\n- `allow-tresor-anhang-lesen`\n- `allow-tresor-anhang-loeschen`\n- `allow-tresor-passwort-aendern`\n- `allow-tresor-code-erneuern`\n- `allow-tresor-sichern`\n- `allow-tresor-zurueckspielen`\n- `allow-tresor-anhang-bytes`\n- `allow-notiz-anhang-aus-datei`\n- `allow-notiz-anhang-bytes`\n- `allow-notiz-anhang-lesen`\n- `allow-notiz-anhang-loeschen`\n- `allow-app-update-pruefen`\n- `allow-app-update-installieren`\n- `allow-app-neustart`\n- `allow-modul-oeffnen`\n- `allow-modul-schliessen`\n- `allow-modul-speicher-lesen`\n- `allow-modul-speicher-schreiben`\n- `allow-module-stand`\n- `allow-modul-aktiv-setzen`\n- `allow-modul-loeschen`\n- `allow-modul-test-oeffnen`\n- `allow-drucken`\n- `allow-vorschau-katalog`\n- `allow-vorschau-ordner`\n- `allow-vorschau-installiert`\n- `allow-lokale-pakete`\n- `allow-skin-stand`\n- `allow-skin-aktivieren`\n- `allow-skin-css`"
         },
         {
           "description": "Enables the abo_lesen command without any pre-configured scope.",
@@ -457,6 +457,18 @@
           "type": "string",
           "const": "allow-installierte",
           "markdownDescription": "Enables the installierte command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the intern_lesen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-intern-lesen",
+          "markdownDescription": "Enables the intern_lesen command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the intern_setzen command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-intern-setzen",
+          "markdownDescription": "Enables the intern_setzen command without any pre-configured scope."
         },
         {
           "description": "Enables the katalog_laden command without any pre-configured scope.",
@@ -841,6 +853,18 @@
           "type": "string",
           "const": "deny-installierte",
           "markdownDescription": "Denies the installierte command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the intern_lesen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-intern-lesen",
+          "markdownDescription": "Denies the intern_lesen command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the intern_setzen command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-intern-setzen",
+          "markdownDescription": "Denies the intern_setzen command without any pre-configured scope."
         },
         {
           "description": "Denies the katalog_laden command without any pre-configured scope.",

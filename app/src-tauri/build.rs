@@ -4,7 +4,7 @@
 // (SICHERHEIT.md, Module, dritte Sicherung). Neue Befehle hier und in permissions/app.toml eintragen; der Test
 // `berechtigungen::befehlsliste_vollstaendig` prüft, dass die Listen zu generate_handler! passen.
 const BEFEHLE: &[&str] = &[
-        "datenordner", "installierte", "paket_lesen", "einspielen_ordner", "einspielen_bytes", "entfernen",
+        "datenordner", "intern_lesen", "intern_setzen", "installierte", "paket_lesen", "einspielen_ordner", "einspielen_bytes", "entfernen",
         "stick_suchen", "aufraeumen_start", "abo_lesen", "abo_schreiben", "verbindung_melden", "speicherort_setzen",
         "katalog_laden", "paket_laden", "download_abbrechen", "updates_jetzt", "abo_status", "lokal_url", "kiwix_url",
         "fenster_oeffnen", "alles_loeschen", "app_info", "downloads_offen", "tresor_status", "tresor_anlegen",
