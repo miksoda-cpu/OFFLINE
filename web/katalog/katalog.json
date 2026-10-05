@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-10-05T14:46:33Z",
-  "gueltig_bis": "2027-01-03T14:46:33Z",
+  "erstellt": "2026-10-05T17:31:04Z",
+  "gueltig_bis": "2027-01-03T17:31:04Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -115,7 +115,7 @@
     },
     {
       "id": "pause",
-      "version": "2026.10.05.1",
+      "version": "2026.10.05.2",
       "titel": "Pause · Happen für zwischendurch",
       "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten – Pilze finden, Geschichten von unten, Lumisch, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
       "art": "inhalt",
@@ -195,12 +195,12 @@
           }
         ]
       },
-      "groesse": 179120,
+      "groesse": 204612,
       "app_min": "0.4.0",
-      "erstellt": "2026-10-05T11:50:20Z",
-      "aenderungen": "Lumisch: 500 Wörter, darunter Wörter fürs Gespräch und für den Stromausfall.",
-      "pfad": "pause-2026.10.05.1/",
-      "sha256_manifest": "49a7c91935f9458f33ca60fc5a59e17fdd52ace3d2e3c2985448aa622f0f3565",
+      "erstellt": "2026-10-05T17:29:51Z",
+      "aenderungen": "Lumisch zum Anhören: Zu jedem Wort kommt die Aussprache mit.",
+      "pfad": "pause-2026.10.05.2/",
+      "sha256_manifest": "d1867569821909b6bfefdc2f614d112b51048b7901e2759b48c88ebb67841be4",
       "status": "verfuegbar"
     },
     {

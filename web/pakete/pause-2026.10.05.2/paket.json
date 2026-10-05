@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "pause",
-  "version": "2026.10.05.1",
+  "version": "2026.10.05.2",
   "titel": "Pause · Happen für zwischendurch",
   "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten – Pilze finden, Geschichten von unten, Lumisch, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
   "art": "inhalt",
@@ -15,8 +15,8 @@
   "alter_ab": 14,
   "abnahme": "Redaktion (Code), 05.10.2026: Lumisch gegen die Beilage der Wortprüfung vom 05.10.2026 (500 Wörter nach dem Nachtrag 2026-10-05-05, Plan in 21 Tagen, von Mik freigegeben); Geschichten auf genau einen falschen Satz geprüft",
   "app_min": "0.4.0",
-  "erstellt": "2026-10-05T11:50:20Z",
-  "aenderungen": "Lumisch: 500 Wörter, darunter Wörter fürs Gespräch und für den Stromausfall.",
+  "erstellt": "2026-10-05T17:29:51Z",
+  "aenderungen": "Lumisch zum Anhören: Zu jedem Wort kommt die Aussprache mit.",
   "quellen": [
     {
       "id": "redaktion",
@@ -27,8 +27,8 @@
   "dateien": [
     {
       "pfad": "inhalt/pause.json",
-      "sha256": "02219d75675db7ef98b09fc5fcb467af978488c8b27787b1002594b8916a0236",
-      "groesse": 118805
+      "sha256": "fc08b69ce6aa2d86e1e9bb3c3aa958313c1b1b4480209f5b5ca68c4f57f3a801",
+      "groesse": 144297
     },
     {
       "pfad": "inhalt/vorschau/1.svg",
@@ -61,5 +61,5 @@
       "groesse": 1562
     }
   ],
-  "groesse": 179120
+  "groesse": 204612
 }

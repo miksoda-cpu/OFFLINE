@@ -2695,7 +2695,9 @@
      "lumisch": "ul uvo zan zan.",
      "deutsch": "Hier oben ist es hell."
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "zan",
+    "ipa": "ˈtsan"
    },
    {
     "wort": "nezan",
@@ -2705,13 +2707,17 @@
     "beispiel": {
      "lumisch": "ul unu nezan tal.",
      "deutsch": "Bei uns unten ist es immer dunkel."
-    }
+    },
+    "umschrift": "ne-zan",
+    "ipa": "ˈne.tsan"
    },
    {
     "wort": "kivzan",
     "deutsch": "blau",
     "gruppe": "Unten: die Höhle",
-    "hinweis": "Das Licht im Eis."
+    "hinweis": "Das Licht im Eis.",
+    "umschrift": "kiw-zan",
+    "ipa": "ˈkiv.tsan"
    },
    {
     "wort": "mo",
@@ -2722,7 +2728,9 @@
      "lumisch": "vuku mo vul vul.",
      "deutsch": "Aus dem Spalt kommt heißes Wasser."
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "mo",
+    "ipa": "ˈmo"
    },
    {
     "wort": "vul",
@@ -2732,37 +2740,49 @@
     "beispiel": {
      "lumisch": "vuku mo vul vul.",
      "deutsch": "Aus dem Spalt kommt heißes Wasser."
-    }
+    },
+    "umschrift": "wul",
+    "ipa": "ˈvul"
    },
    {
     "wort": "kiv",
     "deutsch": "Eis, kalt, frieren",
     "gruppe": "Unten: die Höhle",
     "hinweis": "Das Eis über der Höhle.",
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "kiw",
+    "ipa": "ˈkiv"
    },
    {
     "wort": "tok",
     "deutsch": "Stein, hart",
-    "gruppe": "Unten: die Höhle"
+    "gruppe": "Unten: die Höhle",
+    "umschrift": "tok",
+    "ipa": "ˈtok"
    },
    {
     "wort": "umo",
     "deutsch": "Höhle",
     "gruppe": "Unten: die Höhle",
-    "hinweis": "Der Ort mehrere Kilometer unter dem Eis."
+    "hinweis": "Der Ort mehrere Kilometer unter dem Eis.",
+    "umschrift": "u-mo",
+    "ipa": "ˈu.mo"
    },
    {
     "wort": "tem",
     "deutsch": "Erde, Boden, Land",
-    "gruppe": "Unten: die Höhle"
+    "gruppe": "Unten: die Höhle",
+    "umschrift": "tem",
+    "ipa": "ˈtem"
    },
    {
     "wort": "orr",
     "deutsch": "Dach, Decke",
     "gruppe": "Unten: die Höhle",
     "hinweis": "Das r wird gerollt. Unten ist es die Decke der Höhle.",
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "orr",
+    "ipa": "ˈor"
    },
    {
     "wort": "vuku",
@@ -2772,7 +2792,9 @@
     "beispiel": {
      "lumisch": "vuku mo vul vul.",
      "deutsch": "Aus dem Spalt kommt heißes Wasser."
-    }
+    },
+    "umschrift": "wu-ku",
+    "ipa": "ˈvu.ku"
    },
    {
     "wort": "tivmo",
@@ -2782,32 +2804,42 @@
     "beispiel": {
      "lumisch": "ta nu tam ul tivmo.",
      "deutsch": "Wir sitzen am Fluss."
-    }
+    },
+    "umschrift": "tiw-mo",
+    "ipa": "ˈtiv.mo"
    },
    {
     "wort": "motem",
     "deutsch": "Ufer, Bucht",
     "gruppe": "Unten: die Höhle",
-    "hinweis": "Wasser + Boden. Dort rückt man zum Schlafen zusammen."
+    "hinweis": "Wasser + Boden. Dort rückt man zum Schlafen zusammen.",
+    "umschrift": "mo-tem",
+    "ipa": "ˈmo.tem"
    },
    {
     "wort": "mulo",
     "deutsch": "Dampf, Dunst, Wolke",
     "gruppe": "Unten: die Höhle",
-    "hinweis": "Der Atem des Spalts. Die Pilze quellen davon auf."
+    "hinweis": "Der Atem des Spalts. Die Pilze quellen davon auf.",
+    "umschrift": "mu-lo",
+    "ipa": "ˈmu.lo"
    },
    {
     "wort": "tokvul",
     "deutsch": "heiße Mulde",
     "gruppe": "Unten: die Höhle",
-    "hinweis": "Stein + Wärme. Ein warmer Platz im Stein. Wer zwei findet, zeigt die zweite einem anderen."
+    "hinweis": "Stein + Wärme. Ein warmer Platz im Stein. Wer zwei findet, zeigt die zweite einem anderen.",
+    "umschrift": "tok-wul",
+    "ipa": "ˈtok.vul"
    },
    {
     "wort": "tiv",
     "deutsch": "Weg, Pfad",
     "gruppe": "Unten: die Höhle",
     "hinweis": "Eines der ersten Wörter.",
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "tiw",
+    "ipa": "ˈtiv"
    },
    {
     "wort": "uvo",
@@ -2817,7 +2849,9 @@
     "beispiel": {
      "lumisch": "ul uvo zan zan.",
      "deutsch": "Hier oben ist es hell."
-    }
+    },
+    "umschrift": "u-wo",
+    "ipa": "ˈu.vo"
    },
    {
     "wort": "unu",
@@ -2827,13 +2861,17 @@
     "beispiel": {
      "lumisch": "ul unu nezan tal.",
      "deutsch": "Bei uns unten ist es immer dunkel."
-    }
+    },
+    "umschrift": "u-nu",
+    "ipa": "ˈu.nu"
    },
    {
     "wort": "tuli",
     "deutsch": "Periode, Weile, Zeit",
     "gruppe": "Unten: die Höhle",
-    "hinweis": "Die Lumis rechnen in Perioden, nicht in Tagen. Wie lang eine ist, sagen sie nicht."
+    "hinweis": "Die Lumis rechnen in Perioden, nicht in Tagen. Wie lang eine ist, sagen sie nicht.",
+    "umschrift": "tu-li",
+    "ipa": "ˈtu.li"
    },
    {
     "wort": "pim",
@@ -2844,7 +2882,9 @@
      "lumisch": "ta nu sen pim12.",
      "deutsch": "Wir essen zwölf Pilze."
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "pim",
+    "ipa": "ˈpim"
    },
    {
     "wort": "pelu",
@@ -2855,7 +2895,9 @@
      "lumisch": "li mi pelu ma.",
      "deutsch": "Hast du etwas zu essen?"
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "pe-lu",
+    "ipa": "ˈpe.lu"
    },
    {
     "wort": "sen",
@@ -2866,267 +2908,359 @@
      "lumisch": "ta nu sen pim12.",
      "deutsch": "Wir essen zwölf Pilze."
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "sen",
+    "ipa": "ˈzen"
    },
    {
     "wort": "lap",
     "deutsch": "trinken",
     "gruppe": "Unten: Pilz, Essen, Trinken",
-    "hinweis": "Das Wasser ist warm."
+    "hinweis": "Das Wasser ist warm.",
+    "umschrift": "lap",
+    "ipa": "ˈlap"
    },
    {
     "wort": "pelutuli",
     "deutsch": "Essenszeit",
     "gruppe": "Unten: Pilz, Essen, Trinken",
-    "hinweis": "Sie kommt vom Spalt, wenn er stärker ausatmet."
+    "hinweis": "Sie kommt vom Spalt, wenn er stärker ausatmet.",
+    "umschrift": "pe-lu-tu-li",
+    "ipa": "ˈpe.lu.tu.li"
    },
    {
     "wort": "tuvo",
     "deutsch": "aufquellen, schwellen",
     "gruppe": "Unten: Pilz, Essen, Trinken",
-    "hinweis": "So werden die Pilze weich und kühl, wenn der Dampf kommt."
+    "hinweis": "So werden die Pilze weich und kühl, wenn der Dampf kommt.",
+    "umschrift": "tu-wo",
+    "ipa": "ˈtu.vo"
    },
    {
     "wort": "luvu",
     "deutsch": "weich",
     "gruppe": "Unten: Pilz, Essen, Trinken",
-    "hinweis": "Ein frischer Pilz ist luvu."
+    "hinweis": "Ein frischer Pilz ist luvu.",
+    "umschrift": "lu-wu",
+    "ipa": "ˈlu.vu"
    },
    {
     "wort": "mel",
     "deutsch": "süß",
     "gruppe": "Unten: Pilz, Essen, Trinken",
-    "hinweis": "Frische Pilze schmecken ein wenig süß."
+    "hinweis": "Frische Pilze schmecken ein wenig süß.",
+    "umschrift": "mel",
+    "ipa": "ˈmel"
    },
    {
     "wort": "zila",
     "deutsch": "frisch",
     "gruppe": "Unten: Pilz, Essen, Trinken",
-    "hinweis": "Ein Pilz, der an derselben Stelle nachwächst, ist immer zila."
+    "hinweis": "Ein Pilz, der an derselben Stelle nachwächst, ist immer zila.",
+    "umschrift": "zi-la",
+    "ipa": "ˈtsi.la"
    },
    {
     "wort": "tazi",
     "deutsch": "zäh, grau, verdorben",
     "gruppe": "Unten: Pilz, Essen, Trinken",
-    "hinweis": "Wer einen Pilz abreißt und liegen lässt, bekommt nach einer Weile tazi. Deshalb legt unten keiner einen Vorrat an."
+    "hinweis": "Wer einen Pilz abreißt und liegen lässt, bekommt nach einer Weile tazi. Deshalb legt unten keiner einen Vorrat an.",
+    "umschrift": "ta-zi",
+    "ipa": "ˈta.tsi"
    },
    {
     "wort": "silum",
     "deutsch": "Genuss, genießen",
     "gruppe": "Unten: Pilz, Essen, Trinken",
-    "hinweis": "Erst riechen, die Augen halb zu."
+    "hinweis": "Erst riechen, die Augen halb zu.",
+    "umschrift": "si-lum",
+    "ipa": "ˈzi.lum"
    },
    {
     "wort": "sol",
     "deutsch": "voll, satt, ganz, Ganzes, alle, fertig",
     "gruppe": "Unten: Pilz, Essen, Trinken",
-    "hinweis": "nesol = leer. Satt ist man unten immer."
+    "hinweis": "nesol = leer. Satt ist man unten immer.",
+    "umschrift": "sol",
+    "ipa": "ˈzol"
    },
    {
     "wort": "lisu",
     "deutsch": "Flechte",
     "gruppe": "Unten: Lager und Abfluss",
-    "hinweis": "Wächst erst seit ein paar tausend Jahren in der Höhle. Darauf schlafen die Lumis."
+    "hinweis": "Wächst erst seit ein paar tausend Jahren in der Höhle. Darauf schlafen die Lumis.",
+    "umschrift": "li-su",
+    "ipa": "ˈli.zu"
    },
    {
     "wort": "mus",
     "deutsch": "Moos",
     "gruppe": "Unten: Lager und Abfluss",
-    "hinweis": "Wie die Flechte erst seit ein paar tausend Jahren da. Weich, warm und zum Schlafen."
+    "hinweis": "Wie die Flechte erst seit ein paar tausend Jahren da. Weich, warm und zum Schlafen.",
+    "umschrift": "mus",
+    "ipa": "ˈmuz"
    },
    {
     "wort": "lomo",
     "deutsch": "Lager, Bett",
     "gruppe": "Unten: Lager und Abfluss",
-    "hinweis": "Der Schlafplatz aus Flechte und Moos."
+    "hinweis": "Der Schlafplatz aus Flechte und Moos.",
+    "umschrift": "lo-mo",
+    "ipa": "ˈlo.mo"
    },
    {
     "wort": "tokek",
     "deutsch": "Abflussspalte",
     "gruppe": "Unten: Lager und Abfluss",
-    "hinweis": "Stein + weg. Die Felsspalte, in der das Wasser verschwindet und mit ihm alles, was die Lumis ausscheiden."
+    "hinweis": "Stein + weg. Die Felsspalte, in der das Wasser verschwindet und mit ihm alles, was die Lumis ausscheiden.",
+    "umschrift": "to-kek",
+    "ipa": "ˈto.kek"
    },
    {
     "wort": "moek",
     "deutsch": "ausscheiden, Notdurft",
     "gruppe": "Unten: Lager und Abfluss",
-    "hinweis": "Wasser + weg. Es geht mit dem Wasser fort, und niemand denkt weiter daran."
+    "hinweis": "Wasser + weg. Es geht mit dem Wasser fort, und niemand denkt weiter daran.",
+    "umschrift": "mo-ek",
+    "ipa": "ˈmo.ek"
    },
    {
     "wort": "pati",
     "deutsch": "Finger",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Kleine Hand."
+    "hinweis": "Kleine Hand.",
+    "umschrift": "pa-ti",
+    "ipa": "ˈpa.ti"
    },
    {
     "wort": "patimak",
     "deutsch": "Daumen",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Der große Finger. Lumis haben Hände mit Daumen."
+    "hinweis": "Der große Finger. Lumis haben Hände mit Daumen.",
+    "umschrift": "pa-ti-mak",
+    "ipa": "ˈpa.ti.mak"
    },
    {
     "wort": "tap",
     "deutsch": "Fuß",
-    "gruppe": "Unten: wir und unser Körper"
+    "gruppe": "Unten: wir und unser Körper",
+    "umschrift": "tap",
+    "ipa": "ˈtap"
    },
    {
     "wort": "oki",
     "deutsch": "Auge, sehen",
-    "gruppe": "Unten: wir und unser Körper"
+    "gruppe": "Unten: wir und unser Körper",
+    "umschrift": "o-ki",
+    "ipa": "ˈo.ki"
    },
    {
     "wort": "ela",
     "deutsch": "Ohr, hören",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Die Lumis haben lange Ohren."
+    "hinweis": "Die Lumis haben lange Ohren.",
+    "umschrift": "e-la",
+    "ipa": "ˈe.la"
    },
    {
     "wort": "zanpati",
     "deutsch": "Antenne",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Licht-Finger. Mit ihnen zeigt die Lumi, wie sie sich fühlt."
+    "hinweis": "Licht-Finger. Mit ihnen zeigt die Lumi, wie sie sich fühlt.",
+    "umschrift": "zan-pa-ti",
+    "ipa": "ˈtsan.pa.ti"
    },
    {
     "wort": "nam",
     "deutsch": "Mund, sagen",
-    "gruppe": "Unten: wir und unser Körper"
+    "gruppe": "Unten: wir und unser Körper",
+    "umschrift": "nam",
+    "ipa": "ˈnam"
    },
    {
     "wort": "nes",
     "deutsch": "Nase, riechen",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Riechen ist für die Lumis fast so wichtig wie sehen."
+    "hinweis": "Riechen ist für die Lumis fast so wichtig wie sehen.",
+    "umschrift": "nes",
+    "ipa": "ˈnez"
    },
    {
     "wort": "kopu",
     "deutsch": "Kopf",
-    "gruppe": "Unten: wir und unser Körper"
+    "gruppe": "Unten: wir und unser Körper",
+    "umschrift": "ko-pu",
+    "ipa": "ˈko.pu"
    },
    {
     "wort": "tuk",
     "deutsch": "Herz",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Klingt wie sein Schlag."
+    "hinweis": "Klingt wie sein Schlag.",
+    "umschrift": "tuk",
+    "ipa": "ˈtuk"
    },
    {
     "wort": "pumu",
     "deutsch": "Bauch",
-    "gruppe": "Unten: wir und unser Körper"
+    "gruppe": "Unten: wir und unser Körper",
+    "umschrift": "pu-mu",
+    "ipa": "ˈpu.mu"
    },
    {
     "wort": "luna",
     "deutsch": "Haut, Fell",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Das Fell der Lumi leuchtet leicht blau."
+    "hinweis": "Das Fell der Lumi leuchtet leicht blau.",
+    "umschrift": "lu-na",
+    "ipa": "ˈlu.na"
    },
    {
     "wort": "tokan",
     "deutsch": "Knochen",
-    "gruppe": "Unten: wir und unser Körper"
+    "gruppe": "Unten: wir und unser Körper",
+    "umschrift": "to-kan",
+    "ipa": "ˈto.kan"
    },
    {
     "wort": "vulmo",
     "deutsch": "Blut",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Warmes Wasser."
+    "hinweis": "Warmes Wasser.",
+    "umschrift": "wul-mo",
+    "ipa": "ˈvul.mo"
    },
    {
     "wort": "kit",
     "deutsch": "Zahn",
-    "gruppe": "Unten: wir und unser Körper"
+    "gruppe": "Unten: wir und unser Körper",
+    "umschrift": "kit",
+    "ipa": "ˈkit"
    },
    {
     "wort": "lelu",
     "deutsch": "Haar",
-    "gruppe": "Unten: wir und unser Körper"
+    "gruppe": "Unten: wir und unser Körper",
+    "umschrift": "le-lu",
+    "ipa": "ˈle.lu"
    },
    {
     "wort": "pal",
     "deutsch": "Arm",
-    "gruppe": "Unten: wir und unser Körper"
+    "gruppe": "Unten: wir und unser Körper",
+    "umschrift": "pal",
+    "ipa": "ˈpal"
    },
    {
     "wort": "nini",
     "deutsch": "Kind",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Kommt nach tu Monaten (sieben)."
+    "hinweis": "Kommt nach tu Monaten (sieben).",
+    "umschrift": "ni-ni",
+    "ipa": "ˈni.ni"
    },
    {
     "wort": "ama",
     "deutsch": "tragende Rolle",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Eine von zwei Rollen, die jede Lumi einnehmen kann. Für Menschen: Mutter. Das Wort hat kein Geschlecht."
+    "hinweis": "Eine von zwei Rollen, die jede Lumi einnehmen kann. Für Menschen: Mutter. Das Wort hat kein Geschlecht.",
+    "umschrift": "a-ma",
+    "ipa": "ˈa.ma"
    },
    {
     "wort": "apa",
     "deutsch": "andere Rolle",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Die zweite Rolle. Für Menschen: Vater."
+    "hinweis": "Die zweite Rolle. Für Menschen: Vater.",
+    "umschrift": "a-pa",
+    "ipa": "ˈa.pa"
    },
    {
     "wort": "kami",
     "deutsch": "Freund, Freundin",
-    "gruppe": "Unten: wir und unser Körper"
+    "gruppe": "Unten: wir und unser Körper",
+    "umschrift": "ka-mi",
+    "ipa": "ˈka.mi"
    },
    {
     "wort": "ulkami",
     "deutsch": "Nachbar, Nachbarin",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Der Freund bei uns."
+    "hinweis": "Der Freund bei uns.",
+    "umschrift": "ul-ka-mi",
+    "ipa": "ˈul.ka.mi"
    },
    {
     "wort": "vulsam",
     "deutsch": "kuscheln, Wärme teilen",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Warm + mit. Rücken an Bauch, die Ohren nach unten."
+    "hinweis": "Warm + mit. Rücken an Bauch, die Ohren nach unten.",
+    "umschrift": "wul-sam",
+    "ipa": "ˈvul.zam"
    },
    {
     "wort": "namsam",
     "deutsch": "Gespräch, reden",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Sagen + zusammen. Das Hauptgeschäft der Lumis neben Essen und Schlafen."
+    "hinweis": "Sagen + zusammen. Das Hauptgeschäft der Lumis neben Essen und Schlafen.",
+    "umschrift": "nam-sam",
+    "ipa": "ˈnam.zam"
    },
    {
     "wort": "tapmak",
     "deutsch": "Bein",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "großer Fuß."
+    "hinweis": "großer Fuß.",
+    "umschrift": "tap-mak",
+    "ipa": "ˈtap.mak"
    },
    {
     "wort": "velu",
     "deutsch": "Hals",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "neue Wurzel."
+    "hinweis": "neue Wurzel.",
+    "umschrift": "we-lu",
+    "ipa": "ˈve.lu"
    },
    {
     "wort": "nepumu",
     "deutsch": "Rücken",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "nicht Bauch."
+    "hinweis": "nicht Bauch.",
+    "umschrift": "ne-pu-mu",
+    "ipa": "ˈne.pu.mu"
    },
    {
     "wort": "tukmur",
     "deutsch": "Brust",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Herz-Wand."
+    "hinweis": "Herz-Wand.",
+    "umschrift": "tuk-mur",
+    "ipa": "ˈtuk.muɾ"
    },
    {
     "wort": "lapi",
     "deutsch": "Zunge",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "von lap, trinken."
+    "hinweis": "von lap, trinken.",
+    "umschrift": "la-pi",
+    "ipa": "ˈla.pi"
    },
    {
     "wort": "namluna",
     "deutsch": "Lippe",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Mund + Haut."
+    "hinweis": "Mund + Haut.",
+    "umschrift": "nam-lu-na",
+    "ipa": "ˈnam.lu.na"
    },
    {
     "wort": "namtuk",
     "deutsch": "Stimme",
     "gruppe": "Unten: wir und unser Körper",
-    "hinweis": "Mund + Herz."
+    "hinweis": "Mund + Herz.",
+    "umschrift": "nam-tuk",
+    "ipa": "ˈnam.tuk"
    },
    {
     "wort": "sumu",
@@ -3137,7 +3271,9 @@
      "lumisch": "ke Susi sumu.",
      "deutsch": "Ich habe geschlafen."
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "su-mu",
+    "ipa": "ˈzu.mu"
    },
    {
     "wort": "pat",
@@ -3147,12 +3283,16 @@
      "lumisch": "su nu pat ko unu.",
      "deutsch": "Bald gehen wir nach unten."
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "pat",
+    "ipa": "ˈpat"
    },
    {
     "wort": "tapi",
     "deutsch": "laufen, rennen",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "ta-pi",
+    "ipa": "ˈta.pi"
    },
    {
     "wort": "kom",
@@ -3161,7 +3301,9 @@
     "beispiel": {
      "lumisch": "ke zel3 li ne kom.",
      "deutsch": "Vor drei Tagen bist du nicht gekommen."
-    }
+    },
+    "umschrift": "kom",
+    "ipa": "ˈkom"
    },
    {
     "wort": "tam",
@@ -3171,24 +3313,32 @@
     "beispiel": {
      "lumisch": "ta nu tam ul tivmo.",
      "deutsch": "Wir sitzen am Fluss."
-    }
+    },
+    "umschrift": "tam",
+    "ipa": "ˈtam"
    },
    {
     "wort": "sap",
     "deutsch": "wissen",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "sap",
+    "ipa": "ˈzap"
    },
    {
     "wort": "sapu",
     "deutsch": "lernen",
     "gruppe": "Unten: was man tut",
-    "hinweis": "Wissen, das gerade ankommt."
+    "hinweis": "Wissen, das gerade ankommt.",
+    "umschrift": "sa-pu",
+    "ipa": "ˈza.pu"
    },
    {
     "wort": "kolu",
     "deutsch": "denken, Gedanke",
     "gruppe": "Unten: was man tut",
-    "hinweis": "kolu kolu = tief nachdenken, philosophieren. Das tun die Lumis den ganzen Tag."
+    "hinweis": "kolu kolu = tief nachdenken, philosophieren. Das tun die Lumis den ganzen Tag.",
+    "umschrift": "ko-lu",
+    "ipa": "ˈko.lu"
    },
    {
     "wort": "lik",
@@ -3199,7 +3349,9 @@
      "lumisch": "Susi. ke to tevi. Susi lik.",
      "deutsch": "Susi. Das war neu. Ich mag es."
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "lik",
+    "ipa": "ˈlik"
    },
    {
     "wort": "mi",
@@ -3210,311 +3362,419 @@
      "lumisch": "Susi mi pim3.",
      "deutsch": "Ich habe drei Pilze."
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "mi",
+    "ipa": "ˈmi"
    },
    {
     "wort": "pek",
     "deutsch": "geben",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "pek",
+    "ipa": "ˈpek"
    },
    {
     "wort": "tak",
     "deutsch": "nehmen",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "tak",
+    "ipa": "ˈtak"
    },
    {
     "wort": "kel",
     "deutsch": "machen",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "kel",
+    "ipa": "ˈkel"
    },
    {
     "wort": "kil",
     "deutsch": "suchen",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "kil",
+    "ipa": "ˈkil"
    },
    {
     "wort": "lun",
     "deutsch": "finden",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "lun",
+    "ipa": "ˈlun"
    },
    {
     "wort": "tum",
     "deutsch": "helfen, Hilfe",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "tum",
+    "ipa": "ˈtum"
    },
    {
     "wort": "kik",
     "deutsch": "lachen, Freude",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "kik",
+    "ipa": "ˈkik"
    },
    {
     "wort": "moki",
     "deutsch": "weinen, traurig, Trauer",
     "gruppe": "Unten: was man tut",
-    "hinweis": "Wasser + Auge."
+    "hinweis": "Wasser + Auge.",
+    "umschrift": "mo-ki",
+    "ipa": "ˈmo.ki"
    },
    {
     "wort": "zepa",
     "deutsch": "tanzen",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "ze-pa",
+    "ipa": "ˈtse.pa"
    },
    {
     "wort": "lula",
     "deutsch": "singen",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "lu-la",
+    "ipa": "ˈlu.la"
    },
    {
     "wort": "mura",
     "deutsch": "warten, langsam",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "mu-ra",
+    "ipa": "ˈmu.ɾa"
    },
    {
     "wort": "okiko",
     "deutsch": "zeigen",
     "gruppe": "Unten: was man tut",
-    "hinweis": "Auge hin."
+    "hinweis": "Auge hin.",
+    "umschrift": "o-ki-ko",
+    "ipa": "ˈo.ki.ko"
    },
    {
     "wort": "kuru",
     "deutsch": "schicken",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "ku-ru",
+    "ipa": "ˈku.ɾu"
    },
    {
     "wort": "pera",
     "deutsch": "anfangen, beginnen, Anfang",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "pe-ra",
+    "ipa": "ˈpe.ɾa"
    },
    {
     "wort": "pil",
     "deutsch": "spielen, Spiel",
-    "gruppe": "Unten: was man tut"
+    "gruppe": "Unten: was man tut",
+    "umschrift": "pil",
+    "ipa": "ˈpil"
    },
    {
     "wort": "kolutok",
     "deutsch": "Rätsel",
     "gruppe": "Unten: was man tut",
-    "hinweis": "Denken + Stein: ein harter Brocken, den man knackt."
+    "hinweis": "Denken + Stein: ein harter Brocken, den man knackt.",
+    "umschrift": "ko-lu-tok",
+    "ipa": "ˈko.lu.tok"
    },
    {
     "wort": "taptam",
     "deutsch": "stehen",
     "gruppe": "Unten: was man tut",
-    "hinweis": "Fuß + bleiben."
+    "hinweis": "Fuß + bleiben.",
+    "umschrift": "tap-tam",
+    "ipa": "ˈtap.tam"
    },
    {
     "wort": "unupat",
     "deutsch": "fallen",
     "gruppe": "Unten: was man tut",
-    "hinweis": "nach unten gehen."
+    "hinweis": "nach unten gehen.",
+    "umschrift": "u-nu-pat",
+    "ipa": "ˈu.nu.pat"
    },
    {
     "wort": "uvopat",
     "deutsch": "klettern, steigen",
     "gruppe": "Unten: was man tut",
-    "hinweis": "nach oben gehen."
+    "hinweis": "nach oben gehen.",
+    "umschrift": "u-wo-pat",
+    "ipa": "ˈu.vo.pat"
    },
    {
     "wort": "mopat",
     "deutsch": "schwimmen",
     "gruppe": "Unten: was man tut",
-    "hinweis": "Wasser + gehen."
+    "hinweis": "Wasser + gehen.",
+    "umschrift": "mo-pat",
+    "ipa": "ˈmo.pat"
    },
    {
     "wort": "lunako",
     "deutsch": "berühren",
     "gruppe": "Unten: was man tut",
-    "hinweis": "Haut + hin."
+    "hinweis": "Haut + hin.",
+    "umschrift": "lu-na-ko",
+    "ipa": "ˈlu.na.ko"
    },
    {
     "wort": "nekezan",
     "deutsch": "vergessen",
     "gruppe": "Unten: was man tut",
-    "hinweis": "ne + Erinnerung."
+    "hinweis": "ne + Erinnerung.",
+    "umschrift": "ne-ke-zan",
+    "ipa": "ˈne.ke.tsan"
    },
    {
     "wort": "mimpek",
     "deutsch": "teilen",
     "gruppe": "Unten: was man tut",
-    "hinweis": "Hälfte + geben."
+    "hinweis": "Hälfte + geben.",
+    "umschrift": "mim-pek",
+    "ipa": "ˈmim.pek"
    },
    {
     "wort": "kiltak",
     "deutsch": "sammeln",
     "gruppe": "Unten: was man tut",
-    "hinweis": "suchen + nehmen."
+    "hinweis": "suchen + nehmen.",
+    "umschrift": "kil-tak",
+    "ipa": "ˈkil.tak"
    },
    {
     "wort": "zankel",
     "deutsch": "einschalten",
     "gruppe": "Unten: was man tut",
-    "hinweis": "Licht + machen. Die Lumi wird zankel."
+    "hinweis": "Licht + machen. Die Lumi wird zankel.",
+    "umschrift": "zan-kel",
+    "ipa": "ˈtsan.kel"
    },
    {
     "wort": "nezankel",
     "deutsch": "ausschalten",
     "gruppe": "Unten: was man tut",
-    "hinweis": "ne + zankel."
+    "hinweis": "ne + zankel.",
+    "umschrift": "ne-zan-kel",
+    "ipa": "ˈne.tsan.kel"
    },
    {
     "wort": "zanpim",
     "deutsch": "Leuchtpilz",
     "gruppe": "Unten: Pilzsorten",
-    "hinweis": "Licht + Pilz."
+    "hinweis": "Licht + Pilz.",
+    "umschrift": "zan-pim",
+    "ipa": "ˈtsan.pim"
    },
    {
     "wort": "melpim",
     "deutsch": "Süßpilz",
     "gruppe": "Unten: Pilzsorten",
-    "hinweis": "süß + Pilz."
+    "hinweis": "süß + Pilz.",
+    "umschrift": "mel-pim",
+    "ipa": "ˈmel.pim"
    },
    {
     "wort": "makpim",
     "deutsch": "Riesenpilz",
     "gruppe": "Unten: Pilzsorten",
-    "hinweis": "groß + Pilz."
+    "hinweis": "groß + Pilz.",
+    "umschrift": "mak-pim",
+    "ipa": "ˈmak.pim"
    },
    {
     "wort": "nimpim",
     "deutsch": "Zwergpilz",
     "gruppe": "Unten: Pilzsorten",
-    "hinweis": "klein + Pilz."
+    "hinweis": "klein + Pilz.",
+    "umschrift": "nim-pim",
+    "ipa": "ˈnim.pim"
    },
    {
     "wort": "mulopim",
     "deutsch": "Dampfpilz",
     "gruppe": "Unten: Pilzsorten",
-    "hinweis": "wächst im Dampf am Spalt."
+    "hinweis": "wächst im Dampf am Spalt.",
+    "umschrift": "mu-lo-pim",
+    "ipa": "ˈmu.lo.pim"
    },
    {
     "wort": "tokpim",
     "deutsch": "Steinpilz",
     "gruppe": "Unten: Pilzsorten",
-    "hinweis": "wächst auf Stein."
+    "hinweis": "wächst auf Stein.",
+    "umschrift": "tok-pim",
+    "ipa": "ˈtok.pim"
    },
    {
     "wort": "kivpim",
     "deutsch": "Eispilz",
     "gruppe": "Unten: Pilzsorten",
-    "hinweis": "in den Ritzen des Eises."
+    "hinweis": "in den Ritzen des Eises.",
+    "umschrift": "kiw-pim",
+    "ipa": "ˈkiv.pim"
    },
    {
     "wort": "mopim",
     "deutsch": "Uferpilz",
     "gruppe": "Unten: Pilzsorten",
-    "hinweis": "Wasser + Pilz."
+    "hinweis": "Wasser + Pilz.",
+    "umschrift": "mo-pim",
+    "ipa": "ˈmo.pim"
    },
    {
     "wort": "korpim",
     "deutsch": "Pilzgeflecht, Myzel",
     "gruppe": "Unten: Pilzsorten",
-    "hinweis": "Seil + Pilz."
+    "hinweis": "Seil + Pilz.",
+    "umschrift": "kor-pim",
+    "ipa": "ˈkoɾ.pim"
    },
    {
     "wort": "pimsemi",
     "deutsch": "Sporen",
     "gruppe": "Unten: Pilzsorten",
-    "hinweis": "Pilz + Samen."
+    "hinweis": "Pilz + Samen.",
+    "umschrift": "pim-se-mi",
+    "ipa": "ˈpim.ze.mi"
    },
    {
     "wort": "pimtak",
     "deutsch": "Pilze pflücken",
     "gruppe": "Unten: Pilzsorten",
-    "hinweis": "Pilz + nehmen."
+    "hinweis": "Pilz + nehmen.",
+    "umschrift": "pim-tak",
+    "ipa": "ˈpim.tak"
    },
    {
     "wort": "tevikom",
     "deutsch": "wachsen, nachwachsen",
     "gruppe": "Unten: Pilzsorten",
-    "hinweis": "neu + kommen."
+    "hinweis": "neu + kommen.",
+    "umschrift": "te-wi-kom",
+    "ipa": "ˈte.vi.kom"
    },
    {
     "wort": "umomimu",
     "deutsch": "Stille der Höhle",
     "gruppe": "Unten: Höhlenstimmungen",
-    "hinweis": "Höhle + ruhig."
+    "hinweis": "Höhle + ruhig.",
+    "umschrift": "u-mo-mi-mu",
+    "ipa": "ˈu.mo.mi.mu"
    },
    {
     "wort": "umonam",
     "deutsch": "Echo",
     "gruppe": "Unten: Höhlenstimmungen",
-    "hinweis": "die Höhle sagt."
+    "hinweis": "die Höhle sagt.",
+    "umschrift": "u-mo-nam",
+    "ipa": "ˈu.mo.nam"
    },
    {
     "wort": "monim",
     "deutsch": "Tropfen",
     "gruppe": "Unten: Höhlenstimmungen",
-    "hinweis": "Wasser + klein."
+    "hinweis": "Wasser + klein.",
+    "umschrift": "mo-nim",
+    "ipa": "ˈmo.nim"
    },
    {
     "wort": "zanlim",
     "deutsch": "Glimmen, Dämmerlicht",
     "gruppe": "Unten: Höhlenstimmungen",
-    "hinweis": "Licht + wenig."
+    "hinweis": "Licht + wenig.",
+    "umschrift": "zan-lim",
+    "ipa": "ˈtsan.lim"
    },
    {
     "wort": "umozan",
     "deutsch": "Höhlenleuchten",
     "gruppe": "Unten: Höhlenstimmungen",
-    "hinweis": "wenn alle hell leuchten (Fest)."
+    "hinweis": "wenn alle hell leuchten (Fest).",
+    "umschrift": "u-mo-zan",
+    "ipa": "ˈu.mo.tsan"
    },
    {
     "wort": "vulmimu",
     "deutsch": "Geborgenheit",
     "gruppe": "Unten: Höhlenstimmungen",
-    "hinweis": "warm + ruhig."
+    "hinweis": "warm + ruhig.",
+    "umschrift": "wul-mi-mu",
+    "ipa": "ˈvul.mi.mu"
    },
    {
     "wort": "kivnam",
     "deutsch": "Knacken im Eis",
     "gruppe": "Unten: Höhlenstimmungen",
-    "hinweis": "das Eis sagt."
+    "hinweis": "das Eis sagt.",
+    "umschrift": "kiw-nam",
+    "ipa": "ˈkiv.nam"
    },
    {
     "wort": "usunim",
     "deutsch": "Atem, atmen",
     "gruppe": "Unten: Höhlenstimmungen",
-    "hinweis": "kleiner Wind."
+    "hinweis": "kleiner Wind.",
+    "umschrift": "u-su-nim",
+    "ipa": "ˈu.zu.nim"
    },
    {
     "wort": "nezantuli",
     "deutsch": "Ruhezeit",
     "gruppe": "Unten: Höhlenstimmungen",
-    "hinweis": "dunkle Zeit, alle dimmen."
+    "hinweis": "dunkle Zeit, alle dimmen.",
+    "umschrift": "ne-zan-tu-li",
+    "ipa": "ˈne.tsan.tu.li"
    },
    {
     "wort": "zantuli",
     "deutsch": "Wachzeit",
     "gruppe": "Unten: Höhlenstimmungen",
-    "hinweis": "helle Zeit."
+    "hinweis": "helle Zeit.",
+    "umschrift": "zan-tu-li",
+    "ipa": "ˈtsan.tu.li"
    },
    {
     "wort": "tamsum",
     "deutsch": "Gemütlichkeit",
     "gruppe": "Unten: Höhlenstimmungen",
-    "hinweis": "bleiben + gut."
+    "hinweis": "bleiben + gut.",
+    "umschrift": "tam-sum",
+    "ipa": "ˈtam.zum"
    },
    {
     "wort": "sum",
     "deutsch": "gut, schön",
     "gruppe": "Wie etwas ist",
     "hinweis": "Guten Morgen = zel sum.",
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "sum",
+    "ipa": "ˈzum"
    },
    {
     "wort": "nesum",
     "deutsch": "schlecht, hässlich",
     "gruppe": "Wie etwas ist",
-    "hinweis": "ne + sum."
+    "hinweis": "ne + sum.",
+    "umschrift": "ne-sum",
+    "ipa": "ˈne.zum"
    },
    {
     "wort": "mak",
     "deutsch": "groß",
-    "gruppe": "Wie etwas ist"
+    "gruppe": "Wie etwas ist",
+    "umschrift": "mak",
+    "ipa": "ˈmak"
    },
    {
     "wort": "nim",
     "deutsch": "klein",
-    "gruppe": "Wie etwas ist"
+    "gruppe": "Wie etwas ist",
+    "umschrift": "nim",
+    "ipa": "ˈnim"
    },
    {
     "wort": "tevi",
@@ -3524,170 +3784,228 @@
     "beispiel": {
      "lumisch": "Susi. ke to tevi. Susi lik.",
      "deutsch": "Susi. Das war neu. Ich mag es."
-    }
+    },
+    "umschrift": "te-wi",
+    "ipa": "ˈte.vi"
    },
    {
     "wort": "taso",
     "deutsch": "alt",
-    "gruppe": "Wie etwas ist"
+    "gruppe": "Wie etwas ist",
+    "umschrift": "ta-so",
+    "ipa": "ˈta.zo"
    },
    {
     "wort": "zip",
     "deutsch": "schnell",
-    "gruppe": "Wie etwas ist"
+    "gruppe": "Wie etwas ist",
+    "umschrift": "zip",
+    "ipa": "ˈtsip"
    },
    {
     "wort": "tokal",
     "deutsch": "stark",
     "gruppe": "Wie etwas ist",
-    "hinweis": "netokal = schwach."
+    "hinweis": "netokal = schwach.",
+    "umschrift": "to-kal",
+    "ipa": "ˈto.kal"
    },
    {
     "wort": "lon",
     "deutsch": "lang",
     "gruppe": "Wie etwas ist",
-    "hinweis": "nelon = kurz."
+    "hinweis": "nelon = kurz.",
+    "umschrift": "lon",
+    "ipa": "ˈlon"
    },
    {
     "wort": "tomo",
     "deutsch": "schwer",
     "gruppe": "Wie etwas ist",
-    "hinweis": "netomo = leicht."
+    "hinweis": "netomo = leicht.",
+    "umschrift": "to-mo",
+    "ipa": "ˈto.mo"
    },
    {
     "wort": "mimu",
     "deutsch": "ruhig, still",
-    "gruppe": "Wie etwas ist"
+    "gruppe": "Wie etwas ist",
+    "umschrift": "mi-mu",
+    "ipa": "ˈmi.mu"
    },
    {
     "wort": "tikal",
     "deutsch": "scharf",
-    "gruppe": "Wie etwas ist"
+    "gruppe": "Wie etwas ist",
+    "umschrift": "ti-kal",
+    "ipa": "ˈti.kal"
    },
    {
     "wort": "sana",
     "deutsch": "sicher, geschützt",
-    "gruppe": "Wie etwas ist"
+    "gruppe": "Wie etwas ist",
+    "umschrift": "sa-na",
+    "ipa": "ˈza.na"
    },
    {
     "wort": "zansol",
     "deutsch": "bereit",
     "gruppe": "Wie etwas ist",
-    "hinweis": "Licht voll. So sieht man, wie bereit jemand ist."
+    "hinweis": "Licht voll. So sieht man, wie bereit jemand ist.",
+    "umschrift": "zan-sol",
+    "ipa": "ˈtsan.zol"
    },
    {
     "wort": "nimtiv",
     "deutsch": "nah",
     "gruppe": "Wie etwas ist",
-    "hinweis": "kurzer Weg."
+    "hinweis": "kurzer Weg.",
+    "umschrift": "nim-tiw",
+    "ipa": "ˈnim.tiv"
    },
    {
     "wort": "lontiv",
     "deutsch": "fern",
     "gruppe": "Wie etwas ist",
-    "hinweis": "langer Weg."
+    "hinweis": "langer Weg.",
+    "umschrift": "lon-tiw",
+    "ipa": "ˈlon.tiv"
    },
    {
     "wort": "unulon",
     "deutsch": "tief",
     "gruppe": "Wie etwas ist",
-    "hinweis": "unten + lang."
+    "hinweis": "unten + lang.",
+    "umschrift": "u-nu-lon",
+    "ipa": "ˈu.nu.lon"
    },
    {
     "wort": "uvolon",
     "deutsch": "hoch",
     "gruppe": "Wie etwas ist",
-    "hinweis": "oben + lang."
+    "hinweis": "oben + lang.",
+    "umschrift": "u-wo-lon",
+    "ipa": "ˈu.vo.lon"
    },
    {
     "wort": "kivluna",
     "deutsch": "glatt",
     "gruppe": "Wie etwas ist",
-    "hinweis": "Eis + Haut."
+    "hinweis": "Eis + Haut.",
+    "umschrift": "kiw-lu-na",
+    "ipa": "ˈkiv.lu.na"
    },
    {
     "wort": "kativ",
     "deutsch": "einfach",
     "gruppe": "Wie etwas ist",
-    "hinweis": "ein Weg."
+    "hinweis": "ein Weg.",
+    "umschrift": "ka-tiw",
+    "ipa": "ˈka.tiv"
    },
    {
     "wort": "tomotiv",
     "deutsch": "schwierig",
     "gruppe": "Wie etwas ist",
-    "hinweis": "schwerer Weg."
+    "hinweis": "schwerer Weg.",
+    "umschrift": "to-mo-tiw",
+    "ipa": "ˈto.mo.tiv"
    },
    {
     "wort": "kamisum",
     "deutsch": "freundlich",
     "gruppe": "Wie etwas ist",
-    "hinweis": "Freund + gut."
+    "hinweis": "Freund + gut.",
+    "umschrift": "ka-mi-sum",
+    "ipa": "ˈka.mi.zum"
    },
    {
     "wort": "sapmak",
     "deutsch": "klug",
     "gruppe": "Wie etwas ist",
-    "hinweis": "viel Wissen."
+    "hinweis": "viel Wissen.",
+    "umschrift": "sap-mak",
+    "ipa": "ˈzap.mak"
    },
    {
     "wort": "nesumu",
     "deutsch": "wach",
     "gruppe": "Wie etwas ist",
-    "hinweis": "ne + müde."
+    "hinweis": "ne + müde.",
+    "umschrift": "ne-su-mu",
+    "ipa": "ˈne.zu.mu"
    },
    {
     "wort": "sumluna",
     "deutsch": "gesund",
     "gruppe": "Wie etwas ist",
-    "hinweis": "gute Haut."
+    "hinweis": "gute Haut.",
+    "umschrift": "sum-lu-na",
+    "ipa": "ˈzum.lu.na"
    },
    {
     "wort": "nesumluna",
     "deutsch": "krank",
     "gruppe": "Wie etwas ist",
-    "hinweis": "ne + sumluna."
+    "hinweis": "ne + sumluna.",
+    "umschrift": "ne-sum-lu-na",
+    "ipa": "ˈne.zum.lu.na"
    },
    {
     "wort": "temzan",
     "deutsch": "braun",
     "gruppe": "Wie etwas ist",
-    "hinweis": "Erde + Licht (Farbregel)."
+    "hinweis": "Erde + Licht (Farbregel).",
+    "umschrift": "tem-zan",
+    "ipa": "ˈtem.tsan"
    },
    {
     "wort": "zanluna",
     "deutsch": "Farbe",
     "gruppe": "Farben",
-    "hinweis": "Licht + Haut. Wie ein Ding im Licht aussieht. Das Gegenstück ist nezanluna, der Schatten."
+    "hinweis": "Licht + Haut. Wie ein Ding im Licht aussieht. Das Gegenstück ist nezanluna, der Schatten.",
+    "umschrift": "zan-lu-na",
+    "ipa": "ˈtsan.lu.na"
    },
    {
     "wort": "mulozan",
     "deutsch": "weiß",
     "gruppe": "Farben",
-    "hinweis": "Dampf + Licht. Der Dampf aus dem Spalt im Antennenlicht."
+    "hinweis": "Dampf + Licht. Der Dampf aus dem Spalt im Antennenlicht.",
+    "umschrift": "mu-lo-zan",
+    "ipa": "ˈmu.lo.tsan"
    },
    {
     "wort": "nezanmo",
     "deutsch": "schwarz",
     "gruppe": "Farben",
-    "hinweis": "Dunkel + Wasser. So sieht der Fluss aus, wo kein Licht hinfällt."
+    "hinweis": "Dunkel + Wasser. So sieht der Fluss aus, wo kein Licht hinfällt.",
+    "umschrift": "ne-zan-mo",
+    "ipa": "ˈne.tsan.mo"
    },
    {
     "wort": "vulmozan",
     "deutsch": "rot",
     "gruppe": "Farben",
-    "hinweis": "Blut + Licht."
+    "hinweis": "Blut + Licht.",
+    "umschrift": "wul-mo-zan",
+    "ipa": "ˈvul.mo.tsan"
    },
    {
     "wort": "muszan",
     "deutsch": "grün",
     "gruppe": "Farben",
-    "hinweis": "Moos + Licht."
+    "hinweis": "Moos + Licht.",
+    "umschrift": "mus-zan",
+    "ipa": "ˈmuz.tsan"
    },
    {
     "wort": "pimzan",
     "deutsch": "gelb",
     "gruppe": "Farben",
-    "hinweis": "Pilz + Licht."
+    "hinweis": "Pilz + Licht.",
+    "umschrift": "pim-zan",
+    "ipa": "ˈpim.tsan"
    },
    {
     "wort": "kiru",
@@ -3697,108 +4015,144 @@
     "beispiel": {
      "lumisch": "li ne kiru.",
      "deutsch": "Du hast keine Angst."
-    }
+    },
+    "umschrift": "ki-ru",
+    "ipa": "ˈki.ɾu"
    },
    {
     "wort": "tikvul",
     "deutsch": "Wut, Zorn",
     "gruppe": "Gefühle und Gedanken",
-    "hinweis": "Scharf und warm."
+    "hinweis": "Scharf und warm.",
+    "umschrift": "tik-wul",
+    "ipa": "ˈtik.vul"
    },
    {
     "wort": "tikor",
     "deutsch": "Gefahr",
-    "gruppe": "Gefühle und Gedanken"
+    "gruppe": "Gefühle und Gedanken",
+    "umschrift": "ti-kor",
+    "ipa": "ˈti.koɾ"
    },
    {
     "wort": "unuko",
     "deutsch": "Heimweh",
     "gruppe": "Gefühle und Gedanken",
-    "hinweis": "Nach unten hin. Die Lumi am Handy hat es manchmal."
+    "hinweis": "Nach unten hin. Die Lumi am Handy hat es manchmal.",
+    "umschrift": "u-nu-ko",
+    "ipa": "ˈu.nu.ko"
    },
    {
     "wort": "suzan",
     "deutsch": "Hoffnung",
     "gruppe": "Gefühle und Gedanken",
-    "hinweis": "Das Licht, das bald kommt."
+    "hinweis": "Das Licht, das bald kommt.",
+    "umschrift": "su-zan",
+    "ipa": "ˈzu.tsan"
    },
    {
     "wort": "kezan",
     "deutsch": "Erinnerung",
     "gruppe": "Gefühle und Gedanken",
-    "hinweis": "Das Licht von früher."
+    "hinweis": "Das Licht von früher.",
+    "umschrift": "ke-zan",
+    "ipa": "ˈke.tsan"
    },
    {
     "wort": "kesam",
     "deutsch": "Geschichte, Erzählung",
     "gruppe": "Gefühle und Gedanken",
-    "hinweis": "Das, was früher mit uns war."
+    "hinweis": "Das, was früher mit uns war.",
+    "umschrift": "ke-sam",
+    "ipa": "ˈke.zam"
    },
    {
     "wort": "tivzan",
     "deutsch": "Strom",
     "gruppe": "Oben: Strom, Notfall, Familie",
-    "hinweis": "Weg + Licht."
+    "hinweis": "Weg + Licht.",
+    "umschrift": "tiw-zan",
+    "ipa": "ˈtiv.tsan"
    },
    {
     "wort": "netivzan",
     "deutsch": "Stromausfall, Blackout",
     "gruppe": "Oben: Strom, Notfall, Familie",
-    "hinweis": "ne + Strom."
+    "hinweis": "ne + Strom.",
+    "umschrift": "ne-tiw-zan",
+    "ipa": "ˈne.tiv.tsan"
    },
    {
     "wort": "zanpumu",
     "deutsch": "Akku, Batterie",
     "gruppe": "Oben: Strom, Notfall, Familie",
-    "hinweis": "Licht + Bauch."
+    "hinweis": "Licht + Bauch.",
+    "umschrift": "zan-pu-mu",
+    "ipa": "ˈtsan.pu.mu"
    },
    {
     "wort": "tivmol",
     "deutsch": "Netz, Internet",
     "gruppe": "Oben: Strom, Notfall, Familie",
-    "hinweis": "viele Wege."
+    "hinweis": "viele Wege.",
+    "umschrift": "tiw-mol",
+    "ipa": "ˈtiv.mol"
    },
    {
     "wort": "netivmol",
     "deutsch": "offline",
     "gruppe": "Oben: Strom, Notfall, Familie",
-    "hinweis": "ne + Netz. Der Name der App auf Lumisch."
+    "hinweis": "ne + Netz. Der Name der App auf Lumisch.",
+    "umschrift": "ne-tiw-mol",
+    "ipa": "ˈne.tiv.mol"
    },
    {
     "wort": "tikorkom",
     "deutsch": "Notfall",
     "gruppe": "Oben: Strom, Notfall, Familie",
-    "hinweis": "Gefahr + kommt."
+    "hinweis": "Gefahr + kommt.",
+    "umschrift": "ti-kor-kom",
+    "ipa": "ˈti.koɾ.kom"
    },
    {
     "wort": "sutiv",
     "deutsch": "Plan",
     "gruppe": "Oben: Strom, Notfall, Familie",
-    "hinweis": "Weg für später."
+    "hinweis": "Weg für später.",
+    "umschrift": "su-tiw",
+    "ipa": "ˈzu.tiv"
    },
    {
     "wort": "tumpelu",
     "deutsch": "Medikament, Heilmittel",
     "gruppe": "Oben: Strom, Notfall, Familie",
-    "hinweis": "Hilfe + Essen."
+    "hinweis": "Hilfe + Essen.",
+    "umschrift": "tum-pe-lu",
+    "ipa": "ˈtum.pe.lu"
    },
    {
     "wort": "tumuvu",
     "deutsch": "Arzt, Ärztin",
     "gruppe": "Oben: Strom, Notfall, Familie",
-    "hinweis": "Hilfe + Mensch."
+    "hinweis": "Hilfe + Mensch.",
+    "umschrift": "tu-mu-wu",
+    "ipa": "ˈtu.mu.vu"
    },
    {
     "wort": "amapa",
     "deutsch": "Familie",
     "gruppe": "Oben: Strom, Notfall, Familie",
-    "hinweis": "ama + apa."
+    "hinweis": "ama + apa.",
+    "umschrift": "a-ma-pa",
+    "ipa": "ˈa.ma.pa"
    },
    {
     "wort": "likomtok",
     "deutsch": "Treffpunkt",
     "gruppe": "Oben: Strom, Notfall, Familie",
-    "hinweis": "Begegnung + Stein."
+    "hinweis": "Begegnung + Stein.",
+    "umschrift": "li-kom-tok",
+    "ipa": "ˈli.kom.tok"
    },
    {
     "wort": "nu",
@@ -3809,7 +4163,9 @@
      "lumisch": "ta nu sen pim12.",
      "deutsch": "Wir essen zwölf Pilze."
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "nu",
+    "ipa": "ˈnu"
    },
    {
     "wort": "li",
@@ -3820,13 +4176,17 @@
      "lumisch": "li mi pelu ma.",
      "deutsch": "Hast du etwas zu essen?"
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "li",
+    "ipa": "ˈli"
    },
    {
     "wort": "la",
     "deutsch": "er, sie, es, man",
     "gruppe": "Kleine Wörter",
-    "hinweis": "Kein Geschlecht. la3 = sie drei."
+    "hinweis": "Kein Geschlecht. la3 = sie drei.",
+    "umschrift": "la",
+    "ipa": "ˈla"
    },
    {
     "wort": "ke",
@@ -3837,7 +4197,9 @@
      "lumisch": "Susi. ke to tevi. Susi lik.",
      "deutsch": "Susi. Das war neu. Ich mag es."
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "keh",
+    "ipa": "ˈke"
    },
    {
     "wort": "ta",
@@ -3847,7 +4209,9 @@
     "beispiel": {
      "lumisch": "ta nu sen pim12.",
      "deutsch": "Wir essen zwölf Pilze."
-    }
+    },
+    "umschrift": "ta",
+    "ipa": "ˈta"
    },
    {
     "wort": "su",
@@ -3858,7 +4222,9 @@
      "lumisch": "su nu pat ko unu.",
      "deutsch": "Bald gehen wir nach unten."
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "su",
+    "ipa": "ˈzu"
    },
    {
     "wort": "ne",
@@ -3869,7 +4235,9 @@
      "lumisch": "ke zel3 li ne kom.",
      "deutsch": "Vor drei Tagen bist du nicht gekommen."
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "neh",
+    "ipa": "ˈne"
    },
    {
     "wort": "ma",
@@ -3880,7 +4248,9 @@
      "lumisch": "li mi pelu ma.",
      "deutsch": "Hast du etwas zu essen?"
     },
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "ma",
+    "ipa": "ˈma"
    },
    {
     "wort": "ak",
@@ -3890,13 +4260,17 @@
     "beispiel": {
      "lumisch": "ak. Susi mi pim2.",
      "deutsch": "Ja. Ich habe zwei Pilze."
-    }
+    },
+    "umschrift": "ak",
+    "ipa": "ˈak"
    },
    {
     "wort": "ve",
     "deutsch": "von, gehört zu, aus",
     "gruppe": "Kleine Wörter",
-    "hinweis": "Besitz: ora ve nu = unser Haus."
+    "hinweis": "Besitz: ora ve nu = unser Haus.",
+    "umschrift": "weh",
+    "ipa": "ˈve"
    },
    {
     "wort": "ul",
@@ -3906,7 +4280,9 @@
     "beispiel": {
      "lumisch": "ul uvo zan zan.",
      "deutsch": "Hier oben ist es hell."
-    }
+    },
+    "umschrift": "ul",
+    "ipa": "ˈul"
    },
    {
     "wort": "ko",
@@ -3916,13 +4292,17 @@
     "beispiel": {
      "lumisch": "su nu pat ko unu.",
      "deutsch": "Bald gehen wir nach unten."
-    }
+    },
+    "umschrift": "ko",
+    "ipa": "ˈko"
    },
    {
     "wort": "ek",
     "deutsch": "weg, aus, heraus",
     "gruppe": "Kleine Wörter",
-    "hinweis": "Richtung weg von etwas."
+    "hinweis": "Richtung weg von etwas.",
+    "umschrift": "ek",
+    "ipa": "ˈek"
    },
    {
     "wort": "to",
@@ -3932,88 +4312,118 @@
     "beispiel": {
      "lumisch": "Susi. ke to tevi. Susi lik.",
      "deutsch": "Susi. Das war neu. Ich mag es."
-    }
+    },
+    "umschrift": "to",
+    "ipa": "ˈto"
    },
    {
     "wort": "ol",
     "deutsch": "oder",
     "gruppe": "Kleine Wörter",
-    "hinweis": "„Und“ gibt es nicht, man reiht einfach auf."
+    "hinweis": "„Und“ gibt es nicht, man reiht einfach auf.",
+    "umschrift": "ol",
+    "ipa": "ˈol"
    },
    {
     "wort": "pu",
     "deutsch": "weil, damit, Grund, Ursache",
     "gruppe": "Kleine Wörter",
-    "hinweis": "Auch als Hauptwort: pu ist der Grund. Die Wirkung dazu heißt zeku."
+    "hinweis": "Auch als Hauptwort: pu ist der Grund. Die Wirkung dazu heißt zeku.",
+    "umschrift": "pu",
+    "ipa": "ˈpu"
    },
    {
     "wort": "tan",
     "deutsch": "wenn, falls",
-    "gruppe": "Kleine Wörter"
+    "gruppe": "Kleine Wörter",
+    "umschrift": "tan",
+    "ipa": "ˈtan"
    },
    {
     "wort": "zeku",
     "deutsch": "also, folglich, Wirkung, Folge",
     "gruppe": "Kleine Wörter",
-    "hinweis": "Der Gegenpart zu pu: pu zeku = Ursache und Wirkung."
+    "hinweis": "Der Gegenpart zu pu: pu zeku = Ursache und Wirkung.",
+    "umschrift": "ze-ku",
+    "ipa": "ˈtse.ku"
    },
    {
     "wort": "ses",
     "deutsch": "aber, doch",
-    "gruppe": "Kleine Wörter"
+    "gruppe": "Kleine Wörter",
+    "umschrift": "ses",
+    "ipa": "ˈzez"
    },
    {
     "wort": "ki",
     "deutsch": "dass",
     "gruppe": "Kleine Wörter",
-    "hinweis": "Leitet einen ganzen Satz ein: Susi sap ki li kom = Susi weiß, dass du kommst."
+    "hinweis": "Leitet einen ganzen Satz ein: Susi sap ki li kom = Susi weiß, dass du kommst.",
+    "umschrift": "ki",
+    "ipa": "ˈki"
    },
    {
     "wort": "tisu",
     "deutsch": "können, möglich, vielleicht",
     "gruppe": "Kleine Wörter",
-    "hinweis": "Kurzwort vor dem Verb. netisu = unmöglich."
+    "hinweis": "Kurzwort vor dem Verb. netisu = unmöglich.",
+    "umschrift": "ti-su",
+    "ipa": "ˈti.zu"
    },
    {
     "wort": "kavu",
     "deutsch": "müssen, notwendig",
     "gruppe": "Kleine Wörter",
-    "hinweis": "Kurzwort vor dem Verb."
+    "hinweis": "Kurzwort vor dem Verb.",
+    "umschrift": "ka-wu",
+    "ipa": "ˈka.vu"
    },
    {
     "wort": "sovi",
     "deutsch": "sollen, Pflicht",
     "gruppe": "Kleine Wörter",
-    "hinweis": "Kurzwort vor dem Verb. Als Hauptwort die Pflicht."
+    "hinweis": "Kurzwort vor dem Verb. Als Hauptwort die Pflicht.",
+    "umschrift": "so-wi",
+    "ipa": "ˈzo.vi"
    },
    {
     "wort": "kovi",
     "deutsch": "wollen, Wille",
     "gruppe": "Kleine Wörter",
-    "hinweis": "Kurzwort vor dem Verb. Als Hauptwort der Wille."
+    "hinweis": "Kurzwort vor dem Verb. Als Hauptwort der Wille.",
+    "umschrift": "ko-wi",
+    "ipa": "ˈko.vi"
    },
    {
     "wort": "mu",
     "deutsch": "auch, noch",
-    "gruppe": "Kleine Wörter"
+    "gruppe": "Kleine Wörter",
+    "umschrift": "mu",
+    "ipa": "ˈmu"
    },
    {
     "wort": "mol",
     "deutsch": "viel, viele",
     "gruppe": "Kleine Wörter",
-    "hinweis": "Mehr, als man zählen will. Als Zahlzeichen +: pim+ = viele Pilze. „Wer zählt schon“ heißt ma sap."
+    "hinweis": "Mehr, als man zählen will. Als Zahlzeichen +: pim+ = viele Pilze. „Wer zählt schon“ heißt ma sap.",
+    "umschrift": "mol",
+    "ipa": "ˈmol"
    },
    {
     "wort": "lim",
     "deutsch": "wenig, wenige",
     "gruppe": "Kleine Wörter",
-    "hinweis": "Als Zahlzeichen -: pim- = ein paar Pilze."
+    "hinweis": "Als Zahlzeichen -: pim- = ein paar Pilze.",
+    "umschrift": "lim",
+    "ipa": "ˈlim"
    },
    {
     "wort": "vi",
     "deutsch": "mehr",
     "gruppe": "Kleine Wörter",
-    "hinweis": "A vi B = A mehr als B."
+    "hinweis": "A vi B = A mehr als B.",
+    "umschrift": "wi",
+    "ipa": "ˈvi"
    },
    {
     "wort": "tal",
@@ -4023,23 +4433,31 @@
     "beispiel": {
      "lumisch": "ul unu nezan tal.",
      "deutsch": "Bei uns unten ist es immer dunkel."
-    }
+    },
+    "umschrift": "tal",
+    "ipa": "ˈtal"
    },
    {
     "wort": "sam",
     "deutsch": "mit, zusammen",
     "gruppe": "Kleine Wörter",
-    "hinweis": "ne sam = ohne."
+    "hinweis": "ne sam = ohne.",
+    "umschrift": "sam",
+    "ipa": "ˈzam"
    },
    {
     "wort": "pur",
     "deutsch": "für",
-    "gruppe": "Kleine Wörter"
+    "gruppe": "Kleine Wörter",
+    "umschrift": "pur",
+    "ipa": "ˈpuɾ"
    },
    {
     "wort": "pas",
     "deutsch": "nur, bloß",
-    "gruppe": "Kleine Wörter"
+    "gruppe": "Kleine Wörter",
+    "umschrift": "pas",
+    "ipa": "ˈpaz"
    },
    {
     "wort": "sul",
@@ -4049,12 +4467,16 @@
     "beispiel": {
      "lumisch": "pok sul.",
      "deutsch": "Mach bitte die Tür auf."
-    }
+    },
+    "umschrift": "sul",
+    "ipa": "ˈzul"
    },
    {
     "wort": "tul",
     "deutsch": "danke",
-    "gruppe": "Kleine Wörter"
+    "gruppe": "Kleine Wörter",
+    "umschrift": "tul",
+    "ipa": "ˈtul"
    },
    {
     "wort": "mh",
@@ -4064,357 +4486,479 @@
     "beispiel": {
      "lumisch": "mh. pim0.",
      "deutsch": "Mh. Kein Pilz."
-    }
+    },
+    "umschrift": "mh (Lippen zu, kurz summen)",
+    "ipa": "ˈmː̩h"
    },
    {
     "wort": "o",
     "deutsch": "oh",
     "gruppe": "Kleine Wörter",
-    "hinweis": "Das Staunen."
+    "hinweis": "Das Staunen.",
+    "umschrift": "oh",
+    "ipa": "ˈoː"
    },
    {
     "wort": "kima",
     "deutsch": "ob",
     "gruppe": "Kleine Wörter",
-    "hinweis": "dass + Frage."
+    "hinweis": "dass + Frage.",
+    "umschrift": "ki-ma",
+    "ipa": "ˈki.ma"
    },
    {
     "wort": "sestal",
     "deutsch": "trotzdem",
     "gruppe": "Kleine Wörter",
-    "hinweis": "aber + immer."
+    "hinweis": "aber + immer.",
+    "umschrift": "ses-tal",
+    "ipa": "ˈzez.tal"
    },
    {
     "wort": "mimsap",
     "deutsch": "ungefähr, etwa",
     "gruppe": "Kleine Wörter",
-    "hinweis": "halb + wissen."
+    "hinweis": "halb + wissen.",
+    "umschrift": "mim-sap",
+    "ipa": "ˈmim.zap"
    },
    {
     "wort": "tiktel",
     "deutsch": "genau",
     "gruppe": "Kleine Wörter",
-    "hinweis": "scharfe Zahl."
+    "hinweis": "scharfe Zahl.",
+    "umschrift": "tik-tel",
+    "ipa": "ˈtik.tel"
    },
    {
     "wort": "ka",
     "deutsch": "eins, 1",
     "gruppe": "Zahlen",
-    "hinweis": "Gesprochen wird jede Ziffer einzeln: 12 = ka sa."
+    "hinweis": "Gesprochen wird jede Ziffer einzeln: 12 = ka sa.",
+    "umschrift": "ka",
+    "ipa": "ˈka"
    },
    {
     "wort": "sa",
     "deutsch": "zwei, 2",
-    "gruppe": "Zahlen"
+    "gruppe": "Zahlen",
+    "umschrift": "sa",
+    "ipa": "ˈza"
    },
    {
     "wort": "ro",
     "deutsch": "drei, 3",
     "gruppe": "Zahlen",
-    "im_plan": true
+    "im_plan": true,
+    "umschrift": "ro",
+    "ipa": "ˈɾo"
    },
    {
     "wort": "le",
     "deutsch": "vier, 4",
-    "gruppe": "Zahlen"
+    "gruppe": "Zahlen",
+    "umschrift": "leh",
+    "ipa": "ˈle"
    },
    {
     "wort": "pa",
     "deutsch": "fünf, 5, Hand",
     "gruppe": "Zahlen",
-    "hinweis": "Mit Absicht doppelt: Die Hand hat fünf Finger."
+    "hinweis": "Mit Absicht doppelt: Die Hand hat fünf Finger.",
+    "umschrift": "pa",
+    "ipa": "ˈpa"
    },
    {
     "wort": "ni",
     "deutsch": "sechs, 6",
-    "gruppe": "Zahlen"
+    "gruppe": "Zahlen",
+    "umschrift": "ni",
+    "ipa": "ˈni"
    },
    {
     "wort": "tu",
     "deutsch": "sieben, 7",
     "gruppe": "Zahlen",
-    "hinweis": "Sieben Monate trägt eine Lumi ihr Kind."
+    "hinweis": "Sieben Monate trägt eine Lumi ihr Kind.",
+    "umschrift": "tu",
+    "ipa": "ˈtu"
    },
    {
     "wort": "vo",
     "deutsch": "acht, 8",
-    "gruppe": "Zahlen"
+    "gruppe": "Zahlen",
+    "umschrift": "wo",
+    "ipa": "ˈvo"
    },
    {
     "wort": "ze",
     "deutsch": "neun, 9",
     "gruppe": "Zahlen",
-    "hinweis": "Die Null ist ne."
+    "hinweis": "Die Null ist ne.",
+    "umschrift": "zeh",
+    "ipa": "ˈtse"
    },
    {
     "wort": "mim",
     "deutsch": "halb, die Hälfte",
     "gruppe": "Zahlen",
-    "hinweis": "pim mim = ein halber Pilz."
+    "hinweis": "pim mim = ein halber Pilz.",
+    "umschrift": "mim",
+    "ipa": "ˈmim"
    },
    {
     "wort": "telmim",
     "deutsch": "Komma, Bruch",
     "gruppe": "Lange Zahlen",
-    "hinweis": "Zahl + halb."
+    "hinweis": "Zahl + halb.",
+    "umschrift": "tel-mim",
+    "ipa": "ˈtel.mim"
    },
    {
     "wort": "tep",
     "deutsch": "Pause in langen Zahlen",
     "gruppe": "Lange Zahlen",
-    "hinweis": "nach je drei Ziffern: 1 000 000 = ka tep ne ne ne tep ne ne ne."
+    "hinweis": "nach je drei Ziffern: 1 000 000 = ka tep ne ne ne tep ne ne ne.",
+    "umschrift": "tep",
+    "ipa": "ˈtep"
    },
    {
     "wort": "teluvo",
     "deutsch": "hoch (Potenz)",
     "gruppe": "Lange Zahlen",
-    "hinweis": "Zahl + oben: ka teluvo ka ze = 10 hoch 19."
+    "hinweis": "Zahl + oben: ka teluvo ka ze = 10 hoch 19.",
+    "umschrift": "te-lu-wo",
+    "ipa": "ˈte.lu.vo"
    },
    {
     "wort": "aknam",
     "deutsch": "zustimmen, Zustimmung",
     "gruppe": "Gespräch",
-    "hinweis": "ja + sagen."
+    "hinweis": "ja + sagen.",
+    "umschrift": "ak-nam",
+    "ipa": "ˈak.nam"
    },
    {
     "wort": "sesnam",
     "deutsch": "Einwand, einwenden",
     "gruppe": "Gespräch",
-    "hinweis": "aber + sagen."
+    "hinweis": "aber + sagen.",
+    "umschrift": "ses-nam",
+    "ipa": "ˈzez.nam"
    },
    {
     "wort": "manam",
     "deutsch": "fragen",
     "gruppe": "Gespräch",
-    "hinweis": "Frage + sagen."
+    "hinweis": "Frage + sagen.",
+    "umschrift": "ma-nam",
+    "ipa": "ˈma.nam"
    },
    {
     "wort": "elatam",
     "deutsch": "zuhören",
     "gruppe": "Gespräch",
-    "hinweis": "Ohr + bleiben."
+    "hinweis": "Ohr + bleiben.",
+    "umschrift": "e-la-tam",
+    "ipa": "ˈe.la.tam"
    },
    {
     "wort": "sapkom",
     "deutsch": "verstehen",
     "gruppe": "Gespräch",
-    "hinweis": "Wissen + kommen."
+    "hinweis": "Wissen + kommen.",
+    "umschrift": "sap-kom",
+    "ipa": "ˈzap.kom"
    },
    {
     "wort": "vinioki",
     "deutsch": "vergleichen, Vergleich",
     "gruppe": "Gespräch",
-    "hinweis": "Unterschied + sehen."
+    "hinweis": "Unterschied + sehen.",
+    "umschrift": "wi-ni-o-ki",
+    "ipa": "ˈvi.ni.o.ki"
    },
    {
     "wort": "samto",
     "deutsch": "gleich, dasselbe",
     "gruppe": "Gespräch",
-    "hinweis": "mit + dieses."
+    "hinweis": "mit + dieses.",
+    "umschrift": "sam-to",
+    "ipa": "ˈzam.to"
    },
    {
     "wort": "nesamto",
     "deutsch": "anders, verschieden",
     "gruppe": "Gespräch",
-    "hinweis": "ne + samto."
+    "hinweis": "ne + samto.",
+    "umschrift": "ne-sam-to",
+    "ipa": "ˈne.zam.to"
    },
    {
     "wort": "sumtiv",
     "deutsch": "richtig, recht haben",
     "gruppe": "Gespräch",
-    "hinweis": "guter Weg."
+    "hinweis": "guter Weg.",
+    "umschrift": "sum-tiw",
+    "ipa": "ˈzum.tiv"
    },
    {
     "wort": "reva",
     "deutsch": "wieder, noch einmal",
     "gruppe": "Gespräch",
-    "hinweis": "neue Wurzel."
+    "hinweis": "neue Wurzel.",
+    "umschrift": "re-wa",
+    "ipa": "ˈɾe.va"
    },
    {
     "wort": "revanam",
     "deutsch": "wiederholen",
     "gruppe": "Gespräch",
-    "hinweis": "wieder + sagen."
+    "hinweis": "wieder + sagen.",
+    "umschrift": "re-wa-nam",
+    "ipa": "ˈɾe.va.nam"
    },
    {
     "wort": "vininam",
     "deutsch": "Streitgespräch, Disput",
     "gruppe": "Gespräch",
-    "hinweis": "Unterschied + sagen. Gestritten wird lächelnd."
+    "hinweis": "Unterschied + sagen. Gestritten wird lächelnd.",
+    "umschrift": "wi-ni-nam",
+    "ipa": "ˈvi.ni.nam"
    },
    {
     "wort": "aksam",
     "deutsch": "Einigung, einig",
     "gruppe": "Gespräch",
-    "hinweis": "ja + zusammen."
+    "hinweis": "ja + zusammen.",
+    "umschrift": "ak-sam",
+    "ipa": "ˈak.zam"
    },
    {
     "wort": "mimak",
     "deutsch": "Kompromiss",
     "gruppe": "Gespräch",
-    "hinweis": "halb + ja."
+    "hinweis": "halb + ja.",
+    "umschrift": "mi-mak",
+    "ipa": "ˈmi.mak"
    },
    {
     "wort": "zanpek",
     "deutsch": "überzeugen",
     "gruppe": "Gespräch",
-    "hinweis": "Licht + geben."
+    "hinweis": "Licht + geben.",
+    "umschrift": "zan-pek",
+    "ipa": "ˈtsan.pek"
    },
    {
     "wort": "toknam",
     "deutsch": "behaupten, Behauptung",
     "gruppe": "Gespräch",
-    "hinweis": "Stein + sagen: fest sagen."
+    "hinweis": "Stein + sagen: fest sagen.",
+    "umschrift": "tok-nam",
+    "ipa": "ˈtok.nam"
    },
    {
     "wort": "kikmim",
     "deutsch": "lächeln",
     "gruppe": "Gespräch",
-    "hinweis": "halb + lachen."
+    "hinweis": "halb + lachen.",
+    "umschrift": "kik-mim",
+    "ipa": "ˈkik.mim"
    },
    {
     "wort": "nammim",
     "deutsch": "flüstern",
     "gruppe": "Gespräch",
-    "hinweis": "Mund + halb."
+    "hinweis": "Mund + halb.",
+    "umschrift": "nam-mim",
+    "ipa": "ˈnam.mim"
    },
    {
     "wort": "nammak",
     "deutsch": "rufen",
     "gruppe": "Gespräch",
-    "hinweis": "Mund + groß."
+    "hinweis": "Mund + groß.",
+    "umschrift": "nam-mak",
+    "ipa": "ˈnam.mak"
    },
    {
     "wort": "elamak",
     "deutsch": "laut",
     "gruppe": "Gespräch",
-    "hinweis": "Ohr + groß."
+    "hinweis": "Ohr + groß.",
+    "umschrift": "e-la-mak",
+    "ipa": "ˈe.la.mak"
    },
    {
     "wort": "elanim",
     "deutsch": "leise",
     "gruppe": "Gespräch",
-    "hinweis": "Ohr + klein."
+    "hinweis": "Ohr + klein.",
+    "umschrift": "e-la-nim",
+    "ipa": "ˈe.la.nim"
    },
    {
     "wort": "zelpera",
     "deutsch": "Morgen (Tageszeit)",
     "gruppe": "Zeit",
-    "hinweis": "Tag + Anfang."
+    "hinweis": "Tag + Anfang.",
+    "umschrift": "zel-pe-ra",
+    "ipa": "ˈtsel.pe.ɾa"
    },
    {
     "wort": "zelsolko",
     "deutsch": "Abend",
     "gruppe": "Zeit",
-    "hinweis": "Tag + Ende."
+    "hinweis": "Tag + Ende.",
+    "umschrift": "zel-sol-ko",
+    "ipa": "ˈtsel.zol.ko"
    },
    {
     "wort": "suko",
     "deutsch": "danach, dann",
     "gruppe": "Zeit",
-    "hinweis": "bald + hin."
+    "hinweis": "bald + hin.",
+    "umschrift": "su-ko",
+    "ipa": "ˈzu.ko"
    },
    {
     "wort": "kesol",
     "deutsch": "schon",
     "gruppe": "Zeit",
-    "hinweis": "früher + fertig."
+    "hinweis": "früher + fertig.",
+    "umschrift": "ke-sol",
+    "ipa": "ˈke.zol"
    },
    {
     "wort": "talmim",
     "deutsch": "manchmal",
     "gruppe": "Zeit",
-    "hinweis": "halb immer."
+    "hinweis": "halb immer.",
+    "umschrift": "tal-mim",
+    "ipa": "ˈtal.mim"
    },
    {
     "wort": "talmol",
     "deutsch": "oft",
     "gruppe": "Zeit",
-    "hinweis": "immer + viel."
+    "hinweis": "immer + viel.",
+    "umschrift": "tal-mol",
+    "ipa": "ˈtal.mol"
    },
    {
     "wort": "tallim",
     "deutsch": "selten",
     "gruppe": "Zeit",
-    "hinweis": "immer + wenig."
+    "hinweis": "immer + wenig.",
+    "umschrift": "tal-lim",
+    "ipa": "ˈtal.lim"
    },
    {
     "wort": "uvozan",
     "deutsch": "Sonne",
     "gruppe": "Oben: Himmel, Wetter, Land",
-    "hinweis": "Das Licht von oben. Die Lumis kennen sie nur aus Berichten."
+    "hinweis": "Das Licht von oben. Die Lumis kennen sie nur aus Berichten.",
+    "umschrift": "u-wo-zan",
+    "ipa": "ˈu.vo.tsan"
    },
    {
     "wort": "silu",
     "deutsch": "Mond, Monat",
-    "gruppe": "Oben: Himmel, Wetter, Land"
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "umschrift": "si-lu",
+    "ipa": "ˈzi.lu"
    },
    {
     "wort": "zik",
     "deutsch": "Stern",
-    "gruppe": "Oben: Himmel, Wetter, Land"
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "umschrift": "zik",
+    "ipa": "ˈtsik"
    },
    {
     "wort": "zikzan",
     "deutsch": "Sternenlicht, Polarlicht",
-    "gruppe": "Oben: Himmel, Wetter, Land"
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "umschrift": "zik-zan",
+    "ipa": "ˈtsik.tsan"
    },
    {
     "wort": "molu",
     "deutsch": "Regen",
-    "gruppe": "Oben: Himmel, Wetter, Land"
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "umschrift": "mo-lu",
+    "ipa": "ˈmo.lu"
    },
    {
     "wort": "usu",
     "deutsch": "Wind",
-    "gruppe": "Oben: Himmel, Wetter, Land"
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "umschrift": "u-su",
+    "ipa": "ˈu.zu"
    },
    {
     "wort": "usumak",
     "deutsch": "Sturm",
     "gruppe": "Oben: Himmel, Wetter, Land",
-    "hinweis": "Großer Wind."
+    "hinweis": "Großer Wind.",
+    "umschrift": "u-su-mak",
+    "ipa": "ˈu.zu.mak"
    },
    {
     "wort": "kivmulo",
     "deutsch": "Schnee",
     "gruppe": "Oben: Himmel, Wetter, Land",
-    "hinweis": "Eis-Wolke."
+    "hinweis": "Eis-Wolke.",
+    "umschrift": "kiw-mu-lo",
+    "ipa": "ˈkiv.mu.lo"
    },
    {
     "wort": "momak",
     "deutsch": "Meer, See",
     "gruppe": "Oben: Himmel, Wetter, Land",
-    "hinweis": "Großes Wasser."
+    "hinweis": "Großes Wasser.",
+    "umschrift": "mo-mak",
+    "ipa": "ˈmo.mak"
    },
    {
     "wort": "kivtem",
     "deutsch": "Gletscher",
     "gruppe": "Oben: Himmel, Wetter, Land",
-    "hinweis": "Eis-Land. Darunter wohnen die Lumis."
+    "hinweis": "Eis-Land. Darunter wohnen die Lumis.",
+    "umschrift": "kiw-tem",
+    "ipa": "ˈkiv.tem"
    },
    {
     "wort": "takor",
     "deutsch": "Berg",
-    "gruppe": "Oben: Himmel, Wetter, Land"
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "umschrift": "ta-kor",
+    "ipa": "ˈta.koɾ"
    },
    {
     "wort": "turamol",
     "deutsch": "Wald",
     "gruppe": "Oben: Himmel, Wetter, Land",
-    "hinweis": "Viel Baum."
+    "hinweis": "Viel Baum.",
+    "umschrift": "tu-ra-mol",
+    "ipa": "ˈtu.ɾa.mol"
    },
    {
     "wort": "temnim",
     "deutsch": "Sand",
     "gruppe": "Oben: Himmel, Wetter, Land",
-    "hinweis": "Kleine Erde: tem + nim."
+    "hinweis": "Kleine Erde: tem + nim.",
+    "umschrift": "tem-nim",
+    "ipa": "ˈtem.nim"
    },
    {
     "wort": "vulzan",
     "deutsch": "Feuer",
     "gruppe": "Oben: Himmel, Wetter, Land",
-    "hinweis": "Wärme + Licht. Unten gibt es keines."
+    "hinweis": "Wärme + Licht. Unten gibt es keines.",
+    "umschrift": "wul-zan",
+    "ipa": "ˈvul.tsan"
    },
    {
     "wort": "zel",
@@ -4424,213 +4968,289 @@
     "beispiel": {
      "lumisch": "ke zel3 li ne kom.",
      "deutsch": "Vor drei Tagen bist du nicht gekommen."
-    }
+    },
+    "umschrift": "zel",
+    "ipa": "ˈtsel"
    },
    {
     "wort": "nezel",
     "deutsch": "Nacht",
     "gruppe": "Oben: Himmel, Wetter, Land",
-    "hinweis": "Unten sind die „Nächte“ keine."
+    "hinweis": "Unten sind die „Nächte“ keine.",
+    "umschrift": "ne-zel",
+    "ipa": "ˈne.tsel"
    },
    {
     "wort": "ruma",
     "deutsch": "Jahr",
-    "gruppe": "Oben: Himmel, Wetter, Land"
+    "gruppe": "Oben: Himmel, Wetter, Land",
+    "umschrift": "ru-ma",
+    "ipa": "ˈɾu.ma"
    },
    {
     "wort": "zelok",
     "deutsch": "Uhr",
     "gruppe": "Oben: Himmel, Wetter, Land",
-    "hinweis": "Das Auge des Tages."
+    "hinweis": "Das Auge des Tages.",
+    "umschrift": "ze-lok",
+    "ipa": "ˈtse.lok"
    },
    {
     "wort": "tura",
     "deutsch": "Baum",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "tu-ra",
+    "ipa": "ˈtu.ɾa"
    },
    {
     "wort": "mili",
     "deutsch": "Blume",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "mi-li",
+    "ipa": "ˈmi.li"
    },
    {
     "wort": "pala",
     "deutsch": "Blatt",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "pa-la",
+    "ipa": "ˈpa.la"
    },
    {
     "wort": "sevi",
     "deutsch": "Gras",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "se-wi",
+    "ipa": "ˈze.vi"
    },
    {
     "wort": "tupa",
     "deutsch": "Eichel",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "tu-pa",
+    "ipa": "ˈtu.pa"
    },
    {
     "wort": "kuli",
     "deutsch": "Beere",
     "gruppe": "Oben: Pflanzen und Tiere",
-    "hinweis": "kuli12 = zwölf Beeren, so wie Mik es als Beispiel geschrieben hat."
+    "hinweis": "kuli12 = zwölf Beeren, so wie Mik es als Beispiel geschrieben hat.",
+    "umschrift": "ku-li",
+    "ipa": "ˈku.li"
    },
    {
     "wort": "nuk",
     "deutsch": "Nuss",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "nuk",
+    "ipa": "ˈnuk"
    },
    {
     "wort": "semi",
     "deutsch": "Samen",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "se-mi",
+    "ipa": "ˈze.mi"
    },
    {
     "wort": "tosa",
     "deutsch": "Wurzel",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "to-sa",
+    "ipa": "ˈto.za"
    },
    {
     "wort": "ani",
     "deutsch": "Tier",
     "gruppe": "Oben: Pflanzen und Tiere",
-    "hinweis": "Unten gibt es keine, nur uns."
+    "hinweis": "Unten gibt es keine, nur uns.",
+    "umschrift": "a-ni",
+    "ipa": "ˈa.ni"
    },
    {
     "wort": "pinu",
     "deutsch": "Pinguin",
     "gruppe": "Oben: Pflanzen und Tiere",
-    "hinweis": "Der Nachbar von oben."
+    "hinweis": "Der Nachbar von oben.",
+    "umschrift": "pi-nu",
+    "ipa": "ˈpi.nu"
    },
    {
     "wort": "sila",
     "deutsch": "Fisch",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "si-la",
+    "ipa": "ˈzi.la"
    },
    {
     "wort": "silamak",
     "deutsch": "Wal",
     "gruppe": "Oben: Pflanzen und Tiere",
-    "hinweis": "Großer Fisch."
+    "hinweis": "Großer Fisch.",
+    "umschrift": "si-la-mak",
+    "ipa": "ˈzi.la.mak"
    },
    {
     "wort": "mulu",
     "deutsch": "Robbe",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "mu-lu",
+    "ipa": "ˈmu.lu"
    },
    {
     "wort": "vau",
     "deutsch": "Hund",
     "gruppe": "Oben: Pflanzen und Tiere",
-    "hinweis": "Klingt wie er."
+    "hinweis": "Klingt wie er.",
+    "umschrift": "wa-u",
+    "ipa": "ˈva.u"
    },
    {
     "wort": "miz",
     "deutsch": "Katze",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "miz",
+    "ipa": "ˈmits"
    },
    {
     "wort": "nip",
     "deutsch": "Maus",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "nip",
+    "ipa": "ˈnip"
    },
    {
     "wort": "zum",
     "deutsch": "Biene, summen",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "zum",
+    "ipa": "ˈtsum"
    },
    {
     "wort": "lul",
     "deutsch": "Wurm",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "lul",
+    "ipa": "ˈlul"
    },
    {
     "wort": "tirli",
     "deutsch": "Vogel",
     "gruppe": "Oben: Pflanzen und Tiere",
-    "hinweis": "Wie sein Ruf, „tirili“."
+    "hinweis": "Wie sein Ruf, „tirili“.",
+    "umschrift": "tir-li",
+    "ipa": "ˈtiɾ.li"
    },
    {
     "wort": "teru",
     "deutsch": "Pferd",
-    "gruppe": "Oben: Pflanzen und Tiere"
+    "gruppe": "Oben: Pflanzen und Tiere",
+    "umschrift": "te-ru",
+    "ipa": "ˈte.ɾu"
    },
    {
     "wort": "muvo",
     "deutsch": "Kuh",
     "gruppe": "Oben: Pflanzen und Tiere",
-    "hinweis": "Fängt an wie ihr Muh."
+    "hinweis": "Fängt an wie ihr Muh.",
+    "umschrift": "mu-wo",
+    "ipa": "ˈmu.vo"
    },
    {
     "wort": "mema",
     "deutsch": "Schaf",
     "gruppe": "Oben: Pflanzen und Tiere",
-    "hinweis": "Klingt wie es."
+    "hinweis": "Klingt wie es.",
+    "umschrift": "me-ma",
+    "ipa": "ˈme.ma"
    },
    {
     "wort": "kako",
     "deutsch": "Huhn",
     "gruppe": "Oben: Pflanzen und Tiere",
-    "hinweis": "Klingt wie es."
+    "hinweis": "Klingt wie es.",
+    "umschrift": "ka-ko",
+    "ipa": "ˈka.ko"
    },
    {
     "wort": "tokalu",
     "deutsch": "Macht",
     "gruppe": "Oben: Macht, Recht, Geld",
-    "hinweis": "Stark + u. Wer sie hat, hat wenig anderes."
+    "hinweis": "Stark + u. Wer sie hat, hat wenig anderes.",
+    "umschrift": "to-ka-lu",
+    "ipa": "ˈto.ka.lu"
    },
    {
     "wort": "sovitok",
     "deutsch": "Gesetz",
     "gruppe": "Oben: Macht, Recht, Geld",
-    "hinweis": "Pflicht + Stein. Das in Stein Gemeißelte."
+    "hinweis": "Pflicht + Stein. Das in Stein Gemeißelte.",
+    "umschrift": "so-wi-tok",
+    "ipa": "ˈzo.vi.tok"
    },
    {
     "wort": "nusammak",
     "deutsch": "Staat",
     "gruppe": "Oben: Macht, Recht, Geld",
-    "hinweis": "Gemeinschaft + groß."
+    "hinweis": "Gemeinschaft + groß.",
+    "umschrift": "nu-sam-mak",
+    "ipa": "ˈnu.zam.mak"
    },
    {
     "wort": "mitok",
     "deutsch": "Eigentum, besitzen",
     "gruppe": "Oben: Macht, Recht, Geld",
-    "hinweis": "Haben + Stein. Unten gibt es das nicht."
+    "hinweis": "Haben + Stein. Unten gibt es das nicht.",
+    "umschrift": "mi-tok",
+    "ipa": "ˈmi.tok"
    },
    {
     "wort": "pektak",
     "deutsch": "Tausch, Handel",
     "gruppe": "Oben: Macht, Recht, Geld",
-    "hinweis": "Geben + nehmen."
+    "hinweis": "Geben + nehmen.",
+    "umschrift": "pek-tak",
+    "ipa": "ˈpek.tak"
    },
    {
     "wort": "tokpek",
     "deutsch": "Geld",
     "gruppe": "Oben: Macht, Recht, Geld",
-    "hinweis": "Stein + geben."
+    "hinweis": "Stein + geben.",
+    "umschrift": "tok-pek",
+    "ipa": "ˈtok.pek"
    },
    {
     "wort": "kelmak",
     "deutsch": "Arbeit",
     "gruppe": "Oben: Macht, Recht, Geld",
-    "hinweis": "Machen + groß. Was die Menschen den ganzen Tag tun."
+    "hinweis": "Machen + groß. Was die Menschen den ganzen Tag tun.",
+    "umschrift": "kel-mak",
+    "ipa": "ˈkel.mak"
    },
    {
     "wort": "tikkel",
     "deutsch": "Krieg, Gewalt",
     "gruppe": "Oben: Macht, Recht, Geld",
-    "hinweis": "Scharf + machen."
+    "hinweis": "Scharf + machen.",
+    "umschrift": "tik-kel",
+    "ipa": "ˈtik.kel"
    },
    {
     "wort": "mimusam",
     "deutsch": "Frieden",
     "gruppe": "Oben: Macht, Recht, Geld",
-    "hinweis": "Ruhig + mit."
+    "hinweis": "Ruhig + mit.",
+    "umschrift": "mi-mu-sam",
+    "ipa": "ˈmi.mu.zam"
    },
    {
     "wort": "uvu",
     "deutsch": "Mensch",
     "gruppe": "Oben: Menschen und ihre Dinge",
-    "hinweis": "Wesen von oben."
+    "hinweis": "Wesen von oben.",
+    "umschrift": "u-wu",
+    "ipa": "ˈu.vu"
    },
    {
     "wort": "nem",
@@ -4640,13 +5260,17 @@
     "beispiel": {
      "lumisch": "ma nem li.",
      "deutsch": "Wie heißt du?"
-    }
+    },
+    "umschrift": "nem",
+    "ipa": "ˈnem"
    },
    {
     "wort": "nami",
     "deutsch": "Wort",
     "gruppe": "Oben: Menschen und ihre Dinge",
-    "hinweis": "Kleiner Mund."
+    "hinweis": "Kleiner Mund.",
+    "umschrift": "na-mi",
+    "ipa": "ˈna.mi"
    },
    {
     "wort": "ora",
@@ -4656,7 +5280,9 @@
     "beispiel": {
      "lumisch": "li kom ko ora.",
      "deutsch": "Komm ins Haus."
-    }
+    },
+    "umschrift": "o-ra",
+    "ipa": "ˈo.ɾa"
    },
    {
     "wort": "pok",
@@ -4666,1116 +5292,1490 @@
     "beispiel": {
      "lumisch": "pok sul.",
      "deutsch": "Mach bitte die Tür auf."
-    }
+    },
+    "umschrift": "pok",
+    "ipa": "ˈpok"
    },
    {
     "wort": "zanpok",
     "deutsch": "Fenster",
     "gruppe": "Oben: Menschen und ihre Dinge",
-    "hinweis": "Lichttür."
+    "hinweis": "Lichttür.",
+    "umschrift": "zan-pok",
+    "ipa": "ˈtsan.pok"
    },
    {
     "wort": "mur",
     "deutsch": "Wand, Mauer",
-    "gruppe": "Oben: Menschen und ihre Dinge"
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "umschrift": "mur",
+    "ipa": "ˈmuɾ"
    },
    {
     "wort": "tavo",
     "deutsch": "Tisch",
-    "gruppe": "Oben: Menschen und ihre Dinge"
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "umschrift": "ta-wo",
+    "ipa": "ˈta.vo"
    },
    {
     "wort": "sela",
     "deutsch": "Stuhl",
-    "gruppe": "Oben: Menschen und ihre Dinge"
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "umschrift": "se-la",
+    "ipa": "ˈze.la"
    },
    {
     "wort": "kor",
     "deutsch": "Seil, Zwang",
     "gruppe": "Oben: Menschen und ihre Dinge",
-    "hinweis": "Wer am Seil hängt, wird gezogen. Das Gegenteil heißt nekor."
+    "hinweis": "Wer am Seil hängt, wird gezogen. Das Gegenteil heißt nekor.",
+    "umschrift": "kor",
+    "ipa": "ˈkoɾ"
    },
    {
     "wort": "kelu",
     "deutsch": "Schlüssel",
-    "gruppe": "Oben: Menschen und ihre Dinge"
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "umschrift": "ke-lu",
+    "ipa": "ˈke.lu"
    },
    {
     "wort": "kelumur",
     "deutsch": "Tresor",
     "gruppe": "Oben: Menschen und ihre Dinge",
-    "hinweis": "Schlüssel-Wand."
+    "hinweis": "Schlüssel-Wand.",
+    "umschrift": "ke-lu-mur",
+    "ipa": "ˈke.lu.muɾ"
    },
    {
     "wort": "polo",
     "deutsch": "Vorrat, Vorratskammer",
     "gruppe": "Oben: Menschen und ihre Dinge",
-    "hinweis": "Unten legt keiner einen an. Für die Menschen ist er der halbe Plan."
+    "hinweis": "Unten legt keiner einen an. Für die Menschen ist er der halbe Plan.",
+    "umschrift": "po-lo",
+    "ipa": "ˈpo.lo"
    },
    {
     "wort": "nepelu",
     "deutsch": "Hunger",
     "gruppe": "Oben: Menschen und ihre Dinge",
-    "hinweis": "Kein Essen. Unten hat nie jemand gehungert, das Wort gibt es nur für die Menschen."
+    "hinweis": "Kein Essen. Unten hat nie jemand gehungert, das Wort gibt es nur für die Menschen.",
+    "umschrift": "ne-pe-lu",
+    "ipa": "ˈne.pe.lu"
    },
    {
     "wort": "nemo",
     "deutsch": "Durst, trocken",
     "gruppe": "Oben: Menschen und ihre Dinge",
-    "hinweis": "Kein Wasser. Auch das kennt unten niemand."
+    "hinweis": "Kein Wasser. Auch das kennt unten niemand.",
+    "umschrift": "ne-mo",
+    "ipa": "ˈne.mo"
    },
    {
     "wort": "orra",
     "deutsch": "bauen",
     "gruppe": "Oben: Menschen und ihre Dinge",
-    "hinweis": "Ein Dach machen."
+    "hinweis": "Ein Dach machen.",
+    "umschrift": "o-rra",
+    "ipa": "ˈo.ra"
    },
    {
     "wort": "lis",
     "deutsch": "lesen, Buch",
-    "gruppe": "Oben: Menschen und ihre Dinge"
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "umschrift": "lis",
+    "ipa": "ˈliz"
    },
    {
     "wort": "lipa",
     "deutsch": "schreiben",
-    "gruppe": "Oben: Menschen und ihre Dinge"
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "umschrift": "li-pa",
+    "ipa": "ˈli.pa"
    },
    {
     "wort": "pap",
     "deutsch": "Papier",
-    "gruppe": "Oben: Menschen und ihre Dinge"
+    "gruppe": "Oben: Menschen und ihre Dinge",
+    "umschrift": "pap",
+    "ipa": "ˈpap"
    },
    {
     "wort": "zelis",
     "deutsch": "Tagebuch",
     "gruppe": "Oben: Menschen und ihre Dinge",
-    "hinweis": "Tag + lesen."
+    "hinweis": "Tag + lesen.",
+    "umschrift": "ze-lis",
+    "ipa": "ˈtse.liz"
    },
    {
     "wort": "tivpap",
     "deutsch": "Karte, Landkarte",
     "gruppe": "Oben: Menschen und ihre Dinge",
-    "hinweis": "Weg-Papier."
+    "hinweis": "Weg-Papier.",
+    "umschrift": "tiw-pap",
+    "ipa": "ˈtiv.pap"
    },
    {
     "wort": "zanpa",
     "deutsch": "Taschenlampe",
     "gruppe": "Oben: Menschen und ihre Dinge",
-    "hinweis": "Hand-Licht."
+    "hinweis": "Hand-Licht.",
+    "umschrift": "zan-pa",
+    "ipa": "ˈtsan.pa"
    },
    {
     "wort": "elanam",
     "deutsch": "Telefon",
     "gruppe": "Oben: Menschen und ihre Dinge",
-    "hinweis": "Ohr + Mund."
+    "hinweis": "Ohr + Mund.",
+    "umschrift": "e-la-nam",
+    "ipa": "ˈe.la.nam"
    },
    {
     "wort": "usuela",
     "deutsch": "Radio",
     "gruppe": "Oben: Menschen und ihre Dinge",
-    "hinweis": "Das Ohr im Wind."
+    "hinweis": "Das Ohr im Wind.",
+    "umschrift": "u-su-e-la",
+    "ipa": "ˈu.zu.e.la"
    },
    {
     "wort": "zansap",
     "deutsch": "Wahrheit, wahr",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Licht + Wissen. Was klar zu sehen ist."
+    "hinweis": "Licht + Wissen. Was klar zu sehen ist.",
+    "umschrift": "zan-sap",
+    "ipa": "ˈtsan.zap"
    },
    {
     "wort": "nezansap",
     "deutsch": "Irrtum, falsch",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "ne + zansap."
+    "hinweis": "ne + zansap.",
+    "umschrift": "ne-zan-sap",
+    "ipa": "ˈne.tsan.zap"
    },
    {
     "wort": "nesap",
     "deutsch": "Nichtwissen, Unwissen",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Der Anfang jedes Gesprächs. Susi sap nesap = ich weiß, dass ich nichts weiß."
+    "hinweis": "Der Anfang jedes Gesprächs. Susi sap nesap = ich weiß, dass ich nichts weiß.",
+    "umschrift": "ne-sap",
+    "ipa": "ˈne.zap"
    },
    {
     "wort": "sapzan",
     "deutsch": "Erkenntnis, Einsicht",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Wissen + Licht. Wenn das Wissen aufleuchtet."
+    "hinweis": "Wissen + Licht. Wenn das Wissen aufleuchtet.",
+    "umschrift": "sap-zan",
+    "ipa": "ˈzap.tsan"
    },
    {
     "wort": "sapsol",
     "deutsch": "Weisheit",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Wissen, das ganz ist."
+    "hinweis": "Wissen, das ganz ist.",
+    "umschrift": "sap-sol",
+    "ipa": "ˈzap.zol"
    },
    {
     "wort": "sanasap",
     "deutsch": "Gewissheit",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Sicher + Wissen."
+    "hinweis": "Sicher + Wissen.",
+    "umschrift": "sa-na-sap",
+    "ipa": "ˈza.na.zap"
    },
    {
     "wort": "nesanasap",
     "deutsch": "Ungewissheit",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "ne + sanasap."
+    "hinweis": "ne + sanasap.",
+    "umschrift": "ne-sa-na-sap",
+    "ipa": "ˈne.za.na.zap"
    },
    {
     "wort": "kolupum",
     "deutsch": "Zweifel",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Denken + Zögern. Der Laut dazu ist mh."
+    "hinweis": "Denken + Zögern. Der Laut dazu ist mh.",
+    "umschrift": "ko-lu-pum",
+    "ipa": "ˈko.lu.pum"
    },
    {
     "wort": "kilsap",
     "deutsch": "Neugier",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Suchen + Wissen."
+    "hinweis": "Suchen + Wissen.",
+    "umschrift": "kil-sap",
+    "ipa": "ˈkil.zap"
    },
    {
     "wort": "okio",
     "deutsch": "Staunen, Wunder",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Sehen + oh. Nach Aristoteles der Anfang der Philosophie."
+    "hinweis": "Sehen + oh. Nach Aristoteles der Anfang der Philosophie.",
+    "umschrift": "o-ki-o",
+    "ipa": "ˈo.ki.o"
    },
    {
     "wort": "tuksap",
     "deutsch": "Glaube, glauben",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Herz + Wissen."
+    "hinweis": "Herz + Wissen.",
+    "umschrift": "tuk-sap",
+    "ipa": "ˈtuk.zap"
    },
    {
     "wort": "kolunam",
     "deutsch": "Meinung",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Denken + sagen. Ein Gedanke, den man ausspricht."
+    "hinweis": "Denken + sagen. Ein Gedanke, den man ausspricht.",
+    "umschrift": "ko-lu-nam",
+    "ipa": "ˈko.lu.nam"
    },
    {
     "wort": "kesap",
     "deutsch": "Erfahrung",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Früher + Wissen."
+    "hinweis": "Früher + Wissen.",
+    "umschrift": "ke-sap",
+    "ipa": "ˈke.zap"
    },
    {
     "wort": "zankolu",
     "deutsch": "Vernunft, Verstand",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Licht + Denken."
+    "hinweis": "Licht + Denken.",
+    "umschrift": "zan-ko-lu",
+    "ipa": "ˈtsan.ko.lu"
    },
    {
     "wort": "uvokolu",
     "deutsch": "Idee, Ideal",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Oben + Denken. Platons Idee."
+    "hinweis": "Oben + Denken. Platons Idee.",
+    "umschrift": "u-wo-ko-lu",
+    "ipa": "ˈu.vo.ko.lu"
    },
    {
     "wort": "zanoki",
     "deutsch": "Schein, Erscheinung",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Licht + Auge. Was dem Auge erscheint."
+    "hinweis": "Licht + Auge. Was dem Auge erscheint.",
+    "umschrift": "za-no-ki",
+    "ipa": "ˈtsa.no.ki"
    },
    {
     "wort": "nezanluna",
     "deutsch": "Schatten",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Dunkel + Haut. Das, was an der Wand tanzt."
+    "hinweis": "Dunkel + Haut. Das, was an der Wand tanzt.",
+    "umschrift": "ne-zan-lu-na",
+    "ipa": "ˈne.tsan.lu.na"
    },
    {
     "wort": "toktam",
     "deutsch": "Wirklichkeit",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Stein + bleiben. Was bleibt, ist wirklich."
+    "hinweis": "Stein + bleiben. Was bleibt, ist wirklich.",
+    "umschrift": "tok-tam",
+    "ipa": "ˈtok.tam"
    },
    {
     "wort": "namkolu",
     "deutsch": "Begriff",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Wort + Gedanke."
+    "hinweis": "Wort + Gedanke.",
+    "umschrift": "nam-ko-lu",
+    "ipa": "ˈnam.ko.lu"
    },
    {
     "wort": "namtiv",
     "deutsch": "Sprache",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Sagen + Weg."
+    "hinweis": "Sagen + Weg.",
+    "umschrift": "nam-tiw",
+    "ipa": "ˈnam.tiv"
    },
    {
     "wort": "zannam",
     "deutsch": "Bedeutung",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Licht + sagen. Was ein Wort erhellt."
+    "hinweis": "Licht + sagen. Was ein Wort erhellt.",
+    "umschrift": "zan-nam",
+    "ipa": "ˈtsan.nam"
    },
    {
     "wort": "okinam",
     "deutsch": "Zeichen, Symbol",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Sehen + sagen."
+    "hinweis": "Sehen + sagen.",
+    "umschrift": "o-ki-nam",
+    "ipa": "ˈo.ki.nam"
    },
    {
     "wort": "kolutiv",
     "deutsch": "Methode, Gedankengang",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Denken + Weg."
+    "hinweis": "Denken + Weg.",
+    "umschrift": "ko-lu-tiw",
+    "ipa": "ˈko.lu.tiv"
    },
    {
     "wort": "zekukolu",
     "deutsch": "Logik",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Also + Denken."
+    "hinweis": "Also + Denken.",
+    "umschrift": "ze-ku-ko-lu",
+    "ipa": "ˈtse.ku.ko.lu"
    },
    {
     "wort": "tansap",
     "deutsch": "Annahme, These, Hypothese",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Wenn + Wissen."
+    "hinweis": "Wenn + Wissen.",
+    "umschrift": "tan-sap",
+    "ipa": "ˈtan.zap"
    },
    {
     "wort": "netansap",
     "deutsch": "Gegenthese",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "ne + tansap."
+    "hinweis": "ne + tansap.",
+    "umschrift": "ne-tan-sap",
+    "ipa": "ˈne.tan.zap"
    },
    {
     "wort": "namne",
     "deutsch": "Widerspruch",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Sagen + nicht."
+    "hinweis": "Sagen + nicht.",
+    "umschrift": "nam-neh",
+    "ipa": "ˈnam.ne"
    },
    {
     "wort": "neak",
     "deutsch": "Paradox",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Nein und Ja zugleich."
+    "hinweis": "Nein und Ja zugleich.",
+    "umschrift": "ne-ak",
+    "ipa": "ˈne.ak"
    },
    {
     "wort": "punam",
     "deutsch": "Argument",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Grund + sagen."
+    "hinweis": "Grund + sagen.",
+    "umschrift": "pu-nam",
+    "ipa": "ˈpu.nam"
    },
    {
     "wort": "zekusap",
     "deutsch": "Schluss, Folgerung",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Also + Wissen."
+    "hinweis": "Also + Wissen.",
+    "umschrift": "ze-ku-sap",
+    "ipa": "ˈtse.ku.zap"
    },
    {
     "wort": "okisap",
     "deutsch": "Beweis, Beleg",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Sehen + wissen."
+    "hinweis": "Sehen + wissen.",
+    "umschrift": "o-ki-sap",
+    "ipa": "ˈo.ki.zap"
    },
    {
     "wort": "neokisap",
     "deutsch": "Widerlegung",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "ne + okisap."
+    "hinweis": "ne + okisap.",
+    "umschrift": "ne-o-ki-sap",
+    "ipa": "ˈne.o.ki.zap"
    },
    {
     "wort": "okito",
     "deutsch": "Beispiel, Fall",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Sehen + dieses."
+    "hinweis": "Sehen + dieses.",
+    "umschrift": "o-ki-to",
+    "ipa": "ˈo.ki.to"
    },
    {
     "wort": "okitam",
     "deutsch": "beobachten, Beobachtung",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Sehen + bleiben."
+    "hinweis": "Sehen + bleiben.",
+    "umschrift": "o-ki-tam",
+    "ipa": "ˈo.ki.tam"
    },
    {
     "wort": "kelkil",
     "deutsch": "Versuch, Experiment",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Machen + suchen."
+    "hinweis": "Machen + suchen.",
+    "umschrift": "kel-kil",
+    "ipa": "ˈkel.kil"
    },
    {
     "wort": "kolusol",
     "deutsch": "Theorie",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Denken + ganz."
+    "hinweis": "Denken + ganz.",
+    "umschrift": "ko-lu-sol",
+    "ipa": "ˈko.lu.zol"
    },
    {
     "wort": "tisumol",
     "deutsch": "wahrscheinlich",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Möglich + viel."
+    "hinweis": "Möglich + viel.",
+    "umschrift": "ti-su-mol",
+    "ipa": "ˈti.zu.mol"
    },
    {
     "wort": "tisulim",
     "deutsch": "unwahrscheinlich",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Möglich + wenig."
+    "hinweis": "Möglich + wenig.",
+    "umschrift": "ti-su-lim",
+    "ipa": "ˈti.zu.lim"
    },
    {
     "wort": "maek",
     "deutsch": "Antwort",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Frage + weg. Die Frage geht fort."
+    "hinweis": "Frage + weg. Die Frage geht fort.",
+    "umschrift": "ma-ek",
+    "ipa": "ˈma.ek"
    },
    {
     "wort": "kolutak",
     "deutsch": "Urteil, urteilen",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Denken + nehmen."
+    "hinweis": "Denken + nehmen.",
+    "umschrift": "ko-lu-tak",
+    "ipa": "ˈko.lu.tak"
    },
    {
     "wort": "zanpu",
     "deutsch": "Erklärung",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Licht + Grund."
+    "hinweis": "Licht + Grund.",
+    "umschrift": "zan-pu",
+    "ipa": "ˈtsan.pu"
    },
    {
     "wort": "sumuzan",
     "deutsch": "Traum, Fantasie",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Schlaf + Licht. Das Licht im Schlaf."
+    "hinweis": "Schlaf + Licht. Das Licht im Schlaf.",
+    "umschrift": "su-mu-zan",
+    "ipa": "ˈzu.mu.tsan"
    },
    {
     "wort": "lunak",
     "deutsch": "spüren, fühlen, Empfindung",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Von luna, der Haut."
+    "hinweis": "Von luna, der Haut.",
+    "umschrift": "lu-nak",
+    "ipa": "ˈlu.nak"
    },
    {
     "wort": "zantam",
     "deutsch": "Sein, Dasein, Existenz",
     "gruppe": "Sein und Werden",
-    "hinweis": "Licht + bleiben. Als Verb gibt es „sein“ nicht, als Hauptwort schon."
+    "hinweis": "Licht + bleiben. Als Verb gibt es „sein“ nicht, als Hauptwort schon.",
+    "umschrift": "zan-tam",
+    "ipa": "ˈtsan.tam"
    },
    {
     "wort": "nezantam",
     "deutsch": "Nichts",
     "gruppe": "Sein und Werden",
-    "hinweis": "ne + zantam."
+    "hinweis": "ne + zantam.",
+    "umschrift": "ne-zan-tam",
+    "ipa": "ˈne.tsan.tam"
    },
    {
     "wort": "tevimo",
     "deutsch": "Werden, Veränderung",
     "gruppe": "Sein und Werden",
-    "hinweis": "Neu + Wasser. Alles fließt, und die Lumis sitzen am Fluss."
+    "hinweis": "Neu + Wasser. Alles fließt, und die Lumis sitzen am Fluss.",
+    "umschrift": "te-wi-mo",
+    "ipa": "ˈte.vi.mo"
    },
    {
     "wort": "toktuli",
     "deutsch": "Dauer, Beständigkeit",
     "gruppe": "Sein und Werden",
-    "hinweis": "Stein + Zeit."
+    "hinweis": "Stein + Zeit.",
+    "umschrift": "tok-tu-li",
+    "ipa": "ˈtok.tu.li"
    },
    {
     "wort": "soltuli",
     "deutsch": "Ewigkeit",
     "gruppe": "Sein und Werden",
-    "hinweis": "Ganz + Zeit."
+    "hinweis": "Ganz + Zeit.",
+    "umschrift": "sol-tu-li",
+    "ipa": "ˈzol.tu.li"
    },
    {
     "wort": "motuli",
     "deutsch": "Vergänglichkeit",
     "gruppe": "Sein und Werden",
-    "hinweis": "Wasser + Zeit."
+    "hinweis": "Wasser + Zeit.",
+    "umschrift": "mo-tu-li",
+    "ipa": "ˈmo.tu.li"
    },
    {
     "wort": "okituli",
     "deutsch": "Augenblick",
     "gruppe": "Sein und Werden",
-    "hinweis": "Auge + Zeit."
+    "hinweis": "Auge + Zeit.",
+    "umschrift": "o-ki-tu-li",
+    "ipa": "ˈo.ki.tu.li"
    },
    {
     "wort": "solko",
     "deutsch": "Ende",
     "gruppe": "Sein und Werden",
-    "hinweis": "Fertig + hin."
+    "hinweis": "Fertig + hin.",
+    "umschrift": "sol-ko",
+    "ipa": "ˈzol.ko"
    },
    {
     "wort": "unupera",
     "deutsch": "Ursprung",
     "gruppe": "Sein und Werden",
-    "hinweis": "Unten + Anfang."
+    "hinweis": "Unten + Anfang.",
+    "umschrift": "u-nu-pe-ra",
+    "ipa": "ˈu.nu.pe.ɾa"
    },
    {
     "wort": "nesolko",
     "deutsch": "Unendlichkeit",
     "gruppe": "Sein und Werden",
-    "hinweis": "ne + Ende."
+    "hinweis": "ne + Ende.",
+    "umschrift": "ne-sol-ko",
+    "ipa": "ˈne.zol.ko"
    },
    {
     "wort": "umotem",
     "deutsch": "Raum",
     "gruppe": "Sein und Werden",
-    "hinweis": "Höhle + Land."
+    "hinweis": "Höhle + Land.",
+    "umschrift": "u-mo-tem",
+    "ipa": "ˈu.mo.tem"
    },
    {
     "wort": "zikumo",
     "deutsch": "Weltall, All",
     "gruppe": "Sein und Werden",
-    "hinweis": "Stern + Höhle."
+    "hinweis": "Stern + Höhle.",
+    "umschrift": "zi-ku-mo",
+    "ipa": "ˈtsi.ku.mo"
    },
    {
     "wort": "tempim",
     "deutsch": "Natur",
     "gruppe": "Sein und Werden",
-    "hinweis": "Land + Pilz. Das Gewachsene."
+    "hinweis": "Land + Pilz. Das Gewachsene.",
+    "umschrift": "tem-pim",
+    "ipa": "ˈtem.pim"
    },
    {
     "wort": "toku",
     "deutsch": "Ding, Sache",
     "gruppe": "Sein und Werden",
-    "hinweis": "Ein Stein, der alles sein kann."
+    "hinweis": "Ein Stein, der alles sein kann.",
+    "umschrift": "to-ku",
+    "ipa": "ˈto.ku"
    },
    {
     "wort": "tokzan",
     "deutsch": "Wesen, Kern",
     "gruppe": "Sein und Werden",
-    "hinweis": "Stein + Licht. Was bleibt und leuchtet."
+    "hinweis": "Stein + Licht. Was bleibt und leuchtet.",
+    "umschrift": "tok-zan",
+    "ipa": "ˈtok.tsan"
    },
    {
     "wort": "tokluna",
     "deutsch": "Eigenschaft",
     "gruppe": "Sein und Werden",
-    "hinweis": "Stein + Haut. Wie ein Ding sich zeigt."
+    "hinweis": "Stein + Haut. Wie ein Ding sich zeigt.",
+    "umschrift": "tok-lu-na",
+    "ipa": "ˈtok.lu.na"
    },
    {
     "wort": "tokvu",
     "deutsch": "Grenze",
     "gruppe": "Sein und Werden",
-    "hinweis": "Stein + Rand."
+    "hinweis": "Stein + Rand.",
+    "umschrift": "tok-wu",
+    "ipa": "ˈtok.vu"
    },
    {
     "wort": "zesa",
     "deutsch": "Ordnung",
     "gruppe": "Sein und Werden",
-    "hinweis": "Hat Platz für alles."
+    "hinweis": "Hat Platz für alles.",
+    "umschrift": "ze-sa",
+    "ipa": "ˈtse.za"
    },
    {
     "wort": "nezesa",
     "deutsch": "Chaos, Unordnung",
     "gruppe": "Sein und Werden",
-    "hinweis": "ne + zesa."
+    "hinweis": "ne + zesa.",
+    "umschrift": "ne-ze-sa",
+    "ipa": "ˈne.tse.za"
    },
    {
     "wort": "vini",
     "deutsch": "Gegensatz, Unterschied",
     "gruppe": "Sein und Werden",
-    "hinweis": "Zwei, die sich anschauen."
+    "hinweis": "Zwei, die sich anschauen.",
+    "umschrift": "wi-ni",
+    "ipa": "ˈvi.ni"
    },
    {
     "wort": "mimsol",
     "deutsch": "Mitte, Maß",
     "gruppe": "Sein und Werden",
-    "hinweis": "Hälfte + ganz. Das richtige Maß."
+    "hinweis": "Hälfte + ganz. Das richtige Maß.",
+    "umschrift": "mim-sol",
+    "ipa": "ˈmim.zol"
    },
    {
     "wort": "mimpa",
     "deutsch": "Teil, Stück",
     "gruppe": "Sein und Werden",
-    "hinweis": "Halb + Hand. So viel, wie die Hand hält."
+    "hinweis": "Halb + Hand. So viel, wie die Hand hält.",
+    "umschrift": "mim-pa",
+    "ipa": "ˈmim.pa"
    },
    {
     "wort": "kapu",
     "deutsch": "Zufall",
     "gruppe": "Sein und Werden",
-    "hinweis": "Fällt vom Himmel."
+    "hinweis": "Fällt vom Himmel.",
+    "umschrift": "ka-pu",
+    "ipa": "ˈka.pu"
    },
    {
     "wort": "unutiv",
     "deutsch": "Schicksal",
     "gruppe": "Sein und Werden",
-    "hinweis": "Unten + Weg. Der Weg, der unten festliegt."
+    "hinweis": "Unten + Weg. Der Weg, der unten festliegt.",
+    "umschrift": "u-nu-tiw",
+    "ipa": "ˈu.nu.tiv"
    },
    {
     "wort": "tazan",
     "deutsch": "Anschauung, Gegenwart",
     "gruppe": "Sein und Werden",
-    "hinweis": "Jetzt + Licht. Nach Augustinus gibt es drei Gegenwarten: tazan (das Anschauen), kezan (das Erinnern) und suzan (das Erwarten)."
+    "hinweis": "Jetzt + Licht. Nach Augustinus gibt es drei Gegenwarten: tazan (das Anschauen), kezan (das Erinnern) und suzan (das Erwarten).",
+    "umschrift": "ta-zan",
+    "ipa": "ˈta.tsan"
    },
    {
     "wort": "zantuk",
     "deutsch": "Leben",
     "gruppe": "Sein und Werden",
-    "hinweis": "Licht + Herz."
+    "hinweis": "Licht + Herz.",
+    "umschrift": "zan-tuk",
+    "ipa": "ˈtsan.tuk"
    },
    {
     "wort": "zanpera",
     "deutsch": "Geburt",
     "gruppe": "Sein und Werden",
-    "hinweis": "Licht + anfangen."
+    "hinweis": "Licht + anfangen.",
+    "umschrift": "zan-pe-ra",
+    "ipa": "ˈtsan.pe.ɾa"
    },
    {
     "wort": "tamne",
     "deutsch": "Tod, sterben",
     "gruppe": "Sein und Werden",
-    "hinweis": "Bleiben + nicht. Die Lumis sprechen selten davon, aber sie sprechen davon."
+    "hinweis": "Bleiben + nicht. Die Lumis sprechen selten davon, aber sie sprechen davon.",
+    "umschrift": "tam-neh",
+    "ipa": "ˈtam.ne"
    },
    {
     "wort": "talkom",
     "deutsch": "Wiederkehr, wiederkommen",
     "gruppe": "Sein und Werden",
-    "hinweis": "Immer + kommen."
+    "hinweis": "Immer + kommen.",
+    "umschrift": "tal-kom",
+    "ipa": "ˈtal.kom"
    },
    {
     "wort": "kolun",
     "deutsch": "Geist",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Das, was denkt, ohne Körper gedacht."
+    "hinweis": "Das, was denkt, ohne Körper gedacht.",
+    "umschrift": "ko-lun",
+    "ipa": "ˈko.lun"
    },
    {
     "wort": "lunasol",
     "deutsch": "Körper",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Haut + ganz."
+    "hinweis": "Haut + ganz.",
+    "umschrift": "lu-na-sol",
+    "ipa": "ˈlu.na.zol"
    },
    {
     "wort": "zankolun",
     "deutsch": "Bewusstsein",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Licht + Geist."
+    "hinweis": "Licht + Geist.",
+    "umschrift": "zan-ko-lun",
+    "ipa": "ˈtsan.ko.lun"
    },
    {
     "wort": "nemtam",
     "deutsch": "Selbst, Person, Identität",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Name + bleiben. Wer einen Namen hat, bleibt jemand."
+    "hinweis": "Name + bleiben. Wer einen Namen hat, bleibt jemand.",
+    "umschrift": "nem-tam",
+    "ipa": "ˈnem.tam"
    },
    {
     "wort": "nenem",
     "deutsch": "Nicht-Selbst",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "ne + Name. Die Lumi ohne Namen, die nur „nu“ sagt."
+    "hinweis": "ne + Name. Die Lumi ohne Namen, die nur „nu“ sagt.",
+    "umschrift": "ne-nem",
+    "ipa": "ˈne.nem"
    },
    {
     "wort": "kovilik",
     "deutsch": "Wunsch",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Wille + mögen."
+    "hinweis": "Wille + mögen.",
+    "umschrift": "ko-wi-lik",
+    "ipa": "ˈko.vi.lik"
    },
    {
     "wort": "kovitiv",
     "deutsch": "Absicht",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Wille + Weg."
+    "hinweis": "Wille + Weg.",
+    "umschrift": "ko-wi-tiw",
+    "ipa": "ˈko.vi.tiv"
    },
    {
     "wort": "kovitak",
     "deutsch": "wählen, Wahl, entscheiden",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Wille + nehmen."
+    "hinweis": "Wille + nehmen.",
+    "umschrift": "ko-wi-tak",
+    "ipa": "ˈko.vi.tak"
    },
    {
     "wort": "nekor",
     "deutsch": "Freiheit",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "ne + Seil. Wer nicht am Seil hängt, ist frei."
+    "hinweis": "ne + Seil. Wer nicht am Seil hängt, ist frei.",
+    "umschrift": "ne-kor",
+    "ipa": "ˈne.koɾ"
    },
    {
     "wort": "pekma",
     "deutsch": "Verantwortung",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Geben + Frage. Wer verantwortlich ist, gibt Antwort."
+    "hinweis": "Geben + Frage. Wer verantwortlich ist, gibt Antwort.",
+    "umschrift": "pek-ma",
+    "ipa": "ˈpek.ma"
    },
    {
     "wort": "nepek",
     "deutsch": "Schuld",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Noch nicht gegeben."
+    "hinweis": "Noch nicht gegeben.",
+    "umschrift": "ne-pek",
+    "ipa": "ˈne.pek"
    },
    {
     "wort": "nepekek",
     "deutsch": "verzeihen, Vergebung",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Die Schuld geht weg."
+    "hinweis": "Die Schuld geht weg.",
+    "umschrift": "ne-pe-kek",
+    "ipa": "ˈne.pe.kek"
    },
    {
     "wort": "taltam",
     "deutsch": "Gewohnheit",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Immer + bleiben."
+    "hinweis": "Immer + bleiben.",
+    "umschrift": "tal-tam",
+    "ipa": "ˈtal.tam"
    },
    {
     "wort": "samli",
     "deutsch": "Beziehung",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Mit + du."
+    "hinweis": "Mit + du.",
+    "umschrift": "sam-li",
+    "ipa": "ˈzam.li"
    },
    {
     "wort": "likom",
     "deutsch": "Begegnung",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Du + kommen."
+    "hinweis": "Du + kommen.",
+    "umschrift": "li-kom",
+    "ipa": "ˈli.kom"
    },
    {
     "wort": "nusam",
     "deutsch": "Gemeinschaft",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Wir + mit."
+    "hinweis": "Wir + mit.",
+    "umschrift": "nu-sam",
+    "ipa": "ˈnu.zam"
    },
    {
     "wort": "nesam",
     "deutsch": "Einsamkeit",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Ohne."
+    "hinweis": "Ohne.",
+    "umschrift": "ne-sam",
+    "ipa": "ˈne.zam"
    },
    {
     "wort": "sumuek",
     "deutsch": "erwachen, aufwachen",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Schlaf + weg."
+    "hinweis": "Schlaf + weg.",
+    "umschrift": "su-mu-ek",
+    "ipa": "ˈzu.mu.ek"
    },
    {
     "wort": "takne",
     "deutsch": "loslassen",
     "gruppe": "Ich, Du, Wir",
-    "hinweis": "Nehmen + nicht."
+    "hinweis": "Nehmen + nicht.",
+    "umschrift": "tak-neh",
+    "ipa": "ˈtak.ne"
    },
    {
     "wort": "sumkel",
     "deutsch": "Tugend",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Gut + machen."
+    "hinweis": "Gut + machen.",
+    "umschrift": "sum-kel",
+    "ipa": "ˈzum.kel"
    },
    {
     "wort": "sumtuk",
     "deutsch": "Güte",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Gut + Herz."
+    "hinweis": "Gut + Herz.",
+    "umschrift": "sum-tuk",
+    "ipa": "ˈzum.tuk"
    },
    {
     "wort": "nesumtuk",
     "deutsch": "Bosheit, böse",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "ne + sumtuk."
+    "hinweis": "ne + sumtuk.",
+    "umschrift": "ne-sum-tuk",
+    "ipa": "ˈne.zum.tuk"
    },
    {
     "wort": "tukpum",
     "deutsch": "Gewissen",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Herz + Zögern. Das Herz sagt mh."
+    "hinweis": "Herz + Zögern. Das Herz sagt mh.",
+    "umschrift": "tuk-pum",
+    "ipa": "ˈtuk.pum"
    },
    {
     "wort": "uvosum",
     "deutsch": "das Gute selbst",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Oben + gut."
+    "hinweis": "Oben + gut.",
+    "umschrift": "u-wo-sum",
+    "ipa": "ˈu.vo.zum"
    },
    {
     "wort": "samsol",
     "deutsch": "Gerechtigkeit",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Mit + ganz. Für alle gleich."
+    "hinweis": "Mit + ganz. Für alle gleich.",
+    "umschrift": "sam-sol",
+    "ipa": "ˈzam.zol"
    },
    {
     "wort": "nesamsol",
     "deutsch": "Ungerechtigkeit",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "ne + samsol."
+    "hinweis": "ne + samsol.",
+    "umschrift": "ne-sam-sol",
+    "ipa": "ˈne.zam.zol"
    },
    {
     "wort": "sumsol",
     "deutsch": "Glück, Glückseligkeit",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Gut + voll."
+    "hinweis": "Gut + voll.",
+    "umschrift": "sum-sol",
+    "ipa": "ˈzum.zol"
    },
    {
     "wort": "mimusol",
     "deutsch": "Gelassenheit",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Ruhig + ganz."
+    "hinweis": "Ruhig + ganz.",
+    "umschrift": "mi-mu-sol",
+    "ipa": "ˈmi.mu.zol"
    },
    {
     "wort": "mimusum",
     "deutsch": "Zufriedenheit",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Ruhig + gut."
+    "hinweis": "Ruhig + gut.",
+    "umschrift": "mi-mu-sum",
+    "ipa": "ˈmi.mu.zum"
    },
    {
     "wort": "tikluna",
     "deutsch": "Schmerz",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Scharf + Haut."
+    "hinweis": "Scharf + Haut.",
+    "umschrift": "tik-lu-na",
+    "ipa": "ˈtik.lu.na"
    },
    {
     "wort": "tikmoki",
     "deutsch": "Leid",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Scharf + Trauer."
+    "hinweis": "Scharf + Trauer.",
+    "umschrift": "tik-mo-ki",
+    "ipa": "ˈtik.mo.ki"
    },
    {
     "wort": "mokisam",
     "deutsch": "Mitleid, Mitgefühl",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Trauer + mit."
+    "hinweis": "Trauer + mit.",
+    "umschrift": "mo-ki-sam",
+    "ipa": "ˈmo.ki.zam"
    },
    {
     "wort": "vulpek",
     "deutsch": "Trost, trösten",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Wärme + geben."
+    "hinweis": "Wärme + geben.",
+    "umschrift": "wul-pek",
+    "ipa": "ˈvul.pek"
    },
    {
     "wort": "murasol",
     "deutsch": "Langeweile",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Warten + ganz."
+    "hinweis": "Warten + ganz.",
+    "umschrift": "mu-ra-sol",
+    "ipa": "ˈmu.ɾa.zol"
    },
    {
     "wort": "murasum",
     "deutsch": "Geduld",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Warten + gut."
+    "hinweis": "Warten + gut.",
+    "umschrift": "mu-ra-sum",
+    "ipa": "ˈmu.ɾa.zum"
    },
    {
     "wort": "tultuk",
     "deutsch": "Dankbarkeit",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Danke + Herz."
+    "hinweis": "Danke + Herz.",
+    "umschrift": "tul-tuk",
+    "ipa": "ˈtul.tuk"
    },
    {
     "wort": "kiruluna",
     "deutsch": "Scham",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Angst + Haut."
+    "hinweis": "Angst + Haut.",
+    "umschrift": "ki-ru-lu-na",
+    "ipa": "ˈki.ɾu.lu.na"
    },
    {
     "wort": "nesuzan",
     "deutsch": "Verzweiflung",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "ne + Hoffnung."
+    "hinweis": "ne + Hoffnung.",
+    "umschrift": "ne-su-zan",
+    "ipa": "ˈne.zu.tsan"
    },
    {
     "wort": "likko",
     "deutsch": "Sehnsucht, Streben",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Mögen + hin."
+    "hinweis": "Mögen + hin.",
+    "umschrift": "lik-ko",
+    "ipa": "ˈlik.ko"
    },
    {
     "wort": "kirutam",
     "deutsch": "Sorge",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Angst + bleiben."
+    "hinweis": "Angst + bleiben.",
+    "umschrift": "ki-ru-tam",
+    "ipa": "ˈki.ɾu.tam"
    },
    {
     "wort": "nemsol",
     "deutsch": "Würde",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Name + ganz. Wer einen Namen hat, hat Würde."
+    "hinweis": "Name + ganz. Wer einen Namen hat, hat Würde.",
+    "umschrift": "nem-sol",
+    "ipa": "ˈnem.zol"
    },
    {
     "wort": "zanek",
     "deutsch": "Aufklärung, aufklären",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Licht + heraus."
+    "hinweis": "Licht + heraus.",
+    "umschrift": "za-nek",
+    "ipa": "ˈtsa.nek"
    },
    {
     "wort": "nezantok",
     "deutsch": "Ding an sich",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Dunkel + Ding. Das, was im Dunkel bleibt."
+    "hinweis": "Dunkel + Ding. Das, was im Dunkel bleibt.",
+    "umschrift": "ne-zan-tok",
+    "ipa": "ˈne.tsan.tok"
    },
    {
     "wort": "zantiv",
     "deutsch": "Sinn, Richtung des Lebens",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Licht + Weg."
+    "hinweis": "Licht + Weg.",
+    "umschrift": "zan-tiw",
+    "ipa": "ˈtsan.tiv"
    },
    {
     "wort": "nezantiv",
     "deutsch": "Sinnlosigkeit",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "ne + zantiv."
+    "hinweis": "ne + zantiv.",
+    "umschrift": "ne-zan-tiw",
+    "ipa": "ˈne.tsan.tiv"
    },
    {
     "wort": "kotiv",
     "deutsch": "Zweck, Ziel",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Hin + Weg."
+    "hinweis": "Hin + Weg.",
+    "umschrift": "ko-tiw",
+    "ipa": "ˈko.tiv"
    },
    {
     "wort": "neaktiv",
     "deutsch": "Dialektik",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Nein + Ja + Weg. Der Weg durch den Widerspruch."
+    "hinweis": "Nein + Ja + Weg. Der Weg durch den Widerspruch.",
+    "umschrift": "ne-ak-tiw",
+    "ipa": "ˈne.ak.tiv"
    },
    {
     "wort": "tivsol",
     "deutsch": "Regel",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Weg + ganz."
+    "hinweis": "Weg + ganz.",
+    "umschrift": "tiw-sol",
+    "ipa": "ˈtiv.zol"
    },
    {
     "wort": "namtivpil",
     "deutsch": "Sprachspiel",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Sprache + spielen."
+    "hinweis": "Sprache + spielen.",
+    "umschrift": "nam-tiw-pil",
+    "ipa": "ˈnam.tiv.pil"
    },
    {
     "wort": "nenam",
     "deutsch": "schweigen, Stille",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Nicht + Mund."
+    "hinweis": "Nicht + Mund.",
+    "umschrift": "ne-nam",
+    "ipa": "ˈne.nam"
    },
    {
     "wort": "zansum",
     "deutsch": "Schönheit",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Licht + gut."
+    "hinweis": "Licht + gut.",
+    "umschrift": "zan-sum",
+    "ipa": "ˈtsan.zum"
    },
    {
     "wort": "nezansum",
     "deutsch": "Hässlichkeit",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "ne + zansum."
+    "hinweis": "ne + zansum.",
+    "umschrift": "ne-zan-sum",
+    "ipa": "ˈne.tsan.zum"
    },
    {
     "wort": "uvomak",
     "deutsch": "Erhabenheit",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Oben + groß."
+    "hinweis": "Oben + groß.",
+    "umschrift": "u-wo-mak",
+    "ipa": "ˈu.vo.mak"
    },
    {
     "wort": "uvosol",
     "deutsch": "Gott, das Ganze",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Oben + ganz. Wer es sagt, meint oft das Ganze, nicht eine Person."
+    "hinweis": "Oben + ganz. Wer es sagt, meint oft das Ganze, nicht eine Person.",
+    "umschrift": "u-wo-sol",
+    "ipa": "ˈu.vo.zol"
    },
    {
     "wort": "kelsum",
     "deutsch": "Kunst",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Machen + gut."
+    "hinweis": "Machen + gut.",
+    "umschrift": "kel-sum",
+    "ipa": "ˈkel.zum"
    },
    {
     "wort": "lulatuk",
     "deutsch": "Musik",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Gesang + Herz."
+    "hinweis": "Gesang + Herz.",
+    "umschrift": "lu-la-tuk",
+    "ipa": "ˈlu.la.tuk"
    },
    {
     "wort": "kikkolu",
     "deutsch": "Humor",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Lachen + Denken."
+    "hinweis": "Lachen + Denken.",
+    "umschrift": "kik-ko-lu",
+    "ipa": "ˈkik.ko.lu"
    },
    {
     "wort": "namkik",
     "deutsch": "Ironie",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Sagen + lachen."
+    "hinweis": "Sagen + lachen.",
+    "umschrift": "nam-kik",
+    "ipa": "ˈnam.kik"
    },
    {
     "wort": "neakkik",
     "deutsch": "das Absurde",
     "gruppe": "Gut, Böse, Glück",
-    "hinweis": "Nein-und-Ja + lachen. Sisyphos lacht."
+    "hinweis": "Nein-und-Ja + lachen. Sisyphos lacht.",
+    "umschrift": "ne-ak-kik",
+    "ipa": "ˈne.ak.kik"
    },
    {
     "wort": "tamnezan",
     "deutsch": "Seele, Lebensfunke",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "Bleiben + Dunkel + Licht. Das, was nach dem Körper weiterlebt."
+    "hinweis": "Bleiben + Dunkel + Licht. Das, was nach dem Körper weiterlebt.",
+    "umschrift": "tam-ne-zan",
+    "ipa": "ˈtam.ne.tsan"
    },
    {
     "wort": "tamnetok",
     "deutsch": "sterben (Körper)",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "Bleiben + nicht Stein. Der Körper vergeht."
+    "hinweis": "Bleiben + nicht Stein. Der Körper vergeht.",
+    "umschrift": "tam-ne-tok",
+    "ipa": "ˈtam.ne.tok"
    },
    {
     "wort": "talzanpera",
     "deutsch": "Wiedergeburt",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "Immer + Geburt."
+    "hinweis": "Immer + Geburt.",
+    "umschrift": "tal-zan-pe-ra",
+    "ipa": "ˈtal.tsan.pe.ɾa"
    },
    {
     "wort": "talzankom",
     "deutsch": "Wiederkehr der Seele",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "Immer + Licht + kommen."
+    "hinweis": "Immer + Licht + kommen.",
+    "umschrift": "tal-zan-kom",
+    "ipa": "ˈtal.tsan.kom"
    },
    {
     "wort": "zanzik",
     "deutsch": "Tor, Übergang",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "Licht + Stern. Der Ort, an dem Seelen wechseln."
+    "hinweis": "Licht + Stern. Der Ort, an dem Seelen wechseln.",
+    "umschrift": "zan-zik",
+    "ipa": "ˈtsan.tsik"
    },
    {
     "wort": "nezanzan",
     "deutsch": "Quantenwelt",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "Dunkel + Licht. Kein Bild, sondern Physik: ein wirklicher Bereich der Natur, in dem alles zugleich ist. Die Lumis rechnen ihn und kennen den Zugang, die Wissenschaft der Menschen ist noch nicht so weit."
+    "hinweis": "Dunkel + Licht. Kein Bild, sondern Physik: ein wirklicher Bereich der Natur, in dem alles zugleich ist. Die Lumis rechnen ihn und kennen den Zugang, die Wissenschaft der Menschen ist noch nicht so weit.",
+    "umschrift": "ne-zan-zan",
+    "ipa": "ˈne.tsan.tsan"
    },
    {
     "wort": "nezannam",
     "deutsch": "Quantensprache, Fernsprechen",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "Quantenwelt + sagen. Echte Verbindung über die Quantenwelt, ohne Weg dazwischen, auch zu uns Menschen."
+    "hinweis": "Quantenwelt + sagen. Echte Verbindung über die Quantenwelt, ohne Weg dazwischen, auch zu uns Menschen.",
+    "umschrift": "ne-zan-nam",
+    "ipa": "ˈne.tsan.nam"
    },
    {
     "wort": "zanlu",
     "deutsch": "Unterwelt-Verbindung, Kontakt",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "Licht + Hörer. Wenn ein Gedanke ankommt."
+    "hinweis": "Licht + Hörer. Wenn ein Gedanke ankommt.",
+    "umschrift": "zan-lu",
+    "ipa": "ˈtsan.lu"
    },
    {
     "wort": "zikmo",
     "deutsch": "Ozean des Alles, Urgrund",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "All + Wasser. Das, woraus alles wird."
+    "hinweis": "All + Wasser. Das, woraus alles wird.",
+    "umschrift": "zik-mo",
+    "ipa": "ˈtsik.mo"
    },
    {
     "wort": "tamsam",
     "deutsch": "Einssein, Einheit",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "Bleiben + mit."
+    "hinweis": "Bleiben + mit.",
+    "umschrift": "tam-sam",
+    "ipa": "ˈtam.zam"
    },
    {
     "wort": "telzanam",
     "deutsch": "Vorfahre, Ahne",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "Zahl + Licht + Haut. Wer vor uns war und weiterlebt."
+    "hinweis": "Zahl + Licht + Haut. Wer vor uns war und weiterlebt.",
+    "umschrift": "tel-za-nam",
+    "ipa": "ˈtel.tsa.nam"
    },
    {
     "wort": "telzanpa",
     "deutsch": "Nachkomme, kommende Seele",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "Der, der kommt."
+    "hinweis": "Der, der kommt.",
+    "umschrift": "tel-zan-pa",
+    "ipa": "ˈtel.tsan.pa"
    },
    {
     "wort": "sumutel",
     "deutsch": "Tiefes Träumen, Meditation",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "Schlaf + Zahl."
+    "hinweis": "Schlaf + Zahl.",
+    "umschrift": "su-mu-tel",
+    "ipa": "ˈzu.mu.tel"
    },
    {
     "wort": "zankol",
     "deutsch": "Einsicht über den Tod",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "Licht + Gedanke. Die Ruhe, die man danach hat."
+    "hinweis": "Licht + Gedanke. Die Ruhe, die man danach hat.",
+    "umschrift": "zan-kol",
+    "ipa": "ˈtsan.kol"
    },
    {
     "wort": "nezanluk",
     "deutsch": "Jenseits",
     "gruppe": "Tod, Wiederkehr, Quantenwelt",
-    "hinweis": "Dunkel + Licht + Ende. Das, was hinter dem Ende liegt."
+    "hinweis": "Dunkel + Licht + Ende. Das, was hinter dem Ende liegt.",
+    "umschrift": "ne-zan-luk",
+    "ipa": "ˈne.tsan.luk"
    },
    {
     "wort": "tel",
     "deutsch": "Zahl, zählen",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Auch Ziffernfolge. pim3 sind drei Pilze, die Zahl 3 heißt zel3."
+    "hinweis": "Auch Ziffernfolge. pim3 sind drei Pilze, die Zahl 3 heißt zel3.",
+    "umschrift": "tel",
+    "ipa": "ˈtel"
    },
    {
     "wort": "telkolu",
     "deutsch": "Mathematik",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Zahl + Denken."
+    "hinweis": "Zahl + Denken.",
+    "umschrift": "tel-ko-lu",
+    "ipa": "ˈtel.ko.lu"
    },
    {
     "wort": "telsol",
     "deutsch": "Menge, Gesamtzahl",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Zahl + ganz."
+    "hinweis": "Zahl + ganz.",
+    "umschrift": "tel-sol",
+    "ipa": "ˈtel.zol"
    },
    {
     "wort": "telne",
     "deutsch": "Null, Leere",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Zahl + nicht. Die Null, die etwas ist."
+    "hinweis": "Zahl + nicht. Die Null, die etwas ist.",
+    "umschrift": "tel-neh",
+    "ipa": "ˈtel.ne"
    },
    {
     "wort": "telnesol",
     "deutsch": "Unendliches, grenzenlose Zahl",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Zahl + unendlich."
+    "hinweis": "Zahl + unendlich.",
+    "umschrift": "tel-ne-sol",
+    "ipa": "ˈtel.ne.zol"
    },
    {
     "wort": "telzan",
     "deutsch": "Quant, kleinste Einheit",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Zahl + Licht. Das kleinste Licht, wörtlich gemeint."
+    "hinweis": "Zahl + Licht. Das kleinste Licht, wörtlich gemeint.",
+    "umschrift": "tel-zan",
+    "ipa": "ˈtel.tsan"
    },
    {
     "wort": "zanmo",
     "deutsch": "Welle",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Licht + Wasser."
+    "hinweis": "Licht + Wasser.",
+    "umschrift": "zan-mo",
+    "ipa": "ˈtsan.mo"
    },
    {
     "wort": "toktelzan",
     "deutsch": "Teilchen",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Stein + Quant."
+    "hinweis": "Stein + Quant.",
+    "umschrift": "tok-tel-zan",
+    "ipa": "ˈtok.tel.tsan"
    },
    {
     "wort": "akneak",
     "deutsch": "Überlagerung, beides zugleich",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Ja + Nein + Ja. Das Ding ist hier und dort."
+    "hinweis": "Ja + Nein + Ja. Das Ding ist hier und dort.",
+    "umschrift": "ak-ne-ak",
+    "ipa": "ˈak.ne.ak"
    },
    {
     "wort": "telzansam",
     "deutsch": "Verschränkung",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Quanten + mit. Zwei, die eins sind, auch wenn Weg dazwischen liegt."
+    "hinweis": "Quanten + mit. Zwei, die eins sind, auch wenn Weg dazwischen liegt.",
+    "umschrift": "tel-zan-sam",
+    "ipa": "ˈtel.tsan.zam"
    },
    {
     "wort": "okitak",
     "deutsch": "Messung, messen",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Sehen + nehmen. Wer hinsieht, legt fest."
+    "hinweis": "Sehen + nehmen. Wer hinsieht, legt fest.",
+    "umschrift": "o-ki-tak",
+    "ipa": "ˈo.ki.tak"
    },
    {
     "wort": "nesanazan",
     "deutsch": "Unschärfe",
     "gruppe": "Zahl und Quant",
-    "hinweis": "ne + sicher + Licht."
+    "hinweis": "ne + sicher + Licht.",
+    "umschrift": "ne-sa-na-zan",
+    "ipa": "ˈne.za.na.tsan"
    },
    {
     "wort": "tisutel",
     "deutsch": "Wahrscheinlichkeit (Zahl)",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Möglich + Zahl."
+    "hinweis": "Möglich + Zahl.",
+    "umschrift": "ti-su-tel",
+    "ipa": "ˈti.zu.tel"
    },
    {
     "wort": "tivtel",
     "deutsch": "Funktion, Abbildung",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Weg + Zahl."
+    "hinweis": "Weg + Zahl.",
+    "umschrift": "tiw-tel",
+    "ipa": "ˈtiv.tel"
    },
    {
     "wort": "telmimu",
     "deutsch": "Gleichung",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Zahl + Ruhe. Beide Seiten ruhen gleich."
+    "hinweis": "Zahl + Ruhe. Beide Seiten ruhen gleich.",
+    "umschrift": "tel-mi-mu",
+    "ipa": "ˈtel.mi.mu"
    },
    {
     "wort": "telvi",
     "deutsch": "Summe, vermehren",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Zahl + mehr."
+    "hinweis": "Zahl + mehr.",
+    "umschrift": "tel-wi",
+    "ipa": "ˈtel.vi"
    },
    {
     "wort": "telnevi",
     "deutsch": "Differenz, verringern",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Zahl + weniger."
+    "hinweis": "Zahl + weniger.",
+    "umschrift": "tel-ne-wi",
+    "ipa": "ˈtel.ne.vi"
    },
    {
     "wort": "telsap",
     "deutsch": "Beweis (mathematisch)",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Zahl + wissen."
+    "hinweis": "Zahl + wissen.",
+    "umschrift": "tel-sap",
+    "ipa": "ˈtel.zap"
    },
    {
     "wort": "telnam",
     "deutsch": "Formel",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Zahl + sagen."
+    "hinweis": "Zahl + sagen.",
+    "umschrift": "tel-nam",
+    "ipa": "ˈtel.nam"
    },
    {
     "wort": "telok",
     "deutsch": "Ort einer Zahl, Koordinate",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Zahl + Platz."
+    "hinweis": "Zahl + Platz.",
+    "umschrift": "te-lok",
+    "ipa": "ˈte.lok"
    },
    {
     "wort": "telkik",
     "deutsch": "Rätselzahl, Aufgabe",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Zahl + Spiel."
+    "hinweis": "Zahl + Spiel.",
+    "umschrift": "tel-kik",
+    "ipa": "ˈtel.kik"
    }
   ],
   "hinweis": "Lumisch nach der Wortprüfung vom 05.10.2026: alle 500 Wörter des Wörterbuchs, Plan in 21 Tagen. Neue Wörter nach Tag 21 kommen nach Gruppen: Unten, Wie etwas ist, Farben, Gefühle, Strom und Notfall, Gespräch und Zeit, die Philosophie und „Zahl und Quant“ zuletzt. In langen Zahlen wird nach je drei Ziffern tep gesprochen."
