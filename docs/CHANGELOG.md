@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.5.5 · 05.10.2026 · Nach neuer Version suchen im Web, Hilfetexte richtiggestellt
+
+- **Nach neuer Version suchen am iPad, iPhone und im Browser** (Auftrag 2026-10-05-06): Die Zeile „App 0.5.x · …“ mit dem Knopf steht jetzt auch in der Web-Version (`webUpdateZeile`). Der Knopf fragt `/version.json` ab (`cache: "no-store"`, Zeitstempel in der Adresse; der Service Worker lässt die Datei durch und speichert sie nie). Drei Fälle (`webVersionPruefen` in `web/neuigkeiten.js`): gleich „Du hast die neueste Version (0.5.x).“, neuer „Version 0.5.y ist da.“ mit „Jetzt laden“ (`registration.update()`, warten bis der neue Worker aktiv ist, neu laden; Daten bleiben), ohne Netz „Gerade kein Internet. Die App läuft weiter mit 0.5.x.“ Beim Öffnen und beim Zurückkehren in die App prüft die Web-Version still, höchstens einmal am Tag und nur mit Netz; ist eine neue Version da, steht der rote Punkt bei „Updates & Abo“. `web/version.json` muss gleich `APP_VERSION` sein (Test). Service Worker `offline-v23`.
+- **Hilfetexte** (Auftrag 2026-10-05-07): 14 Antworten Wort für Wort ersetzt, zwei Fragen neu (pause-linie 7 „Was sagt Pause über die Wirkung?“ ohne Wirkversprechen, lumi-buch 6 „Wie öffne ich das Buch?“). Bei Updates die Frage „Wie bekomme ich die neue App-Version?“. Tests lesen beide Aufträge.
+
 ## 0.5.4 · 05.10.2026 · Moduldaten beim Sperren, Info und Hilfe überall, Lumisch 500, drei Buch-Absätze
 
 - **Fehler behoben (Datenverlust seit 0.2.0):** `tresor_sperren` löschte `<Datenordner>/module` mit dem Speicher jedes Moduls und `zustand.json`. Jedes Sperren (Zeit, Minimieren, Beenden) nahm Spielstände und Listen und schaltete Module ab. Die Zeile kam mit der Sandbox (2436fc8); gemeint war nur, offene Modulserver zu stoppen. Jetzt `sperren(&Zustand)`: Schlüssel weg, Modulserver stoppen, Moduldaten bleiben. Rust-Test `tresor_sperren_behaelt_moduldaten` (in der CI). Die Moduldaten waren nie verschlüsselt und nie an den Tresor gebunden.

@@ -6,7 +6,7 @@ import { WERTE as PAUSE_WERTE, LEBENSABSCHNITTE, APPETIT, ART_TEXT, angeboten as
   logDazu as pauseLogDazu, happenFaellig, waehle as pauseWaehle, bewerten as pauseBewerten, schwierigkeit as pauseSchwierigkeit, zoneAnpassen, zoneText, zurueckholen as pauseZurueckholen,
   rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, soSeheIchDich, wochenSatz, rueckspiegel, lumischHeute, lumischUmbenannt, imKennenlernen, gewichtVon, stufeVon, verfuegbar as pauseVerfuegbar, tagVon, raumFormen, dauerText } from "./pause.js";
 import { FORMEN as PAUSE_FORMEN, happenFokus } from "./pause-happen.js";
-import { ungesehen as neuUngesehen, alsGesehen as neuAlsGesehen, inhaltsAenderungen, inhalteStart } from "./neuigkeiten.js";
+import { ungesehen as neuUngesehen, alsGesehen as neuAlsGesehen, inhaltsAenderungen, inhalteStart, webVersionPruefen, stillPruefenFaellig, webNeuerDa } from "./neuigkeiten.js";
 import { HILFE } from "./hilfe.js";
 import { blattOeffnen, blattWeg } from "./blatt.js";
 import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE, LUECKE_WARTET as BUCH_LUECKE_WARTET, wartendeAbsaetze as buchWartend, mitSchluss as buchMitSchluss } from "./buch.js";
@@ -17,7 +17,7 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.5.4";
+const APP_VERSION = "0.5.5";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -753,7 +753,7 @@ const seiten = {
           <div class="progress of-balken" style="margin:.5rem 0"><div style="width:${state.fortschritt.gesamt ? Math.min(100, (100 * state.fortschritt.geladen) / state.fortschritt.gesamt) : 0}%"></div></div>
           ${desktop ? '<button class="btn btn-sm of-btn of-btn--klein" data-abbrechen>Abbrechen – wird später fortgesetzt</button>' : ""}</div>` : ""}
         ${updates.map((u) => `<div class="upd-zeile"><span><strong>${esc(u.eintrag.titel)}</strong> <span class="muted of-klein">${esc(u.installiert)} → ${esc(u.eintrag.version)}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-install="${u.eintrag.id}">Aktualisieren</button></div>`).join("")}
-        ${desktop ? appUpdateZeile() : ""}
+        ${appUpdateZeile()}
       </section>
 
       <section class="card of-karte upd-neu" aria-labelledby="upd-neu-titel">
@@ -800,8 +800,9 @@ const seiten = {
   },
 };
 
-/** Desktop: App-Version und Suche nach einer neuen Version, als Teil von „Stand“ (seit 0.5.2). */
+/** App-Version und Suche nach einer neuen Version, als Teil von „Stand“ (Desktop seit 0.5.2, Web seit 0.5.5). */
 function appUpdateZeile() {
+  if (!desktop) return webUpdateZeile();
   const u = state.appUpdate ?? { status: "" };
   let inhalt;
   switch (u.status) {
@@ -820,6 +821,50 @@ function appUpdateZeile() {
   if (ortProblem) inhalt = `<span class="tag tag-warn of-plakette of-plakette--warnung">Falscher Ort</span> <span>${esc(ortProblem)}</span><br><span class="muted mono of-klein of-mono" style="font-size:.8rem">${esc(desktop.info.ort)}</span>`;
   const laeuft = u.status === "pruefe" || u.status === "laedt" || !!ortProblem;
   return `<div class="upd-zeile upd-app"><span>App ${esc(APP_VERSION)} · <span id="app-update-inhalt">${inhalt}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>`;
+}
+
+/** Web (iPad, iPhone, Browser): Version vom Server abfragen; ist sie neuer, lädt „Jetzt laden“ sie über den Service Worker. */
+function webUpdateZeile() {
+  const gemerkt = speicher.get("web-version-server", null);
+  const u = state.webUpdate ?? (webNeuerDa(gemerkt, APP_VERSION) ? { status: "neuer", version: gemerkt, text: `Version ${gemerkt} ist da.` } : { status: "" });
+  let inhalt;
+  switch (u.status) {
+    case "pruefe": inhalt = `<span class="muted of-klein">Frage den Server …</span>`; break;
+    case "gleich": inhalt = `<span class="tag tag-ok of-plakette of-plakette--offline">Aktuell</span> <span class="muted of-klein">${esc(u.text)}</span>`; break;
+    case "neuer": inhalt = `<span class="tag tag-warn of-plakette of-plakette--warnung">Neu</span> <span class="muted of-klein">${esc(u.text)}</span>
+      <div style="margin-top:.6rem"><button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-web-update-laden>Jetzt laden</button></div>`; break;
+    case "offline": inhalt = `<span class="muted of-klein">${esc(u.text)}</span>`; break;
+    case "laedt": inhalt = `<span class="muted of-klein">Lade Version ${esc(u.version)} … Deine Daten bleiben auf dem Gerät.</span>`; break;
+    default: inhalt = `<span class="muted of-klein">Die App holt sich neue Versionen selbst.</span>`;
+  }
+  const laeuft = u.status === "pruefe" || u.status === "laedt";
+  return `<div class="upd-zeile upd-app"><span>App ${esc(APP_VERSION)} · <span id="app-update-inhalt">${inhalt}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>`;
+}
+const heuteTag = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
+const versionHolen = async () => { const r = await fetch(`/version.json?t=${Date.now()}`, { cache: "no-store" }); if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); };
+/** still: beim Öffnen, höchstens einmal am Tag; zeigt nur etwas, wenn eine neue Version da ist (roter Punkt, Zeile). */
+async function webVersionSuchen({ still = false } = {}) {
+  if (!still) { state.webUpdate = { status: "pruefe" }; render(); }
+  const e = await webVersionPruefen({ aktuell: APP_VERSION, holen: versionHolen });
+  if (e.status !== "offline") { speicher.set("web-version-geprueft", heuteTag()); speicher.set("web-version-server", e.version); }
+  if (!still || e.status === "neuer") state.webUpdate = e;
+  if (!still || location.hash === "#updates") render(); else neuPunktMenue();
+}
+/** Neuen Service Worker holen, warten bis er aktiv ist, dann neu laden. Daten im Gerät bleiben. */
+async function webVersionLaden() {
+  state.webUpdate = { ...state.webUpdate, status: "laedt" }; render();
+  try {
+    const reg = await navigator.serviceWorker?.getRegistration();
+    if (reg) {
+      await reg.update();
+      const neu = reg.installing ?? reg.waiting;
+      if (neu && neu.state !== "activated") await new Promise((fertig) => { const t = setTimeout(fertig, 10000); neu.addEventListener("statechange", () => { if (neu.state === "activated") { clearTimeout(t); fertig(); } }); });
+    }
+  } catch (err) { console.error("Web-Update", err); }
+  location.reload();
+}
+function webVersionStill() {
+  if (!desktop && stillPruefenFaellig({ letzte: speicher.get("web-version-geprueft", null), heute: heuteTag(), online: navigator.onLine })) webVersionSuchen({ still: true }).catch(() => {});
 }
 
 // ---------- Was ist neu (0.5.2): Reiter App (web/neues.json, kommt mit der App) und Inhalte (Katalog), roter Punkt ----------
@@ -846,7 +891,7 @@ function neuListe(reiter, n, k) {
 function neuPunktMenue() {
   const a = document.querySelector('#nav a[data-route="updates"]');
   if (!a) return;
-  const an = neuStand().irgendwas, p = a.querySelector(".neu-punkt");
+  const an = neuStand().irgendwas || (!desktop && webNeuerDa(speicher.get("web-version-server", null), APP_VERSION)), p = a.querySelector(".neu-punkt");
   if (an && !p) a.insertAdjacentHTML("beforeend", '<span class="neu-punkt" aria-label="ungelesen"></span>');
   if (!an && p) p.remove();
 }
@@ -1954,7 +1999,8 @@ function beiKlick(e) {
   if (b.dataset.oeffnenZim) zimOeffnen(b.dataset.oeffnenZim);
   if (b.dataset.intervall) { state.abo.intervall = b.dataset.intervall; aboSpeichern(); render(); }
   if (b.hasAttribute("data-katalog")) pruefeUpdates();
-  if (b.hasAttribute("data-app-update-pruefen")) appUpdatePruefen();
+  if (b.hasAttribute("data-app-update-pruefen")) desktop ? appUpdatePruefen() : webVersionSuchen();
+  if (b.hasAttribute("data-web-update-laden")) webVersionLaden();
   if (b.hasAttribute("data-app-update-installieren")) appUpdateInstallieren();
   if (b.hasAttribute("data-app-neustart")) client.appNeustart();
   if (b.id === "jetzt") { b.disabled = true; b.textContent = "Prüfe …"; desktop ? updatesJetztDesktop() : pruefeUpdates(); }
@@ -2243,8 +2289,9 @@ if (desktop) (async () => {
   // Pause: ist sie an und das Paket fehlt, still holen; dann der Happen beim Öffnen
   if (pauseE().an && !PP() && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "pause" && p.status === "verfuegbar"); if (e && appPasst(e)) await installiere(k, e); } catch (err) { console.error("Pause", err); } }
   pauseBeimOeffnen();
+  webVersionStill(); // 0.5.5: Web still nach neuer Version fragen, höchstens einmal am Tag
 });
-document.addEventListener("visibilitychange", () => { if (!document.hidden) pauseBeimOeffnen(); });
+document.addEventListener("visibilitychange", () => { if (!document.hidden) { pauseBeimOeffnen(); webVersionStill(); } });
 addEventListener("online", () => vorratAuffuellen());
 
 // Service Worker nur im Web-Prototyp. In der Desktop-App liefert der Kern die Dateien; ein Worker aus 0.1.x (Windows)

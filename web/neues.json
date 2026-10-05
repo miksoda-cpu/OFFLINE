@@ -2,6 +2,16 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.5.5",
+      "datum": "2026-10-05",
+      "punkte": [
+        "Auch am iPad, am iPhone und im Browser steht jetzt die Versionsnummer, dazu „Nach neuer Version suchen“.",
+        "Ist eine neue Version da, lädt „Jetzt laden“ sie mit einem Tipp. Deine Daten bleiben auf dem Gerät.",
+        "Einmal am Tag schaut die App still nach. Gibt es eine neue Version, steht ein roter Punkt bei „Updates & Abo“.",
+        "„Info und Hilfe“ ist an 14 Stellen genauer, zum Beispiel beim Lumi-Buch und bei der Bereit-Zahl."
+      ]
+    },
+    {
       "version": "0.5.4",
       "datum": "2026-10-05",
       "punkte": [
