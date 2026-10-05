@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-10-04T21:03:17Z",
-  "gueltig_bis": "2027-01-02T21:03:17Z",
+  "erstellt": "2026-10-05T07:54:26Z",
+  "gueltig_bis": "2027-01-03T07:54:26Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -25,7 +25,7 @@
     },
     {
       "id": "lumi-buch",
-      "version": "2026.10.04",
+      "version": "2026.10.05",
       "titel": "Das Lumi-Buch · Band 1",
       "beschreibung": "Die Geschichte der Lumi von unter dem Eis, in zwölf Kapiteln. Das ganze Buch liegt auf dem Gerät; lesbar wird ein Stück, wenn du es nach einem Satz deiner Lumi aufschlägst. Eine erfundene Geschichte.",
       "art": "inhalt",
@@ -105,12 +105,12 @@
           }
         ]
       },
-      "groesse": 190841,
+      "groesse": 190846,
       "app_min": "0.5.0",
-      "erstellt": "2026-10-04T21:00:20Z",
-      "aenderungen": "Erste Ausgabe: Band 1, zwölf Kapitel, 127 Absätze.",
-      "pfad": "lumi-buch-2026.10.04/",
-      "sha256_manifest": "ffd587c5a1209ef561063d14dfbbfc978210e8148cdcfb9aa95e143b7d1187f2",
+      "erstellt": "2026-10-05T07:52:48Z",
+      "aenderungen": "Ein Satz im letzten Absatz ist genauer: Statt einer Wischgeste, die es nicht gibt, geht man ein Stück weiter.",
+      "pfad": "lumi-buch-2026.10.05/",
+      "sha256_manifest": "4c51e4346c7eaf678c92360ac49a3eb8411291f4c17d8d3233a915afc989fddd",
       "status": "verfuegbar"
     },
     {

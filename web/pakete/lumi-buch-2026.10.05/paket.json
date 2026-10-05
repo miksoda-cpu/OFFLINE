@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "lumi-buch",
-  "version": "2026.10.04",
+  "version": "2026.10.05",
   "titel": "Das Lumi-Buch · Band 1",
   "beschreibung": "Die Geschichte der Lumi von unter dem Eis, in zwölf Kapiteln. Das ganze Buch liegt auf dem Gerät; lesbar wird ein Stück, wenn du es nach einem Satz deiner Lumi aufschlägst. Eine erfundene Geschichte.",
   "art": "inhalt",
@@ -15,8 +15,8 @@
   "alter_ab": 0,
   "abnahme": "Redaktion (Code), 04.10.2026: Format, Reihenfolge, jede Absatznummer mit mindestens einem Tipp, alle 175 Tipps mit vorhandenem Absatz; Text unverändert (keine Tippfehler gefunden)",
   "app_min": "0.5.0",
-  "erstellt": "2026-10-04T21:00:20Z",
-  "aenderungen": "Erste Ausgabe: Band 1, zwölf Kapitel, 127 Absätze.",
+  "erstellt": "2026-10-05T07:52:48Z",
+  "aenderungen": "Ein Satz im letzten Absatz ist genauer: Statt einer Wischgeste, die es nicht gibt, geht man ein Stück weiter.",
   "quellen": [
     {
       "id": "redaktion",
@@ -27,8 +27,8 @@
   "dateien": [
     {
       "pfad": "inhalt/buch.json",
-      "sha256": "03c34749073e6943557ceeeaac706c6aa6696e573c200cb31253ef6bddb7db8e",
-      "groesse": 73645
+      "sha256": "aca03d98117300673fcca1bc4558d8ff98a6934aa24da2ac4b9b01a9d94f0b81",
+      "groesse": 73650
     },
     {
       "pfad": "inhalt/vorschau/1.svg",
@@ -61,5 +61,5 @@
       "groesse": 1605
     }
   ],
-  "groesse": 190841
+  "groesse": 190846
 }
