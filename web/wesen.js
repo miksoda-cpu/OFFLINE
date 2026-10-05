@@ -7,6 +7,7 @@
 
 import { stufe } from "./bereit.js";
 import { MIMIK, LICHT as LICHT_BILD } from "./lumi/mimik.js";
+import { schlaeftJetzt } from "./meintag.js";
 
 const B = 48, H = 36; // logische Pixel
 
@@ -203,8 +204,9 @@ export function schlafenszeit(gelernt) {
   const seitMittag = Math.min(13 * 60, Math.max(9 * 60, m + 30)); // 21:00 … 01:00
   return (seitMittag + 12 * 60) % 1440;
 }
-/** Schläft sie jetzt, weil Nacht ist? */
-export function nachtsSchlaf(jetzt, gelernt) {
+/** Schläft sie jetzt, weil Nacht ist? tag (seit 0.5.6, „Mein Tag“): schläft von Schluss (ohne Uhrzeit: gelernt) bis Aufstehen. */
+export function nachtsSchlaf(jetzt, gelernt, tag) {
+  if (tag) return schlaeftJetzt(jetzt, tag, schlafenszeit(gelernt));
   const d = new Date(jetzt); const m = d.getHours() * 60 + d.getMinutes(); const von = schlafenszeit(gelernt);
   return von > NACHT.bis ? m >= von || m < NACHT.bis : m >= von && m < NACHT.bis;
 }
@@ -251,6 +253,7 @@ export class Wesen {
     this.positionen = {}; this.sprichtBis = 0; this.denktBis = 0; this.freudeBis = 0; this.hoertZu = false;
     this.namensfrage = !this.e.name && this.e.darstellung === "wesen" && !this.start.spaeter; this.ausschaltenFrage = false; this.wachBis = 0;
     this.istVorhaben = o.istVorhaben ?? (() => false); this.tagesSatz = null;
+    this.meinTag = o.meinTag; // 0.5.6: () => { schluss, aufstehen }
     this.buchLink = o.buchLink ?? (() => false); // Lumi-Buch (0.5.0): gibt es unter diesem Satz „Aus dem Lumi-Buch“?
     this.bewertung = bewertungLaden(this.sp.get("lumi-bewertung", null));
     this.gelernt = this.sp.get("wesen-gelernt", { intervall: 90, gelesen: 0, weitergewischt: 0 });
@@ -309,7 +312,7 @@ export class Wesen {
     this.tippSchliessen();
   }
   /** Schläft sie gerade, weil Nacht ist (und kein Stups sie kurz geweckt hat)? */
-  nachtruhe(jetzt = Date.now()) { return this.mitFigur() && nachtsSchlaf(jetzt, this.gelernt) && !(this.wachBis > jetzt); }
+  nachtruhe(jetzt = Date.now()) { return this.mitFigur() && nachtsSchlaf(jetzt, this.gelernt, this.meinTag?.()) && !(this.wachBis > jetzt); }
   freude(ms = 3000) { this.freudeBis = Date.now() + ms; this.zeichnen(); }
   sagen(text) { if (this.benannt() || ohneIch(text)) { this.sprichtBis = Date.now() + 2500; this.sprechblase(text, null, 3500); this.zeichnen(); } }
 

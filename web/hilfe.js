@@ -45,6 +45,10 @@ export const HILFE = {
     ["Warum steht „verdächtig gut“ da?", "Über 95 fragt die App nach deinem letzten Probeabend, wenn du in den letzten drei Monaten keinen bestätigt hast. Ein Probeabend ist ein Abend ohne Strom. Er zeigt, was wirklich fehlt."],
     ["Wer sieht meine Zahl?", "Nur du. Die Zahl bleibt auf diesem Gerät."],
   ],
+  tagesplan: [
+    ["Was ist „Mein Tag“?", "Hier stellst du ein, wann dein Tag endet und wann er beginnt. Zur Schluss-Zeit sagt die App: „Das war dein Tag.“ Die Lumi schläft bis zum Aufstehen."],
+    ["Warum schlägt die App eine Zeit vor?", "Die App merkt sich, wann du abends zuletzt etwas tust. Sie fragt höchstens zweimal. Du entscheidest."],
+  ],
   "pause-linie": [
     ["Was ist „Deine Linie“?", "„Deine Linie“ zeigt, wie Pause dich kennt: was du magst, wie schwer es sein soll und was diese Woche war."],
     ["Wie wählt Pause einen Happen?", "In den ersten drei Wochen lernt Pause dich kennen und wählt, was du am wenigsten gespielt hast. Danach wählt Pause meist etwas Vertrautes, manchmal etwas Ähnliches und selten etwas Neues. Morgen-Happen kommen bis 12 Uhr. Abend-Happen kommen ab 18 Uhr. Dieselbe Form kommt nicht zweimal hintereinander, wenn eine andere passt."],

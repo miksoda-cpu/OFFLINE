@@ -8,6 +8,7 @@ import { WERTE as PAUSE_WERTE, LEBENSABSCHNITTE, APPETIT, ART_TEXT, angeboten as
 import { FORMEN as PAUSE_FORMEN, happenFokus } from "./pause-happen.js";
 import { ungesehen as neuUngesehen, alsGesehen as neuAlsGesehen, inhaltsAenderungen, inhalteStart, webVersionPruefen, stillPruefenFaellig, webNeuerDa } from "./neuigkeiten.js";
 import { HILFE } from "./hilfe.js";
+import { meinTag, schlussVorbei as meinTagSchlussVorbei, SCHLUSS_ZEITEN, AUFSTEHEN_ZEITEN, ARTEN as MEIN_TAG_ARTEN, zeitText, vorschlag as meinTagVorschlag, vorschlagText, vorschlagAntwort } from "./meintag.js";
 import { blattOeffnen, blattWeg } from "./blatt.js";
 import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE, LUECKE_WARTET as BUCH_LUECKE_WARTET, wartendeAbsaetze as buchWartend, mitSchluss as buchMitSchluss } from "./buch.js";
 import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
@@ -17,7 +18,7 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.5.5";
+const APP_VERSION = "0.5.6";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -94,7 +95,7 @@ function vorhabenDazu(t) {
   l.unshift({ id: `v-${Date.now().toString(36)}`, tipp: t.id, text: t.text, datum: new Date().toISOString(), erledigt: null });
   vorhabenSpeichern(l);
 }
-const wesen = new Wesen({ speicher, istVorhaben: (id) => vorhaben().some((v) => v.tipp === id), buchLink: (t) => buchLinkErlaubt(t, wesen.e, buchDaten()), tipps: () => inhalt(PW(), "inhalt/tipps.json")?.tipps ?? [], onLog: () => {
+const wesen = new Wesen({ speicher, meinTag: () => meinTagJetzt(), istVorhaben: (id) => vorhaben().some((v) => v.tipp === id), buchLink: (t) => buchLinkErlaubt(t, wesen.e, buchDaten()), tipps: () => inhalt(PW(), "inhalt/tipps.json")?.tipps ?? [], onLog: () => {
   const z = document.getElementById("wesen-log-zahl"); if (z) z.textContent = `· ${wesen.log.length}`;
   const el = document.getElementById("wesen-log"); if (el) el.innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche);
 } });
@@ -171,8 +172,10 @@ const heuteDatum = () => datumVon(testJetzt());
 state.tag = { offen: {}, nochmal: false, datum: null, liest: false, lesen: null, schlussGezeigt: null };
 function tagesplan() {
   const p = speicher.get("tagesplan", null) ?? {};
-  return { ...PLAN_STANDARD, ...p, karten: { ...PLAN_STANDARD.karten, ...(p.karten ?? {}) } };
+  // „Mein Tag“ (0.5.6): schluss/aufstehen in Minuten; alte volle Stunden gelten weiter, sonst Startwert nach Alter
+  return { ...PLAN_STANDARD, ...p, ...meinTag(p, pauseEinstellungenLaden(speicher.get("pause", null)).alter), karten: { ...PLAN_STANDARD.karten, ...(p.karten ?? {}) } };
 }
+const meinTagJetzt = () => { const p = tagesplan(); return { schluss: p.schluss, aufstehen: p.aufstehen }; };
 function planSpeichern(p) { speicher.set("tagesplan", p); }
 /** Tag 1 der Tagnummern: der erste Tag, an dem die Tagesseite auf diesem Gerät lief. */
 function tagStart() { let t = speicher.get("tag-start", null); if (!t) { t = heuteDatum(); speicher.set("tag-start", t); } return t; }
@@ -266,14 +269,39 @@ function tagKarteHtml(k, status) {
 function tagesplanHtml() {
   const p = tagesplan(), g = speicher.get("tag-gelernt", {});
   const eingefroren = Object.keys(g.eingefroren ?? {}).filter((k) => g.eingefroren[k]);
-  return `<details class="card of-karte" style="margin-bottom:1rem" id="tagesplan"><summary><strong>Tagesplan</strong> <span class="muted of-klein">· Karten, Schluss, Vorrat</span></summary>
+  return `<details class="card of-karte" style="margin-bottom:1rem" id="tagesplan"><summary><strong>Tagesplan</strong> <span class="muted of-klein">· Mein Tag, Karten, Vorrat</span></summary>
     <div style="margin-top:.8rem" class="tagesplan">
       <fieldset><legend>Welche Karten</legend>${TAG_KARTEN.map((k) => `<label class="tagesplan-zeile"><input type="checkbox" data-tagesplan-karte="${k.id}" ${p.karten[k.id] && !k.spaeter ? "checked" : ""} ${k.spaeter ? "disabled" : ""}> ${esc(k.titel)}${k.spaeter ? ' <span class="muted of-klein">(kommt später)</span>' : ""}</label>`).join("")}</fieldset>
-      <label class="tagesplan-zeile">Schluss: wenn alles erledigt ist, spätestens um<br><select class="of-select" data-tagesplan="schlussUm">${[20, 21, 22, 23].map((h) => `<option value="${h}" ${p.schlussUm === h ? "selected" : ""}>${h} Uhr</option>`).join("")}<option value="" ${p.schlussUm == null ? "selected" : ""}>keine Uhrzeit</option></select></label>
+      ${meinTagHtml(p)}
       <label class="tagesplan-zeile">Vorrat<br><select class="of-select" data-tagesplan="tiefe">${TIEFEN.map((t) => `<option value="${t}" ${p.tiefe === t ? "selected" : ""}>${t} Tage im Voraus laden</option>`).join("")}</select></label>
       <label class="tagesplan-zeile"><input type="checkbox" data-tagesplan="sparmodus" ${p.sparmodus ? "checked" : ""}> Sparmodus: Tagesseite ohne Bilder</label>
       ${eingefroren.length ? `<p class="muted of-klein">Fest eingestellt (zweimal zurückgenommen): ${eingefroren.map((a) => esc(TAG_KARTEN.find((k) => k.id === a)?.titel ?? a)).join(", ")}. <button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="gelernt-zuruecksetzen">Gelerntes zurücksetzen</button></p>` : ""}
+      ${hilfeZeile("tagesplan", "bereit-hilfe")}
     </div></details>`;
+}
+/** Unter Lumi: wann sie schläft, mit Link auf „Mein Tag“ im Tagesplan. */
+function lumiMeinTagZeile() {
+  const p = tagesplan();
+  return `<p class="muted of-klein lumi-mein-tag">Schlafenszeit: ${p.schluss == null ? "gelernt" : zeitText(p.schluss)} bis ${zeitText(p.aufstehen)} · <a href="#uebersicht" data-anker="tagesplan">Mein Tag ändern</a></p>`;
+}
+/** „Mein Tag“ (0.5.6): drei Knöpfe als schneller Weg, dann Schluss und Aufstehen auf die halbe Stunde. */
+function meinTagHtml(p) {
+  const art = MEIN_TAG_ARTEN.find((a) => a.schluss === p.schluss && a.aufstehen === p.aufstehen)?.id;
+  return `<fieldset class="mein-tag" id="mein-tag"><legend>Mein Tag</legend>
+    <div class="mein-tag-arten" role="group" aria-label="Schneller Weg">${MEIN_TAG_ARTEN.map((a) => `<button type="button" class="btn btn-sm of-btn of-btn--klein${art === a.id ? " ist-gewaehlt" : ""}" data-mein-tag-art="${a.id}" aria-pressed="${art === a.id}">${esc(a.titel).replace(/mensch$/, "&shy;mensch")}<span class="muted of-klein">${zeitText(a.schluss)} · ${zeitText(a.aufstehen)}</span></button>`).join("")}</div>
+    <label class="tagesplan-zeile">Schluss um<br><select class="of-select" data-tagesplan="schluss">${SCHLUSS_ZEITEN.map((m) => `<option value="${m}" ${p.schluss === m ? "selected" : ""}>${zeitText(m)}</option>`).join("")}<option value="" ${p.schluss == null ? "selected" : ""}>keine Uhrzeit</option></select></label>
+    <label class="tagesplan-zeile">Aufstehen um<br><select class="of-select" data-tagesplan="aufstehen">${AUFSTEHEN_ZEITEN.map((m) => `<option value="${m}" ${p.aufstehen === m ? "selected" : ""}>${zeitText(m)}</option>`).join("")}</select></label>
+    <p class="muted of-klein" style="margin:.2rem 0 0">Zur Schluss-Zeit endet dein Tag. Die Lumi schläft bis zum Aufstehen.</p></fieldset>`;
+}
+/** Vorschlag aus dem Gelernten (höchstens zweimal „Nein“): einmal auf Heute, nie als Fenster. */
+function meinTagVorschlagJetzt() {
+  const p = tagesplan();
+  return meinTagVorschlag({ abende: wesen.gelernt?.abende, tag: { schluss: p.schluss, aufstehen: p.aufstehen }, frage: speicher.get("mein-tag-frage", {}), heute: heuteDatum() });
+}
+function meinTagVorschlagHtml() {
+  const v = meinTagVorschlagJetzt(); if (!v) return "";
+  return `<section class="card of-karte tag-karte mein-tag-frage" aria-label="Mein Tag"><p style="margin:0 0 .6rem">${esc(vorschlagText(v))}</p>
+    <div class="lumi-bewertung"><button type="button" class="btn btn-sm of-btn of-btn--klein" data-mein-tag-vorschlag="ja" data-neu="${v.neu}">Ja</button><button type="button" class="btn btn-sm of-btn of-btn--klein" data-mein-tag-vorschlag="nein">Nein, passt so</button></div></section>`;
 }
 /** Vorratskammer: alte Monate wegräumen, fehlende nach der Vorratstiefe holen (nur Katalog, alles signiert). */
 let vorratLaeuft = false, vorratKatalogGeholt = false;
@@ -354,6 +382,7 @@ const seiten = {
     const datumText = new Date(testJetzt()).toLocaleDateString("de-AT", { weekday: "long", day: "numeric", month: "long" });
     return `
       <div class="gruss of-gruss"><div><h1>Servus.</h1><p class="muted of-klein">${esc(datumText)}</p></div></div>
+      ${meinTagVorschlagHtml()}
       ${pauseKarteHtml()}
       <div class="buehne-kopf" id="wesen-karte">
         ${wesen.mitFigur() && !plan.sparmodus ? wesen.buehneHtml() : ""}
@@ -468,7 +497,7 @@ const seiten = {
       </div>
       ${tagesplanHtml()}
       <a class="card of-karte pause-zeile" href="#pause" style="margin-bottom:1rem"><strong>⏸ Pause</strong> <span class="muted of-klein">· ${pauseE().an ? `ein · Appetit ${esc(pauseE().appetit)}` : "aus"} · Happen für zwischendurch, jetzt mit eigenem Raum</span></a>
-      <details class="card of-karte" id="lumi-einstellungen" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? `${esc(wesen.anzeigename())} · Einstellungen` : wesen.aktiv() ? "Textkarten" : "Tipps aus"}</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}${hilfeZeile("lumi", "bereit-hilfe")}</div></details>
+      <details class="card of-karte" id="lumi-einstellungen" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? `${esc(wesen.anzeigename())} · Einstellungen` : wesen.aktiv() ? "Textkarten" : "Tipps aus"}</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}${lumiMeinTagZeile()}${hilfeZeile("lumi", "bereit-hilfe")}</div></details>
       ${buchDaten() && wesen.mitFigur() ? `<a class="card of-karte buch-zeile" href="#buch" style="margin-bottom:1rem"><strong>Das Lumi-Buch</strong> <span class="muted of-klein">· Band ${buchDaten().band} · ${buchAnteil(buchDaten(), buchFrei())} % lesbar</span></a>` : ""}
       ${wesen.aktiv() || wesen.log.length ? `<details class="card of-karte" id="lumi-log" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>${wesen.mitFigur() ? `Alles, was ${esc(wesen.anzeigename())} gesagt hat` : "Bisherige Tipps"}</strong> <span class="muted of-klein" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` : ""}
       ${updates ? `<a class="card of-karte" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn of-plakette of-plakette--warnung">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted of-klein">· ${intervallText()}</span></a>` : ""}
@@ -1049,10 +1078,11 @@ function pauseGestern() {
 }
 function pauseKontext(nurAbend) {
   const plan = tagesplan(), jetzt = testJetzt();
-  const abend = nurAbend || (plan.schlussUm != null && new Date(jetzt).getHours() >= plan.schlussUm);
-  return { funktionen: FUNKTIONEN, abend, nurAbend, hat: { roman: !!pauseRoman(), gestern: !!pauseGestern() } };
+  const tag = { schluss: plan.schluss, aufstehen: plan.aufstehen };
+  const abend = nurAbend || meinTagSchlussVorbei(jetzt, tag);
+  return { funktionen: FUNKTIONEN, abend, nurAbend, tag, hat: { roman: !!pauseRoman(), gestern: !!pauseGestern() } };
 }
-const tagesSchlussVorbei = () => { const p = tagesplan(); return p.schlussUm != null && new Date(testJetzt()).getHours() >= p.schlussUm; };
+const tagesSchlussVorbei = () => meinTagSchlussVorbei(testJetzt(), meinTagJetzt());
 
 /**
  * Einen Happen starten (Fokus-Bildschirm, Route #happen). form: im Raum oder auf der Karte gewählte Form (id), sonst wählt
@@ -1949,8 +1979,8 @@ main.addEventListener("change", (e) => {
   if (t.dataset.tagesplanKarte) { const p = tagesplan(); p.karten[t.dataset.tagesplanKarte] = t.checked; planSpeichern(p); return; }
   if (t.dataset.tagesplan) {
     const p = tagesplan(), k = t.dataset.tagesplan;
-    p[k] = k === "sparmodus" ? t.checked : k === "schlussUm" ? (t.value === "" ? null : Number(t.value)) : Number(t.value);
-    planSpeichern(p); if (k === "tiefe") vorratAuffuellen(); return;
+    p[k] = k === "sparmodus" ? t.checked : k === "schluss" ? (t.value === "" ? null : Number(t.value)) : Number(t.value);
+    planSpeichern(p); if (k === "schluss" || k === "aufstehen") { wesen.zustandBerechnen?.(); render(); } if (k === "tiefe") vorratAuffuellen(); return;
   }
   if (t.dataset.check) { state.checks[t.dataset.check] = t.checked; speicher.set("checks", state.checks); return bestaetigen(`c-${t.dataset.check}`, t.checked); }
   if (t.dataset.pauseEinstellung) {
@@ -2079,6 +2109,13 @@ document.addEventListener("click", (e) => {
   const b = e.target.closest("button"); if (!b) return;
   if (b.hasAttribute("data-wesen-zu")) { const satz = wesen.tagesSatz; wesen.tippSchliessen(); if (satz) tagSetzen({ id: `lumi-${satz}`, art: "lumi" }, "weg"); }
   if (b.dataset.lumiBuch) return buchOeffnen(b.dataset.lumiBuch);
+  if (b.dataset.meinTagArt) { const a = MEIN_TAG_ARTEN.find((x) => x.id === b.dataset.meinTagArt); if (a) { planSpeichern({ ...tagesplan(), schluss: a.schluss, aufstehen: a.aufstehen }); wesen.zustandBerechnen?.(); render(); } return; }
+  if (b.dataset.meinTagVorschlag) {
+    const ja = b.dataset.meinTagVorschlag === "ja";
+    speicher.set("mein-tag-frage", vorschlagAntwort(speicher.get("mein-tag-frage", {}), ja, heuteDatum()));
+    if (ja) planSpeichern({ ...tagesplan(), schluss: Number(b.dataset.neu) });
+    return render();
+  }
   if (b.dataset.lumiAktion) return lumiKnopf(b);
   if (b.dataset.buch === "vorlesen") return buchVorlesen();
   if (b.dataset.pause) return pauseKnopf(b.dataset.pause, b);

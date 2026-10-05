@@ -623,3 +623,16 @@ body.blatt-offen { overflow: hidden; }
 .blatt-zu:focus { outline: none; } .blatt-zu:focus-visible { outline: 1.5px solid var(--eis-ink); outline-offset: -4px; }
 
 .bereit-hilfe { margin: .6rem 0 0; } /* „Info und Hilfe“ am Ende eines Abschnitts der Übersicht */
+
+/* Mein Tag (0.5.6): drei Knöpfe als schneller Weg, Zeiten darunter */
+.mein-tag { border: 0; padding: 0; margin: .4rem 0 .8rem; }
+.mein-tag-arten { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .4rem; margin: .3rem 0 .6rem; }
+.mein-tag-arten .btn { display: flex; flex-direction: column; align-items: center; gap: .1rem; min-width: 0; white-space: normal; hyphens: manual; line-height: 1.2; padding: .45rem .2rem; font-size: .85rem; }
+.mein-tag-arten .btn .muted { font-size: .78rem; }
+.mein-tag-arten .ist-gewaehlt { border-color: currentColor; box-shadow: inset 0 0 0 1px currentColor; }
+.lumi-mein-tag { margin: .6rem 0 0; }
+
+/* Lumisch anhören (0.5.6): kleiner Knopf mit Haarlinie neben dem Wort */
+.lumisch-hoeren { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; margin: 0 .15rem 0 .35rem; padding: 0; vertical-align: middle; border: 1px solid var(--z-hair); border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer; }
+.lumisch-hoeren:hover, .lumisch-hoeren:focus-visible { color: var(--text); border-color: currentColor; }
+.lumisch-hoeren[hidden] { display: none; }

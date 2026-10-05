@@ -86,10 +86,12 @@ export function tagesKarten({ karten, plan = PLAN_STANDARD, lumi = "karten", tex
   return aus;
 }
 
-/** Ist der Tag zu Ende? Alle Karten erledigt oder weggelegt, oder die Schlussstunde ist erreicht. zustand: { id → "erledigt" | "weg" }. */
+/** Ist der Tag zu Ende? Alle Karten erledigt oder weggelegt, oder die Schluss-Zeit ist erreicht. zustand: { id → "erledigt" | "weg" }. */
 export function schlussErreicht({ karten, zustand = {}, jetzt, plan = PLAN_STANDARD }) {
   if (karten.length && karten.every((k) => zustand[k.id] === "erledigt" || zustand[k.id] === "weg")) return "erledigt";
-  if (plan.schlussUm != null && new Date(jetzt).getHours() >= plan.schlussUm) return "uhrzeit";
+  // 0.5.6: plan.schluss in Minuten („Mein Tag“, auf die halbe Stunde); bis 0.5.5 plan.schlussUm in vollen Stunden
+  const schluss = plan.schluss !== undefined ? plan.schluss : plan.schlussUm == null ? null : plan.schlussUm * 60;
+  if (schluss != null) { const d = new Date(jetzt); if (d.getHours() * 60 + d.getMinutes() >= schluss) return "uhrzeit"; }
   return null;
 }
 

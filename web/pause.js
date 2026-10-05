@@ -5,6 +5,7 @@
 // nichts verlässt das Gerät, alles Gelernte sichtbar und zurücksetzbar.
 
 import { WERTE } from "./pause-werte.js";
+import { abendAb, morgenAb, zeitText } from "./meintag.js";
 
 export { WERTE };
 export const TRAININGSARTEN = ["tempo", "kraft", "ausdauer", "beweglichkeit", "koordination", "gruppe"];
@@ -104,14 +105,15 @@ export function zoneText(linie, form, log) {
 // ---------- Was gerade geht ----------
 /**
  * Kann diese Form jetzt gespielt werden? kontext: { jetzt, alter, funktionen (Set), abend (Tagesschluss vorbei; der Abend selbst beginnt nie vor WERTE.abendAb),
+ * tag („Mein Tag“ seit 0.5.6: { schluss, aufstehen } – Abend ab zwei Stunden vor Schluss, Morgen ab Aufstehen),
  * hat: { roman, gestern } }. Ausgeschlossene Formen (Nicht mehr) zählt der Dirigent selbst aus.
  */
 export function verfuegbar(form, k) {
   if (form.bedingung?.funktion && !k.funktionen?.has(form.bedingung.funktion)) return false;
   if (k.alter && !form.alter.includes(k.alter)) return false;
-  const stunde = new Date(k.jetzt).getHours();
-  if (form.tageszeit === "morgen" && stunde >= WERTE.morgenBis) return false;
-  if (form.tageszeit === "abend" && stunde < WERTE.abendAb) return false; // seit 0.4.2 nie vor 18 Uhr, auch nach dem Tagesschluss
+  const d = new Date(k.jetzt), stunde = d.getHours(), m = stunde * 60 + d.getMinutes();
+  if (form.tageszeit === "morgen" && (stunde >= WERTE.morgenBis || m < morgenAb(k.tag))) return false; // 0.5.6: ab Aufstehen
+  if (form.tageszeit === "abend" && m < abendAb(k.tag, WERTE.abendAb * 60)) return false; // nie vor 18 Uhr; 0.5.6: ab zwei Stunden vor Schluss
   if (form.braucht && !k.hat?.[form.braucht]) return false;
   return true;
 }
@@ -332,9 +334,9 @@ export function dauerText(form) {
  * o: { formen, einstellungen, jetzt, kontext (wie bei verfuegbar), log, lumisch, heute }.
  */
 export function raumFormen({ formen, einstellungen, jetzt, kontext, log, lumisch, heute }) {
-  const e = einstellungenLaden(einstellungen), stunde = new Date(jetzt).getHours();
+  const e = einstellungenLaden(einstellungen), d = new Date(jetzt), m = d.getHours() * 60 + d.getMinutes(), ab = abendAb(kontext?.tag, WERTE.abendAb * 60);
   return formen.filter((f) => !(f.bedingung?.funktion && !kontext?.funktionen?.has(f.bedingung.funktion)) && !(e.alter && !f.alter.includes(e.alter))).map((form) => {
-    if (form.tageszeit === "abend" && stunde < WERTE.abendAb) return { form, geht: false, stand: `ab ${WERTE.abendAb} Uhr` };
+    if (form.tageszeit === "abend" && m < ab) return { form, geht: false, stand: `ab ${zeitText(ab).replace(/:00$/, "")} Uhr` };
     if (form.braucht === "roman" && !kontext?.hat?.roman) return { form, geht: false, stand: "wenn du im Roman der Woche liest" };
     if (form.braucht === "gestern" && !kontext?.hat?.gestern) return { form, geht: false, stand: "nach einem Tag mit Rätsel" };
     if (form.id === "lumisch" && lumisch?.plan) { const h = lumischHeute(log, lumisch, heute ?? tagVon(jetzt)); return { form, geht: true, stand: h.art === "plan" ? `Tag ${h.tag} von ${lumisch.plan.length}` : h.art === "neu" ? "ein neues Wort" : "Wiederholung" }; }

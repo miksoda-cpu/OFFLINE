@@ -343,3 +343,25 @@ test("Lumisch: wer das alte Wort für Eis gelernt hat, verliert nichts; die Kart
   assert.equal(lumischUmbenannt(log, [KIR]), null, "danach nie wieder");
   assert.equal(lumischUmbenannt(log.map((e) => ({ ...e, ergebnis: { ...e.ergebnis, wort: e.ergebnis.wort === KIR ? "kiv" : e.ergebnis.wort, abgefragt: "zan" } })), []), null, "wer kiv gelernt hat, sieht nichts");
 });
+
+// ---------- Lumisch anhören (0.5.6, Auftrag 2026-10-05-09) ----------
+test("Lumisch anhören: Umschrift und Lautschrift im Paket, Stimme de-AT zuerst, Weiche für IPA aus, ohne Stimme kein Knopf", async () => {
+  const { waehleStimme, sprechText, hoerenKnopf, STIMME_KANN_IPA, TEMPO } = await import("./stimme.js");
+  const paket = JSON.parse(await readFile(new URL("../pakete/pause/inhalt/pause.json", import.meta.url), "utf8"));
+  const quelle = JSON.parse(await readFile(new URL("../pakete/pause/quelle/OFFLINE-Lumisch-Aussprache.json", import.meta.url), "utf8"));
+  const wb = paket.lumisch.woerterbuch, a = new Map(quelle.woerter.map((x) => [x.wort, x]));
+  assert.equal(wb.length, 500);
+  for (const w of wb) { assert.equal(w.umschrift, a.get(w.wort)?.umschrift, w.wort); assert.equal(w.ipa, a.get(w.wort)?.ipa, w.wort); }
+  const w = (wort) => wb.find((x) => x.wort === wort);
+  assert.equal(sprechText(w("kiv")), "kiw");
+  assert.equal(sprechText(w("vau")), "wa u", "vau als wa-u, zwei Silben");
+  assert.equal(sprechText(w("talzanpera")), "tal zan pe ra");
+  assert.equal(STIMME_KANN_IPA, false); assert.equal(sprechText(w("vau"), true), "ˈva.u", "Weiche: mit IPA-Stimme die Lautschrift");
+  assert.ok(TEMPO < 1, "etwas langsamer");
+  const at = { lang: "de-AT", name: "Michael" }, de = { lang: "de-DE", name: "Anna" }, en = { lang: "en-US", name: "Sam", default: true };
+  assert.equal(waehleStimme([en, de, at]), at); assert.equal(waehleStimme([en, de]), de); assert.equal(waehleStimme([en]), null); assert.equal(waehleStimme([]), null);
+  assert.match(hoerenKnopf(w("vau")), /data-hoeren="wa u"[^>]*aria-label="vau anhören"[^>]*hidden/, "erst sichtbar, wenn es eine Stimme gibt");
+  assert.equal(hoerenKnopf({ wort: "alt" }), "", "ohne Umschrift (altes Paket) kein Knopf");
+  const happen = await readFile(new URL("./pause-happen.js", import.meta.url), "utf8");
+  assert.equal((happen.match(/\$\{hoer\(/g) ?? []).length, 4, "neben jedem Lumisch-Wort: Plan, neues Wort, Wiederholung, Abfrage");
+});

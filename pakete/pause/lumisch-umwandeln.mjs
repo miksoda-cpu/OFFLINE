@@ -8,6 +8,7 @@
 //   die Beilage eines hat: der erste Beispielsatz aus Abschnitt 4, in dem das Wort vorkommt.
 // - Reihenfolge (so kommen neue Wörter nach Tag 21): Unten, Wie etwas ist, Farben, Gefühle, dann die übrigen; die
 //   Philosophie-Gruppen und „Zahl und Quant“ zuletzt.
+// - Aussprache (Auftrag 2026-10-05-09): umschrift und ipa aus quelle/OFFLINE-Lumisch-Aussprache.json, nur Daten.
 // - Hinweise ohne die Klammern „(Bis 05.10.2026: …)“, damit kein ersetztes Wort im Paket steht.
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -15,6 +16,7 @@ import { fileURLToPath } from "node:url";
 
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 export const QUELLE = path.join(HIER, "quelle", "OFFLINE-Lumisch-Woerterbuch-2026-10-05.md");
+export const AUSSPRACHE = path.join(HIER, "quelle", "OFFLINE-Lumisch-Aussprache.json");
 const ZIEL = path.join(HIER, "inhalt", "pause.json");
 
 /** Gruppen in der Reihenfolge, in der neue Wörter kommen (Präfix der Überschrift genügt). */
@@ -42,7 +44,15 @@ const gruppeName = (u) => {
 const ohneAlt = (h) => h.replace(/\s*\(Bis 05\.10\.2026:[^)]*\)/g, "").trim();
 const woerterIn = (satz) => satz.toLowerCase().replace(/[.,!?]/g, " ").split(/\s+/).map((w) => w.replace(/\d+/g, "")).filter(Boolean);
 
-export function lumischAusBeilage(md) {
+/** Aussprache (Auftrag 2026-10-05-09): umschrift (spricht die Stimme de-AT) und ipa (für später) zu jedem Wort. */
+export function ausspracheDazu(woerterbuch, aussprache) {
+  const a = new Map((aussprache?.woerter ?? []).map((x) => [x.wort, x]));
+  const fehlt = woerterbuch.filter((w) => !a.has(w.wort)).map((w) => w.wort);
+  if (fehlt.length) throw new Error(`Ohne Aussprache: ${fehlt.join(", ")}`);
+  return woerterbuch.map((w) => ({ ...w, umschrift: a.get(w.wort).umschrift, ipa: a.get(w.wort).ipa }));
+}
+
+export function lumischAusBeilage(md, aussprache) {
   // Abschnitt 8: Plan
   const plan = abschnitt(md, "## 8. Lumisch in 21 Tagen", "## 9.").split("\n").filter((z) => /^\| \d+ \|/.test(z)).map((z) => {
     const [tag, wort, bedeutung, aufgabe] = zellen(z);
@@ -65,8 +75,9 @@ export function lumischAusBeilage(md) {
   }
   const rang = (g) => { const i = GRUPPEN_REIHENFOLGE.findIndex((x) => g.startsWith(x)); if (i < 0) throw new Error(`Gruppe ohne Platz in der Reihenfolge: ${g}`); return i; };
   const imPlan = new Set(plan.map((p) => p.wort).filter(Boolean));
-  const woerterbuch = eintraege.map((e, i) => ({ e, i })).sort((a, b) => rang(a.e.gruppe) - rang(b.e.gruppe) || a.i - b.i)
+  const sortiert = eintraege.map((e, i) => ({ e, i })).sort((a, b) => rang(a.e.gruppe) - rang(b.e.gruppe) || a.i - b.i)
     .map(({ e }) => ({ ...e, ...(imPlan.has(e.wort) ? { im_plan: true } : {}) }));
+  const woerterbuch = aussprache ? ausspracheDazu(sortiert, aussprache) : sortiert;
   return {
     plan,
     // kurze Liste für die Abfrage (Ablenkwörter): alle Wörter mit ihrer ersten Bedeutung
@@ -78,8 +89,9 @@ export function lumischAusBeilage(md) {
 
 async function main() {
   const md = await readFile(QUELLE, "utf8");
+  const aussprache = JSON.parse(await readFile(AUSSPRACHE, "utf8"));
   const j = JSON.parse(await readFile(ZIEL, "utf8"));
-  j.lumisch = lumischAusBeilage(md);
+  j.lumisch = lumischAusBeilage(md, aussprache);
   await writeFile(ZIEL, JSON.stringify(j, null, 1) + "\n");
   console.log(`Plan ${j.lumisch.plan.length} Tage, Wörterbuch ${j.lumisch.woerterbuch.length} Wörter (${j.lumisch.woerterbuch.filter((w) => w.beispiel).length} mit Beispiel)`);
 }
