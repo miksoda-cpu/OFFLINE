@@ -69,4 +69,5 @@ jobs:
           t=$(rustc -vV | sed -n 's/^host: //p'); e=""; [ "$RUNNER_OS" = Windows ] && e=.exe
           mkdir -p app/src-tauri/binaries && touch "app/src-tauri/binaries/kiwix-serve-$t$e"
       - run: cargo test --manifest-path app/src-tauri/Cargo.toml berechtigungen
+      - run: cargo test --manifest-path app/src-tauri/Cargo.toml tresor_sperren
 

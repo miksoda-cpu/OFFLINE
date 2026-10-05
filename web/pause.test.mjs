@@ -276,13 +276,13 @@ test("Lumisch Tag 1 bis 40: Plan bis 21, danach zwei Wiederholungen und ein neue
 // ---------- Lumisch nach der Wortprüfung (Auftrag 2026-10-05-03, 0.5.3) ----------
 const beilage = await readFile(new URL("../pakete/pause/quelle/OFFLINE-Lumisch-Woerterbuch-2026-10-05.md", import.meta.url), "utf8");
 
-test("Lumisch: Wörterbuch im Paket entspricht der Beilage (401, keine Doppelten, kein altes Wort), Plan nach Abschnitt 8", () => {
+test("Lumisch: Wörterbuch im Paket entspricht der Beilage (500, keine Doppelten, kein altes Wort), Plan nach Abschnitt 8", () => {
   const l = daten.lumisch;
   const abschnitt6 = beilage.slice(beilage.indexOf("## 6. Wörterbuch"), beilage.indexOf("## 7. Register"));
   const soll = [...abschnitt6.matchAll(/^\| \*\*([a-z]+)\*\* \| ([^|]+) \|/gm)].map((m) => [m[1], m[2].trim()]);
-  assert.equal(soll.length, 401);
-  assert.equal(l.woerterbuch.length, 401);
-  assert.equal(new Set(l.woerterbuch.map((w) => w.wort)).size, 401, "keine Doppelten");
+  assert.equal(soll.length, 500);
+  assert.equal(l.woerterbuch.length, 500);
+  assert.equal(new Set(l.woerterbuch.map((w) => w.wort)).size, 500, "keine Doppelten");
   assert.deepEqual(l.woerterbuch.map((w) => [w.wort, w.deutsch]).sort(), soll.sort(), "Wort und Deutsch wie in der Beilage");
   for (const alt of Object.keys(LUMISCH_ALT)) assert.ok(!l.woerterbuch.some((w) => w.wort === alt), `${alt} ist ersetzt`);
   const plan = Object.fromEntries(l.plan.map((p) => [p.tag, p]));
@@ -293,9 +293,17 @@ test("Lumisch: Wörterbuch im Paket entspricht der Beilage (401, keine Doppelten
   assert.ok(l.woerterbuch.find((w) => w.wort === "lim").hinweis.includes("Zahlzeichen -"), "Zahlzeichen „-“ heißt lim");
   // Reihenfolge der Gruppen: Unten zuerst, Philosophie und „Zahl und Quant“ zuletzt
   const gruppen = [...new Set(l.woerterbuch.map((w) => w.gruppe))];
-  assert.ok(gruppen.slice(0, 5).every((g) => g.startsWith("Unten")));
-  assert.deepEqual(gruppen.slice(5, 8), ["Wie etwas ist", "Farben", "Gefühle und Gedanken"]);
+  assert.ok(gruppen.slice(0, 7).every((g) => g.startsWith("Unten")), "Unten zuerst, mit Pilzsorten und Höhlenstimmungen");
+  assert.deepEqual(gruppen.slice(7, 11), ["Wie etwas ist", "Farben", "Gefühle und Gedanken", "Oben: Strom, Notfall, Familie"], "Strom nach Gefühle");
+  const philo = gruppen.indexOf("Denken: Wissen, Wahrheit, Sprache");
+  assert.ok(gruppen.indexOf("Gespräch") < philo && gruppen.indexOf("Zeit") < philo, "Gespräch und Zeit vor der Philosophie");
   assert.equal(gruppen.at(-1), "Zahl und Quant");
+  assert.ok(!gruppen.some((g) => /Nachtrag|\(/.test(g)), "Nachträge stehen in ihrer Stammgruppe");
+  // Nachträge reihen sich hinten in ihre Stammgruppe ein
+  const koerper = l.woerterbuch.filter((w) => w.gruppe === "Unten: wir und unser Körper").map((w) => w.wort);
+  const nachtrag = [...beilage.slice(beilage.indexOf("### Körper (Nachtrag)")).split("\n### ")[0].matchAll(/^\| \*\*([a-z]+)\*\*/gm)].map((m) => m[1]);
+  assert.ok(nachtrag.length >= 5); assert.deepEqual(koerper.slice(-nachtrag.length), nachtrag);
+  assert.match(l.woerterbuch.find((w) => w.wort === "tep").hinweis, /nach je drei Ziffern/, "tep in langen Zahlen");
 });
 
 test("Lumisch: kein ersetztes Wort in App, Paketen oder Tests (außer der Zuordnung alt → neu)", async () => {

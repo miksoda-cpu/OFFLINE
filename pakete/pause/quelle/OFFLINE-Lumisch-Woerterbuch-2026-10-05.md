@@ -1,6 +1,6 @@
 # OFFLINE – Lumisch: Wörterbuch und Grammatik der Lumi
 
-Stand 05.10.2026 · Idee von Mik, ausgearbeitet in der Session · 401 Wörter, 25 Regeln · am 05.10.2026 auf Ähnlichkeit mit echten Wörtern geprüft, sieben Wörter ersetzt, sechs Farbwörter neu (Abschnitt 11) · Entwurf für Bill, Prioritäten setzt Mik
+Stand 05.10.2026 · Idee von Mik, ausgearbeitet in der Session · 500 Wörter, 25 Regeln · am 05.10.2026 auf Ähnlichkeit mit echten Wörtern geprüft, sieben Wörter ersetzt, sechs Farbwörter und 99 weitere Wörter neu (Abschnitt 11) · Entwurf für Bill, Prioritäten setzt Mik
 
 > Die Wörter und die Regeln sind frei erfunden. Gesprochen und gelernt wird Lumisch im Spiel „Lumisch“ (Happen in der Pause, Übung 7 der ersten Version) und im Paket `wir`. Die fünf Wörter aus dem Testspiel (mo, pelu, zan, tiv, orr) gelten weiter. Nur pelu heißt jetzt „Essen“ und nicht mehr „Brot“, weil unten niemand Brot kennt.
 
@@ -12,7 +12,7 @@ Dazu passt eine Regel, die in der App schon gilt: Die Lumi sagt kein „ich“, 
 
 ### Die Welt hinter den Wörtern
 
-Das Wörterbuch folgt der Welt der Lumis, so wie Mik sie festgelegt hat: eine riesige, warme Höhle mehrere Kilometer unter dem Eis. Es gibt nur die Lumis, die Pilze und das heiße Wasser, das aus einem Spalt (vuku) in einen Fluss (tivmo) fließt. Was die Lumis ausscheiden, verschwindet mit dem Wasser in einer Felsspalte (tokek). Seit ein paar tausend Jahren wachsen auch Flechten und Moos, und darauf schlafen die Lumis. Niemand hungert, niemand konkurriert, einen Vorrat legt keiner an. Gegessen, geschlafen und philosophiert wird. Die Lumis haben große Gehirne, denken logisch und haben viel Fantasie. In ihrer Welt wissen sie mehr als jede heutige KI, und ihre Mathematik liegt auf Quantenniveau. Ihre Sozialfragen (Tod, Wiederkehr, Zugang zur Quantenwelt) behandeln sie auf höchstem Niveau, und über diese Quantenwelt können sie auch mit uns sprechen. Die Quantenwelt ist dabei keine Metapher: Sie existiert und gehört zur Physik, nur ist die Wissenschaft der Menschen noch nicht so weit, sie zu erfassen (Mik, 05.10.2026). Alle Wörter dieser Gruppen sind deshalb wörtlich gemeint. Sie leben noch immer unter dem Eis. Deshalb ist das Wörterbuch zweigeteilt:
+Das Wörterbuch folgt der Welt der Lumis, so wie Mik sie festgelegt hat: eine riesige, warme Höhle mehrere Kilometer unter dem Eis. Es gibt nur die Lumis, die Pilze und das heiße Wasser, das aus einem Spalt (vuku) in einen Fluss (tivmo) fließt. Was die Lumis ausscheiden, verschwindet mit dem Wasser in einer Felsspalte (tokek). Seit ein paar tausend Jahren wachsen auch Flechten und Moos, und darauf schlafen die Lumis. Niemand hungert, und heute konkurriert niemand mehr. Früher schon, um Licht und Gehör (05.10.2026). Einen Vorrat legt keiner an. Gegessen, geschlafen und philosophiert wird. Die Lumis haben große Gehirne, denken logisch und haben viel Fantasie. In ihrer Welt wissen sie mehr als jede heutige KI, und ihre Mathematik liegt auf Quantenniveau. Ihre Sozialfragen (Tod, Wiederkehr, Zugang zur Quantenwelt) behandeln sie auf höchstem Niveau, und über diese Quantenwelt können sie auch mit uns sprechen. Die Quantenwelt ist dabei keine Metapher: Sie existiert und gehört zur Physik, nur ist die Wissenschaft der Menschen noch nicht so weit, sie zu erfassen (Mik, 05.10.2026). Alle Wörter dieser Gruppen sind deshalb wörtlich gemeint. Sie leben noch immer unter dem Eis. Deshalb ist das Wörterbuch zweigeteilt:
 
 - **Unten** (die Gruppen „Unten: …“) sind die eigenen Wörter der Lumis, gewachsen aus Höhle, Pilz, Wasser, Wärme und Zusammensein. Beim Essen und Trinken gibt es nur Pilz und heißes Wasser und das, was beides begleitet (riechen, aufquellen, frisch, zäh). Dazu kommen das Lager aus Flechte und Moos und der Abfluss.
 - **Oben** (die Gruppen „Oben: …“) sind Wörter, die die Lumis für Dinge geprägt haben, die sie nur aus Menschengeschichten kennen: Sonne, Regen, Hund, Telefon. Manche davon gibt es unten nicht und braucht es dort nicht (Hunger, Durst, Vorrat). Sie stehen im Wörterbuch, weil die Lumi in der App täglich mit Menschen spricht.
@@ -525,6 +525,155 @@ Gebaut sind die Wörter fast alle aus bekannten Wurzeln: zan (Licht) steht für 
 | **namkik** | Ironie | Sagen + lachen. |
 | **neakkik** | das Absurde | Nein-und-Ja + lachen. Sisyphos lacht. |
 
+### Gespräch: zustimmen, widersprechen, vergleichen (neu, Mik, 05.10.2026)
+
+| Lumisch | Deutsch | Hinweis |
+|---|---|---|
+| **aknam** | zustimmen, Zustimmung | ja + sagen. |
+| **sesnam** | Einwand, einwenden | aber + sagen. |
+| **manam** | fragen | Frage + sagen. |
+| **elatam** | zuhören | Ohr + bleiben. |
+| **sapkom** | verstehen | Wissen + kommen. |
+| **vinioki** | vergleichen, Vergleich | Unterschied + sehen. |
+| **samto** | gleich, dasselbe | mit + dieses. |
+| **nesamto** | anders, verschieden | ne + samto. |
+| **sumtiv** | richtig, recht haben | guter Weg. |
+| **reva** | wieder, noch einmal | neue Wurzel. |
+| **revanam** | wiederholen | wieder + sagen. |
+| **vininam** | Streitgespräch, Disput | Unterschied + sagen. Gestritten wird lächelnd. |
+| **aksam** | Einigung, einig | ja + zusammen. |
+| **mimak** | Kompromiss | halb + ja. |
+| **zanpek** | überzeugen | Licht + geben. |
+| **toknam** | behaupten, Behauptung | Stein + sagen: fest sagen. |
+| **kikmim** | lächeln | halb + lachen. |
+| **nammim** | flüstern | Mund + halb. |
+| **nammak** | rufen | Mund + groß. |
+| **elamak** | laut | Ohr + groß. |
+| **elanim** | leise | Ohr + klein. |
+
+### Unten: Pilzsorten (neu, Mik, 05.10.2026)
+
+| Lumisch | Deutsch | Hinweis |
+|---|---|---|
+| **zanpim** | Leuchtpilz | Licht + Pilz. |
+| **melpim** | Süßpilz | süß + Pilz. |
+| **makpim** | Riesenpilz | groß + Pilz. |
+| **nimpim** | Zwergpilz | klein + Pilz. |
+| **mulopim** | Dampfpilz | wächst im Dampf am Spalt. |
+| **tokpim** | Steinpilz | wächst auf Stein. |
+| **kivpim** | Eispilz | in den Ritzen des Eises. |
+| **mopim** | Uferpilz | Wasser + Pilz. |
+| **korpim** | Pilzgeflecht, Myzel | Seil + Pilz. |
+| **pimsemi** | Sporen | Pilz + Samen. |
+| **pimtak** | Pilze pflücken | Pilz + nehmen. |
+| **tevikom** | wachsen, nachwachsen | neu + kommen. |
+
+### Unten: Höhlenstimmungen (neu, Mik, 05.10.2026)
+
+| Lumisch | Deutsch | Hinweis |
+|---|---|---|
+| **umomimu** | Stille der Höhle | Höhle + ruhig. |
+| **umonam** | Echo | die Höhle sagt. |
+| **monim** | Tropfen | Wasser + klein. |
+| **zanlim** | Glimmen, Dämmerlicht | Licht + wenig. |
+| **umozan** | Höhlenleuchten | wenn alle hell leuchten (Fest). |
+| **vulmimu** | Geborgenheit | warm + ruhig. |
+| **kivnam** | Knacken im Eis | das Eis sagt. |
+| **usunim** | Atem, atmen | kleiner Wind. |
+| **nezantuli** | Ruhezeit | dunkle Zeit, alle dimmen. |
+| **zantuli** | Wachzeit | helle Zeit. |
+| **tamsum** | Gemütlichkeit | bleiben + gut. |
+
+### Lange Zahlen (neu, Mik, 05.10.2026)
+
+| Lumisch | Deutsch | Hinweis |
+|---|---|---|
+| **telmim** | Komma, Bruch | Zahl + halb. |
+| **tep** | Pause in langen Zahlen | nach je drei Ziffern: 1 000 000 = ka tep ne ne ne tep ne ne ne. |
+| **teluvo** | hoch (Potenz) | Zahl + oben: ka teluvo ka ze = 10 hoch 19. |
+
+### Körper (Nachtrag) (neu, Mik, 05.10.2026)
+
+| Lumisch | Deutsch | Hinweis |
+|---|---|---|
+| **tapmak** | Bein | großer Fuß. |
+| **velu** | Hals | neue Wurzel. |
+| **nepumu** | Rücken | nicht Bauch. |
+| **tukmur** | Brust | Herz-Wand. |
+| **lapi** | Zunge | von lap, trinken. |
+| **namluna** | Lippe | Mund + Haut. |
+| **namtuk** | Stimme | Mund + Herz. |
+
+### Was man tut (Nachtrag) (neu, Mik, 05.10.2026)
+
+| Lumisch | Deutsch | Hinweis |
+|---|---|---|
+| **taptam** | stehen | Fuß + bleiben. |
+| **unupat** | fallen | nach unten gehen. |
+| **uvopat** | klettern, steigen | nach oben gehen. |
+| **mopat** | schwimmen | Wasser + gehen. |
+| **lunako** | berühren | Haut + hin. |
+| **nekezan** | vergessen | ne + Erinnerung. |
+| **mimpek** | teilen | Hälfte + geben. |
+| **kiltak** | sammeln | suchen + nehmen. |
+| **zankel** | einschalten | Licht + machen. Die Lumi wird zankel. |
+| **nezankel** | ausschalten | ne + zankel. |
+
+### Wie etwas ist (Nachtrag) (neu, Mik, 05.10.2026)
+
+| Lumisch | Deutsch | Hinweis |
+|---|---|---|
+| **nimtiv** | nah | kurzer Weg. |
+| **lontiv** | fern | langer Weg. |
+| **unulon** | tief | unten + lang. |
+| **uvolon** | hoch | oben + lang. |
+| **kivluna** | glatt | Eis + Haut. |
+| **kativ** | einfach | ein Weg. |
+| **tomotiv** | schwierig | schwerer Weg. |
+| **kamisum** | freundlich | Freund + gut. |
+| **sapmak** | klug | viel Wissen. |
+| **nesumu** | wach | ne + müde. |
+| **sumluna** | gesund | gute Haut. |
+| **nesumluna** | krank | ne + sumluna. |
+| **temzan** | braun | Erde + Licht (Farbregel). |
+
+### Zeit (neu, Mik, 05.10.2026)
+
+| Lumisch | Deutsch | Hinweis |
+|---|---|---|
+| **zelpera** | Morgen (Tageszeit) | Tag + Anfang. |
+| **zelsolko** | Abend | Tag + Ende. |
+| **suko** | danach, dann | bald + hin. |
+| **kesol** | schon | früher + fertig. |
+| **talmim** | manchmal | halb immer. |
+| **talmol** | oft | immer + viel. |
+| **tallim** | selten | immer + wenig. |
+
+### Kleine Wörter (Nachtrag) (neu, Mik, 05.10.2026)
+
+| Lumisch | Deutsch | Hinweis |
+|---|---|---|
+| **kima** | ob | dass + Frage. |
+| **sestal** | trotzdem | aber + immer. |
+| **mimsap** | ungefähr, etwa | halb + wissen. |
+| **tiktel** | genau | scharfe Zahl. |
+
+### Oben: Strom, Notfall, Familie (neu, Mik, 05.10.2026)
+
+| Lumisch | Deutsch | Hinweis |
+|---|---|---|
+| **tivzan** | Strom | Weg + Licht. |
+| **netivzan** | Stromausfall, Blackout | ne + Strom. |
+| **zanpumu** | Akku, Batterie | Licht + Bauch. |
+| **tivmol** | Netz, Internet | viele Wege. |
+| **netivmol** | offline | ne + Netz. Der Name der App auf Lumisch. |
+| **tikorkom** | Notfall | Gefahr + kommt. |
+| **sutiv** | Plan | Weg für später. |
+| **tumpelu** | Medikament, Heilmittel | Hilfe + Essen. |
+| **tumuvu** | Arzt, Ärztin | Hilfe + Mensch. |
+| **amapa** | Familie | ama + apa. |
+| **likomtok** | Treffpunkt | Begegnung + Stein. |
+
 ### Oben: Himmel, Wetter, Land (Menschenwelt)
 
 *Wörter für die Menschenwelt. Die Lumis kennen diese Dinge nur aus Geschichten.*
@@ -676,53 +825,53 @@ Gebaut sind die Wörter fast alle aus bekannten Wurzeln: zan (Licht) steht für 
 
 ## 7. Register Deutsch – Lumisch
 
-**A** Abbildung tivtel · aber ses · Abflussspalte tokek · Absicht kovitiv · acht vo · Ahne telzanam · All zikumo · alle sol · also zeku · alt taso · an ul · andere Rolle apa · Anfang pera · anfangen pera · Angst kiru · Annahme tansap · Anschauung tazan · Antenne zanpati · Antwort maek · Arbeit kelmak · Argument punam · Arm pal · auch mu · auf ul · Aufgabe telkik · aufklären zanek · Aufklärung zanek · aufquellen tuvo · aufwachen sumuek · Auge oki · Augenblick okituli · aus ve/ek · ausscheiden moek
+**A** Abbildung tivtel · Abend zelsolko · aber ses · Abflussspalte tokek · Absicht kovitiv · acht vo · Ahne telzanam · Akku zanpumu · All zikumo · alle sol · also zeku · alt taso · an ul · andere Rolle apa · anders nesamto · Anfang pera · anfangen pera · Angst kiru · Annahme tansap · Anschauung tazan · Antenne zanpati · Antwort maek · Arbeit kelmak · Argument punam · Arm pal · Arzt tumuvu · Ärztin tumuvu · Atem usunim · atmen usunim · auch mu · auf ul · Aufgabe telkik · aufklären zanek · Aufklärung zanek · aufquellen tuvo · aufwachen sumuek · Auge oki · Augenblick okituli · aus ve/ek · ausschalten nezankel · ausscheiden moek
 
-**B** Bach tivmo · bald su · Bauch pumu · bauen orra · Baum tura · Bedeutung zannam · Beere kuli · Begegnung likom · beginnen pera · Begriff namkolu · bei ul · beides zugleich akneak · Beispiel okito · Beleg okisap · beobachten okitam · Beobachtung okitam · bereit zansol · Berg takor · besitzen mitok · Beständigkeit toktuli · Bett lomo · Beweis okisap · Beweis (mathematisch) telsap · Bewusstsein zankolun · Beziehung samli · Biene zum · bitte sul · Blatt pala · blau kivzan · bleiben tam · bloß pas · Blume mili · Blut vulmo · Boden tem · böse nesumtuk · Bosheit nesumtuk · Buch lis · Bucht motem
+**B** Bach tivmo · bald su · Batterie zanpumu · Bauch pumu · bauen orra · Baum tura · Bedeutung zannam · Beere kuli · Begegnung likom · beginnen pera · Begriff namkolu · behaupten toknam · Behauptung toknam · bei ul · beides zugleich akneak · Bein tapmak · Beispiel okito · Beleg okisap · beobachten okitam · Beobachtung okitam · bereit zansol · Berg takor · berühren lunako · besitzen mitok · Beständigkeit toktuli · Bett lomo · Beweis (mathematisch) telsap · Beweis okisap · Bewusstsein zankolun · Beziehung samli · Biene zum · bitte sul · Blackout netivzan · Blatt pala · blau kivzan · bleiben tam · bloß pas · Blume mili · Blut vulmo · Boden tem · böse nesumtuk · Bosheit nesumtuk · braun temzan · Bruch telmim · Brust tukmur · Buch lis · Bucht motem
 
 **C** Chaos nezesa
 
-**D** Dach orr · damit pu · Dampf mulo · Dankbarkeit tultuk · danke tul · das to · das Absurde neakkik · das da to · das Ganze uvosol · das Gute selbst uvosum · Dasein zantam · dass ki · Dauer toktuli · Daumen patimak · Decke orr · denken kolu · Dialektik neaktiv · die Hälfte mim · dieses to · Differenz telnevi · Ding toku · Ding an sich nezantok · doch ses · drei ro · du li · dunkel nezan · Dunkelheit nezan · Dunst mulo · Durst nemo
+**D** Dach orr · damit pu · Dämmerlicht zanlim · Dampf mulo · Dampfpilz mulopim · danach suko · Dankbarkeit tultuk · danke tul · dann suko · das Absurde neakkik · das da to · das Ganze uvosol · das Gute selbst uvosum · das to · Dasein zantam · dass ki · dasselbe samto · Dauer toktuli · Daumen patimak · Decke orr · denken kolu · Dialektik neaktiv · die Hälfte mim · dieses to · Differenz telnevi · Ding an sich nezantok · Ding toku · Disput vininam · doch ses · drei ro · du li · dunkel nezan · Dunkelheit nezan · Dunst mulo · Durst nemo
 
-**E** Eichel tupa · Eigenschaft tokluna · Eigentum mitok · Einheit tamsam · eins ka · Einsamkeit nesam · Einsicht sapzan · Einsicht über den Tod zankol · Einssein tamsam · Eis kiv · Empfindung lunak · Ende solko · entscheiden kovitak · er la · Erde tem · Erfahrung kesap · Erhabenheit uvomak · Erinnerung kezan · Erkenntnis sapzan · Erklärung zanpu · Erscheinung zanoki · erwachen sumuek · Erzählung kesam · es la · Essen pelu · essen sen · Essenszeit pelutuli · Ewigkeit soltuli · Existenz zantam · Experiment kelkil
+**E** Echo umonam · Eichel tupa · Eigenschaft tokluna · Eigentum mitok · einfach kativ · Einheit tamsam · einig aksam · Einigung aksam · eins ka · Einsamkeit nesam · einschalten zankel · Einsicht sapzan · Einsicht über den Tod zankol · Einssein tamsam · Einwand sesnam · einwenden sesnam · Eis kiv · Eispilz kivpim · Empfindung lunak · Ende solko · entscheiden kovitak · er la · Erde tem · Erfahrung kesap · Erhabenheit uvomak · Erinnerung kezan · Erkenntnis sapzan · Erklärung zanpu · Erscheinung zanoki · erwachen sumuek · Erzählung kesam · es la · Essen pelu · essen sen · Essenszeit pelutuli · etwa mimsap · Ewigkeit soltuli · Existenz zantam · Experiment kelkil
 
-**F** Fall okito · falls tan · falsch nezansap · Fantasie sumuzan · Fell luna · Fenster zanpok · Fernsprechen nezannam · fertig sol · Feuer vulzan · finden lun · Finger pati · Fisch sila · Flechte lisu · Fluss tivmo · Folge zeku · Folgerung zekusap · folglich zeku · Formel telnam · Frage ma · Freiheit nekor · Freude kik · Freund kami · Freundin kami · Frieden mimusam · frieren kiv · frisch zila · früher ke · fühlen lunak · fünf pa · Funktion tivtel · für pur · Farbe zanluna · Fuß tap
+**F** Fall okito · fallen unupat · falls tan · falsch nezansap · Familie amapa · Fantasie sumuzan · Farbe zanluna · Fell luna · Fenster zanpok · fern lontiv · Fernsprechen nezannam · fertig sol · Feuer vulzan · finden lun · Finger pati · Fisch sila · Flechte lisu · Fluss tivmo · flüstern nammim · Folge zeku · Folgerung zekusap · folglich zeku · Formel telnam · Frage ma · fragen manam · Freiheit nekor · Freude kik · Freund kami · Freundin kami · freundlich kamisum · Frieden mimusam · frieren kiv · frisch zila · früher ke · fühlen lunak · fünf pa · Funktion tivtel · für pur · Fuß tap
 
-**G** ganz sol · gelb pimzan · Ganzes sol · geben pek · Geburt zanpera · Gedanke kolu · Gedankengang kolutiv · Geduld murasum · Gefahr tikor · Gegensatz vini · Gegenthese netansap · Gegenwart tazan · gehen pat · gehört zu ve · Geist kolun · Gelassenheit mimusol · Geld tokpek · Gemeinschaft nusam · genießen silum · Genuss silum · Gerechtigkeit samsol · gern haben lik · Gesamtzahl telsol · Geschichte kesam · geschützt sana · Gesetz sovitok · Gespräch namsam · Gewalt tikkel · Gewissen tukpum · Gewissheit sanasap · Gewohnheit taltam · Glaube tuksap · glauben tuksap · Gleichung telmimu · Gletscher kivtem · Glück sumsol · Glückseligkeit sumsol · Gott uvosol · Gras sevi · grau tazi · grün muszan · Grenze tokvu · grenzenlose Zahl telnesol · groß mak · Grund pu · gut sum · Güte sumtuk
+**G** ganz sol · Ganzes sol · geben pek · Geborgenheit vulmimu · Geburt zanpera · Gedanke kolu · Gedankengang kolutiv · Geduld murasum · Gefahr tikor · Gegensatz vini · Gegenthese netansap · Gegenwart tazan · gehen pat · gehört zu ve · Geist kolun · Gelassenheit mimusol · gelb pimzan · Geld tokpek · Gemeinschaft nusam · Gemütlichkeit tamsum · genau tiktel · genießen silum · Genuss silum · Gerechtigkeit samsol · gern haben lik · Gesamtzahl telsol · Geschichte kesam · geschützt sana · Gesetz sovitok · Gespräch namsam · gesund sumluna · Gewalt tikkel · Gewissen tukpum · Gewissheit sanasap · Gewohnheit taltam · glatt kivluna · Glaube tuksap · glauben tuksap · gleich samto · Gleichung telmimu · Gletscher kivtem · Glimmen zanlim · Glück sumsol · Glückseligkeit sumsol · Gott uvosol · Gras sevi · grau tazi · Grenze tokvu · grenzenlose Zahl telnesol · groß mak · grün muszan · Grund pu · gut sum · Güte sumtuk
 
-**H** Haar lelu · haben mi · halb mim · Hand pa · Handel pektak · hart tok · hässlich nesum · Hässlichkeit nezansum · Haus ora · Haut luna · Heimweh unuko · heiße Mulde tokvul · helfen tum · hell zan · heraus ek · Herz tuk · hier ul · Hilfe tum · Himmel uvo · hin ko · hm mh · Hoffnung suzan · Höhle umo · hören ela · Huhn kako · Humor kikkolu · Hund vau · Hunger nepelu · Hypothese tansap
+**H** Haar lelu · haben mi · halb mim · Hals velu · Hand pa · Handel pektak · hart tok · hässlich nesum · Hässlichkeit nezansum · Haus ora · Haut luna · Heilmittel tumpelu · Heimweh unuko · heiße Mulde tokvul · helfen tum · hell zan · heraus ek · Herz tuk · hier ul · Hilfe tum · Himmel uvo · hin ko · hm mh · hoch (Potenz) teluvo · hoch uvolon · Hoffnung suzan · Höhle umo · Höhlenleuchten umozan · hören ela · Huhn kako · Humor kikkolu · Hund vau · Hunger nepelu · Hypothese tansap
 
-**I** Ideal uvokolu · Idee uvokolu · Identität nemtam · immer tal · in ul · Ironie namkik · Irrtum nezansap
+**I** Ideal uvokolu · Idee uvokolu · Identität nemtam · immer tal · in ul · Internet tivmol · Ironie namkik · Irrtum nezansap
 
 **J** ja ak · Jahr ruma · jedes Mal tal · Jenseits nezanluk · jetzt ta
 
-**K** kalt kiv · Karte tivpap · Katze miz · kein ne · Kern tokzan · Kind nini · klein nim · kleinste Einheit telzan · Knochen tokan · kommen kom · kommende Seele telzanpa · können tisu · Kontakt zanlu · Koordinate telok · Kopf kopu · Körper lunasol · Krieg tikkel · Kuh muvo · Kunst kelsum · kuscheln vulsam
+**K** kalt kiv · Karte tivpap · Katze miz · kein ne · Kern tokzan · Kind nini · klein nim · kleinste Einheit telzan · klettern uvopat · klug sapmak · Knacken im Eis kivnam · Knochen tokan · Komma telmim · kommen kom · kommende Seele telzanpa · Kompromiss mimak · können tisu · Kontakt zanlu · Koordinate telok · Kopf kopu · Körper lunasol · krank nesumluna · Krieg tikkel · Kuh muvo · Kunst kelsum · kuscheln vulsam
 
-**L** lachen kik · Lager lomo · Land tem · Landkarte tivpap · lang lon · Langeweile murasol · langsam mura · laufen tapi · Leben zantuk · Lebensfunke tamnezan · Leere telne · Leid tikmoki · lernen sapu · lesen lis · leuchten zan · Licht zan · Logik zekukolu · loslassen takne
+**L** lächeln kikmim · lachen kik · Lager lomo · Land tem · Landkarte tivpap · lang lon · Langeweile murasol · langsam mura · laufen tapi · laut elamak · Leben zantuk · Lebensfunke tamnezan · Leere telne · Leid tikmoki · leise elanim · lernen sapu · lesen lis · leuchten zan · Leuchtpilz zanpim · Licht zan · Lippe namluna · Logik zekukolu · loslassen takne
 
-**M** machen kel · Macht tokalu · Mahl pelu · man la · Maß mimsol · Mathematik telkolu · Mauer mur · Maus nip · Meditation sumutel · Meer momak · mehr vi · Meinung kolunam · Menge telsol · Mensch uvu · messen okitak · Messung okitak · Methode kolutiv · mit sam · Mitgefühl mokisam · Mitleid mokisam · Mitte mimsol · mögen lik · möglich tisu · Monat silu · Mond silu · Moos mus · müde sumu · Mund nam · Musik lulatuk · müssen kavu
+**M** machen kel · Macht tokalu · Mahl pelu · man la · manchmal talmim · Maß mimsol · Mathematik telkolu · Mauer mur · Maus nip · Medikament tumpelu · Meditation sumutel · Meer momak · mehr vi · Meinung kolunam · Menge telsol · Mensch uvu · messen okitak · Messung okitak · Methode kolutiv · mit sam · Mitgefühl mokisam · Mitleid mokisam · Mitte mimsol · mögen lik · möglich tisu · Monat silu · Mond silu · Moos mus · Morgen (Tageszeit) zelpera · müde sumu · Mund nam · Musik lulatuk · müssen kavu · Myzel korpim
 
-**N** nach ko · Nachbar ulkami · Nachbarin ulkami · Nachkomme telzanpa · Nacht nezel · Name nem · Nase nes · nass mo · Natur tempim · nehmen tak · neu tevi · Neugier kilsap · neun ze · nicht ne · Nicht-Selbst nenem · Nichts nezantam · Nichtwissen nesap · noch mu · Notdurft moek · notwendig kavu · null ne · Null telne · nur pas · Nuss nuk
+**N** nach ko · Nachbar ulkami · Nachbarin ulkami · Nachkomme telzanpa · Nacht nezel · nachwachsen tevikom · nah nimtiv · Name nem · Nase nes · nass mo · Natur tempim · nehmen tak · Netz tivmol · neu tevi · Neugier kilsap · neun ze · nicht ne · Nicht-Selbst nenem · Nichts nezantam · Nichtwissen nesap · noch einmal reva · noch mu · Notdurft moek · Notfall tikorkom · notwendig kavu · null ne · Null telne · nur pas · Nuss nuk
 
-**O** oben uvo · oder ol · öffnen pok · oh o · Ohr ela · Ordnung zesa · Ort einer Zahl telok · Ozean des Alles zikmo
+**O** ob kima · oben uvo · oder ol · offline netivmol · öffnen pok · oft talmol · oh o · Ohr ela · Ordnung zesa · Ort einer Zahl telok · Ozean des Alles zikmo
 
-**P** Papier pap · Paradox neak · Periode tuli · Person nemtam · Pfad tiv · Pferd teru · Pflicht sovi · Pilz pim · Pinguin pinu · Polarlicht zikzan
+**P** Papier pap · Paradox neak · Pause in langen Zahlen tep · Periode tuli · Person nemtam · Pfad tiv · Pferd teru · Pflicht sovi · Pilz pim · Pilze pflücken pimtak · Pilzgeflecht korpim · Pinguin pinu · Plan sutiv · Polarlicht zikzan
 
 **Q** Quant telzan · Quantensprache nezannam · Quantenwelt nezanzan · Quelle vuku
 
-**R** Radio usuela · Rätsel kolutok · Rätselzahl telkik · Raum umotem · reden namsam · Regel tivsol · Regen molu · rennen tapi · Richtung des Lebens zantiv · riechen nes · Robbe mulu · rot vulmozan · ruhig mimu
+**R** Radio usuela · Rätsel kolutok · Rätselzahl telkik · Raum umotem · recht haben sumtiv · reden namsam · Regel tivsol · Regen molu · rennen tapi · richtig sumtiv · Richtung des Lebens zantiv · riechen nes · Riesenpilz makpim · Robbe mulu · rot vulmozan · Rücken nepumu · rufen nammak · Ruhezeit nezantuli · ruhig mimu
 
-**S** Sache toku · sagen nam · Samen semi · Sand temnim · satt sol · Schaf mema · Scham kiruluna · scharf tikal · Schatten nezanluna · Schein zanoki · schicken kuru · Schicksal unutiv · schlafen sumu · schlecht nesum · Schluss zekusap · Schlüssel kelu · Schmerz tikluna · Schnee kivmulo · schwarz nezanmo · schnell zip · schön sum · Schönheit zansum · schreiben lipa · Schuld nepek · schweigen nenam · schwellen tuvo · schwer tomo · sechs ni · See momak · Seele tamnezan · sehen oki · Sehnsucht likko · Seil kor · Sein zantam · Selbst nemtam · sicher sana · sie la · sieben tu · singen lula · Sinn zantiv · Sinnlosigkeit nezantiv · sitzen tam · sollen sovi · Sonne uvozan · Sorge kirutam · Spalt vuku · später su · Spiel pil · spielen pil · Sprache namtiv · Sprachspiel namtivpil · spüren lunak · Staat nusammak · stark tokal · Staunen okio · Stein tok · sterben tamne · sterben (Körper) tamnetok · Stern zik · Sternenlicht zikzan · still mimu · Stille nenam · Streben likko · Stück mimpa · Stuhl sela · Sturm usumak · suchen kil · Summe telvi · summen zum · süß mel · Symbol okinam
+**S** Sache toku · sagen nam · Samen semi · sammeln kiltak · Sand temnim · satt sol · Schaf mema · Scham kiruluna · scharf tikal · Schatten nezanluna · Schein zanoki · schicken kuru · Schicksal unutiv · schlafen sumu · schlecht nesum · Schluss zekusap · Schlüssel kelu · Schmerz tikluna · Schnee kivmulo · schnell zip · schon kesol · schön sum · Schönheit zansum · schreiben lipa · Schuld nepek · schwarz nezanmo · schweigen nenam · schwellen tuvo · schwer tomo · schwierig tomotiv · schwimmen mopat · sechs ni · See momak · Seele tamnezan · sehen oki · Sehnsucht likko · Seil kor · Sein zantam · Selbst nemtam · selten tallim · sicher sana · sie la · sieben tu · singen lula · Sinn zantiv · Sinnlosigkeit nezantiv · sitzen tam · sollen sovi · Sonne uvozan · Sorge kirutam · Spalt vuku · später su · Spiel pil · spielen pil · Sporen pimsemi · Sprache namtiv · Sprachspiel namtivpil · spüren lunak · Staat nusammak · stark tokal · Staunen okio · stehen taptam · steigen uvopat · Stein tok · Steinpilz tokpim · sterben (Körper) tamnetok · sterben tamne · Stern zik · Sternenlicht zikzan · still mimu · Stille der Höhle umomimu · Stille nenam · Stimme namtuk · Streben likko · Streitgespräch vininam · Strom tivzan · Stromausfall netivzan · Stück mimpa · Stuhl sela · Sturm usumak · suchen kil · Summe telvi · summen zum · süß mel · Süßpilz melpim · Symbol okinam
 
-**T** Tag zel · Tagebuch zelis · tanzen zepa · Taschenlampe zanpa · Tausch pektak · Teil mimpa · Teilchen toktelzan · Telefon elanam · Theorie kolusol · These tansap · Tiefes Träumen sumutel · Tier ani · Tisch tavo · Tod tamne · Tor zanzik · tragende Rolle ama · Trauer moki · Traum sumuzan · traurig moki · Tresor kelumur · trinken lap · trocken nemo · Trost vulpek · trösten vulpek · Tugend sumkel · Tür pok
+**T** Tag zel · Tagebuch zelis · tanzen zepa · Taschenlampe zanpa · Tausch pektak · Teil mimpa · Teilchen toktelzan · teilen mimpek · Telefon elanam · Theorie kolusol · These tansap · tief unulon · Tiefes Träumen sumutel · Tier ani · Tisch tavo · Tod tamne · Tor zanzik · tragende Rolle ama · Trauer moki · Traum sumuzan · traurig moki · Treffpunkt likomtok · Tresor kelumur · trinken lap · trocken nemo · Tropfen monim · Trost vulpek · trösten vulpek · trotzdem sestal · Tugend sumkel · Tür pok
 
-**U** Übergang zanzik · Überlagerung akneak · Ufer motem · Uhr zelok · un- ne · Unendliches telnesol · Unendlichkeit nesolko · Ungerechtigkeit nesamsol · Ungewissheit nesanasap · Unordnung nezesa · Unschärfe nesanazan · unten unu · Unterschied vini · Unterwelt-Verbindung zanlu · unwahrscheinlich tisulim · Unwissen nesap · Urgrund zikmo · Ursache pu · Ursprung unupera · Urteil kolutak · urteilen kolutak
+**U** Übergang zanzik · Überlagerung akneak · überzeugen zanpek · Ufer motem · Uferpilz mopim · Uhr zelok · un- ne · Unendliches telnesol · Unendlichkeit nesolko · ungefähr mimsap · Ungerechtigkeit nesamsol · Ungewissheit nesanasap · Unordnung nezesa · Unschärfe nesanazan · unten unu · Unterschied vini · Unterwelt-Verbindung zanlu · unwahrscheinlich tisulim · Unwissen nesap · Urgrund zikmo · Ursache pu · Ursprung unupera · Urteil kolutak · urteilen kolutak
 
-**V** Veränderung tevimo · Verantwortung pekma · verdorben tazi · Vergänglichkeit motuli · Vergebung nepekek · vermehren telvi · Vernunft zankolu · verringern telnevi · Verschränkung telzansam · Verstand zankolu · Versuch kelkil · verzeihen nepekek · Verzweiflung nesuzan · viel mol · viele mol · vielleicht tisu · vier le · Vogel tirli · voll sol · von ve · Vorfahre telzanam · vorher ke · Vorrat polo · Vorratskammer polo
+**V** Veränderung tevimo · Verantwortung pekma · verdorben tazi · Vergänglichkeit motuli · Vergebung nepekek · vergessen nekezan · Vergleich vinioki · vergleichen vinioki · vermehren telvi · Vernunft zankolu · verringern telnevi · verschieden nesamto · Verschränkung telzansam · Verstand zankolu · verstehen sapkom · Versuch kelkil · verzeihen nepekek · Verzweiflung nesuzan · viel mol · viele mol · vielleicht tisu · vier le · Vogel tirli · voll sol · von ve · Vorfahre telzanam · vorher ke · Vorrat polo · Vorratskammer polo
 
-**W** Wahl kovitak · wählen kovitak · wahr zansap · Wahrheit zansap · wahrscheinlich tisumol · Wahrscheinlichkeit (Zahl) tisutel · Wal silamak · Wald turamol · Wand mur · wann ma · warm vul · Wärme vul · Wärme teilen vulsam · wärmen vul · warten mura · was ma · Wasser mo · weg ek · Weg tiv · weich luvu · weil pu · Weile tuli · weinen moki · Weisheit sapsol · weiß mulozan · Welle zanmo · Weltall zikumo · wenig lim · wenige lim · wenn tan · wer ma · Werden tevimo · Wesen tokzan · Widerlegung neokisap · Widerspruch namne · wie ma · wie viele ma · Wiedergeburt talzanpera · Wiederkehr talkom · Wiederkehr der Seele talzankom · wiederkommen talkom · Wille kovi · Wind usu · wir nu · Wirklichkeit toktam · Wirkung zeku · wissen sap · wo ma · Wolke mulo · wollen kovi · Wort nami · Wunder okio · Wunsch kovilik · Würde nemsol · Wurm lul · Wurzel tosa · Wut tikvul
+**W** wach nesumu · wachsen tevikom · Wachzeit zantuli · Wahl kovitak · wählen kovitak · wahr zansap · Wahrheit zansap · wahrscheinlich tisumol · Wahrscheinlichkeit (Zahl) tisutel · Wal silamak · Wald turamol · Wand mur · wann ma · warm vul · Wärme teilen vulsam · Wärme vul · wärmen vul · warten mura · was ma · Wasser mo · weg ek · Weg tiv · weich luvu · weil pu · Weile tuli · weinen moki · Weisheit sapsol · weiß mulozan · Welle zanmo · Weltall zikumo · wenig lim · wenige lim · wenn tan · wer ma · Werden tevimo · Wesen tokzan · Widerlegung neokisap · Widerspruch namne · wie ma · wie viele ma · wieder reva · Wiedergeburt talzanpera · wiederholen revanam · Wiederkehr der Seele talzankom · Wiederkehr talkom · wiederkommen talkom · Wille kovi · Wind usu · wir nu · Wirklichkeit toktam · Wirkung zeku · wissen sap · wo ma · Wolke mulo · wollen kovi · Wort nami · Wunder okio · Wunsch kovilik · Würde nemsol · Wurm lul · Wurzel tosa · Wut tikvul
 
-**Z** zäh tazi · Zahl tel · zählen tel · Zahn kit · Zeichen okinam · zeigen okiko · Zeit tuli · Ziel kotiv · Zorn tikvul · zu ko · Zufall kapu · Zufriedenheit mimusum · Zuhause unu · zusammen sam · Zwang kor · Zweck kotiv · zwei sa · Zweifel kolupum
+**Z** zäh tazi · Zahl tel · zählen tel · Zahn kit · Zeichen okinam · zeigen okiko · Zeit tuli · Ziel kotiv · Zorn tikvul · zu ko · Zufall kapu · Zufriedenheit mimusum · Zuhause unu · zuhören elatam · Zunge lapi · zusammen sam · zustimmen aknam · Zustimmung aknam · Zwang kor · Zweck kotiv · zwei sa · Zweifel kolupum · Zwergpilz nimpim
 
 ## 8. Lumisch in 21 Tagen
 
@@ -763,7 +912,7 @@ Ein Wort pro Tag, nach drei Wochen kann man kleine Sätze. Das ist die Vorlage f
 ## 10. Offen
 
 1. **Farben** sind seit 05.10.2026 da (Mik freigegeben): zanluna, mulozan, nezanmo, vulmozan, muszan, pimzan, dazu kivzan. Weitere Farben (braun, lila) bei Bedarf nach derselben Regel. Neue Wörter vor der Aufnahme so prüfen wie am 05.10.2026.
-2. **Wachstum:** Der Wortschatz reicht für die ersten Wochen, nicht für ein Gespräch. Der Wortschatz hat jetzt gut 350 Wörter, davon rund 150 für abstraktes Denken (Mik, 04.10.2026: die Lumis philosophieren den ganzen Tag). Es fehlen noch Wörter für feinere Gesprächsformen (Einwand, Zustimmung, Vergleich, Beispiel geben), für Pilzsorten und Höhlenstimmungen sowie für Zahlen über zehn Stellen hinaus. Ziel bleiben etwa 500 Wörter, danach „Oben“.
+2. **Wachstum:** Das Ziel von 500 Wörtern ist am 05.10.2026 erreicht (Gesprächsformen, Pilzsorten, Höhlenstimmungen, lange Zahlen mit tep und teluvo, Wörter für Strom und Notfall). Weiter wächst der Wortschatz vor allem bei „Oben“, jedes neue Wort vorher geprüft.
 3. **Zufällige Ähnlichkeiten** sind am 05.10.2026 geprüft (OFFLINE-Lumisch-Pruefung.md). Vor der Veröffentlichung sollte je eine Muttersprachlerin für Türkisch, Arabisch und Bosnisch/Kroatisch/Serbisch die gelbe Liste kurz ansehen.
 4. **Aufnahme der Aussprache:** Ob die Lumi ihre Wörter mit eigener Stimme spricht oder nur mit der Vorlese-Stimme, entscheidet Mik.
 5. **Eigene Schrift** ist nicht entworfen. Vorschlag für später: Zeichen aus Punkten und Strichen, passend zum Licht der Lumi.
@@ -788,3 +937,5 @@ Alle 395 Wörter wurden auf Ähnlichkeit mit Deutsch, Englisch, Französisch, Sp
 **Bleiben, obwohl gelb (Mik, 05.10.2026):** kit, zip, zik, tupa, kako, mema, nip, kuli, polo, nemo, nuk, kik, sap. Gründe in OFFLINE-Lumisch-Pruefung.md.
 
 **Neu aufgenommen (Mik, 05.10.2026):** sechs Farbwörter, vorher genauso geprüft, alle grün: zanluna (Farbe), mulozan (weiß), nezanmo (schwarz), vulmozan (rot), muszan (grün), pimzan (gelb).
+
+**Erweiterung auf 500 (Mik, 05.10.2026):** 99 weitere Wörter, vorher genauso geprüft (Liste mit Prüfergebnis: OFFLINE-Lumisch-Erweiterung-500.md). 95 grün, 4 gelb und harmlos: aksam (türkisch „Abend“), tapmak (türkisch „anbeten“), tep (türkisch „tritt!“), reva (Vorname). Neue Wurzeln nur reva (wieder) und velu (Hals). Nicht aufgenommen wegen Anklang: lunatik, moka, mumak, tolo.

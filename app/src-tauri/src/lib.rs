@@ -53,6 +53,18 @@ struct Zustand {
     letzter_katalog: Mutex<Option<Katalog>>,
 }
 
+#[cfg(test)]
+impl Zustand {
+    /// Zustand ohne Fenster, für Tests (Datenordner frei wählbar).
+    fn fuer_test(datenordner: PathBuf) -> Zustand {
+        Zustand {
+            datenordner, schluessel: Vec::new(), abo: Mutex::new(Abo::default()), sperre: Mutex::new(()),
+            abbruch: Arc::new(AtomicBool::new(false)), laeuft: Arc::new(AtomicBool::new(false)), verbindung: Mutex::new((false, None, 0)),
+            lokal: Mutex::new(None), kiwix: Mutex::new(None), tresor: Mutex::new(None), module: Mutex::new(BTreeMap::new()), letzter_katalog: Mutex::new(None),
+        }
+    }
+}
+
 struct TresorSitzung {
     schluessel: tresor::Schluessel,
     zuletzt: std::time::Instant,
@@ -285,9 +297,15 @@ async fn tresor_oeffnen_code(z: State<'_, Zustand>, code: String) -> Result<(), 
 
 #[tauri::command]
 fn tresor_sperren(z: State<Zustand>) {
+    sperren(&z);
+}
+
+/// Tresor sperren: Schlüssel aus dem Arbeitsspeicher, offene Modulserver stoppen. Die Daten der Module
+/// (`<Datenordner>/module/<id>.json`) und ihr Aktiv-Stand (`zustand.json`) bleiben: Sie gehören nicht zum Tresor und sind
+/// nicht verschlüsselt. Bis 0.5.3 löschte das Sperren diesen Ordner (Fehler seit 0.2.0, Auftrag 2026-10-05-04).
+fn sperren(z: &Zustand) {
     if let Ok(mut t) = z.tresor.lock() { *t = None; }
     if let Ok(mut m) = z.module.lock() { m.clear(); }
-    let _ = std::fs::remove_dir_all(z.datenordner.join("module"));
 }
 
 #[tauri::command]

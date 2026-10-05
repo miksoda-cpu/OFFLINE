@@ -1,5 +1,12 @@
 # Änderungen
 
+## 0.5.4 · 05.10.2026 · Moduldaten beim Sperren, Info und Hilfe überall, Lumisch 500, drei Buch-Absätze
+
+- **Fehler behoben (Datenverlust seit 0.2.0):** `tresor_sperren` löschte `<Datenordner>/module` mit dem Speicher jedes Moduls und `zustand.json`. Jedes Sperren (Zeit, Minimieren, Beenden) nahm Spielstände und Listen und schaltete Module ab. Die Zeile kam mit der Sandbox (2436fc8); gemeint war nur, offene Modulserver zu stoppen. Jetzt `sperren(&Zustand)`: Schlüssel weg, Modulserver stoppen, Moduldaten bleiben. Rust-Test `tresor_sperren_behaelt_moduldaten` (in der CI). Die Moduldaten waren nie verschlüsselt und nie an den Tresor gebunden.
+- **Info und Hilfe** (Auftrag 2026-10-05-04): Bills Texte Wort für Wort in `web/hilfe.js` für Tresor (nur Desktop), Bibliothek, Bereit, Deine Linie, Lumi, Werkzeuge, Lumi-Buch; als letzte Zeile der Seite (zentral in `render()`), bei Bereit und Lumi am Ende ihres Abschnitts in der Übersicht. Notfall ohne. Test gegen den Auftrag.
+- **Paket `pause` 2026.10.05.1** (Nachtrag 2026-10-05-05): Lumisch mit 500 Wörtern; neue Gruppen, Nachträge in ihrer Stammgruppe hinten angereiht; Reihenfolge: Unten (mit Pilzsorten und Höhlenstimmungen), Wie etwas ist, Farben, Gefühle, Oben: Strom, Notfall, Familie, Kleine Wörter, Zahlen, Lange Zahlen, Gespräch, Zeit, Oben, Philosophie, Zahl und Quant. `tep` nach je drei Ziffern.
+- **Paket `lumi-buch` 2026.10.05.2:** b1-09-01, b1-11-01 und b1-11-05 neu gefasst (Session „die lumis“), Wort für Wort aus `quelle/neufassung-2026-10-05.json`; Nummern, Zuordnung, Hinweis bleiben.
+
 ## 0.5.3 · 05.10.2026 · Lumisch auf geprüftem Stand, Hinweis im Lumi-Buch
 
 - **Paket `pause` 2026.10.05** (Auftrag 2026-10-05-03): Lumisch aus der Beilage der Wortprüfung vom 05.10.2026 (`pakete/pause/quelle/`, übernommen mit `pakete/pause/lumisch-umwandeln.mjs`). Plan nach Abschnitt 8 (Tag 3 `pelu` = Essen, Tag 6 `kiv`, Tag 7 Wiederholung mit kiv). Wörterbuch mit allen 401 Wörtern, je Gruppe, Deutsch, Hinweis, Beispiel nur aus den Beispielsätzen der Beilage; Reihenfolge für neue Wörter: Unten, Wie etwas ist, Farben, Gefühle, …, die Philosophie-Gruppen und „Zahl und Quant“ zuletzt. Kit prüft `hinweis`.

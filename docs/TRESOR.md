@@ -16,6 +16,7 @@ Grundsatz: **Der Tresor verlässt das Gerät nie unverschlüsselt, und wir haben
 - Darin Notizen wie im offenen Bereich: Text, Checklisten, Bilder und PDFs als Anhang (Scans)
 - Suche nur bei geöffnetem Tresor, der Suchindex ist ebenfalls verschlüsselt
 - Sperrt automatisch nach 5 Minuten ohne Eingabe (einstellbar: 1, 5, 15 Minuten), beim Minimieren und beim Ruhezustand des Geräts
+- Beim Sperren stoppen offene Modulserver; die Daten der Module (`module/<id>.json`, `zustand.json`) gehören nicht zum Tresor und bleiben (seit 0.5.4, vorher wurden sie beim Sperren gelöscht)
 - Vorlage „Notfallmappe“ (siehe unten)
 - Wiederherstellungsschlüssel zum Ausdrucken, einmalig beim Anlegen
 - Export als verschlüsselte Datei, zum Beispiel für einen USB-Stick in der Lade

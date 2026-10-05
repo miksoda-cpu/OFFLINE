@@ -4,6 +4,7 @@
 // - „# Kapitel N: Titel“ wird ein Kapitel, „### b1-KK-PP“ ein Absatz. Die Zeile `Tipps: …` ist Redaktion und fällt weg.
 // - Inhalt bleibt, wie er ist. Tippfehler stehen in KORREKTUR und in der Rückmeldung.
 import { readFile, writeFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buchFehler } from "../../paket-kit/buch-format.mjs";
@@ -16,6 +17,12 @@ export const KORREKTUR = [
   // Auftrag 2026-10-05-01: Eine Wischgeste gibt es in der App nicht
   ["b1-12-06", "Wenn man weiter will, wischt man nach links, und dann kommt das Wissen.", "Wenn man weiter will, geht man ein Stück weiter, und dann kommt das Wissen."],
 ];
+
+/**
+ * Neufassungen ganzer Absätze (Auftrag 2026-10-05-05, Session „die lumis“, Mik 05.10.2026: die Quantenwelt ist in der Welt
+ * der Lumis wirklich). Der Text steht Wort für Wort in quelle/neufassung-2026-10-05.json; Nummern und Zuordnung bleiben.
+ */
+export const NEUFASSUNG = JSON.parse(readFileSync(path.join(HIER, "quelle", "neufassung-2026-10-05.json"), "utf8"));
 
 export function umwandeln(md) {
   const kapitel = [];
@@ -31,6 +38,7 @@ export function umwandeln(md) {
   for (const k of kapitel) for (const a of k.absaetze) {
     a.text = a.teile.join("\n").trim().replace(/\n{2,}/g, "\n\n");
     delete a.teile;
+    if (NEUFASSUNG[a.id]) a.text = NEUFASSUNG[a.id];
     for (const [id, alt, neu] of KORREKTUR) if (id === a.id) { if (!a.text.includes(alt)) throw new Error(`${id}: „${alt}“ nicht gefunden`); a.text = a.text.replace(alt, neu); }
   }
   return {

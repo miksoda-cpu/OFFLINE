@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Paket „pause“: Lumisch aus der geprüften Beilage übernehmen (Auftrag 2026-10-05-03).
-// Quelle: quelle/OFFLINE-Lumisch-Woerterbuch-2026-10-05.md (401 Wörter, Wortprüfung vom 05.10.2026, Mik freigegeben).
+// Quelle: quelle/OFFLINE-Lumisch-Woerterbuch-2026-10-05.md (500 Wörter nach dem Nachtrag 2026-10-05-05, Wortprüfung vom
+// 05.10.2026, Mik freigegeben).
 // Aufruf: node pakete/pause/lumisch-umwandeln.mjs   – schreibt lumisch in inhalt/pause.json neu, alles andere bleibt.
 // - Plan (Tag 1–21): Abschnitt 8. Tag 21 hat kein Wort („—“).
 // - Wörterbuch: Abschnitt 6, jedes Wort mit Gruppe (Überschrift ohne Klammer), Deutsch und Hinweis. Ein Beispiel nur, wo
@@ -19,16 +20,25 @@ const ZIEL = path.join(HIER, "inhalt", "pause.json");
 /** Gruppen in der Reihenfolge, in der neue Wörter kommen (Präfix der Überschrift genügt). */
 export const GRUPPEN_REIHENFOLGE = [
   "Unten: die Höhle", "Unten: Pilz, Essen, Trinken", "Unten: Lager und Abfluss", "Unten: wir und unser Körper", "Unten: was man tut",
-  "Wie etwas ist", "Farben", "Gefühle und Gedanken", "Kleine Wörter", "Zahlen",
+  "Unten: Pilzsorten", "Unten: Höhlenstimmungen",
+  "Wie etwas ist", "Farben", "Gefühle und Gedanken", "Oben: Strom, Notfall, Familie",
+  "Kleine Wörter", "Zahlen", "Lange Zahlen", "Gespräch", "Zeit",
   "Oben: Himmel, Wetter, Land", "Oben: Pflanzen und Tiere", "Oben: Macht, Recht, Geld", "Oben: Menschen und ihre Dinge",
-  // Philosophie-Gruppen, dann Zahl und Quant
+  // Philosophie-Gruppen, dann Zahl und Quant (Nachtrag 2026-10-05-05: Gespräch und Zeit vor der Philosophie, Strom nach Gefühle)
   "Denken: Wissen, Wahrheit, Sprache", "Sein und Werden", "Ich, Du, Wir", "Gut, Böse, Glück", "Tod, Wiederkehr, Quantenwelt",
   "Zahl und Quant",
 ];
 
 const zellen = (zeile) => zeile.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
 const abschnitt = (t, von, bis) => t.slice(t.indexOf(von), bis ? t.indexOf(bis) : undefined);
-const gruppeName = (u) => u.replace(/\s*\([^)]*\)\s*$/, "").trim();
+/** Nachträge gehören zu ihrer Stammgruppe und reihen sich dort hinten ein (Nachtrag 2026-10-05-05). */
+export const NACHTRAG_STAMM = { "Körper": "Unten: wir und unser Körper", "Was man tut": "Unten: was man tut", "Wie etwas ist": "Wie etwas ist", "Kleine Wörter": "Kleine Wörter" };
+const gruppeName = (u) => {
+  const ohne = u.replace(/\s*\((neu|Menschenwelt|Mathematik|Sokrates|Heraklit|Descartes|Aristoteles|Heidegger|sie tragen)[^)]*\)/g, "").trim();
+  const n = ohne.match(/^(.*?)\s*\(Nachtrag\)$/);
+  if (n) { if (!NACHTRAG_STAMM[n[1]]) throw new Error(`Nachtrag ohne Stammgruppe: ${u}`); return NACHTRAG_STAMM[n[1]]; }
+  return ohne.replace(/:\s*zustimmen, widersprechen, vergleichen$/, "");
+};
 const ohneAlt = (h) => h.replace(/\s*\(Bis 05\.10\.2026:[^)]*\)/g, "").trim();
 const woerterIn = (satz) => satz.toLowerCase().replace(/[.,!?]/g, " ").split(/\s+/).map((w) => w.replace(/\d+/g, "")).filter(Boolean);
 
@@ -62,7 +72,7 @@ export function lumischAusBeilage(md) {
     // kurze Liste für die Abfrage (Ablenkwörter): alle Wörter mit ihrer ersten Bedeutung
     woerter: woerterbuch.map((w) => ({ wort: w.wort, deutsch: w.deutsch.split(",")[0].trim() })),
     woerterbuch,
-    hinweis: "Lumisch nach der Wortprüfung vom 05.10.2026: alle 401 Wörter des Wörterbuchs, Plan in 21 Tagen. Neue Wörter nach Tag 21 kommen nach Gruppen: Unten, Wie etwas ist, Farben, Gefühle, die Philosophie und „Zahl und Quant“ zuletzt.",
+    hinweis: "Lumisch nach der Wortprüfung vom 05.10.2026: alle 500 Wörter des Wörterbuchs, Plan in 21 Tagen. Neue Wörter nach Tag 21 kommen nach Gruppen: Unten, Wie etwas ist, Farben, Gefühle, Strom und Notfall, Gespräch und Zeit, die Philosophie und „Zahl und Quant“ zuletzt. In langen Zahlen wird nach je drei Ziffern tep gesprochen.",
   };
 }
 

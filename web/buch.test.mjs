@@ -111,3 +111,13 @@ test("0.5.1: Schlussstück b1-12-06 wird frei, sobald die anderen fünf Absätze
   assert.match(absatz(buch, "b1-12-06").text, /Die Tagesseite ist immer der Anfang\. Wenn man weiter will, geht man ein Stück weiter, und dann kommt das Wissen\./);
   assert.doesNotMatch(absatz(buch, "b1-12-06").text, /wischt/);
 });
+
+test("0.5.4: drei Absätze in Kapitel 9 und 11 Wort für Wort neu, Nummern und Zuordnung gleich, Freigeschaltetes bleibt", async () => {
+  const neu = await json("../pakete/lumi-buch/quelle/neufassung-2026-10-05.json");
+  assert.deepEqual(Object.keys(neu).sort(), ["b1-09-01", "b1-11-01", "b1-11-05"]);
+  for (const [id, text] of Object.entries(neu)) assert.equal(absatz(buch, id).text, text, id);
+  assert.equal(buch.hinweis, "Eine erfundene Geschichte.");
+  assert.equal(absatzIds(buch).length, 127);
+  const f = freischalten(freiLaden(null), buch, "b1-11-01");
+  assert.ok(buchMitLuecken(buch, f)[10].teile.some((t) => t.id === "b1-11-01" && t.text === neu["b1-11-01"]), "wer ihn freigeschaltet hat, liest den neuen Text");
+});

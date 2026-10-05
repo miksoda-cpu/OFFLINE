@@ -58,3 +58,17 @@ test("Blatt: ✕, Escape, Zurück-Taste (popstate) und eigener Bildlauf; Punkt a
   const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
   assert.match(app, /#nav a\[data-route="updates"\]/, "Punkt am Menüpunkt");
 });
+
+test("0.5.4: Info und Hilfe auf sieben weiteren Seiten, Bills Texte Wort für Wort, Tresor nur Desktop, Notfall ohne", async () => {
+  const auftrag = await readFile(new URL("../bill/erledigt/2026-10-05-info-und-hilfe.md", import.meta.url), "utf8").catch(() => readFile(new URL("../bill/todo/2026-10-05-info-und-hilfe.md", import.meta.url), "utf8"));
+  const teil2 = auftrag.slice(auftrag.indexOf("## Teil 2"), auftrag.indexOf("## Fertig, wenn"));
+  const soll = Object.fromEntries(teil2.split("\n### ").slice(1).map((b) => [b.split(/[\s(]/)[0].trim(), [...b.matchAll(/^\d+\. \*\*(.+?)\*\* (.+)$/gm)].map((m) => [m[1], m[2].trim()])]));
+  assert.deepEqual(Object.keys(soll), ["tresor", "bibliothek", "bereit", "pause-linie", "lumi", "werkzeuge", "lumi-buch"]);
+  for (const [k, v] of Object.entries(soll)) assert.deepEqual(HILFE[k], v, `Texte ${k} Wort für Wort`);
+  assert.equal(HILFE.notfall, undefined, "Notfall bleibt ohne");
+  const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
+  assert.match(app, /get tresor\(\) \{ return desktop \? "tresor" : null; \}/, "Tresor nur in der Desktop-App");
+  for (const s of ["bibliothek", "werkzeuge", "pause-linie", "lumi-buch"]) assert.ok(app.includes(`"${s}"`) && app.includes("main.innerHTML = seiten[seite]() + hilfeZeile(HILFE_SEITE[seite]);"), `${s}: letzte Zeile der Seite`);
+  assert.match(app, /hilfeZeile\("bereit", "bereit-hilfe"\)/); assert.match(app, /hilfeZeile\("lumi", "bereit-hilfe"\)/);
+  assert.doesNotMatch(app, /notfall: "notfall"/);
+});

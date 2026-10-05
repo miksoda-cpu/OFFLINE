@@ -14,7 +14,7 @@ Nur Daten (`inhalt/buch.json`, Format `paket-kit/buch-format.mjs`). Das ganze Bu
 
 ## Wie geprüft
 
-Format mit dem Kit; alle 175 Tipps zeigen auf einen vorhandenen Absatz, jeder Absatz hat mindestens einen Tipp (Test `web/buch.test.mjs`, Kit `pruefen.mjs`). Text gegen die Vorlage: keine Tippfehler gefunden; ein Satz in b1-12-06 nach Bills Entscheidung geändert (`KORREKTUR` im Umwandler).
+Format mit dem Kit; alle 175 Tipps zeigen auf einen vorhandenen Absatz, jeder Absatz hat mindestens einen Tipp (Test `web/buch.test.mjs`, Kit `pruefen.mjs`). Text gegen die Vorlage: keine Tippfehler gefunden; ein Satz in b1-12-06 nach Bills Entscheidung geändert (`KORREKTUR` im Umwandler); b1-09-01, b1-11-01 und b1-11-05 neu gefasst (Session „die lumis“, `quelle/neufassung-2026-10-05.json`).
 
 ## Offene Punkte
 

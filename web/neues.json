@@ -2,6 +2,16 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.5.4",
+      "datum": "2026-10-05",
+      "punkte": [
+        "Module behalten ihre Daten jetzt auch, wenn der Tresor sperrt.",
+        "„Info und Hilfe“ gibt es jetzt auch bei Tresor, Bibliothek, Bereit, Deiner Linie, der Lumi, den Werkzeugen und im Lumi-Buch.",
+        "Lumisch hat 500 Wörter, darunter Wörter fürs Gespräch und für den Stromausfall.",
+        "Im Lumi-Buch sind drei Absätze in Kapitel 9 und 11 überarbeitet. Wer sie schon lesen konnte, liest jetzt den neuen Text."
+      ]
+    },
+    {
       "version": "0.5.3",
       "datum": "2026-10-05",
       "punkte": [

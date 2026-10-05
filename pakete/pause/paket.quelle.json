@@ -12,7 +12,7 @@
   "kategorie": "jeden-tag",
   "alter_ab": 14,
   "app_min": "0.4.0",
-  "aenderungen": "Lumisch: 401 Wörter, ein paar neue Namen. Alle Wörter sind geprüft, Eis heißt jetzt kiv.",
+  "aenderungen": "Lumisch: 500 Wörter, darunter Wörter fürs Gespräch und für den Stromausfall.",
   "quellen": [
     {
       "id": "redaktion",
@@ -20,6 +20,6 @@
       "url": "https://github.com/miksoda-cpu/OFFLINE/blob/main/docs/PAUSE.md"
     }
   ],
-  "abnahme": "Redaktion (Code), 05.10.2026: Lumisch gegen die Beilage der Wortprüfung vom 05.10.2026 (401 Wörter, Plan in 21 Tagen, von Mik freigegeben); Geschichten auf genau einen falschen Satz geprüft",
+  "abnahme": "Redaktion (Code), 05.10.2026: Lumisch gegen die Beilage der Wortprüfung vom 05.10.2026 (500 Wörter nach dem Nachtrag 2026-10-05-05, Plan in 21 Tagen, von Mik freigegeben); Geschichten auf genau einen falschen Satz geprüft",
   "braucht_netz": false
 }

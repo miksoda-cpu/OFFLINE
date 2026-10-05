@@ -925,6 +925,34 @@
     "deutsch": "Gespräch"
    },
    {
+    "wort": "tapmak",
+    "deutsch": "Bein"
+   },
+   {
+    "wort": "velu",
+    "deutsch": "Hals"
+   },
+   {
+    "wort": "nepumu",
+    "deutsch": "Rücken"
+   },
+   {
+    "wort": "tukmur",
+    "deutsch": "Brust"
+   },
+   {
+    "wort": "lapi",
+    "deutsch": "Zunge"
+   },
+   {
+    "wort": "namluna",
+    "deutsch": "Lippe"
+   },
+   {
+    "wort": "namtuk",
+    "deutsch": "Stimme"
+   },
+   {
     "wort": "sumu",
     "deutsch": "schlafen"
    },
@@ -1029,6 +1057,138 @@
     "deutsch": "Rätsel"
    },
    {
+    "wort": "taptam",
+    "deutsch": "stehen"
+   },
+   {
+    "wort": "unupat",
+    "deutsch": "fallen"
+   },
+   {
+    "wort": "uvopat",
+    "deutsch": "klettern"
+   },
+   {
+    "wort": "mopat",
+    "deutsch": "schwimmen"
+   },
+   {
+    "wort": "lunako",
+    "deutsch": "berühren"
+   },
+   {
+    "wort": "nekezan",
+    "deutsch": "vergessen"
+   },
+   {
+    "wort": "mimpek",
+    "deutsch": "teilen"
+   },
+   {
+    "wort": "kiltak",
+    "deutsch": "sammeln"
+   },
+   {
+    "wort": "zankel",
+    "deutsch": "einschalten"
+   },
+   {
+    "wort": "nezankel",
+    "deutsch": "ausschalten"
+   },
+   {
+    "wort": "zanpim",
+    "deutsch": "Leuchtpilz"
+   },
+   {
+    "wort": "melpim",
+    "deutsch": "Süßpilz"
+   },
+   {
+    "wort": "makpim",
+    "deutsch": "Riesenpilz"
+   },
+   {
+    "wort": "nimpim",
+    "deutsch": "Zwergpilz"
+   },
+   {
+    "wort": "mulopim",
+    "deutsch": "Dampfpilz"
+   },
+   {
+    "wort": "tokpim",
+    "deutsch": "Steinpilz"
+   },
+   {
+    "wort": "kivpim",
+    "deutsch": "Eispilz"
+   },
+   {
+    "wort": "mopim",
+    "deutsch": "Uferpilz"
+   },
+   {
+    "wort": "korpim",
+    "deutsch": "Pilzgeflecht"
+   },
+   {
+    "wort": "pimsemi",
+    "deutsch": "Sporen"
+   },
+   {
+    "wort": "pimtak",
+    "deutsch": "Pilze pflücken"
+   },
+   {
+    "wort": "tevikom",
+    "deutsch": "wachsen"
+   },
+   {
+    "wort": "umomimu",
+    "deutsch": "Stille der Höhle"
+   },
+   {
+    "wort": "umonam",
+    "deutsch": "Echo"
+   },
+   {
+    "wort": "monim",
+    "deutsch": "Tropfen"
+   },
+   {
+    "wort": "zanlim",
+    "deutsch": "Glimmen"
+   },
+   {
+    "wort": "umozan",
+    "deutsch": "Höhlenleuchten"
+   },
+   {
+    "wort": "vulmimu",
+    "deutsch": "Geborgenheit"
+   },
+   {
+    "wort": "kivnam",
+    "deutsch": "Knacken im Eis"
+   },
+   {
+    "wort": "usunim",
+    "deutsch": "Atem"
+   },
+   {
+    "wort": "nezantuli",
+    "deutsch": "Ruhezeit"
+   },
+   {
+    "wort": "zantuli",
+    "deutsch": "Wachzeit"
+   },
+   {
+    "wort": "tamsum",
+    "deutsch": "Gemütlichkeit"
+   },
+   {
     "wort": "sum",
     "deutsch": "gut"
    },
@@ -1085,6 +1245,58 @@
     "deutsch": "bereit"
    },
    {
+    "wort": "nimtiv",
+    "deutsch": "nah"
+   },
+   {
+    "wort": "lontiv",
+    "deutsch": "fern"
+   },
+   {
+    "wort": "unulon",
+    "deutsch": "tief"
+   },
+   {
+    "wort": "uvolon",
+    "deutsch": "hoch"
+   },
+   {
+    "wort": "kivluna",
+    "deutsch": "glatt"
+   },
+   {
+    "wort": "kativ",
+    "deutsch": "einfach"
+   },
+   {
+    "wort": "tomotiv",
+    "deutsch": "schwierig"
+   },
+   {
+    "wort": "kamisum",
+    "deutsch": "freundlich"
+   },
+   {
+    "wort": "sapmak",
+    "deutsch": "klug"
+   },
+   {
+    "wort": "nesumu",
+    "deutsch": "wach"
+   },
+   {
+    "wort": "sumluna",
+    "deutsch": "gesund"
+   },
+   {
+    "wort": "nesumluna",
+    "deutsch": "krank"
+   },
+   {
+    "wort": "temzan",
+    "deutsch": "braun"
+   },
+   {
     "wort": "zanluna",
     "deutsch": "Farbe"
    },
@@ -1135,6 +1347,50 @@
    {
     "wort": "kesam",
     "deutsch": "Geschichte"
+   },
+   {
+    "wort": "tivzan",
+    "deutsch": "Strom"
+   },
+   {
+    "wort": "netivzan",
+    "deutsch": "Stromausfall"
+   },
+   {
+    "wort": "zanpumu",
+    "deutsch": "Akku"
+   },
+   {
+    "wort": "tivmol",
+    "deutsch": "Netz"
+   },
+   {
+    "wort": "netivmol",
+    "deutsch": "offline"
+   },
+   {
+    "wort": "tikorkom",
+    "deutsch": "Notfall"
+   },
+   {
+    "wort": "sutiv",
+    "deutsch": "Plan"
+   },
+   {
+    "wort": "tumpelu",
+    "deutsch": "Medikament"
+   },
+   {
+    "wort": "tumuvu",
+    "deutsch": "Arzt"
+   },
+   {
+    "wort": "amapa",
+    "deutsch": "Familie"
+   },
+   {
+    "wort": "likomtok",
+    "deutsch": "Treffpunkt"
    },
    {
     "wort": "nu",
@@ -1281,6 +1537,22 @@
     "deutsch": "oh"
    },
    {
+    "wort": "kima",
+    "deutsch": "ob"
+   },
+   {
+    "wort": "sestal",
+    "deutsch": "trotzdem"
+   },
+   {
+    "wort": "mimsap",
+    "deutsch": "ungefähr"
+   },
+   {
+    "wort": "tiktel",
+    "deutsch": "genau"
+   },
+   {
     "wort": "ka",
     "deutsch": "eins"
    },
@@ -1319,6 +1591,130 @@
    {
     "wort": "mim",
     "deutsch": "halb"
+   },
+   {
+    "wort": "telmim",
+    "deutsch": "Komma"
+   },
+   {
+    "wort": "tep",
+    "deutsch": "Pause in langen Zahlen"
+   },
+   {
+    "wort": "teluvo",
+    "deutsch": "hoch (Potenz)"
+   },
+   {
+    "wort": "aknam",
+    "deutsch": "zustimmen"
+   },
+   {
+    "wort": "sesnam",
+    "deutsch": "Einwand"
+   },
+   {
+    "wort": "manam",
+    "deutsch": "fragen"
+   },
+   {
+    "wort": "elatam",
+    "deutsch": "zuhören"
+   },
+   {
+    "wort": "sapkom",
+    "deutsch": "verstehen"
+   },
+   {
+    "wort": "vinioki",
+    "deutsch": "vergleichen"
+   },
+   {
+    "wort": "samto",
+    "deutsch": "gleich"
+   },
+   {
+    "wort": "nesamto",
+    "deutsch": "anders"
+   },
+   {
+    "wort": "sumtiv",
+    "deutsch": "richtig"
+   },
+   {
+    "wort": "reva",
+    "deutsch": "wieder"
+   },
+   {
+    "wort": "revanam",
+    "deutsch": "wiederholen"
+   },
+   {
+    "wort": "vininam",
+    "deutsch": "Streitgespräch"
+   },
+   {
+    "wort": "aksam",
+    "deutsch": "Einigung"
+   },
+   {
+    "wort": "mimak",
+    "deutsch": "Kompromiss"
+   },
+   {
+    "wort": "zanpek",
+    "deutsch": "überzeugen"
+   },
+   {
+    "wort": "toknam",
+    "deutsch": "behaupten"
+   },
+   {
+    "wort": "kikmim",
+    "deutsch": "lächeln"
+   },
+   {
+    "wort": "nammim",
+    "deutsch": "flüstern"
+   },
+   {
+    "wort": "nammak",
+    "deutsch": "rufen"
+   },
+   {
+    "wort": "elamak",
+    "deutsch": "laut"
+   },
+   {
+    "wort": "elanim",
+    "deutsch": "leise"
+   },
+   {
+    "wort": "zelpera",
+    "deutsch": "Morgen (Tageszeit)"
+   },
+   {
+    "wort": "zelsolko",
+    "deutsch": "Abend"
+   },
+   {
+    "wort": "suko",
+    "deutsch": "danach"
+   },
+   {
+    "wort": "kesol",
+    "deutsch": "schon"
+   },
+   {
+    "wort": "talmim",
+    "deutsch": "manchmal"
+   },
+   {
+    "wort": "talmol",
+    "deutsch": "oft"
+   },
+   {
+    "wort": "tallim",
+    "deutsch": "selten"
    },
    {
     "wort": "uvozan",
@@ -2691,6 +3087,48 @@
     "hinweis": "Sagen + zusammen. Das Hauptgeschäft der Lumis neben Essen und Schlafen."
    },
    {
+    "wort": "tapmak",
+    "deutsch": "Bein",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "großer Fuß."
+   },
+   {
+    "wort": "velu",
+    "deutsch": "Hals",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "neue Wurzel."
+   },
+   {
+    "wort": "nepumu",
+    "deutsch": "Rücken",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "nicht Bauch."
+   },
+   {
+    "wort": "tukmur",
+    "deutsch": "Brust",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Herz-Wand."
+   },
+   {
+    "wort": "lapi",
+    "deutsch": "Zunge",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "von lap, trinken."
+   },
+   {
+    "wort": "namluna",
+    "deutsch": "Lippe",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Mund + Haut."
+   },
+   {
+    "wort": "namtuk",
+    "deutsch": "Stimme",
+    "gruppe": "Unten: wir und unser Körper",
+    "hinweis": "Mund + Herz."
+   },
+   {
     "wort": "sumu",
     "deutsch": "schlafen, müde",
     "gruppe": "Unten: was man tut",
@@ -2858,6 +3296,204 @@
     "hinweis": "Denken + Stein: ein harter Brocken, den man knackt."
    },
    {
+    "wort": "taptam",
+    "deutsch": "stehen",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "Fuß + bleiben."
+   },
+   {
+    "wort": "unupat",
+    "deutsch": "fallen",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "nach unten gehen."
+   },
+   {
+    "wort": "uvopat",
+    "deutsch": "klettern, steigen",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "nach oben gehen."
+   },
+   {
+    "wort": "mopat",
+    "deutsch": "schwimmen",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "Wasser + gehen."
+   },
+   {
+    "wort": "lunako",
+    "deutsch": "berühren",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "Haut + hin."
+   },
+   {
+    "wort": "nekezan",
+    "deutsch": "vergessen",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "ne + Erinnerung."
+   },
+   {
+    "wort": "mimpek",
+    "deutsch": "teilen",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "Hälfte + geben."
+   },
+   {
+    "wort": "kiltak",
+    "deutsch": "sammeln",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "suchen + nehmen."
+   },
+   {
+    "wort": "zankel",
+    "deutsch": "einschalten",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "Licht + machen. Die Lumi wird zankel."
+   },
+   {
+    "wort": "nezankel",
+    "deutsch": "ausschalten",
+    "gruppe": "Unten: was man tut",
+    "hinweis": "ne + zankel."
+   },
+   {
+    "wort": "zanpim",
+    "deutsch": "Leuchtpilz",
+    "gruppe": "Unten: Pilzsorten",
+    "hinweis": "Licht + Pilz."
+   },
+   {
+    "wort": "melpim",
+    "deutsch": "Süßpilz",
+    "gruppe": "Unten: Pilzsorten",
+    "hinweis": "süß + Pilz."
+   },
+   {
+    "wort": "makpim",
+    "deutsch": "Riesenpilz",
+    "gruppe": "Unten: Pilzsorten",
+    "hinweis": "groß + Pilz."
+   },
+   {
+    "wort": "nimpim",
+    "deutsch": "Zwergpilz",
+    "gruppe": "Unten: Pilzsorten",
+    "hinweis": "klein + Pilz."
+   },
+   {
+    "wort": "mulopim",
+    "deutsch": "Dampfpilz",
+    "gruppe": "Unten: Pilzsorten",
+    "hinweis": "wächst im Dampf am Spalt."
+   },
+   {
+    "wort": "tokpim",
+    "deutsch": "Steinpilz",
+    "gruppe": "Unten: Pilzsorten",
+    "hinweis": "wächst auf Stein."
+   },
+   {
+    "wort": "kivpim",
+    "deutsch": "Eispilz",
+    "gruppe": "Unten: Pilzsorten",
+    "hinweis": "in den Ritzen des Eises."
+   },
+   {
+    "wort": "mopim",
+    "deutsch": "Uferpilz",
+    "gruppe": "Unten: Pilzsorten",
+    "hinweis": "Wasser + Pilz."
+   },
+   {
+    "wort": "korpim",
+    "deutsch": "Pilzgeflecht, Myzel",
+    "gruppe": "Unten: Pilzsorten",
+    "hinweis": "Seil + Pilz."
+   },
+   {
+    "wort": "pimsemi",
+    "deutsch": "Sporen",
+    "gruppe": "Unten: Pilzsorten",
+    "hinweis": "Pilz + Samen."
+   },
+   {
+    "wort": "pimtak",
+    "deutsch": "Pilze pflücken",
+    "gruppe": "Unten: Pilzsorten",
+    "hinweis": "Pilz + nehmen."
+   },
+   {
+    "wort": "tevikom",
+    "deutsch": "wachsen, nachwachsen",
+    "gruppe": "Unten: Pilzsorten",
+    "hinweis": "neu + kommen."
+   },
+   {
+    "wort": "umomimu",
+    "deutsch": "Stille der Höhle",
+    "gruppe": "Unten: Höhlenstimmungen",
+    "hinweis": "Höhle + ruhig."
+   },
+   {
+    "wort": "umonam",
+    "deutsch": "Echo",
+    "gruppe": "Unten: Höhlenstimmungen",
+    "hinweis": "die Höhle sagt."
+   },
+   {
+    "wort": "monim",
+    "deutsch": "Tropfen",
+    "gruppe": "Unten: Höhlenstimmungen",
+    "hinweis": "Wasser + klein."
+   },
+   {
+    "wort": "zanlim",
+    "deutsch": "Glimmen, Dämmerlicht",
+    "gruppe": "Unten: Höhlenstimmungen",
+    "hinweis": "Licht + wenig."
+   },
+   {
+    "wort": "umozan",
+    "deutsch": "Höhlenleuchten",
+    "gruppe": "Unten: Höhlenstimmungen",
+    "hinweis": "wenn alle hell leuchten (Fest)."
+   },
+   {
+    "wort": "vulmimu",
+    "deutsch": "Geborgenheit",
+    "gruppe": "Unten: Höhlenstimmungen",
+    "hinweis": "warm + ruhig."
+   },
+   {
+    "wort": "kivnam",
+    "deutsch": "Knacken im Eis",
+    "gruppe": "Unten: Höhlenstimmungen",
+    "hinweis": "das Eis sagt."
+   },
+   {
+    "wort": "usunim",
+    "deutsch": "Atem, atmen",
+    "gruppe": "Unten: Höhlenstimmungen",
+    "hinweis": "kleiner Wind."
+   },
+   {
+    "wort": "nezantuli",
+    "deutsch": "Ruhezeit",
+    "gruppe": "Unten: Höhlenstimmungen",
+    "hinweis": "dunkle Zeit, alle dimmen."
+   },
+   {
+    "wort": "zantuli",
+    "deutsch": "Wachzeit",
+    "gruppe": "Unten: Höhlenstimmungen",
+    "hinweis": "helle Zeit."
+   },
+   {
+    "wort": "tamsum",
+    "deutsch": "Gemütlichkeit",
+    "gruppe": "Unten: Höhlenstimmungen",
+    "hinweis": "bleiben + gut."
+   },
+   {
     "wort": "sum",
     "deutsch": "gut, schön",
     "gruppe": "Wie etwas ist",
@@ -2940,6 +3576,84 @@
     "hinweis": "Licht voll. So sieht man, wie bereit jemand ist."
    },
    {
+    "wort": "nimtiv",
+    "deutsch": "nah",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "kurzer Weg."
+   },
+   {
+    "wort": "lontiv",
+    "deutsch": "fern",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "langer Weg."
+   },
+   {
+    "wort": "unulon",
+    "deutsch": "tief",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "unten + lang."
+   },
+   {
+    "wort": "uvolon",
+    "deutsch": "hoch",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "oben + lang."
+   },
+   {
+    "wort": "kivluna",
+    "deutsch": "glatt",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "Eis + Haut."
+   },
+   {
+    "wort": "kativ",
+    "deutsch": "einfach",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "ein Weg."
+   },
+   {
+    "wort": "tomotiv",
+    "deutsch": "schwierig",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "schwerer Weg."
+   },
+   {
+    "wort": "kamisum",
+    "deutsch": "freundlich",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "Freund + gut."
+   },
+   {
+    "wort": "sapmak",
+    "deutsch": "klug",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "viel Wissen."
+   },
+   {
+    "wort": "nesumu",
+    "deutsch": "wach",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "ne + müde."
+   },
+   {
+    "wort": "sumluna",
+    "deutsch": "gesund",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "gute Haut."
+   },
+   {
+    "wort": "nesumluna",
+    "deutsch": "krank",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "ne + sumluna."
+   },
+   {
+    "wort": "temzan",
+    "deutsch": "braun",
+    "gruppe": "Wie etwas ist",
+    "hinweis": "Erde + Licht (Farbregel)."
+   },
+   {
     "wort": "zanluna",
     "deutsch": "Farbe",
     "gruppe": "Farben",
@@ -3019,6 +3733,72 @@
     "deutsch": "Geschichte, Erzählung",
     "gruppe": "Gefühle und Gedanken",
     "hinweis": "Das, was früher mit uns war."
+   },
+   {
+    "wort": "tivzan",
+    "deutsch": "Strom",
+    "gruppe": "Oben: Strom, Notfall, Familie",
+    "hinweis": "Weg + Licht."
+   },
+   {
+    "wort": "netivzan",
+    "deutsch": "Stromausfall, Blackout",
+    "gruppe": "Oben: Strom, Notfall, Familie",
+    "hinweis": "ne + Strom."
+   },
+   {
+    "wort": "zanpumu",
+    "deutsch": "Akku, Batterie",
+    "gruppe": "Oben: Strom, Notfall, Familie",
+    "hinweis": "Licht + Bauch."
+   },
+   {
+    "wort": "tivmol",
+    "deutsch": "Netz, Internet",
+    "gruppe": "Oben: Strom, Notfall, Familie",
+    "hinweis": "viele Wege."
+   },
+   {
+    "wort": "netivmol",
+    "deutsch": "offline",
+    "gruppe": "Oben: Strom, Notfall, Familie",
+    "hinweis": "ne + Netz. Der Name der App auf Lumisch."
+   },
+   {
+    "wort": "tikorkom",
+    "deutsch": "Notfall",
+    "gruppe": "Oben: Strom, Notfall, Familie",
+    "hinweis": "Gefahr + kommt."
+   },
+   {
+    "wort": "sutiv",
+    "deutsch": "Plan",
+    "gruppe": "Oben: Strom, Notfall, Familie",
+    "hinweis": "Weg für später."
+   },
+   {
+    "wort": "tumpelu",
+    "deutsch": "Medikament, Heilmittel",
+    "gruppe": "Oben: Strom, Notfall, Familie",
+    "hinweis": "Hilfe + Essen."
+   },
+   {
+    "wort": "tumuvu",
+    "deutsch": "Arzt, Ärztin",
+    "gruppe": "Oben: Strom, Notfall, Familie",
+    "hinweis": "Hilfe + Mensch."
+   },
+   {
+    "wort": "amapa",
+    "deutsch": "Familie",
+    "gruppe": "Oben: Strom, Notfall, Familie",
+    "hinweis": "ama + apa."
+   },
+   {
+    "wort": "likomtok",
+    "deutsch": "Treffpunkt",
+    "gruppe": "Oben: Strom, Notfall, Familie",
+    "hinweis": "Begegnung + Stein."
    },
    {
     "wort": "nu",
@@ -3293,6 +4073,30 @@
     "hinweis": "Das Staunen."
    },
    {
+    "wort": "kima",
+    "deutsch": "ob",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "dass + Frage."
+   },
+   {
+    "wort": "sestal",
+    "deutsch": "trotzdem",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "aber + immer."
+   },
+   {
+    "wort": "mimsap",
+    "deutsch": "ungefähr, etwa",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "halb + wissen."
+   },
+   {
+    "wort": "tiktel",
+    "deutsch": "genau",
+    "gruppe": "Kleine Wörter",
+    "hinweis": "scharfe Zahl."
+   },
+   {
     "wort": "ka",
     "deutsch": "eins, 1",
     "gruppe": "Zahlen",
@@ -3347,6 +4151,192 @@
     "deutsch": "halb, die Hälfte",
     "gruppe": "Zahlen",
     "hinweis": "pim mim = ein halber Pilz."
+   },
+   {
+    "wort": "telmim",
+    "deutsch": "Komma, Bruch",
+    "gruppe": "Lange Zahlen",
+    "hinweis": "Zahl + halb."
+   },
+   {
+    "wort": "tep",
+    "deutsch": "Pause in langen Zahlen",
+    "gruppe": "Lange Zahlen",
+    "hinweis": "nach je drei Ziffern: 1 000 000 = ka tep ne ne ne tep ne ne ne."
+   },
+   {
+    "wort": "teluvo",
+    "deutsch": "hoch (Potenz)",
+    "gruppe": "Lange Zahlen",
+    "hinweis": "Zahl + oben: ka teluvo ka ze = 10 hoch 19."
+   },
+   {
+    "wort": "aknam",
+    "deutsch": "zustimmen, Zustimmung",
+    "gruppe": "Gespräch",
+    "hinweis": "ja + sagen."
+   },
+   {
+    "wort": "sesnam",
+    "deutsch": "Einwand, einwenden",
+    "gruppe": "Gespräch",
+    "hinweis": "aber + sagen."
+   },
+   {
+    "wort": "manam",
+    "deutsch": "fragen",
+    "gruppe": "Gespräch",
+    "hinweis": "Frage + sagen."
+   },
+   {
+    "wort": "elatam",
+    "deutsch": "zuhören",
+    "gruppe": "Gespräch",
+    "hinweis": "Ohr + bleiben."
+   },
+   {
+    "wort": "sapkom",
+    "deutsch": "verstehen",
+    "gruppe": "Gespräch",
+    "hinweis": "Wissen + kommen."
+   },
+   {
+    "wort": "vinioki",
+    "deutsch": "vergleichen, Vergleich",
+    "gruppe": "Gespräch",
+    "hinweis": "Unterschied + sehen."
+   },
+   {
+    "wort": "samto",
+    "deutsch": "gleich, dasselbe",
+    "gruppe": "Gespräch",
+    "hinweis": "mit + dieses."
+   },
+   {
+    "wort": "nesamto",
+    "deutsch": "anders, verschieden",
+    "gruppe": "Gespräch",
+    "hinweis": "ne + samto."
+   },
+   {
+    "wort": "sumtiv",
+    "deutsch": "richtig, recht haben",
+    "gruppe": "Gespräch",
+    "hinweis": "guter Weg."
+   },
+   {
+    "wort": "reva",
+    "deutsch": "wieder, noch einmal",
+    "gruppe": "Gespräch",
+    "hinweis": "neue Wurzel."
+   },
+   {
+    "wort": "revanam",
+    "deutsch": "wiederholen",
+    "gruppe": "Gespräch",
+    "hinweis": "wieder + sagen."
+   },
+   {
+    "wort": "vininam",
+    "deutsch": "Streitgespräch, Disput",
+    "gruppe": "Gespräch",
+    "hinweis": "Unterschied + sagen. Gestritten wird lächelnd."
+   },
+   {
+    "wort": "aksam",
+    "deutsch": "Einigung, einig",
+    "gruppe": "Gespräch",
+    "hinweis": "ja + zusammen."
+   },
+   {
+    "wort": "mimak",
+    "deutsch": "Kompromiss",
+    "gruppe": "Gespräch",
+    "hinweis": "halb + ja."
+   },
+   {
+    "wort": "zanpek",
+    "deutsch": "überzeugen",
+    "gruppe": "Gespräch",
+    "hinweis": "Licht + geben."
+   },
+   {
+    "wort": "toknam",
+    "deutsch": "behaupten, Behauptung",
+    "gruppe": "Gespräch",
+    "hinweis": "Stein + sagen: fest sagen."
+   },
+   {
+    "wort": "kikmim",
+    "deutsch": "lächeln",
+    "gruppe": "Gespräch",
+    "hinweis": "halb + lachen."
+   },
+   {
+    "wort": "nammim",
+    "deutsch": "flüstern",
+    "gruppe": "Gespräch",
+    "hinweis": "Mund + halb."
+   },
+   {
+    "wort": "nammak",
+    "deutsch": "rufen",
+    "gruppe": "Gespräch",
+    "hinweis": "Mund + groß."
+   },
+   {
+    "wort": "elamak",
+    "deutsch": "laut",
+    "gruppe": "Gespräch",
+    "hinweis": "Ohr + groß."
+   },
+   {
+    "wort": "elanim",
+    "deutsch": "leise",
+    "gruppe": "Gespräch",
+    "hinweis": "Ohr + klein."
+   },
+   {
+    "wort": "zelpera",
+    "deutsch": "Morgen (Tageszeit)",
+    "gruppe": "Zeit",
+    "hinweis": "Tag + Anfang."
+   },
+   {
+    "wort": "zelsolko",
+    "deutsch": "Abend",
+    "gruppe": "Zeit",
+    "hinweis": "Tag + Ende."
+   },
+   {
+    "wort": "suko",
+    "deutsch": "danach, dann",
+    "gruppe": "Zeit",
+    "hinweis": "bald + hin."
+   },
+   {
+    "wort": "kesol",
+    "deutsch": "schon",
+    "gruppe": "Zeit",
+    "hinweis": "früher + fertig."
+   },
+   {
+    "wort": "talmim",
+    "deutsch": "manchmal",
+    "gruppe": "Zeit",
+    "hinweis": "halb immer."
+   },
+   {
+    "wort": "talmol",
+    "deutsch": "oft",
+    "gruppe": "Zeit",
+    "hinweis": "immer + viel."
+   },
+   {
+    "wort": "tallim",
+    "deutsch": "selten",
+    "gruppe": "Zeit",
+    "hinweis": "immer + wenig."
    },
    {
     "wort": "uvozan",
@@ -4788,7 +5778,7 @@
     "hinweis": "Zahl + Spiel."
    }
   ],
-  "hinweis": "Lumisch nach der Wortprüfung vom 05.10.2026: alle 401 Wörter des Wörterbuchs, Plan in 21 Tagen. Neue Wörter nach Tag 21 kommen nach Gruppen: Unten, Wie etwas ist, Farben, Gefühle, die Philosophie und „Zahl und Quant“ zuletzt."
+  "hinweis": "Lumisch nach der Wortprüfung vom 05.10.2026: alle 500 Wörter des Wörterbuchs, Plan in 21 Tagen. Neue Wörter nach Tag 21 kommen nach Gruppen: Unten, Wie etwas ist, Farben, Gefühle, Strom und Notfall, Gespräch und Zeit, die Philosophie und „Zahl und Quant“ zuletzt. In langen Zahlen wird nach je drei Ziffern tep gesprochen."
  },
  "texte": {
   "rueckwaerts": {

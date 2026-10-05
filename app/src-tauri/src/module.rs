@@ -274,6 +274,28 @@ pub fn drucken(fenster: tauri::WebviewWindow) -> Result<(), String> {
 mod tests {
     use super::*;
 
+    /// Auftrag 2026-10-05-04: Sperren des Tresors darf die Daten der Module und ihren Aktiv-Stand nicht löschen.
+    #[test]
+    fn tresor_sperren_behaelt_moduldaten() {
+        let dir = std::env::temp_dir().join(format!("offline-sperren-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        let z = Zustand::fuer_test(dir.clone());
+        // Modul aktiv, Speicher schreiben
+        let mut zs = BTreeMap::new();
+        zs.insert("wichteln".to_string(), ModulZustand { aktiv: true });
+        schreiben_atomar(&zustand_datei(&z), &serde_json::to_vec(&zs).unwrap()).unwrap();
+        let mut d = BTreeMap::new();
+        d.insert("runden".to_string(), serde_json::json!([1, 2, 3]));
+        schreiben_atomar(&daten_datei(&z, "wichteln"), &serde_json::to_vec(&d).unwrap()).unwrap();
+        // Tresor sperren
+        super::super::sperren(&z);
+        // Speicher lesen: der Wert ist noch da, das Modul ist noch aktiv
+        assert_eq!(daten_lesen(&z, "wichteln").get("runden"), Some(&serde_json::json!([1, 2, 3])), "Speicher des Moduls nach dem Sperren");
+        assert!(zustaende(&z).get("wichteln").map(|m| m.aktiv) == Some(true), "Modul nach dem Sperren noch aktiv");
+        assert!(ist_aktiv(&z, "wichteln"));
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
     #[test]
     fn schluessel_regel_wie_in_der_oberflaeche() {
         for ok in ["runden", "a", "a.b-c_d", "A9"] { assert!(schluessel_ok(ok).is_ok(), "{ok}"); }

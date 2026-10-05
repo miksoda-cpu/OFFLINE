@@ -14,7 +14,7 @@ Nur Daten (`inhalt/pause.json`, Format `paket-kit/pause-format.mjs`). Die Spiele
 
 ## Wie geprüft
 
-Jede Geschichte auf genau einen Satz geprüft, der der Geschichte selbst widerspricht. Lumisch aus der Beilage `quelle/OFFLINE-Lumisch-Woerterbuch-2026-10-05.md` übernommen (Wortprüfung vom 05.10.2026, 401 Wörter, Plan in Abschnitt 8) mit `node pakete/pause/lumisch-umwandeln.mjs`; ein Test vergleicht das Paket mit der Beilage. Format mit dem Kit geprüft.
+Jede Geschichte auf genau einen Satz geprüft, der der Geschichte selbst widerspricht. Lumisch aus der Beilage `quelle/OFFLINE-Lumisch-Woerterbuch-2026-10-05.md` übernommen (Wortprüfung vom 05.10.2026, 500 Wörter nach dem Nachtrag vom 05.10.2026, Plan in Abschnitt 8) mit `node pakete/pause/lumisch-umwandeln.mjs`; ein Test vergleicht das Paket mit der Beilage. Format mit dem Kit geprüft.
 
 ## Offene Punkte
 

@@ -17,7 +17,7 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
 const desktop = client.istDesktop ? await client.init() : null;
-const APP_VERSION = "0.5.3";
+const APP_VERSION = "0.5.4";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -454,6 +454,7 @@ const seiten = {
         <div class="progress of-balken" style="margin:.4rem 0 .8rem"><div style="width:${b.wert}%"></div></div>
         <p style="margin:0 0 .6rem"><a href="${schritt.ziel}">${esc(schritt.text)}</a></p>
         ${b.quellen.map((q) => `<div class="bereit-quelle"><span>${esc(q.name)} <span class="muted of-klein">· ${esc(q.text)}</span></span><span class="mono of-mono">${q.punkte}/${q.max}</span></div>`).join("")}
+        ${hilfeZeile("bereit", "bereit-hilfe")}
       </div>
       <div class="kacheln">
         ${kachel("notfall", "rose", "Notfall", "112 · 122 · 133 · 144, Sirenen")}
@@ -467,7 +468,7 @@ const seiten = {
       </div>
       ${tagesplanHtml()}
       <a class="card of-karte pause-zeile" href="#pause" style="margin-bottom:1rem"><strong>⏸ Pause</strong> <span class="muted of-klein">· ${pauseE().an ? `ein · Appetit ${esc(pauseE().appetit)}` : "aus"} · Happen für zwischendurch, jetzt mit eigenem Raum</span></a>
-      <details class="card of-karte" id="lumi-einstellungen" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? `${esc(wesen.anzeigename())} · Einstellungen` : wesen.aktiv() ? "Textkarten" : "Tipps aus"}</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}</div></details>
+      <details class="card of-karte" id="lumi-einstellungen" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? `${esc(wesen.anzeigename())} · Einstellungen` : wesen.aktiv() ? "Textkarten" : "Tipps aus"}</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}${hilfeZeile("lumi", "bereit-hilfe")}</div></details>
       ${buchDaten() && wesen.mitFigur() ? `<a class="card of-karte buch-zeile" href="#buch" style="margin-bottom:1rem"><strong>Das Lumi-Buch</strong> <span class="muted of-klein">· Band ${buchDaten().band} · ${buchAnteil(buchDaten(), buchFrei())} % lesbar</span></a>` : ""}
       ${wesen.aktiv() || wesen.log.length ? `<details class="card of-karte" id="lumi-log" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>${wesen.mitFigur() ? `Alles, was ${esc(wesen.anzeigename())} gesagt hat` : "Bisherige Tipps"}</strong> <span class="muted of-klein" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` : ""}
       ${updates ? `<a class="card of-karte" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn of-plakette of-plakette--warnung">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted of-klein">· ${intervallText()}</span></a>` : ""}
@@ -852,6 +853,9 @@ function neuPunktMenue() {
 function neuAlleZeigen(reiter) {
   blattOeffnen(reiter === "app" ? "Was ist neu · App" : "Was ist neu · Inhalte", neuListe(reiter, null, katalogAusSpeicher()?.katalog));
 }
+/** „Info und Hilfe“ als letzte Zeile einer Seite (Muster seit 0.5.2). Tresor nur in der Desktop-App, Notfall nie. */
+const HILFE_SEITE = { bibliothek: "bibliothek", werkzeuge: "werkzeuge", linie: "pause-linie", buch: "lumi-buch", get tresor() { return desktop ? "tresor" : null; } };
+const hilfeZeile = (seite, klasse = "upd-info") => (seite && HILFE[seite] ? `<p class="${klasse}"><button type="button" class="z-neben" data-hilfe="${seite}">Info und Hilfe</button></p>` : "");
 function hilfeZeigen(seite) {
   const t = HILFE[seite]; if (!t) return;
   blattOeffnen("Info und Hilfe", t.map(([f, a]) => `<h3 class="hilfe-frage">${esc(f)}</h3><p class="hilfe-antwort">${esc(a)}</p>`).join(""));
@@ -1873,7 +1877,7 @@ function render() {
   }
   if (desktop && route === "updates") client.aboStatus().then((st) => { if (st !== desktop.aboStatus) { desktop.aboStatus = st; render(); } }).catch(() => {});
   const seite = seiten[route] ? route : "start";
-  main.innerHTML = seiten[seite]();
+  main.innerHTML = seiten[seite]() + hilfeZeile(HILFE_SEITE[seite]);
   if (seite === "start") wesen.einbauen(); else wesen.setScore(bereit());
   wesen.ansicht(seite);
   if (seite === "start") { tagesSatzZeigen(); pauseKarteWischen(); }

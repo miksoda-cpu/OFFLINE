@@ -621,3 +621,5 @@ body.blatt-offen { overflow: hidden; }
 @keyframes blatt-hinter { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .blatt, .blatt-hinter { animation: none; } }
 .blatt-zu:focus { outline: none; } .blatt-zu:focus-visible { outline: 1.5px solid var(--eis-ink); outline-offset: -4px; }
+
+.bereit-hilfe { margin: .6rem 0 0; } /* „Info und Hilfe“ am Ende eines Abschnitts der Übersicht */
