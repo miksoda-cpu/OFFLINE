@@ -1,7 +1,9 @@
 // Paket-Client für die Desktop-App: gleiche Schnittstelle wie paket-client.js, aber alles, was Pakete prüft,
 // lädt oder speichert, macht der Rust-Kern (Update-Dienst). Die Oberfläche zeigt nur an.
 
-import { speicher } from "./paket-client.js";
+// `export … from` legt keinen Namen in dieser Datei an: was hier selbst benutzt wird, muss auch importiert sein
+// (0.6.3: sha256Hex fehlte, der interne Kanal brach in der Mac-App mit „Can't find variable: sha256Hex“ ab).
+import { speicher, sha256Hex } from "./paket-client.js";
 import { delta, versionVergleich } from "./paket-kern.js";
 
 export { speicher, katalogAusSpeicher, paketUrl, inhalt, sha256Hex } from "./paket-client.js";

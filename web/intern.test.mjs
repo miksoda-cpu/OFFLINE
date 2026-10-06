@@ -184,3 +184,35 @@ test("Menü nur mit installiertem Paket", async () => {
   assert.ok(app.includes('route !== "natur" || naturDaten()'));
   assert.doesNotMatch(app.match(/const ROUTEN = \[[\s\S]*?\];/)[0], /natur/, "nicht in der festen Liste");
 });
+
+test("0.6.3: Desktop-Weg des Kanals – alles, was paket-client-tauri.js selbst aufruft, ist auch importiert", async () => {
+  const t = await lies("./paket-client-tauri.js");
+  const durch = [...t.matchAll(/^export \{([^}]+)\} from/gm)].flatMap((m) => m[1].split(",").map((s) => s.trim().split(/\s+as\s+/)[0]));
+  const importiert = new Set([...t.matchAll(/^import \{([^}]+)\} from/gm)].flatMap((m) => m[1].split(",").map((s) => s.trim().split(/\s+as\s+/).at(-1))));
+  const ohneExport = t.split("\n").filter((z) => !/^export \{/.test(z)).join("\n");
+  for (const n of durch) if (new RegExp(`\\b${n}\\s*[(.]`).test(ohneExport)) assert.ok(importiert.has(n), `${n} wird benutzt, aber nur durchgereicht`);
+  assert.ok(importiert.has("sha256Hex"));
+});
+
+test("0.6.3: installiereAusDateien der Mac-App prüft die Manifest-Prüfsumme und gibt alles an den Kern", async () => {
+  const aufrufe = [];
+  globalThis.window = { __TAURI__: { core: { invoke: async (b, a) => { aufrufe.push([b, a]); return b === "installierte" ? [] : null; } } } };
+  const tauri = await import("./paket-client-tauri.js?test-0-6-3");
+  const manifest = new TextEncoder().encode(JSON.stringify({ id: "x", version: "1" }));
+  const { createHash } = await import("node:crypto");
+  const eintrag = { id: "x", sha256_manifest: createHash("sha256").update(manifest).digest("hex") };
+  const dateien = [{ pfad: "paket.json", bytes: manifest }, { pfad: "paket.sig", bytes: new TextEncoder().encode("{}") }, { pfad: "inhalt/a.json", bytes: new TextEncoder().encode("[]") }];
+  await tauri.installiereAusDateien(eintrag, dateien);
+  const e = aufrufe.find(([b]) => b === "einspielen_bytes");
+  assert.deepEqual(e[1].dateien.map((d) => [d.pfad, Buffer.from(d.daten, "base64").toString()]), [["paket.json", '{"id":"x","version":"1"}'], ["paket.sig", "{}"], ["inhalt/a.json", "[]"]]);
+  await assert.rejects(tauri.installiereAusDateien({ ...eintrag, sha256_manifest: "0".repeat(64) }, dateien), /Prüfsumme/);
+  delete globalThis.window;
+});
+
+test("0.6.3: Die Lumi schweigt auf den Leseseiten (Lumi-Buch, Was die Lumis denken), auch ein offener Satz geht", async () => {
+  const { STILL } = await import("./wesen.js");
+  for (const s of ["notfall", "natur", "buch", "absatz", "gedanken", "gedanke"]) assert.ok(STILL.includes(s), s);
+  const w = await lies("./wesen.js");
+  assert.ok(w.includes('if (STILL.includes(name)) { const toast = document.getElementById("wesen-toast"); if (toast) { toast.remove();'));
+  assert.match(await lies("./styles.css"), /\.upd-version \{[^}]*touch-action: manipulation/, "siebenmal Tippen ohne Doppeltipp-Zoom");
+});

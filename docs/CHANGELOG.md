@@ -1,5 +1,12 @@
 # Änderungen
 
+## 0.6.3 · 06.10.2026 · Interner Kanal in der Mac-App, Lumi still beim Lesen
+
+- **Fehler behoben:** In der Mac-App brach der Abgleich des internen Kanals mit „Can't find variable: sha256Hex“ ab. `web/paket-client-tauri.js` reichte `sha256Hex` mit `export … from` nur durch; das legt in der Datei keinen Namen an. Jetzt importiert. Tests: alles, was die Datei selbst aufruft, ist importiert; `installiereAusDateien` der Mac-App mit nachgebildeter Tauri-Brücke. Ein gespeicherter Schlüssel bleibt gültig; der nächste Start oder „Jetzt prüfen“ spielt die Pakete ein.
+- **Geprüft mit Playwright-WebKit** gegen den Live-Kanal: Desktop-Weg bis zum Kern, Web am iPhone (Link, Katalog, Entschlüsseln, Prüfsumme, Einspielen, 209 Bilder), Feld nach siebenmal Tippen am iPhone; dazu der Rust-Kern mit den entschlüsselten Paketen. Die Versionsnummer hat `touch-action: manipulation` (kein Doppeltipp-Zoom).
+- **Lumi still** auf den Leseseiten (`buch`, `absatz`, `gedanken`, `gedanke`); auf stillen Seiten verschwindet auch ein offener Satz.
+- `lumi-philosophie`: `ki_generiert` (Bill, 06.10.).
+
 ## 0.6.2 · 06.10.2026 · Was die Lumis denken, Regel fürs öffentliche Repo
 
 - **Paket `lumi-philosophie` „Was die Lumis denken“** (Auftrag 2026-10-06-12, öffentlich, `alter_ab` 18): fünfzehn Gedanken (zwölf Philosophen, drei Lumis) mit Aquarell, Lumisch-Satz, Wort für Wort, Deutsch und Text. Umwandler `pakete/lumi-philosophie/gedanken-umwandeln.mjs` liest jedes Feld wörtlich aus `quelle/texte.md`, Bilder WebP höchstens 1200 px; Format `paket-kit/gedanken-format.mjs` (`inhalt/gedanken.json`), im Kit geprüft. Jedes Lumisch-Wort steht im Wörterbuch des Pakets `pause` (Eigennamen ausgenommen).

@@ -222,8 +222,8 @@ export function abendMerken(gelernt, jetzt) {
   for (const alt of Object.keys(a).sort().slice(0, -14)) delete a[alt];
   return true;
 }
-/** Hier schweigt die Lumi: Notfall und (0.6.1) Naturheilkunde mit der Erste-Hilfe-Karte. */
-export const STILL = ["notfall", "natur"];
+/** Hier schweigt die Lumi: Notfall, (0.6.1) Naturheilkunde mit der Erste-Hilfe-Karte, (0.6.3) die Leseseiten des Lumi-Buchs und von „Was die Lumis denken“. */
+export const STILL = ["notfall", "natur", "buch", "absatz", "gedanken", "gedanke"];
 const WACH_MS = 60000; // ein Stups weckt sie für eine Minute
 const TAKT = { normal: 90, seltener: 180, aus: 0 };
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -418,6 +418,8 @@ export class Wesen {
   ansicht(name) {
     const vorher = this.ansichtName; this.ansichtName = name;
     if (name === "start") { const toast = document.getElementById("wesen-toast"); if (toast) { toast.remove(); this.aktuellerTipp = null; } this.planen(); return; }
+    // Notfall, Naturheilkunde und die Leseseiten (Lumi-Buch, „Was die Lumis denken“, 0.6.3): hier schweigt sie, auch ein offener Satz geht
+    if (STILL.includes(name)) { const toast = document.getElementById("wesen-toast"); if (toast) { toast.remove(); this.aktuellerTipp = null; } return; }
     if (!this.aktiv() || this.nachtruhe() || this.fragtNachNamen() || name === vorher || this.ansichtTippGezeigt.has(name) || STILL.includes(name) || this.sitzung.tipps >= 12) return;
     const t = this.waehleTipp(name); if (t) { this.ansichtTippGezeigt.add(name); this.zeigeTipp(t); }
   }

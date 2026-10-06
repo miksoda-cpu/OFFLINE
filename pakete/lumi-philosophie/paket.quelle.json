@@ -13,7 +13,7 @@
   "kategorie": "miteinander",
   "alter_ab": 18,
   "app_min": "0.6.2",
-  "aenderungen": "Neu: fünfzehn Gedanken, zwölf von Philosophen der Menschen und drei von den Lumis, mit Aquarell, Lumisch-Satz zum Anhören und Text.",
+  "aenderungen": "Die Aquarelle sind jetzt als KI-generiert gekennzeichnet. Sonst unverändert.",
   "quellen": [
     {
       "id": "redaktion",
@@ -22,5 +22,6 @@
     }
   ],
   "abnahme": "Redaktion (Code), 06.10.2026: 15 Gedanken mit allen Feldern und Bild, Text wörtlich aus der Beilage, jedes Lumisch-Wort im Wörterbuch des Pakets pause (Eigennamen ausgenommen)",
-  "braucht_netz": false
+  "braucht_netz": false,
+  "ki_generiert": true
 }

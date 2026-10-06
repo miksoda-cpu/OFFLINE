@@ -113,7 +113,7 @@ test("Ohne Bilderpaket geht alles weiter; Bilderpaket nur intern", async () => {
 
 test("Im Bereich Naturheilkunde schweigt die Lumi wie im Notfall", async () => {
   const { STILL } = await import("./wesen.js");
-  assert.deepEqual(STILL, ["notfall", "natur"]);
+  assert.deepEqual(STILL.slice(0, 2), ["notfall", "natur"]);
   const w = await lies("./wesen.js");
   assert.ok(w.includes("STILL.includes(this.ansichtName)") && w.includes("STILL.includes(name)"));
 });
