@@ -18,6 +18,66 @@
     "text": "Vergiftungsinformationszentrale (VIZ) Wien",
     "grund": "Name der Einrichtung zur Notrufnummer"
    }
+  ],
+  "pakete/lumi-philosophie/quelle/texte.md": [
+   {
+    "text": "ul umo nu oki nezanluna. zanoki ne toktam.",
+    "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
+   },
+   {
+    "text": "bei Höhle wir sehen Schatten / Schein nicht Wirklichkeit",
+    "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
+   },
+   {
+    "text": "Wovon man nicht sprechen kann, darüber muss man schweigen.",
+    "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
+   },
+   {
+    "text": "wir Zahl denken früher jetzt später / Quantenwelt alles",
+    "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
+   },
+   {
+    "text": "Wir denken die Zahl in Vergangenheit, Gegenwart und Zukunft. Die Quantenwelt ist alles.",
+    "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
+   },
+   {
+    "text": "Wiedergeburt. Der Tod ist nicht das Ende.",
+    "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
+   },
+   {
+    "text": "Über die Quantenwelt sprechen wir mit dir.",
+    "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
+   }
+  ],
+  "pakete/lumi-philosophie/inhalt/gedanken.json": [
+   {
+    "text": "ul umo nu oki nezanluna. zanoki ne toktam.",
+    "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
+   },
+   {
+    "text": "bei Höhle wir sehen Schatten / Schein nicht Wirklichkeit",
+    "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
+   },
+   {
+    "text": "Wovon man nicht sprechen kann, darüber muss man schweigen.",
+    "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
+   },
+   {
+    "text": "wir Zahl denken früher jetzt später / Quantenwelt alles",
+    "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
+   },
+   {
+    "text": "Wir denken die Zahl in Vergangenheit, Gegenwart und Zukunft. Die Quantenwelt ist alles.",
+    "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
+   },
+   {
+    "text": "Wiedergeburt. Der Tod ist nicht das Ende.",
+    "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
+   },
+   {
+    "text": "Über die Quantenwelt sprechen wir mit dir.",
+    "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
+   }
   ]
  }
 }
