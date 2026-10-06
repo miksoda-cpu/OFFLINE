@@ -50,6 +50,10 @@ test("Schlüsselwechsel im Repo: umschlüsseln (alles oder nichts) und auffrisch
   await assert.rejects(werkzeug.umschluesseln(path.join(p, "verschluesselt"), FALSCH, NEU), /nichts geändert/);
   assert.equal(werkzeug.entschluesseln(await readFile(path.join(p, "verschluesselt", "b.json")), K).toString(), "{\"b\":1}", "unverändert");
   await werkzeug.umschluesseln(path.join(p, "verschluesselt"), K, NEU);
+  await mkdir(path.join(p, "inhalt", "bilder"), { recursive: true }); await writeFile(path.join(p, "inhalt", "bilder", "x.webp"), "BILD");
+  assert.deepEqual(await werkzeug.einlagern(p, [path.join(p, "inhalt")], NEU), ["inhalt/bilder/x.webp"]);
+  assert.equal(werkzeug.entschluesseln(await readFile(path.join(p, "verschluesselt", "inhalt", "bilder", "x.webp")), NEU).toString(), "BILD");
+  await assert.rejects(werkzeug.einlagern(path.join(p, "inhalt"), [path.join(p, "b.json")], NEU), /nicht unter/);
   assert.equal(werkzeug.entschluesseln(await readFile(path.join(p, "verschluesselt", "quelle", "a.md")), NEU).toString(), "Alpha");
   assert.throws(() => werkzeug.entschluesseln(readFileSync(path.join(p, "verschluesselt", "b.json")), K));
   const doku = await lies("../docs/INTERN.md");

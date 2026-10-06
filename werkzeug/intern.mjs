@@ -6,6 +6,7 @@
 // Aufruf (CI): OFFLINE_INTERN_SCHLUESSEL=… node werkzeug/intern.mjs verschluesseln <ordner> <ziel>  → gibt die Kennung aus
 // Das Repo ist öffentlich: Inhalte interner Pakete liegen dort nur verschlüsselt (pakete/<id>/verschluesselt/, gleicher
 // Schlüssel); `entschluesseln` holt sie in der CI zurück. Klartext nur lokal (.gitignore).
+//   einlagern <wurzel> <pfad…> – Klartext erstmals verschlüsselt ablegen: <wurzel>/<rel> → <wurzel>/verschluesselt/<rel>
 //   auffrischen <paket>    – nach einer Änderung am Inhalt: was in <paket>/verschluesselt/ liegt, neu aus dem Klartext
 //   umschluesseln <ordner> – Schlüsselwechsel: alter Schlüssel in OFFLINE_INTERN_SCHLUESSEL_ALT, neuer in OFFLINE_INTERN_SCHLUESSEL
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
@@ -75,16 +76,34 @@ export async function umschluesseln(ordner, alt, neu) {
   return liste;
 }
 
+/** Legt Klartext-Dateien verschlüsselt ab: <wurzel>/<rel> → <wurzel>/verschluesselt/<rel>. Ordner werden ganz übernommen.
+ *  Danach den Klartext aus dem Index nehmen (git rm --cached) und in den Block der .gitignore schreiben (docs/INTERN.md). */
+export async function einlagern(wurzel, pfade, k) {
+  const aus = [];
+  for (const p of pfade) {
+    const rel = path.relative(wurzel, p).split(path.sep).join("/");
+    if (rel.startsWith("..") || rel.split("/").includes("verschluesselt")) throw new Error(`${p} liegt nicht unter ${wurzel}`);
+    const liste = (await stat(p)).isDirectory() ? (await dateien(p)).map((r) => path.posix.join(rel, r)) : [rel];
+    for (const r of liste) {
+      await mkdir(path.dirname(path.join(wurzel, "verschluesselt", r)), { recursive: true });
+      await writeFile(path.join(wurzel, "verschluesselt", r), verschluesseln(await readFile(path.join(wurzel, r)), k));
+      aus.push(r);
+    }
+  }
+  return aus;
+}
+
 async function main() {
   const [befehl, ordner, ziel] = process.argv.slice(2);
   const k = schluesselLesen(process.env.OFFLINE_INTERN_SCHLUESSEL);
   if (befehl === "kennung") return console.log(kennung(k));
+  if (befehl === "einlagern" && ordner && ziel) return console.log(`${(await einlagern(ordner, process.argv.slice(4), k)).length} Dateien verschlüsselt abgelegt unter ${path.join(ordner, "verschluesselt")}`);
   if (befehl === "auffrischen" && ordner) return console.log(`${(await auffrischen(ordner, k)).length} Dateien neu verschlüsselt (Kennung ${kennung(k)})`);
   if (befehl === "umschluesseln" && ordner) {
     const alt = schluesselLesen(process.env.OFFLINE_INTERN_SCHLUESSEL_ALT);
     return console.log(`${(await umschluesseln(ordner, alt, k)).length} Dateien umgeschlüsselt: ${kennung(alt)} → ${kennung(k)}`);
   }
-  if (!["verschluesseln", "entschluesseln"].includes(befehl) || !ordner || !ziel) throw new Error("Aufruf: intern.mjs verschluesseln|entschluesseln <ordner> <ziel> | auffrischen <paket> | umschluesseln <ordner> | kennung");
+  if (!["verschluesseln", "entschluesseln"].includes(befehl) || !ordner || !ziel) throw new Error("Aufruf: intern.mjs verschluesseln|entschluesseln <ordner> <ziel> | einlagern <wurzel> <pfad…> | auffrischen <paket> | umschluesseln <ordner> | kennung");
   await (befehl === "verschluesseln" ? ordnerVerschluesseln : ordnerEntschluesseln)(ordner, ziel, k);
   console.log(kennung(k));
 }

@@ -5,7 +5,7 @@ import { readFile, stat } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { randomBytes } from "node:crypto";
-import { geschuetzteMuster, trifft, siehtNachChiffratAus, fingerabdruecke, fundeImText, pruefe, erlaubtFuer } from "./klartext-wache.mjs";
+import { geschuetzteMuster, trifft, siehtNachChiffratAus, fingerabdruecke, fundeImText, pruefe, erlaubtFuer, klartextZu, nichtFreigegeben, imGeschuetztenPaket, schutzGrund, freigegebeneAbziehen, regelnAusRepo } from "./klartext-wache.mjs";
 import { verschluesseln } from "./intern.mjs";
 
 const lies = (p) => readFile(new URL(p, import.meta.url), "utf8");
@@ -51,6 +51,35 @@ test("Fingerabdruck: Text aus den Quellen in einer anderen Datei fällt auf, auc
   const erl = { "*": [{ text: "A" }], "a.md": [{ text: "B" }] };
   assert.deepEqual(erlaubtFuer(erl, "a.md"), ["A", "B"]); assert.deepEqual(erlaubtFuer(erl, "b.md"), ["A"]);
   assert.deepEqual(erlaubtFuer(erl, "werkzeug/klartext-wache-erlaubt.json").sort(), ["A", "B"], "die Liste selbst");
+});
+
+test("Regel fürs öffentliche Repo (Auftrag 13): Spiegel der verschlüsselten Dateien und Pakete mit \"freigegeben\": false", () => {
+  assert.equal(klartextZu("pakete/x/verschluesselt/quelle/a.md"), "pakete/x/quelle/a.md");
+  assert.equal(klartextZu("bill/beilagen/verschluesselt/a.md"), "bill/beilagen/a.md");
+  assert.ok(nichtFreigegeben({ freigegeben: false })); assert.ok(nichtFreigegeben({ kanal: "intern" }));
+  assert.ok(!nichtFreigegeben({})); assert.ok(!nichtFreigegeben({ freigegeben: true }));
+  const r = { muster: [], spiegel: new Set(["pakete/p/quelle/a.md"]), pakete: [{ wurzel: "pakete/neu/", offen: ["LIESMICH.md"] }] };
+  assert.match(schutzGrund("pakete/p/quelle/a.md", r), /verschlüsselt im Repo/);
+  for (const p of ["pakete/neu/inhalt/text.json", "pakete/neu/PRUEFBERICHT.md", "pakete/neu/quelle/x.md", "pakete/neu/inhalt/bild.webp"]) assert.match(schutzGrund(p, r), /nicht freigegeben/, p);
+  for (const p of ["pakete/neu/paket.quelle.json", "pakete/neu/umwandeln.mjs", "pakete/neu/LIESMICH.md", "pakete/neu/verschluesselt/inhalt/text.json", "pakete/alt/inhalt/text.json"]) assert.equal(schutzGrund(p, r), null, p);
+  assert.equal(pruefe([{ pfad: "pakete/neu/inhalt/text.json", inhalt: B("{}") }], r).length, 1, "neues Paket ohne .gitignore-Eintrag wird trotzdem gestoppt");
+});
+
+test("Fingerabdruck: Freigegebenes zählt nicht; Rahmen und Aufzählungszeichen machen keinen Fund", () => {
+  const f = fingerabdruecke(["- **Ein Satz aus einer Quelle, der noch nicht veröffentlicht ist.**", "„Ein Satz, der schon in der App steht und daher öffentlich ist.“", "│" + " ".repeat(60) + "│"]);
+  assert.equal(f.size, 2);
+  freigegebeneAbziehen(f, ['const hilfe = "Ein Satz, der schon in der App steht und daher öffentlich ist.";']);
+  assert.equal(f.size, 1);
+  assert.equal(fundeImText("Zitat: Ein Satz aus einer Quelle, der noch nicht veröffentlicht ist.", f).length, 1);
+});
+
+test("Die Regeln im Repo: Naturheilkunde, Bilder und Flechte gekennzeichnet; Unveröffentlichtes liegt verschlüsselt", () => {
+  const r = regelnAusRepo();
+  assert.deepEqual(r.pakete.map((p) => p.wurzel).sort(), ["pakete/flechte/", "pakete/naturheilkunde-bilder/", "pakete/naturheilkunde/"]);
+  for (const p of ["pakete/flechte/inhalt/skin/skin.css", "pakete/pause/quelle/OFFLINE-Lumisch-Woerterbuch-2026-10-05.md", "pakete/pause/quelle/OFFLINE-Lumisch-Aussprache.json",
+    "bill/eingang/2026-10-04-pause-quellen/OFFLINE-Modul-Pause-Konzept.md", "bill/eingang/2026-09-29-bill/material/pakete/wir/inhalt/tipps.json", "bill/beilagen/2026-10-06-auszuege.md"])
+    assert.ok(r.spiegel.has(p) && schutzGrund(p, r), p);
+  assert.equal(schutzGrund("pakete/pause/inhalt/pause.json", r), null, "freigegebener Paketinhalt bleibt offen");
 });
 
 test("Jede Freigabe hat einen Grund und ist kurz (Namen und Redaktionssätze, kein Inhalt)", async () => {

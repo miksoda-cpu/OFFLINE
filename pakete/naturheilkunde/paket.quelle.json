@@ -1,5 +1,7 @@
 {
   "id": "naturheilkunde",
+  "freigegeben": false,
+  "offen": ["LIESMICH.md"],
   "kanal": "intern",
   "titel": "Naturheilkunde (in Prüfung)",
   "beschreibung": "Ich gehe in den Wald und finde …: Waldfunde, Giftiges und Verwechslungen, Pflanzenkarten, Wechselwirkungen und Überlieferung. Entwurf, fachlich noch nicht geprüft, nicht zur Anwendung.",

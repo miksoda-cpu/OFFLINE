@@ -54,10 +54,10 @@
 | Tipp | Text (Anfang) | Vorschlag |
 |---|---|---|
 | `laune-006` | „Du hast heute dreimal die Kühlschranktür aufgemacht …“ | allgemein formulieren („Wer im Blackout dreimal die Kühlschranktür aufmacht …“) |
-| `laune-010` | „Du hast meinen Namen geändert. Schon wieder.“ | nur nach einer Namensänderung; die App merkt sich frühere Namen nicht, sonst streichen |
+| `laune-010` | Wortlaut in Beilage A2 | nur nach einer Namensänderung; die App merkt sich frühere Namen nicht, sonst streichen |
 | `laune-015` | „Du hast heute noch nichts bestätigt.“ | Die App weiß das nicht je Tag; umformulieren oder eine Bedingung „heute nichts bestätigt“ bauen |
 | `alltag-039` | „… die Nachbarin, die noch bei sieben ist.“ | behauptet den Stand einer Nachbarin; allgemein formulieren |
-| `alltag-004` | „Zwei Nachbarn eingetragen, und ich bin ruhiger.“ | liest sich als Tatsache; als Wunsch formulieren („Wenn zwei Nachbarn eingetragen sind …“) |
+| `alltag-004` | Wortlaut in Beilage A3 | liest sich als Tatsache; als Wunsch formulieren („Wenn zwei Nachbarn eingetragen sind …“) |
 
 - **Punktzahlen aus der alten Bereit-Rechnung stimmen seit 0.2.0 nicht mehr:** `alltag-001` („acht Punkte“), `alltag-003` („zehn Punkte“), `alltag-014` („Fünf Punkte“). Vorschlag: Die Punkte streichen oder durch „hebt deine Zahl“ ersetzen.
 - **Funktionen, die es in der App (noch) nicht gibt:**

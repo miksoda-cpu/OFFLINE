@@ -1,5 +1,7 @@
 {
   "id": "flechte",
+  "freigegeben": false,
+  "offen": ["LIESMICH.md"],
   "titel": "Flechte · Aussehen",
   "beschreibung": "Die App im Flechtengewand: Moos statt Weiß, Wiesenfarben, Serifen für Titel und kleine Flechtenbilder am Rand. Hell und dunkel. Notfallseiten bleiben schlicht.",
   "art": "skin",

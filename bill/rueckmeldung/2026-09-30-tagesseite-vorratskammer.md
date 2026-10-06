@@ -92,6 +92,6 @@
 - **Der Vorrat reicht bis 30. November 2026.** Für Dezember braucht es ein Paket `tage-2026-12`: Rätsel und vier weitere Romanwochen, dafür wäre Advent ein naheliegendes Thema.
   - Baukasten und Werkzeuge stehen, der Aufwand ist Redaktion.
   - Ohne neues Paket zeigen die Geräte ab 1. Dezember „Vorrat: leer“ mit Hinweis.
-- **Inhaltsfehler im Paket `wir` (nicht Teil dieses Auftrags):** Der Tipp `alltag-020` („Der Treffpunkt im Tresor ist eingetragen. Weiß deine Familie ihn auch? …“) hat keine Bedingung. Er erscheint deshalb auch, wenn gar kein Treffpunkt eingetragen ist. Vorschlag: umformulieren oder an eine Bestätigung des Treffpunkts binden.
+- **Inhaltsfehler im Paket `wir` (nicht Teil dieses Auftrags):** Der Tipp `alltag-020` (Wortlaut in Beilage A4) hat keine Bedingung. Er erscheint deshalb auch, wenn gar kein Treffpunkt eingetragen ist. Vorschlag: umformulieren oder an eine Bestätigung des Treffpunkts binden.
 - **Apps bis 0.2.1** sehen die Tagespakete im Katalog als „Braucht App 0.3.0“ und laden sie nicht.
 - **Entwickler-Build:** Das vorgestellte Datum greift erst nach dem ersten Neuzeichnen. Das betrifft nur die Testleiste, nicht die ausgelieferte App.

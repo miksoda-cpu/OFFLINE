@@ -5,6 +5,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { WERTE, einstellungenLaden, angeboten, happenFaellig, waehle, linieLaden, bewerten, zurueckholen, schwierigkeit, zoneAnpassen, verfuegbar,
   rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, rueckspiegel, lumischHeute, lumischAntworten, soSeheIchDich, wochenSatz, logDazu, imKennenlernen, gewichtVon, stufeVon, tagVon, raumFormen, dauerText, LUMISCH_ALT, lumischUmbenannt } from "./pause.js";
 import { pilzMs } from "./pause-happen.js";
@@ -274,9 +275,14 @@ test("Lumisch Tag 1 bis 40: Plan bis 21, danach zwei Wiederholungen und ein neue
 });
 
 // ---------- Lumisch nach der Wortprüfung (Auftrag 2026-10-05-03, 0.5.3) ----------
-const beilage = await readFile(new URL("../pakete/pause/quelle/OFFLINE-Lumisch-Woerterbuch-2026-10-05.md", import.meta.url), "utf8");
+// Die Beilage ist unveröffentlicht und liegt im Repo nur verschlüsselt (Auftrag 2026-10-06-13); die CI entschlüsselt sie mit dem
+// Kanal-Schlüssel, ohne ihn wird der Abgleich übersprungen.
+const BEILAGE = new URL("../pakete/pause/quelle/OFFLINE-Lumisch-Woerterbuch-2026-10-05.md", import.meta.url);
+const AUSSPRACHE = new URL("../pakete/pause/quelle/OFFLINE-Lumisch-Aussprache.json", import.meta.url);
+const MIT_BEILAGE = existsSync(BEILAGE) ? {} : { skip: "Beilage nur verschlüsselt im Repo" };
+const beilage = existsSync(BEILAGE) ? await readFile(BEILAGE, "utf8") : "";
 
-test("Lumisch: Wörterbuch im Paket entspricht der Beilage (500, keine Doppelten, kein altes Wort), Plan nach Abschnitt 8", () => {
+test("Lumisch: Wörterbuch im Paket entspricht der Beilage (500, keine Doppelten, kein altes Wort), Plan nach Abschnitt 8", MIT_BEILAGE, () => {
   const l = daten.lumisch;
   const abschnitt6 = beilage.slice(beilage.indexOf("## 6. Wörterbuch"), beilage.indexOf("## 7. Register"));
   const soll = [...abschnitt6.matchAll(/^\| \*\*([a-z]+)\*\* \| ([^|]+) \|/gm)].map((m) => [m[1], m[2].trim()]);
@@ -348,10 +354,13 @@ test("Lumisch: wer das alte Wort für Eis gelernt hat, verliert nichts; die Kart
 test("Lumisch anhören: Umschrift und Lautschrift im Paket, Stimme de-AT zuerst, Weiche für IPA aus, ohne Stimme kein Knopf", async () => {
   const { waehleStimme, sprechText, hoerenKnopf, STIMME_KANN_IPA, TEMPO } = await import("./stimme.js");
   const paket = JSON.parse(await readFile(new URL("../pakete/pause/inhalt/pause.json", import.meta.url), "utf8"));
-  const quelle = JSON.parse(await readFile(new URL("../pakete/pause/quelle/OFFLINE-Lumisch-Aussprache.json", import.meta.url), "utf8"));
-  const wb = paket.lumisch.woerterbuch, a = new Map(quelle.woerter.map((x) => [x.wort, x]));
+  const wb = paket.lumisch.woerterbuch;
   assert.equal(wb.length, 500);
-  for (const w of wb) { assert.equal(w.umschrift, a.get(w.wort)?.umschrift, w.wort); assert.equal(w.ipa, a.get(w.wort)?.ipa, w.wort); }
+  assert.ok(wb.every((w) => w.umschrift && w.ipa), "jedes Wort mit Umschrift und Lautschrift");
+  if (existsSync(AUSSPRACHE)) {
+    const a = new Map(JSON.parse(await readFile(AUSSPRACHE, "utf8")).woerter.map((x) => [x.wort, x]));
+    for (const w of wb) { assert.equal(w.umschrift, a.get(w.wort)?.umschrift, w.wort); assert.equal(w.ipa, a.get(w.wort)?.ipa, w.wort); }
+  }
   const w = (wort) => wb.find((x) => x.wort === wort);
   assert.equal(sprechText(w("kiv")), "kiw");
   assert.equal(sprechText(w("vau")), "wa u", "vau als wa-u, zwei Silben");

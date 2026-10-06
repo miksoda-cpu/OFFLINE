@@ -4,11 +4,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 
 const lies = (p) => readFile(new URL(p, import.meta.url), "utf8");
 const css = await lies("./styles.css");
 const wesenCss = await lies("./wesen.css");
-const flechte = await lies("../pakete/flechte/inhalt/skin/skin.css");
+// Der Skin Flechte ist unveröffentlicht und liegt im Repo nur verschlüsselt (Auftrag 2026-10-06-13); die CI entschlüsselt ihn.
+const FLECHTE = new URL("../pakete/flechte/inhalt/skin/skin.css", import.meta.url);
+const flechte = existsSync(FLECHTE) ? await readFile(FLECHTE, "utf8") : null;
 
 /** Variablen eines Blocks: alle `--name: #hex` (spätere gewinnen). */
 const variablen = (block) => Object.fromEntries([...block.matchAll(/(--[\w-]+):\s*(#[0-9a-fA-F]{6})\b/g)].map((m) => [m[1], m[2]]));
@@ -42,7 +45,7 @@ test("Kacheln: Untertitel auf jeder Kachelfarbe mindestens 4,5 : 1", () => {
   for (const f of ["--eisblau", "--flieder", "--moos", "--sand", "--rose"]) pruefe(`Kachel ${f}`, mische([28, 27, 25], a, rgb(hell[f])), rgb(hell[f]));
 });
 
-test("Skin Flechte: gleiche Regel, hell und dunkel", () => {
+test("Skin Flechte: gleiche Regel, hell und dunkel", flechte ? {} : { skip: "Skin nur verschlüsselt im Repo" }, () => {
   const fh = variablen(blockNach(flechte, ":root {")), fd = { ...fh, ...variablen(blockNach(flechte, ':root[data-theme="dark"] {')) };
   const P = [["--of-tinte", "--of-grund"], ["--of-tinte", "--of-flaeche"], ["--of-tinte-2", "--of-grund"], ["--of-tinte-2", "--of-flaeche"], ["--of-tinte-3", "--of-grund"], ["--of-tinte-3", "--of-flaeche"],
     ["--of-moos", "--of-moos-zart"], ["--of-moos", "--of-flaeche"], ["--of-mohn", "--of-mohn-zart"], ["--of-kornblume", "--of-flaeche"], ["--of-kornblume", "--of-kornblume-zart"],

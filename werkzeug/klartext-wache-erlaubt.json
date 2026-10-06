@@ -12,6 +12,12 @@
     "text": "1. **Volltexte von PubMed/PMC/NCBI (LiverTox) waren nicht abrufbar** (Captcha-Sperre; nicht umgangen).",
     "grund": "Redaktionsvermerk als Testfall für istGesperrt()"
    }
+  ],
+  "*": [
+   {
+    "text": "Vergiftungsinformationszentrale (VIZ) Wien",
+    "grund": "Name der Einrichtung zur Notrufnummer"
+   }
   ]
  }
 }

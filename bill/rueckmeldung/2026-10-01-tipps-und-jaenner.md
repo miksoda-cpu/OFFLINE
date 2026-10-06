@@ -70,7 +70,7 @@ Grundsatz: Ein Tipp behauptet nie etwas, das die App nicht weiß, und nennt kein
 | `digital-030` | „Frag noch einmal. Mich zum Beispiel.“: Die Lumi kann keine Fragen beantworten. | wartet auf `fragen` |
 | `laune-002` | „Du hast mich geweckt.“: Die App weiß nicht, ob jemand sie geweckt hat. | „Wenn du mich weckst, sag ich nichts Kluges. Nur damit du es weißt.“ |
 | `laune-007` | „Du wischst schnell heute.“: Das misst die App nicht. | „Wer schnell wischt, dem rede ich langsamer. Einer von uns muss.“ |
-| `app-025` | „Die Radioseite kennt die Frequenzen deiner Region“: Man trägt sie selbst ein. | „Unter Werkzeuge trägst du die Frequenz deines Radiosenders ein. Schreib sie trotzdem auf Papier. Papier braucht keinen Akku.“ |
+| `app-025` | Wortlaut in Beilage A5: Man trägt sie selbst ein. | „Unter Werkzeuge trägst du die Frequenz deines Radiosenders ein. Schreib sie trotzdem auf Papier. Papier braucht keinen Akku.“ |
 
 Insgesamt warten damit 19 Tipps auf eine Funktion.
 

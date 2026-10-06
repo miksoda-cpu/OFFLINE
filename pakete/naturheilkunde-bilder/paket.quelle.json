@@ -1,5 +1,7 @@
 {
   "id": "naturheilkunde-bilder",
+  "freigegeben": false,
+  "offen": ["sichtpruefung.json"],
   "kanal": "intern",
   "titel": "Naturheilkunde: Bilder (in Prüfung)",
   "beschreibung": "Alte Pflanzentafeln (Köhler, Thomé) und freie Fotos von Wikimedia Commons zum Paket Naturheilkunde. Jedes Bild mit Urheber, Lizenz und Quelle.",

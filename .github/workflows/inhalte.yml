@@ -106,6 +106,8 @@ jobs:
             # Interne Pakete (Feld "kanal": "intern") nie in den öffentlichen Katalog; die baut der Workflow „Interner Kanal“.
             # Freigeben heißt: die Zeile "kanal" löschen, dann kommt das Paket hier mit.
             if grep -qE '"kanal": *"intern"' "$q/paket.quelle.json"; then echo "Intern, nicht öffentlich: $q"; continue; fi
+            # Noch nicht freigegeben (Auftrag 2026-10-06-13): Inhalt liegt nur verschlüsselt im Repo, nie in den öffentlichen Katalog.
+            if grep -qE '"freigegeben": *false' "$q/paket.quelle.json"; then echo "Nicht freigegeben: $q"; continue; fi
             case "$(basename "$q")" in "$NUR"*) ;; *) echo "Nicht ausgewählt: $q"; continue ;; esac
             node werkzeug/paket.mjs bauen "$q" ausgabe
           done

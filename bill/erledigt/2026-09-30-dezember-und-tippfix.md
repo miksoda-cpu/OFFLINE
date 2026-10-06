@@ -9,7 +9,7 @@
 - Bauen, prüfen, mit dem Paketschlüssel über den Workflow signieren und hochladen, nur das Dezember-Paket.
 
 ## 2. Tipp `alltag-020` im Paket `wir`
-„Der Treffpunkt im Tresor ist eingetragen …“ erscheint auch, wenn keiner eingetragen ist. Bedingung ergänzen, sodass der Tipp nur bei eingetragenem Treffpunkt kommt, oder den Text neutral umformulieren. Alle 176 Tipps einmal darauf prüfen, ob noch andere einen Zustand behaupten, den die App nicht kennt, und in der Rückmeldung auflisten.
+Der Tipp zum Treffpunkt (`alltag-020`, Wortlaut in Beilage A1) erscheint auch, wenn keiner eingetragen ist. Bedingung ergänzen, sodass der Tipp nur bei eingetragenem Treffpunkt kommt, oder den Text neutral umformulieren. Alle 176 Tipps einmal darauf prüfen, ob noch andere einen Zustand behaupten, den die App nicht kennt, und in der Rückmeldung auflisten.
 
 ## 3. Mitnehmen: „Was ist neu“
 Der Auftrag `2026-09-30-was-ist-neu.md` liegt im Ordner OFFLINE - Home und gehört ins nächste App-Update, zusammen mit einem Eintrag für 0.3.0 (Tagesseite, Vorratskammer, Roman der Woche).

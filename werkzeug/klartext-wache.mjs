@@ -1,11 +1,16 @@
 #!/usr/bin/env node
-// Klartext-Wache (Nachtrag 2026-10-06, nach dem Vorfall mit Commit 2725532): Das Repo ist öffentlich. Nichts, was nur intern
-// ist, darf im Klartext hinein. Die Wache bricht ab, wenn
-//   1. eine Datei aus den geschützten Ordnern der .gitignore vorgemerkt ist (Block „Klartext-Wache“; auch mit `git add -f`),
-//      oder ein Schlüssel (*.key),
+// Klartext-Wache (Nachtrag 2026-10-06 nach Commit 2725532; Regel fürs öffentliche Repo, Auftrag 2026-10-06-13): Das Repo ist
+// öffentlich. Was nicht freigegeben ist (nicht in einer veröffentlichten App-Version, nicht im öffentlichen Katalog), liegt nur
+// verschlüsselt darin. Die Wache bricht ab, wenn
+//   1. eine geschützte Datei vorgemerkt ist (auch mit `git add -f`). Geschützt ist
+//      - was im Block „Klartext-Wache“ der .gitignore steht, und jeder Schlüssel (*.key),
+//      - der Klartext zu jeder Datei, die verschlüsselt im Repo liegt (…/verschluesselt/x → …/x),
+//      - jedes Paket mit "freigegeben": false oder "kanal": "intern" in paket.quelle.json, außer paket.quelle.json, Code (*.mjs),
+//        verschluesselt/ und den Dateien, die das Paket unter "offen" nennt,
 //   2. eine Datei in einem Ordner `verschluesselt/` nicht nach Chiffrat aussieht,
-//   3. eine Datei Text aus den lokalen Quellen enthält (Ordner quelle/ im Block; Fingerabdruck: jedes Textstück ab 40 Zeichen;
-//      nur wenn die Quellen auf diesem Rechner liegen). Bewusst öffentliche Wendungen stehen mit Grund in klartext-wache-erlaubt.json.
+//   3. eine Datei Text aus unveröffentlichten Quellen enthält (Fingerabdruck: jedes Textstück ab 40 Zeichen, nur wenn der Klartext
+//      auf diesem Rechner liegt; Stücke, die schon in der letzten veröffentlichten App-Version stehen, zählen nicht). Bewusst öffentliche
+//      Wendungen stehen mit Grund in klartext-wache-erlaubt.json.
 // Aufruf:
 //   node werkzeug/klartext-wache.mjs vorgemerkt   – Hook pre-commit: die vorgemerkten Dateien
 //   node werkzeug/klartext-wache.mjs push         – Hook pre-push: alle Dateien in den Commits, die hinausgehen (stdin wie git)
@@ -44,6 +49,28 @@ export function trifft(pfad, muster) {
   });
 }
 
+/** Klartext-Pfad zu einer verschlüsselten Datei: das Segment „verschluesselt“ fällt weg. */
+export const klartextZu = (pfad) => pfad.split("/").filter((s) => s !== "verschluesselt").join("/");
+/** Ist ein Paket (Inhalt von paket.quelle.json) noch nicht freigegeben? */
+export const nichtFreigegeben = (q) => q?.freigegeben === false || q?.kanal === "intern";
+/** Geschützt durch die Kennzeichnung im Paket? pakete: [{ wurzel: "pakete/x/", offen: [...] }] */
+export function imGeschuetztenPaket(pfad, pakete) {
+  for (const p of pakete) {
+    if (!pfad.startsWith(p.wurzel)) continue;
+    const rel = pfad.slice(p.wurzel.length);
+    if (rel === "paket.quelle.json" || rel.endsWith(".mjs") || rel.split("/").includes("verschluesselt") || (p.offen ?? []).includes(rel)) return false;
+    return true;
+  }
+  return false;
+}
+/** Alle Schutzregeln für einen Pfad; gibt den Grund zurück oder null. */
+export function schutzGrund(pfad, r) {
+  if (trifft(pfad, r.muster ?? [])) return `steht im Block „${BLOCK}“ der .gitignore`;
+  if (r.spiegel?.has(pfad)) return "liegt verschlüsselt im Repo, der Klartext darf nicht hinein";
+  if (imGeschuetztenPaket(pfad, r.pakete ?? [])) return "gehört zu einem Paket, das noch nicht freigegeben ist";
+  return null;
+}
+
 /** Chiffrat (IV + AES-GCM) ist Zufall: höchstens rund 40 % druckbare Zeichen. Text liegt weit über 90 %. */
 export function siehtNachChiffratAus(buf) {
   if (buf.length < 28) return false;
@@ -53,10 +80,19 @@ export function siehtNachChiffratAus(buf) {
 }
 
 /** Fingerabdrücke: die ersten MIN Zeichen jedes Textstücks ab MIN Zeichen (getrennt an Zeilenende, Anführungszeichen, Backslash,
- *  Tabellenstrich). Commons-Dateinamen und Adressen sind öffentlich und zählen nicht. */
+ *  Tabellenstrich), wenn mindestens die Hälfte davon Buchstaben sind (keine Rahmen, Zahlenreihen, Leerzeichen). Commons-Dateinamen
+ *  und Adressen sind öffentlich und zählen nicht. */
 export function fingerabdruecke(texte) {
   const f = new Set();
-  for (const t of texte) for (const s of t.split(/[\n\r"\\|]+/)) { const x = s.trim(); if (x.length >= MIN && !/^File:|https?:\/\//.test(x)) f.add(x.slice(0, MIN)); }
+  for (const t of texte) for (const s of t.split(/[\n\r"\\|]+/)) {
+    const x = s.replace(/^[\s\-*#>„“”‚‘'»«•·:()\d.]+/u, "").trim(); // Aufzählung, Hervorhebung, Anführung vorne weg
+    if (x.length >= MIN && !/^File:|https?:\/\//.test(x) && (x.slice(0, MIN).match(/\p{L}/gu) ?? []).length >= MIN / 2) f.add(x.slice(0, MIN));
+  }
+  return f;
+}
+/** Nimmt aus den Fingerabdrücken alles heraus, was in freigegebenen Texten steht (die sind ohnehin öffentlich). */
+export function freigegebeneAbziehen(f, texte) {
+  for (const t of texte) for (const w of fundeImText(t, f)) f.delete(w);
   return f;
 }
 /** Stücke aus dem Klartext, die im Text vorkommen. `erlaubt`: Wendungen, die bewusst öffentlich sind (klartext-wache-erlaubt.json). */
@@ -79,16 +115,20 @@ export const ERLAUBT_DATEI = "werkzeug/klartext-wache-erlaubt.json";
 /** Freigegebene Wendungen für eine Datei: die unter ihrem Pfad und die unter „*“. Die Freigabeliste selbst darf genau ihre Einträge enthalten. */
 export const erlaubtFuer = (liste, pfad) => (pfad === ERLAUBT_DATEI ? Object.values(liste).flat() : [...(liste["*"] ?? []), ...(liste[pfad] ?? [])]).map((e) => e.text);
 
-/** Prüft Dateien [{ pfad, inhalt: Buffer|null }]. Gibt die Fehler zurück (leer = sauber). */
-export function pruefe(dateien, muster, f = new Set(), erlaubt = {}) {
+/** Prüft Dateien [{ pfad, inhalt: Buffer|null }]. `regeln`: { muster, spiegel, pakete } (oder nur die Muster als Liste).
+ *  Gibt die Fehler zurück (leer = sauber). */
+export function pruefe(dateien, regeln, f = new Set(), erlaubt = {}) {
+  const r = Array.isArray(regeln) ? { muster: regeln } : regeln;
   const fehler = [];
   for (const { pfad, inhalt } of dateien) {
-    if (trifft(pfad, muster)) { fehler.push(`${pfad}: liegt in einem geschützten Ordner (.gitignore, Block „${BLOCK}“)`); continue; }
+    const grund = schutzGrund(pfad, r);
+    if (grund) { fehler.push(`${pfad}: ${grund}`); continue; }
     if (!inhalt) continue;
     if (pfad.split("/").includes("verschluesselt")) { if (!siehtNachChiffratAus(inhalt)) fehler.push(`${pfad}: liegt in verschluesselt/, sieht aber nach Klartext aus`); continue; }
     if (inhalt.length > 8e6 || inhalt.includes(0)) continue; // groß oder binär: Bilder, Programme
-    const funde = fundeImText(inhalt.toString("utf8"), f, erlaubtFuer(erlaubt, pfad));
-    if (funde.length) fehler.push(`${pfad}: enthält Klartext aus internen Inhalten (${funde.length}×, zuerst „${funde[0]}…“)`);
+    const text = inhalt.toString("utf8"), funde = fundeImText(text, f, erlaubtFuer(erlaubt, pfad));
+    const zeilenNr = [...new Set(funde.map((w) => text.slice(0, text.indexOf(w)).split("\n").length))];
+    if (funde.length) fehler.push(`${pfad}: enthält Klartext aus unveröffentlichten Inhalten (${funde.length}×, Zeile ${zeilenNr.join(", ")}; zuerst „${funde[0]}…“)`);
   }
   return fehler;
 }
@@ -96,19 +136,48 @@ export function pruefe(dateien, muster, f = new Set(), erlaubt = {}) {
 // ---------- Anbindung an git ----------
 const git = (...a) => execFileSync("git", a, { cwd: WURZEL, maxBuffer: 1 << 30 });
 const zeilen = (b) => b.toString("utf8").split("\n").filter(Boolean);
-function lokalerKlartext(muster) {
-  const texte = [];
-  const lauf = (rel) => {
-    const abs = path.join(WURZEL, rel);
-    if (!existsSync(abs)) return;
-    const st = statSync(abs);
-    if (st.isDirectory()) { for (const e of readdirSync(abs)) if (e !== ".roh") lauf(path.posix.join(rel, e)); return; }
-    if (st.size < 8e6 && /\.(json|md|txt|csv|html?)$/i.test(rel)) texte.push(readFileSync(abs, "utf8"));
-  };
-  // Nur die Quellen (Bills Material) geben Fingerabdrücke. Was der Umwandler oder bilder-holen.mjs selbst erzeugt, steht ohnehin
-  // im Code und ist öffentlich; die Quelltexte im Paketinhalt sind dieselben wie in quelle/.
-  for (const m of muster) if (!m.includes("*") && m.split("/").includes("quelle")) lauf(m.replace(/^\/|\/$/g, ""));
-  return fingerabdruecke(texte);
+const TEXT = /\.(json|md|txt|csv|html?|py)$/i;
+function dateienUnter(rel) {
+  const abs = path.join(WURZEL, rel);
+  if (!existsSync(abs)) return [];
+  if (!statSync(abs).isDirectory()) return [rel];
+  return readdirSync(abs).filter((e) => e !== ".roh").flatMap((e) => dateienUnter(path.posix.join(rel, e)));
+}
+/** Schutzregeln aus dem Repo: .gitignore-Block, Spiegel der verschlüsselten Dateien (Index), Pakete mit Kennzeichnung. */
+export function regelnAusRepo() {
+  const muster = geschuetzteMuster(readFileSync(path.join(WURZEL, ".gitignore"), "utf8"));
+  const index = zeilen(git("ls-files", "-z").toString("utf8").replace(/\0/g, "\n"));
+  const spiegel = new Set(index.filter((p) => p.split("/").includes("verschluesselt")).map(klartextZu));
+  const pakete = [];
+  for (const id of readdirSync(path.join(WURZEL, "pakete"))) {
+    const q = path.join(WURZEL, "pakete", id, "paket.quelle.json");
+    if (!existsSync(q)) continue;
+    const j = JSON.parse(readFileSync(q, "utf8"));
+    if (nichtFreigegeben(j)) pakete.push({ wurzel: `pakete/${id}/`, offen: j.offen ?? [] });
+  }
+  return { muster, spiegel, pakete };
+}
+/** Was sicher öffentlich ist: der Stand der letzten veröffentlichten App-Version (Tag vX.Y.Z) – App-Code und Paketinhalte, ohne
+ *  Geschütztes. Bewusst nicht der Arbeitsstand: Was jemand gerade hineinkopiert, darf sich nicht selbst freisprechen. */
+function freigegebeneTexte(r) {
+  let tag;
+  try { tag = git("describe", "--tags", "--abbrev=0", "--match", "v*", "HEAD").toString().trim(); } catch { return []; }
+  const pfade = zeilen(git("ls-tree", "-r", "--name-only", tag)).filter((p) => TEXT.test(p) || /\.(m?js|css|rs)$/.test(p));
+  return pfade.filter((p) => (p.startsWith("web/") || p.startsWith("app/src") || /^pakete\/[^/]+\/inhalt\//.test(p)) && !p.startsWith("web/pakete/") && !schutzGrund(p, r))
+    .map((p) => git("show", `${tag}:${p}`).toString("utf8"));
+}
+/** Fingerabdrücke aus dem lokalen Klartext unveröffentlichter Quellen: Ordner quelle/, alles unter bill/ und die .md-Dateien im
+ *  Inhalt geschützter Pakete. Was ein Umwandler selbst erzeugt (JSON im Paketinhalt, Berichte), steht ohnehin im Code und zählt nicht.
+ *  Davon ab geht alles, was in der letzten veröffentlichten App-Version steht. */
+export function lokalerKlartext(r) {
+  const kandidaten = new Set([...r.spiegel]);
+  for (const m of r.muster) if (!m.includes("*")) for (const p of dateienUnter(m.replace(/^\/|\/$/g, ""))) kandidaten.add(p);
+  for (const p of r.pakete) for (const d of dateienUnter(p.wurzel)) if (imGeschuetztenPaket(d, [p])) kandidaten.add(d);
+  const quelle = (p) => p.split("/").includes("quelle") || p.startsWith("bill/") || (/\.md$/i.test(p) && p.split("/").includes("inhalt") && r.pakete.some((x) => p.startsWith(x.wurzel)));
+  const texte = [...kandidaten].filter((p) => TEXT.test(p) && quelle(p) && existsSync(path.join(WURZEL, p)) && statSync(path.join(WURZEL, p)).size < 8e6).map((p) => readFileSync(path.join(WURZEL, p), "utf8"));
+  const f = fingerabdruecke(texte);
+  if (!f.size) return f;
+  return freigegebeneAbziehen(f, freigegebeneTexte(r));
 }
 const NULL = /^0+$/;
 function dateienFuer(modus, stdin) {
@@ -132,13 +201,13 @@ function dateienFuer(modus, stdin) {
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const modus = process.argv[2];
   const stdin = modus === "push" ? readFileSync(0, "utf8") : "";
-  const muster = geschuetzteMuster(readFileSync(path.join(WURZEL, ".gitignore"), "utf8"));
+  const regeln = regelnAusRepo();
   const erlaubt = JSON.parse(readFileSync(path.join(WURZEL, ERLAUBT_DATEI), "utf8")).erlaubt;
-  const fehler = pruefe(dateienFuer(modus, stdin), muster, lokalerKlartext(muster), erlaubt);
+  const fehler = pruefe(dateienFuer(modus, stdin), regeln, lokalerKlartext(regeln), erlaubt);
   if (fehler.length) {
     console.error(`Klartext-Wache: abgebrochen, ${fehler.length} Fund${fehler.length > 1 ? "e" : ""}. Das Repo ist öffentlich.`);
     for (const f of fehler) console.error("  " + f);
-    console.error("Interne Inhalte nur verschlüsselt einchecken (docs/INTERN.md).");
+    console.error("Unveröffentlichtes nur verschlüsselt einchecken (docs/INTERN.md, „Regel fürs öffentliche Repo“).");
     process.exit(1);
   }
   console.log(`Klartext-Wache: sauber (${modus}).`);

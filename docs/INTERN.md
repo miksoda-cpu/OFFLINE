@@ -1,6 +1,6 @@
 # Interner Kanal
 
-Stand: 06.10.2026 · Auftrag 2026-10-05-08, Weg A, mit Bills Ergänzungen 1–7 · Nachtrag 2026-10-06: Klartext-Wache, Schlüsselwechsel
+Stand: 06.10.2026 · Auftrag 2026-10-05-08, Weg A, mit Bills Ergänzungen 1–7 · Nachtrag 2026-10-06: Klartext-Wache, Schlüsselwechsel · Auftrag 2026-10-06-13: Regel fürs öffentliche Repo, Freigeben
 
 Pakete, die nur auf freigeschalteten Geräten erscheinen, etwa die Naturheilkunde vor der fachlichen Prüfung. Für alle anderen gibt es sie nicht: kein Menüpunkt, keine leere Seite, keine Zeile in „Updates & Abo“.
 
@@ -33,21 +33,53 @@ Eine neue Datei kommt einmal mit `verschluesseln <ordner> <ziel>` hinein, danach
 
 Bilder und Berichte mit Inhalten gehen nicht nach `bill/`, sondern lokal an Bill (Ordner „OFFLINE - Home“).
 
+## Regel fürs öffentliche Repo
+Stand 06.10.2026 · Auftrag 2026-10-06-13 · Entscheidung Mik: Das Repo bleibt öffentlich, verschlüsselt wird so viel wie nötig.
+
+1. **Der Code der App bleibt offen.** Die Sicherheit hängt an den Schlüsseln, nicht an verstecktem Code. Private Schlüssel kommen nie ins Repo.
+2. **Was nicht freigegeben ist, liegt nur verschlüsselt.** Freigegeben heißt: Es steht in einer veröffentlichten App-Version oder im öffentlichen Katalog. Das gilt für Inhalte, Entwürfe, Bilder und Berichte mit Inhaltsauszügen. Verschlüsselt wird mit dem Kanal-Schlüssel, wie bei der Naturheilkunde.
+3. **Was freigegeben ist, liegt offen.** Jeder Nutzer lädt es ohnehin herunter.
+4. **`bill/` zählt mit.** Aufträge und Rückmeldungen enthalten keine wörtlichen Auszüge aus Unveröffentlichtem. Der Auszug kommt in eine verschlüsselte Beilage unter `bill/beilagen/`, im Klartext steht nur der Verweis („Beilage A1“).
+5. **Die Geschichte bleibt.** Alte Commits werden nicht umgeschrieben; die Regel gilt ab dem 06.10.2026.
+
+**Wo was liegt:**
+- Verschlüsselt liegt jede Datei unter `<wurzel>/verschluesselt/<pfad>`, der Klartext daneben unter `<wurzel>/<pfad>`. Er ist nur lokal vorhanden und steht im Block „Klartext-Wache“ der `.gitignore`.
+- Die Wurzel ist das Paket (`pakete/<id>`), eine Lieferung im Eingang (`bill/eingang/<lieferung>`) oder `bill/beilagen`.
+- Ein Paket, das noch nicht freigegeben ist, trägt in `paket.quelle.json` die Kennzeichnung `"freigegeben": false`. Interne Pakete (`"kanal": "intern"`) gelten ebenso.
+  - Unter `"offen"` stehen die Dateien, die trotzdem offen liegen dürfen, etwa `LIESMICH.md` ohne Inhaltsauszug.
+  - `inhalte.yml` baut ein solches Paket nie in den öffentlichen Katalog.
+- Die CI (`tests.yml`) entschlüsselt alles Verschlüsselte mit dem Kanal-Schlüssel. Nur so prüfen die Inhaltstests auch das Unveröffentlichte. Ohne den Schlüssel, etwa bei einem Pull-Request von außen, werden diese Tests übersprungen.
+
+**Unveröffentlichtes ablegen** (ein neues Paket, eine Beilage, Material von Bill):
+
+    OFFLINE_INTERN_SCHLUESSEL=$(cat ~/.offline/schluessel/offline-intern-kanal.key) node werkzeug/intern.mjs einlagern <wurzel> <pfad…>
+    git rm -r --cached <pfad…>          # falls schon im Index
+
+Danach die Pfade in den Block der `.gitignore` schreiben. Bei einem Paket kommt `"freigegeben": false` in die `paket.quelle.json`.
+
+Ändert sich der Inhalt, verschlüsselt `auffrischen <wurzel>` neu.
+
 ## Klartext-Wache
 Seit dem Nachtrag vom 06.10.2026, Anlass war der Klartext-Commit `2725532` vom 05.10.2026. Vor jedem Commit und jedem Push prüft `werkzeug/klartext-wache.mjs` und bricht ab, wenn
-- eine Datei aus dem Block „Klartext-Wache“ der `.gitignore` vorgemerkt ist, auch mit `git add -f`, oder ein Schlüssel (`*.key`),
+- eine geschützte Datei vorgemerkt ist, auch mit `git add -f`. Geschützt sind:
+  - der Block „Klartext-Wache“ der `.gitignore` und jeder Schlüssel (`*.key`),
+  - der Klartext zu jeder Datei, die verschlüsselt im Repo liegt,
+  - jedes Paket mit `"freigegeben": false` oder `"kanal": "intern"`, außer `paket.quelle.json`, Code und den Dateien unter `"offen"`. Ein neues Paket ist damit geschützt, bevor jemand an die `.gitignore` denkt.
 - eine Datei in `verschluesselt/` nicht nach Chiffrat aussieht,
-- eine Datei Text aus den lokalen Quellen enthält. Geprüft wird jedes Stück ab 40 Zeichen aus den Ordnern `quelle/` im Block. Das geht nur auf einem Rechner, auf dem die Quellen liegen.
+- eine Datei Text aus unveröffentlichten Quellen enthält.
+  - Die Quellen sind die Ordner `quelle/`, alles Verschlüsselte unter `bill/` und die `.md` im Inhalt geschützter Pakete.
+  - Geprüft wird jedes Stück ab 40 Zeichen. Was schon in der letzten veröffentlichten App-Version steht (Tag `v…`), zählt nicht.
+  - Die Fundstelle wird mit Zeilennummer gemeldet.
 
 Einschalten, einmal je Klon:
 
     git config core.hooksPath .githooks
 
-In der CI prüft der Test `werkzeug/klartext-wache.test.mjs` bei jedem Push das ganze Repo: die Pfade und den Inhalt von `verschluesselt/`. Ohne Quellen gibt es dort keine Fingerabdrücke.
+In der CI prüft der Test `werkzeug/klartext-wache.test.mjs` bei jedem Push das ganze Repo. Dort ist der Klartext entschlüsselt, also prüft er auch die Fingerabdrücke.
 
 Kurze Wendungen, die bewusst öffentlich sind, stehen mit Grund in `werkzeug/klartext-wache-erlaubt.json`, etwa ein Testfall oder ein zitierter Redaktionssatz. Inhalt kommt dort nie hinein.
 
-Ein neuer interner Ordner gehört in den Block der `.gitignore`, seine Quellen in einen Ordner `quelle/`.
+Ein neuer Ordner mit Unveröffentlichtem gehört in den Block der `.gitignore`, seine Quellen in einen Ordner `quelle/`.
 
 ## Schlüssel wechseln
 Wann:
@@ -78,11 +110,11 @@ Ohne den alten Schlüssel lässt sich der Inhalt im Repo nicht mehr öffnen. Dan
 
 4. **Inhalt im Repo umschlüsseln.** Je Paket alles oder nichts: Passt der alte Schlüssel bei einer Datei nicht, bleibt das Paket unverändert.
 
-       for v in pakete/*/verschluesselt; do OFFLINE_INTERN_SCHLUESSEL_ALT=$(cat ~/.offline/schluessel/offline-intern-kanal.key) OFFLINE_INTERN_SCHLUESSEL=$(cat ~/.offline/schluessel/offline-intern-kanal.neu.key) node werkzeug/intern.mjs umschluesseln "$v"; done
+       for v in $(git ls-files "*/verschluesselt/*" | sed "s#/verschluesselt/.*#/verschluesselt#" | sort -u); do OFFLINE_INTERN_SCHLUESSEL_ALT=$(cat ~/.offline/schluessel/offline-intern-kanal.key) OFFLINE_INTERN_SCHLUESSEL=$(cat ~/.offline/schluessel/offline-intern-kanal.neu.key) node werkzeug/intern.mjs umschluesseln "$v"; done
 
 5. **Prüfen.** Zuerst muss sich alles mit dem neuen Schlüssel öffnen lassen:
 
-       for v in pakete/*/verschluesselt; do OFFLINE_INTERN_SCHLUESSEL=$(cat ~/.offline/schluessel/offline-intern-kanal.neu.key) node werkzeug/intern.mjs entschluesseln "$v" "$(mktemp -d)" > /dev/null && echo "ok $v"; done
+       for v in $(git ls-files "*/verschluesselt/*" | sed "s#/verschluesselt/.*#/verschluesselt#" | sort -u); do OFFLINE_INTERN_SCHLUESSEL=$(cat ~/.offline/schluessel/offline-intern-kanal.neu.key) node werkzeug/intern.mjs entschluesseln "$v" "$(mktemp -d)" > /dev/null && echo "ok $v"; done
 
    Danach die Wache und die Tests:
 
@@ -117,8 +149,31 @@ Ohne den alten Schlüssel lässt sich der Inhalt im Repo nicht mehr öffnen. Dan
     - den Wechsel in `bill/STATUS.md` vermerken, nur mit Datum und neuer Kennung, nie mit dem Schlüssel.
 
 ## Freigeben
-Wenn Mik ein internes Paket freigibt:
-1. In `paket.quelle.json` die Zeile `"kanal": "intern"` löschen.
-2. `inhalte.yml` mit `nur=<id>` laufen lassen, danach `web.yml`.
+Erst wenn Mik das Wort gibt. Dann wechselt der Inhalt vom verschlüsselten in den offenen Teil, im selben Zug wie die Veröffentlichung:
 
-Mehr ist nicht nötig. Der Test `web/intern.test.mjs` prüft, dass die Naturheilkunde bis dahin weder im öffentlichen Katalog noch in `web/pakete/` liegt.
+1. **Klartext holen:** Liegt er nicht lokal, aus dem Repo entschlüsseln:
+
+       OFFLINE_INTERN_SCHLUESSEL=$(cat ~/.offline/schluessel/offline-intern-kanal.key) node werkzeug/intern.mjs entschluesseln <wurzel>/verschluesselt <wurzel>
+
+2. **Kennzeichnung löschen:** In `paket.quelle.json` die Zeilen `"freigegeben": false` und `"offen"` löschen. Bei einem internen Paket auch `"kanal": "intern"`.
+3. **`.gitignore`:** Die Zeilen des Pakets aus dem Block „Klartext-Wache“ löschen.
+4. **Verschlüsselte Fassung entfernen und Klartext aufnehmen:**
+
+       git rm -r <wurzel>/verschluesselt/<pfad…>
+       git add <wurzel>/<pfad…>
+
+   Nur das, was freigegeben wird. Eine Quelle, die mehr enthält als das Paket, bleibt verschlüsselt. Ein Beispiel ist das Lumisch-Wörterbuch mit Grammatik und Philosophen-Sätzen.
+5. **Prüfen:**
+
+       node werkzeug/klartext-wache.mjs vorgemerkt
+       node --test werkzeug/klartext-wache.test.mjs
+
+   Der Test „Die Regeln im Repo“ zählt die gekennzeichneten Pakete und muss angepasst werden.
+6. **Veröffentlichen:**
+   - Textpakete: `inhalte.yml` mit `nur=<id>`, danach `web.yml`.
+   - Module und Skins: über die Redaktionsablage (`redaktion/README.md`).
+
+   Erst danach gilt der Inhalt als freigegeben.
+7. **Auszüge in `bill/beilagen/`,** die jetzt freigegeben sind, dürfen wieder in den Klartext. Die Beilage kann bleiben.
+
+Der Test `web/intern.test.mjs` prüft, dass die Naturheilkunde bis dahin weder im öffentlichen Katalog noch in `web/pakete/` liegt.

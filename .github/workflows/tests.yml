@@ -1,4 +1,6 @@
-# Tests bei jedem Push: Paketwerkzeug und Paket-Kit (Node), Kern (Rust), App-Berechtigungen auf drei Systemen. Keine Secrets, baut und veröffentlicht nichts.
+# Tests bei jedem Push: Paketwerkzeug und Paket-Kit (Node), Kern (Rust), App-Berechtigungen auf drei Systemen. Baut und veröffentlicht nichts.
+# Einziges Secret: der Kanal-Schlüssel, damit die Inhaltstests auch Unveröffentlichtes prüfen (liegt im Repo nur verschlüsselt,
+# Auftrag 2026-10-06-13). Der Klartext bleibt im Runner und kommt in kein Log. Ohne Secret (Pull-Request von außen) werden sie übersprungen.
 name: Tests
 
 on:
@@ -14,6 +16,13 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with: { node-version: 22 }
+      - name: Unveröffentlichtes entschlüsseln (nur für die Tests)
+        env:
+          OFFLINE_INTERN_SCHLUESSEL: ${{ secrets.OFFLINE_INTERN_SCHLUESSEL }}
+        run: |
+          set -euo pipefail
+          [ -n "$OFFLINE_INTERN_SCHLUESSEL" ] || { echo "Kein Kanal-Schlüssel: Inhaltstests werden übersprungen"; exit 0; }
+          find . -type d -name verschluesselt -not -path "./node_modules/*" | while read -r v; do node werkzeug/intern.mjs entschluesseln "$v" "$(dirname "$v")" > /dev/null; done
       - run: node --test werkzeug/test.mjs werkzeug/klartext-wache.test.mjs
       - run: node --test web/bereit.test.mjs web/wesen.test.mjs web/tag.test.mjs web/neues.test.mjs web/pause.test.mjs web/stil.test.mjs web/buch.test.mjs web/neuigkeiten.test.mjs web/meintag.test.mjs web/intern.test.mjs web/naturheilkunde.test.mjs web/naturbilder.test.mjs
       - name: Paket-Kit gegen Beispiel und Vorlage

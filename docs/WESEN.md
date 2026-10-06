@@ -208,8 +208,8 @@
 
 | Sorte | Was | Beispiel |
 |---|---|---|
-| **App** | sich in OFFLINE zurechtfinden | „Der Tresor ist hinter dem kleinen Schloss oben rechts. Nur du kennst das Passwort. Ich auch nicht." |
-| **Alltag** | was den Score hebt, was man heute tun könnte | „Ein Probeabend ohne Strom bringt zehn Punkte. Und du weißt danach, was fehlt. Meistens die Taschenlampe." |
+| **App** | sich in OFFLINE zurechtfinden | „Die Notfallmappe im Tresor hat zehn Felder. Du musst nicht alle füllen. Fang mit den Nummern an." |
+| **Alltag** | was den Score hebt, was man heute tun könnte | „Ein Probeabend ohne Strom hebt deine Bereit-Zahl. Und du weißt danach, was fehlt. Meistens die Taschenlampe." |
 | **Wissen** | Fakten, die man im Ernstfall braucht, aus den Paketen | „Gefrorenes hält vierundzwanzig Stunden, wenn du die Tür zulässt. Auch wenn du nachschauen willst. Gerade dann." |
 | **Weisheit** | von unten, aus einer Welt ohne Gefahr | „Vorbereitet sein heißt nicht, Angst haben. Es heißt, keine haben zu müssen." |
 | **Laune** | launisch, nie verletzend | „Heute nicht. Frag mich morgen." |
