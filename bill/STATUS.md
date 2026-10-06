@@ -30,7 +30,7 @@ Alles andere im Repo ist veröffentlicht: Tagesseite mit Roman der Woche und Vor
 - Sandbox-Probe in der App: Windows grün (Windows-Probe, 48 von 48 Angriffen blockiert); Linux in der App noch offen (Berechtigungstest läuft auf Linux).
 
 ## Offen bei Mik
-Sieben Konzeptfragen (Gesamtkonzept Kap. 10), Priorität für den nächsten Auftrag.
+Gesamtkonzept: alle Fragen entschieden (Fassung 9, 05.10.). Neue Fragen stehen im Lagebild.
 
 ## Extern wartend
 Anwalt (35 Fragen), Lizenzanfragen an Institutionen, ärztliche Prüfung der Guides.
