@@ -63,7 +63,10 @@ Das geschieht erst auf Miks Wort, im selben Zug wie die Veröffentlichung.
 - Web: 140 von 140.
 - **Frischer Klon ohne Schlüssel:** 162 bestanden, 20 übersprungen, 0 Fehler.
 - **Frischer Klon mit Schlüssel, wie die CI:** 179 bestanden, 3 übersprungen, 0 Fehler. Die 3 brauchen die Bilder von Commons.
-- CI und Windows-Probe: CI_ERGEBNIS
+- CI und Windows-Probe: grün.
+  - Der erste Lauf war rot: Die CI holte keine Tags, also fehlte der Wache der Stand von v0.6.1, und sie meldete auch Veröffentlichtes. Jetzt holt der Checkout die Tags, und ohne Tag gibt die Wache einen deutlichen Hinweis.
+  - Im zweiten Lauf (`37448204839`) hat die CI entschlüsselt: Werkzeug 42 von 42, Web 137 bestanden, 3 übersprungen (die Bilder).
+  - Windows-Probe: grün, auf dem ersten und dem letzten Stand (`37446666030`, `37448495044`).
 
 ## Hinweis
 Die Regel gilt ab jetzt. Was vor dem 06.10. offen im Repo lag, steht weiter in der Geschichte, etwa Flechte, das Wörterbuch und deine Konzepte; so wolltest du es (Regel 5).
