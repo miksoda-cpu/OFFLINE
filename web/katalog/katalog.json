@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-10-05T21:27:30Z",
-  "gueltig_bis": "2027-01-03T21:27:30Z",
+  "erstellt": "2026-10-06T12:06:34Z",
+  "gueltig_bis": "2027-01-04T12:06:34Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -111,6 +111,97 @@
       "aenderungen": "Lumi-Buch: drei Absätze in Kapitel 9 und 11 überarbeitet.",
       "pfad": "lumi-buch-2026.10.05.2/",
       "sha256_manifest": "29a03363c8cbc2175b689ca8ab429d77369e321c36980df8512648c32c75195c",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "lumi-philosophie",
+      "version": "2026.10.06",
+      "titel": "Was die Lumis denken",
+      "beschreibung": "Fünfzehn Gedanken, für Erwachsene.",
+      "art": "inhalt",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "kategorie": "miteinander",
+      "alter_ab": 18,
+      "hinweis": "Die Lumis sind erfunden, die Philosophen nicht.",
+      "vorschau": {
+        "folien": [
+          {
+            "nr": 1,
+            "rolle": "wofuer",
+            "bild": "1.svg",
+            "titel": "Fünfzehn Gedanken",
+            "text": "Zwölf Philosophen der Menschen und drei Gedanken der Lumis, je mit Aquarell, Satz auf Lumisch und einem kurzen Text. Für Erwachsene.",
+            "alt": "Titel „Fünfzehn Gedanken“ mit drei Zeilen Erklärung"
+          },
+          {
+            "nr": 2,
+            "rolle": "aussehen",
+            "bild": "2.jpg",
+            "titel": "Eine Seite je Gedanke",
+            "text": "Bild, Name, Titel, der Satz auf Lumisch groß mit Lautsprecher, Wort für Wort, Deutsch, dann der Text.",
+            "alt": "Bildschirm der Web-Version bei 360 Pixel Breite: Gedanke 1, Sokrates, mit Aquarell, Titel „Was wir nicht wissen“ und dem Satz „nu sap nesap.“ mit Lautsprecher"
+          },
+          {
+            "nr": 3,
+            "rolle": "inhalt",
+            "bild": "3.svg",
+            "titel": "Was drin ist",
+            "text": "Sokrates, Heraklit, Platon, Aristoteles, Epikur und die Stoa, Descartes, Kant, Kierkegaard, Schopenhauer, Camus, Wittgenstein, Buber und drei Lumis",
+            "alt": "Liste der zwölf Philosophen und der drei Gedanken der Lumis"
+          },
+          {
+            "nr": 4,
+            "rolle": "platz",
+            "bild": "4.svg",
+            "titel": "Klein und ohne Netz",
+            "text": "Rund 1,8 MB mit allen fünfzehn Bildern. Alles liegt auf dem Gerät. Vorlesen und Anhören mit der Stimme des Geräts.",
+            "alt": "Angaben zu Größe, Netz und Stimme"
+          },
+          {
+            "nr": 5,
+            "rolle": "herkunft",
+            "bild": "5.svg",
+            "titel": "Von The Digioneer",
+            "text": "Die Lumis sind erfunden, die Philosophen nicht. Gratis, ab 18 Jahren.",
+            "alt": "Angaben zu Herausgeber, Preis und Alter"
+          }
+        ],
+        "dateien": [
+          {
+            "pfad": "inhalt/vorschau/1.svg",
+            "groesse": 1183,
+            "sha256": "1e4862d608f6014c2d75903019e794a098763d8f9ef9dfde26eee68c0d8f0274"
+          },
+          {
+            "pfad": "inhalt/vorschau/2.jpg",
+            "groesse": 53044,
+            "sha256": "77d64f44b133df1b85d5d017208a1bb39f2631f8352f5d11db2bdd1361593e3f"
+          },
+          {
+            "pfad": "inhalt/vorschau/3.svg",
+            "groesse": 1190,
+            "sha256": "9852a8661c4bb63457c110b27e963c980afcafac876f96d23b465338e6cdae48"
+          },
+          {
+            "pfad": "inhalt/vorschau/4.svg",
+            "groesse": 1034,
+            "sha256": "47d628f388e9dc59c9d009a0e2d1ff2eecce424b1e6779517cb7e4ecb1fd3cda"
+          },
+          {
+            "pfad": "inhalt/vorschau/5.svg",
+            "groesse": 849,
+            "sha256": "c095f7376cb03ccd15916f297a5a140b96ab6b1e4a50b5e1611747343257cbba"
+          }
+        ]
+      },
+      "groesse": 1986608,
+      "app_min": "0.6.2",
+      "erstellt": "2026-10-06T12:05:10Z",
+      "aenderungen": "Neu: fünfzehn Gedanken, zwölf von Philosophen der Menschen und drei von den Lumis, mit Aquarell, Lumisch-Satz zum Anhören und Text.",
+      "pfad": "lumi-philosophie-2026.10.06/",
+      "sha256_manifest": "4790971e39dac63148e530ccef6fb541b98d6fa97f9b2bcf9dc1bd45656775ab",
       "status": "verfuegbar"
     },
     {

@@ -1,0 +1,141 @@
+{
+  "format": 1,
+  "id": "lumi-philosophie",
+  "version": "2026.10.06",
+  "titel": "Was die Lumis denken",
+  "beschreibung": "Fünfzehn Gedanken, für Erwachsene.",
+  "art": "inhalt",
+  "sprache": "de-AT",
+  "lizenz": "CC BY-SA 4.0",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "kategorie": "miteinander",
+  "alter_ab": 18,
+  "hinweis": "Die Lumis sind erfunden, die Philosophen nicht.",
+  "abnahme": "Redaktion (Code), 06.10.2026: 15 Gedanken mit allen Feldern und Bild, Text wörtlich aus der Beilage, jedes Lumisch-Wort im Wörterbuch des Pakets pause (Eigennamen ausgenommen)",
+  "app_min": "0.6.2",
+  "erstellt": "2026-10-06T12:05:10Z",
+  "aenderungen": "Neu: fünfzehn Gedanken, zwölf von Philosophen der Menschen und drei von den Lumis, mit Aquarell, Lumisch-Satz zum Anhören und Text.",
+  "quellen": [
+    {
+      "id": "redaktion",
+      "name": "Was die Lumis denken (Session „die lumis“, Texte von Bill geprüft, Fassung mit „Sisyphos kik.“, 06.10.2026)",
+      "url": ""
+    }
+  ],
+  "dateien": [
+    {
+      "pfad": "inhalt/bilder/01.webp",
+      "sha256": "f32c9c0f6bf94cf96bbb1e54a591d140373f6abf4e6201f6aa0bc8684511b0bf",
+      "groesse": 145390
+    },
+    {
+      "pfad": "inhalt/bilder/02.webp",
+      "sha256": "3355238f0bb48d563651d18e338c3c044bb403c46ffcae43e3c9d3d33cdd473b",
+      "groesse": 102472
+    },
+    {
+      "pfad": "inhalt/bilder/03.webp",
+      "sha256": "5ca20a1d6a7d174e9c79ea562824de2da37d7ace7d78f4d344672fbae545563d",
+      "groesse": 127624
+    },
+    {
+      "pfad": "inhalt/bilder/04.webp",
+      "sha256": "63d7d594eadf4d2d4ba02e6578d68eba00dcb077d3e69329cb48490ad08a29ae",
+      "groesse": 125386
+    },
+    {
+      "pfad": "inhalt/bilder/05.webp",
+      "sha256": "df7009c265aa6333478a3cd02830ec0f7fa820bea00f5278aa7f42a15cae8369",
+      "groesse": 115556
+    },
+    {
+      "pfad": "inhalt/bilder/06.webp",
+      "sha256": "a24c13f4b3d331c2a945b53000f6e96ad0c38de50d35ac4e747fab73e3a1d3ac",
+      "groesse": 106914
+    },
+    {
+      "pfad": "inhalt/bilder/07.webp",
+      "sha256": "09aee1005263c90666ec331f908ac5c687988b37e4eb3a346732fd82ec516a8a",
+      "groesse": 137294
+    },
+    {
+      "pfad": "inhalt/bilder/08.webp",
+      "sha256": "46e88cb18d5aeaebab28025466b04194422ff84cad4dd22eadeb45c8682ae6dd",
+      "groesse": 111496
+    },
+    {
+      "pfad": "inhalt/bilder/09.webp",
+      "sha256": "c22279cfc4618793fa6899268c7a990886d534f9d3feb080195f7491b99e4e5a",
+      "groesse": 123362
+    },
+    {
+      "pfad": "inhalt/bilder/10.webp",
+      "sha256": "e6d0b0f543a8eb8c65a11672fccedb09c35148d51f13aae1132bc3c0bb3c13e4",
+      "groesse": 107348
+    },
+    {
+      "pfad": "inhalt/bilder/11.webp",
+      "sha256": "7a8897f89f5a47a91425c7226560404d7897177b6dc9169462cf7577a6d25989",
+      "groesse": 138968
+    },
+    {
+      "pfad": "inhalt/bilder/12.webp",
+      "sha256": "e57f859729ae2479821aa6adf331607b56ad4f5cf722f81555a98be92955c504",
+      "groesse": 126636
+    },
+    {
+      "pfad": "inhalt/bilder/13.webp",
+      "sha256": "01ad08fcbf206e589d360be492a01cd1db61aaba80062db3bd5fcc45a4408a55",
+      "groesse": 160268
+    },
+    {
+      "pfad": "inhalt/bilder/14.webp",
+      "sha256": "5cadd3cd5a0394018d87ab1a44587b9df2548d4f6dcaa10ad46d33366d55c16a",
+      "groesse": 154864
+    },
+    {
+      "pfad": "inhalt/bilder/15.webp",
+      "sha256": "c7ce05ed225e8a41e778ad7ad5a747a03bb720f5351d1ef6013f9e01036f67b9",
+      "groesse": 131930
+    },
+    {
+      "pfad": "inhalt/gedanken.json",
+      "sha256": "30ffe13ce427e1c14c289a05cb396023b24658e4a4feab22ca0e038f4f28051e",
+      "groesse": 12228
+    },
+    {
+      "pfad": "inhalt/vorschau/1.svg",
+      "sha256": "1e4862d608f6014c2d75903019e794a098763d8f9ef9dfde26eee68c0d8f0274",
+      "groesse": 1183
+    },
+    {
+      "pfad": "inhalt/vorschau/2.jpg",
+      "sha256": "77d64f44b133df1b85d5d017208a1bb39f2631f8352f5d11db2bdd1361593e3f",
+      "groesse": 53044
+    },
+    {
+      "pfad": "inhalt/vorschau/3.svg",
+      "sha256": "9852a8661c4bb63457c110b27e963c980afcafac876f96d23b465338e6cdae48",
+      "groesse": 1190
+    },
+    {
+      "pfad": "inhalt/vorschau/4.svg",
+      "sha256": "47d628f388e9dc59c9d009a0e2d1ff2eecce424b1e6779517cb7e4ecb1fd3cda",
+      "groesse": 1034
+    },
+    {
+      "pfad": "inhalt/vorschau/5.svg",
+      "sha256": "c095f7376cb03ccd15916f297a5a140b96ab6b1e4a50b5e1611747343257cbba",
+      "groesse": 849
+    },
+    {
+      "pfad": "inhalt/vorschau/folien.json",
+      "sha256": "54b26a65287c358a5bcb997134fc5af155ef41fcba6150af91d6c41ab8833074",
+      "groesse": 1572
+    }
+  ],
+  "groesse": 1986608
+}

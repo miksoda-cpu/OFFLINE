@@ -1,0 +1,44 @@
+{
+ "folien": [
+  {
+   "nr": 1,
+   "rolle": "wofuer",
+   "bild": "1.svg",
+   "titel": "Fünfzehn Gedanken",
+   "text": "Zwölf Philosophen der Menschen und drei Gedanken der Lumis, je mit Aquarell, Satz auf Lumisch und einem kurzen Text. Für Erwachsene.",
+   "alt": "Titel „Fünfzehn Gedanken“ mit drei Zeilen Erklärung"
+  },
+  {
+   "nr": 2,
+   "rolle": "aussehen",
+   "bild": "2.jpg",
+   "titel": "Eine Seite je Gedanke",
+   "text": "Bild, Name, Titel, der Satz auf Lumisch groß mit Lautsprecher, Wort für Wort, Deutsch, dann der Text.",
+   "alt": "Bildschirm der Web-Version bei 360 Pixel Breite: Gedanke 1, Sokrates, mit Aquarell, Titel „Was wir nicht wissen“ und dem Satz „nu sap nesap.“ mit Lautsprecher"
+  },
+  {
+   "nr": 3,
+   "rolle": "inhalt",
+   "bild": "3.svg",
+   "titel": "Was drin ist",
+   "text": "Sokrates, Heraklit, Platon, Aristoteles, Epikur und die Stoa, Descartes, Kant, Kierkegaard, Schopenhauer, Camus, Wittgenstein, Buber und drei Lumis",
+   "alt": "Liste der zwölf Philosophen und der drei Gedanken der Lumis"
+  },
+  {
+   "nr": 4,
+   "rolle": "platz",
+   "bild": "4.svg",
+   "titel": "Klein und ohne Netz",
+   "text": "Rund 1,8 MB mit allen fünfzehn Bildern. Alles liegt auf dem Gerät. Vorlesen und Anhören mit der Stimme des Geräts.",
+   "alt": "Angaben zu Größe, Netz und Stimme"
+  },
+  {
+   "nr": 5,
+   "rolle": "herkunft",
+   "bild": "5.svg",
+   "titel": "Von The Digioneer",
+   "text": "Die Lumis sind erfunden, die Philosophen nicht. Gratis, ab 18 Jahren.",
+   "alt": "Angaben zu Herausgeber, Preis und Alter"
+  }
+ ]
+}
