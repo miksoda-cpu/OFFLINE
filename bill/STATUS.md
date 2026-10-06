@@ -31,7 +31,7 @@ Alles andere im Repo ist veröffentlicht: Tagesseite mit Roman der Woche und Vor
 - Sandbox-Probe in der App: Windows grün (Windows-Probe, 48 von 48 Angriffen blockiert); Linux in der App noch offen (Berechtigungstest läuft auf Linux).
 
 ## Offen bei Mik
-Sieben Konzeptfragen (Gesamtkonzept Kap. 10), Priorität für den nächsten Auftrag. Kanal-Schlüssel als Datei `~/.offline/schluessel/offline-intern-kanal.key` ablegen (sonst kein Umschlüsseln nach Sitzungsende). Entscheidung GitHub-Support zu Commit `2725532`.
+Sieben Konzeptfragen (Gesamtkonzept Kap. 10), Priorität für den nächsten Auftrag. Entscheidung GitHub-Support zu Commit `2725532`.
 
 ## Extern wartend
 Anwalt (35 Fragen), Lizenzanfragen an Institutionen, ärztliche Prüfung der Guides.
