@@ -211,7 +211,8 @@ test("0.6.3: installiereAusDateien der Mac-App prüft die Manifest-Prüfsumme un
 
 test("0.6.3: Die Lumi schweigt auf den Leseseiten (Lumi-Buch, Was die Lumis denken), auch ein offener Satz geht", async () => {
   const { STILL } = await import("./wesen.js");
-  for (const s of ["notfall", "natur", "buch", "absatz", "gedanken", "gedanke"]) assert.ok(STILL.includes(s), s);
+  for (const s of ["notfall", "natur", "buch", "absatz", "gedanken", "gedanke", "happen"]) assert.ok(STILL.includes(s), s);
+  assert.ok((await lies("./app.js")).includes('wesen.ansicht("happen");'), "der Happen meldet sich bei der Lumi als eigene Seite");
   const w = await lies("./wesen.js");
   assert.ok(w.includes('if (STILL.includes(name)) { const toast = document.getElementById("wesen-toast"); if (toast) { toast.remove();'));
   assert.match(await lies("./styles.css"), /\.upd-version \{[^}]*touch-action: manipulation/, "siebenmal Tippen ohne Doppeltipp-Zoom");

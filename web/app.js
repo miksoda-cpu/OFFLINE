@@ -2081,6 +2081,7 @@ function render() {
   if (route === "happen") {
     if (!pauseFokus?.ctrl) { window.scrollTo(0, 0); main.scrollTop = 0; }
     pauseFokusEinbauen();
+    wesen.ansicht("happen"); // still wie beim Lesen: kein Tipp über einem laufenden Happen, ein offener Satz geht
     state.tag.seiteVorher = "happen";
     document.title = "OFFLINE – Pause";
     sidebar.classList.remove("open"); menu.setAttribute("aria-expanded", "false"); document.getElementById("sheet-hinter").hidden = true;

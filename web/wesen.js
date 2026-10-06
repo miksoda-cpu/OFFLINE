@@ -222,8 +222,8 @@ export function abendMerken(gelernt, jetzt) {
   for (const alt of Object.keys(a).sort().slice(0, -14)) delete a[alt];
   return true;
 }
-/** Hier schweigt die Lumi: Notfall, (0.6.1) Naturheilkunde mit der Erste-Hilfe-Karte, (0.6.3) die Leseseiten des Lumi-Buchs und von „Was die Lumis denken“. */
-export const STILL = ["notfall", "natur", "buch", "absatz", "gedanken", "gedanke"];
+/** Hier schweigt die Lumi: Notfall, (0.6.1) Naturheilkunde mit der Erste-Hilfe-Karte, (0.6.3) die Leseseiten des Lumi-Buchs und von „Was die Lumis denken“, (nächste Version) ein laufender Pause-Happen. */
+export const STILL = ["notfall", "natur", "buch", "absatz", "gedanken", "gedanke", "happen"];
 const WACH_MS = 60000; // ein Stups weckt sie für eine Minute
 const TAKT = { normal: 90, seltener: 180, aus: 0 };
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
