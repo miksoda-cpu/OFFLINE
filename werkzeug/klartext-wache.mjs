@@ -134,7 +134,7 @@ export function pruefe(dateien, regeln, f = new Set(), erlaubt = {}) {
 }
 
 // ---------- Anbindung an git ----------
-const git = (...a) => execFileSync("git", a, { cwd: WURZEL, maxBuffer: 1 << 30 });
+const git = (...a) => execFileSync("git", a, { cwd: WURZEL, maxBuffer: 1 << 30, stdio: ["pipe", "pipe", "ignore"] });
 const zeilen = (b) => b.toString("utf8").split("\n").filter(Boolean);
 const TEXT = /\.(json|md|txt|csv|html?|py)$/i;
 function dateienUnter(rel) {
@@ -161,7 +161,8 @@ export function regelnAusRepo() {
  *  Geschütztes. Bewusst nicht der Arbeitsstand: Was jemand gerade hineinkopiert, darf sich nicht selbst freisprechen. */
 function freigegebeneTexte(r) {
   let tag;
-  try { tag = git("describe", "--tags", "--abbrev=0", "--match", "v*", "HEAD").toString().trim(); } catch { return []; }
+  try { tag = git("describe", "--tags", "--abbrev=0", "--match", "v*", "HEAD").toString().trim(); }
+  catch { console.error("Klartext-Wache: kein Release-Tag (vX.Y.Z) gefunden, auch Veröffentlichtes zählt als Fund. In der CI: checkout mit fetch-depth 0."); return []; }
   const pfade = zeilen(git("ls-tree", "-r", "--name-only", tag)).filter((p) => TEXT.test(p) || /\.(m?js|css|rs)$/.test(p));
   return pfade.filter((p) => (p.startsWith("web/") || p.startsWith("app/src") || /^pakete\/[^/]+\/inhalt\//.test(p)) && !p.startsWith("web/pakete/") && !schutzGrund(p, r))
     .map((p) => git("show", `${tag}:${p}`).toString("utf8"));
