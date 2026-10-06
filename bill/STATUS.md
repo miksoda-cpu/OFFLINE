@@ -26,12 +26,11 @@ Alles andere im Repo ist veröffentlicht: Tagesseite mit Roman der Woche und Vor
 - Gesamtkonzept: Projektdokument „OFFLINE-Gesamtkonzept“ (Fassung 6), noch nicht in `docs/`
 
 ## Offen bei Code (wartet)
-- **Öffentliches Repo:** Commit `2725532` (Naturheilkunde im Klartext, 2 Minuten gepusht) ist bei GitHub über die Kennung noch abrufbar; Entfernung nur über den GitHub-Support (Mik entscheidet).
 - CI `tests.yml` läuft seit 29.09. bei jedem Push (Werkzeug, Kit, Bereit, Lumi, Kern, Sandbox-Probe).
 - Sandbox-Probe in der App: Windows grün (Windows-Probe, 48 von 48 Angriffen blockiert); Linux in der App noch offen (Berechtigungstest läuft auf Linux).
 
 ## Offen bei Mik
-Sieben Konzeptfragen (Gesamtkonzept Kap. 10), Priorität für den nächsten Auftrag. Entscheidung GitHub-Support zu Commit `2725532`.
+Sieben Konzeptfragen (Gesamtkonzept Kap. 10), Priorität für den nächsten Auftrag.
 
 ## Extern wartend
 Anwalt (35 Fragen), Lizenzanfragen an Institutionen, ärztliche Prüfung der Guides.
