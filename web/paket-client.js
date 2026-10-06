@@ -137,19 +137,28 @@ export async function installiere(katalog, eintrag, fortschritt = () => {}) {
   const alt = installiertesPaket(eintrag.id);
   const { manifest, url, schluessel } = await ladeManifest(katalog, eintrag);
   const d = delta(alt?.manifest ?? null, manifest);
-  const inhalt = {};
+  const inhalt = {}, binaer = [], neueBilder = [];
   let geladen = 0;
   for (const datei of manifest.dateien) {
+    const bild = BINAER.test(datei.pfad);
+    if (bild) binaer.push(datei.pfad);
     const muss = d.laden.find((l) => l.pfad === datei.pfad);
-    if (!muss) { inhalt[datei.pfad] = alt.inhalt[datei.pfad]; continue; }
+    if (!muss && (bild || alt?.inhalt?.[datei.pfad] !== undefined)) { if (!bild) inhalt[datei.pfad] = alt.inhalt[datei.pfad]; continue; }
     const bytes = await holeBytes(url + datei.pfad);
     if (bytes.length !== datei.groesse) throw new Error(`Größe falsch: ${datei.pfad}`);
     if ((await sha256Hex(bytes)) !== datei.sha256) throw new Error(`Prüfsumme falsch: ${datei.pfad}`);
-    inhalt[datei.pfad] = new TextDecoder().decode(bytes);
+    if (bild) neueBilder.push([datei.pfad, bytes]); else inhalt[datei.pfad] = new TextDecoder().decode(bytes);
     geladen += bytes.length;
     fortschritt({ pfad: datei.pfad, geladen, gesamt: d.bytes });
   }
-  const paket = { manifest, inhalt, installiert: new Date().toISOString(), schluessel };
+  // Bilder (0.6.2, z. B. „Was die Lumis denken“): erst wenn alles geprüft ist, in den Cache-Speicher, nicht in localStorage
+  if (neueBilder.length || alt?.binaer?.length) {
+    const c = await caches.open(BILD_SPEICHER);
+    for (const [pfad, bytes] of neueBilder) await c.put(bildSchluessel(eintrag.id, pfad), new Response(bytes, { headers: { "Content-Type": MIME[pfad.split(".").pop().toLowerCase()] ?? "application/octet-stream" } }));
+    for (const a of alt?.binaer ?? []) if (!binaer.includes(a)) await c.delete(bildSchluessel(eintrag.id, a));
+    for (const [pfad] of neueBilder) bildUrls.delete(bildSchluessel(eintrag.id, pfad));
+  }
+  const paket = { manifest, inhalt, ...(binaer.length ? { binaer } : {}), installiert: new Date().toISOString(), schluessel };
   speicher.set("paket:" + eintrag.id, paket); // atomar: ein Schreibvorgang ersetzt den alten Stand
   return { paket, delta: d, geladen };
 }

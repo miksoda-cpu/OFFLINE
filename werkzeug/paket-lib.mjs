@@ -203,7 +203,7 @@ export async function tageInhaltPruefen(ordner, m) {
 /** Angaben aus dem Paket-Kit, die ins Manifest wandern, soweit sie gesetzt sind (PAKETFORMAT.md 2.1). */
 function angaben(meta) {
   const a = {};
-  for (const k of ["preis", "pruefstatus", "kategorie", "alter_ab", "abnahme", "ki_generiert"]) if (meta[k] !== undefined) a[k] = meta[k];
+  for (const k of ["preis", "pruefstatus", "kategorie", "alter_ab", "hinweis", "abnahme", "ki_generiert"]) if (meta[k] !== undefined) a[k] = meta[k];
   if (meta.art === "tage" && meta.tage !== undefined) a.tage = meta.tage;
   if (meta.art === "modul" && meta.datenversion !== undefined) a.datenversion = meta.datenversion;
   return a;
@@ -282,7 +282,7 @@ export async function katalogBauen(paketOrdner, { basis, geplant = [], gueltigTa
     const vorschau = await vorschauFuerKatalog(ordner, m);
     pakete.push({
       id: m.id, version: m.version, titel: m.titel, beschreibung: m.beschreibung, art: m.art, pro: m.pro,
-      ...Object.fromEntries(["preis", "pruefstatus", "kategorie", "alter_ab", "ki_generiert", "tage"].filter((k) => m[k] !== undefined).map((k) => [k, m[k]])),
+      ...Object.fromEntries(["preis", "pruefstatus", "kategorie", "alter_ab", "hinweis", "ki_generiert", "tage"].filter((k) => m[k] !== undefined).map((k) => [k, m[k]])),
       ...(vorschau ? { vorschau } : {}),
       groesse: m.groesse, app_min: m.app_min, erstellt: m.erstellt, aenderungen: m.aenderungen,
       pfad: `${path.basename(ordner)}/`, sha256_manifest: sha256(bytes), status: "verfuegbar",

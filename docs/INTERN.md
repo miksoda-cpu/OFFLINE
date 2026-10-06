@@ -59,6 +59,10 @@ Danach die Pfade in den Block der `.gitignore` schreiben. Bei einem Paket kommt 
 
 Ändert sich der Inhalt, verschlüsselt `auffrischen <wurzel>` neu.
 
+**Falle:** Auf einem Zweig, auf dem die Datei noch eingecheckt war, liegt sie im Index. Wechselt man von dort auf einen Stand, auf dem sie nur noch verschlüsselt liegt (`checkout`, `merge --ff-only`), löscht git den lokalen Klartext. Verloren ist nichts. Man holt ihn zurück mit:
+
+    OFFLINE_INTERN_SCHLUESSEL=$(cat ~/.offline/schluessel/offline-intern-kanal.key) node werkzeug/intern.mjs entschluesseln <wurzel>/verschluesselt <wurzel>
+
 ## Klartext-Wache
 Seit dem Nachtrag vom 06.10.2026, Anlass war der Klartext-Commit `2725532` vom 05.10.2026. Vor jedem Commit und jedem Push prüft `werkzeug/klartext-wache.mjs` und bricht ab, wenn
 - eine geschützte Datei vorgemerkt ist, auch mit `git add -f`. Geschützt sind:

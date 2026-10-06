@@ -2,6 +2,15 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.6.2",
+      "datum": "2026-10-06",
+      "punkte": [
+        "Neu in der Bibliothek: Was die Lumis denken. Fünfzehn Gedanken für Erwachsene.",
+        "Jeder Gedanke hat eine eigene Seite mit einem Aquarell. Du blätterst vor und zurück oder springst über das Inhaltsverzeichnis.",
+        "Neben jedem Satz auf Lumisch steht ein Lautsprecher. Er spricht den Satz vor, den Text darunter liest dir die App vor."
+      ]
+    },
+    {
       "version": "0.6.1",
       "datum": "2026-10-05",
       "punkte": [

@@ -84,6 +84,9 @@ pub struct Manifest {
     pub kategorie: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub alter_ab: Option<u32>,
+    /// Kurzer Hinweis unter der Beschreibung (0.6.2), z. B. „Die Lumis sind erfunden, die Philosophen nicht.“
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hinweis: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub abnahme: Option<String>,
     /// Bilder oder andere Inhalte sind mit KI erzeugt (Anzeige auf der Katalogkarte).

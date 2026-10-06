@@ -35,6 +35,9 @@ pub struct KatalogEintrag {
     pub kategorie: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub alter_ab: Option<u32>,
+    /// Kurzer Hinweis unter der Beschreibung (0.6.2)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hinweis: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub ki_generiert: Option<bool>,
     /// Tagesinhalte: welche Tage das Paket abdeckt (die Vorratskammer lädt danach voraus)

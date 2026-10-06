@@ -1,0 +1,28 @@
+{
+  "id": "lumi-philosophie",
+  "freigegeben": false,
+  "offen": ["LIESMICH.md"],
+  "titel": "Was die Lumis denken",
+  "beschreibung": "Fünfzehn Gedanken, für Erwachsene.",
+  "hinweis": "Die Lumis sind erfunden, die Philosophen nicht.",
+  "art": "inhalt",
+  "sprache": "de-AT",
+  "lizenz": "CC BY-SA 4.0",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "kategorie": "miteinander",
+  "alter_ab": 18,
+  "app_min": "0.6.2",
+  "aenderungen": "Neu: fünfzehn Gedanken, zwölf von Philosophen der Menschen und drei von den Lumis, mit Aquarell, Lumisch-Satz zum Anhören und Text.",
+  "quellen": [
+    {
+      "id": "redaktion",
+      "name": "Was die Lumis denken (Session „die lumis“, Texte von Bill geprüft, Fassung mit „Sisyphos kik.“, 06.10.2026)",
+      "url": ""
+    }
+  ],
+  "abnahme": "Redaktion (Code), 06.10.2026: 15 Gedanken mit allen Feldern und Bild, Text wörtlich aus der Beilage, jedes Lumisch-Wort im Wörterbuch des Pakets pause (Eigennamen ausgenommen)",
+  "braucht_netz": false
+}

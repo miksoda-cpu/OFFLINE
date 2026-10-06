@@ -12,6 +12,7 @@ import { tageBereichFehler, tageInhaltFehler } from "./tage-format.mjs";
 import { tippsFehler } from "./tipps-format.mjs";
 import { pauseFehler } from "./pause-format.mjs";
 import { buchFehler, zuordnungFehler } from "./buch-format.mjs";
+import { gedankenFehler } from "./gedanken-format.mjs";
 
 const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul", "skin", "tage"];
 const PREISE = ["gratis", "pro", "kauf"];
@@ -257,6 +258,13 @@ async function pruefen(ordner) {
       if (t) for (const f of zuordnungFehler(b, t.tipps ?? []).filter((x) => /kein Tipp zeigt/.test(x))) F(`inhalt/buch.json: ${f}`);
     }
     R("Text gegen die freigegebene Vorlage gelesen; nur Tippfehler korrigiert und gemeldet.");
+  }
+
+  // --- Gedanken (inhalt/gedanken.json, Paket „lumi-philosophie“): je Gedanke alle Felder und ein Bild im Paket ---
+  if (liste.find((d) => d.rel === "gedanken.json")) {
+    let g = null;
+    try { g = JSON.parse(await readFile(path.join(inhalt, "gedanken.json"), "utf8")); } catch { F("inhalt/gedanken.json: kein gültiges JSON"); }
+    if (g) for (const f of gedankenFehler(g, liste.map((d) => d.rel))) F(`inhalt/gedanken.json: ${f}`);
   }
 
   // --- Pause (inhalt/pause.json, Paket „pause“): Formen mit Selbstbeschreibung, Geschichten, Lumisch ---

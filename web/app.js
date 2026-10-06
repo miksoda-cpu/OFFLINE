@@ -13,6 +13,8 @@ import { schluesselAusLink, internKatalog, internPaketDateien, KanalAbgelaufen, 
 import { naturHtml, naturKlick, vorleseTeile as naturVorleseTeile, bilderIndex as naturBilderIndexBauen, bildZeile as naturBildZeile } from "./natur.js";
 import { meinTag, schlussVorbei as meinTagSchlussVorbei, SCHLUSS_ZEITEN, AUFSTEHEN_ZEITEN, ARTEN as MEIN_TAG_ARTEN, zeitText, vorschlag as meinTagVorschlag, vorschlagText, vorschlagAntwort } from "./meintag.js";
 import { blattOeffnen, blattWeg } from "./blatt.js";
+import { PAKET as GEDANKEN_PAKET, inhaltHtml as gedankenInhaltHtml, seiteHtml as gedankeSeiteHtml, seitenListe as gedankenSeiten, vorleseTeile as gedankenVorleseTeile } from "./gedanken.js";
+import { hoerenZeigen, sprechen as lumischSprechen } from "./stimme.js";
 import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE, LUECKE_WARTET as BUCH_LUECKE_WARTET, wartendeAbsaetze as buchWartend, mitSchluss as buchMitSchluss } from "./buch.js";
 import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
@@ -37,7 +39,7 @@ async function internFreischalten(schluessel) {
   if (k) { history.replaceState(null, "", `${location.pathname}${location.search}#updates`); await internFreischalten(k); }
   else if (location.hash.startsWith("#kanal=")) history.replaceState(null, "", `${location.pathname}${location.search}#updates`);
 }
-const APP_VERSION = "0.6.1";
+const APP_VERSION = "0.6.2";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -107,6 +109,8 @@ const P = () => installiertesPaket(BASISPAKET);
 const PW = () => installiertesPaket("wir");
 const PB = () => installiertesPaket("lumi-buch"); // Das Lumi-Buch (0.5.0)
 const buchDaten = () => inhalt(PB(), "inhalt/buch.json");
+// „Was die Lumis denken“ (0.6.2): fünfzehn Gedanken für Erwachsene, Paket „lumi-philosophie“
+const gedankenDaten = () => inhalt(installiertesPaket(GEDANKEN_PAKET), "inhalt/gedanken.json");
 // Vorhaben: Sätze der Lumi, die man sich mit „Mach ich“ vorgenommen hat. Eine Erinnerung, keine Prüfung: zählen nicht zu Bereit.
 const vorhaben = () => speicher.get("vorhaben", []);
 const vorhabenSpeichern = (l) => speicher.set("vorhaben", l);
@@ -465,6 +469,9 @@ const seiten = {
   natur() { const d = naturDaten(); return d ? naturHtml(d, state.natur, naturBilder()) : seiten.start(); },
   /** Ein Absatz aus dem Lumi-Buch: ruhige Leseansicht, nur ✕ und „Zurück“. */
   absatz() { return absatzHtml(); },
+  /** „Was die Lumis denken“: Inhaltsverzeichnis und je Gedanke eine Seite (web/gedanken.js). */
+  gedanken() { const d = gedankenDaten(); return d ? gedankenInhaltHtml(d) : gedankenFehlt(); },
+  gedanke() { const d = gedankenDaten(); return d ? gedankeSeiteHtml(d, state.gedanke ?? 0, { liest: state.gedankenLiest }) : gedankenFehlt(); },
 
   /** Heft „Was Lumi gesagt hat“: gemerkte Sätze, ohne Netz durchsuchbar, einzeln löschbar. */
   heft() {
@@ -749,7 +756,7 @@ const seiten = {
         const inst = installiertesPaket(p.id);
         const update = inst && p.status === "verfuegbar" && versionVergleich(p.version, inst.manifest.version) > 0 && appPasst(p);
         let knopf;
-        if (inst) knopf = `${p.id === "lumi-buch" ? `<a class="btn btn-sm of-btn of-btn--klein" href="#buch">Lesen</a> ` : ""}${update ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${p.id}">Aktualisieren</button> ` : ""}${desktop && p.art === "zim" ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-oeffnen-zim="${p.id}">Öffnen</button> ` : ""}${desktop && p.art === "karte" ? `<a class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" href="#karte">Karte öffnen</a> ` : ""}<button class="btn btn-sm of-btn of-btn--klein" data-remove="${p.id}">Entfernen</button>`;
+        if (inst) knopf = `${p.id === "lumi-buch" ? `<a class="btn btn-sm of-btn of-btn--klein" href="#buch">Lesen</a> ` : p.id === GEDANKEN_PAKET ? `<a class="btn btn-sm of-btn of-btn--klein" href="#gedanken">Lesen</a> ` : ""}${update ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${p.id}">Aktualisieren</button> ` : ""}${desktop && p.art === "zim" ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-oeffnen-zim="${p.id}">Öffnen</button> ` : ""}${desktop && p.art === "karte" ? `<a class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" href="#karte">Karte öffnen</a> ` : ""}<button class="btn btn-sm of-btn of-btn--klein" data-remove="${p.id}">Entfernen</button>`;
         else if (p.status !== "verfuegbar") knopf = `<span class="tag tag-warn of-plakette of-plakette--warnung">Geplant</span>`;
         else if (p.pro) knopf = `<button class="btn btn-sm of-btn of-btn--klein" disabled title="Nur mit Pro">Nur mit Pro</button>`;
         else if (!desktop && p.art !== "inhalt" && p.art !== "tage") knopf = `<span class="tag of-plakette">Nur in der Desktop-App</span>`;
@@ -757,8 +764,8 @@ const seiten = {
         else knopf = `<button class="btn btn-sm of-btn of-btn--klein" data-install="${p.id}">Installieren</button>`;
         return `<div class="card pkg of-karte of-paket">
           <div class="pkg-head"><h3 style="margin:0">${esc(p.titel)}</h3><span>${p.pro ? '<span class="tag tag-pro of-plakette of-plakette--pro">Pro</span> ' : ""}${inst ? `<span class="tag tag-ok of-plakette of-plakette--offline">${update ? "Update " + esc(p.version) : "Installiert"}</span>` : ""}</span></div>
-          <p>${esc(p.beschreibung)}</p>
-          <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(p.groesse)}${p.version ? ` · ${esc(p.version)}` : ""}</span><span>${knopf}</span></div></div>`;
+          <p>${esc(p.beschreibung)}</p>${p.hinweis ? `<p class="muted of-klein pkg-hinweis">${esc(p.hinweis)}</p>` : ""}
+          <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(p.groesse)}${p.version ? ` · ${esc(p.version)}` : ""}${p.alter_ab ? ` · ab ${p.alter_ab} Jahren` : ""}</span><span>${knopf}</span></div></div>`;
       }).join("")}</div>`;
   },
 
@@ -1396,6 +1403,34 @@ function buchVorlesen() {
   render();
 }
 // ---------- Das Lumi-Buch ende ----------
+// ---------- Was die Lumis denken (0.6.2) ----------
+const gedankenFehlt = () => `${kopf("Was die Lumis denken", "Die Gedanken kommen mit dem Paket „Was die Lumis denken“.")}<div class="card of-karte"><p style="margin:0">Es lässt sich in der Bibliothek installieren.</p></div>`;
+function gedankeOeffnen(i) {
+  if (state.gedankenLiest) gedankenVorlesenStop();
+  state.gedanke = Math.max(0, Math.min(Number(i) || 0, gedankenSeiten(gedankenDaten()).length - 1));
+  if (location.hash === "#gedanke") { render(); window.scrollTo(0, 0); main.scrollTop = 0; } else location.hash = "#gedanke";
+}
+function gedankenVorlesenStop() { try { speechSynthesis.cancel(); } catch { /* egal */ } state.gedankenLiest = false; }
+function gedankenVorlesen() {
+  if (state.gedankenLiest) { gedankenVorlesenStop(); return render(); }
+  const teile = gedankenDaten() ? gedankenVorleseTeile(gedankenDaten(), state.gedanke ?? 0) : [];
+  if (!teile.length) return;
+  try {
+    speechSynthesis.cancel();
+    teile.forEach((t, i) => { const u = new SpeechSynthesisUtterance(t); u.lang = "de-AT"; if (i === teile.length - 1) u.onend = () => { state.gedankenLiest = false; if (location.hash === "#gedanke") render(); }; speechSynthesis.speak(u); });
+    state.gedankenLiest = true;
+  } catch { state.gedankenLiest = false; }
+  render();
+}
+/** Nach dem Zeichnen: das Aquarell einhängen (Desktop: lokaler Dateiserver, Web: Cache-Speicher) und den Lautsprecher zeigen. */
+async function gedankenNachZeichnen() {
+  hoerenZeigen(main);
+  for (const img of main.querySelectorAll("img[data-gedanke-bild]:not([src])")) {
+    const url = await client.bildUrl?.(GEDANKEN_PAKET, `inhalt/${img.dataset.gedankeBild}`);
+    if (url) img.src = url; else img.closest("figure")?.remove();
+  }
+}
+// ---------- Was die Lumis denken ende ----------
 function naturVorlesenStop() { try { speechSynthesis.cancel(); } catch { /* egal */ } state.natur = { ...state.natur, liest: false }; }
 function naturVorlesen() {
   if (state.natur.liest) { naturVorlesenStop(); return render(); }
@@ -2060,15 +2095,17 @@ function render() {
   if (seite === "start") wesen.einbauen(); else wesen.setScore(bereit());
   wesen.ansicht(seite);
   if (seite === "start") { tagesSatzZeigen(); pauseKarteWischen(); }
-  const aktiv = seite === "lesen" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" || seite === "buch" || seite === "absatz" ? "uebersicht" : seite === "linie" ? "pause" : seite;
+  if (seite !== "gedanke" && state.gedankenLiest) gedankenVorlesenStop();
+  if (seite === "gedanken" || seite === "gedanke") gedankenNachZeichnen();
+  const aktiv = seite === "lesen" || seite === "gedanken" || seite === "gedanke" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" || seite === "buch" || seite === "absatz" ? "uebersicht" : seite === "linie" ? "pause" : seite;
   if (seite !== "kapitel" && state.tag.liest) vorlesenStop();
   if (seite !== "buch" && state.buchLiest) { try { speechSynthesis.cancel(); } catch { /* egal */ } state.buchLiest = false; }
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
   main.classList.toggle("main-lesen", seite === "lesen");
-  if ((seite === "kapitel" || seite === "neues" || seite === "heft" || seite === "linie" || seite === "pause" || seite === "buch" || seite === "absatz") && state.tag.seiteVorher !== seite) { window.scrollTo(0, 0); main.scrollTop = 0; } // beginnt oben
+  if ((seite === "kapitel" || seite === "neues" || seite === "heft" || seite === "linie" || seite === "pause" || seite === "buch" || seite === "absatz" || seite === "gedanken" || seite === "gedanke") && state.tag.seiteVorher !== seite) { window.scrollTo(0, 0); main.scrollTop = 0; } // beginnt oben
   state.tag.seiteVorher = seite;
   if (seite === "natur") { naturBilderLaden(); document.title = "OFFLINE – Naturheilkunde"; document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === "natur" ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"))); }
-  else document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : seite === "heft" ? `Was ${wesen.anzeigename()} gesagt hat` : seite === "linie" ? "Deine Linie" : seite === "buch" || seite === "absatz" ? "Das Lumi-Buch" : state.lesen?.titel ?? "Lesen")}`;
+  else document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : seite === "heft" ? `Was ${wesen.anzeigename()} gesagt hat` : seite === "linie" ? "Deine Linie" : seite === "buch" || seite === "absatz" ? "Das Lumi-Buch" : seite === "gedanken" || seite === "gedanke" ? "Was die Lumis denken" : state.lesen?.titel ?? "Lesen")}`;
   if (seite === "karte") karteStarten();
   if (seite === "bibliothek") vorschauenNachladen();
   skinFuerSeite();
@@ -2234,6 +2271,9 @@ document.addEventListener("click", (e) => {
   }
   if (b.dataset.lumiAktion) return lumiKnopf(b);
   if (b.dataset.buch === "vorlesen") return buchVorlesen();
+  if (b.dataset.gedanke !== undefined) return gedankeOeffnen(b.dataset.gedanke);
+  if (b.dataset.gedanken === "vorlesen") return gedankenVorlesen();
+  if (b.dataset.hoeren !== undefined && (location.hash === "#gedanke")) { if (state.gedankenLiest) gedankenVorlesenStop(); lumischSprechen(b.dataset.hoeren); return; }
   if (b.dataset.pause) return pauseKnopf(b.dataset.pause, b);
   if (b.dataset.pauseZurueck) { linieSpeichern(pauseZurueckholen(pauseL(), b.dataset.pauseZurueck)); return render(); }
   if (b.dataset.pauseStufe) { const f = pauseDaten()?.formen.find((x) => x.id === b.dataset.pauseStufe); if (f) linieSpeichern(pauseSchwierigkeit(pauseL(), f, b.dataset.richtung)); return render(); }
