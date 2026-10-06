@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-10-06T12:06:34Z",
-  "gueltig_bis": "2027-01-04T12:06:34Z",
+  "erstellt": "2026-10-06T12:55:20Z",
+  "gueltig_bis": "2027-01-04T12:55:20Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -115,7 +115,7 @@
     },
     {
       "id": "lumi-philosophie",
-      "version": "2026.10.06",
+      "version": "2026.10.06.1",
       "titel": "Was die Lumis denken",
       "beschreibung": "Fünfzehn Gedanken, für Erwachsene.",
       "art": "inhalt",
@@ -125,6 +125,7 @@
       "kategorie": "miteinander",
       "alter_ab": 18,
       "hinweis": "Die Lumis sind erfunden, die Philosophen nicht.",
+      "ki_generiert": true,
       "vorschau": {
         "folien": [
           {
@@ -198,10 +199,10 @@
       },
       "groesse": 1986608,
       "app_min": "0.6.2",
-      "erstellt": "2026-10-06T12:05:10Z",
-      "aenderungen": "Neu: fünfzehn Gedanken, zwölf von Philosophen der Menschen und drei von den Lumis, mit Aquarell, Lumisch-Satz zum Anhören und Text.",
-      "pfad": "lumi-philosophie-2026.10.06/",
-      "sha256_manifest": "4790971e39dac63148e530ccef6fb541b98d6fa97f9b2bcf9dc1bd45656775ab",
+      "erstellt": "2026-10-06T12:53:51Z",
+      "aenderungen": "Die Aquarelle sind jetzt als KI-generiert gekennzeichnet. Sonst unverändert.",
+      "pfad": "lumi-philosophie-2026.10.06.1/",
+      "sha256_manifest": "8453dc9224caa372c8ed47d12b6ab6554f40e56f93c9894ebf7c75038f0fb641",
       "status": "verfuegbar"
     },
     {

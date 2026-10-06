@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "lumi-philosophie",
-  "version": "2026.10.06",
+  "version": "2026.10.06.1",
   "titel": "Was die Lumis denken",
   "beschreibung": "Fünfzehn Gedanken, für Erwachsene.",
   "art": "inhalt",
@@ -15,9 +15,10 @@
   "alter_ab": 18,
   "hinweis": "Die Lumis sind erfunden, die Philosophen nicht.",
   "abnahme": "Redaktion (Code), 06.10.2026: 15 Gedanken mit allen Feldern und Bild, Text wörtlich aus der Beilage, jedes Lumisch-Wort im Wörterbuch des Pakets pause (Eigennamen ausgenommen)",
+  "ki_generiert": true,
   "app_min": "0.6.2",
-  "erstellt": "2026-10-06T12:05:10Z",
-  "aenderungen": "Neu: fünfzehn Gedanken, zwölf von Philosophen der Menschen und drei von den Lumis, mit Aquarell, Lumisch-Satz zum Anhören und Text.",
+  "erstellt": "2026-10-06T12:53:51Z",
+  "aenderungen": "Die Aquarelle sind jetzt als KI-generiert gekennzeichnet. Sonst unverändert.",
   "quellen": [
     {
       "id": "redaktion",
