@@ -2,6 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import { randomBytes } from "node:crypto";
 import * as werkzeug from "../werkzeug/intern.mjs";
 import { schluesselAusLink, kennung, entschluesseln, holeIntern, internKatalog, internPaketDateien, KanalAbgelaufen, kanalZeile } from "./intern.js";
@@ -34,6 +35,26 @@ function server(dateien, schluessel = K) {
   for (const [p, b] of Object.entries(dateien)) m.set(`https://x/intern/${kid}/${p}`, werkzeug.verschluesseln(Buffer.from(b), schluessel));
   return async (url) => (m.has(url) ? { ok: true, status: 200, arrayBuffer: async () => m.get(url) } : { ok: false, status: 404 });
 }
+
+test("Schlüsselwechsel im Repo: umschlüsseln (alles oder nichts) und auffrischen aus dem Klartext", async () => {
+  const { mkdtemp, mkdir, writeFile } = await import("node:fs/promises");
+  const os = await import("node:os"), path = await import("node:path");
+  const p = await mkdtemp(path.join(os.tmpdir(), "offline-kanal-"));
+  await mkdir(path.join(p, "verschluesselt", "quelle"), { recursive: true }); await mkdir(path.join(p, "quelle"));
+  await writeFile(path.join(p, "quelle", "a.md"), "Alpha"); await writeFile(path.join(p, "b.json"), "{\"b\":1}");
+  await writeFile(path.join(p, "verschluesselt", "quelle", "a.md"), werkzeug.verschluesseln(Buffer.from("alt"), K));
+  await writeFile(path.join(p, "verschluesselt", "b.json"), werkzeug.verschluesseln(Buffer.from("alt"), K));
+  assert.deepEqual((await werkzeug.auffrischen(p, K)).sort(), ["b.json", "quelle/a.md"]);
+  assert.equal(werkzeug.entschluesseln(await readFile(path.join(p, "verschluesselt", "quelle", "a.md")), K).toString(), "Alpha");
+  const NEU = randomBytes(32), FALSCH = randomBytes(32);
+  await assert.rejects(werkzeug.umschluesseln(path.join(p, "verschluesselt"), FALSCH, NEU), /nichts geändert/);
+  assert.equal(werkzeug.entschluesseln(await readFile(path.join(p, "verschluesselt", "b.json")), K).toString(), "{\"b\":1}", "unverändert");
+  await werkzeug.umschluesseln(path.join(p, "verschluesselt"), K, NEU);
+  assert.equal(werkzeug.entschluesseln(await readFile(path.join(p, "verschluesselt", "quelle", "a.md")), NEU).toString(), "Alpha");
+  assert.throws(() => werkzeug.entschluesseln(readFileSync(path.join(p, "verschluesselt", "b.json")), K));
+  const doku = await lies("../docs/INTERN.md");
+  for (const s of ["## Schlüssel wechseln", "umschluesseln", "OFFLINE_INTERN_SCHLUESSEL_ALT", "gh secret set OFFLINE_INTERN_SCHLUESSEL <", "Interner Kanal abgelaufen", "klartext-wache"]) assert.ok(doku.includes(s), s);
+});
 
 test("Katalog und Paket aus dem Kanal; Schlüsselwechsel meldet still „abgelaufen“", async () => {
   const katalog = { format: 1, erstellt: "2026-10-05T20:00:00Z", pakete: [{ id: "naturheilkunde", version: "2026.10.05", pfad: "naturheilkunde-2026.10.05/", status: "verfuegbar" }] };

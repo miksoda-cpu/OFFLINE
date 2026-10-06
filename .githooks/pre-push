@@ -1,0 +1,3 @@
+#!/bin/sh
+# Klartext-Wache: prüft jede Datei in den Commits, die hinausgehen (werkzeug/klartext-wache.mjs, docs/INTERN.md)
+exec node "$(git rev-parse --show-toplevel)/werkzeug/klartext-wache.mjs" push

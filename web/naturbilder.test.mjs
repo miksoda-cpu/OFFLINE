@@ -4,7 +4,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { lizenzPruefen, binomen, tafelBestaetigt, KATEGORIEN } from "../pakete/naturheilkunde-bilder/bilder-holen.mjs";
+import { lizenzPruefen, binomen, tafelBestaetigt, KATEGORIEN, nachSicht } from "../pakete/naturheilkunde-bilder/bilder-holen.mjs";
 import { bilderIndex, eintragBilder, giftigeArt, bildZeile, naturHtml, findeErgebnis, istWarnung, BILD_SATZ, ERLAUBTE_LIZENZ } from "./natur.js";
 
 const lies = (p) => readFile(new URL(p, import.meta.url), "utf8");
@@ -32,6 +32,16 @@ test("Namen und Tafeln: Binomen auch abgekürzt; Tafel nur aus der Kategorie des
   assert.equal(tafelBestaetigt(koehler, KATEGORIEN.koehler).jahr, 1897);
   assert.equal(tafelBestaetigt({ ...koehler, kategorien: ["Aconitum napellus"] }, KATEGORIEN.koehler).ok, false, "nicht in der Kategorie");
   assert.equal(tafelBestaetigt({ ...koehler, datum: "2015" }, KATEGORIEN.koehler).ok, false, "Jahr passt nicht");
+});
+
+test("Sichtprüfung (Kontaktbögen): verworfene Bilder fallen auch beim Laden weg, Tafeln wie Fotos, mit Grund", async () => {
+  const s = JSON.parse(await lies("../pakete/naturheilkunde-bilder/sichtpruefung.json"));
+  assert.ok(s.verworfen["File:Illustration elaïosome Asarum europaeum.jpg"], "Haselwurz-Tafel zeigt nur den Samen");
+  for (const [datei, grund] of Object.entries(s.verworfen)) { assert.match(datei, /^File:/); assert.ok(grund.length > 3, datei); }
+  const r = nachSicht([{ datei: "File:A.jpg", art: "A a" }, { datei: "File:B.jpg", art: "B b" }], { "File:B.jpg": "zeigt nur den Samen" });
+  assert.deepEqual(r.bleibt.map((b) => b.datei), ["File:A.jpg"]);
+  assert.deepEqual(r.weg, [{ datei: "File:B.jpg", art: "B b", grund: "Sichtprüfung: zeigt nur den Samen" }]);
+  if (DA) for (const b of n.bilder) assert.ok(!s.verworfen[b.commons_datei], `${b.id} ist bei der Sichtprüfung verworfen`);
 });
 
 test("Bildzeile wie im Auftrag; Bilder ohne Nachweis oder mit fremder Lizenz fallen weg", () => {

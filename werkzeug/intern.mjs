@@ -6,6 +6,8 @@
 // Aufruf (CI): OFFLINE_INTERN_SCHLUESSEL=… node werkzeug/intern.mjs verschluesseln <ordner> <ziel>  → gibt die Kennung aus
 // Das Repo ist öffentlich: Inhalte interner Pakete liegen dort nur verschlüsselt (pakete/<id>/verschluesselt/, gleicher
 // Schlüssel); `entschluesseln` holt sie in der CI zurück. Klartext nur lokal (.gitignore).
+//   auffrischen <paket>    – nach einer Änderung am Inhalt: was in <paket>/verschluesselt/ liegt, neu aus dem Klartext
+//   umschluesseln <ordner> – Schlüsselwechsel: alter Schlüssel in OFFLINE_INTERN_SCHLUESSEL_ALT, neuer in OFFLINE_INTERN_SCHLUESSEL
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
 import { readFile, writeFile, mkdir, readdir, stat } from "node:fs/promises";
 import path from "node:path";
@@ -52,11 +54,37 @@ export async function ordnerVerschluesseln(ordner, ziel, k) {
   }
 }
 
+/** Verschlüsselt jede Datei, die schon in <paket>/verschluesselt/ liegt, neu aus dem Klartext daneben (<paket>/<gleicher Pfad>).
+ *  Für jede Änderung am Inhalt: welche Dateien verschlüsselt im Repo liegen, bestimmt der Ordner selbst. */
+export async function auffrischen(paket, k) {
+  const v = path.join(paket, "verschluesselt"), liste = await dateien(v);
+  for (const r of liste) {
+    const klar = await readFile(path.join(paket, r)).catch(() => { throw new Error(`Klartext fehlt: ${path.join(paket, r)} (erst entschlüsseln)`); });
+    await writeFile(path.join(v, r), verschluesseln(klar, k));
+  }
+  return liste;
+}
+/** Schlüsselwechsel im Repo: jede Datei unter ordner mit dem alten Schlüssel öffnen und mit dem neuen verschließen, an Ort und Stelle.
+ *  Erst alles prüfen, dann schreiben: passt der alte Schlüssel bei einer Datei nicht, bleibt alles unverändert. */
+export async function umschluesseln(ordner, alt, neu) {
+  const liste = await dateien(ordner), klar = [];
+  for (const r of liste) {
+    try { klar.push(entschluesseln(await readFile(path.join(ordner, r)), alt)); } catch { throw new Error(`${r}: alter Schlüssel passt nicht – nichts geändert`); }
+  }
+  for (const [i, r] of liste.entries()) await writeFile(path.join(ordner, r), verschluesseln(klar[i], neu));
+  return liste;
+}
+
 async function main() {
   const [befehl, ordner, ziel] = process.argv.slice(2);
   const k = schluesselLesen(process.env.OFFLINE_INTERN_SCHLUESSEL);
   if (befehl === "kennung") return console.log(kennung(k));
-  if (!["verschluesseln", "entschluesseln"].includes(befehl) || !ordner || !ziel) throw new Error("Aufruf: intern.mjs verschluesseln|entschluesseln <ordner> <ziel> | kennung");
+  if (befehl === "auffrischen" && ordner) return console.log(`${(await auffrischen(ordner, k)).length} Dateien neu verschlüsselt (Kennung ${kennung(k)})`);
+  if (befehl === "umschluesseln" && ordner) {
+    const alt = schluesselLesen(process.env.OFFLINE_INTERN_SCHLUESSEL_ALT);
+    return console.log(`${(await umschluesseln(ordner, alt, k)).length} Dateien umgeschlüsselt: ${kennung(alt)} → ${kennung(k)}`);
+  }
+  if (!["verschluesseln", "entschluesseln"].includes(befehl) || !ordner || !ziel) throw new Error("Aufruf: intern.mjs verschluesseln|entschluesseln <ordner> <ziel> | auffrischen <paket> | umschluesseln <ordner> | kennung");
   await (befehl === "verschluesseln" ? ordnerVerschluesseln : ordnerEntschluesseln)(ordner, ziel, k);
   console.log(kennung(k));
 }

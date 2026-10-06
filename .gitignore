@@ -6,7 +6,8 @@ target/
 app/src-tauri/binaries/*
 !app/src-tauri/binaries/README.md
 
-# Naturheilkunde (0.6.0): Inhalte nur intern – im öffentlichen Repo nur verschlüsselt (pakete/naturheilkunde/verschluesselt/)
+# Klartext-Wache: Inhalte, die nur intern sind (0.6.0 Naturheilkunde). Im öffentlichen Repo nur verschlüsselt (pakete/<id>/verschluesselt/).
+# werkzeug/klartext-wache.mjs bricht Commit und Push ab, wenn etwas aus diesem Block vorgemerkt ist. Block endet an der Leerzeile.
 pakete/naturheilkunde/quelle/
 pakete/naturheilkunde/inhalt/
 pakete/naturheilkunde/unzugeordnet.md

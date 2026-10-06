@@ -1,6 +1,6 @@
 {
- "stand": "2026-10-05",
- "hinweis": "Fotos, die bei der Sichtprüfung (Kontaktbogen) verworfen wurden: Motiv zeigt das Merkmal nicht oder ist nicht die Art. Gilt für jede neue Suche.",
+ "stand": "2026-10-06",
+ "hinweis": "Bilder, die bei der Sichtprüfung (Kontaktbogen) verworfen wurden: Motiv zeigt das Merkmal nicht oder ist nicht die Art. Fotos geprüft am 05.10.2026, alle Tafeln am 06.10.2026. Gilt für jede neue Suche und beim Laden.",
  "verworfen": {
   "File:Hortus Haren. 06-05-2020 (actm.) 16.jpg": "zeigt vor allem andere, gelb blühende Pflanzen",
   "File:20200531Atropa belladonna01.jpg": "Strauch im Gras, Merkmal nicht zu erkennen",
@@ -36,6 +36,7 @@
   "File:Old wall in Gullmarsskogen 1.jpg": "Waldboden mit Mauer, kein Wacholder zu sehen",
   "File:Rowan tree.jpg": "ganzer Baum, Merkmal nicht zu erkennen",
   "File:20180225Ligustrum vulgare3.jpg": "Zweige vor Himmel, Merkmal nicht zu erkennen",
-  "File:Amanita phalloides var alba.JPG": "Pilz wirkt weiß, der typisch grünliche Hut ist nicht zu sehen (verwechselbar mit dem Weißen Knollenblätterpilz)"
+  "File:Amanita phalloides var alba.JPG": "Pilz wirkt weiß, der typisch grünliche Hut ist nicht zu sehen (verwechselbar mit dem Weißen Knollenblätterpilz)",
+  "File:Illustration elaïosome Asarum europaeum.jpg": "Tafel zeigt nur den Samen (Ausschnitt), nicht die Pflanze"
  }
 }

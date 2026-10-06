@@ -1,0 +1,17 @@
+{
+ "hinweis": "Wendungen aus internen Inhalten, die bewusst öffentlich im Repo stehen dürfen. Jede mit Grund. Nur kurze Namen und Redaktionssätze, nie Inhalt. „*“ gilt für alle Dateien.",
+ "erlaubt": {
+  "bill/rueckmeldung/2026-10-05-version-0-6-0.md": [
+   {
+    "text": "Die Abschnitte unten sind Quellenmaterial",
+    "grund": "Redaktionssatz, als Beispiel für das Weglassen zitiert"
+   }
+  ],
+  "web/naturheilkunde.test.mjs": [
+   {
+    "text": "1. **Volltexte von PubMed/PMC/NCBI (LiverTox) waren nicht abrufbar** (Captcha-Sperre; nicht umgangen).",
+    "grund": "Redaktionsvermerk als Testfall für istGesperrt()"
+   }
+  ]
+ }
+}

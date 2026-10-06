@@ -142,7 +142,7 @@ async function suchen() {
       if (istPilzFlechteMoos(e) || warnIds.has(e.id)) plaene.push({ eintrag: e.id, art: b, typ: "foto", kandidaten: (await suche(`"${b}" filetype:bitmap -illustration -drawing`, 12)).map((t) => ({ t })) });
     }
   }
-  const sicht = JSON.parse(await readFile(path.join(HIER, "sichtpruefung.json"), "utf8").catch(() => '{"verworfen":{}}')).verworfen;
+  const sicht = await sichtLesen();
   const info = await bildInfo([...new Set(plaene.flatMap((p) => p.kandidaten.map((k) => k.t)))]);
   const auswahl = [], verworfen = [];
   const schonArt = new Map();
@@ -180,8 +180,16 @@ async function suchen() {
 const slug = (s) => s.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 // ---------- laden ----------
+/** Sichtprüfung gilt auch beim Laden: was in sichtpruefung.json steht, kommt nicht ins Paket, auch wenn die Auswahl älter ist. */
+export function nachSicht(bilder, sicht) {
+  return { bleibt: bilder.filter((b) => !sicht[b.datei]), weg: bilder.filter((b) => sicht[b.datei]).map((b) => ({ datei: b.datei, art: b.art, grund: `Sichtprüfung: ${sicht[b.datei]}` })) };
+}
+const sichtLesen = async () => JSON.parse(await readFile(path.join(HIER, "sichtpruefung.json"), "utf8").catch(() => '{"verworfen":{}}')).verworfen;
+
 async function laden() {
   const a = JSON.parse(await readFile(AUSWAHL, "utf8"));
+  const sv = nachSicht(a.bilder, await sichtLesen());
+  if (sv.weg.length) { console.log(`${sv.weg.length} nach Sichtprüfung weggelassen`); a.bilder = sv.bleibt; }
   const info = await bildInfo(a.bilder.map((b) => b.datei));
   await rm(path.join(ZIEL, "bilder"), { recursive: true, force: true });
   await mkdir(path.join(ZIEL, "bilder"), { recursive: true });

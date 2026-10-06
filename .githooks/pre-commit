@@ -1,0 +1,3 @@
+#!/bin/sh
+# Klartext-Wache: bricht ab, wenn interne Inhalte im Klartext vorgemerkt sind (werkzeug/klartext-wache.mjs, docs/INTERN.md)
+exec node "$(git rev-parse --show-toplevel)/werkzeug/klartext-wache.mjs" vorgemerkt
