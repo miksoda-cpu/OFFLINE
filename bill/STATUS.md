@@ -27,6 +27,8 @@ Alles andere im Repo ist veröffentlicht: Tagesseite mit Roman der Woche und Vor
 - Gesamtkonzept: Projektdokument „OFFLINE-Gesamtkonzept“ (Fassung 6), noch nicht in `docs/`
 
 ## Offen bei Code (wartet)
+- **Nächste Version:** Lumi schweigt auch während eines Pause-Happens (Branch `lumi-still-happen`, getestet, noch nicht zusammengeführt).
+- **Probe Lumi-Seite und Bibliothek als Laden** (Richtung Mik, 06.10.): Bilder und Liste nur lokal bei Mik in „OFFLINE - Home/lumi-bestand/“ (Entwurf, nicht im Repo). Wartet auf Freigabe und sechs Antworten.
 - CI `tests.yml` läuft seit 29.09. bei jedem Push (Werkzeug, Kit, Bereit, Lumi, Kern, Sandbox-Probe).
 - Sandbox-Probe in der App: Windows grün (Windows-Probe, 48 von 48 Angriffen blockiert); Linux in der App noch offen (Berechtigungstest läuft auf Linux).
 
