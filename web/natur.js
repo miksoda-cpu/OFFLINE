@@ -211,7 +211,7 @@ export function naturHtml(d, z, bi = null) {
   if (z.weg === "bildnachweise") {
     const liste = [...(bi?.alle ?? [])].sort((a, b) => a.art.localeCompare(b.art) || a.typ.localeCompare(b.typ));
     return `${kopf}${zurueck("handbuch", "Handbuch")}<section class="card of-karte natur-text"><h2>Bildnachweise</h2>
-      <p class="muted of-klein">Alle Bilder kommen von Wikimedia Commons: alte Pflanzentafeln (gemeinfrei) und freie Fotos (CC0, CC BY, CC BY-SA). Keine KI-Bilder.</p>
+      <p class="muted of-klein">Alle Bilder kommen von Wikimedia Commons: alte Pflanzentafeln (gemeinfrei) und freie Fotos mit Creative-Commons-Lizenz (CC0, CC BY, CC BY-SA). Keine Bilder aus künstlicher Intelligenz (KI).</p>
       <ul class="natur-nachweise">${liste.map((b) => `<li>${bildHtml(b, true)}<div><strong>${esc(b.art)}</strong> · ${b.typ === "tafel" ? "Tafel" : "Foto"}<br>
         <span class="of-klein">${b.typ === "tafel" ? `${esc(b.werk ?? "")}${b.jahr ? `, ${b.jahr}` : ""}${b.jahr_laut ? ` (Jahr laut ${esc(b.jahr_laut)})` : ""} · ` : ""}Urheber: ${esc(urheberText(b.urheber))}${b.urheber_laut && b.urheber_laut !== "Dateiblatt" ? ` (laut ${esc(b.urheber_laut)})` : ""} · Lizenz: ${esc(b.lizenz)}<br>Quelle: ${esc(lesbar(b.quelle))}</span></div></li>`).join("")}</ul></section>`;
   }

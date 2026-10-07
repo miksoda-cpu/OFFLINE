@@ -1,5 +1,17 @@
 # Änderungen
 
+## 0.6.4 · 07.10.2026 · Pause fordert mehr, Abkürzungen ausgeschrieben
+
+- **Pause, ohne neue Inhalte** (Bill, 07.10.):
+  - Startstufe ab 14 Jahren: Jede Form mit Stufen beginnt auf Stufe 2 (`WERTE.startStufeAb14`, `startStufe`). Der Pilz begann bisher auf 3. Die Regel zum Nachstellen bleibt; gespeicherte Stufen bleiben.
+  - Lumisch mit echten Stufen: 1 Lumisch → Deutsch mit 3 Antworten; 2 Deutsch → Lumisch mit 4 Antworten, jede zum Anhören; 3 einen Satz aus „Was die Lumis denken“ aus den Wörtern ordnen, danach „Wort für Wort“ und Deutsch (`lumischSaetze`: nur Sätze, deren Wörter alle im Wörterbuch stehen, mindestens drei Wörter; das Lumi-Buch hat keine Lumisch-Sätze; ohne das Paket bleibt Stufe 3 bei der Übung von Stufe 2).
+  - Der eingebaute Fehler endet bei Stufe 2 (`pauseAufbereiten`), bis es Geschichten für Stufe 3 gibt. Ein zweiter Fehler je Geschichte wäre neuer Text.
+- **Lumi still im Happen:** Der Happen meldet sich als eigene Seite (`STILL` um `happen`).
+- **Abkürzungen** (Textregel Mik, 07.10.):
+  - `web/abkuerzungen.js` mit Liste, `KEINE` und `OFFEN`. Die App schreibt beim Anzeigen jede Abkürzung beim ersten Vorkommen in jedem Text aus: Paketinhalte (Österreich-Basis, Tipps, Lumi-Buch, Gedanken, Naturheilkunde mit Erste-Hilfe-Karte), Hilfe (Frage und Antwort als ein Text) und „Was ist neu“. Die Abkürzung bleibt im Satz, die Langform kommt in Klammern dahinter, damit der Fall stimmt; steht die Langform schon im Text, kommt die Abkürzung dazu. Internetadressen bleiben. Einmal je Paketversion berechnet, Naturheilkunde etwa 80 ms.
+  - Eigene Sätze der App von Hand: Österreichischer Rundfunk (ORF), künstliche Intelligenz (KI), Toilettenspülung statt WC-Spülung.
+  - Test `web/abkuerzungen.test.mjs`: jede Abkürzung in allen Texten eingeordnet und nach dem Ausschreiben erklärt.
+
 ## 0.6.3 · 06.10.2026 · Interner Kanal in der Mac-App, Lumi still beim Lesen
 
 - **Fehler behoben:** In der Mac-App brach der Abgleich des internen Kanals mit „Can't find variable: sha256Hex“ ab. `web/paket-client-tauri.js` reichte `sha256Hex` mit `export … from` nur durch; das legt in der Datei keinen Namen an. Jetzt importiert. Tests: alles, was die Datei selbst aufruft, ist importiert; `installiereAusDateien` der Mac-App mit nachgebildeter Tauri-Brücke. Ein gespeicherter Schlüssel bleibt gültig; der nächste Start oder „Jetzt prüfen“ spielt die Pakete ein.

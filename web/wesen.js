@@ -37,7 +37,7 @@ export const TEXTE = {
   einladungJa: "Ja, zeig sie mir", einladungNein: "Nein, danke",
   einladungHinweis: "Du kannst sie jederzeit in den Einstellungen wieder ausschalten.",
   beschreibung: "Ein kleines Wesen aus der Höhle unter dem antarktischen Eis. Sie zeigt mit ihrem Licht, wie bereit du bist, und gibt dir ab und zu einen Tipp.",
-  ki: "Die Bilder der Lumi sind mit KI erzeugt (Herkunft in der App-Dokumentation).",
+  ki: "Die Bilder der Lumi sind mit künstlicher Intelligenz (KI) erzeugt (Herkunft in der App-Dokumentation).",
   ersterSatz: "Oh. Hier oben ist es hell.",
   namensfrage: "Wie soll sie heißen?", namenGeben: "Namen geben", spaeter: "Später",
   mitNamen: (n) => `${n}. Das bin ich. Das war neu. Ich mag es.`,

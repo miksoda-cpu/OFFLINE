@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { WERTE, einstellungenLaden, angeboten, happenFaellig, waehle, linieLaden, bewerten, zurueckholen, schwierigkeit, zoneAnpassen, verfuegbar,
-  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, rueckspiegel, lumischHeute, lumischAntworten, soSeheIchDich, wochenSatz, logDazu, imKennenlernen, gewichtVon, stufeVon, tagVon, raumFormen, dauerText, LUMISCH_ALT, lumischUmbenannt } from "./pause.js";
+  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, rueckspiegel, lumischHeute, lumischAntworten, startStufe, pauseAufbereiten, lumischSaetze, reihenfolgeRichtig, soSeheIchDich, wochenSatz, logDazu, imKennenlernen, gewichtVon, stufeVon, tagVon, raumFormen, dauerText, LUMISCH_ALT, lumischUmbenannt } from "./pause.js";
 import { pilzMs } from "./pause-happen.js";
 import { pruefeNachricht, pruefeSpielMeldung, GRENZEN } from "./modul-host.js";
 import { pauseFehler, GEBAUT } from "../paket-kit/pause-format.mjs";
@@ -135,12 +135,12 @@ test("Linie: Mehr davon hebt die Form und Verwandtes, Nicht mehr nimmt sie herau
 test("Zone: über 85 % eine Stufe schwerer, unter 75 % leichter; Zu leicht / Zu schwer stellt direkt; Pilz blitzt kürzer", () => {
   const pilz = formen.find((f) => f.id === "pilz");
   const log = (treffer) => Array.from({ length: 3 }, () => ({ quelle: "pause", id: "pilz", art: ["tempo"], ergebnis: { treffer, von: 3 }, zeit: "2026-10-05T10:00:00Z" }));
-  assert.equal(stufeVon(zoneAnpassen({}, pilz, log(3)), pilz), pilz.zone.start + 1);
-  assert.equal(stufeVon(zoneAnpassen({}, pilz, log(2)), pilz), pilz.zone.start - 1, "2 von 3 = 67 %");
-  assert.equal(stufeVon(zoneAnpassen({}, pilz, log(3).slice(0, 2)), pilz), pilz.zone.start, "zu wenig Happen: nichts verstellen");
-  assert.equal(stufeVon(schwierigkeit({}, pilz, "leicht"), pilz), pilz.zone.start + 1);
-  assert.equal(stufeVon(schwierigkeit({}, pilz, "schwer"), pilz), pilz.zone.start - 1);
-  assert.equal(stufeVon(schwierigkeit({}, pilz, "richtig"), pilz), pilz.zone.start);
+  assert.equal(stufeVon(zoneAnpassen({}, pilz, log(3)), pilz), startStufe(pilz) + 1);
+  assert.equal(stufeVon(zoneAnpassen({}, pilz, log(2)), pilz), startStufe(pilz) - 1, "2 von 3 = 67 %");
+  assert.equal(stufeVon(zoneAnpassen({}, pilz, log(3).slice(0, 2)), pilz), startStufe(pilz), "zu wenig Happen: nichts verstellen");
+  assert.equal(stufeVon(schwierigkeit({}, pilz, "leicht"), pilz), startStufe(pilz) + 1);
+  assert.equal(stufeVon(schwierigkeit({}, pilz, "schwer"), pilz), startStufe(pilz) - 1);
+  assert.equal(stufeVon(schwierigkeit({}, pilz, "richtig"), pilz), startStufe(pilz));
   assert.ok(pilzMs(1) > pilzMs(5) && pilzMs(10) >= WERTE.pilz.msMin);
 });
 
@@ -372,5 +372,44 @@ test("Lumisch anhören: Umschrift und Lautschrift im Paket, Stimme de-AT zuerst,
   assert.match(hoerenKnopf(w("vau")), /data-hoeren="wa u"[^>]*aria-label="vau anhören"[^>]*hidden/, "erst sichtbar, wenn es eine Stimme gibt");
   assert.equal(hoerenKnopf({ wort: "alt" }), "", "ohne Umschrift (altes Paket) kein Knopf");
   const happen = await readFile(new URL("./pause-happen.js", import.meta.url), "utf8");
-  assert.equal((happen.match(/\$\{hoer\(/g) ?? []).length, 4, "neben jedem Lumisch-Wort: Plan, neues Wort, Wiederholung, Abfrage");
+  assert.equal((happen.match(/\$\{hoer\(/g) ?? []).length, 5, "neben jedem Lumisch-Wort: Plan, neues Wort, Wiederholung, Abfrage Stufe 1 und jede Antwort in Stufe 2");
+});
+
+// ---------- Pause fordert mehr (0.6.4) ----------
+test("0.6.4: ab 14 beginnt jede Form mit Stufen auf Stufe 2; gespeicherte Stufen bleiben, nie über der obersten", () => {
+  for (const f of formen.filter((x) => x.zone)) { assert.equal(startStufe(f), 2, f.id); assert.equal(stufeVon({ stufe: {} }, f), 2, f.id); }
+  const pilz = formen.find((f) => f.id === "pilz");
+  assert.equal(stufeVon({ stufe: { pilz: 7 } }, pilz), 7, "wer schon weiter ist, bleibt dort");
+  assert.equal(startStufe(formen.find((f) => f.id === "atem")), 1, "Formen ohne Stufen");
+});
+
+test("0.6.4: Der eingebaute Fehler endet bei Stufe 2, solange es keine Geschichten für Stufe 3 gibt", () => {
+  const d = pauseAufbereiten(daten), f = d.formen.find((x) => x.id === "fehler");
+  assert.equal(f.zone.stufen, Math.max(...daten.fehler.map((g) => g.stufe)));
+  assert.equal(f.zone.stufen, 2);
+  assert.equal(stufeVon({ stufe: { fehler: 3 } }, f), 2, "eine gespeicherte Stufe 3 wird zu 2");
+  assert.equal(stufeVon(schwierigkeit({ stufe: { fehler: 2 } }, f, "leicht"), f), 2, "„Zu leicht“ geht nicht über 2");
+  assert.equal(daten.formen.find((x) => x.id === "fehler").zone.stufen, 3, "das Paket selbst bleibt unverändert");
+});
+
+test("0.6.4: Lumisch Stufe 3 – nur Sätze aus „Was die Lumis denken“, alle Wörter im Wörterbuch, mindestens drei Wörter", async () => {
+  const g = JSON.parse(await readFile(new URL("../pakete/lumi-philosophie/inhalt/gedanken.json", import.meta.url), "utf8"));
+  const wb = daten.lumisch.woerterbuch, s = lumischSaetze(g, wb), w = new Set(wb.map((x) => x.wort));
+  assert.ok(s.length >= 10, `${s.length} Sätze`);
+  for (const x of s) { assert.ok(x.woerter.length >= WERTE.lumischSatzMinWoerter, x.lumisch); assert.ok(x.woerter.every((y) => w.has(y)), x.lumisch); assert.ok(x.wortFuerWort && x.deutsch); }
+  assert.ok(!s.some((x) => /Sisyphos/.test(x.lumisch)), "Eigennamen fallen weg");
+  assert.ok(!s.some((x) => x.lumisch === "sol tevimo."), "zwei Wörter wären Raten");
+  assert.deepEqual(lumischSaetze(null, wb), [], "ohne das Paket keine Sätze (dann Stufe-2-Übung)");
+  assert.ok(reihenfolgeRichtig(["li", "sovi", "pu", "li", "tisu"], ["li", "sovi", "pu", "li", "tisu"]));
+  assert.ok(!reihenfolgeRichtig(["sovi", "li", "pu", "li", "tisu"], ["li", "sovi", "pu", "li", "tisu"]));
+});
+
+test("0.6.4: Lumisch-Happen kennt drei Stufen (Lumisch → Deutsch mit 3, Deutsch → Lumisch mit 4 und Anhören, Satz ordnen)", async () => {
+  const h = await readFile(new URL("./pause-happen.js", import.meta.url), "utf8");
+  assert.ok(h.includes("const rueckwaerts = stufe >= 2, anzahl = rueckwaerts ? 4 : 3;"));
+  assert.ok(h.includes("${hoer(w)}</span>"), "jede Lumisch-Antwort zum Anhören");
+  assert.ok(h.includes("if (stufe >= 3 && saetze.length) return ordnen(ziel);"));
+  assert.ok(h.includes("Wort für Wort: ${esc(s.wortFuerWort)}"));
+  const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
+  assert.ok(app.includes("saetze: lumischSaetze(gedankenDaten(),") && app.includes("pauseAufbereiten(inhalt(p, \"inhalt/pause.json\"))"));
 });

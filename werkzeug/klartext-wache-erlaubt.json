@@ -78,6 +78,12 @@
     "text": "Über die Quantenwelt sprechen wir mit dir.",
     "grund": "freigegeben mit 0.6.2 („Was die Lumis denken“, Auftrag 2026-10-06-12: öffentlich, Miks Freigabe über Bill); steht auch im unveröffentlichten Teil des Lumisch-Wörterbuchs"
    }
+  ],
+  "web/abkuerzungen.js": [
+   {
+    "text": "Handwörterbuch des deutschen Aberglaubens",
+    "grund": "Titel eines öffentlichen Werks, Langform zur Abkürzung HWDA"
+   }
   ]
  }
 }

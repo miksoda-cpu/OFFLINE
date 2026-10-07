@@ -4,7 +4,7 @@ import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUeb
 import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch, tippPool, tippKnoepfeHtml, ZIELE, FUNKTIONEN } from "./wesen.js";
 import { WERTE as PAUSE_WERTE, LEBENSABSCHNITTE, APPETIT, ART_TEXT, angeboten as pauseAngeboten, einstellungenLaden as pauseEinstellungenLaden, linieLaden as pauseLinieLaden,
   logDazu as pauseLogDazu, happenFaellig, waehle as pauseWaehle, bewerten as pauseBewerten, schwierigkeit as pauseSchwierigkeit, zoneAnpassen, zoneText, zurueckholen as pauseZurueckholen,
-  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, soSeheIchDich, wochenSatz, rueckspiegel, lumischHeute, lumischUmbenannt, imKennenlernen, gewichtVon, stufeVon, verfuegbar as pauseVerfuegbar, tagVon, raumFormen, dauerText } from "./pause.js";
+  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, soSeheIchDich, wochenSatz, rueckspiegel, lumischHeute, lumischUmbenannt, lumischSaetze, pauseAufbereiten, imKennenlernen, gewichtVon, stufeVon, verfuegbar as pauseVerfuegbar, tagVon, raumFormen, dauerText } from "./pause.js";
 import { FORMEN as PAUSE_FORMEN, happenFokus } from "./pause-happen.js";
 import { ungesehen as neuUngesehen, alsGesehen as neuAlsGesehen, inhaltsAenderungen, inhalteStart, webVersionPruefen, stillPruefenFaellig, webNeuerDa } from "./neuigkeiten.js";
 import { HILFE } from "./hilfe.js";
@@ -13,6 +13,7 @@ import { schluesselAusLink, internKatalog, internPaketDateien, KanalAbgelaufen, 
 import { naturHtml, naturKlick, vorleseTeile as naturVorleseTeile, bilderIndex as naturBilderIndexBauen, bildZeile as naturBildZeile } from "./natur.js";
 import { meinTag, schlussVorbei as meinTagSchlussVorbei, SCHLUSS_ZEITEN, AUFSTEHEN_ZEITEN, ARTEN as MEIN_TAG_ARTEN, zeitText, vorschlag as meinTagVorschlag, vorschlagText, vorschlagAntwort } from "./meintag.js";
 import { blattOeffnen, blattWeg } from "./blatt.js";
+import { ausschreiben, texteAusschreiben } from "./abkuerzungen.js";
 import { PAKET as GEDANKEN_PAKET, inhaltHtml as gedankenInhaltHtml, seiteHtml as gedankeSeiteHtml, seitenListe as gedankenSeiten, vorleseTeile as gedankenVorleseTeile } from "./gedanken.js";
 import { hoerenZeigen, sprechen as lumischSprechen } from "./stimme.js";
 import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE, LUECKE_WARTET as BUCH_LUECKE_WARTET, wartendeAbsaetze as buchWartend, mitSchluss as buchMitSchluss } from "./buch.js";
@@ -39,7 +40,7 @@ async function internFreischalten(schluessel) {
   if (k) { history.replaceState(null, "", `${location.pathname}${location.search}#updates`); await internFreischalten(k); }
   else if (location.hash.startsWith("#kanal=")) history.replaceState(null, "", `${location.pathname}${location.search}#updates`);
 }
-const APP_VERSION = "0.6.3";
+const APP_VERSION = "0.6.4";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -108,9 +109,17 @@ const ARTEN = { inhalt: "Österreich", zim: "Bibliothek", karte: "Karten", model
 const P = () => installiertesPaket(BASISPAKET);
 const PW = () => installiertesPaket("wir");
 const PB = () => installiertesPaket("lumi-buch"); // Das Lumi-Buch (0.5.0)
-const buchDaten = () => inhalt(PB(), "inhalt/buch.json");
+// Abkürzungen (Textregel 07.10.2026): Texte aus Paketen mit ausgeschriebenen Abkürzungen, je Paketversion einmal berechnet
+const ausgeschriebenMerk = new Map();
+function texte(p, pfad) {
+  if (!p) return null;
+  const k = `${p.manifest.id}@${p.manifest.version}:${pfad}`;
+  if (!ausgeschriebenMerk.has(k)) ausgeschriebenMerk.set(k, texteAusschreiben(inhalt(p, pfad)));
+  return ausgeschriebenMerk.get(k);
+}
+const buchDaten = () => texte(PB(), "inhalt/buch.json");
 // „Was die Lumis denken“ (0.6.2): fünfzehn Gedanken für Erwachsene, Paket „lumi-philosophie“
-const gedankenDaten = () => inhalt(installiertesPaket(GEDANKEN_PAKET), "inhalt/gedanken.json");
+const gedankenDaten = () => texte(installiertesPaket(GEDANKEN_PAKET), "inhalt/gedanken.json");
 // Vorhaben: Sätze der Lumi, die man sich mit „Mach ich“ vorgenommen hat. Eine Erinnerung, keine Prüfung: zählen nicht zu Bereit.
 const vorhaben = () => speicher.get("vorhaben", []);
 const vorhabenSpeichern = (l) => speicher.set("vorhaben", l);
@@ -119,7 +128,7 @@ function vorhabenDazu(t) {
   l.unshift({ id: `v-${Date.now().toString(36)}`, tipp: t.id, text: t.text, datum: new Date().toISOString(), erledigt: null });
   vorhabenSpeichern(l);
 }
-const wesen = new Wesen({ speicher, meinTag: () => meinTagJetzt(), istVorhaben: (id) => vorhaben().some((v) => v.tipp === id), buchLink: (t) => buchLinkErlaubt(t, wesen.e, buchDaten()), tipps: () => inhalt(PW(), "inhalt/tipps.json")?.tipps ?? [], onLog: () => {
+const wesen = new Wesen({ speicher, meinTag: () => meinTagJetzt(), istVorhaben: (id) => vorhaben().some((v) => v.tipp === id), buchLink: (t) => buchLinkErlaubt(t, wesen.e, buchDaten()), tipps: () => texte(PW(), "inhalt/tipps.json")?.tipps ?? [], onLog: () => {
   const z = document.getElementById("wesen-log-zahl"); if (z) z.textContent = `· ${wesen.log.length}`;
   const el = document.getElementById("wesen-log"); if (el) el.innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche);
 } });
@@ -157,7 +166,7 @@ function bestaetigen(id, ja = true) {
   if (ja && BEREIT_POSITIONEN.find((p) => p.id === id)?.fest) wesen.fest(); else if (ja && wesen.mitFigur()) wesen.freude();
   render();
 }
-const D = (name) => inhalt(P(), `inhalt/${name}.json`);
+const D = (name) => texte(P(), `inhalt/${name}.json`);
 const katalog = () => katalogAusSpeicher()?.katalog ?? null;
 
 // ---------- Navigation ----------
@@ -188,7 +197,7 @@ document.getElementById("tabbar").innerHTML = TABS.map((id) => { const n = ROUTE
 if (desktop) document.getElementById("proto-banner")?.remove();
 // Naturheilkunde (0.6.0): im Menü nur, wenn das Paket auf diesem Gerät liegt – sonst gibt es den Bereich nicht, auch nicht leer.
 const naturPaket = () => installiertesPaket("naturheilkunde");
-const naturDaten = () => inhalt(naturPaket(), "inhalt/naturheilkunde.json");
+const naturDaten = () => texte(naturPaket(), "inhalt/naturheilkunde.json");
 // Bilder (0.6.1): eigenes Paket „naturheilkunde-bilder“; ohne es geht alles weiter, nur ohne Bilder
 const NATUR_BILDER = "naturheilkunde-bilder";
 let naturBilderMerk = null;
@@ -684,7 +693,7 @@ const seiten = {
 
   werkzeuge() {
     const w = state.werkzeug;
-    const laender = inhalt(P(), "inhalt/bundeslaender.json")?.laender ?? [];
+    const laender = texte(P(), "inhalt/bundeslaender.json")?.laender ?? [];
     const land = laender.find((l) => l.name === state.bundesland);
     const koord = HAUPTSTAEDTE[state.bundesland] ?? HAUPTSTAEDTE.Wien;
     const d = w.datum ? new Date(w.datum + "T12:00:00") : new Date();
@@ -699,7 +708,7 @@ const seiten = {
     return `${kopf("Werkzeuge", "Radio, Sonne und Mond, Rechner – alles ohne Netz.", `<div class="switch of-liste__zeile" style="border:0;padding:0"><label class="muted of-klein" for="bl2">Bundesland</label><select class="of-select" id="bl2">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>`)}
       <div class="grid grid-2">
         <div class="card of-karte"><h3>📻 Radio im Krisenfall</h3>
-          <p class="muted of-klein" style="margin:.3rem 0 .6rem">Fällt Strom und Netz aus, informiert der ORF über Radio – Ö3 ist der Verkehrs- und Krisenfunk, dazu das Landesstudio. Ein <strong>Batterie- oder Kurbelradio</strong> gehört in jede Vorsorge. Die Frequenz hängt vom Sender in deiner Nähe ab: einmal am Radio suchen und hier eintragen, dann steht sie auch ohne Netz da.</p>
+          <p class="muted of-klein" style="margin:.3rem 0 .6rem">Fällt Strom und Netz aus, informiert der Österreichische Rundfunk (ORF) über Radio – Ö3 ist der Verkehrs- und Krisenfunk, dazu das Landesstudio. Ein <strong>Batterie- oder Kurbelradio</strong> gehört in jede Vorsorge. Die Frequenz hängt vom Sender in deiner Nähe ab: einmal am Radio suchen und hier eintragen, dann steht sie auch ohne Netz da.</p>
           ${sender.map(([k, name]) => `<div class="switch of-liste__zeile"><span><strong>${esc(name)}</strong></span><span style="display:flex;align-items:center;gap:.3rem"><input class="of-input" type="text" data-radio="${k}" value="${esc(radio[k] ?? "")}" placeholder="z. B. 99,9" inputmode="decimal" style="width:7.5em;text-align:right" autocomplete="off"> <span class="muted of-klein">MHz</span></span></div>`).join("")}
           <p class="muted of-klein" style="margin:.6rem 0 0;font-size:.85rem">Wien: Ö1 92,0 · Radio Wien 89,9 · Ö3 99,9 MHz (Sender Kahlenberg). Digital: DAB+ ist in Ballungsräumen zusätzlich verfügbar, im Blackout aber vom Sendernetz abhängig – UKW bleibt die sicherste Wahl.</p>
         </div>
@@ -1027,12 +1036,14 @@ const HILFE_SEITE = { bibliothek: "bibliothek", werkzeuge: "werkzeuge", linie: "
 const hilfeZeile = (seite, klasse = "upd-info") => (seite && HILFE[seite] ? `<p class="${klasse}"><button type="button" class="z-neben" data-hilfe="${seite}">Info und Hilfe</button></p>` : "");
 function hilfeZeigen(seite) {
   const t = HILFE[seite]; if (!t) return;
-  blattOeffnen("Info und Hilfe", t.map(([f, a]) => `<h3 class="hilfe-frage">${esc(f)}</h3><p class="hilfe-antwort">${esc(a)}</p>`).join(""));
+  // Frage und Antwort sind ein Text: eine Abkürzung wird beim ersten Vorkommen ausgeschrieben, auch wenn es in der Frage steht
+  const TRENNER = "\u2063";
+  blattOeffnen("Info und Hilfe", t.map(([f, a]) => { const [frage, antwort] = ausschreiben(`${f}${TRENNER}${a}`).split(TRENNER); return `<h3 class="hilfe-frage">${esc(frage)}</h3><p class="hilfe-antwort">${esc(antwort)}</p>`; }).join(""));
 }
 
 async function neuesLaden() {
   if (state.neues) return;
-  try { state.neues = await (await fetch("/neues.json", { cache: "no-cache" })).json(); }
+  try { state.neues = texteAusschreiben(await (await fetch("/neues.json", { cache: "no-cache" })).json()); }
   catch { state.neues = { versionen: [], fehler: true }; }
   if (location.hash === "#neues" || location.hash === "#updates") render();
 }
@@ -1142,7 +1153,9 @@ async function installiereMitMeldung(id, ziel) {
 // Eine Funktion im Kern mit eigenem Raum (#pause, seit 0.4.2; Auftrag 2026-10-04-pause-umbau), ein- und ausschaltbar; standardmäßig
 // aus. Inhalte aus dem Paket „pause“ (nur Daten). Logik: web/pause.js, Spiele: web/pause-happen.js, Startwerte: web/pause-werte.js.
 const PP = () => installiertesPaket("pause");
-const pauseDaten = () => inhalt(PP(), "inhalt/pause.json");
+// Aufbereitet (0.6.4): z. B. endet der eingebaute Fehler bei der höchsten Stufe, für die es Geschichten gibt
+let pauseDatenMerk = null;
+const pauseDaten = () => { const p = PP(); if (!p) return null; if (pauseDatenMerk?.v !== p.manifest.version) pauseDatenMerk = { v: p.manifest.version, d: pauseAufbereiten(inhalt(p, "inhalt/pause.json")) }; return pauseDatenMerk.d; };
 const pauseE = () => pauseEinstellungenLaden(speicher.get("pause", null));
 const pauseL = () => pauseLinieLaden(speicher.get("pause-linie", null));
 const linieSpeichern = (l) => speicher.set("pause-linie", l);
@@ -1215,6 +1228,7 @@ function pauseFokusEinbauen() {
         heute: lumischHeute(spielLog(), daten.lumisch, heute),
         umbenannt: lumischUmbenannt(spielLog(), speicher.get("lumisch-umbenannt", [])), umbenanntGezeigt: (alt) => speicher.set("lumisch-umbenannt", [...speicher.get("lumisch-umbenannt", []), alt]),
         roman: pauseRoman(), vermutung: speicher.get("pause-vermutung", null), vermutungSpeichern: (v) => speicher.set("pause-vermutung", v), gestern: pauseGestern(),
+        saetze: lumischSaetze(gedankenDaten(), daten.lumisch?.woerterbuch ?? daten.lumisch?.woerter), // Lumisch Stufe 3
       });
     },
     gespielt: (form, erg, sek) => {
@@ -1529,7 +1543,7 @@ function modulKarte(e, quelle) {
   return `<div class="card pkg modul-karte of-karte of-paket" data-modul-karte="${esc(e.id)}">
     <div class="pkg-head"><h3 style="margin:0">${esc(e.titel)}</h3><span><span class="tag of-plakette">${skin ? "Skin" : "Modul"}</span>${quelle.art === "ordner" ? ' <span class="tag tag-warn of-plakette of-plakette--warnung">lokal, nicht veröffentlicht</span>' : ""}${inst ? ` <span class="tag of-plakette ${aktiv ? "tag-ok of-plakette--offline" : ""}">${aktiv ? "Geladen" : "Inaktiv"}</span>` : ""}</span></div>
     <p>${esc(e.beschreibung)}</p>
-    ${(inst?.manifest.ki_generiert ?? e.ki_generiert) ? `<p class="muted of-klein" style="margin:-.3rem 0 .5rem"><span class="tag of-plakette">KI</span> Bilder KI-generiert, Herkunft im Paket</p>` : ""}
+    ${(inst?.manifest.ki_generiert ?? e.ki_generiert) ? `<p class="muted of-klein" style="margin:-.3rem 0 .5rem"><span class="tag of-plakette">KI</span> Bilder mit künstlicher Intelligenz (KI) erzeugt, Herkunft im Paket</p>` : ""}
     ${sliderHtml(sliderSchluessel(e.id, quelle), e)}
     <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(e.groesse)}${e.version ? ` · ${esc(e.version)}` : ""}${e.alter_ab ? ` · ab ${e.alter_ab} Jahren` : ""}</span><span class="modul-steuerung">${steuerung}</span></div>
     ${state.modul.loeschen === e.id ? loeschDialog(e.id) : ""}
@@ -2057,13 +2071,13 @@ function antworte(frage) {
   const treffer = [];
   for (const e of n.eintraege) if (f.includes(e.nr) || f.includes(e.name.toLowerCase().split(" ")[0])) treffer.push(`<strong>${e.nr} – ${e.name}:</strong> ${e.info}`);
   for (const x of s.signale) if (f.includes(x.name.toLowerCase()) || (f.includes("heul") && x.muster === "heulend") || (f.includes("sirene") && !treffer.length)) treffer.push(`<strong>${x.name}</strong> (${x.dauer}): ${x.tun}`);
-  if (/wasser|trink/.test(f)) treffer.push(v.gruppen[0].punkte[0] + ". Dazu Wasser für die WC-Spülung.");
+  if (/wasser|trink/.test(f)) treffer.push(v.gruppen[0].punkte[0] + ". Dazu Wasser für die Toilettenspülung.");
   if (/blackout|strom/.test(f)) b.ablauf.slice(0, 2).forEach((x) => treffer.push(`<strong>${x.t}:</strong> ${x.text}`));
   if (/geld|bargeld|bankomat/.test(f)) treffer.push(v.gruppen[3].punkte[0] + ".");
   if (/rettung|arzt|krank|verletzt/.test(f) && !treffer.length) treffer.push("<strong>144 – Rettung</strong> im Notfall, <strong>141</strong> für den Ärztenotdienst, <strong>1450</strong> für Beratung.");
   return treffer.length
     ? [...new Set(treffer)].slice(0, 4).map(esc).map((t) => t.replace(/&lt;(\/?)strong&gt;/g, "<$1strong>")).join("<br><br>") + `<br><br><span class="muted of-klein" style="font-size:.85rem">Quelle: ${esc(P().manifest.titel)} ${esc(P().manifest.version)}</span>`
-    : "Dazu finde ich im Österreich-Paket nichts. Mit installierter Wikipedia und dem KI-Modell kann ich in der App mehr beantworten.";
+    : "Dazu finde ich im Österreich-Paket nichts. Mit installierter Wikipedia und dem Sprachmodell kann ich in der App mehr beantworten.";
 }
 
 // ---------- Rendern & Ereignisse ----------

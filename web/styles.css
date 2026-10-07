@@ -399,6 +399,13 @@ textarea { border-radius: var(--radius-sm) !important; }
 .pause-wort { font-size: 1.2rem; margin: .2rem 0 .6rem; line-height: 1.4; }
 .pause-wahl { display: flex; flex-wrap: wrap; gap: .4rem; }
 .pause-wahl .z-linie { flex: 1 1 40%; }
+/* Lumisch-Stufen (0.6.4): Stufe 2 Wahl mit Lautsprecher je Antwort, Stufe 3 Wörter ordnen */
+.pause-wahl-zeile { display: flex; align-items: center; flex: 1 1 100%; gap: .2rem; }
+.pause-wahl-zeile .z-linie { flex: 1 1 auto; }
+.pause-wahl--woerter .z-linie { flex: 0 0 auto; min-width: 4.5rem; }
+.pause-wahl--woerter .z-linie[hidden] { display: none; }
+.pause-satz-gelegt { min-height: 48px; display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; padding: .4rem 0; border-bottom: 1px solid var(--z-hair); margin: .4rem 0 .8rem; }
+.pause-gelegt { min-height: 40px; padding: 0 .7rem; }
 .pause-wahl--richtig::before { border-color: var(--z-ok) !important; }
 .pause-aufloesung { margin: .6rem 0; min-height: 1.2em; }
 .pause-zitat { margin: .3rem 0 .8rem; padding: .5rem .8rem; border-left: 3px solid var(--line); font-style: italic; line-height: 1.5; }

@@ -5,7 +5,7 @@
 // höchstens eine Rückfrage) → „Noch einen“ oder „Zurück“. Kein Falsch-Ton, keine rote Zahl: Falsches führt zu „Schau, so war's“.
 // Die Daten kommen aus dem Paket „pause“, die Auswahl aus web/pause.js. Aussehen: die zarten Werte (--z-*) in styles.css.
 
-import { WERTE, stufeVon, zahlText, lumischAntworten } from "./pause.js";
+import { WERTE, stufeVon, zahlText, lumischAntworten, reihenfolgeRichtig } from "./pause.js";
 import { hoerenKnopf, hoerenZeigen, sprechen } from "./stimme.js";
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -75,7 +75,7 @@ export const FORMEN = {
     return { treffer: richtig ? 1 : 0, von: 1, satz: richtig ? "Den Fehler hast du gefunden." : "Jetzt kennst du die Geschichte ganz.", ergebnis: { treffer: richtig ? 1 : 0, von: 1, geschichte: g.id } };
   },
 
-  async lumisch(el, { form, linie, daten, heute, antwortRichtig, rnd, umbenannt, umbenanntGezeigt }) {
+  async lumisch(el, { form, linie, daten, heute, antwortRichtig, rnd, umbenannt, umbenanntGezeigt, saetze = [] }) {
     // heute: lumischHeute(…) aus web/pause.js – Plan (Tag 1–21), neues Wort (jeder dritte Tag danach) oder Wiederholung
     const plan = daten.lumisch.plan, stufe = stufeVon(linie, form), wb = daten.lumisch.woerterbuch ?? daten.lumisch.woerter;
     const weiter = (text = "Weiter") => new Promise((r) => { el.insertAdjacentHTML("beforeend", knopf(text, "data-pause-weiter", true)); el.querySelector("[data-pause-weiter]").onclick = r; });
@@ -87,18 +87,45 @@ export const FORMEN = {
     const zeigen = () => hoerenZeigen(el);
     el.addEventListener("click", (e) => { const b = e.target.closest("[data-hoeren]"); if (b) sprechen(b.dataset.hoeren); });
     const beispiel = (w) => (w?.beispiel ? `<p class="muted of-klein">Zum Beispiel: <span lang="x-lumisch">${esc(w.beispiel.lumisch)}</span> – ${esc(w.beispiel.deutsch)}</p>` : "");
+    // Stufen (0.6.4): 1 Lumisch → Deutsch, drei Antworten · 2 Deutsch → Lumisch, vier Antworten, jede zum Anhören ·
+    // 3 einen Satz aus „Was die Lumis denken“ in die richtige Reihenfolge legen (ohne passende Sätze wie Stufe 2)
     const abfrage = async (frage, richtigText, ziel) => {
-      const anzahl = 2 + Math.min(2, stufe); // 3 bis 4 Möglichkeiten
-      const falsch = mischen((daten.lumisch.woerter ?? wb).filter((w) => w.wort !== frage && w.deutsch !== richtigText), rnd).slice(0, anzahl - 1).map((w) => w.deutsch);
-      const wahl = mischen([richtigText, ...falsch], rnd);
-      ziel.innerHTML = `<p>Was heißt <strong lang="x-lumisch">${esc(frage)}</strong>${hoer(frage)}?</p><div class="pause-wahl" role="group">${wahl.map((w, i) => feld(esc(w), `data-wahl="${i}"`)).join("")}</div><p class="pause-aufloesung" role="status" aria-live="polite"></p>`;
+      if (stufe >= 3 && saetze.length) return ordnen(ziel);
+      const rueckwaerts = stufe >= 2, anzahl = rueckwaerts ? 4 : 3;
+      const andere = mischen((daten.lumisch.woerter ?? wb).filter((w) => w.wort !== frage && w.deutsch !== richtigText), rnd).slice(0, anzahl - 1);
+      const richtig = rueckwaerts ? frage : richtigText;
+      const wahl = mischen([richtig, ...andere.map((w) => (rueckwaerts ? w.wort : w.deutsch))], rnd);
+      ziel.innerHTML = rueckwaerts
+        ? `<p>Wie heißt <strong>${esc(richtigText)}</strong> auf Lumisch?</p><div class="pause-wahl pause-wahl--lumisch" role="group">${wahl.map((w, i) => `<span class="pause-wahl-zeile">${feld(`<span lang="x-lumisch">${esc(w)}</span>`, `data-wahl="${i}"`)}${hoer(w)}</span>`).join("")}</div><p class="pause-aufloesung" role="status" aria-live="polite"></p>`
+        : `<p>Was heißt <strong lang="x-lumisch">${esc(frage)}</strong>${hoer(frage)}?</p><div class="pause-wahl" role="group">${wahl.map((w, i) => feld(esc(w), `data-wahl="${i}"`)).join("")}</div><p class="pause-aufloesung" role="status" aria-live="polite"></p>`;
       zeigen();
       const kn = [...ziel.querySelectorAll("[data-wahl]")];
       const i = await new Promise((r) => kn.forEach((b, j) => { b.onclick = () => r(j); }));
       kn.forEach((b) => { b.disabled = true; });
-      const ok = wahl[i] === richtigText;
-      kn[wahl.indexOf(richtigText)].classList.add("pause-wahl--richtig");
+      const ok = wahl[i] === richtig;
+      kn[wahl.indexOf(richtig)].classList.add("pause-wahl--richtig");
       ziel.querySelector(".pause-aufloesung").textContent = ok ? `Ak! ${frage} heißt ${richtigText}.` : `Schau, so war's: ${frage} heißt ${richtigText}.`;
+      return ok;
+    };
+    // Stufe 3: Wörter eines Satzes antippen, bis er steht; danach „Wort für Wort“ und Deutsch
+    const ordnen = async (ziel) => {
+      const s = saetze[zufall(saetze.length, rnd)];
+      let karten = mischen(s.woerter.map((w, i) => ({ w, i })), rnd);
+      if (karten.every((k, j) => k.i === j)) karten = [...karten.slice(1), karten[0]]; // nie schon fertig
+      const gelegt = [];
+      ziel.innerHTML = `<p>Leg den Satz aus „${esc(s.titel)}“ in die richtige Reihenfolge.</p><p class="pause-satz-gelegt" lang="x-lumisch" aria-live="polite"></p><div class="pause-wahl pause-wahl--woerter" role="group">${karten.map((k, j) => feld(`<span lang="x-lumisch">${esc(k.w)}</span>`, `data-wort="${j}"`)).join("")}</div><p class="pause-aufloesung" role="status" aria-live="polite"></p>`;
+      const zeile = ziel.querySelector(".pause-satz-gelegt"), kn = [...ziel.querySelectorAll("[data-wort]")];
+      const zeichnen = () => { zeile.innerHTML = gelegt.length ? gelegt.map((j) => `<button type="button" class="z-linie pause-gelegt" data-zurueck="${j}">${esc(karten[j].w)}</button>`).join(" ") : `<span class="z-leise">Tipp die Wörter der Reihe nach an.</span>`; kn.forEach((b, j) => { b.hidden = gelegt.includes(j); }); };
+      zeichnen();
+      await new Promise((fertig) => {
+        kn.forEach((b, j) => { b.onclick = () => { gelegt.push(j); zeichnen(); if (gelegt.length === karten.length) fertig(); }; });
+        zeile.onclick = (e) => { const z = e.target.closest("[data-zurueck]"); if (z) { gelegt.splice(gelegt.indexOf(Number(z.dataset.zurueck)), 1); zeichnen(); } };
+      });
+      zeile.onclick = null; zeile.querySelectorAll("button").forEach((b) => { b.disabled = true; });
+      const ok = reihenfolgeRichtig(gelegt.map((j) => karten[j].w), s.woerter);
+      ziel.querySelector(".pause-aufloesung").innerHTML = `<p><strong>${ok ? "Ak! Genau so." : "Schau, so war's:"}</strong> <span lang="x-lumisch">${esc(s.lumisch)}</span>${hoerenKnopf({ wort: s.lumisch, umschrift: s.umschrift })}</p>
+        <p class="muted of-klein">Wort für Wort: ${esc(s.wortFuerWort)}</p><p>${esc(s.deutsch)}</p><p class="z-leise">${esc(s.wer)} · Was die Lumis denken</p>`;
+      zeigen();
       return ok;
     };
     if (heute.art === "wiederholung") {

@@ -38,7 +38,7 @@ export const POSITIONEN = [
   { id: "c-2-0", check: "2-0", quelle: "dinge", titel: "Hausapotheke und Erste-Hilfe-Set", verfall: 24 },
   { id: "c-2-1", check: "2-1", quelle: "dinge", titel: "Dauermedikamente für 14 Tage", verfall: 6, gewicht: 2 },
   { id: "c-2-2", check: "2-2", quelle: "dinge", titel: "Hygieneartikel, Müllsäcke, Toilettenpapier", verfall: 24, gewicht: 0.5 },
-  { id: "c-2-3", check: "2-3", quelle: "dinge", titel: "Wasser für die WC-Spülung", verfall: 12, gewicht: 0.5 },
+  { id: "c-2-3", check: "2-3", quelle: "dinge", titel: "Wasser für die Toilettenspülung", verfall: 12, gewicht: 0.5 },
   { id: "c-2-4", check: "2-4", quelle: "dinge", titel: "Desinfektionsmittel, Handschuhe, Masken", verfall: 24, gewicht: 0.5 },
   { id: "c-3-0", check: "3-0", quelle: "dinge", titel: "Bargeld in kleinen Scheinen", verfall: 12, gewicht: 1.5 },
   { id: "c-3-1", check: "3-1", quelle: "dinge", titel: "Dokumentenmappe", verfall: 24 },
@@ -54,7 +54,7 @@ export const POSITIONEN = [
 
   // Können
   { id: "kocher", quelle: "koennen", titel: "Campingkocher einmal angezündet", verfall: 12, hinweis: "Im Freien, einmal Wasser kochen." },
-  { id: "radio", quelle: "koennen", titel: "Radio getestet und den ORF-Sender gefunden", verfall: 12, hinweis: "Ö3 oder Radio Wien einstellen, Frequenz unter Werkzeuge eintragen." },
+  { id: "radio", quelle: "koennen", titel: "Radio getestet und den Sender des Österreichischen Rundfunks (ORF) gefunden", verfall: 12, hinweis: "Ö3 oder Radio Wien einstellen, Frequenz unter Werkzeuge eintragen." },
   { id: "probeabend", quelle: "koennen", titel: "Probeabend ohne Strom gemacht", verfall: 12, gewicht: 2, fest: true, hinweis: "Ein Abend mit Sicherung aus. Danach weißt du, was fehlt." },
 ];
 

@@ -57,7 +57,31 @@ export function linieLaden(g) {
   };
 }
 export const gewichtVon = (linie, id) => linie.gewicht[id] ?? WERTE.gewicht.start;
-export const stufeVon = (linie, form) => linie.stufe[form.id] ?? form.zone?.start ?? 1;
+/** Startstufe (0.6.4, Bill): ab 14 Jahren beginnt jede Form auf Stufe 2; Pause gibt es nur ab 14. Höchstens die oberste Stufe. */
+export const startStufe = (form) => (form.zone ? Math.min(form.zone.stufen, WERTE.startStufeAb14) : 1);
+/** Stufe einer Form: gespeichert oder Startstufe, nie über der obersten (z. B. wenn eine Stufe wegfällt). */
+export const stufeVon = (linie, form) => Math.min(linie.stufe[form.id] ?? startStufe(form), form.zone?.stufen ?? 1);
+/**
+ * Paketdaten für die App aufbereiten (0.6.4): Der eingebaute Fehler hat nur Geschichten für Stufe 1 und 2. Eine Stufe 3
+ * bräuchte einen zweiten Fehler je Geschichte, also neuen Text; bis er kommt, endet die Form bei der höchsten Stufe, für die es
+ * Geschichten gibt.
+ */
+export function pauseAufbereiten(daten) {
+  if (!daten?.formen) return daten;
+  const hoechste = Math.max(1, ...(daten.fehler ?? []).map((g) => g.stufe ?? 1));
+  return { ...daten, formen: daten.formen.map((f) => (f.id === "fehler" && f.zone ? { ...f, zone: { ...f.zone, stufen: Math.min(f.zone.stufen, hoechste) } } : f)) };
+}
+/**
+ * Lumisch Stufe 3 (0.6.4): Sätze zum Ordnen aus „Was die Lumis denken“. Nur Sätze, deren Wörter alle im Wörterbuch stehen
+ * (also keine Eigennamen), mit mindestens WERTE.lumischSatzMinWoerter Wörtern. Das Lumi-Buch hat keine Lumisch-Sätze.
+ */
+export function lumischSaetze(gedanken, woerterbuch) {
+  const wb = new Set((woerterbuch ?? []).map((w) => w.wort));
+  return (gedanken?.gedanken ?? []).map((g) => ({ id: `gedanke-${g.nr}`, titel: g.titel, wer: g.wer, lumisch: g.lumisch, umschrift: g.umschrift, wortFuerWort: g.wort_fuer_wort, deutsch: g.deutsch, woerter: g.lumisch.match(/[A-Za-zÄÖÜäöüß]+/g) ?? [] }))
+    .filter((s) => s.woerter.length >= WERTE.lumischSatzMinWoerter && s.woerter.every((w) => wb.has(w)));
+}
+/** Stimmt die gelegte Reihenfolge? Gleiche Wörter dürfen ihre Plätze tauschen. */
+export const reihenfolgeRichtig = (gelegt, woerter) => gelegt.length === woerter.length && gelegt.every((w, i) => w === woerter[i]);
 const verwandt = (a, b) => a.id !== b.id && a.art.some((x) => b.art.includes(x));
 
 /** Bewertung nach einem Happen: mehr hebt die Form und leicht ihre Verwandten, nicht nimmt sie heraus, passt ändert nichts. */

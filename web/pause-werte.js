@@ -9,6 +9,9 @@ export const WERTE = {
   neuigkeitRegler: 0.15,
   // Zone 2 (Grundlage): Trefferquote, in der die Stufe bleibt; darüber eine Stufe schwerer, darunter eine leichter
   zone: { untere: 0.75, obere: 0.85, beurteilenNach: 3 }, // erst nach so vielen Happen einer Form verstellen
+  // Startstufe nach Alter (0.6.4): ab 14 beginnt jede Form mit Stufen auf Stufe 2. Pause gibt es erst ab 14, also gilt das für alle.
+  startStufeAb14: 2,
+  lumischSatzMinWoerter: 3, // Lumisch Stufe 3: nur Sätze mit mindestens so vielen Wörtern (bei zweien wäre es Raten)
   // Kennenlernen: so viele Tage viel Abwechslung, Rückfragen höchstens einmal am Tag, danach höchstens einmal je Woche
   kennenlernenTage: 21,
   rueckfrage: { kennenlernenAbstandTage: 1, danachAbstandTage: 7 },
