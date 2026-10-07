@@ -917,7 +917,7 @@ function appUpdateZeile() {
  * Paket „spiele-1“; dort stehen dieselben Hinweise mit dem vollen Lizenztext (inhalt/lizenzen.txt).
  */
 const UEBER_LIZENZEN = [
-  ["Rätsel zum Knobeln: Lichter, Netz, Muster, Brücken, Minen, Sudoku", "Simon Tatham's Portable Puzzle Collection. Copyright (c) 2004–2024 Simon Tatham; Teile Copyright Richard Boulton, James Harvey, Mike Pinna, Jonas Kölker, Dariusz Olszewski, Michael Schierl, Lambros Lambrou, Bernd Schmidt, Steffen Bauer, Lennard Sprong, Rogier Goossens, Michael Quevillon, Asher Gordon, Didi Kohen, Ben Harris und Anders Höglund. MIT-Lizenz."],
+  ["Rätsel zum Knobeln: Lichter, Netz, Muster, Brücken, Minen, Sudoku", "Simon Tatham's Portable Puzzle Collection, angepasst für OFFLINE. Copyright (c) 2004–2024 Simon Tatham; Teile Copyright Richard Boulton, James Harvey, Mike Pinna, Jonas Kölker, Dariusz Olszewski, Michael Schierl, Lambros Lambrou, Bernd Schmidt, Steffen Bauer, Lennard Sprong, Rogier Goossens, Michael Quevillon, Asher Gordon, Didi Kohen, Ben Harris und Anders Höglund. MIT-Lizenz."],
   ["Rätsel zum Knobeln: 2048", "Spiellogik von Gabriele Cirulli. Copyright (c) 2014 Gabriele Cirulli. MIT-Lizenz."],
 ];
 const ueberHtml = () => `<details class="upd-zeile ueber"><summary class="muted of-klein">Über · Lizenzen fremder Teile</summary><ul class="of-klein">${UEBER_LIZENZEN.map(([was, wer]) => `<li><strong>${esc(was)}</strong>: ${esc(wer)}</li>`).join("")}</ul></details>`;
@@ -1707,7 +1707,8 @@ async function modulAnsichtZeigen() {
     <div class="modul-platz" id="modul-platz"></div><p class="form-msg of-meldung" id="modul-msg"></p>`;
   const id = o.id;
   try {
-    const url = o.url ?? (await client.modulOeffnen(id));
+    // Module im Bereich Pause bekommen auch hier (aus der Bibliothek geöffnet) die Farben des Skins (0.6.6)
+    const url = o.url ?? `${await client.modulOeffnen(id)}${installiertesPaket(id)?.manifest.bereich === "pause" ? `#f=${encodeURIComponent(JSON.stringify(spielFarben()))}` : ""}`;
     const rahmen = new ModulRahmen({ url, titel: o.titel, behaelter: document.getElementById("modul-platz"), dienste: {
       speicherLesen: (k) => client.modulSpeicherLesen(id, k),
       speicherSchreiben: (k, w) => client.modulSpeicherSchreiben(id, k, w),

@@ -108,6 +108,19 @@ test("Das Modul: jedes Spiel aus den Formen gibt es, Stufen je drei, keine Töne
   }
 });
 
+test("Nachtrag 0.6.6 (Bill zu 0.6.5): langer Druck bei Minen, Name und Anleitung ohne App-Rahmen, gleich der Einladung", MIT_TEXT, async () => {
+  const js = await readFile(url("../pakete/spiele-1/inhalt/modul/spiel.js"), "utf8");
+  assert.match(js, /taste: "Fahne setzen", langerDruck: true/);
+  assert.match(js, /if \(s\.langerDruck\) langerDruck\(\$\("puzzlecanvas"\)\)/);
+  assert.match(js, /var LANG = 450;/);
+  assert.match(js, /if \(!imHappen\) \{ \$\("titel"\)\.textContent = s\.titel; \$\("regel"\)\.textContent = s\.regel;/);
+  const formen = JSON.parse(await readFile(FORMEN, "utf8")).formen;
+  for (const f of formen) assert.ok(js.includes(`titel: "${f.titel}", regel: ${JSON.stringify(f.einladung)}`), `${f.id}: Name und Anleitung wie in Pause`);
+  const app = await readFile(url("./app.js"), "utf8");
+  assert.match(app, /manifest\.bereich === "pause" \? `#f=\$\{encodeURIComponent\(JSON\.stringify\(spielFarben\(\)\)\)\}`/, "Farben auch aus der Bibliothek");
+  assert.ok(app.includes("Simon Tatham's Portable Puzzle Collection, angepasst für OFFLINE."));
+});
+
 test("Einbau in die App: Modulformen in Pause, Lumi still, Rahmen zu beim Verlassen, Lizenzen unter Über", async () => {
   const app = await readFile(url("./app.js"), "utf8");
   for (const s of ['p.manifest.bereich === "pause"', 'texte(m, "inhalt/pause-formen.json")', "if (form.modul) return modulHappen(", "pauseModulZu();",

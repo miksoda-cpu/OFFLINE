@@ -1,5 +1,12 @@
 # Änderungen
 
+## Nächste Version (Branch `spiele-nachtrag`, Bill zu 0.6.5)
+
+- **Minen:** Ein langer Druck (450 ms, Finger, Stift oder Maus) setzt die Fahne; der Umschalter bleibt. Rechte und mittlere Maustaste gehen wie bisher direkt durch.
+- **Rätsel aus der Bibliothek geöffnet:** Über dem Spiel stehen Name und Anleitung (gleich der Einladung in Pause). Die App gibt dem Modul auch hier die Farben des Skins mit; ohne Angabe folgt es dem Farbschema des Geräts.
+- **Über · Lizenzen fremder Teile:** beim Tatham-Hinweis „angepasst für OFFLINE“.
+- Paket `spiele-1`: neue Ausgabe mit der Veröffentlichung.
+
 ## 0.6.5 · 07.10.2026 · Rätsel zum Knobeln in Pause, Abkürzungen zweiter Teil
 
 - **Spielpaket 1** (Auftrag 2026-10-07-14, Freigabe Bill 07.10.): Modul `spiele-1` (Art `modul`, Bereich `pause`) mit Lichter, Netz, Muster, Brücken, Minen, Sudoku (Simon Tatham, MIT) und 2048 (Gabriele Cirulli, MIT). Die Tatham-Rätsel sind aus dem Quelltext gebaut (`pakete/spiele-1/tatham-bauen.sh`, Patch: Status abfragbar, WebAssembly von der Seite, Farben aus dem Skin, kein Netz, kein Browser-Speicher), 2048 hat eigenes Aussehen und eigene Eingabe. Tagesrätsel per Startwert aus Datum, Spiel, Stufe. 1,6 MB.

@@ -48,7 +48,8 @@ Für alle, die Pause eingeschaltet haben (ab 14 Jahren), in der Desktop-App.
 
 ## Offene Punkte
 
-- Minen: Die Fahne setzt man mit dem Umschalter „Fahne setzen“; ein langer Druck geht noch nicht.
+- Minen: Fahne mit langem Druck (450 ms) oder mit dem Umschalter, seit dem Nachtrag zu 0.6.5.
+
 - Schleife (Loopy) und Türme (Towers) kommen später.
 
 ## Lizenzen
