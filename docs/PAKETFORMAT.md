@@ -69,6 +69,8 @@ Der Ordnername ist `<id>-<version>`. Er ist nur Konvention; maßgeblich ist das 
 | `alter_ab` | nein | Ab welchem Alter das Paket im Kinder-Modus sichtbar ist (`0`, `6`, `10`, `14`, `18`). Fehlt es, gilt `0`. |
 | `abnahme` | nein | Fachliche Abnahme wie in `paket.quelle.json` (`keine`, oder wer und Stand). |
 | `datenversion` | nur bei `modul` | Formatversion der gespeicherten Nutzerdaten eines Moduls, ab 1. |
+| `bereich` | nur bei `modul`, optional (ab App 0.6.5) | Wo die App das Modul selbst einbindet. Heute nur `pause`: Die Spiele des Moduls stehen als Happen-Formen in Pause; die Formen beschreibt `inhalt/pause-formen.json` (Format `paket-kit/pause-format.mjs`, `pauseFormenFehler`). |
+| `wasm` | nur bei `modul`, optional (ab App 0.6.5) | `true`: Das Modul führt WebAssembly aus. Erlaubt nur mit einem Schlüssel mit Zweck `wasm` (SICHERHEIT.md, Abschnitt Module); ohne Anmeldung sperrt die Sandbox WebAssembly. |
 | `app_min` | ja | Kleinste App-Version, die das Paket versteht. |
 | `erstellt` | ja | Zeitpunkt der Erstellung, ISO 8601 UTC. |
 | `aenderungen` | nein | Was ist neu – Klartext für „Was ist neu?“. |
@@ -106,6 +108,7 @@ Seit 29.09.2026 (`docs/SICHERHEIT.md`, Abschnitt Module). Zusätzlich zu allem o
 - Signiert mit einem Schlüssel mit Zweck **`module`**, der **nicht** zugleich `katalog` hat (Redaktionsschlüssel). Mit einem Paket- oder Katalogschlüssel signierte Module lehnt die App ab, und der Redaktionsschlüssel signiert keine anderen Pakete.
 - `pruefstatus` ist `redaktion`, `datenversion` ist eine ganze Zahl ab 1, `inhalt/modul/index.html` ist vorhanden.
 - Alle Dateien unter `inhalt/modul/` zusammen höchstens 2 MB.
+- `bereich` nur `pause`, `wasm` nur `true` oder `false`; beide nur bei Modulen und ab `app_min` 0.6.5. WebAssembly läuft nur, wenn `wasm` gesetzt ist und der Schlüssel den Zweck `wasm` hat. Daten-JSON außerhalb von `inhalt/modul/` (z. B. `inhalt/pause-formen.json`) liest die App wie bei Textpaketen.
 - Code nur unter `inhalt/modul/`: Dateien `.js`/`.mjs` anderswo sind ein Fehler. Seiten (`.html`, `.htm`, `.xhtml`, `.svg`) außerhalb von `inhalt/modul/` werden beim Prüfen gelesen und abgelehnt, wenn sie `<script`, ein Ereignis-Attribut (` on…=`) oder `javascript:` enthalten.
 
 Für alle anderen Arten gilt dasselbe noch strenger: gar kein Code, weder als `.js` noch in Seiten. Jede `.css` außerhalb einer Modul-Oberfläche wird gelesen und abgelehnt, wenn sie `@import`, eine `url()` außerhalb des Pakets, `expression()`, `javascript:`, `behavior:`/`-moz-binding` oder Backslash-Escapes enthält.

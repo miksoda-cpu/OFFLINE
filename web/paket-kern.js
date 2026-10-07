@@ -15,6 +15,8 @@ export const TAGE_ENDUNGEN = [".json", ".md", ".txt"];
 // nur mit dem Redaktionsschlüssel (Zweck „module“) signiert und mit pruefstatus „redaktion“.
 export const MODUL_ORDNER = "inhalt/modul/";
 export const MODUL_GRENZE = 2 * 1024 * 1024;
+/** Bereiche, in denen die App ein Modul selbst einbindet (0.6.5): Spiele als Happen-Formen in Pause. */
+export const BEREICHE = ["pause"];
 export const SKRIPT_ENDUNGEN = [".js", ".mjs"];
 export const SEITEN_ENDUNGEN = [".html", ".htm", ".xhtml", ".svg"];
 // Skins (Aussehen): nur Stil, Schriften, Bilder, Lizenzen, Herkunft – unter inhalt/skin/, Einstieg skin.css, höchstens 20 MB.
@@ -143,7 +145,12 @@ export function manifestPruefenStruktur(m) {
     if (versionVergleich(m.app_min || "0", "0.3.0") < 0) f.push("Tagesinhalte brauchen app_min 0.3.0 oder höher");
   }
   if ((m.art === "modul" || m.art === "skin") && versionVergleich(m.app_min || "0", "0.2.0") < 0) f.push(`${m.art === "modul" ? "Module" : "Skins"} brauchen app_min 0.2.0 oder höher (ältere Apps kennen die Art nicht)`);
+  if (m.art !== "modul" && (m.bereich !== undefined || m.wasm !== undefined)) f.push("bereich und wasm gibt es nur bei Modulen");
   if (m.art === "modul") {
+    // 0.6.5: bereich (wo die App das Modul einbindet) und wasm (führt WebAssembly aus; erlaubt nur mit Schlüssel-Zweck „wasm“)
+    if (m.bereich !== undefined && !BEREICHE.includes(m.bereich)) f.push(`bereich ungültig (${BEREICHE.join(", ")})`);
+    if (m.wasm !== undefined && typeof m.wasm !== "boolean") f.push("wasm: true oder false");
+    if ((m.bereich !== undefined || m.wasm === true) && versionVergleich(m.app_min || "0", "0.6.5") < 0) f.push("bereich und wasm brauchen app_min 0.6.5 oder höher (ältere Apps kennen sie nicht)");
     if (m.pruefstatus !== "redaktion") f.push("Module nur mit pruefstatus redaktion");
     if (!Number.isInteger(m.datenversion) || m.datenversion < 1) f.push("Module brauchen datenversion (ganze Zahl ab 1)");
     if (!m.dateien.some((d) => d.pfad === MODUL_ORDNER + "index.html")) f.push("Modul ohne inhalt/modul/index.html");

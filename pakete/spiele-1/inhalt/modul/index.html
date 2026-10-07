@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="de-AT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rätsel zum Knobeln</title>
+<link rel="stylesheet" href="spiel.css">
+</head>
+<body>
+<!-- Rätsel zum Knobeln (Auftrag 2026-10-07-14). Den Rahmen (✕, Name, Einladung) zeichnet die App; hier stehen nur das Spiel
+     und seine Knöpfe. Welches Spiel, welche Stufe und welcher Tag: aus der Adresse (#spiel=…&stufe=…&datum=…), die die App setzt.
+     Ohne Angabe zeigt die Seite die Auswahl. Spiel-Logik: Simon Tathams Portable Puzzle Collection und 2048 von Gabriele
+     Cirulli, beide MIT-Lizenz (lizenzen.txt). Die Seite läuft in der Sandbox der App, ohne Netz; window.offline ist die Brücke. -->
+<div id="auswahl" class="auswahl" hidden>
+  <p class="leise">Rätsel des Tages, für alle gleich.</p>
+  <ul id="auswahl-liste"></ul>
+</div>
+
+<div id="spiel" class="spiel" hidden>
+  <p class="stand" id="stand" aria-live="polite"></p>
+
+  <!-- Tatham: Diese Elemente erwartet das Programm der Rätsel. Menü, Statuszeile und Links bleiben verborgen. -->
+  <main id="puzzle" hidden>
+    <form id="gamemenu" hidden><ul>
+      <li><div tabindex="-1"><ul>
+        <li><button type="button" id="specific" tabindex="-1">Spiel-ID</button></li>
+        <li><button type="button" id="random" tabindex="-1">Startwert</button></li>
+        <li><button type="button" id="prefs" tabindex="-1">Einstellungen</button></li>
+      </ul></div></li>
+      <li><div tabindex="-1"><ul role="menu" id="gametype"></ul></div></li>
+      <li><button type="button" id="new" tabindex="-1">Neu</button></li>
+      <li><button type="button" id="restart" tabindex="-1">Von vorn</button></li>
+      <li><button type="button" id="undo" tabindex="-1">Zurück</button></li>
+      <li><button type="button" id="redo" tabindex="-1">Wieder vor</button></li>
+      <li><button type="button" id="solve" tabindex="-1">Auflösen</button></li>
+    </ul></form>
+    <div id="puzzlecanvascontain"><canvas id="puzzlecanvas" tabindex="0" aria-label="Spielfeld"></canvas></div>
+    <div id="statusbar" hidden></div>
+    <p hidden><a id="permalink-desc"></a><a id="permalink-seed"></a></p>
+  </main>
+
+  <!-- 2048: eigenes Aussehen, Logik von Gabriele Cirulli (2048/) -->
+  <div id="brett" class="brett" hidden>
+    <div class="punkte">Punkte <strong id="punkte">0</strong></div>
+    <div class="brett-feld" id="brett-feld" role="img" aria-label="Spielfeld 4 mal 4"></div>
+  </div>
+
+  <div class="ziffern" id="ziffern" role="group" aria-label="Ziffern" hidden></div>
+  <div class="aufloesung" id="aufloesung" role="status" aria-live="polite"></div>
+  <div class="knoepfe" id="knoepfe"></div>
+</div>
+<script src="spiel.js"></script>
+</body>
+</html>

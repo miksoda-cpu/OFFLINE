@@ -58,6 +58,8 @@ Alles unter `inhalt/` wird signiert und ausgeliefert. Alles außerhalb bleibt be
 | `abnahme` | ja | `keine`, oder wer fachlich abgenommen hat bzw. abnehmen muss (`Feuerwehr`, `Rettung`, …) und der Stand (`angefragt`, `erteilt am …`). Dieses Feld führt. Ein Feld `fachlich_abgenommen` in einzelnen Inhalten (etwa im Guide-Format) zeigt höchstens den Stand je Inhalt an und ersetzt `abnahme` nie |
 | `ki_generiert` | bei `skin`, sonst nein | `true`, wenn Bilder oder andere Inhalte mit KI erzeugt sind. Die Katalogkarte zeigt dann „Bilder KI-generiert, Herkunft im Paket“; die Herkunft (Modell, Datum, Prompts) liegt im Paket |
 | `datenversion` | bei `modul` | ganze Zahl, beginnt bei 1. Erhöhen, wenn sich das Format gespeicherter Nutzerdaten ändert (siehe 7) |
+| `bereich` | nein (nur `modul`) | `pause`: die App zeigt die Spiele des Moduls als Formen in Pause; dazu `inhalt/pause-formen.json`. Ab `app_min` 0.6.5 |
+| `wasm` | nein (nur `modul`) | `true`, wenn das Modul WebAssembly ausführt. Nur für Module der Redaktion (eigener Herausgeber); ohne Anmeldung sperrt die Sandbox es. Ab `app_min` 0.6.5 |
 
 ## 3. Die Slideshow `inhalt/vorschau/`
 

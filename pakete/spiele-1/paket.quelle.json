@@ -1,0 +1,61 @@
+{
+  "id": "spiele-1",
+  "titel": "Rätsel zum Knobeln",
+  "beschreibung": "Sieben Rätsel für Pause: Lichter, Netz, Muster, Brücken, Minen, Sudoku und 2048. Jeden Tag für alle dasselbe, von leicht bis schwer.",
+  "art": "modul",
+  "bereich": "pause",
+  "wasm": true,
+  "sprache": "de-AT",
+  "lizenz": "MIT (Simon Tatham; Gabriele Cirulli)",
+  "herausgeber": "The Digioneer",
+  "quellen": [
+    {
+      "id": "tatham",
+      "name": "Simon Tatham's Portable Puzzle Collection (MIT-Lizenz), Quelltext vom 22.09.2026, für OFFLINE gebaut",
+      "url": "https://www.chiark.greenend.org.uk/~sgtatham/puzzles/"
+    },
+    {
+      "id": "cirulli",
+      "name": "2048 von Gabriele Cirulli (MIT-Lizenz), Spiellogik",
+      "url": "https://github.com/gabrielecirulli/2048"
+    }
+  ],
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "app_min": "0.6.5",
+  "aenderungen": "Neu: sieben Rätsel für Pause, von leicht bis schwer.",
+  "alter_ab": 14,
+  "kategorie": "jeden-tag",
+  "braucht_netz": false,
+  "abnahme": "Redaktion (Code), 07.10.2026: alle sieben Spiele in WebKit über den echten Modulserver gespielt, hell und dunkel, bei 360 px",
+  "datenversion": 1,
+  "freigegeben": false,
+  "offen": [
+    "LIESMICH.md",
+    "tatham-bauen.sh",
+    "quelle/tatham-offline.patch",
+    "inhalt/lizenzen.txt",
+    "inhalt/modul/index.html",
+    "inhalt/modul/spiel.js",
+    "inhalt/modul/spiel.css",
+    "inhalt/modul/lizenzen.txt",
+    "inhalt/modul/2048/grid.js",
+    "inhalt/modul/2048/tile.js",
+    "inhalt/modul/2048/game_manager.js",
+    "inhalt/modul/2048/license.txt",
+    "inhalt/modul/tatham/licence.txt",
+    "inhalt/modul/tatham/lightup.js",
+    "inhalt/modul/tatham/lightup.wasm.js",
+    "inhalt/modul/tatham/net.js",
+    "inhalt/modul/tatham/net.wasm.js",
+    "inhalt/modul/tatham/pattern.js",
+    "inhalt/modul/tatham/pattern.wasm.js",
+    "inhalt/modul/tatham/bridges.js",
+    "inhalt/modul/tatham/bridges.wasm.js",
+    "inhalt/modul/tatham/mines.js",
+    "inhalt/modul/tatham/mines.wasm.js",
+    "inhalt/modul/tatham/solo.js",
+    "inhalt/modul/tatham/solo.wasm.js"
+  ]
+}

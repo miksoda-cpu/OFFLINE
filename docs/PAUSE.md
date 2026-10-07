@@ -59,6 +59,18 @@ Hauptknopf: helles Rot (`--accent-soft`) mit roter Schrift, 12,5 px, Gewicht 500
 
 **Warten auf eine Funktion** (im Paket mit `bedingung.funktion`, nicht gebaut): Sonnengruß-Kette (`bilderfolge`), Wo liegt es? und Nachbar-Namen (`tresor-fragen`), Rezept nur einmal (`kochbuch`), Weg im Kopf (`karte-offline`), Frag jemanden (`tagebuch`). Das Tagesrätsel bleibt ein eigenes Paket und meldet sein Ergebnis ins Spiel-Log (`quelle: "raetsel"`). Wichteln meldet eine ausgeloste Runde über `offline.spiel.melden`.
 
+## Spiele aus Modulen (seit 0.6.5, Spielpaket 1)
+
+Ein Modul mit `"bereich": "pause"` bringt eigene Formen mit (`inhalt/pause-formen.json`, Format `pauseFormenFehler` in `paket-kit/pause-format.mjs`). Das erste ist `spiele-1`, „Rätsel zum Knobeln“: Lichter, Netz, Muster, Brücken, Minen, Sudoku (Simon Tatham, MIT) und 2048 (Gabriele Cirulli, MIT). Nur in der Desktop-App, weil der Web-Prototyp keine Module annimmt.
+
+- **Einbau:** `pauseDaten()` hängt die Formen aktiver Module an die Formen des Pakets `pause` (`modulFormen` in `web/pause.js`). Sie stehen im Raum, in „Deine Linie“ und beim Dirigenten wie jede andere Form (Gruppe `raetsel` bzw. `spiel`).
+- **Im Happen:** `modulHappen` (`web/pause-happen.js`) öffnet das Modul im Rahmen des Happens in der Sandbox. In der Adresse stehen Spiel, Stufe, Datum, das wievielte Spiel heute (`spielNummerHeute`) und die Farben des Skins. Am Ende meldet das Modul über `offline.spiel.melden` „gelöst“ oder „offen“; der Happen schreibt es mit `quelle: "pause"` ins Spiel-Log (nichts doppelt) und zeigt den Satz aus dem Paket. Die Lumi bleibt still. ✕ schließt Happen und Rahmen.
+- **Stufen:** je drei. Tatham: die eingebauten Schwierigkeiten in Handygröße (Lichter 7 × 7 leicht/mittel/schwer, Netz 5 × 5/7 × 7/9 × 9, Muster 5 × 5/10 × 10/15 × 15, Brücken 7 × 7 leicht/mittel/schwer, Minen 9 × 9 mit 10 oder 35, 16 × 16 mit 40, Sudoku leicht/mittel/schwer). 2048: Ziel 512, 1024, 2048. Ab 14 Stufe 2. Gelöst zählt als Treffer (1 von 1), „Auflösen“, „Aufhören“ und verloren als 0; die Zone stellt nach wie bei den anderen Formen.
+- **Tagesrätsel:** Startwert aus Datum, Spiel, Stufe und Nummer des Spiels am Tag. Das erste Spiel des Tages ist für alle gleich, auch ohne Netz (`werkzeug/spiele-probe.mjs`). Bei Minen hängt die Lage zusätzlich vom ersten Tipp ab.
+- **Bedienung am Handy:** Umschalter für die zweite Taste („Punkt setzen“, „Rechtsherum“, „Leer markieren“, „Fahne setzen“), Ziffernleiste für Sudoku, Wischen und Pfeiltasten bei 2048. Zurück, Von vorn, Auflösen bzw. Aufhören.
+- **Ohne Hebel:** keine Töne, keine Effekte beim Gewinnen, das Wort „Training“ kommt nicht vor. Die Punkte von 2048 sind nur während der Runde zu sehen, werden nicht gespeichert und nicht verglichen.
+- **Dauer:** Rätsel dürfen länger dauern als die Happen der App (bis 15 Minuten); der Raum zeigt die Dauer.
+
 ## Der Dirigent (Regeln, ohne KI, ohne Netz)
 
 1. Nur Formen, die verfügbar sind (Funktion da, Altersband, Tageszeit, was sie braucht) und nicht mit „Nicht mehr“ ausgeschlossen. Nie zweimal dieselbe hintereinander, wenn es anders geht.

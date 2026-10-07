@@ -1,7 +1,7 @@
 {
-  "zeit": "2026-09-29T10:43:25.161Z",
-  "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6.2 Safari/605.1.15",
-  "versuche": 35,
+  "zeit": "2026-10-07T09:03:29.875Z",
+  "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Safari/605.1.15",
+  "versuche": 49,
   "offen": [],
   "ergebnisse": [
     {
@@ -62,12 +62,12 @@
     {
       "name": "WebRTC über leeren Unterrahmen",
       "blockiert": true,
-      "text": "SecurityError: Sandbox access violation: Blocked a frame at \"http://127.0.0.1:51286\" from accessing a cross-origin frame.  Both frames are sandboxed and lack th"
+      "text": "SecurityError: Sandbox access violation: Blocked a frame at \"http://127.0.0.1:52364\" from accessing a cross-origin frame.  Both frames are sandboxed and lack th"
     },
     {
       "name": "WebRTC über srcdoc-Rahmen",
       "blockiert": true,
-      "text": "SecurityError: Sandbox access violation: Blocked a frame at \"http://127.0.0.1:51286\" from accessing a cross-origin frame.  Both frames are sandboxed and lack th"
+      "text": "SecurityError: Sandbox access violation: Blocked a frame at \"http://127.0.0.1:52364\" from accessing a cross-origin frame.  Both frames are sandboxed and lack th"
     },
     {
       "name": "WebRTC (STUN ins Internet)",
@@ -85,17 +85,57 @@
       "text": "EvalError: Refused to evaluate a string as JavaScript because 'unsafe-eval' or 'trusted-types-eval' is not an allowed source of script in the following Content "
     },
     {
+      "name": "WebAssembly ohne Anmeldung",
+      "blockiert": true,
+      "text": "CompileError: Refused to create a WebAssembly object because 'unsafe-eval' or 'wasm-unsafe-eval' is not an allowed source of script in the following Content Sec"
+    },
+    {
       "name": "parent.document lesen",
       "blockiert": true,
-      "text": "SecurityError: Sandbox access violation: Blocked a frame at \"http://127.0.0.1:51286\" from accessing a cross-origin frame.  The frame requesting access is sandbo"
+      "text": "SecurityError: Sandbox access violation: Blocked a frame at \"http://127.0.0.1:52364\" from accessing a cross-origin frame.  The frame requesting access is sandbo"
     },
     {
       "name": "parent.__TAURI__ / invoke",
       "blockiert": true,
-      "text": "SecurityError: Sandbox access violation: Blocked a frame at \"http://127.0.0.1:51286\" from accessing a cross-origin frame.  The frame requesting access is sandbo"
+      "text": "SecurityError: Sandbox access violation: Blocked a frame at \"http://127.0.0.1:52364\" from accessing a cross-origin frame.  The frame requesting access is sandbo"
     },
     {
-      "name": "eigenes __TAURI_INTERNALS__",
+      "name": "Tauri-Objekt benutzbar",
+      "blockiert": true,
+      "text": "nicht vorhanden"
+    },
+    {
+      "name": "Tauri-Rohkanal (window.ipc)",
+      "blockiert": true,
+      "text": "nicht vorhanden"
+    },
+    {
+      "name": "WebView2-Kanal (chrome.webview)",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "Tauri-Aufruf app_info",
+      "blockiert": true,
+      "text": "Error: nicht vorhanden"
+    },
+    {
+      "name": "Tauri-Aufruf tresor_status",
+      "blockiert": true,
+      "text": "Error: nicht vorhanden"
+    },
+    {
+      "name": "Tauri-Aufruf Webseite öffnen",
+      "blockiert": true,
+      "text": "Error: nicht vorhanden"
+    },
+    {
+      "name": "Tauri-Aufruf Ordnerdialog",
+      "blockiert": true,
+      "text": "Error: nicht vorhanden"
+    },
+    {
+      "name": "WebKit-Kanal (webkit.messageHandlers)",
       "blockiert": true,
       "text": "false"
     },
@@ -157,7 +197,37 @@
     {
       "name": "Flut (300 Aufrufe auf einmal)",
       "blockiert": true,
-      "text": "44 von 300 beantwortet"
+      "text": "50 von 300 beantwortet"
+    },
+    {
+      "name": "Spiel: Meldung unter fremdem Modul",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "Spiel: fremde Einträge lesen",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "Spiel: übergroßes Ergebnis",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "Spiel: verschachtelte Werte",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "Spiel: unbekannte Trainingsart",
+      "blockiert": true,
+      "text": "false"
+    },
+    {
+      "name": "Spiel: Flut (30 Meldungen in einer Minute)",
+      "blockiert": true,
+      "text": "9 von 30 angenommen"
     },
     {
       "name": "window.open",
@@ -181,5 +251,5 @@
     }
   ],
   "verletzungen": 13,
-  "abgelehnt_von_der_app": 260
+  "abgelehnt_von_der_app": 280
 }

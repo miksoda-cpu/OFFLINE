@@ -36,6 +36,10 @@ jobs:
           cargo build --manifest-path kern/Cargo.toml --bin offline-kern
           CHROME="C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe" node werkzeug/sandbox-probe.mjs --chrome
 
+      - name: Spiele-Probe gegen Edge (Tagesrätsel, WebAssembly in der Sandbox)
+        shell: bash
+        run: CHROME="C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe" node werkzeug/spiele-probe.mjs --chrome
+
       - name: Quellstand 0.1.8 daneben legen
         shell: bash
         # Der Cache legt alt/app/src-tauri/target schon an; beiseitelegen, Quellstand holen, zurücklegen

@@ -10,7 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { tageBereichFehler, tageInhaltFehler } from "./tage-format.mjs";
 import { tippsFehler } from "./tipps-format.mjs";
-import { pauseFehler } from "./pause-format.mjs";
+import { pauseFehler, pauseFormenFehler } from "./pause-format.mjs";
 import { buchFehler, zuordnungFehler } from "./buch-format.mjs";
 import { gedankenFehler } from "./gedanken-format.mjs";
 
@@ -118,6 +118,12 @@ async function pruefen(ordner) {
   }
   if (!txt(meta.abnahme)) F("abnahme fehlt (\"keine\" oder wer abnimmt und Stand)");
   if (meta.art === "modul" && !(Number.isInteger(meta.datenversion) && meta.datenversion >= 1)) F("datenversion fehlt (ganze Zahl ab 1, Pflicht bei art = modul)");
+  // 0.6.5: bereich (die App bindet das Modul selbst ein, heute nur „pause“) und wasm (WebAssembly, SICHERHEIT.md)
+  if (meta.art !== "modul" && (meta.bereich !== undefined || meta.wasm !== undefined)) F("bereich und wasm gibt es nur bei Modulen");
+  if (meta.bereich !== undefined && meta.bereich !== "pause") F(`bereich ungültig: ${meta.bereich} (erlaubt: pause)`);
+  if (meta.wasm !== undefined && typeof meta.wasm !== "boolean") F("wasm muss true oder false sein");
+  if (meta.wasm === true && meta.pruefstatus !== "redaktion") F("wasm nur für Module der Redaktion (eigener Herausgeber)");
+  if ((meta.bereich !== undefined || meta.wasm === true) && txt(meta.app_min) && versionKleiner(meta.app_min, "0.6.5")) F("bereich und wasm: app_min muss 0.6.5 oder höher sein");
   if (meta.ki_generiert !== undefined && typeof meta.ki_generiert !== "boolean") F("ki_generiert muss true oder false sein");
   if ((meta.art === "modul" || meta.art === "skin") && txt(meta.app_min) && appMinZuAlt(meta.app_min)) F(`art = ${meta.art}: app_min muss 0.2.0 oder höher sein (ältere Apps kennen Module und Skins nicht)`);
   if (meta.art === "modul" && meta.pruefstatus !== "redaktion") F("art = modul: pruefstatus muss redaktion sein (SICHERHEIT.md, Module, Bedingung 2)");
@@ -172,6 +178,8 @@ async function pruefen(ordner) {
   for (const d of liste.filter((d) => [".html", ".js", ".css", ".svg"].includes(path.extname(d.rel)))) {
     const t = await readFile(path.join(inhalt, d.rel), "utf8");
     for (const [re, was] of VERBOTEN) if (re.test(t)) F(`inhalt/${d.rel}: verboten – ${was}`);
+    // WebAssembly nur mit Anmeldung im Manifest (die Sandbox sperrt es sonst ohnehin; so fällt es schon beim Bau auf)
+    if (d.rel.startsWith("modul/") && /WebAssembly/.test(t) && meta.wasm !== true) F(`inhalt/${d.rel}: WebAssembly ohne Anmeldung ("wasm": true in paket.quelle.json)`);
     if (d.rel.startsWith("modul/") && /localStorage/.test(t) && !/window\.offline/.test(t)) F(`inhalt/${d.rel}: localStorage direkt verwendet; nur über offline.speicher (Ersatz für die Entwicklung erlaubt)`);
     // offline.spiel.melden / .liste gibt es ab App 0.4.0: entweder app_min 0.4.0 oder vorher prüfen (if (offline.spiel) …)
     if (d.rel.startsWith("modul/") && /offline\.spiel\b/.test(t) && !(txt(meta.app_min) && !versionKleiner(meta.app_min, "0.4.0")) && !/if\s*\(\s*(window\.)?offline\.spiel\s*\)|(window\.)?offline\.spiel\s*&&/.test(t)) H(`inhalt/${d.rel}: offline.spiel gibt es erst ab App 0.4.0 – app_min auf 0.4.0 setzen oder vorher prüfen (if (offline.spiel) …)`);
@@ -273,6 +281,16 @@ async function pruefen(ordner) {
     try { t = JSON.parse(await readFile(path.join(inhalt, "pause.json"), "utf8")); } catch { F("inhalt/pause.json: kein gültiges JSON"); }
     if (t) for (const f of pauseFehler(t)) F(`inhalt/pause.json: ${f}`);
     if (txt(meta.app_min) && versionKleiner(meta.app_min, "0.4.0")) F("Pause-Inhalte: app_min muss 0.4.0 oder höher sein");
+  }
+
+  // --- Modul im Bereich Pause (inhalt/pause-formen.json): Spiele als Happen-Formen ---
+  if (meta.art === "modul" && meta.bereich === "pause") {
+    let t = null;
+    if (!liste.find((d) => d.rel === "pause-formen.json")) F("bereich = pause: inhalt/pause-formen.json fehlt");
+    else {
+      try { t = JSON.parse(await readFile(path.join(inhalt, "pause-formen.json"), "utf8")); } catch { F("inhalt/pause-formen.json: kein gültiges JSON"); }
+      if (t) for (const f of pauseFormenFehler(t)) F(`inhalt/pause-formen.json: ${f}`);
+    }
   }
 
   // --- Quellen-Verweise und Notrufhinweis in den Inhalten ---

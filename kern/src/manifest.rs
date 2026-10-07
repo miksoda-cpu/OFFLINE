@@ -39,6 +39,8 @@ impl TageBereich {
 /// nur mit dem Redaktionsschlüssel (Zweck „module“) signiert und mit `pruefstatus: redaktion`.
 pub const MODUL_ORDNER: &str = "inhalt/modul/";
 pub const MODUL_GRENZE: u64 = 2 * 1024 * 1024;
+/// Bereiche, in denen die App ein Modul selbst einbindet (0.6.5).
+pub const BEREICHE: [&str; 1] = ["pause"];
 const SKRIPT_ENDUNGEN: [&str; 2] = [".js", ".mjs"];
 const SEITEN_ENDUNGEN: [&str; 4] = [".html", ".htm", ".xhtml", ".svg"];
 /// Skins (Aussehen): nur Stil, Schriften, Bilder, Lizenzen, Herkunft – unter `inhalt/skin/`, Einstieg `skin.css`, höchstens 20 MB.
@@ -98,6 +100,13 @@ pub struct Manifest {
     /// Nur bei Modulen: Formatversion der gespeicherten Nutzerdaten, ab 1.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub datenversion: Option<u32>,
+    /// Nur bei Modulen (0.6.5): wo die App das Modul zeigt, heute nur „pause“ (Spiele als Happen-Formen).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bereich: Option<String>,
+    /// Nur bei Modulen (0.6.5): das Modul führt WebAssembly aus. Erlaubt nur mit einem Schlüssel mit Zweck „wasm“
+    /// (modulserver::wasm_erlaubt); ohne Anmeldung sperrt die Sandbox WebAssembly.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub wasm: Option<bool>,
     pub app_min: String,
     pub erstellt: String,
     #[serde(default)]
@@ -344,7 +353,15 @@ pub fn manifest_pruefen_struktur(m: &Manifest) -> Vec<String> {
             f.push(format!("Tagesinhalte zu groß ({summe} Bytes, höchstens {TAGE_GRENZE})"));
         }
     }
+    if m.art != "modul" && (m.bereich.is_some() || m.wasm.is_some()) {
+        f.push("bereich und wasm gibt es nur bei Modulen".into());
+    }
     if m.art == "modul" {
+        if let Some(b) = &m.bereich {
+            if !BEREICHE.contains(&b.as_str()) {
+                f.push(format!("bereich ungültig ({})", BEREICHE.join(", ")));
+            }
+        }
         if m.pruefstatus.as_deref() != Some("redaktion") {
             f.push("Module nur mit pruefstatus redaktion".into());
         }

@@ -4,8 +4,8 @@ import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUeb
 import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch, tippPool, tippKnoepfeHtml, ZIELE, FUNKTIONEN } from "./wesen.js";
 import { WERTE as PAUSE_WERTE, LEBENSABSCHNITTE, APPETIT, ART_TEXT, angeboten as pauseAngeboten, einstellungenLaden as pauseEinstellungenLaden, linieLaden as pauseLinieLaden,
   logDazu as pauseLogDazu, happenFaellig, waehle as pauseWaehle, bewerten as pauseBewerten, schwierigkeit as pauseSchwierigkeit, zoneAnpassen, zoneText, zurueckholen as pauseZurueckholen,
-  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, soSeheIchDich, wochenSatz, rueckspiegel, lumischHeute, lumischUmbenannt, lumischSaetze, pauseAufbereiten, imKennenlernen, gewichtVon, stufeVon, verfuegbar as pauseVerfuegbar, tagVon, raumFormen, dauerText } from "./pause.js";
-import { FORMEN as PAUSE_FORMEN, happenFokus } from "./pause-happen.js";
+  rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, soSeheIchDich, wochenSatz, rueckspiegel, lumischHeute, lumischUmbenannt, lumischSaetze, pauseAufbereiten, modulFormen as pauseModulFormen, spielNummerHeute, imKennenlernen, gewichtVon, stufeVon, verfuegbar as pauseVerfuegbar, tagVon, raumFormen, dauerText } from "./pause.js";
+import { FORMEN as PAUSE_FORMEN, happenFokus, modulHappen } from "./pause-happen.js";
 import { ungesehen as neuUngesehen, alsGesehen as neuAlsGesehen, inhaltsAenderungen, inhalteStart, webVersionPruefen, stillPruefenFaellig, webNeuerDa } from "./neuigkeiten.js";
 import { HILFE } from "./hilfe.js";
 import { pruefeSignatur } from "./paket-client.js";
@@ -40,7 +40,7 @@ async function internFreischalten(schluessel) {
   if (k) { history.replaceState(null, "", `${location.pathname}${location.search}#updates`); await internFreischalten(k); }
   else if (location.hash.startsWith("#kanal=")) history.replaceState(null, "", `${location.pathname}${location.search}#updates`);
 }
-const APP_VERSION = "0.6.4";
+const APP_VERSION = "0.6.5";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -910,8 +910,17 @@ function appUpdateZeile() {
   const ortProblem = desktop?.info?.ort_problem;
   if (ortProblem) inhalt = `<span class="tag tag-warn of-plakette of-plakette--warnung">Falscher Ort</span> <span>${esc(ortProblem)}</span><br><span class="muted mono of-klein of-mono" style="font-size:.8rem">${esc(desktop.info.ort)}</span>`;
   const laeuft = u.status === "pruefe" || u.status === "laedt" || !!ortProblem;
-  return `<div class="upd-zeile upd-app"><span>${versionKnopf()} · <span id="app-update-inhalt">${inhalt}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>${internZeileHtml()}`;
+  return `<div class="upd-zeile upd-app"><span>${versionKnopf()} · <span id="app-update-inhalt">${inhalt}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>${internZeileHtml()}${ueberHtml()}`;
 }
+/**
+ * Über: die Copyright-Hinweise fremder Teile, gesammelt (0.6.5, Spielpaket 1, Auftrag 2026-10-07-14). Die Spiele kommen als
+ * Paket „spiele-1“; dort stehen dieselben Hinweise mit dem vollen Lizenztext (inhalt/lizenzen.txt).
+ */
+const UEBER_LIZENZEN = [
+  ["Rätsel zum Knobeln: Lichter, Netz, Muster, Brücken, Minen, Sudoku", "Simon Tatham's Portable Puzzle Collection. Copyright (c) 2004–2024 Simon Tatham; Teile Copyright Richard Boulton, James Harvey, Mike Pinna, Jonas Kölker, Dariusz Olszewski, Michael Schierl, Lambros Lambrou, Bernd Schmidt, Steffen Bauer, Lennard Sprong, Rogier Goossens, Michael Quevillon, Asher Gordon, Didi Kohen, Ben Harris und Anders Höglund. MIT-Lizenz."],
+  ["Rätsel zum Knobeln: 2048", "Spiellogik von Gabriele Cirulli. Copyright (c) 2014 Gabriele Cirulli. MIT-Lizenz."],
+];
+const ueberHtml = () => `<details class="upd-zeile ueber"><summary class="muted of-klein">Über · Lizenzen fremder Teile</summary><ul class="of-klein">${UEBER_LIZENZEN.map(([was, wer]) => `<li><strong>${esc(was)}</strong>: ${esc(wer)}</li>`).join("")}</ul></details>`;
 /** Die Versionsnummer; siebenmal Tippen öffnet das Feld für einen Freischalt-Link (Desktop, wo es keinen Link-Aufruf gibt). */
 const versionKnopf = () => `<button type="button" class="upd-version" data-version-tippen>App ${esc(APP_VERSION)}</button>`;
 let versionTipps = [];
@@ -971,7 +980,7 @@ function webUpdateZeile() {
     default: inhalt = `<span class="muted of-klein">Die App holt sich neue Versionen selbst.</span>`;
   }
   const laeuft = u.status === "pruefe" || u.status === "laedt";
-  return `<div class="upd-zeile upd-app"><span>${versionKnopf()} · <span id="app-update-inhalt">${inhalt}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>${internZeileHtml()}`;
+  return `<div class="upd-zeile upd-app"><span>${versionKnopf()} · <span id="app-update-inhalt">${inhalt}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-app-update-pruefen ${laeuft ? "disabled" : ""}>Nach neuer Version suchen</button></div>${internZeileHtml()}${ueberHtml()}`;
 }
 const heuteTag = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
 const versionHolen = async () => { const r = await fetch(`/version.json?t=${Date.now()}`, { cache: "no-store" }); if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); };
@@ -1152,9 +1161,52 @@ async function installiereMitMeldung(id, ziel) {
 // Eine Funktion im Kern mit eigenem Raum (#pause, seit 0.4.2; Auftrag 2026-10-04-pause-umbau), ein- und ausschaltbar; standardmäßig
 // aus. Inhalte aus dem Paket „pause“ (nur Daten). Logik: web/pause.js, Spiele: web/pause-happen.js, Startwerte: web/pause-werte.js.
 const PP = () => installiertesPaket("pause");
-// Aufbereitet (0.6.4): z. B. endet der eingebaute Fehler bei der höchsten Stufe, für die es Geschichten gibt
+// Aufbereitet (0.6.4): z. B. endet der eingebaute Fehler bei der höchsten Stufe, für die es Geschichten gibt.
+// Dazu (0.6.5) die Spiele aus Modulen im Bereich „pause“ (Spielpaket 1), nur in der Desktop-App und nur aktive Module.
 let pauseDatenMerk = null;
-const pauseDaten = () => { const p = PP(); if (!p) return null; if (pauseDatenMerk?.v !== p.manifest.version) pauseDatenMerk = { v: p.manifest.version, d: pauseAufbereiten(inhalt(p, "inhalt/pause.json")) }; return pauseDatenMerk.d; };
+const pauseModule = () => (desktop ? installierteIds().map(installiertesPaket).filter((p) => p?.manifest.art === "modul" && p.manifest.bereich === "pause" && (state.modul.stand[p.manifest.id]?.aktiv ?? true)) : []);
+const pauseDaten = () => {
+  const p = PP();
+  if (!p) return null;
+  const module = pauseModule(), v = `${p.manifest.version}|${module.map((m) => `${m.manifest.id}@${m.manifest.version}`).join(",")}`;
+  if (pauseDatenMerk?.v !== v) {
+    const d = pauseAufbereiten(inhalt(p, "inhalt/pause.json"));
+    const dazu = module.flatMap((m) => pauseModulFormen(m.manifest.id, texte(m, "inhalt/pause-formen.json"), (d?.formen ?? []).map((f) => f.id)));
+    pauseDatenMerk = { v, d: d?.formen ? { ...d, formen: [...d.formen, ...dazu] } : d };
+  }
+  return pauseDatenMerk.d;
+};
+/** Farben des Skins für ein Spiel im Modul (nur volle Farben als #rrggbb; was fehlt, ersetzt das Modul selbst). */
+function spielFarben() {
+  const s = getComputedStyle(document.documentElement), c = document.createElement("canvas").getContext("2d");
+  const hex = (n) => { const v = s.getPropertyValue(n).trim(); if (!v || !c) return undefined; c.fillStyle = "#000000"; c.fillStyle = v; return /^#[0-9a-f]{6}$/i.test(c.fillStyle) ? c.fillStyle : undefined; };
+  const grund = hex("--eis") ?? "#eef3f6", [r, g, b] = [1, 3, 5].map((i) => parseInt(grund.substr(i, 2), 16));
+  const dunkel = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 < 0.45;
+  return { grund, text: hex("--text"), leise: hex("--muted"), ink: hex("--eis-ink"), ruhig: hex("--eis-ruhig"), karte: hex("--z-karte"), haupt: hex("--accent-soft"), hauptInk: hex("--accent"), warn: hex("--accent"), licht: hex("--warn"), lichtZart: hex(dunkel ? "--warn-soft" : "--sand"), dunkel };
+}
+let pauseModulLaeuft = null; // { id, rahmen } – ein Spiel aus einem Modul im Happen
+function pauseModulZu() {
+  if (!pauseModulLaeuft) return;
+  pauseModulLaeuft.rahmen.schliessen(); client.modulSchliessen?.(pauseModulLaeuft.id).catch(() => {});
+  pauseModulLaeuft = null;
+}
+/** Öffnet das Spiel einer Modul-Form im Happen und wartet auf seine Meldung (null, wenn es sich nicht öffnen ließ). */
+async function pauseModulStarten(form, platz, stufe) {
+  const id = form.modul.id, heute = heuteDatum();
+  let url;
+  try { url = await client.modulOeffnen(id); } catch (e) { platz.innerHTML = `<p class="z-leise">${esc(String(e?.message ?? e))}</p>`; return null; }
+  const adresse = `${url}#spiel=${encodeURIComponent(form.modul.spiel)}&stufe=${stufe}&datum=${heute}&n=${spielNummerHeute(spielLog(), form.id, heute)}&f=${encodeURIComponent(JSON.stringify(spielFarben()))}`;
+  return new Promise((fertig) => {
+    const rahmen = new ModulRahmen({ url: adresse, titel: form.titel, behaelter: platz, dienste: {
+      speicherLesen: (k) => client.modulSpeicherLesen(id, k), speicherSchreiben: (k, w) => client.modulSpeicherSchreiben(id, k, w),
+      vorlesen: async () => {}, drucken: async () => {}, wesenSagen: async () => {}, // im Happen meldet sich die Lumi nicht (0.6.4)
+      // Das Ergebnis übernimmt der Happen selbst (Spiel-Log mit quelle „pause“); hier wird nichts doppelt gezählt
+      spielMelden: async (m) => { if (m.id === form.modul.spiel) { pauseModulZu(); fertig(m); } },
+      spielListe: async () => [],
+    } });
+    pauseModulLaeuft = { id, rahmen };
+  });
+}
 const pauseE = () => pauseEinstellungenLaden(speicher.get("pause", null));
 const pauseL = () => pauseLinieLaden(speicher.get("pause-linie", null));
 const linieSpeichern = (l) => speicher.set("pause-linie", l);
@@ -1214,12 +1266,13 @@ function pauseFokusEinbauen() {
   pauseFokus.ctrl = happenFokus(document.getElementById("happen"), {
     erste: pauseFokus.erste,
     zurueckText: pauseFokus.zurueck === "pause" ? "Zurück zur Pause" : "Zurück zu Heute",
-    zu: () => { const f = pauseFokus; pauseFokus = null; if (f?.gepusht) history.back(); else location.replace(`#${f?.zurueck ?? "start"}`); },
+    zu: () => { pauseModulZu(); const f = pauseFokus; pauseFokus = null; if (f?.gepusht) history.back(); else location.replace(`#${f?.zurueck ?? "start"}`); },
     naechster: (ohne) => {
       if (nurAbend && spielLog().some((e) => e.quelle === "pause" && e.id === "rueckwaerts" && tagVon(Date.parse(e.zeit)) === heuteDatum() && !e.abgebrochen)) return null;
       return pauseWaehle({ formen, linie: pauseL(), log: spielLog(), einstellungen: speicher.get("pause", null), jetzt: testJetzt(), kontext: pauseKontext(nurAbend), ohne });
     },
     spielen: (form, el, rahmen) => {
+      if (form.modul) return modulHappen(el, { form, linie: pauseL(), rahmen, starten: (platz, stufe) => pauseModulStarten(form, platz, stufe) });
       const log = spielLog().filter((e) => e.quelle === "pause"), heute = heuteDatum();
       return PAUSE_FORMEN[form.id](el, {
         form, linie: pauseL(), daten, rahmen, rnd: Math.random, jetzt: testJetzt, antwortRichtig,
@@ -1318,6 +1371,7 @@ function pauseRaumHtml() {
       : `<div class="z-karte z-eis"><p class="z-text" style="margin:0">Gerade schlägt Pause nichts vor. Such dir unten etwas aus.</p></div>`}
     <h2 class="z-ueber">Alle Spiele</h2>
     <ul class="z-liste pause-liste">${liste.map((x) => `<li><button type="button" class="pause-zeile-wahl" data-pause="spielen" data-form="${esc(x.form.id)}" ${x.geht ? "" : "disabled"}><span class="z-name">${esc(x.form.titel)}</span><span class="z-unter">${esc(x.stand)}</span></button></li>`).join("")}</ul>
+    ${desktop && !installiertesPaket("spiele-1") && katalog()?.pakete.some((p) => p.id === "spiele-1") ? `<p class="z-leise">Mehr zum Knobeln: „Rätsel zum Knobeln“ findest du in der <a href="#bibliothek">Bibliothek</a> unter Module.</p>` : ""}
     <div class="z-zeile pause-raum-fuss"><a class="z-neben" href="#linie">Deine Linie</a></div>
     <details class="pause-einst" id="pause-einstellungen"><summary class="z-neben">Einstellungen</summary><div>${pauseEinstellungenHtml()}</div></details></div>`;
 }
@@ -2089,7 +2143,7 @@ function render() {
   blattWeg();
   if (route === "modul") { modulAnsichtZeigen(); return; }
   modulAnsichtVerbergen();
-  if (route !== "happen" && pauseFokus) { pauseFokus.ctrl?.abbrechen(); pauseFokus = null; } // Happen verlassen (Zurück, Navigation): zählt als abgebrochen
+  if (route !== "happen" && pauseFokus) { pauseFokus.ctrl?.abbrechen(); pauseFokus = null; pauseModulZu(); } // Happen verlassen (Zurück, Navigation): zählt als abgebrochen
   document.body.classList.toggle("happen-offen", route === "happen");
   if (route === "happen") {
     if (!pauseFokus?.ctrl) { window.scrollTo(0, 0); main.scrollTop = 0; }

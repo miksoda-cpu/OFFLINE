@@ -1,0 +1,128 @@
+diff --git a/cmake/platforms/emscripten.cmake b/cmake/platforms/emscripten.cmake
+index f168607..8edc52e 100644
+--- a/cmake/platforms/emscripten.cmake
++++ b/cmake/platforms/emscripten.cmake
+@@ -38,6 +38,8 @@ set(emcc_export_list
+   _timer_callback
+   # Callback from button presses in the UI outside the canvas
+   _command
++  # OFFLINE: Status des Spiels (gelöst, verloren, läuft)
++  _game_status
+   # Text-formatting for copying to clipboard
+   _get_text_format
+   _free_text_format
+diff --git a/emcc.c b/emcc.c
+index ae90f3c..c9ce59a 100644
+--- a/emcc.c
++++ b/emcc.c
+@@ -117,6 +117,7 @@ bool key(int keycode, const char *key, const char *chr, int location,
+          bool shift, bool ctrl);
+ void timer_callback(double tplus);
+ void command(int n);
++int game_status(void);
+ char *get_text_format(void);
+ void free_save_file(char *buffer);
+ char *get_save_file(void);
+@@ -304,6 +305,12 @@ void frontend_default_colour(frontend *fe, float *output)
+  * and redo buttons get properly enabled and disabled after every move
+  * or undo or new-game event.
+  */
++/* OFFLINE: Status des Spiels für die App (midend_status: +1 gelöst, -1 verloren, 0 läuft). */
++int game_status(void)
++{
++    return midend_status(me);
++}
++
+ static void post_move(void)
+ {
+     js_enable_undo_redo(midend_can_undo(me), midend_can_redo(me));
+diff --git a/emcclib.js b/emcclib.js
+index c03283d..e073609 100644
+--- a/emcclib.js
++++ b/emcclib.js
+@@ -187,6 +187,8 @@ mergeInto(LibraryManager.library, {
+      */
+     js_set_colour: function(colour_number, colour_string) {
+         colours[colour_number] = UTF8ToString(colour_string);
++        // OFFLINE: Farben aus dem Skin (die Formen bleiben)
++        if (window.offlineFarbe) colours[colour_number] = window.offlineFarbe(colour_number, colours[colour_number]);
+         if (colour_number == 0)
+             document.documentElement.style.setProperty("--puzzle-background",
+                                                        colours[colour_number]);
+@@ -822,13 +824,7 @@ mergeInto(LibraryManager.library, {
+      */
+     js_save_prefs: function(buf) {
+         var prefsdata = UTF8ToString(buf);
+-        try {
+-            localStorage.setItem(location.pathname + " preferences", prefsdata);
+-        } catch (error) {
+-            // Tell the user their preferences have not been saved.
+-            console.error(error);
+-            alert("Saving of preferences failed: " + error.message);
+-        }
++        // OFFLINE: Einstellungen werden im Modul nicht gespeichert
+     },
+ 
+     /*
+@@ -854,13 +850,6 @@ mergeInto(LibraryManager.library, {
+              document.querySelectorAll("script.preferences"))
+             load_prefs_from_string(prefsscript.textContent);
+         // Load saved preferences if they exist.
+-        try {
+-            load_prefs_from_string(
+-                localStorage.getItem(location.pathname + " preferences"));
+-        } catch (error) {
+-            // Log the error but otherwise pretend the settings were
+-            // absent.
+-            console.warn(error);
+-        }
++        // OFFLINE: keine gespeicherten Einstellungen
+     }
+ });
+diff --git a/emccpre.js b/emccpre.js
+index dc3b367..8737804 100644
+--- a/emccpre.js
++++ b/emccpre.js
+@@ -99,7 +99,9 @@ var Module = {
+     },
+     // Pass argv[1] as the fragment identifier (so that permalinks of
+     // the form puzzle.html#game-id can launch the specified id).
+-    'arguments': [decodeURIComponent(location.hash)],
++    // OFFLINE: Spiel-ID und WebAssembly gibt die Seite vor (kein Abruf übers Netz)
++    'arguments': [window.offlineSpielId || decodeURIComponent(location.hash)],
++    'wasmBinary': window.offlineWasm,
+     'noExitRuntime': true
+ };
+ 
+@@ -359,6 +361,8 @@ function initPuzzle() {
+ 
+         var xy = canvas_mouse_coords(event, onscreen_canvas);
+         var logbutton = event.button;
++        // OFFLINE: Umschalter in der App für die zweite Taste (am Handy gibt es keinen Rechtsklick)
++        if (logbutton === 0 && window.offlineTaste) logbutton = window.offlineTaste();
+         if (event.shiftKey)
+             logbutton = 1;   // Shift-click overrides to middle button
+         else if (event.ctrlKey)
+@@ -413,6 +417,8 @@ function initPuzzle() {
+     // Mostly those are button presses, but there's also one for the
+     // game-type dropdown having been changed.
+     command = Module.cwrap('command', 'void', ['number']);
++    // OFFLINE: Ziffernleiste und Status für die App
++    window.offlineSpiel = { key: key, status: Module.cwrap('game_status', 'number', []) };
+ 
+     // Event handlers for buttons and things, which call command().
+     if (specific_button) specific_button.onclick = function(event) {
+@@ -624,12 +630,7 @@ function initPuzzle() {
+     menuform.addEventListener("keydown", menukey);
+ 
+     // Open documentation links within the application in KaiOS.
+-    for (var elem of document.querySelectorAll("#gamemenu a[href]")) {
+-        elem.addEventListener("click", function(event) {
+-            window.open(event.target.href);
+-            event.preventDefault();
+-        });
+-    }
++    // OFFLINE: keine Links aus dem Modul hinaus
+ 
+     // In IE, the canvas doesn't automatically gain focus on a mouse
+     // click, so make sure it does

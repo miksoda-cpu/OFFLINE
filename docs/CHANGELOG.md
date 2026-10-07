@@ -1,5 +1,12 @@
 # Änderungen
 
+## 0.6.5 · 07.10.2026 · Rätsel zum Knobeln in Pause, Abkürzungen zweiter Teil
+
+- **Spielpaket 1** (Auftrag 2026-10-07-14, Freigabe Bill 07.10.): Modul `spiele-1` (Art `modul`, Bereich `pause`) mit Lichter, Netz, Muster, Brücken, Minen, Sudoku (Simon Tatham, MIT) und 2048 (Gabriele Cirulli, MIT). Die Tatham-Rätsel sind aus dem Quelltext gebaut (`pakete/spiele-1/tatham-bauen.sh`, Patch: Status abfragbar, WebAssembly von der Seite, Farben aus dem Skin, kein Netz, kein Browser-Speicher), 2048 hat eigenes Aussehen und eigene Eingabe. Tagesrätsel per Startwert aus Datum, Spiel, Stufe. 1,6 MB.
+- **Pause:** Formen aus Modulen (`modulFormen`, `modulHappen`, `spielNummerHeute`); im Raum ein Hinweis, wo man die Rätsel lädt; die Lizenzen unter „Über · Lizenzen fremder Teile“.
+- **WebAssembly in der Sandbox** (SICHERHEIT.md): nur mit `"wasm": true` im Manifest und einem Schlüssel mit Zweck `wasm` (Redaktionsschlüssel); dann genau `'wasm-unsafe-eval'` in der CSP. Neue Manifestfelder `bereich` und `wasm` in Kern, Werkzeug, Web und Paket-Kit; Module bekommen ihre Daten-JSON wie Textpakete. Rust-Test, Angriff Nr. 49 im bösartigen Testmodul, `werkzeug/spiele-probe.mjs` (zwei Geräte, dasselbe Rätsel; ohne Freigabe keins) in CI und Windows-Probe.
+- **Abkürzungen** (Bill, 07.10.): eine Klammer statt zwei (Semikolon), Überschriften und Knöpfe mit ganzem Wort, BMLUK ausgeschrieben, Regel auch auf der Webseite.
+
 ## 0.6.4 · 07.10.2026 · Pause fordert mehr, Abkürzungen ausgeschrieben
 
 - **Pause, ohne neue Inhalte** (Bill, 07.10.):

@@ -72,7 +72,9 @@ fn lauf() -> Result<(), offline_kern::Fehler> {
                 return Err(offline_kern::Fehler("Verwendung: modul-probe <modulordner> <bruecke.js> <erlaubter-einbetter>".into()));
             };
             let js = std::fs::read_to_string(bruecke)?.replace("__OFFLINE_INFO__", r#"{"version":"probe","alter":null}"#);
-            let srv = offline_kern::modulserver::Modulserver::starten_mit(PathBuf::from(ordner), format!("<script>{js}</script>"), einbetten)?;
+            // optional --wasm: wie ein Modul mit Anmeldung und Redaktionsschlüssel (Gegenprobe zum Angriff „WebAssembly ohne Anmeldung“)
+            let wasm = args.iter().any(|a| a == "--wasm");
+            let srv = offline_kern::modulserver::Modulserver::starten_mit(PathBuf::from(ordner), format!("<script>{js}</script>"), einbetten, wasm)?;
             println!("{}", srv.url());
             // läuft, bis stdin geschlossen wird
             let _ = std::io::Read::read_to_end(&mut std::io::stdin(), &mut Vec::new());
@@ -83,7 +85,7 @@ fn lauf() -> Result<(), offline_kern::Fehler> {
                 println!("{m}");
             }
         }
-        _ => println!("offline-kern\n\n  pruefen <paketordner>\n  delta <alt/paket.json|-> <neu/paket.json>\n  einspielen <paketordner> <installationsordner> [--downgrade]\n  katalog <katalog-url>\n  laden <katalog-url> <paket-id> <installationsordner>\n  aufraeumen <installationsordner>\n  modul-probe <modulordner> <bruecke.js> <erlaubter-einbetter>"),
+        _ => println!("offline-kern\n\n  pruefen <paketordner>\n  delta <alt/paket.json|-> <neu/paket.json>\n  einspielen <paketordner> <installationsordner> [--downgrade]\n  katalog <katalog-url>\n  laden <katalog-url> <paket-id> <installationsordner>\n  aufraeumen <installationsordner>\n  modul-probe <modulordner> <bruecke.js> <erlaubter-einbetter> [--wasm]"),
     }
     Ok(())
 }

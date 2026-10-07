@@ -2,6 +2,17 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.6.5",
+      "datum": "2026-10-07",
+      "punkte": [
+        "Neu in Pause: Rätsel zum Knobeln, von leicht bis schwer.",
+        "Sieben Spiele: Lichter, Netz, Muster, Brücken, Minen, Sudoku und 2048. Jeden Tag gibt es für alle dasselbe Rätsel, auch ohne Netz.",
+        "Die Rätsel laufen in der Desktop-App. Du lädst sie in der Bibliothek unter Module, danach stehen sie im Raum Pause.",
+        "Abkürzungen in Überschriften und auf Knöpfen stehen jetzt als ganzes Wort da. Steht nach einer Abkürzung schon eine Klammer, kommt die Erklärung mit hinein.",
+        "Woher die Spiele kommen und unter welcher Lizenz, steht unter „Über“ bei der Version."
+      ]
+    },
+    {
       "version": "0.6.4",
       "datum": "2026-10-07",
       "punkte": [

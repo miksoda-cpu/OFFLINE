@@ -204,9 +204,11 @@ fn schluessel_laden() -> Vec<OeffentlicherSchluessel> {
 fn paket_aus_ordner(ordner: &Path, schluessel: &[OeffentlicherSchluessel]) -> Result<Paket, String> {
     let g = paket_pruefen(ordner, schluessel, &datum::heute()).map_err(|e| e.0)?;
     let mut inhalt = BTreeMap::new();
-    // Textpakete ganz, Tagespakete nur die Tagesdatei (die Oberfläche braucht sie für die Tagesseite)
-    if g.manifest.art == "inhalt" || g.manifest.art == "tage" {
-        for d in g.manifest.dateien.iter().filter(|d| g.manifest.art == "inhalt" || d.pfad == offline_kern::manifest::TAGE_DATEI) {
+    // Textpakete ganz, Tagespakete nur die Tagesdatei (die Oberfläche braucht sie für die Tagesseite), Module nur ihre
+    // Daten-JSON außerhalb der Oberfläche (0.6.5: z. B. inhalt/pause-formen.json für ein Modul im Bereich Pause)
+    let modul_daten = |p: &str| p.ends_with(".json") && !p.starts_with(offline_kern::manifest::MODUL_ORDNER) && !p.starts_with("inhalt/vorschau/");
+    if g.manifest.art == "inhalt" || g.manifest.art == "tage" || g.manifest.art == "modul" {
+        for d in g.manifest.dateien.iter().filter(|d| g.manifest.art == "inhalt" || d.pfad == offline_kern::manifest::TAGE_DATEI || (g.manifest.art == "modul" && modul_daten(&d.pfad))) {
             if let Ok(t) = std::fs::read_to_string(datei_pfad(ordner, &d.pfad)) {
                 inhalt.insert(d.pfad.clone(), t);
             }

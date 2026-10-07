@@ -80,6 +80,20 @@ export function lumischSaetze(gedanken, woerterbuch) {
   return (gedanken?.gedanken ?? []).map((g) => ({ id: `gedanke-${g.nr}`, titel: g.titel, wer: g.wer, lumisch: g.lumisch, umschrift: g.umschrift, wortFuerWort: g.wort_fuer_wort, deutsch: g.deutsch, woerter: g.lumisch.match(/[A-Za-zÄÖÜäöüß]+/g) ?? [] }))
     .filter((s) => s.woerter.length >= WERTE.lumischSatzMinWoerter && s.woerter.every((w) => wb.has(w)));
 }
+/**
+ * Formen aus einem Modul im Bereich „pause“ (0.6.5, Spielpaket 1): inhalt/pause-formen.json des Moduls. Jede Form ist ein
+ * Spiel im Modul (modul: { id, spiel }); die App öffnet es im Happen in der Sandbox. Unvollständige Formen fallen weg, ebenso
+ * solche, deren id schon eine andere Form trägt. Format: paket-kit/pause-format.mjs (pauseFormenFehler).
+ */
+export function modulFormen(modulId, daten, schonDa = []) {
+  const ids = new Set(schonDa);
+  const ok = (x) => x && typeof x.id === "string" && typeof x.spiel === "string" && typeof x.titel === "string" && typeof x.einladung === "string"
+    && Array.isArray(x.art) && Array.isArray(x.alter) && x.dauer && Number.isInteger(x.zone?.stufen) && typeof x.ende?.geloest === "string" && typeof x.ende?.offen === "string";
+  return (daten?.formen ?? []).filter((x) => ok(x) && !ids.has(x.id) && ids.add(x.id)).map((x) => ({ ...x, tageszeit: x.tageszeit ?? "jederzeit", modul: { id: modulId, spiel: x.spiel } }));
+}
+/** Das wievielte Spiel dieser Form heute (für den Startwert: das erste ist das Rätsel des Tages, für alle gleich). */
+export const spielNummerHeute = (log, formId, heute) => 1 + pauseEintraege(log).filter((e) => e.id === formId && !e.abgebrochen && tagVon(Date.parse(e.zeit)) === heute).length;
+
 /** Stimmt die gelegte Reihenfolge? Gleiche Wörter dürfen ihre Plätze tauschen. */
 export const reihenfolgeRichtig = (gelegt, woerter) => gelegt.length === woerter.length && gelegt.every((w, i) => w === woerter[i]);
 const verwandt = (a, b) => a.id !== b.id && a.art.some((x) => b.art.includes(x));

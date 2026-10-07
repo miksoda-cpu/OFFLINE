@@ -30,11 +30,12 @@
       "algorithmus": "ed25519",
       "oeffentlich": "u2tQMbctY/bvhQ6huC8iTsImI1XE7JBgYVTG+Vlq7FI=",
       "zweck": [
-        "module"
+        "module",
+        "wasm"
       ],
       "gueltig_ab": "2026-09-29",
       "gueltig_bis": null,
-      "bezeichnung": "Redaktionsschlüssel Module 2026 – privat nur auf Miks Mac, signiert nur Module"
+      "bezeichnung": "Redaktionsschlüssel Module 2026 – privat nur auf Miks Mac, signiert nur Module; „wasm“: darf WebAssembly freigeben (eigener Herausgeber)"
     }
   ]
 }

@@ -248,6 +248,22 @@ export const FORMEN = {
   },
 };
 
+// ---------- Spiele aus einem Modul (0.6.5, Spielpaket 1) ----------
+/**
+ * Eine Form aus einem Modul im Bereich „pause“: Das Spiel läuft im Rahmen des Happens in der Sandbox (web/modul-host.js),
+ * mit Stufe, Datum und Farben in der Adresse. starten(platz, stufe) öffnet es und liefert die Meldung des Moduls
+ * ({ ergebnis: { geloest } }) oder null. Ende: der Satz aus dem Paket, gelöst oder offen; kein Falsch-Ton.
+ */
+export async function modulHappen(el, { form, linie, starten, rahmen }) {
+  const stufe = stufeVon(linie, form);
+  el.innerHTML = '<div class="pause-modul"></div>';
+  rahmen?.classList?.add("happen--modul");
+  const m = await starten(el.querySelector(".pause-modul"), stufe);
+  rahmen?.classList?.remove("happen--modul");
+  const geloest = m?.ergebnis?.geloest === true;
+  return { treffer: geloest ? 1 : 0, von: 1, satz: geloest ? form.ende.geloest : form.ende.offen, ergebnis: { treffer: geloest ? 1 : 0, von: 1, stufe, geloest } };
+}
+
 // ---------- Der Fokus-Bildschirm ----------
 /**
  * Zeigt Happen in el (füllt den Inhaltsbereich, am Handy den ganzen Schirm), bis man ✕ oder „Zurück“ tippt. a (von der App):

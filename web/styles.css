@@ -500,6 +500,9 @@ a.pause-zeile { display: block; color: inherit; text-decoration: none; }
 .happen-inhalt { flex: 1; display: flex; flex-direction: column; }
 .happen-inhalt > .z-haupt, .happen-fuss { margin-top: auto; padding-top: .6rem; }
 .happen-inhalt > .z-haupt { align-self: flex-start; }
+/* Spiele aus einem Modul (0.6.5): der Rahmen füllt die Breite; Feld so breit wie hoch, darunter Platz für die Knöpfe */
+.pause-modul { flex: 1; display: flex; min-height: 0; }
+.pause-modul .modul-rahmen { width: 100%; border: 0; border-radius: 0; background: transparent; height: calc(min(100vw - 32px, 604px) + 190px); max-height: calc(100vh - 150px); min-height: 420px; display: block; }
 .happen-fuss { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
 .happen-satz { font-family: var(--z-serif); font-weight: var(--z-h-gewicht); font-size: 1.45rem; line-height: 1.25; margin: .4rem 0 .6rem; }
 .happen-frage { margin-top: .8rem; }

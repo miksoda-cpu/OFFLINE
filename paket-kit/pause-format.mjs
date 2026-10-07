@@ -66,3 +66,36 @@ export function pauseFehler(j) {
   if (!ohneCode) f.push("enthält Code (Skript, Ereignis-Attribut oder javascript:)");
   return f;
 }
+
+/**
+ * Formen aus einem Modul im Bereich „pause“ (inhalt/pause-formen.json, App ab 0.6.5; Spielpaket 1, Auftrag 2026-10-07-14).
+ * Jede Form ist ein Spiel des Moduls: Die App öffnet das Modul im Happen mit spiel, Stufe und Datum in der Adresse und
+ * nimmt das Ergebnis über offline.spiel.melden an. Rätsel dürfen länger dauern als die Happen der App (bis 15 Minuten);
+ * jede Form hat Stufen (zone) und einen Satz fürs Ende, gelöst und offen.
+ */
+export function pauseFormenFehler(j) {
+  const f = [];
+  if (!j || typeof j !== "object") return ["kein Objekt"];
+  if (j.format !== 1) f.push("format muss 1 sein");
+  if (!Array.isArray(j.formen) || !j.formen.length) return [...f, "formen fehlt oder leer"];
+  const ids = new Set();
+  j.formen.forEach((x, i) => {
+    const wo = `formen[${i}]${x?.id ? ` (${x.id})` : ""}`, F = (s) => f.push(`${wo}: ${s}`);
+    if (!x || typeof x !== "object") return F("kein Objekt");
+    if (!ID.test(x.id ?? "") && !/^[0-9]+$/.test(x.id ?? "")) F("id ungültig"); else if (ids.has(x.id) || GEBAUT.includes(x.id)) F("id doppelt oder schon eine Form der App"); else ids.add(x.id);
+    if (!/^[a-z0-9-]{1,40}$/.test(x.spiel ?? "")) F("spiel: Kennung des Spiels im Modul");
+    if (!text(x.titel, 60)) F("titel fehlt oder zu lang (60)");
+    if (!text(x.einladung, 200)) F("einladung: ein Satz, höchstens 200 Zeichen");
+    if (!GRUPPEN.includes(x.gruppe)) F(`gruppe: ${GRUPPEN.join(", ")}`);
+    if (!Array.isArray(x.art) || !x.art.length || !x.art.every((a) => TRAININGSARTEN.includes(a))) F(`art: Liste aus ${TRAININGSARTEN.join(", ")}`);
+    if (!x.dauer || !Number.isInteger(x.dauer.von) || !Number.isInteger(x.dauer.bis) || x.dauer.von < 10 || x.dauer.bis < x.dauer.von || x.dauer.bis > 900) F("dauer: { von, bis } in Sekunden, höchstens 15 Minuten");
+    if (!Array.isArray(x.alter) || !x.alter.length || !x.alter.every((a) => ALTER.includes(a))) F(`alter: Liste aus ${ALTER.join(", ")}`);
+    if (!TAGESZEITEN.includes(x.tageszeit)) F(`tageszeit: ${TAGESZEITEN.join(", ")}`);
+    if (!(Number.isInteger(x.zone?.stufen) && x.zone.stufen >= 1 && x.zone.stufen <= 20 && Number.isInteger(x.zone.start) && x.zone.start >= 1 && x.zone.start <= x.zone.stufen)) F("zone: { stufen 1–20, start }");
+    if (x.beim !== undefined && !text(x.beim, 40)) F("beim: kurze Wendung für den Rückspiegel (höchstens 40)");
+    if (!text(x.ende?.geloest, 160) || !text(x.ende?.offen, 160)) F("ende: { geloest, offen } je ein Satz");
+    for (const k of Object.keys(x)) if (!["id", "spiel", "titel", "einladung", "gruppe", "art", "dauer", "alter", "tageszeit", "zone", "beim", "ende"].includes(k)) F(`unbekanntes Feld: ${k}`);
+  });
+  if (/<script\b|\son[a-z]+\s*=|javascript:/i.test(JSON.stringify(j))) f.push("enthält Code (Skript, Ereignis-Attribut oder javascript:)");
+  return f;
+}

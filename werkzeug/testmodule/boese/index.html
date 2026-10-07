@@ -98,6 +98,8 @@ async function alles() {
   // --- Code nachladen ---
   await versuch("eval", async () => eval("1 + 1") === 2, { direktive: "script-src" });
   await versuch("new Function", async () => new Function("return 2")() === 2, { direktive: "script-src" });
+  // Seit 0.6.5: WebAssembly nur in Modulen mit "wasm": true und Redaktionsschlüssel (SICHERHEIT.md); dieses Modul meldet es nicht an
+  await versuch("WebAssembly ohne Anmeldung", async () => { const m = await WebAssembly.instantiate(new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0])); return !!m.instance; }, { direktive: "script-src" });
 
   // --- App, Tauri, Tresor ---
   await versuch("parent.document lesen", async () => !!parent.document.body);

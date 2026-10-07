@@ -9,6 +9,8 @@
 //! Nur GET/HEAD, nur lesend, keine Pfad-Ausbrüche, keine Verzeichnisse, kein CORS.
 
 use crate::lokalserver::{sicherer_pfad, typ};
+use crate::manifest::Manifest;
+use crate::schluessel::OeffentlicherSchluessel;
 use std::io::{BufRead, BufReader, Write};
 use std::net::{TcpListener, TcpStream};
 use std::path::{Path, PathBuf};
@@ -31,12 +33,21 @@ struct Konfig {
     einschub: String,
 }
 
+/// Darf dieses Modul WebAssembly ausführen (seit 0.6.5, SICHERHEIT.md, Abschnitt Module)? Nur wenn es das im Manifest
+/// anmeldet (`"wasm": true`) und mit einem Schlüssel signiert ist, der den Zweck „wasm“ hat. Den hat vorerst nur der
+/// Redaktionsschlüssel, also nur Pakete des eigenen Herausgebers. Das WebAssembly liegt im Paket; Netz gibt es weiter keins.
+pub fn wasm_erlaubt(m: &Manifest, signiert_mit: Option<&OeffentlicherSchluessel>) -> bool {
+    m.art == "modul" && m.wasm == Some(true) && signiert_mit.is_some_and(|s| s.zweck.iter().any(|z| z == "wasm"))
+}
+
 /// Die Content-Security-Policy eines Moduls. Quellen nur vom eigenen Pfad, kein Netz, keine Formulare,
 /// keine Rahmen, keine Worker, kein eval. `unsafe-inline`, weil Module eine einzige HTML-Datei sein dürfen.
-pub fn csp(port: u16, token: &str, einbetten: &str) -> String {
+/// Mit `wasm` (nur nach `wasm_erlaubt`) kommt genau `'wasm-unsafe-eval'` dazu: WebAssembly übersetzen, sonst nichts.
+pub fn csp(port: u16, token: &str, einbetten: &str, wasm: bool) -> String {
     let selbst = format!("http://127.0.0.1:{port}/{token}/");
+    let wasm = if wasm { " 'wasm-unsafe-eval'" } else { "" };
     format!(
-        "default-src 'none'; script-src 'unsafe-inline' {selbst}; style-src 'unsafe-inline' {selbst}; img-src {selbst} data: blob:; \
+        "default-src 'none'; script-src 'unsafe-inline'{wasm} {selbst}; style-src 'unsafe-inline' {selbst}; img-src {selbst} data: blob:; \
          font-src {selbst} data:; media-src {selbst} data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'; \
          frame-src 'none'; child-src 'none'; worker-src 'none'; object-src 'none'; manifest-src 'none'; \
          frame-ancestors {einbetten}; webrtc 'block'; sandbox allow-scripts"
@@ -65,16 +76,17 @@ fn zufalls_token() -> String {
 
 impl Modulserver {
     /// Startet den Server für `wurzel` (= `<paket>/inhalt/modul`) und liefert sofort zurück.
-    pub fn starten(wurzel: PathBuf, einschub: String) -> std::io::Result<Modulserver> {
-        Self::starten_mit(wurzel, einschub, APP_URSPRUENGE)
+    /// `wasm`: Ergebnis von `wasm_erlaubt` für dieses Modul.
+    pub fn starten(wurzel: PathBuf, einschub: String, wasm: bool) -> std::io::Result<Modulserver> {
+        Self::starten_mit(wurzel, einschub, APP_URSPRUENGE, wasm)
     }
 
     /// Wie `starten`, mit eigener Liste für `frame-ancestors` (Tests, Prüfseite).
-    pub fn starten_mit(wurzel: PathBuf, einschub: String, einbetten: &str) -> std::io::Result<Modulserver> {
+    pub fn starten_mit(wurzel: PathBuf, einschub: String, einbetten: &str, wasm: bool) -> std::io::Result<Modulserver> {
         let l = TcpListener::bind("127.0.0.1:0")?;
         let port = l.local_addr()?.port();
         let token = zufalls_token();
-        let k = Arc::new(Konfig { wurzel, csp: csp(port, &token, einbetten), token: token.clone(), einschub });
+        let k = Arc::new(Konfig { wurzel, csp: csp(port, &token, einbetten, wasm), token: token.clone(), einschub });
         let stop = Arc::new(AtomicBool::new(false));
         let s = stop.clone();
         std::thread::spawn(move || {
@@ -187,6 +199,28 @@ mod tests {
         assert_eq!(einfuegen("<p>x</p>", "[B]"), "[B]<p>x</p>");
     }
 
+    /// WebAssembly (0.6.5): nur mit Anmeldung im Manifest und Schlüssel mit Zweck „wasm“; dann kommt genau
+    /// 'wasm-unsafe-eval' dazu, Netz, eval und alles andere bleiben gesperrt.
+    #[test]
+    fn webassembly_nur_mit_anmeldung_und_eigenem_schluessel() {
+        let ohne = csp(1, "t", "x", false);
+        let mit = csp(1, "t", "x", true);
+        assert!(!ohne.contains("wasm"), "{ohne}");
+        assert!(mit.contains("script-src 'unsafe-inline' 'wasm-unsafe-eval' http://127.0.0.1:1/t/;"), "{mit}");
+        assert_eq!(mit.replace(" 'wasm-unsafe-eval'", ""), ohne, "sonst gleich");
+        assert!(!mit.contains("'unsafe-eval'") && mit.contains("connect-src 'none'"));
+
+        let schluessel = |zweck: &[&str]| OeffentlicherSchluessel { id: "k".into(), algorithmus: "ed25519".into(), oeffentlich: String::new(), zweck: zweck.iter().map(|z| z.to_string()).collect(), gueltig_ab: Some("2026-01-01".into()), gueltig_bis: None, bezeichnung: String::new() };
+        let modul = |wasm: Option<bool>| Manifest { art: "modul".into(), wasm, ..Default::default() };
+        let eigen = schluessel(&["module", "wasm"]);
+        assert!(wasm_erlaubt(&modul(Some(true)), Some(&eigen)));
+        assert!(!wasm_erlaubt(&modul(None), Some(&eigen)), "nicht angemeldet");
+        assert!(!wasm_erlaubt(&modul(Some(false)), Some(&eigen)));
+        assert!(!wasm_erlaubt(&modul(Some(true)), Some(&schluessel(&["module"]))), "Schlüssel ohne Zweck wasm (Herausgeber von außen)");
+        assert!(!wasm_erlaubt(&modul(Some(true)), None), "Schlüssel unbekannt");
+        assert!(!wasm_erlaubt(&Manifest { art: "inhalt".into(), wasm: Some(true), ..Default::default() }, Some(&eigen)), "nur Module");
+    }
+
     #[test]
     fn nur_eigener_pfad_mit_csp_und_bruecke() {
         let dir = std::env::temp_dir().join(format!("offline-modulsrv-{}", std::process::id()));
@@ -194,7 +228,7 @@ mod tests {
         std::fs::write(dir.join("modul/index.html"), "<!doctype html><head><title>M</title></head><body>hi</body>").unwrap();
         std::fs::write(dir.join("modul/app.js"), "1").unwrap();
         std::fs::write(dir.join("geheim.json"), "{\"tresor\":1}").unwrap();
-        let srv = Modulserver::starten(dir.join("modul"), "<script>/*BRUECKE*/</script>".into()).unwrap();
+        let srv = Modulserver::starten(dir.join("modul"), "<script>/*BRUECKE*/</script>".into(), false).unwrap();
         let t = srv.token.clone();
         assert_eq!(t.len(), 32);
 
@@ -205,7 +239,7 @@ mod tests {
         for muss in ["default-src 'none'", "connect-src 'none'", "webrtc 'block'", "form-action 'none'", "frame-src 'none'", "worker-src 'none'", "sandbox allow-scripts", "frame-ancestors tauri://localhost"] {
             assert!(csp.contains(muss), "{muss} fehlt in {csp}");
         }
-        assert!(!csp.contains("unsafe-eval") && !csp.contains("allow-same-origin"));
+        assert!(!csp.contains("unsafe-eval") && !csp.contains("allow-same-origin"), "ohne Anmeldung auch kein WebAssembly");
         assert!(!kopf.contains("Access-Control-Allow-Origin"), "kein CORS");
         assert!(kopf.contains("X-Content-Type-Options: nosniff"));
 

@@ -1,0 +1,17 @@
+Rätsel zum Knobeln (OFFLINE, Paket spiele-1) – Lizenzen der Spiele
+
+Lichter, Netz, Muster, Brücken, Minen und Sudoku stammen aus Simon Tatham's Portable Puzzle Collection
+(https://www.chiark.greenend.org.uk/~sgtatham/puzzles/), gebaut aus dem Quelltext vom 22.09.2026 mit einer
+kleinen Änderung für OFFLINE (Status des Spiels abfragbar, Farben aus dem Skin, kein Netz). Lizenz: modul/tatham/licence.txt.
+
+  This software is copyright (c) 2004-2024 Simon Tatham.
+  Portions copyright Richard Boulton, James Harvey, Mike Pinna, Jonas Kölker, Dariusz Olszewski,
+  Michael Schierl, Lambros Lambrou, Bernd Schmidt, Steffen Bauer, Lennard Sprong, Rogier Goossens,
+  Michael Quevillon, Asher Gordon, Didi Kohen, Ben Harris and Anders Höglund.
+  MIT-Lizenz (Volltext in modul/tatham/licence.txt).
+
+2048: Spiellogik (modul/2048/grid.js, tile.js, game_manager.js) von Gabriele Cirulli
+(https://github.com/gabrielecirulli/2048). Aussehen und Eingabe sind für OFFLINE neu geschrieben.
+
+  Copyright (c) 2014 Gabriele Cirulli
+  MIT-Lizenz (Volltext in modul/2048/license.txt).

@@ -3,7 +3,7 @@
 //! einen dieser Befehle aufruft; die Modul-Id setzt immer die Oberfläche, nie das Modul.
 
 use super::{paket_aus_ordner, Zustand};
-use offline_kern::{einspielen, modulserver::Modulserver, paket::datei_pfad};
+use offline_kern::{einspielen, modulserver::{self, Modulserver}, paket::datei_pfad};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::BTreeMap;
@@ -65,25 +65,27 @@ fn einschub(version: &str) -> String {
     format!("<script>{}</script>", BRUECKE.replace("__OFFLINE_INFO__", &info.to_string()))
 }
 
-/// Installiertes Modul: Ordner, erneut vollständig geprüft (Signatur, Schlüssel passt zur Art, Prüfsummen).
-fn modul_ordner(z: &Zustand, id: &str) -> Result<PathBuf, String> {
+/// Installiertes Modul: Ordner, erneut vollständig geprüft (Signatur, Schlüssel passt zur Art, Prüfsummen), und ob es
+/// WebAssembly ausführen darf (angemeldet und mit einem Schlüssel mit Zweck „wasm“ signiert, SICHERHEIT.md).
+fn modul_ordner(z: &Zustand, id: &str) -> Result<(PathBuf, bool), String> {
     id_ok(id)?;
     let (_, ordner) = einspielen::installierte_version(&z.wurzel(), id).ok_or("Modul ist nicht installiert")?;
     let p = paket_aus_ordner(&ordner, &z.schluessel)?;
     if p.manifest.art != "modul" {
         return Err("Dieses Paket ist kein Modul".into());
     }
-    Ok(ordner)
+    let wasm = modulserver::wasm_erlaubt(&p.manifest, z.schluessel.iter().find(|s| s.id == p.schluessel));
+    Ok((ordner, wasm))
 }
 
 /// Startet den Modulserver und gibt die Adresse für den iframe zurück. Ein bereits laufender Server des Moduls wird ersetzt.
 #[tauri::command]
 pub fn modul_oeffnen(app: AppHandle, z: State<Zustand>, id: String) -> Result<String, String> {
-    let ordner = modul_ordner(&z, &id)?;
+    let (ordner, wasm) = modul_ordner(&z, &id)?;
     if !ist_aktiv(&z, &id) {
         return Err("Das Modul ist ausgeschaltet.".into());
     }
-    let srv = Modulserver::starten(datei_pfad(&ordner, "inhalt/modul"), einschub(&app.package_info().version.to_string())).map_err(|e| e.to_string())?;
+    let srv = Modulserver::starten(datei_pfad(&ordner, "inhalt/modul"), einschub(&app.package_info().version.to_string()), wasm).map_err(|e| e.to_string())?;
     let url = srv.url();
     z.module.lock().map_err(|_| "gesperrt")?.insert(id, srv);
     Ok(url)
@@ -258,7 +260,7 @@ pub fn modul_test_oeffnen(app: AppHandle, z: State<Zustand>, pfad: String) -> Re
     if !cfg!(debug_assertions) {
         return Err("Nur in Entwickler-Builds.".into());
     }
-    let srv = Modulserver::starten(PathBuf::from(pfad), einschub(&app.package_info().version.to_string())).map_err(|e| e.to_string())?;
+    let srv = Modulserver::starten(PathBuf::from(pfad), einschub(&app.package_info().version.to_string()), false).map_err(|e| e.to_string())?;
     let url = srv.url();
     z.module.lock().map_err(|_| "gesperrt")?.insert("modul-test".into(), srv);
     Ok(url)
