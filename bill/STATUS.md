@@ -27,6 +27,7 @@ Alles andere im Repo ist veröffentlicht: Tagesseite mit Roman der Woche und Vor
 - Gesamtkonzept: Projektdokument „OFFLINE-Gesamtkonzept“ (Fassung 6), noch nicht in `docs/`
 
 ## Offen bei Code (wartet)
+- **Nachtrag Spielpaket 1 (Nr. 15, Bill zu 0.6.5):** Branch `spiele-nachtrag`, CI grün, kommt mit der nächsten Version (langer Druck bei Minen, Name und Anleitung aus der Bibliothek, „angepasst für OFFLINE“). Frage an Bill: Spielpaket auch ins Tagesrätsel einbinden (Grundlage „Entscheidung Bill“)?
 - **Abkürzungen PI, DGAM, ÖGC:** Fundstellen bei Mik („OFFLINE - Home/abkuerzungen-offen.md“) für die Inhalts-Session.
 - **Probe Lumi-Seite und Bibliothek als Laden** (Richtung Mik, 06.10.): Bilder und Liste nur lokal bei Mik in „OFFLINE - Home/lumi-bestand/“ (Entwurf, nicht im Repo). Wartet auf Freigabe und sechs Antworten.
 - CI `tests.yml` läuft seit 29.09. bei jedem Push (Werkzeug, Kit, Bereit, Lumi, Kern, Sandbox-Probe).
