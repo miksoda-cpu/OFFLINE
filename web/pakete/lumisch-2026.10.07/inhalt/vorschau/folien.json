@@ -1,0 +1,44 @@
+{
+ "folien": [
+  {
+   "nr": 1,
+   "rolle": "wofuer",
+   "bild": "1.svg",
+   "titel": "Die Sprache der Lumis",
+   "text": "Ein Wort am Tag, 21 Tage lang, danach Wiederholung und neue Wörter. Jedes Wort zum Anhören.",
+   "alt": "Titel „Die Sprache der Lumis“ mit vier Zeilen zum Ablauf"
+  },
+  {
+   "nr": 2,
+   "rolle": "aussehen",
+   "bild": "2.webp",
+   "titel": "So sieht es aus",
+   "text": "Ein Lumisch-Happen in Pause: das Wort des Tages, eine Aufgabe und eine Frage mit Lautsprechern.",
+   "alt": "Bildschirm eines Lumisch-Happens: zan heißt Licht, darunter vier Antworten mit Lautsprecher"
+  },
+  {
+   "nr": 3,
+   "rolle": "inhalt",
+   "bild": "3.svg",
+   "titel": "Was drin ist",
+   "text": "Plan für 21 Tage, 500 Wörter in Gruppen, Umschrift und Lautschrift zu jedem Wort.",
+   "alt": "Liste mit dem Inhalt des Pakets"
+  },
+  {
+   "nr": 4,
+   "rolle": "platz",
+   "bild": "4.svg",
+   "titel": "Klein und ohne Netz",
+   "text": "Etwa 150 kB, nur Text. Gelernte Wörter bleiben auf dem Gerät.",
+   "alt": "Angaben zu Größe und Gerät"
+  },
+  {
+   "nr": 5,
+   "rolle": "herkunft",
+   "bild": "5.svg",
+   "titel": "Von der Redaktion",
+   "text": "Geprüft am 05.10.2026, bisher im Paket Pause. Gratis, ab 14 Jahren.",
+   "alt": "Angaben zu Herkunft, Prüfung, Preis und Alter"
+  }
+ ]
+}

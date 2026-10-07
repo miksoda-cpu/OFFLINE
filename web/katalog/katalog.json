@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-10-07T09:31:24Z",
-  "gueltig_bis": "2027-01-05T09:31:24Z",
+  "erstellt": "2026-10-07T11:03:47Z",
+  "gueltig_bis": "2027-01-05T11:03:47Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -203,6 +203,96 @@
       "aenderungen": "Die Aquarelle sind jetzt als KI-generiert gekennzeichnet. Sonst unverändert.",
       "pfad": "lumi-philosophie-2026.10.06.1/",
       "sha256_manifest": "8453dc9224caa372c8ed47d12b6ab6554f40e56f93c9894ebf7c75038f0fb641",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "lumisch",
+      "version": "2026.10.07",
+      "titel": "Lumisch · die Sprache der Lumis",
+      "beschreibung": "Ein Wort am Tag, 21 Tage lang, danach Wiederholung aus dem Kopf und neue Wörter aus dem Wörterbuch. 500 Wörter, jedes zum Anhören.",
+      "art": "inhalt",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "alter_ab": 14,
+      "bereich": "lumi",
+      "vorschau": {
+        "folien": [
+          {
+            "nr": 1,
+            "rolle": "wofuer",
+            "bild": "1.svg",
+            "titel": "Die Sprache der Lumis",
+            "text": "Ein Wort am Tag, 21 Tage lang, danach Wiederholung und neue Wörter. Jedes Wort zum Anhören.",
+            "alt": "Titel „Die Sprache der Lumis“ mit vier Zeilen zum Ablauf"
+          },
+          {
+            "nr": 2,
+            "rolle": "aussehen",
+            "bild": "2.webp",
+            "titel": "So sieht es aus",
+            "text": "Ein Lumisch-Happen in Pause: das Wort des Tages, eine Aufgabe und eine Frage mit Lautsprechern.",
+            "alt": "Bildschirm eines Lumisch-Happens: zan heißt Licht, darunter vier Antworten mit Lautsprecher"
+          },
+          {
+            "nr": 3,
+            "rolle": "inhalt",
+            "bild": "3.svg",
+            "titel": "Was drin ist",
+            "text": "Plan für 21 Tage, 500 Wörter in Gruppen, Umschrift und Lautschrift zu jedem Wort.",
+            "alt": "Liste mit dem Inhalt des Pakets"
+          },
+          {
+            "nr": 4,
+            "rolle": "platz",
+            "bild": "4.svg",
+            "titel": "Klein und ohne Netz",
+            "text": "Etwa 150 kB, nur Text. Gelernte Wörter bleiben auf dem Gerät.",
+            "alt": "Angaben zu Größe und Gerät"
+          },
+          {
+            "nr": 5,
+            "rolle": "herkunft",
+            "bild": "5.svg",
+            "titel": "Von der Redaktion",
+            "text": "Geprüft am 05.10.2026, bisher im Paket Pause. Gratis, ab 14 Jahren.",
+            "alt": "Angaben zu Herkunft, Prüfung, Preis und Alter"
+          }
+        ],
+        "dateien": [
+          {
+            "pfad": "inhalt/vorschau/1.svg",
+            "groesse": 1065,
+            "sha256": "6a2f6898780ab9b45ad1fc354b7239222b1117bddc122c1f7c11a08871490381"
+          },
+          {
+            "pfad": "inhalt/vorschau/2.webp",
+            "groesse": 15132,
+            "sha256": "6b53a51a513e15a395279943ae93dcf33b4e4c7963e5a5633ef0ede973fd2c80"
+          },
+          {
+            "pfad": "inhalt/vorschau/3.svg",
+            "groesse": 1082,
+            "sha256": "5a5e08bf2b41cd96dac61dbed2924a38a02f800fc5107f311da09f4175507e92"
+          },
+          {
+            "pfad": "inhalt/vorschau/4.svg",
+            "groesse": 934,
+            "sha256": "12adab803bc598aa1752cdb4aa34ee3123d24718267965109aa1e7bbd7c98fed"
+          },
+          {
+            "pfad": "inhalt/vorschau/5.svg",
+            "groesse": 932,
+            "sha256": "dfcf1affac5b2b7ab3ee15e1ff48c030f48710112fe6c2b3172b1cccf481ed22"
+          }
+        ]
+      },
+      "groesse": 145745,
+      "app_min": "0.7.0",
+      "erstellt": "2026-10-07T11:01:38Z",
+      "aenderungen": "Neu: Lumisch als eigenes Paket. Bisher steckte es im Paket Pause.",
+      "pfad": "lumisch-2026.10.07/",
+      "sha256_manifest": "df2e86286082e607a46d456f9b05a6a06e18334da8a946050402fe80a237bbd3",
       "status": "verfuegbar"
     },
     {
