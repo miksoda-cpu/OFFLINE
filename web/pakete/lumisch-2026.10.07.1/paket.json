@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "lumisch",
-  "version": "2026.10.07",
+  "version": "2026.10.07.1",
   "titel": "Lumisch · die Sprache der Lumis",
   "beschreibung": "Ein Wort am Tag, 21 Tage lang, danach Wiederholung aus dem Kopf und neue Wörter aus dem Wörterbuch. 500 Wörter, jedes zum Anhören.",
   "art": "inhalt",
@@ -14,9 +14,9 @@
   "alter_ab": 14,
   "abnahme": "Redaktion (Code), 07.10.2026: Inhalt wortgleich mit Lumisch im Paket pause 2026.10.05.2 (Test web/lumi-seite.test.mjs)",
   "bereich": "lumi",
-  "app_min": "0.7.0",
-  "erstellt": "2026-10-07T11:01:38Z",
-  "aenderungen": "Neu: Lumisch als eigenes Paket. Bisher steckte es im Paket Pause.",
+  "app_min": "0.7.1",
+  "erstellt": "2026-10-07T12:18:40Z",
+  "aenderungen": "100 neue Aufgaben in fünf Stufen. Im Wörterbuch heißt es jetzt „Wir wissen, dass wir nichts wissen“ und „tel3“.",
   "quellen": [
     {
       "id": "redaktion",
@@ -27,8 +27,8 @@
   "dateien": [
     {
       "pfad": "inhalt/lumisch.json",
-      "sha256": "266e7a22f7446275ad6ee166682a20b3ec13dc0477adee952ad557fc33074afb",
-      "groesse": 125298
+      "sha256": "da918c0de957846350f1c12f9e21df9da782ae3bf48892f7d02d465399fd2435",
+      "groesse": 158287
     },
     {
       "pfad": "inhalt/vorschau/1.svg",
@@ -61,5 +61,5 @@
       "groesse": 1302
     }
   ],
-  "groesse": 145745
+  "groesse": 178734
 }

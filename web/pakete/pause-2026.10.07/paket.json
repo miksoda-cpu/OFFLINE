@@ -1,9 +1,9 @@
 {
   "format": 1,
   "id": "pause",
-  "version": "2026.10.05.2",
+  "version": "2026.10.07",
   "titel": "Pause · Happen für zwischendurch",
-  "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten – Pilze finden, Geschichten von unten, Lumisch, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
+  "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten, in fünf Stufen – Pilze finden, Geschichten mit einem Fehler, Kaffeehaus-Logik, Kopfnuss, Gedanken am Fluss, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
   "art": "inhalt",
   "sprache": "de-AT",
   "lizenz": "CC BY-SA 4.0",
@@ -11,12 +11,12 @@
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",
-  "kategorie": "jeden-tag",
   "alter_ab": 14,
   "abnahme": "Redaktion (Code), 05.10.2026: Lumisch gegen die Beilage der Wortprüfung vom 05.10.2026 (500 Wörter nach dem Nachtrag 2026-10-05-05, Plan in 21 Tagen, von Mik freigegeben); Geschichten auf genau einen falschen Satz geprüft",
-  "app_min": "0.4.0",
-  "erstellt": "2026-10-05T17:29:51Z",
-  "aenderungen": "Lumisch zum Anhören: Zu jedem Wort kommt die Aussprache mit.",
+  "bereich": "pause",
+  "app_min": "0.7.1",
+  "erstellt": "2026-10-07T12:17:45Z",
+  "aenderungen": "Pause hat jetzt fünf Stufen, 60 neue Geschichten, je 30 Varianten für den Tag rückwärts und das Atemfenster und drei neue Formen: Kaffeehaus-Logik, Kopfnuss und Ein Gedanke am Fluss.",
   "quellen": [
     {
       "id": "redaktion",
@@ -27,8 +27,8 @@
   "dateien": [
     {
       "pfad": "inhalt/pause.json",
-      "sha256": "fc08b69ce6aa2d86e1e9bb3c3aa958313c1b1b4480209f5b5ca68c4f57f3a801",
-      "groesse": 144297
+      "sha256": "23c6b23dfe17409773b04d3df1ae281b4477236738e8d644ae5d6211a50bfdfa",
+      "groesse": 224500
     },
     {
       "pfad": "inhalt/vorschau/1.svg",
@@ -61,5 +61,5 @@
       "groesse": 1562
     }
   ],
-  "groesse": 204612
+  "groesse": 284815
 }

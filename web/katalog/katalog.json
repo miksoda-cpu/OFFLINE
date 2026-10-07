@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-10-07T11:03:47Z",
-  "gueltig_bis": "2027-01-05T11:03:47Z",
+  "erstellt": "2026-10-07T12:21:49Z",
+  "gueltig_bis": "2027-01-05T12:21:49Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -207,7 +207,7 @@
     },
     {
       "id": "lumisch",
-      "version": "2026.10.07",
+      "version": "2026.10.07.1",
       "titel": "Lumisch · die Sprache der Lumis",
       "beschreibung": "Ein Wort am Tag, 21 Tage lang, danach Wiederholung aus dem Kopf und neue Wörter aus dem Wörterbuch. 500 Wörter, jedes zum Anhören.",
       "art": "inhalt",
@@ -287,25 +287,25 @@
           }
         ]
       },
-      "groesse": 145745,
-      "app_min": "0.7.0",
-      "erstellt": "2026-10-07T11:01:38Z",
-      "aenderungen": "Neu: Lumisch als eigenes Paket. Bisher steckte es im Paket Pause.",
-      "pfad": "lumisch-2026.10.07/",
-      "sha256_manifest": "df2e86286082e607a46d456f9b05a6a06e18334da8a946050402fe80a237bbd3",
+      "groesse": 178734,
+      "app_min": "0.7.1",
+      "erstellt": "2026-10-07T12:18:40Z",
+      "aenderungen": "100 neue Aufgaben in fünf Stufen. Im Wörterbuch heißt es jetzt „Wir wissen, dass wir nichts wissen“ und „tel3“.",
+      "pfad": "lumisch-2026.10.07.1/",
+      "sha256_manifest": "22f2ac47b0f455cc25e17ba1c28d4791065ad1a45c48d8d8dd46d2deae6e49e3",
       "status": "verfuegbar"
     },
     {
       "id": "pause",
-      "version": "2026.10.05.2",
+      "version": "2026.10.07",
       "titel": "Pause · Happen für zwischendurch",
-      "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten – Pilze finden, Geschichten von unten, Lumisch, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
+      "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten, in fünf Stufen – Pilze finden, Geschichten mit einem Fehler, Kaffeehaus-Logik, Kopfnuss, Gedanken am Fluss, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
       "art": "inhalt",
       "pro": false,
       "preis": "gratis",
       "pruefstatus": "redaktion",
-      "kategorie": "jeden-tag",
       "alter_ab": 14,
+      "bereich": "pause",
       "vorschau": {
         "folien": [
           {
@@ -377,12 +377,12 @@
           }
         ]
       },
-      "groesse": 204612,
-      "app_min": "0.4.0",
-      "erstellt": "2026-10-05T17:29:51Z",
-      "aenderungen": "Lumisch zum Anhören: Zu jedem Wort kommt die Aussprache mit.",
-      "pfad": "pause-2026.10.05.2/",
-      "sha256_manifest": "d1867569821909b6bfefdc2f614d112b51048b7901e2759b48c88ebb67841be4",
+      "groesse": 284815,
+      "app_min": "0.7.1",
+      "erstellt": "2026-10-07T12:17:45Z",
+      "aenderungen": "Pause hat jetzt fünf Stufen, 60 neue Geschichten, je 30 Varianten für den Tag rückwärts und das Atemfenster und drei neue Formen: Kaffeehaus-Logik, Kopfnuss und Ein Gedanke am Fluss.",
+      "pfad": "pause-2026.10.07/",
+      "sha256_manifest": "acd1938e36b71fc4c064c97471d9fd45a0a6d140cd0fde841e2aa3f245b120f1",
       "status": "verfuegbar"
     },
     {
@@ -552,7 +552,7 @@
     },
     {
       "id": "ris-bund",
-      "titel": "RIS · Bundesrecht (Auszug)",
+      "titel": "Rechtsinformationssystem (RIS) · Bundesrecht (Auszug)",
       "beschreibung": "Geltende Fassungen wichtiger Bundesgesetze, wöchentlich aktualisiert.",
       "art": "inhalt",
       "pro": true,

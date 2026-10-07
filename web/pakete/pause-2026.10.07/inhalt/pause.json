@@ -26,7 +26,7 @@
    "einladung": "Schau in die Mitte. Gleich blitzt irgendwo ein Pilz auf.",
    "zone": {
     "stufen": 10,
-    "start": 3
+    "start": 5
    },
    "auffrischung_monate": [
     11,
@@ -60,8 +60,8 @@
    "tageszeit": "jederzeit",
    "einladung": "Eine kurze Geschichte von unten. In einem Satz stimmt etwas nicht.",
    "zone": {
-    "stufen": 3,
-    "start": 1
+    "stufen": 5,
+    "start": 3
    },
    "herkunft": "Übungskatalog 7.6 (C)",
    "beim": "bei den Geschichten von unten"
@@ -91,8 +91,8 @@
    "tageszeit": "jederzeit",
    "einladung": "Ein Wort aus der Sprache der Lumis, jeden Tag ein neues.",
    "zone": {
-    "stufen": 3,
-    "start": 1
+    "stufen": 5,
+    "start": 3
    },
    "herkunft": "Übungskatalog 7.7 (C), Lumisch-Wörterbuch Abschnitt 8",
    "beim": "beim Lumisch"
@@ -199,8 +199,8 @@
    "tageszeit": "morgen",
    "einladung": "Wie spät ist es wohl? Schau dabei nicht auf die Uhr.",
    "zone": {
-    "stufen": 3,
-    "start": 1
+    "stufen": 5,
+    "start": 3
    },
    "herkunft": "Übungskatalog 7.4 (A)",
    "beim": "beim Zeitgefühl"
@@ -229,6 +229,95 @@
    "einladung": "Vier ruhige Atemzüge. Der Bildschirm wird dabei dunkler.",
    "herkunft": "Übungskatalog 3.A",
    "beim": "beim Atemfenster"
+  },
+  {
+   "id": "kaffeehaus",
+   "titel": "Kaffeehaus-Logik",
+   "gruppe": "raetsel",
+   "art": [
+    "kraft",
+    "beweglichkeit"
+   ],
+   "trainiert": [
+    "Sl"
+   ],
+   "dauer": {
+    "von": 40,
+    "bis": 180
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Ein kleines Rätsel am Kaffeehaustisch. Wer trinkt was, wer sitzt wo?",
+   "zone": {
+    "stufen": 5,
+    "start": 3
+   },
+   "herkunft": "Pause-Session 07.10.2026, Neue Formen",
+   "beim": "bei der Kaffeehaus-Logik"
+  },
+  {
+   "id": "kopfnuss",
+   "titel": "Kopfnuss",
+   "gruppe": "raetsel",
+   "art": [
+    "kraft",
+    "beweglichkeit"
+   ],
+   "trainiert": [
+    "Tp"
+   ],
+   "dauer": {
+    "von": 30,
+    "bis": 180
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Eine Aufgabe zum Rechnen und Knobeln, ganz im Kopf.",
+   "zone": {
+    "stufen": 5,
+    "start": 3
+   },
+   "herkunft": "Pause-Session 07.10.2026, Neue Formen",
+   "beim": "bei der Kopfnuss"
+  },
+  {
+   "id": "fluss",
+   "titel": "Ein Gedanke am Fluss",
+   "gruppe": "ruhe",
+   "art": [
+    "beweglichkeit"
+   ],
+   "trainiert": [
+    "Sp"
+   ],
+   "dauer": {
+    "von": 60,
+    "bis": 180
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "einladung": "Ein Gedanke zum Nachdenken. Es gibt kein Richtig und kein Falsch.",
+   "zone": {
+    "stufen": 5,
+    "start": 3
+   },
+   "herkunft": "Pause-Session 07.10.2026, Neue Formen",
+   "beim": "beim Gedanken am Fluss"
   },
   {
    "id": "sonnengruss",
@@ -374,184 +463,863 @@
  ],
  "fehler": [
   {
-   "id": "f-01",
+   "id": "feh-1-01",
    "stufe": 1,
+   "titel": "Der Bäcker",
+   "art": "Alltag",
    "saetze": [
-    "Gestern haben wir zwölf Beeren gesammelt.",
-    "Vier haben wir gleich gegessen.",
-    "Den Rest haben wir in die Vorratsnische gelegt.",
-    "Heute früh lagen dort zehn Beeren."
-   ],
-   "fehler": 3,
-   "erklaerung": "Zwölf weniger vier sind acht. Zehn Beeren können es nicht sein."
-  },
-  {
-   "id": "f-02",
-   "stufe": 1,
-   "saetze": [
-    "Unten ist es immer dunkel.",
-    "Nur unsere Antennen machen Licht.",
-    "Darum brauchen wir keine Fenster.",
-    "Mittags scheint die Sonne durch das Höhlendach und wärmt das Moos."
-   ],
-   "fehler": 3,
-   "erklaerung": "Unten ist es immer dunkel. Dort scheint keine Sonne."
-  },
-  {
-   "id": "f-03",
-   "stufe": 1,
-   "saetze": [
-    "Ein Pinguin ist durch eine Spalte im Eis zu uns gerutscht.",
-    "Er war nass und hatte Hunger.",
-    "Wir haben ihm einen Fisch aus dem Becken gegeben.",
-    "Danach ist er davongeflogen, zurück nach oben."
-   ],
-   "fehler": 3,
-   "erklaerung": "Pinguine können nicht fliegen. Er ist die Spalte wieder hinaufgewatschelt."
-  },
-  {
-   "id": "f-04",
-   "stufe": 2,
-   "saetze": [
-    "In unserer Höhle wohnen sieben von uns.",
-    "Drei schlafen immer, während vier wachen.",
-    "So ist nie jemand allein.",
-    "Gestern haben acht von uns gleichzeitig geschlafen."
-   ],
-   "fehler": 3,
-   "erklaerung": "Es sind nur sieben. Acht können nicht schlafen."
-  },
-  {
-   "id": "f-05",
-   "stufe": 2,
-   "saetze": [
-    "Unser Wasser kommt vom Eis über uns.",
-    "Es tropft langsam in ein Becken aus Stein.",
-    "Wenn es oben besonders kalt ist, tropft es am schnellsten.",
-    "Dann trinken wir sparsam."
+    "Der Bäcker steht um vier Uhr morgens auf.",
+    "In der Backstube duftet es nach frischem Brot.",
+    "Er schiebt die Semmeln zum Backen in den Kühlschrank.",
+    "Um sechs sperrt er den Laden auf."
    ],
    "fehler": 2,
-   "erklaerung": "Wenn es kalt ist, schmilzt weniger Eis. Dann tropft es langsamer, nicht schneller."
+   "erklaerung": "Gebacken wird im heißen Ofen. Im Kühlschrank wird nichts knusprig."
   },
   {
-   "id": "f-06",
+   "id": "feh-1-02",
    "stufe": 1,
+   "titel": "Der Schirm",
+   "art": "Alltag",
    "saetze": [
-    "Mila hat ein helles, blaues Fell.",
-    "Sie singt gern beim Pilzesammeln.",
-    "Im Dunkeln finden wir sie sofort, weil ihr Fell so hell ist.",
-    "Gestern haben wir sie nicht gefunden, weil ihr dunkles Fell im Dunkeln verschwindet."
-   ],
-   "fehler": 3,
-   "erklaerung": "Milas Fell ist hell. Darum findet man sie im Dunkeln leicht."
-  },
-  {
-   "id": "f-07",
-   "stufe": 1,
-   "saetze": [
-    "Pilze wachsen bei uns auf dem feuchten Stein.",
-    "Sie brauchen kein Licht, nur Wasser und Wärme.",
-    "Darum stellen wir sie in die hellste Ecke, damit sie genug Licht bekommen.",
-    "Nach drei Tagen sind sie groß genug."
+    "Es regnet den ganzen Vormittag.",
+    "Anna spannt ihren Schirm auf.",
+    "Damit sie nicht nass wird, stellt sie sich unter den Wasserhahn.",
+    "Zu Mittag ist sie trotzdem pünktlich im Büro."
    ],
    "fehler": 2,
-   "erklaerung": "Pilze brauchen kein Licht. Das hat die Geschichte selbst gesagt."
+   "erklaerung": "Unter dem Wasserhahn wird man nass. Der Schirm ist das, was vor Regen schützt."
   },
   {
-   "id": "f-08",
-   "stufe": 2,
-   "saetze": [
-    "Mit den Nachbarn aus der zweiten Höhle tauschen wir gern.",
-    "Für drei Beeren bekommen wir einen Pilz.",
-    "Heute hatten wir neun Beeren.",
-    "Dafür haben wir zwei Pilze bekommen, und keine Beere blieb übrig."
-   ],
-   "fehler": 3,
-   "erklaerung": "Neun Beeren sind dreimal drei. Das gibt drei Pilze."
-  },
-  {
-   "id": "f-09",
+   "id": "feh-1-03",
    "stufe": 1,
+   "titel": "Der Herbstwald",
+   "art": "Natur",
    "saetze": [
-    "Einmal im Jahr klettern wir nach oben, um die Sterne zu sehen.",
-    "Wir gehen in der Nacht, wenn es oben dunkel ist.",
-    "Die Sterne leuchten dann wie unsere Antennen, nur weiter weg.",
-    "Am liebsten schauen wir sie mittags an, wenn die Sonne am höchsten steht."
+    "Im Herbst färben sich die Blätter bunt.",
+    "Um Mitternacht scheint die Sonne hell über den Baumwipfeln.",
+    "Die Kinder sammeln Kastanien.",
+    "Ein Igel schläft unter dem Laub."
    ],
-   "fehler": 3,
-   "erklaerung": "Mittags sieht man keine Sterne. Darum gehen wir in der Nacht."
+   "fehler": 1,
+   "erklaerung": "Um Mitternacht ist es Nacht. Die Sonne scheint dann nicht über dem Wald."
   },
   {
-   "id": "f-10",
+   "id": "feh-1-05",
    "stufe": 1,
+   "titel": "Die Katze",
+   "art": "Tiere",
    "saetze": [
-    "Wenn wir in der großen Halle singen, kommt das Lied zurück.",
-    "Wir nennen das den zweiten Sänger.",
-    "Er singt immer dasselbe wie wir, nur etwas später.",
-    "Gestern hat er ein ganz anderes Lied gesungen als wir."
+    "Die Katze bellt laut wie ein Hund.",
+    "Dann springt sie auf das Sofa.",
+    "Dort schnurrt sie leise.",
+    "Bald schläft sie ein."
    ],
-   "fehler": 3,
-   "erklaerung": "Das Echo singt immer dasselbe. Ein anderes Lied kann es nicht sein."
+   "fehler": 0,
+   "erklaerung": "Katzen miauen oder fauchen. Bellen tun Hunde."
   },
   {
-   "id": "f-11",
-   "stufe": 2,
-   "saetze": [
-    "Opa Tok hat gesagt, er kommt in fünf Tagen.",
-    "Wir legen jeden Abend einen Stein in ein Körbchen.",
-    "Heute liegen drei Steine im Körbchen.",
-    "Also kommt er morgen."
-   ],
-   "fehler": 3,
-   "erklaerung": "Drei von fünf Steinen: Es fehlen noch zwei Tage. Er kommt übermorgen."
-  },
-  {
-   "id": "f-12",
-   "stufe": 2,
-   "saetze": [
-    "Je tiefer wir gehen, desto wärmer wird der Boden.",
-    "Ganz unten schlafen wir, weil es dort am wärmsten ist.",
-    "Oben am Eis ist es am kältesten.",
-    "Darum lagern wir unser Eis ganz unten, damit es nicht schmilzt."
-   ],
-   "fehler": 3,
-   "erklaerung": "Unten ist es am wärmsten. Dort würde das Eis schmelzen."
-  },
-  {
-   "id": "f-13",
+   "id": "feh-1-06",
    "stufe": 1,
+   "titel": "Der Schneemann",
+   "art": "Natur",
    "saetze": [
-    "Wenn wir müde sind, wird das Licht in unseren Antennen schwächer.",
-    "Wenn wir uns freuen, leuchtet es heller.",
-    "Gestern hatten wir ein großes Fest.",
-    "Die ganze Höhle war dunkel vor lauter Freude."
-   ],
-   "fehler": 3,
-   "erklaerung": "Freude macht das Licht heller. Die Höhle war hell."
-  },
-  {
-   "id": "f-14",
-   "stufe": 2,
-   "saetze": [
-    "Wir sind vier und haben acht Nüsse.",
-    "Jeder bekommt gleich viele.",
-    "Also bekommt jeder drei Nüsse.",
-    "Keine Nuss bleibt übrig."
+    "Im Jänner liegt Schnee auf den Dächern.",
+    "Die Kinder bauen einen Schneemann.",
+    "Bei minus zehn Grad schmilzt er sofort.",
+    "Er bekommt eine Karotte als Nase."
    ],
    "fehler": 2,
-   "erklaerung": "Acht Nüsse für vier: Jeder bekommt zwei."
+   "erklaerung": "Bei minus zehn Grad schmilzt Schnee nicht. Er bleibt liegen."
   },
   {
-   "id": "f-15",
+   "id": "feh-1-07",
    "stufe": 1,
+   "titel": "Der Zug",
+   "art": "Alltag",
    "saetze": [
-    "Eine Lumi ohne Namen sagt nie „ich“.",
-    "Sie sagt dann „wir“.",
-    "Gestern rief eine kleine Lumi ohne Namen: „Ich habe einen Pilz gefunden!“",
-    "Alle haben sich mit ihr gefreut."
+    "Der Zug fliegt über die Berge.",
+    "Die Fahrgäste sitzen und lesen.",
+    "Am Ziel steigen alle aus.",
+    "Dann fährt er leer zurück."
+   ],
+   "fehler": 0,
+   "erklaerung": "Ein Zug bleibt auf den Schienen. Er fliegt nicht."
+  },
+  {
+   "id": "feh-1-08",
+   "stufe": 1,
+   "titel": "Die Hände",
+   "art": "Zahlen",
+   "saetze": [
+    "Mia hat zwei Hände.",
+    "An jeder Hand hat sie fünf Finger.",
+    "Zusammen sind das zwölf Finger.",
+    "Mit allen Fingern hält sie ihre Tasse."
    ],
    "fehler": 2,
-   "erklaerung": "Ohne Namen sagt eine Lumi „wir“. Sie hätte gerufen: „Wir haben einen Pilz gefunden!“"
+   "erklaerung": "Zweimal fünf sind zehn, nicht zwölf."
+  },
+  {
+   "id": "feh-1-09",
+   "stufe": 1,
+   "titel": "Das Frühstück",
+   "art": "Alltag",
+   "saetze": [
+    "Lena deckt den Frühstückstisch.",
+    "Sie stellt Teller und Tassen auf.",
+    "Den Tee trinkt sie mit der Gabel.",
+    "Das Brot schneidet sie mit einem Messer."
+   ],
+   "fehler": 2,
+   "erklaerung": "Tee trinkt man aus der Tasse. Die Gabel ist zum Essen da."
+  },
+  {
+   "id": "feh-1-10",
+   "stufe": 1,
+   "titel": "Die Zitrone",
+   "art": "Essen",
+   "saetze": [
+    "Auf dem Markt gibt es Äpfel und Zitronen.",
+    "Die Zitrone ist gelb.",
+    "Sie schmeckt süß wie Zucker.",
+    "Die Äpfel sind rot und knackig."
+   ],
+   "fehler": 2,
+   "erklaerung": "Zitronen schmecken sauer."
+  },
+  {
+   "id": "feh-1-11",
+   "stufe": 1,
+   "titel": "Das Haus",
+   "art": "Alltag",
+   "saetze": [
+    "Das Haus hat ein rotes Dach.",
+    "Wer heimkommt, steigt durch das Dach ins Haus.",
+    "Das Dach schützt vor Regen.",
+    "Die Tür ist grün."
+   ],
+   "fehler": 1,
+   "erklaerung": "Man geht durch die Tür hinein. Das Dach ist oben."
+  },
+  {
+   "id": "feh-1-12",
+   "stufe": 1,
+   "titel": "Unten und oben",
+   "art": "Lumi",
+   "saetze": [
+    "Die Lumi hat zwei Ohren und leuchtende Antennen.",
+    "Unter dem Eis scheint den ganzen Tag die Sonne.",
+    "Ihr Fell leuchtet leicht blau.",
+    "Unten in der Höhle ist es warm."
+   ],
+   "fehler": 1,
+   "erklaerung": "Die Höhle liegt mehrere Kilometer unter dem Eis. Dort ist es immer dunkel, die Lumis leuchten selbst.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "feh-2-01",
+   "stufe": 2,
+   "titel": "Wien",
+   "art": "Wissen",
+   "saetze": [
+    "Wien ist die Hauptstadt von Österreich.",
+    "Die Stadt liegt direkt an der Nordsee.",
+    "Durch die Stadt fließt die Donau.",
+    "Der Stephansdom steht im ersten Bezirk."
+   ],
+   "fehler": 1,
+   "erklaerung": "Österreich hat keinen Zugang zum Meer. Wien liegt an der Donau."
+  },
+  {
+   "id": "feh-2-02",
+   "stufe": 2,
+   "titel": "Die Woche",
+   "art": "Zeit",
+   "saetze": [
+    "Die Woche beginnt mit dem Montag.",
+    "Dann kommen Dienstag und Mittwoch.",
+    "Nach dem Freitag folgt der Donnerstag.",
+    "Samstag und Sonntag sind das Wochenende."
+   ],
+   "fehler": 2,
+   "erklaerung": "Der Donnerstag liegt vor dem Freitag. Nach dem Freitag kommt der Samstag."
+  },
+  {
+   "id": "feh-2-03",
+   "stufe": 2,
+   "titel": "Der Apfelkuchen",
+   "art": "Alltag",
+   "saetze": [
+    "Eva backt einen Apfelkuchen.",
+    "Sie mischt Mehl, Eier und Zucker zu einem Teig.",
+    "Den Teig stellt sie in den Gefrierschrank, damit er goldbraun wird.",
+    "Dann schält sie vier Äpfel."
+   ],
+   "fehler": 2,
+   "erklaerung": "Goldbraun wird ein Kuchen im heißen Backofen. Im Gefrierschrank gefriert er."
+  },
+  {
+   "id": "feh-2-04",
+   "stufe": 2,
+   "titel": "Der Film",
+   "art": "Zeit",
+   "saetze": [
+    "Der Film beginnt um acht Uhr abends.",
+    "Er dauert zwei Stunden.",
+    "Um neun Uhr ist er zu Ende.",
+    "Danach gehen alle nach Hause."
+   ],
+   "fehler": 2,
+   "erklaerung": "Acht Uhr plus zwei Stunden ergibt zehn Uhr, nicht neun."
+  },
+  {
+   "id": "feh-2-05",
+   "stufe": 2,
+   "titel": "Der Einkauf",
+   "art": "Zahlen",
+   "saetze": [
+    "Maria kauft drei Semmeln und zwei Äpfel.",
+    "Zu Hause legt sie die fünf Äpfel in die Schale.",
+    "Sie hat mit einem Zehn-Euro-Schein gezahlt.",
+    "Die Kassiererin hat ihr Wechselgeld gegeben."
+   ],
+   "fehler": 1,
+   "erklaerung": "Maria hat nur zwei Äpfel gekauft."
+  },
+  {
+   "id": "feh-2-06",
+   "stufe": 2,
+   "titel": "Der Großglockner",
+   "art": "Wissen",
+   "saetze": [
+    "Der Großglockner ist der höchste Berg Österreichs.",
+    "Auf dem Gipfel wachsen dichte Palmenwälder.",
+    "Er steht an der Grenze zwischen Kärnten und Tirol.",
+    "Im Winter liegt dort viel Schnee."
+   ],
+   "fehler": 1,
+   "erklaerung": "Auf fast viertausend Metern Höhe liegt Eis und Schnee. Palmen wachsen dort nicht."
+  },
+  {
+   "id": "feh-2-07",
+   "stufe": 2,
+   "titel": "Der Bauernhof",
+   "art": "Tiere",
+   "saetze": [
+    "Der Hund legt jeden Morgen ein Ei ins Nest.",
+    "Die Kuh gibt Milch.",
+    "Das Huhn legt Eier.",
+    "Das Schaf liefert Wolle."
+   ],
+   "fehler": 0,
+   "erklaerung": "Eier legen Hühner, keine Hunde."
+  },
+  {
+   "id": "feh-2-08",
+   "stufe": 2,
+   "titel": "Die Lumi und das Brot",
+   "art": "Lumi",
+   "saetze": [
+    "Die Lumis wohnen in einer Höhle unter dem Eis.",
+    "Sie essen Pilze und trinken heißes Wasser.",
+    "Jeden Morgen kaufen sie frische Semmeln beim Bäcker.",
+    "Sie schlafen auf Moos und Flechten."
+   ],
+   "fehler": 2,
+   "erklaerung": "Unten gibt es keinen Bäcker und kein Brot. Die Lumis kennen Semmeln nur aus Menschengeschichten.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "feh-2-09",
+   "stufe": 2,
+   "titel": "Die Jahreszeiten",
+   "art": "Natur",
+   "saetze": [
+    "Im Frühling blühen die Blumen.",
+    "Im Winter ist es am heißesten.",
+    "Im Sommer baden die Leute im See.",
+    "Im Herbst fallen die Blätter."
+   ],
+   "fehler": 1,
+   "erklaerung": "Am heißesten ist es im Sommer."
+  },
+  {
+   "id": "feh-2-10",
+   "stufe": 2,
+   "titel": "Das Dutzend",
+   "art": "Zahlen",
+   "saetze": [
+    "Ein Dutzend sind zwölf.",
+    "Zwei Dutzend Eier sind vierundzwanzig.",
+    "Drei Dutzend sind dreißig.",
+    "Ein halbes Dutzend sind sechs."
+   ],
+   "fehler": 2,
+   "erklaerung": "Dreimal zwölf sind sechsunddreißig."
+  },
+  {
+   "id": "feh-2-11",
+   "stufe": 2,
+   "titel": "Die Zeit",
+   "art": "Zeit",
+   "saetze": [
+    "Eine Stunde hat sechzig Minuten.",
+    "Ein Tag hat vierundzwanzig Stunden.",
+    "Eine Woche hat sieben Tage.",
+    "Ein Jahr hat zwölf Wochen."
+   ],
+   "fehler": 3,
+   "erklaerung": "Ein Jahr hat zwölf Monate. Es hat gut fünfzig Wochen."
+  },
+  {
+   "id": "feh-2-12",
+   "stufe": 2,
+   "titel": "Die Sinne",
+   "art": "Körper",
+   "saetze": [
+    "Mit dem Ellbogen schmecken wir den Kuchen.",
+    "Mit den Augen sehen wir.",
+    "Mit den Ohren hören wir.",
+    "Mit der Nase riechen wir."
+   ],
+   "fehler": 0,
+   "erklaerung": "Geschmeckt wird mit der Zunge."
+  },
+  {
+   "id": "feh-3-01",
+   "stufe": 3,
+   "titel": "Der Zug nach Salzburg",
+   "art": "Zeit",
+   "saetze": [
+    "Der Zug nach Salzburg fährt um 8:15 in Wien ab.",
+    "Er hält in St. Pölten und in Linz.",
+    "In Linz steigt Familie Huber zu.",
+    "Die Fahrt dauert planmäßig zweieinhalb Stunden.",
+    "Der Zug kommt um 9:45 in Salzburg an.",
+    "Familie Huber freut sich auf das Wochenende."
+   ],
+   "fehler": 4,
+   "erklaerung": "8:15 plus zweieinhalb Stunden ergibt 10:45. Um 9:45 wäre er nach anderthalb Stunden da."
+  },
+  {
+   "id": "feh-3-02",
+   "stufe": 3,
+   "titel": "Tag und Nacht",
+   "art": "Wissen",
+   "saetze": [
+    "Die Erde dreht sich einmal am Tag um sich selbst.",
+    "Die Sonne umkreist jeden Tag die Erde.",
+    "Durch die Drehung gibt es Tag und Nacht.",
+    "Für einen Umlauf um die Sonne braucht die Erde ein Jahr.",
+    "Der Mond umkreist die Erde in etwa einem Monat."
+   ],
+   "fehler": 1,
+   "erklaerung": "Es sieht nur so aus. Die Erde dreht sich, und deshalb wandert die Sonne scheinbar über den Himmel."
+  },
+  {
+   "id": "feh-3-03",
+   "stufe": 3,
+   "titel": "Die Familie von Oma Gerda",
+   "art": "Logik",
+   "saetze": [
+    "Oma Gerda hat zwei Kinder, Karl und Hilde.",
+    "Karl hat eine Tochter, Lena.",
+    "Hilde hat zwei Söhne.",
+    "Die beiden Söhne sind Lenas Geschwister.",
+    "Lena ist also die Nichte von Hilde."
+   ],
+   "fehler": 3,
+   "erklaerung": "Die Söhne sind Hildes Kinder, Lena ist Karls Kind. Sie sind Cousins, keine Geschwister."
+  },
+  {
+   "id": "feh-3-04",
+   "stufe": 3,
+   "titel": "Die Hauptstädte",
+   "art": "Wissen",
+   "saetze": [
+    "Graz ist die Hauptstadt von Kärnten.",
+    "Innsbruck liegt am Inn und ist die Hauptstadt von Tirol.",
+    "Im Osten Österreichs liegt das Burgenland mit der Hauptstadt Eisenstadt.",
+    "Salzburg liegt an der Salzach."
+   ],
+   "fehler": 0,
+   "erklaerung": "Graz ist die Hauptstadt der Steiermark. Die Hauptstadt von Kärnten ist Klagenfurt."
+  },
+  {
+   "id": "feh-3-05",
+   "stufe": 3,
+   "titel": "Der Einkauf von Peter",
+   "art": "Zahlen",
+   "saetze": [
+    "Peter kauft ein Brot um 3 Euro und ein Packerl Butter um 2 Euro.",
+    "Dazu nimmt er Käse um 5 Euro.",
+    "Insgesamt zahlt er 10 Euro.",
+    "Er gibt der Kassiererin einen Zwanziger.",
+    "Er bekommt 5 Euro zurück.",
+    "Dann packt er alles in seine Tasche."
+   ],
+   "fehler": 4,
+   "erklaerung": "Von 20 Euro bleiben nach 10 Euro Einkauf 10 Euro übrig."
+  },
+  {
+   "id": "feh-3-06",
+   "stufe": 3,
+   "titel": "Die Bergtour",
+   "art": "Logik",
+   "saetze": [
+    "Familie Berger wandert im Juli auf einen Dreitausender.",
+    "Im Tal hat es angenehme 25 Grad.",
+    "Je höher sie steigen, desto wärmer wird es.",
+    "Am Gipfel ziehen sie deshalb ihre Jacken an.",
+    "Dort liegt sogar noch Schnee."
+   ],
+   "fehler": 2,
+   "erklaerung": "Mit der Höhe wird es kühler. Das erklärt Jacken und Schnee, aber nicht den Satz, dass es wärmer wird."
+  },
+  {
+   "id": "feh-3-08",
+   "stufe": 3,
+   "titel": "Beim Friseur",
+   "art": "Zeit",
+   "saetze": [
+    "Anna hat um 14 Uhr einen Termin beim Friseur.",
+    "Zu Fuß braucht sie 20 Minuten dorthin.",
+    "Sie geht um 13:30 los.",
+    "Nach 20 Minuten steht sie vor dem Salon.",
+    "Es ist erst 13:40, sie ist also zu früh dran.",
+    "Sie setzt sich noch kurz auf die Bank vor dem Salon."
+   ],
+   "fehler": 4,
+   "erklaerung": "13:30 plus 20 Minuten ist 13:50, nicht 13:40."
+  },
+  {
+   "id": "feh-3-09",
+   "stufe": 3,
+   "titel": "Die Bienen",
+   "art": "Natur",
+   "saetze": [
+    "Bienen sammeln Nektar von Blüten.",
+    "Im Winter fliegen die Bienen in großen Schwärmen nach Afrika.",
+    "Aus dem Nektar machen sie Honig.",
+    "Die Bienenkönigin legt die Eier.",
+    "Der Honig wird in Waben gelagert."
+   ],
+   "fehler": 1,
+   "erklaerung": "Honigbienen bleiben im Winter im Stock und wärmen sich gegenseitig. Sie ziehen nicht fort."
+  },
+  {
+   "id": "feh-3-10",
+   "stufe": 3,
+   "titel": "Österreich",
+   "art": "Wissen",
+   "saetze": [
+    "Österreich ist seit 1995 Mitglied der Europäischen Union.",
+    "Das Staatsgebiet liegt vollständig am Meer.",
+    "Die Hauptstadt ist Wien.",
+    "Der Euro ist seit 2002 als Bargeld im Umlauf.",
+    "Die Amtssprache ist Deutsch."
+   ],
+   "fehler": 1,
+   "erklaerung": "Österreich ist ein Binnenland ohne Küste."
+  },
+  {
+   "id": "feh-3-11",
+   "stufe": 3,
+   "titel": "Die Kartoffeln",
+   "art": "Logik",
+   "saetze": [
+    "Kartoffeln kocht man in Salzwasser.",
+    "Das Wasser muss dafür sieden.",
+    "Nach etwa zwanzig Minuten sind sie weich.",
+    "Sie sind gar, wenn sich die Gabel nur mit großer Kraft hineinstechen lässt.",
+    "Dann gießt man das Wasser ab."
+   ],
+   "fehler": 3,
+   "erklaerung": "Gare Kartoffeln sind weich, die Gabel gleitet leicht hinein. Das steht auch im Satz davor."
+  },
+  {
+   "id": "feh-3-12",
+   "stufe": 3,
+   "titel": "Der Schlaf",
+   "art": "Zeit",
+   "saetze": [
+    "Dora geht um 22 Uhr schlafen.",
+    "Ihr Wecker ist auf sechs Uhr gestellt.",
+    "Sie schläft also zehn Stunden.",
+    "Am Morgen fühlt sie sich ausgeruht."
+   ],
+   "fehler": 2,
+   "erklaerung": "Von 22 Uhr bis 6 Uhr sind es acht Stunden."
+  },
+  {
+   "id": "feh-4-01",
+   "stufe": 4,
+   "titel": "Die Ferienwohnung",
+   "art": "Kalender",
+   "saetze": [
+    "Familie Gruber fährt an einem Freitag, dem 3. Mai, nach Kärnten.",
+    "Sie haben eine Ferienwohnung für neun Nächte gebucht.",
+    "Die Fahrt dauert gut vier Stunden.",
+    "Am Abreisetag, dem 12. Mai, räumen sie die Wohnung.",
+    "Das ist ein Samstag.",
+    "Am Montag danach sind alle wieder in der Arbeit."
+   ],
+   "fehler": 4,
+   "erklaerung": "Freitag, 3. Mai plus neun Tage ist der 12. Mai, und der ist ein Sonntag. Der Montag danach stimmt."
+  },
+  {
+   "id": "feh-4-02",
+   "stufe": 4,
+   "titel": "Der Schlussverkauf",
+   "art": "Rechnen",
+   "saetze": [
+    "Eine Jacke kostet im Geschäft 120 Euro.",
+    "Beim Schlussverkauf wird sie um ein Viertel billiger.",
+    "Sie kostet dann 90 Euro.",
+    "Eine zweite Jacke ist von 80 auf 60 Euro reduziert.",
+    "Das ist ebenfalls ein Viertel Nachlass.",
+    "Zusammen kosten die beiden Jacken 150 Euro.",
+    "Mit einem Gutschein über 10 Euro zahlt man noch 130 Euro.",
+    "Die Jacken hängen im ersten Stock."
+   ],
+   "fehler": 6,
+   "erklaerung": "150 minus 10 ergibt 140. Alles davor stimmt: Ein Viertel von 120 ist 30, ein Viertel von 80 ist 20."
+  },
+  {
+   "id": "feh-4-03",
+   "stufe": 4,
+   "titel": "Der Nachtzug",
+   "art": "Zeit",
+   "saetze": [
+    "Ein Nachtzug fährt um 21:40 von Wien ab.",
+    "Die planmäßige Fahrt nach Zürich dauert 9 Stunden und 20 Minuten.",
+    "Österreich und die Schweiz haben dieselbe Uhrzeit, also ändert sich nichts.",
+    "Planmäßig kommt er um 7:00 Uhr an.",
+    "In Salzburg steht der Zug wegen eines Defekts 45 Minuten still.",
+    "Er erreicht Zürich deshalb um 7:30 Uhr.",
+    "Am Bahnsteig warten schon die Abholer."
+   ],
+   "fehler": 5,
+   "erklaerung": "7:00 plus 45 Minuten Verspätung ergibt 7:45 Uhr."
+  },
+  {
+   "id": "feh-4-04",
+   "stufe": 4,
+   "titel": "Das Quartal",
+   "art": "Kalender",
+   "saetze": [
+    "Der Jänner hat 31 Tage.",
+    "Der 1. Jänner ist ein Montag.",
+    "Der 29. Jänner ist daher ebenfalls ein Montag.",
+    "Der 1. Februar ist damit ein Donnerstag.",
+    "Der Februar hat in diesem Jahr 28 Tage.",
+    "Der 1. März ist also ein Freitag.",
+    "Der 31. März ist ein Samstag."
+   ],
+   "fehler": 5,
+   "erklaerung": "Der 1. Februar ist ein Donnerstag, und 28 Tage später ist wieder ein Donnerstag. Der 1. März ist also ein Donnerstag, und nur dann ist der 31. März ein Samstag."
+  },
+  {
+   "id": "feh-4-05",
+   "stufe": 4,
+   "titel": "Onkel und Tante",
+   "art": "Logik",
+   "saetze": [
+    "Karl und Anna sind Geschwister mit denselben Eltern.",
+    "Anna hat zwei Kinder, Paul und Lisa.",
+    "Karl hat eine Tochter, Mia.",
+    "Paul und Mia sind Cousin und Cousine.",
+    "Lisa und Mia sind ebenfalls Cousinen.",
+    "Karls Vater ist der Großvater aller drei Kinder.",
+    "Karls Mutter ist die Tante von Paul und Lisa.",
+    "Anna ist die Tante von Mia."
+   ],
+   "fehler": 6,
+   "erklaerung": "Karls Mutter ist die Mutter von Anna. Für Paul und Lisa ist sie die Großmutter."
+  },
+  {
+   "id": "feh-4-06",
+   "stufe": 4,
+   "titel": "Die Hütte",
+   "art": "Rechnen",
+   "saetze": [
+    "Vier Freunde mieten eine Hütte für drei Nächte.",
+    "Die Hütte kostet 90 Euro pro Nacht.",
+    "Das sind 270 Euro.",
+    "Dazu kommen 40 Euro für die Endreinigung.",
+    "Insgesamt sind das 310 Euro.",
+    "Durch vier geteilt zahlt jeder 72,50 Euro.",
+    "Sagt einer ab, zahlen die übrigen drei je rund 103 Euro."
+   ],
+   "fehler": 5,
+   "erklaerung": "310 durch vier sind 77,50 Euro. Bei drei Personen ergeben sich gut 103 Euro, das stimmt."
+  },
+  {
+   "id": "feh-4-07",
+   "stufe": 4,
+   "titel": "Der Verein",
+   "art": "Zeit",
+   "saetze": [
+    "Ein Verein wird im Jahr 1990 gegründet.",
+    "Die Gründerin Eva ist bei der Gründung 25 Jahre alt.",
+    "Ihre Tochter Mia kommt im Jahr 2000 zur Welt.",
+    "Bei Mias Geburt war Eva 30.",
+    "2020 feiert der Verein sein dreißigjähriges Bestehen.",
+    "Im Jahr 2020 ist Eva 55.",
+    "Bei der Gründung des Vereins ist Mia noch nicht geboren."
+   ],
+   "fehler": 3,
+   "erklaerung": "Eva ist 1965 geboren, im Jahr 2000 war sie also 35."
+  },
+  {
+   "id": "feh-4-08",
+   "stufe": 4,
+   "titel": "Die Badewanne",
+   "art": "Rechnen",
+   "saetze": [
+    "Ein Eimer fasst 10 Liter.",
+    "Eine Badewanne fasst 150 Liter.",
+    "Man braucht 15 Eimer, um die Wanne zu füllen.",
+    "Schafft jemand zwei Eimer pro Minute, dauert das fünf Minuten.",
+    "Ein Liter Wasser wiegt etwa ein Kilogramm.",
+    "Das Wasser in der Wanne wiegt also rund 150 Kilogramm.",
+    "Ein Kubikmeter Wasser wiegt etwa eine Tonne."
+   ],
+   "fehler": 3,
+   "erklaerung": "15 Eimer bei zwei Eimern pro Minute sind siebeneinhalb Minuten."
+  },
+  {
+   "id": "feh-4-09",
+   "stufe": 4,
+   "titel": "Die Flüsse",
+   "art": "Wissen",
+   "saetze": [
+    "Die meisten Flüsse Österreichs fließen schließlich in die Donau.",
+    "Auch die Mur mündet direkt in die Donau.",
+    "Die Salzach mündet in den Inn.",
+    "Der Inn mündet bei Passau in die Donau.",
+    "Die Enns mündet in die Donau.",
+    "Die Drau fließt durch Kärnten und mündet später in die Donau.",
+    "Die Traun mündet in die Donau."
+   ],
+   "fehler": 1,
+   "erklaerung": "Die Mur mündet in die Drau, und erst die Drau erreicht die Donau."
+  },
+  {
+   "id": "feh-4-10",
+   "stufe": 4,
+   "titel": "Die vier Häuser",
+   "art": "Logik",
+   "saetze": [
+    "Vier Häuser stehen nebeneinander, von links nach rechts nummeriert.",
+    "Im ersten Haus wohnt Anna.",
+    "Ben wohnt nicht neben Anna.",
+    "Cara wohnt direkt rechts neben Ben.",
+    "Cara wohnt im dritten Haus, Dora im zweiten.",
+    "Dora wohnt also zwischen Anna und Ben."
+   ],
+   "fehler": 4,
+   "erklaerung": "Ben kann nur im dritten Haus wohnen, denn im zweiten wäre er Annas Nachbar. Cara wohnt dann im vierten, Dora im zweiten."
+  },
+  {
+   "id": "feh-4-12",
+   "stufe": 4,
+   "titel": "Das Bügeleisen",
+   "art": "Rechnen",
+   "saetze": [
+    "Ein Gerät mit 2000 Watt läuft eine halbe Stunde.",
+    "Es verbraucht dabei eine Kilowattstunde.",
+    "Kostet die Kilowattstunde 30 Cent, kostet das 30 Cent.",
+    "Läuft es täglich eine halbe Stunde, sind das in 30 Tagen 30 Kilowattstunden.",
+    "Das kostet im Monat 12 Euro.",
+    "Im Jahr sind das gut 100 Euro."
+   ],
+   "fehler": 4,
+   "erklaerung": "30 Kilowattstunden zu 30 Cent kosten 9 Euro. Zwölf Monate zu 9 Euro ergeben 108 Euro, also gut 100."
+  },
+  {
+   "id": "feh-5-01",
+   "stufe": 5,
+   "titel": "Die Tagung",
+   "art": "Zeit",
+   "saetze": [
+    "Die Tagung beginnt um 9:00 mit dem ersten Vortrag.",
+    "Jeder der fünf Vorträge dauert 40 Minuten.",
+    "Zwischen zwei Vorträgen liegen 10 Minuten Pause, nur nach dem dritten Vortrag ist die Pause eine halbe Stunde lang.",
+    "Der zweite Vortrag beginnt um 9:50.",
+    "Der dritte beginnt um 10:40.",
+    "Er endet um 11:20.",
+    "Der vierte Vortrag beginnt um 11:50.",
+    "Er endet um 12:30.",
+    "Der fünfte beginnt um 12:40.",
+    "Er endet um 13:10.",
+    "Danach gibt es Mittagessen."
+   ],
+   "fehler": 9,
+   "erklaerung": "12:40 plus 40 Minuten ist 13:20. Alle Zeiten davor stimmen."
+  },
+  {
+   "id": "feh-5-02",
+   "stufe": 5,
+   "titel": "Die Geschwister",
+   "art": "Rechnen",
+   "saetze": [
+    "Anna ist heute doppelt so alt wie ihr Bruder Ben.",
+    "Vor fünf Jahren war sie dreimal so alt wie er damals.",
+    "Heute ist Anna 20 und Ben 10.",
+    "In fünf Jahren sind sie 25 und 15.",
+    "Dann ist Anna nicht mehr doppelt so alt, sondern weniger als doppelt so alt.",
+    "Ihre Mutter ist 25 Jahre älter als Anna.",
+    "Sie ist also heute 45.",
+    "Als Anna geboren wurde, war die Mutter 30.",
+    "Als Ben geboren wurde, war die Mutter 35."
+   ],
+   "fehler": 7,
+   "erklaerung": "45 minus 20 ist 25. Als Anna geboren wurde, war die Mutter 25. Bei Bens Geburt waren es 35, das stimmt."
+  },
+  {
+   "id": "feh-5-03",
+   "stufe": 5,
+   "titel": "Von 1918 bis 2002",
+   "art": "Geschichte",
+   "saetze": [
+    "Die Republik Österreich wurde im November 1918 ausgerufen.",
+    "Im März 1938 endete ihre Selbständigkeit mit dem Anschluss, zwanzig Jahre später.",
+    "Nach 1945 war das Land zehn Jahre lang besetzt.",
+    "Der Staatsvertrag von 1955 stellte die volle Souveränität wieder her.",
+    "Noch im selben Jahr erklärte Österreich seine Neutralität.",
+    "1995, vierzig Jahre nach dem Staatsvertrag, trat es der EU bei.",
+    "Sieben Jahre später, 2002, kam der Euro als Bargeld.",
+    "Zwischen dem Staatsvertrag und dem Euro-Bargeld liegen damit 57 Jahre.",
+    "Zwischen dem Ende der Besatzung und dem EU-Beitritt liegen vierzig Jahre."
+   ],
+   "fehler": 7,
+   "erklaerung": "1955 bis 2002 sind 47 Jahre: vierzig bis zum EU-Beitritt und sieben bis zum Euro."
+  },
+  {
+   "id": "feh-5-04",
+   "stufe": 5,
+   "titel": "Der Berg und das Wasser",
+   "art": "Physik",
+   "saetze": [
+    "Auf Meereshöhe siedet Wasser bei 100 Grad.",
+    "Je höher man steigt, desto geringer ist der Luftdruck.",
+    "Deshalb siedet Wasser auf einem Berg schon bei weniger als 100 Grad.",
+    "Eier brauchen dort länger, bis sie hart sind.",
+    "Ein Schnellkochtopf erhöht den Druck im Topf.",
+    "Das Wasser darin siedet deshalb bei weniger als 100 Grad.",
+    "Die Speisen garen darin schneller als in einem offenen Topf.",
+    "Auf einem hohen Berg gleicht ein Schnellkochtopf den geringeren Luftdruck teilweise aus."
+   ],
+   "fehler": 5,
+   "erklaerung": "Mehr Druck heißt höherer Siedepunkt, also über 100 Grad. Das ist der Grund, warum es im Schnellkochtopf schneller geht."
+  },
+  {
+   "id": "feh-5-05",
+   "stufe": 5,
+   "titel": "Die Münze",
+   "art": "Wahrscheinlichkeit",
+   "saetze": [
+    "Eine Münze wird dreimal geworfen.",
+    "Es gibt acht mögliche Folgen von Kopf und Zahl.",
+    "Dreimal Kopf kommt mit der Chance von einem Achtel vor.",
+    "Nach dreimal Kopf in Folge ist beim vierten Wurf Zahl wahrscheinlicher geworden.",
+    "Jeder Wurf ist unabhängig von den vorherigen.",
+    "Genau zweimal Kopf hat drei Achtel.",
+    "Genau einmal Kopf hat ebenfalls drei Achtel.",
+    "Mindestens einmal Kopf hat sieben Achtel."
+   ],
+   "fehler": 3,
+   "erklaerung": "Die Münze hat kein Gedächtnis. Der vierte Wurf bleibt bei einer halben Chance."
+  },
+  {
+   "id": "feh-5-06",
+   "stufe": 5,
+   "titel": "Das Rechteck",
+   "art": "Geometrie",
+   "saetze": [
+    "Ein Quadrat hat eine Seitenlänge von 6 Metern.",
+    "Seine Fläche beträgt 36 Quadratmeter.",
+    "Sein Umfang beträgt 24 Meter.",
+    "Ein Rechteck von 8 mal 4 Metern hat denselben Umfang.",
+    "Seine Fläche beträgt 32 Quadratmeter.",
+    "Es hat also weniger Fläche als das Quadrat.",
+    "Ein Rechteck von 10 mal 2 Metern hat ebenfalls 24 Meter Umfang und 24 Quadratmeter Fläche.",
+    "Je schmaler das Rechteck wird, desto kleiner wird bei gleichem Umfang die Fläche."
+   ],
+   "fehler": 6,
+   "erklaerung": "10 mal 2 sind 20 Quadratmeter, nicht 24. Der Umfang stimmt (2 mal 12 sind 24)."
+  },
+  {
+   "id": "feh-5-08",
+   "stufe": 5,
+   "titel": "Das Schaltjahr",
+   "art": "Kalender",
+   "saetze": [
+    "Ein Jahr ist ein Schaltjahr, wenn es durch 4 teilbar ist.",
+    "Bei vollen Jahrhunderten gilt das nur, wenn sie auch durch 400 teilbar sind.",
+    "Daher war 1900 kein Schaltjahr.",
+    "Das Jahr 2000 war eines.",
+    "Auch 2024 und 2028 sind Schaltjahre.",
+    "Das Jahr 2100 wird eines sein.",
+    "In einem Schaltjahr hat der Februar 29 Tage und das Jahr 366."
+   ],
+   "fehler": 5,
+   "erklaerung": "2100 ist ein volles Jahrhundert und nicht durch 400 teilbar. Es wird kein Schaltjahr."
+  },
+  {
+   "id": "feh-5-09",
+   "stufe": 5,
+   "titel": "Das Gewitter",
+   "art": "Physik",
+   "saetze": [
+    "Der Schall breitet sich in der Luft mit etwa 340 Metern pro Sekunde aus.",
+    "Das Licht ist unvorstellbar viel schneller.",
+    "Zählt man vom Blitz bis zum Donner drei Sekunden, ist das Gewitter etwa einen Kilometer entfernt.",
+    "Bei sechs Sekunden sind es etwa zwei Kilometer.",
+    "Bei neun Sekunden sind es etwa drei Kilometer.",
+    "Bei dreißig Sekunden sind es etwa fünf Kilometer.",
+    "Je länger es zwischen Blitz und Donner dauert, desto weiter ist das Gewitter entfernt."
+   ],
+   "fehler": 5,
+   "erklaerung": "Dreißig Sekunden mal 340 Meter sind gut zehn Kilometer."
+  },
+  {
+   "id": "feh-5-10",
+   "stufe": 5,
+   "titel": "Der Sirup",
+   "art": "Rechnen",
+   "saetze": [
+    "Ein Sirup wird im Verhältnis eins zu vier angemischt: ein Teil Saft, vier Teile Wasser.",
+    "Aus 200 Milliliter Saft wird so ein Liter Getränk.",
+    "Für zweieinhalb Liter braucht man 500 Milliliter Saft und zwei Liter Wasser.",
+    "Verdünnt man einen Liter des fertigen Getränks mit einem weiteren Liter Wasser, macht der Saft nur noch ein Zehntel aus.",
+    "Ein Glas mit 250 Milliliter enthält 50 Milliliter Saft.",
+    "Aus einer Flasche mit 750 Milliliter Saft lassen sich drei Liter Getränk machen.",
+    "Je mehr Wasser man zugibt, desto milder wird der Geschmack."
+   ],
+   "fehler": 5,
+   "erklaerung": "Ein Fünftel des Getränks ist Saft. 750 Milliliter Saft ergeben also 3,75 Liter."
+  },
+  {
+   "id": "feh-5-11",
+   "stufe": 5,
+   "titel": "Rad und Auto",
+   "art": "Rechnen",
+   "saetze": [
+    "Ein Radfahrer fährt gleichmäßig mit 24 Stundenkilometern.",
+    "In zweieinhalb Stunden schafft er 60 Kilometer.",
+    "Ein Auto fährt auf derselben Strecke mit 90 Stundenkilometern.",
+    "Für 60 Kilometer braucht es 40 Minuten.",
+    "Der Radfahrer startet eine halbe Stunde früher.",
+    "Beim Start des Autos hat er also schon 12 Kilometer Vorsprung.",
+    "Das Auto nähert sich ihm pro Stunde um 66 Kilometer.",
+    "Es holt ihn deshalb nach etwa 20 Minuten ein.",
+    "Bis dahin hat das Auto gut 16 Kilometer zurückgelegt."
+   ],
+   "fehler": 7,
+   "erklaerung": "12 Kilometer durch 66 Stundenkilometer sind knapp 11 Minuten. In dieser Zeit fährt das Auto gut 16 Kilometer."
   }
  ],
  "lumisch": {
@@ -5461,7 +6229,7 @@
     "wort": "nesap",
     "deutsch": "Nichtwissen, Unwissen",
     "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-    "hinweis": "Der Anfang jedes Gesprächs. Susi sap nesap = ich weiß, dass ich nichts weiß.",
+    "hinweis": "Der Anfang jedes Gesprächs. nesap sap = wir wissen, dass wir nichts wissen.",
     "umschrift": "ne-sap",
     "ipa": "ˈne.zap"
    },
@@ -6613,7 +7381,7 @@
     "wort": "tel",
     "deutsch": "Zahl, zählen",
     "gruppe": "Zahl und Quant",
-    "hinweis": "Auch Ziffernfolge. pim3 sind drei Pilze, die Zahl 3 heißt zel3.",
+    "hinweis": "Auch Ziffernfolge. pim3 sind drei Pilze, die Zahl 3 heißt tel3.",
     "umschrift": "tel",
     "ipa": "ˈtel"
    },
@@ -6805,5 +7573,2033 @@
    "Nimm dir draußen einen Moment und schau dich bewusst um.",
    "Erzähl heute jemandem von dem Happen."
   ]
- }
+ },
+ "stufen_woerter": [
+  "leicht",
+  "gemütlich",
+  "mit Biss",
+  "knifflig",
+  "Knackpunkt"
+ ],
+ "ruhe": {
+  "rueckwaerts": [
+   {
+    "id": "tag-01",
+    "titel": "Gehörtes, Gerochenes, Gesehenes",
+    "fragen": [
+     "Was hast du heute am Abend zuletzt gehört?",
+     "Was hast du am Nachmittag gerochen?",
+     "Was hast du heute früh als Erstes gesehen?"
+    ],
+    "schluss": "Dein Tag hatte Klang, Duft und Bild. Gute Nacht.",
+    "lumisch": "nezel sum.",
+    "uebersetzung": "Gute Nacht.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-02",
+    "titel": "Die Hände",
+    "fragen": [
+     "Was hattest du heute am Abend in der Hand?",
+     "Was hast du am Nachmittag mit den Händen gemacht?",
+     "Was hast du am Morgen als Erstes angefasst?"
+    ],
+    "schluss": "Die Hände haben viel getan. Jetzt dürfen sie ruhen.",
+    "lumisch": "mimusol sum.",
+    "uebersetzung": "Gelassenheit ist gut.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-03",
+    "titel": "Essen und Trinken",
+    "fragen": [
+     "Was hast du heute am Abend gegessen oder getrunken?",
+     "Was war am Nachmittag dein Happen oder dein Schluck?",
+     "Was war heute dein erstes Getränk?"
+    ],
+    "schluss": "Gut gegessen ist halb geschlafen. Gute Nacht.",
+    "lumisch": "pelu sum. nezel sum.",
+    "uebersetzung": "Das Essen war gut. Gute Nacht.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-04",
+    "titel": "Menschen",
+    "fragen": [
+     "Mit wem hast du heute am Abend zuletzt gesprochen?",
+     "Wen hast du am Nachmittag gesehen?",
+     "Wem bist du heute früh als Erstes begegnet?"
+    ],
+    "schluss": "Menschen kommen und gehen. Heute waren welche da.",
+    "lumisch": "likom sum.",
+    "uebersetzung": "Begegnung ist gut.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-05",
+    "titel": "Wege",
+    "fragen": [
+     "Wohin bist du heute am Abend zuletzt gegangen?",
+     "Welchen Weg bist du am Nachmittag gegangen?",
+     "Wie bist du heute früh aus dem Haus gekommen?"
+    ],
+    "schluss": "Du bist heute weit gekommen, auch wenn es nur durch die Wohnung war.",
+    "lumisch": "tiv sum.",
+    "uebersetzung": "Der Weg ist gut.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-06",
+    "titel": "Licht",
+    "fragen": [
+     "Wie war das Licht heute am Abend?",
+     "Wie war das Licht am Nachmittag?",
+     "Wie war das Licht, als du heute aufgewacht bist?"
+    ],
+    "schluss": "Alles Licht des Tages ist jetzt in dir. Das nächste kommt von allein.",
+    "lumisch": "zan ko.",
+    "uebersetzung": "Das Licht geht mit.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-07",
+    "titel": "Himmel und Wetter",
+    "fragen": [
+     "Wie sah der Himmel heute am Abend aus?",
+     "Wie war das Wetter am Nachmittag?",
+     "Wie hat der Morgen draußen ausgesehen?"
+    ],
+    "schluss": "Wetter geht vorüber. Du auch, in den Schlaf.",
+    "lumisch": "nezel sum.",
+    "uebersetzung": "Gute Nacht.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-08",
+    "titel": "Worte",
+    "fragen": [
+     "Was hat heute am Abend jemand zu dir gesagt?",
+     "Welches Wort ist dir am Nachmittag begegnet?",
+     "Was hast du heute früh als Erstes gesagt?"
+    ],
+    "schluss": "Worte sind leicht zu vergessen und leicht zu behalten. Heute hast du welche behalten.",
+    "lumisch": "nam sum.",
+    "uebersetzung": "Sagen ist gut.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-09",
+    "titel": "Ein Lächeln",
+    "fragen": [
+     "Wer hat heute am Abend gelächelt?",
+     "Wann hast du am Nachmittag gelächelt?",
+     "Was hat dich heute früh zum Lächeln gebracht, auch nur ein bisschen?"
+    ],
+    "schluss": "Ein halbes Lächeln zählt auch.",
+    "lumisch": "kikmim.",
+    "uebersetzung": "Lächeln.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-10",
+    "titel": "Was geklappt hat",
+    "fragen": [
+     "Was hat heute am Abend gut geklappt?",
+     "Was ist dir am Nachmittag leichtgefallen?",
+     "Was hat heute früh gleich funktioniert?"
+    ],
+    "schluss": "Kleine Dinge, die klappen, tragen einen Tag.",
+    "lumisch": "tul. nezel sum.",
+    "uebersetzung": "Danke. Gute Nacht.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-11",
+    "titel": "Etwas Schönes",
+    "fragen": [
+     "Was war heute am Abend schön, und sei es klein?",
+     "Was war am Nachmittag ein schöner Moment?",
+     "Was war heute früh schön anzusehen?"
+    ],
+    "schluss": "Schönes darf man sich merken.",
+    "lumisch": "zansum.",
+    "uebersetzung": "Schönheit.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-12",
+    "titel": "Wo du gesessen hast",
+    "fragen": [
+     "Wo hast du heute am Abend gesessen?",
+     "Wo hast du am Nachmittag gesessen?",
+     "Wo hast du heute früh gesessen?"
+    ],
+    "schluss": "Jeder Platz war ein Platz zum Ankommen. Jetzt liegst du vielleicht.",
+    "lumisch": "tamsum.",
+    "uebersetzung": "Gemütlichkeit.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-13",
+    "titel": "Was du angehabt hast",
+    "fragen": [
+     "Was hast du heute am Abend angehabt?",
+     "Was hast du am Nachmittag getragen?",
+     "Was hast du heute früh zuerst angezogen?"
+    ],
+    "schluss": "Gleich ziehst du das Letzte davon aus. Gute Nacht.",
+    "lumisch": "nezel sum.",
+    "uebersetzung": "Gute Nacht.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-14",
+    "titel": "Farben",
+    "fragen": [
+     "Welche Farbe hat dein Abend gehabt?",
+     "Welche Farbe hat dein Nachmittag gehabt?",
+     "Welche Farbe hatte dein Morgen?"
+    ],
+    "schluss": "Ein Tag in drei Farben. Morgen sind es andere.",
+    "lumisch": "zanluna sum.",
+    "uebersetzung": "Farbe ist gut.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-15",
+    "titel": "Geräusche der Umgebung",
+    "fragen": [
+     "Was war heute am Abend zu hören, wenn es still war?",
+     "Was war am Nachmittag das lauteste Geräusch?",
+     "Was war heute früh das erste Geräusch?"
+    ],
+    "schluss": "Jetzt ist es leiser. Gute Nacht.",
+    "lumisch": "elanim.",
+    "uebersetzung": "Leise.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-16",
+    "titel": "Nachrichten",
+    "fragen": [
+     "Wer hat dir heute am Abend zuletzt geschrieben oder dich angerufen?",
+     "Welche Nachricht hat dich am Nachmittag am meisten gefreut?",
+     "Wer war heute die oder der Erste, die oder der sich gemeldet hat?"
+    ],
+    "schluss": "Gemeldet wird sich morgen wieder. Heute reicht es.",
+    "lumisch": "su oki.",
+    "uebersetzung": "Bis bald.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-17",
+    "titel": "Etwas Neues",
+    "fragen": [
+     "Was war heute am Abend neu für dich?",
+     "Was war am Nachmittag etwas, das du so noch nicht gemacht hast?",
+     "Was war heute früh neu, und sei es nur ein Wort?"
+    ],
+    "schluss": "Neues ist auch dann Neues, wenn es klein ist.",
+    "lumisch": "tevi sum.",
+    "uebersetzung": "Neues ist gut.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-18",
+    "titel": "Etwas gelernt",
+    "fragen": [
+     "Was hast du heute am Abend gelernt oder erfahren?",
+     "Was hast du am Nachmittag dazugelernt?",
+     "Was wusstest du heute früh noch nicht?"
+    ],
+    "schluss": "Wissen, das gerade ankommt, heißt bei den Lumis sapu.",
+    "lumisch": "sapu sum.",
+    "uebersetzung": "Lernen ist gut.",
+    "lumisch_nur_mit_lumi": true,
+    "ohne_lumi": {
+     "schluss": "Was heute neu war, darf bleiben."
+    }
+   },
+   {
+    "id": "tag-19",
+    "titel": "Ruhige Momente",
+    "fragen": [
+     "Wann war es heute am Abend am ruhigsten?",
+     "Wann war es am Nachmittag ruhig, wenigstens kurz?",
+     "Wann war es heute früh still?"
+    ],
+    "schluss": "Ruhe findet sich immer wieder. Jetzt ist sie da.",
+    "lumisch": "mimu.",
+    "uebersetzung": "Ruhig.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-20",
+    "titel": "Danke",
+    "fragen": [
+     "Wofür bist du heute am Abend dankbar?",
+     "Wofür bist du am Nachmittag dankbar?",
+     "Wofür bist du heute früh dankbar?"
+    ],
+    "schluss": "Dankbarkeit ist ein warmes Wort.",
+    "lumisch": "tultuk.",
+    "uebersetzung": "Dankbarkeit.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-21",
+    "titel": "Wasser",
+    "fragen": [
+     "Wann hast du heute am Abend Wasser getrunken?",
+     "Wann hast du am Nachmittag Wasser gesehen, im Glas, im Regen, im Wasserhahn?",
+     "Wann hast du dich heute früh mit Wasser gewaschen?"
+    ],
+    "schluss": "Wasser war heute da. Es ist auch morgen da.",
+    "lumisch": "mo sum.",
+    "uebersetzung": "Wasser ist gut.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-22",
+    "titel": "Draußen",
+    "fragen": [
+     "Wann warst du heute am Abend draußen, und sei es nur kurz?",
+     "Wo warst du am Nachmittag im Freien?",
+     "Wann hast du heute früh frische Luft geatmet?"
+    ],
+    "schluss": "Drinnen ist es auch schön. Gute Nacht.",
+    "lumisch": "usunim.",
+    "uebersetzung": "Atem.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-23",
+    "titel": "Die Uhr",
+    "fragen": [
+     "Wann hast du heute am Abend zuletzt auf die Uhr geschaut?",
+     "Wann hast du am Nachmittag auf die Uhr geschaut und gedacht: schon?",
+     "Wann hast du heute früh zum ersten Mal auf die Uhr gesehen?"
+    ],
+    "schluss": "Die Uhr hat heute genug gearbeitet.",
+    "lumisch": "zelok. nezel sum.",
+    "uebersetzung": "Die Uhr. Gute Nacht.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-24",
+    "titel": "Etwas, das dich gewundert hat",
+    "fragen": [
+     "Was hat dich heute am Abend gewundert?",
+     "Was hat dich am Nachmittag überrascht?",
+     "Was ist dir heute früh seltsam vorgekommen?"
+    ],
+    "schluss": "Staunen ist bei den Lumis der Anfang von allem.",
+    "lumisch": "okio.",
+    "uebersetzung": "Staunen.",
+    "lumisch_nur_mit_lumi": true,
+    "ohne_lumi": {
+     "schluss": "Staunen ist der Anfang von allem."
+    }
+   },
+   {
+    "id": "tag-25",
+    "titel": "Bewegung",
+    "fragen": [
+     "Wann hast du dich heute am Abend zuletzt bewegt?",
+     "Wie hast du dich am Nachmittag bewegt?",
+     "Wie hast du dich heute früh gestreckt oder gerührt?"
+    ],
+    "schluss": "Der Körper hat getan, was er konnte. Jetzt ruht er.",
+    "lumisch": "sumu sum.",
+    "uebersetzung": "Schlafen ist gut.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-26",
+    "titel": "Was du erledigt hast",
+    "fragen": [
+     "Was hast du heute am Abend erledigt?",
+     "Was hast du am Nachmittag erledigt?",
+     "Was hast du heute früh gleich erledigt?"
+    ],
+    "schluss": "Was fertig ist, ist fertig. Der Rest darf warten.",
+    "lumisch": "sol.",
+    "uebersetzung": "Fertig.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-27",
+    "titel": "Wie die Lumi deinen Tag erzählt",
+    "fragen": [
+     "Wie würde die Lumi deinen Abend in einem Satz erzählen?",
+     "Wie würde sie deinen Nachmittag erzählen?",
+     "Wie würde sie deinen Morgen erzählen?"
+    ],
+    "schluss": "Die Lumi hat zugehört. Sie erzählt ihn dir nicht weiter, außer du willst.",
+    "lumisch": "kesam.",
+    "uebersetzung": "Geschichte.",
+    "lumisch_nur_mit_lumi": true,
+    "ohne_lumi": {
+     "fragen": [
+      "Wie würdest du deinen Abend in einem Satz erzählen?",
+      "Wie würdest du deinen Nachmittag erzählen?",
+      "Wie würdest du deinen Morgen erzählen?"
+     ],
+     "schluss": "Du hast ihn dir erzählt. Du musst ihn niemandem weitererzählen."
+    }
+   },
+   {
+    "id": "tag-28",
+    "titel": "Etwas, das du mitnimmst",
+    "fragen": [
+     "Was nimmst du von diesem Abend mit?",
+     "Was nimmst du vom Nachmittag mit?",
+     "Was nimmst du von diesem Morgen mit?"
+    ],
+    "schluss": "Was du mitnimmst, ist leicht zu tragen.",
+    "lumisch": "kezan sum.",
+    "uebersetzung": "Erinnerung ist gut.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-29",
+    "titel": "Wie gestern",
+    "fragen": [
+     "Was war heute am Abend wie gestern?",
+     "Was war am Nachmittag wie gestern?",
+     "Was war heute früh wie gestern?"
+    ],
+    "schluss": "Dass manches gleich bleibt, ist auch ein Geschenk.",
+    "lumisch": "taltam.",
+    "uebersetzung": "Gewohnheit.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "tag-30",
+    "titel": "Hoffnung",
+    "fragen": [
+     "Worauf hast du dich heute am Abend gefreut?",
+     "Worauf hast du dich am Nachmittag gefreut?",
+     "Worauf hast du dich heute früh gefreut?"
+    ],
+    "schluss": "Auch morgen wird es etwas zum Freuen geben.",
+    "lumisch": "suzan.",
+    "uebersetzung": "Hoffnung.",
+    "lumisch_nur_mit_lumi": true
+   }
+  ],
+  "atem": [
+   {
+    "id": "atem-01",
+    "titel": "Dampf am Spalt",
+    "ein": "Wie Dampf, der aus dem Spalt steigt.",
+    "aus": "Und er zieht davon.",
+    "ende": "Der Spalt atmet weiter, auch ohne dich. Du darfst zurück.",
+    "lumisch": "mulo.",
+    "uebersetzung": "Dampf.",
+    "lumisch_nur_mit_lumi": true,
+    "ohne_lumi": {
+     "ein": "Wie Dampf, der aus dem Boden steigt.",
+     "aus": "Und er zieht davon.",
+     "ende": "Der Dampf steigt weiter, auch ohne dich. Du darfst zurück."
+    }
+   },
+   {
+    "id": "atem-02",
+    "titel": "Der Fluss",
+    "ein": "Wie Wasser, das heranfließt.",
+    "aus": "Wie Wasser, das weiterfließt.",
+    "ende": "Der Fluss fließt, auch wenn du aufstehst.",
+    "lumisch": "tivmo.",
+    "uebersetzung": "Fluss.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-03",
+    "titel": "Der Berg",
+    "ein": "Wie ein Berg, der in die Höhe wächst.",
+    "aus": "Wie ein Berg, der in sich ruht.",
+    "ende": "Berge haben Zeit. Du gerade auch.",
+    "lumisch": "takor.",
+    "uebersetzung": "Berg.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-04",
+    "titel": "Der Wald",
+    "ein": "Wie ein Wald, der das Licht trinkt.",
+    "aus": "Wie Blätter, die loslassen.",
+    "ende": "Im Wald ist nichts eilig.",
+    "lumisch": "turamol.",
+    "uebersetzung": "Wald.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-05",
+    "titel": "Eine Welle",
+    "ein": "Wie eine Welle, die ans Ufer kommt.",
+    "aus": "Wie eine Welle, die zurückgeht.",
+    "ende": "Die nächste Welle kommt, wenn du sie brauchst.",
+    "lumisch": "zanmo.",
+    "uebersetzung": "Welle.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-06",
+    "titel": "Der Ballon",
+    "ein": "Der Ballon wird groß.",
+    "aus": "Der Ballon wird weich.",
+    "ende": "Jetzt ist er leicht. Du auch.",
+    "lumisch": "luvu.",
+    "uebersetzung": "Weich.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-07",
+    "titel": "Die Schultern",
+    "ein": "Die Schultern heben sich.",
+    "aus": "Die Schultern sinken.",
+    "ende": "Es muss nichts gerade sein.",
+    "lumisch": "mimu.",
+    "uebersetzung": "Ruhig.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-08",
+    "titel": "Die Hände",
+    "ein": "Die Hände öffnen sich.",
+    "aus": "Die Hände ruhen.",
+    "ende": "Wer die Hände ruhen lässt, hat Platz für das Nächste.",
+    "lumisch": "pati.",
+    "uebersetzung": "Finger.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-09",
+    "titel": "Eine Tasse Tee",
+    "ein": "Du riechst den Dampf über der Tasse.",
+    "aus": "Du pustest sanft darüber.",
+    "ende": "Tee wird kalt, wenn man ihn vergisst. Du hast ihn nicht vergessen.",
+    "lumisch": "tamsum.",
+    "uebersetzung": "Gemütlichkeit.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-10",
+    "titel": "Nebel",
+    "ein": "Der Nebel kommt aus dem Tal.",
+    "aus": "Er löst sich langsam auf.",
+    "ende": "Wenn der Nebel geht, sieht man klar.",
+    "lumisch": "zanlim.",
+    "uebersetzung": "Dämmerlicht.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-11",
+    "titel": "Schnee",
+    "ein": "Schneeflocken sinken herab.",
+    "aus": "Sie bleiben liegen.",
+    "ende": "Unter Schnee ist es still.",
+    "lumisch": "kivmulo.",
+    "uebersetzung": "Schnee.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-12",
+    "titel": "Moos",
+    "ein": "Das Moos wird weich unter dir.",
+    "aus": "Du sinkst ein wenig hinein.",
+    "ende": "Moos ist geduldig.",
+    "lumisch": "mus.",
+    "uebersetzung": "Moos.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-13",
+    "titel": "Ein Pilz wächst",
+    "ein": "Etwas Kleines kommt aus dem Boden.",
+    "aus": "Es wächst, ohne zu drängen.",
+    "ende": "Alles Gute wächst in seiner Zeit.",
+    "lumisch": "tevikom.",
+    "uebersetzung": "Nachwachsen.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-14",
+    "titel": "Die Höhle",
+    "ein": "Die Höhle ist weit und warm.",
+    "aus": "Sie ist still und sicher.",
+    "ende": "Die Höhle hält dich.",
+    "lumisch": "umomimu.",
+    "uebersetzung": "Stille der Höhle.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-15",
+    "titel": "Ein Tropfen",
+    "ein": "Ein Tropfen sammelt sich.",
+    "aus": "Er fällt, ganz langsam.",
+    "ende": "Man hört ihn noch eine Weile.",
+    "lumisch": "monim.",
+    "uebersetzung": "Tropfen.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-16",
+    "titel": "Wind",
+    "ein": "Ein leichter Wind kommt auf.",
+    "aus": "Er legt sich wieder.",
+    "ende": "Der Wind kommt, wenn er will.",
+    "lumisch": "usu.",
+    "uebersetzung": "Wind.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-17",
+    "titel": "Sterne",
+    "ein": "Du schaust in die Weite.",
+    "aus": "Du lässt den Blick sinken.",
+    "ende": "Die Sterne sind noch da, auch am Tag.",
+    "lumisch": "zik.",
+    "uebersetzung": "Stern.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-18",
+    "titel": "Sonnenaufgang",
+    "ein": "Das Licht wird heller.",
+    "aus": "Das Licht ist da.",
+    "ende": "Ein Tag fängt klein an.",
+    "lumisch": "uvozan.",
+    "uebersetzung": "Sonne.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-19",
+    "titel": "Eine Wiese",
+    "ein": "Das Gras neigt sich im Wind.",
+    "aus": "Es richtet sich wieder auf.",
+    "ende": "Auf einer Wiese hat jeder Halm Platz.",
+    "lumisch": "sevi.",
+    "uebersetzung": "Gras.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-20",
+    "titel": "Ein See",
+    "ein": "Der See ist glatt.",
+    "aus": "Die Ringe auf dem Wasser werden weiter.",
+    "ende": "Nach einer Weile ist er wieder glatt.",
+    "lumisch": "momak.",
+    "uebersetzung": "See.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-21",
+    "titel": "Die Schaukel",
+    "ein": "Du schwingst nach vorn.",
+    "aus": "Du schwingst zurück.",
+    "ende": "Eine Schaukel schaukelt von selbst weiter.",
+    "lumisch": "pil.",
+    "uebersetzung": "Spiel.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-22",
+    "titel": "Die Hängematte",
+    "ein": "Du spürst, wie du getragen wirst.",
+    "aus": "Du lässt dich tragen.",
+    "ende": "Wer getragen wird, muss nichts halten.",
+    "lumisch": "vulsam.",
+    "uebersetzung": "Wärme teilen.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-23",
+    "titel": "Ein Echo",
+    "ein": "Dein Atem geht hinaus.",
+    "aus": "Er kommt leise zurück.",
+    "ende": "Das Echo ist weich.",
+    "lumisch": "umonam.",
+    "uebersetzung": "Echo.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-24",
+    "titel": "Licht in der Dunkelheit",
+    "ein": "Ein kleines Licht geht an.",
+    "aus": "Es leuchtet ruhig weiter.",
+    "ende": "Ein kleines Licht reicht.",
+    "lumisch": "zan.",
+    "uebersetzung": "Licht.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-25",
+    "titel": "Der Atem selbst",
+    "ein": "Du atmest ein.",
+    "aus": "Du atmest aus.",
+    "ende": "Das war alles. Mehr braucht es nicht.",
+    "lumisch": "usunim.",
+    "uebersetzung": "Atem.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-26",
+    "titel": "Schritt für Schritt",
+    "ein": "Du hebst einen Fuß.",
+    "aus": "Du setzt ihn ab.",
+    "ende": "Vor dir liegt ein Weg, aber nicht jetzt.",
+    "lumisch": "tiv.",
+    "uebersetzung": "Weg.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-27",
+    "titel": "Die Uhr steht still",
+    "ein": "Die Zeit hält inne.",
+    "aus": "Die Zeit geht weiter, ganz langsam.",
+    "ende": "Auch diese Pause war Zeit.",
+    "lumisch": "tuli.",
+    "uebersetzung": "Weile.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-28",
+    "titel": "Kerzenlicht",
+    "ein": "Die Flamme wird groß.",
+    "aus": "Die Flamme wird klein.",
+    "ende": "Sie brennt ruhig weiter.",
+    "lumisch": "vulzan.",
+    "uebersetzung": "Feuer.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-29",
+    "titel": "Zählen",
+    "ein": "Eins, zwei, drei, vier.",
+    "aus": "Eins bis sechs, langsam.",
+    "ende": "Du hast gezählt und nichts anderes. Das war genug.",
+    "lumisch": "ka sa ro le.",
+    "uebersetzung": "Eins, zwei, drei, vier.",
+    "lumisch_nur_mit_lumi": true
+   },
+   {
+    "id": "atem-30",
+    "titel": "Danke",
+    "ein": "Du nimmst etwas auf, ohne zu fragen.",
+    "aus": "Du gibst etwas ab, ohne zu rechnen.",
+    "ende": "Danke für diese Pause.",
+    "lumisch": "tul.",
+    "uebersetzung": "Danke.",
+    "lumisch_nur_mit_lumi": true
+   }
+  ]
+ },
+ "kaffeehaus": [
+  {
+   "id": "logik-1-01",
+   "stufe": 1,
+   "frage": "Anna und Ben trinken Kaffee und Tee. Anna trinkt keinen Tee. Was trinkt Ben?",
+   "antworten": [
+    "Kaffee",
+    "Tee",
+    "Wasser",
+    "Kakao"
+   ],
+   "richtig": 1,
+   "erklaerung": "Es gibt nur Kaffee und Tee. Anna trinkt keinen Tee, also Kaffee. Für Ben bleibt der Tee.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-1-02",
+   "stufe": 1,
+   "frage": "Drei Körbe stehen da: ein roter, ein blauer, ein grüner. Der Pilz liegt weder im roten noch im blauen. Wo liegt er?",
+   "antworten": [
+    "im roten",
+    "im blauen",
+    "im grünen",
+    "in keinem"
+   ],
+   "richtig": 2,
+   "erklaerung": "Zwei Körbe sind ausgeschlossen, also bleibt der grüne.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-1-03",
+   "stufe": 1,
+   "frage": "Drei Tassen stehen auf dem Tisch: eine weiße, eine gelbe, eine rote. Die Milch ist weder in der weißen noch in der gelben Tasse. In welcher ist sie?",
+   "antworten": [
+    "in der weißen",
+    "in der gelben",
+    "in der roten",
+    "in keiner"
+   ],
+   "richtig": 2,
+   "erklaerung": "Zwei Tassen scheiden aus, also bleibt die rote.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-1-04",
+   "stufe": 1,
+   "frage": "Anna und Ben teilen sich einen Apfelstrudel und eine Sachertorte, jeder nimmt eines. Anna mag keinen Apfel. Was nimmt Ben?",
+   "antworten": [
+    "den Apfelstrudel",
+    "die Sachertorte",
+    "beides",
+    "nichts"
+   ],
+   "richtig": 0,
+   "erklaerung": "Anna nimmt die Sachertorte, weil sie keinen Apfel mag. Für Ben bleibt der Apfelstrudel.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-1-05",
+   "stufe": 1,
+   "frage": "Auf dem Tisch liegen eine Zeitung, ein Buch und ein Heft. Anna nimmt weder das Buch noch das Heft. Was nimmt sie?",
+   "antworten": [
+    "die Zeitung",
+    "das Buch",
+    "das Heft",
+    "nichts"
+   ],
+   "richtig": 0,
+   "erklaerung": "Buch und Heft scheiden aus. Es bleibt die Zeitung.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-2-01",
+   "stufe": 2,
+   "frage": "Anna ist größer als Ben. Ben ist größer als Cara. Wer ist am kleinsten?",
+   "antworten": [
+    "Anna",
+    "Ben",
+    "Cara",
+    "Man weiß es nicht"
+   ],
+   "richtig": 2,
+   "erklaerung": "Anna ist größer als Ben, und Ben ist größer als Cara. Also ist Cara die Kleinste.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-2-02",
+   "stufe": 2,
+   "frage": "Wenn es regnet, nimmt Eva den Schirm mit. Eva hat heute keinen Schirm dabei. Was folgt daraus?",
+   "antworten": [
+    "Es regnet.",
+    "Es regnet nicht.",
+    "Eva ist zu Hause.",
+    "Man kann nichts sagen."
+   ],
+   "richtig": 1,
+   "erklaerung": "Hätte es geregnet, hätte sie den Schirm mitgenommen. Sie hat ihn nicht dabei, also regnet es nicht.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-2-03",
+   "stufe": 2,
+   "frage": "Ben ist älter als Cara. Cara ist älter als Dora. Wer ist am jüngsten?",
+   "antworten": [
+    "Ben",
+    "Cara",
+    "Dora",
+    "Man weiß es nicht"
+   ],
+   "richtig": 2,
+   "erklaerung": "Ben ist älter als Cara, und Cara ist älter als Dora. Also ist Dora die Jüngste.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-2-04",
+   "stufe": 2,
+   "frage": "Wenn das Kaffeehaus geöffnet hat, brennt das Licht im Fenster. Das Licht im Fenster brennt nicht. Was folgt daraus?",
+   "antworten": [
+    "Das Kaffeehaus hat geöffnet.",
+    "Das Kaffeehaus hat nicht geöffnet.",
+    "Es ist Abend.",
+    "Man kann nichts sagen."
+   ],
+   "richtig": 1,
+   "erklaerung": "Hätte es geöffnet, würde das Licht brennen. Es brennt nicht, also hat es nicht geöffnet.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-2-05",
+   "stufe": 2,
+   "frage": "Anna sitzt links von Ben. Ben sitzt links von Cara. Wer sitzt in der Mitte?",
+   "antworten": [
+    "Anna",
+    "Ben",
+    "Cara",
+    "Man weiß es nicht"
+   ],
+   "richtig": 1,
+   "erklaerung": "Von links nach rechts sitzen Anna, Ben, Cara. In der Mitte sitzt Ben.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-3-01",
+   "stufe": 3,
+   "frage": "Anna, Ben und Cara trinken Kaffee, Tee und Kakao, jeder ein anderes Getränk. Ben trinkt keinen Tee. Cara trinkt weder Kaffee noch Tee. Was trinkt Anna?",
+   "antworten": [
+    "Kaffee",
+    "Tee",
+    "Kakao",
+    "Man weiß es nicht"
+   ],
+   "richtig": 1,
+   "erklaerung": "Cara trinkt Kakao. Ben trinkt keinen Tee und keinen Kakao, also Kaffee. Für Anna bleibt der Tee.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-3-02",
+   "stufe": 3,
+   "frage": "Dora ist älter als Anna. Anna ist älter als Ben. Cara ist jünger als Ben. Wer ist die Zweitälteste?",
+   "antworten": [
+    "Dora",
+    "Anna",
+    "Ben",
+    "Cara"
+   ],
+   "richtig": 1,
+   "erklaerung": "Von alt nach jung: Dora, Anna, Ben, Cara. Die Zweitälteste ist Anna.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-3-03",
+   "stufe": 3,
+   "frage": "Vier Freunde wiegen unterschiedlich viel. Anna ist leichter als Ben. Cara ist schwerer als Ben. Dora ist leichter als Anna. Wer ist der Zweitschwerste?",
+   "antworten": [
+    "Anna",
+    "Ben",
+    "Cara",
+    "Dora"
+   ],
+   "richtig": 1,
+   "erklaerung": "Von leicht nach schwer: Dora, Anna, Ben, Cara. Am schwersten ist Cara, am zweitschwersten Ben.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-3-04",
+   "stufe": 3,
+   "frage": "Der Kellner sagt: „Alle Gäste am Fenster haben Kuchen.“ Frau Huber hat keinen Kuchen. Was folgt daraus?",
+   "antworten": [
+    "Sie sitzt am Fenster.",
+    "Sie sitzt nicht am Fenster.",
+    "Sie bestellt gleich einen Kuchen.",
+    "Man weiß es nicht."
+   ],
+   "richtig": 1,
+   "erklaerung": "Säße sie am Fenster, hätte sie Kuchen. Sie hat keinen, also sitzt sie nicht am Fenster.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-3-05",
+   "stufe": 3,
+   "frage": "Anna, Ben und Cara wohnen in Graz, Linz und Wien, jeder in einer anderen Stadt. Anna wohnt nicht in Wien. Ben wohnt weder in Graz noch in Wien. Wo wohnt Cara?",
+   "antworten": [
+    "in Graz",
+    "in Linz",
+    "in Wien",
+    "Man weiß es nicht"
+   ],
+   "richtig": 2,
+   "erklaerung": "Ben bleibt nur Linz. Anna wohnt dann nicht in Wien und nicht in Linz, also in Graz. Für Cara bleibt Wien.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-4-01",
+   "stufe": 4,
+   "frage": "Zwei Brüder stehen an einer Weggabelung. Einer lügt immer, der andere sagt immer die Wahrheit, du weißt nicht, wer wer ist. Du fragst einen: „Würde dein Bruder sagen, dass der linke Weg der richtige ist?“ Er antwortet: „Ja.“ Wohin gehst du?",
+   "antworten": [
+    "nach links",
+    "nach rechts",
+    "Man kann es nicht wissen",
+    "Man muss noch einmal fragen"
+   ],
+   "richtig": 1,
+   "erklaerung": "Du bekommst immer die falsche Auskunft über den richtigen Weg, egal, wen du gefragt hast. Der Ehrliche meldet die Lüge des anderen, der Lügner verdreht die Wahrheit des anderen. „Ja“ heißt also: Links ist falsch. Du gehst nach rechts.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-4-02",
+   "stufe": 4,
+   "frage": "Drei Kisten tragen die Etiketten „Äpfel“, „Birnen“ und „Äpfel und Birnen“. Alle drei Etiketten sind falsch. Du greifst in die Kiste „Äpfel und Birnen“ und ziehst eine Birne. Was ist in der Kiste mit dem Etikett „Äpfel“?",
+   "antworten": [
+    "nur Äpfel",
+    "nur Birnen",
+    "Äpfel und Birnen gemischt",
+    "Sie ist leer"
+   ],
+   "richtig": 2,
+   "erklaerung": "Die Kiste „Äpfel und Birnen“ enthält nur Birnen, denn ihr Etikett ist falsch und du hast eine Birne gezogen. In der Kiste „Äpfel“ können keine Äpfel sein (falsches Etikett) und keine Birnen (die sind schon vergeben). Also ist sie gemischt.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-4-03",
+   "stufe": 4,
+   "frage": "Ben und Cara sind jeder entweder immer ehrlich oder lügen immer. Ben sagt: „Wir lügen beide.“ Was stimmt?",
+   "antworten": [
+    "Ben ist ehrlich.",
+    "Ben lügt, Cara ist ehrlich.",
+    "Beide lügen.",
+    "Beide sind ehrlich."
+   ],
+   "richtig": 1,
+   "erklaerung": "Wäre Ben ehrlich, müsste er lügen, ein Widerspruch. Also lügt er. Dann stimmt „wir lügen beide“ nicht, und Cara muss ehrlich sein.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-4-04",
+   "stufe": 4,
+   "frage": "Zehn Gäste bestellen. Sechs bestellen Kaffee, sieben bestellen Kuchen, und jeder bestellt mindestens eines von beiden. Wie viele bestellen beides?",
+   "antworten": [
+    "1",
+    "2",
+    "3",
+    "4"
+   ],
+   "richtig": 2,
+   "erklaerung": "6 plus 7 sind 13. Es sind aber nur 10 Gäste, also wurden drei doppelt gezählt. Drei bestellen beides.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-4-05",
+   "stufe": 4,
+   "frage": "Ein Schlüssel liegt in einer von drei Schachteln. Auf A steht: „Der Schlüssel ist hier.“ Auf B steht: „Der Schlüssel ist nicht hier.“ Auf C steht: „Der Schlüssel ist nicht in A.“ Genau ein Satz ist wahr. Wo liegt der Schlüssel?",
+   "antworten": [
+    "in A",
+    "in C",
+    "in B",
+    "Man weiß es nicht"
+   ],
+   "richtig": 2,
+   "erklaerung": "Läge er in A, wären Satz A und B wahr. Läge er in C, wären Satz B und C wahr. Nur in B ist genau ein Satz wahr, nämlich der von C.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-5-01",
+   "stufe": 5,
+   "frage": "Anna sagt: „Ben lügt.“ Ben sagt: „Cara lügt.“ Cara sagt: „Anna und Ben lügen.“ Wer sagt die Wahrheit?",
+   "antworten": [
+    "nur Anna",
+    "nur Ben",
+    "nur Cara",
+    "alle drei"
+   ],
+   "richtig": 1,
+   "erklaerung": "Wäre Cara ehrlich, würden Anna und Ben beide lügen. Dann wäre Annas Satz „Ben lügt“ aber wahr, ein Widerspruch. Anna kann auch nicht ehrlich sein, denn dann müsste Cara ehrlich sein. Anna lügt also, Ben ist ehrlich, Cara lügt.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-5-02",
+   "stufe": 5,
+   "frage": "Vier Häuser stehen in einer Reihe, von links nach rechts 1 bis 4. Ben wohnt direkt rechts von Anna. Cara wohnt nicht am Rand. Dora wohnt nicht neben Anna. Dora wohnt irgendwo links von Cara. Wer wohnt im zweiten Haus?",
+   "antworten": [
+    "Anna",
+    "Ben",
+    "Cara",
+    "Dora"
+   ],
+   "richtig": 2,
+   "erklaerung": "Anna und Ben bilden ein Paar. Stünden sie links (Häuser 1 und 2), müsste Dora rechts von Cara wohnen, das geht nicht. In der Mitte wäre für Cara kein Platz. Also stehen sie rechts (3 und 4), Cara im zweiten Haus, Dora im ersten.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-5-03",
+   "stufe": 5,
+   "frage": "Anna sagt: „Genau einer von uns dreien lügt.“ Ben sagt: „Genau zwei von uns dreien lügen.“ Cara sagt: „Alle drei lügen.“ Jeder ist entweder immer ehrlich oder lügt immer. Wer ist ehrlich?",
+   "antworten": [
+    "nur Cara",
+    "nur Anna",
+    "nur Ben",
+    "niemand"
+   ],
+   "richtig": 2,
+   "erklaerung": "Cara kann nicht ehrlich sein, sonst würde sie selbst lügen. Wäre Anna ehrlich, gäbe es genau einen Lügner, aber Cara und Ben lügen dann beide. Bleibt Ben: Anna und Cara lügen, das sind genau zwei.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-5-04",
+   "stufe": 5,
+   "frage": "Drei Gäste sitzen hintereinander, jeder sieht nur die vor ihm. Es gibt drei weiße und zwei schwarze Hüte, drei davon sind aufgesetzt. Der Hinterste sagt: „Ich weiß meine Farbe nicht.“ Der Mittlere sagt: „Ich auch nicht.“ Welchen Hut trägt der Vorderste?",
+   "antworten": [
+    "weiß",
+    "schwarz",
+    "Man weiß es nicht",
+    "Das hängt vom Hinteren ab"
+   ],
+   "richtig": 0,
+   "erklaerung": "Hätten Mittlerer und Vorderster beide schwarz, wüsste der Hinterste, dass er weiß trägt. Also ist nicht beides schwarz. Wäre der Vorderste schwarz, wüsste der Mittlere, dass er weiß trägt. Er weiß es nicht, also trägt der Vorderste weiß.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "logik-5-05",
+   "stufe": 5,
+   "frage": "Drei Karten liegen verdeckt: eine mit zwei roten Seiten, eine mit zwei blauen und eine mit einer roten und einer blauen Seite. Du ziehst blind eine und siehst eine rote Seite. Wie groß ist die Chance, dass die Rückseite auch rot ist?",
+   "antworten": [
+    "ein Halb",
+    "zwei Drittel",
+    "ein Drittel",
+    "drei Viertel"
+   ],
+   "richtig": 1,
+   "erklaerung": "Es gibt drei rote Seiten. Zwei davon gehören zur rot-roten Karte, eine zur rot-blauen. Zwei von drei Fällen haben eine rote Rückseite.",
+   "intern": {
+    "trainiert": [
+     "Pl"
+    ]
+   }
+  }
+ ],
+ "kopfnuss": [
+  {
+   "id": "nuss-1-01",
+   "stufe": 1,
+   "frage": "Wie viele Beine haben drei Katzen zusammen?",
+   "antwort": 12,
+   "tipp": "Vier Beine pro Katze.",
+   "weg": "3 mal 4 sind 12.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-1-02",
+   "stufe": 1,
+   "frage": "Wie viel ist 15 plus 27?",
+   "antwort": 42,
+   "tipp": "Erst 15 plus 20, dann plus 7.",
+   "weg": "15 plus 20 ist 35, plus 7 ist 42.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-1-03",
+   "stufe": 1,
+   "frage": "Ein Packerl hat 6 Eier. Wie viele Eier sind in fünf Packerln?",
+   "antwort": 30,
+   "tipp": "Fünfmal die Sechs.",
+   "weg": "5 mal 6 sind 30.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-1-04",
+   "stufe": 1,
+   "frage": "Von 50 Euro gibst du 18 Euro aus. Wie viel Euro bleiben?",
+   "antwort": 32,
+   "tipp": "Erst 10 abziehen, dann 8.",
+   "weg": "50 minus 10 sind 40, minus 8 sind 32.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-1-05",
+   "stufe": 1,
+   "frage": "Wie viele Minuten sind eine Stunde und zehn Minuten?",
+   "antwort": 70,
+   "tipp": "Eine Stunde hat 60 Minuten.",
+   "weg": "60 plus 10 sind 70.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-2-01",
+   "stufe": 2,
+   "frage": "Eine Semmel kostet 45 Cent. Wie viel Cent kosten vier Semmeln?",
+   "antwort": 180,
+   "tipp": "Zweimal zwei Semmeln.",
+   "weg": "2 Semmeln kosten 90 Cent, 4 kosten 180 Cent.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-2-02",
+   "stufe": 2,
+   "frage": "Ein Film beginnt um 19:40 und dauert 95 Minuten. Wie viele Minuten nach 21 Uhr ist er zu Ende?",
+   "antwort": 15,
+   "tipp": "Erst bis 21 Uhr rechnen.",
+   "weg": "Von 19:40 bis 21:00 sind es 80 Minuten. Es bleiben 15 Minuten.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-2-03",
+   "stufe": 2,
+   "frage": "Ein Zug fährt um 14:45 ab und kommt um 16:10 an. Wie viele Minuten dauert die Fahrt?",
+   "antwort": 85,
+   "tipp": "Erst bis zur vollen Stunde.",
+   "weg": "Von 14:45 bis 15:00 sind es 15 Minuten, bis 16:00 weitere 60, bis 16:10 noch 10. Zusammen 85.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-2-04",
+   "stufe": 2,
+   "frage": "Drei Freunde teilen eine Rechnung von 87 Euro gleich auf. Wie viel Euro zahlt jeder?",
+   "antwort": 29,
+   "tipp": "87 ist 90 minus 3.",
+   "weg": "90 durch 3 sind 30, 3 durch 3 ist 1. Also 30 minus 1 gleich 29.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-2-05",
+   "stufe": 2,
+   "frage": "Ein Liter Milch kostet 1,20 Euro. Wie viel Cent kosten fünf Liter?",
+   "antwort": 600,
+   "tipp": "Erst in Euro, dann in Cent.",
+   "weg": "5 mal 1,20 Euro sind 6 Euro, also 600 Cent.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-3-01",
+   "stufe": 3,
+   "frage": "Ein Zug fährt 90 Kilometer pro Stunde. Wie viele Kilometer schafft er in 20 Minuten?",
+   "antwort": 30,
+   "tipp": "20 Minuten sind ein Drittel einer Stunde.",
+   "weg": "90 durch 3 sind 30.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-3-02",
+   "stufe": 3,
+   "frage": "Von 240 Euro werden 35 Prozent abgezogen. Wie viel Euro bleiben?",
+   "antwort": 156,
+   "tipp": "Erst 10 Prozent, dann 5 Prozent.",
+   "weg": "35 Prozent von 240 sind 84 (24 mal 3 plus 12). 240 minus 84 sind 156.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-3-03",
+   "stufe": 3,
+   "frage": "Ein Rucksack kostet 80 Euro und ist um 15 Prozent reduziert. Wie viel Euro kostet er jetzt?",
+   "antwort": 68,
+   "tipp": "10 Prozent sind 8 Euro, 5 Prozent sind 4 Euro.",
+   "weg": "15 Prozent von 80 sind 12 Euro. 80 minus 12 sind 68.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-3-04",
+   "stufe": 3,
+   "frage": "Ein Auto verbraucht 6 Liter auf 100 Kilometer. Wie viele Liter braucht es für 250 Kilometer?",
+   "antwort": 15,
+   "tipp": "250 sind zweieinhalb mal 100.",
+   "weg": "2,5 mal 6 Liter sind 15 Liter.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-3-05",
+   "stufe": 3,
+   "frage": "Auf 2 000 Euro gibt es 3 Prozent Zinsen im Jahr. Wie viel Euro Zinsen sind das nach zwei Jahren, wenn die Zinsen nicht mitverzinst werden?",
+   "antwort": 120,
+   "tipp": "Erst ein Jahr: 1 Prozent von 2 000.",
+   "weg": "1 Prozent sind 20 Euro, 3 Prozent sind 60 Euro im Jahr. In zwei Jahren sind das 120 Euro.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-4-01",
+   "stufe": 4,
+   "frage": "Drei Arbeiter mauern eine Wand in 6 Stunden. Wie viele Stunden brauchen 9 Arbeiter bei gleichem Tempo?",
+   "antwort": 2,
+   "tipp": "Dreimal so viele Arbeiter.",
+   "weg": "Dreimal so viele Arbeiter brauchen ein Drittel der Zeit: 6 durch 3 sind 2.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-4-02",
+   "stufe": 4,
+   "frage": "Ein Becken hat zwei Zuläufe. Der erste füllt es in 6 Stunden, der zweite in 3 Stunden. Wie viele Stunden dauert es, wenn beide zugleich laufen?",
+   "antwort": 2,
+   "tipp": "Wie viel schafft jeder in einer Stunde?",
+   "weg": "In einer Stunde füllt der erste ein Sechstel, der zweite ein Drittel, zusammen ein Halbes. Also 2 Stunden.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-4-03",
+   "stufe": 4,
+   "frage": "Ein Becken fasst 60 Kubikmeter. Der Zulauf bringt 4 Kubikmeter pro Stunde, der Ablauf nimmt 1 Kubikmeter pro Stunde weg. Wie viele Stunden dauert es, das leere Becken zu füllen, wenn beide laufen?",
+   "antwort": 20,
+   "tipp": "Wie viel kommt pro Stunde netto dazu?",
+   "weg": "Netto kommen 3 Kubikmeter pro Stunde dazu. 60 durch 3 sind 20 Stunden.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-4-04",
+   "stufe": 4,
+   "frage": "Ein Preis steigt um 20 Prozent und sinkt danach um 20 Prozent. Jetzt beträgt er 96 Euro. Wie viel Euro betrug er am Anfang?",
+   "antwort": 100,
+   "tipp": "Beide Änderungen zusammen sind nicht null.",
+   "weg": "1,2 mal 0,8 ist 0,96. 96 Euro sind also 96 Prozent des Anfangspreises, der Anfangspreis war 100 Euro.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-4-05",
+   "stufe": 4,
+   "frage": "Zwei Radfahrer starten gleichzeitig an zwei Orten, die 60 Kilometer auseinanderliegen, und fahren einander entgegen, mit 15 und mit 25 Kilometern pro Stunde. Nach wie vielen Minuten treffen sie sich?",
+   "antwort": 90,
+   "tipp": "Wie schnell nähern sie sich einander?",
+   "weg": "Sie nähern sich mit 40 Kilometern pro Stunde. 60 durch 40 sind eineinhalb Stunden, also 90 Minuten.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-5-01",
+   "stufe": 5,
+   "frage": "Wie viel ergibt die Summe aller Zahlen von 1 bis 100?",
+   "antwort": 5050,
+   "tipp": "Paare bilden: 1 mit 100, 2 mit 99.",
+   "weg": "Es gibt 50 Paare zu je 101. 50 mal 101 sind 5050.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-5-02",
+   "stufe": 5,
+   "frage": "Wie viele Diagonalen hat ein Achteck?",
+   "antwort": 20,
+   "tipp": "Von jeder Ecke gehen Diagonalen zu allen außer sich selbst und den zwei Nachbarn.",
+   "weg": "Von jeder der 8 Ecken gehen 5 Diagonalen aus. Das sind 40, jede zählt doppelt: 20.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-5-03",
+   "stufe": 5,
+   "frage": "Ein Gitter hat 3 mal 3 Felder. Wie viele Quadrate jeder Größe kann man darin zählen?",
+   "antwort": 14,
+   "tipp": "Zähle nach Seitenlänge: 1, 2 und 3 Felder.",
+   "weg": "9 kleine Quadrate, 4 Quadrate aus 2 mal 2 Feldern und 1 großes: 14.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-5-04",
+   "stufe": 5,
+   "frage": "Zwölf Personen geben einander jeweils einmal die Hand. Wie viele Handschläge sind das?",
+   "antwort": 66,
+   "tipp": "Jeder gibt elf Personen die Hand, aber ein Handschlag zählt für zwei.",
+   "weg": "12 mal 11 sind 132, durch 2 sind 66.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  },
+  {
+   "id": "nuss-5-05",
+   "stufe": 5,
+   "frage": "Wie viele Zahlen von 1 bis 100 sind durch 3 oder durch 5 teilbar?",
+   "antwort": 47,
+   "tipp": "Die durch 15 teilbaren zählen doppelt.",
+   "weg": "Durch 3 teilbar sind 33, durch 5 sind 20, durch beides (also durch 15) sind 6. 33 plus 20 minus 6 sind 47.",
+   "intern": {
+    "trainiert": [
+     "Tp",
+     "Pl"
+    ]
+   }
+  }
+ ],
+ "fluss": [
+  {
+   "id": "gedanke-1-01",
+   "stufe": 1,
+   "gedanke": "Ist ein Geschenk, das man nicht mag, trotzdem ein Geschenk?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein bester Grund?",
+    "Was würde jemand sagen, der es anders sieht?"
+   ],
+   "lumisch": "okio.",
+   "uebersetzung": "Staunen.",
+   "ende_ohne_lumi": "Staunen.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-1-02",
+   "stufe": 1,
+   "gedanke": "Ist es besser, früh aufzustehen oder auszuschlafen?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein bester Grund?",
+    "Was würde jemand sagen, der es anders sieht?"
+   ],
+   "lumisch": "sumu sum.",
+   "uebersetzung": "Schlafen ist gut.",
+   "ende_ohne_lumi": "Schlafen ist gut.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-1-03",
+   "stufe": 1,
+   "gedanke": "Ist ein leises Lied schöner als ein lautes?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein bester Grund?",
+    "Was würde jemand sagen, der es anders sieht?"
+   ],
+   "lumisch": "elanim sum.",
+   "uebersetzung": "Leise ist gut.",
+   "ende_ohne_lumi": "Leise ist gut.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-1-04",
+   "stufe": 1,
+   "gedanke": "Schmeckt etwas besser, wenn man es teilt?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein bester Grund?",
+    "Was würde jemand sagen, der es anders sieht?"
+   ],
+   "lumisch": "mimpek sum.",
+   "uebersetzung": "Teilen ist gut.",
+   "ende_ohne_lumi": "Teilen ist gut.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-1-05",
+   "stufe": 1,
+   "gedanke": "Ist ein neuer Tag immer ein Geschenk?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein bester Grund?",
+    "Was würde jemand sagen, der es anders sieht?"
+   ],
+   "lumisch": "zel tevi.",
+   "uebersetzung": "Ein neuer Tag.",
+   "ende_ohne_lumi": "Ein neuer Tag.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-2-01",
+   "stufe": 2,
+   "gedanke": "Darf man eine kleine Lüge sagen, um jemandem eine Freude zu machen?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein bester Grund?",
+    "Was würde jemand sagen, der es anders sieht?"
+   ],
+   "lumisch": "mh.",
+   "uebersetzung": "Mh. (Da stimmt etwas nicht, oder doch?)",
+   "ende_ohne_lumi": "Mh. (Da stimmt etwas nicht, oder doch?)",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-2-02",
+   "stufe": 2,
+   "gedanke": "Ist man allein glücklicher oder mit anderen?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein bester Grund?",
+    "Was würde jemand sagen, der es anders sieht?"
+   ],
+   "lumisch": "nusam.",
+   "uebersetzung": "Gemeinschaft.",
+   "ende_ohne_lumi": "Gemeinschaft.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-2-03",
+   "stufe": 2,
+   "gedanke": "Ist es mutig, um Hilfe zu bitten?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein bester Grund?",
+    "Was würde jemand sagen, der es anders sieht?"
+   ],
+   "lumisch": "nekiru sum.",
+   "uebersetzung": "Mut ist gut.",
+   "ende_ohne_lumi": "Mut ist gut.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-2-04",
+   "stufe": 2,
+   "gedanke": "Kann man verzeihen, ohne zu vergessen?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein bester Grund?",
+    "Was würde jemand sagen, der es anders sieht?"
+   ],
+   "lumisch": "nekezan. nepekek.",
+   "uebersetzung": "Vergessen. Verzeihen.",
+   "ende_ohne_lumi": "Vergessen. Verzeihen.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-2-05",
+   "stufe": 2,
+   "gedanke": "Wird eine Freundschaft stärker, wenn man gestritten und sich wieder geeinigt hat?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein bester Grund?",
+    "Was würde jemand sagen, der es anders sieht?"
+   ],
+   "lumisch": "vininam. aksam.",
+   "uebersetzung": "Streitgespräch. Einigung.",
+   "ende_ohne_lumi": "Streitgespräch. Einigung.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-3-01",
+   "stufe": 3,
+   "gedanke": "Was ist wichtiger: gerecht zu sein oder gütig?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein stärkster Grund?",
+    "Was ist das stärkste Argument der Gegenseite?"
+   ],
+   "lumisch": "samsol. sumtuk.",
+   "uebersetzung": "Gerechtigkeit. Güte.",
+   "ende_ohne_lumi": "Gerechtigkeit. Güte.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-3-02",
+   "stufe": 3,
+   "gedanke": "Handelt man anders, wenn niemand zusieht?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein stärkster Grund?",
+    "Was ist das stärkste Argument der Gegenseite?"
+   ],
+   "lumisch": "tukpum.",
+   "uebersetzung": "Gewissen.",
+   "ende_ohne_lumi": "Gewissen.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-3-03",
+   "stufe": 3,
+   "gedanke": "Ist Wissen ohne Erfahrung etwas wert?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein stärkster Grund?",
+    "Was ist das stärkste Argument der Gegenseite?"
+   ],
+   "lumisch": "kesap. sapsol.",
+   "uebersetzung": "Erfahrung. Weisheit.",
+   "ende_ohne_lumi": "Erfahrung. Weisheit.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-3-04",
+   "stufe": 3,
+   "gedanke": "Ist Geduld eine Tugend oder nur ein Mangel an Mut?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein stärkster Grund?",
+    "Was ist das stärkste Argument der Gegenseite?"
+   ],
+   "lumisch": "murasum. sumkel.",
+   "uebersetzung": "Geduld. Tugend.",
+   "ende_ohne_lumi": "Geduld. Tugend.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-3-05",
+   "stufe": 3,
+   "gedanke": "Ist Humor eine Form von Klugheit?",
+   "schritte": [
+    "Wo stehst du?",
+    "Was ist dein stärkster Grund?",
+    "Was ist das stärkste Argument der Gegenseite?"
+   ],
+   "lumisch": "kikkolu. sapmak.",
+   "uebersetzung": "Humor. Klug.",
+   "ende_ohne_lumi": "Humor. Klug.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-4-01",
+   "stufe": 4,
+   "gedanke": "Man steigt nicht zweimal in denselben Fluss. Gilt das auch für dich selbst?",
+   "schritte": [
+    "Sag deine Seite in einem Satz.",
+    "Sag die Gegenseite in einem Satz, so gut, wie sie es selbst sagen würde.",
+    "Gibt es eine dritte Möglichkeit, die beide Sätze ein Stück versöhnt?"
+   ],
+   "lumisch": "sol tevimo.",
+   "uebersetzung": "Alles fließt. (Heraklit)",
+   "ende_ohne_lumi": "Alles fließt. (Heraklit)",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-4-02",
+   "stufe": 4,
+   "gedanke": "Ist es ein Verlust, wenn man nicht vermisst, was man nicht hat?",
+   "schritte": [
+    "Sag deine Seite in einem Satz.",
+    "Sag die Gegenseite in einem Satz, so gut, wie sie es selbst sagen würde.",
+    "Gibt es eine dritte Möglichkeit, die beide Sätze ein Stück versöhnt?"
+   ],
+   "lumisch": "mimusol sum.",
+   "uebersetzung": "Gelassenheit ist gut. (Epikur)",
+   "ende_ohne_lumi": "Gelassenheit ist gut. (Epikur)",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-4-03",
+   "stufe": 4,
+   "gedanke": "Ist es schon gerecht, wenn alle gleich behandelt werden?",
+   "schritte": [
+    "Sag deine Seite in einem Satz.",
+    "Sag die Gegenseite in einem Satz, so gut, wie sie es selbst sagen würde.",
+    "Gibt es eine dritte Möglichkeit, die beide Sätze ein Stück versöhnt?"
+   ],
+   "lumisch": "samsol. vini.",
+   "uebersetzung": "Gerechtigkeit. Unterschied.",
+   "ende_ohne_lumi": "Gerechtigkeit. Unterschied.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-4-04",
+   "stufe": 4,
+   "gedanke": "Ist Freiheit ohne Verantwortung noch Freiheit?",
+   "schritte": [
+    "Sag deine Seite in einem Satz.",
+    "Sag die Gegenseite in einem Satz, so gut, wie sie es selbst sagen würde.",
+    "Gibt es eine dritte Möglichkeit, die beide Sätze ein Stück versöhnt?"
+   ],
+   "lumisch": "nekor. pekma.",
+   "uebersetzung": "Freiheit. Verantwortung.",
+   "ende_ohne_lumi": "Freiheit. Verantwortung.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-4-05",
+   "stufe": 4,
+   "gedanke": "Wer etwas beweisen kann, weiß der es dann auch sicher?",
+   "schritte": [
+    "Sag deine Seite in einem Satz.",
+    "Sag die Gegenseite in einem Satz, so gut, wie sie es selbst sagen würde.",
+    "Gibt es eine dritte Möglichkeit, die beide Sätze ein Stück versöhnt?"
+   ],
+   "lumisch": "okisap. sanasap.",
+   "uebersetzung": "Beweis. Gewissheit.",
+   "ende_ohne_lumi": "Beweis. Gewissheit.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-5-01",
+   "stufe": 5,
+   "gedanke": "Wenn man nach und nach jedes Teil eines Schiffes ersetzt, ist es am Ende dasselbe Schiff?",
+   "schritte": [
+    "Wähle die Seite, die dir weniger einleuchtet.",
+    "Verteidige sie so gut du kannst, in zwei Sätzen.",
+    "Hat sich dabei etwas an deiner eigenen Meinung bewegt, und sei es nur ein Stück?"
+   ],
+   "lumisch": "nesap sap.",
+   "uebersetzung": "Wir wissen, dass wir nichts wissen. (Sokrates)",
+   "ende_ohne_lumi": "Wir wissen, dass wir nichts wissen. (Sokrates)",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-5-02",
+   "stufe": 5,
+   "gedanke": "Eine Maschine könnte dir ein Leben lang jedes Glück vorspielen, und du würdest es nie merken. Würdest du hineingehen?",
+   "schritte": [
+    "Wähle die Seite, die dir weniger einleuchtet.",
+    "Verteidige sie so gut du kannst, in zwei Sätzen.",
+    "Hat sich dabei etwas an deiner eigenen Meinung bewegt, und sei es nur ein Stück?"
+   ],
+   "lumisch": "ma sap.",
+   "uebersetzung": "Wer weiß. (Wer zählt schon.)",
+   "ende_ohne_lumi": "Wer weiß. (Wer zählt schon.)",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-5-03",
+   "stufe": 5,
+   "gedanke": "Kann man etwas wissen, ohne es je beweisen zu können?",
+   "schritte": [
+    "Wähle die Seite, die dir weniger einleuchtet.",
+    "Verteidige sie so gut du kannst, in zwei Sätzen.",
+    "Hat sich dabei etwas an deiner eigenen Meinung bewegt, und sei es nur ein Stück?"
+   ],
+   "lumisch": "ma sap. ne okisap.",
+   "uebersetzung": "Wer weiß. Kein Beweis.",
+   "ende_ohne_lumi": "Wer weiß. Kein Beweis.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-5-04",
+   "stufe": 5,
+   "gedanke": "Ist ein Zufall nur ein Schicksal, das man nicht versteht?",
+   "schritte": [
+    "Wähle die Seite, die dir weniger einleuchtet.",
+    "Verteidige sie so gut du kannst, in zwei Sätzen.",
+    "Hat sich dabei etwas an deiner eigenen Meinung bewegt, und sei es nur ein Stück?"
+   ],
+   "lumisch": "kapu. unutiv.",
+   "uebersetzung": "Zufall. Schicksal.",
+   "ende_ohne_lumi": "Zufall. Schicksal.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  },
+  {
+   "id": "gedanke-5-05",
+   "stufe": 5,
+   "gedanke": "Wenn die Zukunft schon feststeht, hat Wählen dann noch einen Sinn?",
+   "schritte": [
+    "Wähle die Seite, die dir weniger einleuchtet.",
+    "Verteidige sie so gut du kannst, in zwei Sätzen.",
+    "Hat sich dabei etwas an deiner eigenen Meinung bewegt, und sei es nur ein Stück?"
+   ],
+   "lumisch": "unutiv. kovitak.",
+   "uebersetzung": "Schicksal. Wahl.",
+   "ende_ohne_lumi": "Schicksal. Wahl.",
+   "lumisch_nur_mit_lumi": true,
+   "intern": {
+    "trainiert": [
+     "Sp",
+     "Mn"
+    ]
+   }
+  }
+ ]
 }

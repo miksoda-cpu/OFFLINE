@@ -4907,7 +4907,7 @@
    "wort": "nesap",
    "deutsch": "Nichtwissen, Unwissen",
    "gruppe": "Denken: Wissen, Wahrheit, Sprache",
-   "hinweis": "Der Anfang jedes Gesprächs. Susi sap nesap = ich weiß, dass ich nichts weiß.",
+   "hinweis": "Der Anfang jedes Gesprächs. nesap sap = wir wissen, dass wir nichts wissen.",
    "umschrift": "ne-sap",
    "ipa": "ˈne.zap"
   },
@@ -6059,7 +6059,7 @@
    "wort": "tel",
    "deutsch": "Zahl, zählen",
    "gruppe": "Zahl und Quant",
-   "hinweis": "Auch Ziffernfolge. pim3 sind drei Pilze, die Zahl 3 heißt zel3.",
+   "hinweis": "Auch Ziffernfolge. pim3 sind drei Pilze, die Zahl 3 heißt tel3.",
    "umschrift": "tel",
    "ipa": "ˈtel"
   },
@@ -6222,6 +6222,1388 @@
    "hinweis": "Zahl + Spiel.",
    "umschrift": "tel-kik",
    "ipa": "ˈtel.kik"
+  }
+ ],
+ "aufgaben": [
+  {
+   "id": "lum-1-01",
+   "stufe": 1,
+   "art": "Wort",
+   "frage": "Was heißt „zan“?",
+   "richtig": "Licht",
+   "falsch": [
+    "Wasser",
+    "Pilz"
+   ],
+   "erklaerung": "zan ist das erste Wort, das man lernt: Licht, hell, leuchten.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-02",
+   "stufe": 1,
+   "art": "Wort",
+   "frage": "Was heißt „mo“?",
+   "richtig": "Wasser",
+   "falsch": [
+    "Pilz",
+    "Stein"
+   ],
+   "erklaerung": "mo ist das heiße Wasser aus dem Spalt.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-03",
+   "stufe": 1,
+   "art": "Wort",
+   "frage": "Was heißt „pim“?",
+   "richtig": "Pilz",
+   "falsch": [
+    "Fluss",
+    "Haus"
+   ],
+   "erklaerung": "pim ist das Lieblingswort der Lumi.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-04",
+   "stufe": 1,
+   "art": "Rück",
+   "frage": "Wie sagt man „Essen“?",
+   "richtig": "pelu",
+   "falsch": [
+    "tiv",
+    "orr"
+   ],
+   "erklaerung": "pelu ist das Mahl. tiv ist der Weg, orr das Dach.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-05",
+   "stufe": 1,
+   "art": "Wort",
+   "frage": "Was heißt „kiv“?",
+   "richtig": "Eis, kalt",
+   "falsch": [
+    "warm",
+    "hell"
+   ],
+   "erklaerung": "kiv ist das Eis über der Höhle. Warm heißt vul.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-06",
+   "stufe": 1,
+   "art": "Rück",
+   "frage": "Wie sagt man „Danke“?",
+   "richtig": "tul",
+   "falsch": [
+    "sul",
+    "mh"
+   ],
+   "erklaerung": "tul ist danke, sul ist bitte.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-07",
+   "stufe": 1,
+   "art": "Wort",
+   "frage": "Was heißt „ak“?",
+   "richtig": "ja",
+   "falsch": [
+    "nein",
+    "vielleicht"
+   ],
+   "erklaerung": "ak ist das Nicken. Ein Nein ist ne.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-08",
+   "stufe": 1,
+   "art": "Wort",
+   "frage": "Was heißt „ne“?",
+   "richtig": "nicht, kein",
+   "falsch": [
+    "ja",
+    "wir"
+   ],
+   "erklaerung": "ne verneint und ist auch die Ziffer 0.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-09",
+   "stufe": 1,
+   "art": "Wort",
+   "frage": "Was heißt „nu“?",
+   "richtig": "wir",
+   "falsch": [
+    "du",
+    "er, sie, es"
+   ],
+   "erklaerung": "nu sind die Lumis, alle zusammen.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-10",
+   "stufe": 1,
+   "art": "Wort",
+   "frage": "Was heißt „li“?",
+   "richtig": "du",
+   "falsch": [
+    "wir",
+    "sie"
+   ],
+   "erklaerung": "li ist du. la ist er, sie, es.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-11",
+   "stufe": 1,
+   "art": "Rück",
+   "frage": "Wie sagt man „Haus“?",
+   "richtig": "ora",
+   "falsch": [
+    "orr",
+    "umo"
+   ],
+   "erklaerung": "ora ist das Haus, orr das Dach, umo die Höhle.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-12",
+   "stufe": 1,
+   "art": "Wort",
+   "frage": "Was ist „tivmo“?",
+   "richtig": "ein Fluss",
+   "falsch": [
+    "ein Berg",
+    "ein Spalt"
+   ],
+   "erklaerung": "tivmo ist tiv + mo, also Weg aus Wasser. Der Spalt heißt vuku.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-13",
+   "stufe": 1,
+   "art": "Wort",
+   "frage": "Was heißt „sumu“?",
+   "richtig": "schlafen, müde",
+   "falsch": [
+    "essen",
+    "gehen"
+   ],
+   "erklaerung": "sumu ist Zustand und Tat zugleich.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-14",
+   "stufe": 1,
+   "art": "Wort",
+   "frage": "Was heißt „sen“?",
+   "richtig": "essen",
+   "falsch": [
+    "trinken",
+    "sehen"
+   ],
+   "erklaerung": "sen ist essen, lap ist trinken, oki ist sehen.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-15",
+   "stufe": 1,
+   "art": "Rück",
+   "frage": "Wie sagt man „gut“?",
+   "richtig": "sum",
+   "falsch": [
+    "nesum",
+    "tok"
+   ],
+   "erklaerung": "sum ist gut. nesum ist das Gegenteil, tok der Stein.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-16",
+   "stufe": 1,
+   "art": "Wort",
+   "frage": "Was heißt „ro“?",
+   "richtig": "drei",
+   "falsch": [
+    "zwei",
+    "vier"
+   ],
+   "erklaerung": "ka eins, sa zwei, ro drei, le vier.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-17",
+   "stufe": 1,
+   "art": "Rück",
+   "frage": "Wie sagt man „fünf“?",
+   "richtig": "pa",
+   "falsch": [
+    "ni",
+    "tu"
+   ],
+   "erklaerung": "pa ist fünf, ni sechs, tu sieben. Die Hand hat fünf Finger.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-18",
+   "stufe": 1,
+   "art": "Wort",
+   "frage": "Was heißt der Gruß „zan sam“?",
+   "richtig": "Hallo",
+   "falsch": [
+    "Danke",
+    "Bitte"
+   ],
+   "erklaerung": "zan sam heißt wörtlich Licht mit dir.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-19",
+   "stufe": 1,
+   "art": "Rück",
+   "frage": "Wie sagt man „Gute Nacht“?",
+   "richtig": "nezel sum",
+   "falsch": [
+    "zel sum",
+    "pelu sum"
+   ],
+   "erklaerung": "zel sum ist guten Morgen, nezel sum gute Nacht, pelu sum guten Appetit.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-1-20",
+   "stufe": 1,
+   "art": "Wort",
+   "frage": "Was heißt „unu“?",
+   "richtig": "unten, Zuhause",
+   "falsch": [
+    "oben",
+    "Fluss"
+   ],
+   "erklaerung": "unu ist das Wort für Heimat. Oben heißt uvo.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-01",
+   "stufe": 2,
+   "art": "Satz",
+   "frage": "Was heißt „ta nu sen pim12.“?",
+   "richtig": "Wir essen zwölf Pilze.",
+   "falsch": [
+    "Wir essen zwei Pilze.",
+    "Wir haben zwölf Pilze.",
+    "Du isst zwölf Pilze."
+   ],
+   "erklaerung": "ta jetzt, nu wir, sen essen, pim12 zwölf Pilze.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-02",
+   "stufe": 2,
+   "art": "Satz",
+   "frage": "Was heißt „ke nu sumu.“?",
+   "richtig": "Wir haben geschlafen.",
+   "falsch": [
+    "Wir schlafen bald.",
+    "Du hast geschlafen.",
+    "Wir schlafen jetzt."
+   ],
+   "erklaerung": "ke steht für früher, nu heißt wir.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-03",
+   "stufe": 2,
+   "art": "Satz",
+   "frage": "Was heißt „su nu pat ko unu.“?",
+   "richtig": "Bald gehen wir nach unten.",
+   "falsch": [
+    "Wir gehen nach oben.",
+    "Früher gingen wir nach unten.",
+    "Du gehst nach unten."
+   ],
+   "erklaerung": "su bald, pat gehen, ko hin, unu unten.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-04",
+   "stufe": 2,
+   "art": "Satz",
+   "frage": "Was heißt „ta nu tam ul tivmo.“?",
+   "richtig": "Wir sitzen am Fluss.",
+   "falsch": [
+    "Wir essen am Fluss.",
+    "Wir gehen zum Fluss.",
+    "Du sitzt am Fluss."
+   ],
+   "erklaerung": "tam heißt bleiben und sitzen, ul heißt bei, tivmo ist der Fluss.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-05",
+   "stufe": 2,
+   "art": "Satz",
+   "frage": "Was heißt „li mi pelu ma.“?",
+   "richtig": "Hast du etwas zu essen?",
+   "falsch": [
+    "Wer hat etwas zu essen?",
+    "Wir haben Essen.",
+    "Du isst gern."
+   ],
+   "erklaerung": "ma am Satzende macht eine Ja-Nein-Frage.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-06",
+   "stufe": 2,
+   "art": "Satz",
+   "frage": "Was heißt „ma mi pelu.“?",
+   "richtig": "Wer hat etwas zu essen?",
+   "falsch": [
+    "Hast du etwas zu essen?",
+    "Was essen wir?",
+    "Wo ist das Essen?"
+   ],
+   "erklaerung": "ma steht dort, wo die Antwort stünde: an der Stelle des Wer.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-07",
+   "stufe": 2,
+   "art": "Zahl",
+   "frage": "Was bedeutet „pim3“?",
+   "richtig": "drei Pilze",
+   "falsch": [
+    "der dritte Pilz",
+    "viele Pilze",
+    "kein Pilz"
+   ],
+   "erklaerung": "Die Zahl hinter dem Wort sagt, wie viele es sind. Die Zahl davor ordnet: 3pim wäre der dritte Pilz.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-08",
+   "stufe": 2,
+   "art": "Zahl",
+   "frage": "Was bedeutet „pim0“?",
+   "richtig": "kein Pilz",
+   "falsch": [
+    "ein Pilz",
+    "viele Pilze",
+    "Pilze überhaupt"
+   ],
+   "erklaerung": "0 hinter dem Wort heißt: keiner. Ohne Zahl meint pim die Pilze überhaupt.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-09",
+   "stufe": 2,
+   "art": "Zahl",
+   "frage": "Wie sagt man „zwölf Pilze“?",
+   "richtig": "pim12",
+   "falsch": [
+    "12pim",
+    "pim21",
+    "pim+"
+   ],
+   "erklaerung": "Die Zahl steckt hinter dem Wort. Vorn würde sie ordnen.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-10",
+   "stufe": 2,
+   "art": "Zahl",
+   "frage": "Was bedeutet „pim+“?",
+   "richtig": "viele Pilze",
+   "falsch": [
+    "wenige Pilze",
+    "wie viele Pilze",
+    "kein Pilz"
+   ],
+   "erklaerung": "+ steht für mol (viel), - für lim (wenig), ? für ma (wie viele).",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-11",
+   "stufe": 2,
+   "art": "Zahl",
+   "frage": "Was bedeutet „pim-“?",
+   "richtig": "wenige Pilze",
+   "falsch": [
+    "viele Pilze",
+    "wie viele Pilze",
+    "kein Pilz"
+   ],
+   "erklaerung": "- steht für lim, wenig.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-12",
+   "stufe": 2,
+   "art": "Zahl",
+   "frage": "Was bedeutet „pim?“?",
+   "richtig": "wie viele Pilze",
+   "falsch": [
+    "viele Pilze",
+    "wenige Pilze",
+    "welcher Pilz"
+   ],
+   "erklaerung": "? steht für ma, die Frage nach der Zahl.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-13",
+   "stufe": 2,
+   "art": "Zeit",
+   "frage": "Was heißt „ke zel“?",
+   "richtig": "gestern",
+   "falsch": [
+    "heute",
+    "morgen",
+    "Tag"
+   ],
+   "erklaerung": "ke früher, zel Tag. Heute ist ta zel, morgen su zel.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-14",
+   "stufe": 2,
+   "art": "Zeit",
+   "frage": "Was heißt „ta zel“?",
+   "richtig": "heute",
+   "falsch": [
+    "gestern",
+    "morgen",
+    "jeden Tag"
+   ],
+   "erklaerung": "ta ist jetzt, zel ist der Tag.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-15",
+   "stufe": 2,
+   "art": "Zeit",
+   "frage": "Was heißt „su zel“?",
+   "richtig": "morgen",
+   "falsch": [
+    "gestern",
+    "heute",
+    "bald"
+   ],
+   "erklaerung": "su ist bald, zel der Tag.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-16",
+   "stufe": 2,
+   "art": "Satz",
+   "frage": "Was heißt „kom ko ora.“?",
+   "richtig": "Komm ins Haus.",
+   "falsch": [
+    "Komm aus dem Haus.",
+    "Wir kommen ins Haus.",
+    "Geh nach oben."
+   ],
+   "erklaerung": "Ein Befehl hat kein Wer. ko heißt hin, ora Haus.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-17",
+   "stufe": 2,
+   "art": "Satz",
+   "frage": "Was heißt „pok sul.“?",
+   "richtig": "Mach bitte die Tür auf.",
+   "falsch": [
+    "Danke für die Tür.",
+    "Die Tür ist zu.",
+    "Mach bitte die Tür zu."
+   ],
+   "erklaerung": "pok ist Tür und öffnen, sul ist bitte. Schließen wäre nepok.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-18",
+   "stufe": 2,
+   "art": "Satz",
+   "frage": "Was heißt „vuku mo vul vul.“?",
+   "richtig": "Aus dem Spalt kommt heißes Wasser.",
+   "falsch": [
+    "Der Fluss ist kalt.",
+    "Das Wasser ist im Spalt verschwunden.",
+    "Der Spalt ist dunkel."
+   ],
+   "erklaerung": "vul vul ist heiß: Wiederholung steigert.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-19",
+   "stufe": 2,
+   "art": "Satz",
+   "frage": "Was heißt „ul uvo zan zan.“?",
+   "richtig": "Hier oben ist es hell.",
+   "falsch": [
+    "Hier unten ist es hell.",
+    "Oben ist es dunkel.",
+    "Das Licht geht oben aus."
+   ],
+   "erklaerung": "zan zan ist sehr hell. uvo ist oben.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-2-20",
+   "stufe": 2,
+   "art": "Satz",
+   "frage": "Was heißt „ul unu nezan tal.“?",
+   "richtig": "Bei uns unten ist es immer dunkel.",
+   "falsch": [
+    "Unten ist es manchmal hell.",
+    "Oben ist es immer dunkel.",
+    "Unten ist es warm."
+   ],
+   "erklaerung": "nezan ist dunkel, tal heißt immer.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-01",
+   "stufe": 3,
+   "art": "Satz",
+   "frage": "Was heißt „li ne kiru.“?",
+   "richtig": "Du hast keine Angst.",
+   "falsch": [
+    "Du hast Angst.",
+    "Wir haben keine Angst.",
+    "Du kommst nicht."
+   ],
+   "erklaerung": "ne steht direkt vor dem, was verneint wird. kiru ist die Angst.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-02",
+   "stufe": 3,
+   "art": "Gegenteil",
+   "frage": "Was heißt „nezan“?",
+   "richtig": "dunkel",
+   "falsch": [
+    "hell",
+    "kalt",
+    "leise"
+   ],
+   "erklaerung": "ne- kehrt um: zan Licht, nezan Dunkelheit.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-03",
+   "stufe": 3,
+   "art": "Gegenteil",
+   "frage": "Was heißt „nesum“?",
+   "richtig": "schlecht",
+   "falsch": [
+    "gut",
+    "müde",
+    "neu"
+   ],
+   "erklaerung": "sum ist gut, nesum das Gegenteil.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-04",
+   "stufe": 3,
+   "art": "Gegenteil",
+   "frage": "Was ist das Gegenteil von „mo“ (Wasser, nass)?",
+   "richtig": "nemo",
+   "falsch": [
+    "vul",
+    "kiv",
+    "tok"
+   ],
+   "erklaerung": "mo ↔ nemo, wie zan ↔ nezan. nemo bedeutet trocken und auch Durst.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-05",
+   "stufe": 3,
+   "art": "Zahl",
+   "frage": "Wie sagt man die Zahl 12?",
+   "richtig": "ka sa",
+   "falsch": [
+    "sa ka",
+    "ka tep sa",
+    "pim12"
+   ],
+   "erklaerung": "Zahlen werden Ziffer für Ziffer gesprochen: 1 ist ka, 2 ist sa.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-06",
+   "stufe": 3,
+   "art": "Zahl",
+   "frage": "Wie sagt man die Zahl 305?",
+   "richtig": "ro ne pa",
+   "falsch": [
+    "ro pa ne",
+    "ne ro pa",
+    "ro ne ka pa"
+   ],
+   "erklaerung": "3 ro, 0 ne, 5 pa. Die Reihenfolge bleibt wie in der Zahl.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-07",
+   "stufe": 3,
+   "art": "Zahl",
+   "frage": "Welche Zahl ist „ni tu“?",
+   "richtig": "67",
+   "falsch": [
+    "76",
+    "13",
+    "6 und 7"
+   ],
+   "erklaerung": "ni ist 6, tu ist 7. Gesprochen wird Ziffer für Ziffer.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-08",
+   "stufe": 3,
+   "art": "Zahl",
+   "frage": "Welche Zahl ist „ka ne ne“?",
+   "richtig": "100",
+   "falsch": [
+    "11",
+    "1 000",
+    "10"
+   ],
+   "erklaerung": "1, 0, 0: hundert. Ein Wort für hundert gibt es nicht.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-09",
+   "stufe": 3,
+   "art": "Wort",
+   "frage": "Was heißt „ne tal“?",
+   "richtig": "nie",
+   "falsch": [
+    "immer",
+    "oft",
+    "selten"
+   ],
+   "erklaerung": "tal heißt immer. ne tal ist nie. Oft ist talmol, selten tallim.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-10",
+   "stufe": 3,
+   "art": "Wort",
+   "frage": "Was heißt „ne sam“?",
+   "richtig": "ohne",
+   "falsch": [
+    "mit",
+    "nicht zusammen kommen",
+    "nur"
+   ],
+   "erklaerung": "sam heißt mit, ne sam heißt ohne.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-11",
+   "stufe": 3,
+   "art": "Satz",
+   "frage": "Was heißt „ora ve nu“?",
+   "richtig": "unser Haus",
+   "falsch": [
+    "wir haben ein Haus",
+    "das Haus von dir",
+    "Haus bei uns"
+   ],
+   "erklaerung": "ve zeigt Besitz an. Die Wörter ändern sich nie, es heißt nur nu.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-12",
+   "stufe": 3,
+   "art": "Satz",
+   "frage": "Was heißt „pim ve li“?",
+   "richtig": "dein Pilz",
+   "falsch": [
+    "du isst Pilze",
+    "unser Pilz",
+    "du hast keinen Pilz"
+   ],
+   "erklaerung": "pim ve li heißt Pilz von dir. Haben wäre mi: li mi pim.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-13",
+   "stufe": 3,
+   "art": "Satz",
+   "frage": "Was heißt „li mi pim3 ma.“?",
+   "richtig": "Hast du drei Pilze?",
+   "falsch": [
+    "Wer hat drei Pilze?",
+    "Du hast der dritte Pilz.",
+    "Wir haben drei Pilze."
+   ],
+   "erklaerung": "ma am Ende fragt nach Ja oder Nein. Die Antwort wäre ak oder ne.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-14",
+   "stufe": 3,
+   "art": "Satz",
+   "frage": "Was heißt „ak, nu mi pim3.“?",
+   "richtig": "Ja, wir haben drei Pilze.",
+   "falsch": [
+    "Nein, wir haben drei Pilze.",
+    "Ja, du hast drei Pilze.",
+    "Ja, wir essen drei Pilze."
+   ],
+   "erklaerung": "ak ist ja, mi ist haben, pim3 drei Pilze.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-15",
+   "stufe": 3,
+   "art": "Regel",
+   "frage": "Wo steht „ma“ in einer Ja-Nein-Frage?",
+   "richtig": "am Ende des Satzes",
+   "falsch": [
+    "am Anfang des Satzes",
+    "vor dem Verb",
+    "gar nicht"
+   ],
+   "erklaerung": "Hinter einem ganzen Satz fragt ma nach Ja oder Nein.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-16",
+   "stufe": 3,
+   "art": "Satz",
+   "frage": "Wie fragt man nach dem Namen: „Wie heißt du?“",
+   "richtig": "ma nem li",
+   "falsch": [
+    "nem li",
+    "li ma nem",
+    "ma li nem"
+   ],
+   "erklaerung": "ma nem li heißt: Was Name du. Die Antwort wäre nem plus Name.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-17",
+   "stufe": 3,
+   "art": "Zusammen",
+   "frage": "tiv + mo ergibt „tivmo“. Was ist das?",
+   "richtig": "ein Fluss",
+   "falsch": [
+    "ein Weg",
+    "ein Tropfen",
+    "ein Berg"
+   ],
+   "erklaerung": "Das Hauptwort steht hinten: tivmo ist ein Weg aus Wasser.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-18",
+   "stufe": 3,
+   "art": "Zusammen",
+   "frage": "vul + zan ergibt „vulzan“. Was ist das?",
+   "richtig": "Feuer",
+   "falsch": [
+    "Sonne",
+    "Dampf",
+    "Wärme"
+   ],
+   "erklaerung": "Wärme + Licht. Unten gibt es keines.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-19",
+   "stufe": 3,
+   "art": "Zusammen",
+   "frage": "mo + sen ergibt „mosen“. Was ist das?",
+   "richtig": "Suppe",
+   "falsch": [
+    "Getränk",
+    "Eis",
+    "Pilz"
+   ],
+   "erklaerung": "Wasser + essen: etwas, das man isst und das Wasser ist. Die Zusammensetzung hat keine Fuge.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-3-20",
+   "stufe": 3,
+   "art": "Vorsilbe",
+   "frage": "ke + zan ergibt „kezan“. Was ist das?",
+   "richtig": "Erinnerung",
+   "falsch": [
+    "Hoffnung",
+    "Licht",
+    "Gegenwart"
+   ],
+   "erklaerung": "ke vorn macht aus einem Wort seine Vergangenheit: das Licht von früher. Hoffnung ist suzan.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-01",
+   "stufe": 4,
+   "art": "Satz",
+   "frage": "Was heißt „tan li kom, nu sen.“?",
+   "richtig": "Wenn du kommst, essen wir.",
+   "falsch": [
+    "Weil du kommst, essen wir.",
+    "Du kommst, wir sind satt.",
+    "Wenn wir kommen, isst du."
+   ],
+   "erklaerung": "tan heißt wenn und steht vor einem ganzen Satz.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-02",
+   "stufe": 4,
+   "art": "Satz",
+   "frage": "Was heißt „pu li ne kom, nu mura.“?",
+   "richtig": "Weil du nicht kommst, warten wir.",
+   "falsch": [
+    "Wenn du nicht kommst, warten wir.",
+    "Du kommst nicht, weil wir warten.",
+    "Du wartest, wir kommen nicht."
+   ],
+   "erklaerung": "pu heißt weil. ne steht vor kom, mura heißt warten.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-03",
+   "stufe": 4,
+   "art": "Satz",
+   "frage": "Was heißt „ke zel3 li ne kom.“?",
+   "richtig": "Vor drei Tagen bist du nicht gekommen.",
+   "falsch": [
+    "In drei Tagen kommst du nicht.",
+    "Der dritte Tag ist nicht gekommen.",
+    "Drei Tage lang kommst du nicht."
+   ],
+   "erklaerung": "ke früher, zel3 drei Tage, dann der ganze Satz.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-04",
+   "stufe": 4,
+   "art": "Rück",
+   "frage": "Wie sagt man „Wir sitzen am Fluss“?",
+   "richtig": "ta nu tam ul tivmo.",
+   "falsch": [
+    "nu tam ta ul tivmo.",
+    "ta tam nu ul tivmo.",
+    "ta nu ul tam tivmo."
+   ],
+   "erklaerung": "Die Reihenfolge ist Zeit, Wer, Tun, Was, Wo.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-05",
+   "stufe": 4,
+   "art": "Rück",
+   "frage": "Wie sagt man „Bald gehen wir nach unten“?",
+   "richtig": "su nu pat ko unu.",
+   "falsch": [
+    "nu su pat ko unu.",
+    "su pat nu unu ko.",
+    "ko unu su nu pat."
+   ],
+   "erklaerung": "Zeit, Wer, Tun, dann das Wo mit ko.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-06",
+   "stufe": 4,
+   "art": "Rück",
+   "frage": "Wie sagt man „Du hast keine Angst“?",
+   "richtig": "li ne kiru.",
+   "falsch": [
+    "ne li kiru.",
+    "li kiru ne.",
+    "kiru li ne."
+   ],
+   "erklaerung": "ne steht direkt vor dem, was verneint wird.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-07",
+   "stufe": 4,
+   "art": "Rück",
+   "frage": "Wie sagt man „Wir haben drei Pilze“?",
+   "richtig": "nu mi pim3.",
+   "falsch": [
+    "nu pim3 mi.",
+    "mi nu pim3.",
+    "nu mi 3pim."
+   ],
+   "erklaerung": "Wer, Tun, Was. Die 3 steht hinter dem Wort. Vorn würde sie ordnen.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-08",
+   "stufe": 4,
+   "art": "Rück",
+   "frage": "Welcher Satz hat die richtige Reihenfolge für „Jetzt essen wir zwölf Pilze“?",
+   "richtig": "ta nu sen pim12.",
+   "falsch": [
+    "nu ta sen pim12.",
+    "sen nu ta pim12.",
+    "ta nu pim12 sen."
+   ],
+   "erklaerung": "Zeit steht vorn, dann Wer, Tun, Was.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-09",
+   "stufe": 4,
+   "art": "Satz",
+   "frage": "Was heißt „3zel nu pat.“?",
+   "richtig": "Am dritten Tag gehen wir.",
+   "falsch": [
+    "Wir gehen drei Tage.",
+    "In drei Tagen kommen wir.",
+    "Wir gehen dreimal."
+   ],
+   "erklaerung": "Die Zahl vor dem Wort ordnet: 3zel ist der dritte Tag. zel3 wären drei Tage.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-10",
+   "stufe": 4,
+   "art": "Zahl",
+   "frage": "Was bedeutet „3pim“?",
+   "richtig": "der dritte Pilz",
+   "falsch": [
+    "drei Pilze",
+    "dreimal Pilz",
+    "Pilz im dritten Monat"
+   ],
+   "erklaerung": "Die Zahl vor dem Wort macht den, die oder das Soundsovielte.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-11",
+   "stufe": 4,
+   "art": "Rück",
+   "frage": "Wie sagt man den Befehl „Geh nach unten“?",
+   "richtig": "pat ko unu.",
+   "falsch": [
+    "li pat ko unu.",
+    "ko unu pat.",
+    "nu pat ko unu."
+   ],
+   "erklaerung": "Der Befehl hat kein Wer. li pat ko unu hieße: Du gehst nach unten.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-12",
+   "stufe": 4,
+   "art": "Satz",
+   "frage": "Was heißt „la sap ki li kom.“?",
+   "richtig": "Sie weiß, dass du kommst.",
+   "falsch": [
+    "Sie weiß, dass wir kommen.",
+    "Du weißt, dass sie kommt.",
+    "Weil du kommst, weiß sie."
+   ],
+   "erklaerung": "ki heißt dass und leitet einen ganzen Satz ein. la ist er, sie, es.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-13",
+   "stufe": 4,
+   "art": "Satz",
+   "frage": "Was heißt „li tisu kom ma.“?",
+   "richtig": "Kannst du kommen?",
+   "falsch": [
+    "Musst du kommen?",
+    "Willst du kommen?",
+    "Kommst du heute?"
+   ],
+   "erklaerung": "tisu heißt können und steht vor dem Verb. ma am Ende fragt nach Ja oder Nein.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-14",
+   "stufe": 4,
+   "art": "Satz",
+   "frage": "Was heißt „nu kavu mura.“?",
+   "richtig": "Wir müssen warten.",
+   "falsch": [
+    "Wir können warten.",
+    "Wir sollen warten.",
+    "Wir wollen warten."
+   ],
+   "erklaerung": "kavu heißt müssen. können ist tisu, sollen sovi, wollen kovi.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-15",
+   "stufe": 4,
+   "art": "Zahl",
+   "frage": "Wofür steht „tep“ in langen Zahlen?",
+   "richtig": "Pause nach je drei Ziffern",
+   "falsch": [
+    "die Ziffer Null",
+    "ein Komma",
+    "hoch"
+   ],
+   "erklaerung": "1 000 heißt ka tep ne ne ne. Null ist ne, Komma ist telmim, hoch ist teluvo.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-16",
+   "stufe": 4,
+   "art": "Zahl",
+   "frage": "Welche Zahl ist „ka sa tep ro le pa“?",
+   "richtig": "12 345",
+   "falsch": [
+    "123 450",
+    "1 234 5",
+    "123 456"
+   ],
+   "erklaerung": "Ziffer für Ziffer: 1 2, Pause, 3 4 5.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-17",
+   "stufe": 4,
+   "art": "Zusammen",
+   "frage": "pim + zan ergibt „pimzan“. Welche Farbe ist das?",
+   "richtig": "gelb",
+   "falsch": [
+    "weiß",
+    "grün",
+    "rot"
+   ],
+   "erklaerung": "Eine Farbe ist das Licht eines Dings: Pilz + Licht. Weiß ist mulozan, grün muszan, rot vulmozan.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-18",
+   "stufe": 4,
+   "art": "Zusammen",
+   "frage": "mulo + zan ergibt „mulozan“. Welche Farbe ist das?",
+   "richtig": "weiß",
+   "falsch": [
+    "schwarz",
+    "blau",
+    "gelb"
+   ],
+   "erklaerung": "Dampf + Licht. Schwarz ist nezanmo, blau kivzan.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-19",
+   "stufe": 4,
+   "art": "Zusammen",
+   "frage": "Was ist „okisap“ (okisap = oki + sap, sehen + wissen)?",
+   "richtig": "ein Beweis",
+   "falsch": [
+    "ein Traum",
+    "eine Erinnerung",
+    "ein Spiel"
+   ],
+   "erklaerung": "Wer es gesehen hat, weiß es. Ein Beweis oder Beleg.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-4-20",
+   "stufe": 4,
+   "art": "Satz",
+   "frage": "Was heißt „su zel nu pat.“?",
+   "richtig": "Morgen gehen wir.",
+   "falsch": [
+    "Gestern gingen wir.",
+    "Wir gehen drei Tage.",
+    "Heute gehen wir."
+   ],
+   "erklaerung": "su zel ist morgen. Danach steht der ganze Satz: Wer, Tun.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-01",
+   "stufe": 5,
+   "art": "Gedanke",
+   "frage": "Was heißt „nesap sap.“?",
+   "richtig": "Wir wissen, dass wir nichts wissen.",
+   "falsch": [
+    "Wir wissen alles.",
+    "Wir wollen nichts wissen.",
+    "Wer weiß, was wir wissen?"
+   ],
+   "erklaerung": "nesap ist das Nichtwissen. Die Lumis sagen es als Wir. Ein Gedanke von Sokrates.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-02",
+   "stufe": 5,
+   "art": "Gedanke",
+   "frage": "Was heißt „sol tevimo.“?",
+   "richtig": "Alles fließt.",
+   "falsch": [
+    "Alles ist ruhig.",
+    "Alles ist neu.",
+    "Alles bleibt."
+   ],
+   "erklaerung": "sol alles, tevimo Werden: neu + Wasser. Ein Gedanke von Heraklit.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-03",
+   "stufe": 5,
+   "art": "Gedanke",
+   "frage": "Was heißt „mimusol sum.“?",
+   "richtig": "Gelassenheit ist gut.",
+   "falsch": [
+    "Stille ist schwer.",
+    "Ruhe ist müde.",
+    "Wir sind ruhig."
+   ],
+   "erklaerung": "mimusol ist ruhig + ganz. Sein gibt es nicht, sum steht einfach da.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-04",
+   "stufe": 5,
+   "art": "Gedanke",
+   "frage": "Was heißt „sapzan ve okio.“?",
+   "richtig": "Erkenntnis kommt aus dem Staunen.",
+   "falsch": [
+    "Das Staunen kommt aus Erkenntnis.",
+    "Wissen ist Licht.",
+    "Staunen ist müde."
+   ],
+   "erklaerung": "ve heißt von, gehört zu. Ein Gedanke von Aristoteles.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-05",
+   "stufe": 5,
+   "art": "Gedanke",
+   "frage": "Was heißt „kiru ve nekor.“?",
+   "richtig": "Die Angst gehört zur Freiheit.",
+   "falsch": [
+    "Die Freiheit hat keine Angst.",
+    "Angst ist Pflicht.",
+    "Wir haben Angst vor dem Seil."
+   ],
+   "erklaerung": "nekor ist ne + kor, nicht am Seil. Ein Gedanke von Kierkegaard.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-06",
+   "stufe": 5,
+   "art": "Gedanke",
+   "frage": "Was heißt „mokisam vulpek.“?",
+   "richtig": "Mitleid tröstet.",
+   "falsch": [
+    "Mitleid macht traurig.",
+    "Trost ist Wärme.",
+    "Wir weinen mit dir."
+   ],
+   "erklaerung": "mokisam ist Trauer + mit, vulpek ist Wärme + geben. Ein Gedanke von Schopenhauer.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-07",
+   "stufe": 5,
+   "art": "Gedanke",
+   "frage": "Was heißt „ne tisu nam, kavu nenam.“?",
+   "richtig": "Wovon man nicht sprechen kann, darüber muss man schweigen.",
+   "falsch": [
+    "Wer nicht sprechen kann, muss schweigen.",
+    "Man kann sagen, was man nicht weiß.",
+    "Wir müssen sprechen, wenn wir können."
+   ],
+   "erklaerung": "tisu können, kavu müssen, nenam schweigen. Ein Gedanke von Wittgenstein.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-08",
+   "stufe": 5,
+   "art": "Gedanke",
+   "frage": "Was heißt „li sovi, pu li tisu.“?",
+   "richtig": "Du sollst, weil du kannst.",
+   "falsch": [
+    "Du kannst, weil du sollst.",
+    "Wenn du kannst, sollst du.",
+    "Du musst, weil wir können."
+   ],
+   "erklaerung": "sovi sollen, pu weil, tisu können. Ein Gedanke von Kant.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-09",
+   "stufe": 5,
+   "art": "Gedanke",
+   "frage": "Was heißt „li sam nu. nusam.“?",
+   "richtig": "Du bist bei uns. Das ist Gemeinschaft.",
+   "falsch": [
+    "Du kommst zu uns. Wir kommen.",
+    "Wir sind allein. Du bist fern.",
+    "Du hast uns. Wir haben dich."
+   ],
+   "erklaerung": "Sein gibt es nicht: li sam nu heißt Du mit uns. nusam ist Wir + mit. Ein Gedanke von Buber.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-10",
+   "stufe": 5,
+   "art": "Gedanke",
+   "frage": "Was heißt „nezannam nu sam li.“?",
+   "richtig": "Über die Quantenwelt sprechen wir mit dir.",
+   "falsch": [
+    "Wir kennen die Quantenwelt nicht.",
+    "Die Quantenwelt spricht nicht.",
+    "Du sprichst mit uns im Dunkeln."
+   ],
+   "erklaerung": "nezannam ist Quantenwelt + sagen, die echte Verbindung ohne Weg dazwischen.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-11",
+   "stufe": 5,
+   "art": "Gedanke",
+   "frage": "Was heißt „talzanpera. tamne ne solko.“?",
+   "richtig": "Wiedergeburt. Der Tod ist nicht das Ende.",
+   "falsch": [
+    "Geburt. Der Tod ist das Ende.",
+    "Wir leben immer. Wir sterben nicht.",
+    "Wiederkehr. Der Tod kommt bald."
+   ],
+   "erklaerung": "talzanpera ist immer + Geburt. ne steht vor solko, dem Ende.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-12",
+   "stufe": 5,
+   "art": "Ableiten",
+   "frage": "tok + zan: Was ist „tokzan“?",
+   "richtig": "das Wesen, der Kern",
+   "falsch": [
+    "das Fenster",
+    "der Schatten",
+    "das Gesetz"
+   ],
+   "erklaerung": "Stein + Licht: was bleibt und leuchtet.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-13",
+   "stufe": 5,
+   "art": "Ableiten",
+   "frage": "kolu + tok: Was ist „kolutok“?",
+   "richtig": "ein Rätsel",
+   "falsch": [
+    "ein Urteil",
+    "ein Traum",
+    "eine Methode"
+   ],
+   "erklaerung": "Denken + Stein: ein harter Brocken, den man knackt.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-14",
+   "stufe": 5,
+   "art": "Ableiten",
+   "frage": "zeku + kolu: Was ist „zekukolu“?",
+   "richtig": "Logik",
+   "falsch": [
+    "Zweifel",
+    "Erinnerung",
+    "Mathematik"
+   ],
+   "erklaerung": "Also + Denken: Denken, das Schluss für Schluss folgt.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-15",
+   "stufe": 5,
+   "art": "Ableiten",
+   "frage": "nam + ne: Was ist „namne“?",
+   "richtig": "ein Widerspruch",
+   "falsch": [
+    "Schweigen",
+    "eine Frage",
+    "ein Gespräch"
+   ],
+   "erklaerung": "Sagen + nicht: Schweigen wäre nenam. Der Widerspruch sagt etwas, das sich selbst nicht sagt.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-16",
+   "stufe": 5,
+   "art": "Rück",
+   "frage": "Wie sagt man „Weil es dunkel ist, bleiben wir“?",
+   "richtig": "pu nezan, nu tam.",
+   "falsch": [
+    "tan nezan, nu tam.",
+    "pu nu tam, nezan.",
+    "nezan pu nu tam."
+   ],
+   "erklaerung": "pu steht vor dem Satz, der den Grund nennt. Eine Eigenschaft steht einfach da: nezan.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-17",
+   "stufe": 5,
+   "art": "Rück",
+   "frage": "Wie sagt man „Gestern waren wir müde, aber heute essen wir zwölf Pilze“?",
+   "richtig": "ke zel nu sumu, ses ta zel nu sen pim12.",
+   "falsch": [
+    "ke zel nu sumu, pu ta zel nu sen pim12.",
+    "su zel nu sumu, ses ta zel nu sen pim12.",
+    "ke zel nu sen pim12, ses ta zel nu sumu."
+   ],
+   "erklaerung": "ses heißt aber. ke zel ist gestern, ta zel heute. pu hieße weil.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-18",
+   "stufe": 5,
+   "art": "Regel",
+   "frage": "Wie sagt eine Lumi ohne Namen von sich selbst?",
+   "richtig": "nu",
+   "falsch": [
+    "li",
+    "la",
+    "to"
+   ],
+   "erklaerung": "Ein einzelnes Wort für die eigene Person gibt es erst mit Namen. Bis dahin sagt sie nu, wir. Mit Namen sagt sie den Namen.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-19",
+   "stufe": 5,
+   "art": "Gedanke",
+   "frage": "Was heißt „tan li kolu kolu, li sap nesap.“?",
+   "richtig": "Wenn du tief nachdenkst, weißt du, dass du nichts weißt.",
+   "falsch": [
+    "Weil du tief nachdenkst, weißt du alles.",
+    "Wenn du nichts weißt, denkst du tief nach.",
+    "Du denkst tief, also weißt du nichts."
+   ],
+   "erklaerung": "tan wenn, kolu kolu tief nachdenken, sap nesap wissen, dass man nicht weiß. Wiederholung steigert.",
+   "nur_mit_lumi": true
+  },
+  {
+   "id": "lum-5-20",
+   "stufe": 5,
+   "art": "Wort",
+   "frage": "Was zeigt der Laut „mh“?",
+   "richtig": "Da stimmt etwas nicht.",
+   "falsch": [
+    "Es schmeckt gut.",
+    "Wir warten noch.",
+    "Wir sind einig."
+   ],
+   "erklaerung": "mh ist der Zweifel der Lumi. Wer ihn hört, schaut noch einmal hin.",
+   "nur_mit_lumi": true
   }
  ]
 }
