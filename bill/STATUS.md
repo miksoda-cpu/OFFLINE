@@ -27,8 +27,8 @@ Alles andere im Repo ist veröffentlicht: Tagesseite mit Roman der Woche und Vor
 - Gesamtkonzept: Projektdokument „OFFLINE-Gesamtkonzept“ (Fassung 6), noch nicht in `docs/`
 
 ## Offen bei Code (wartet)
-- **Abkürzungen offen:** vier Langformen (BMLUK, PI, DGAM, ÖGC) und vier Fragen an Bill (Rückmeldung `2026-10-07-version-0-6-4`).
-- **Als Nächstes:** Spielpaket 1, Auftrag von Bill folgt.
+- **Spielpaket 1 (Nr. 14):** Probe bei Mik in „OFFLINE - Home/spiele-probe/“ (Lichter und 2048, hell und dunkel). Wartet auf Freigabe und drei Entscheidungen: WebAssembly in der Modul-Sandbox, Auswahl, Stufen.
+- **Abkürzungen, zweiter Teil** (Bill 07.10.): Branch `abkuerzungen-2`, getestet, kommt mit der nächsten Version (eine Klammer, Überschriften mit ganzem Wort, BMLUK, Webseite). PI, DGAM, ÖGC: Fundstellen bei Mik für die Inhalts-Session.
 - **Probe Lumi-Seite und Bibliothek als Laden** (Richtung Mik, 06.10.): Bilder und Liste nur lokal bei Mik in „OFFLINE - Home/lumi-bestand/“ (Entwurf, nicht im Repo). Wartet auf Freigabe und sechs Antworten.
 - CI `tests.yml` läuft seit 29.09. bei jedem Push (Werkzeug, Kit, Bereit, Lumi, Kern, Sandbox-Probe).
 - Sandbox-Probe in der App: Windows grün (Windows-Probe, 48 von 48 Angriffen blockiert); Linux in der App noch offen (Berechtigungstest läuft auf Linux).
