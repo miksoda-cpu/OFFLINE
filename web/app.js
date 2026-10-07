@@ -13,7 +13,7 @@ import { schluesselAusLink, internKatalog, internPaketDateien, KanalAbgelaufen, 
 import { naturHtml, naturKlick, vorleseTeile as naturVorleseTeile, bilderIndex as naturBilderIndexBauen, bildZeile as naturBildZeile } from "./natur.js";
 import { meinTag, schlussVorbei as meinTagSchlussVorbei, SCHLUSS_ZEITEN, AUFSTEHEN_ZEITEN, ARTEN as MEIN_TAG_ARTEN, zeitText, vorschlag as meinTagVorschlag, vorschlagText, vorschlagAntwort } from "./meintag.js";
 import { blattOeffnen, blattWeg } from "./blatt.js";
-import { ausschreiben, texteAusschreiben } from "./abkuerzungen.js";
+import { ausschreiben, ausschreibenTitel, texteAusschreiben } from "./abkuerzungen.js";
 import { PAKET as GEDANKEN_PAKET, inhaltHtml as gedankenInhaltHtml, seiteHtml as gedankeSeiteHtml, seitenListe as gedankenSeiten, vorleseTeile as gedankenVorleseTeile } from "./gedanken.js";
 import { hoerenZeigen, sprechen as lumischSprechen } from "./stimme.js";
 import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE, LUECKE_WARTET as BUCH_LUECKE_WARTET, wartendeAbsaetze as buchWartend, mitSchluss as buchMitSchluss } from "./buch.js";
@@ -103,7 +103,7 @@ function aboSpeichern() {
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const groesse = (b) => b < 1e6 ? `${Math.max(1, Math.round(b / 1e3))} kB` : b < 1e9 ? `${(b / 1e6).toLocaleString("de-AT", { maximumFractionDigits: 1 })} MB` : `${(b / 1e9).toLocaleString("de-AT", { maximumFractionDigits: 1 })} GB`;
 const datum = (iso) => new Date(iso).toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
-const ARTEN = { inhalt: "Österreich", zim: "Bibliothek", karte: "Karten", modell: "KI", kurs: "Kurse", software: "Software", tage: "Tage", modul: "Module" };
+const ARTEN = { inhalt: "Österreich", zim: "Bibliothek", karte: "Karten", modell: "Künstliche Intelligenz", kurs: "Kurse", software: "Software", tage: "Tage", modul: "Module" };
 
 // ---------- Paketinhalt ----------
 const P = () => installiertesPaket(BASISPAKET);
@@ -187,7 +187,7 @@ const I = {
 };
 const ROUTEN = [
   ["start", "Heute"], ["pause", "Pause"], ["uebersicht", "Übersicht"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
-  ["karte", "Karte"], ["ki", "KI-Assistent"], ["notizen", "Notizen"], ["tresor", "Tresor"], ["updates", "Updates & Abo"],
+  ["karte", "Karte"], ["ki", "Künstliche Intelligenz"], ["notizen", "Notizen"], ["tresor", "Tresor"], ["updates", "Updates & Abo"],
 ];
 const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
 document.getElementById("nav").innerHTML = ROUTEN.map(([id, name]) => `<a href="#${id}" data-route="${id}">${icon(id)}${name}</a>`).join("");
@@ -753,7 +753,7 @@ const seiten = {
     const liste = k.pakete.filter((p) => state.filter === "Alle" || (ARTEN[p.art] ?? p.art) === state.filter);
     return `
       ${kopf("Bibliothek", `Katalog vom ${datum(k.erstellt)} · Signatur geprüft ✓${desktop ? "" : " · Pakete im Browser sind Textpakete, große kommen in die Desktop-App."}`)}
-      ${desktop ? `<div class="card of-karte" style="margin-bottom:1rem"><h3>Vom USB-Stick oder Ordner einspielen</h3>
+      ${desktop ? `<div class="card of-karte" style="margin-bottom:1rem"><h3>Vom Speicherstick oder Ordner einspielen</h3>
         <p class="muted of-klein" style="margin:0 0 .75rem">Ohne Internet: Paketordner vom Stick auswählen. Der Kern prüft Signatur und jede Datei, bevor etwas übernommen wird.</p>
         <button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-stick-suchen>Datenträger durchsuchen</button> <button class="btn btn-sm of-btn of-btn--klein" data-ordner-waehlen>Ordner wählen …</button>
         <div id="stick-funde" style="margin-top:.75rem">${(state.funde ?? []).map((f) => `<div class="switch of-liste__zeile"><span><strong>${esc(f.titel)}</strong> <span class="muted of-klein">${esc(f.version)} · ${groesse(f.groesse)}</span><br><span class="muted mono of-klein of-mono" style="font-size:.8rem">${esc(f.pfad)}</span></span><button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-stick="${esc(f.pfad)}">Einspielen</button></div>`).join("")}</div></div>` : ""}
@@ -786,7 +786,7 @@ const seiten = {
   },
 
   ki() {
-    return `${kopf("KI-Assistent", "Prototyp: sucht im installierten Österreich-Paket. In der App antwortet ein lokales Sprachmodell.")}
+    return `${kopf("Assistent mit künstlicher Intelligenz", "Prototyp: sucht im installierten Österreich-Paket. In der App antwortet ein lokales Sprachmodell.")}
       <div class="card of-karte"><div class="chat" id="chat">
         <div class="bubble bot">Servus! Frag mich etwas zu Notrufen, Sirenen oder Blackout-Vorsorge – zum Beispiel „Was bedeutet der Heulton?“ oder „Wie viel Wasser brauche ich?“</div></div>
         <form class="chat-form" id="chat-form"><input class="of-input" type="text" id="frage" placeholder="Deine Frage …" autocomplete="off" aria-label="Frage"><button class="btn btn-primary of-btn of-btn--primaer">Fragen</button></form>
@@ -832,7 +832,7 @@ const seiten = {
     const nachher = neuStand();
     const punkt = (an) => (an ? '<span class="neu-punkt" aria-label="ungelesen"></span>' : "");
     const abo = state.abo;
-    const stand = !abo.aktiv ? "Update-Abo pausiert" : [opt.find(([x]) => x === abo.intervall)?.[1] ?? "", abo.nurWlan ? "nur im WLAN" : "", abo.fenster ? `${abo.von}–${abo.bis} Uhr` : ""].filter(Boolean).join(" · ");
+    const stand = !abo.aktiv ? "Update-Abo pausiert" : [opt.find(([x]) => x === abo.intervall)?.[1] ?? "", abo.nurWlan ? "nur im drahtlosen Netz" : "", abo.fenster ? `${abo.von}–${abo.bis} Uhr` : ""].filter(Boolean).join(" · ");
     return `
       <div class="page-head of-seitenkopf"><div><h1>Updates &amp; Abo</h1></div></div>
       <section class="card of-karte upd-stand" aria-label="Stand">
@@ -860,7 +860,7 @@ const seiten = {
         <div class="field" style="margin-top:.8rem"><span class="legend">Wie oft?</span>
           <div class="seg" role="group" aria-label="Intervall">${opt.map(([kk, n]) => `<button data-intervall="${kk}" aria-pressed="${abo.intervall === kk}">${n}</button>`).join("")}</div></div>
         <div class="switch of-liste__zeile"><span><strong>Update-Abo aktiv</strong></span><input type="checkbox" data-abo="aktiv" ${abo.aktiv ? "checked" : ""}></div>
-        <div class="switch of-liste__zeile"><span><strong>Nur im WLAN</strong></span><input type="checkbox" data-abo="nurWlan" ${abo.nurWlan ? "checked" : ""}></div>
+        <div class="switch of-liste__zeile"><span><strong>Nur im drahtlosen Netz</strong></span><input type="checkbox" data-abo="nurWlan" ${abo.nurWlan ? "checked" : ""}></div>
         <div class="switch of-liste__zeile"><span><strong>Zeitfenster</strong></span><input type="checkbox" data-abo="fenster" ${abo.fenster ? "checked" : ""}></div>
         <div style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;${abo.fenster ? "" : "opacity:.5"}">
           <input class="of-input" type="time" data-zeit="von" value="${abo.von}" aria-label="von"> bis <input class="of-input" type="time" data-zeit="bis" value="${abo.bis}" aria-label="bis"></div>
@@ -1036,9 +1036,8 @@ const HILFE_SEITE = { bibliothek: "bibliothek", werkzeuge: "werkzeuge", linie: "
 const hilfeZeile = (seite, klasse = "upd-info") => (seite && HILFE[seite] ? `<p class="${klasse}"><button type="button" class="z-neben" data-hilfe="${seite}">Info und Hilfe</button></p>` : "");
 function hilfeZeigen(seite) {
   const t = HILFE[seite]; if (!t) return;
-  // Frage und Antwort sind ein Text: eine Abkürzung wird beim ersten Vorkommen ausgeschrieben, auch wenn es in der Frage steht
-  const TRENNER = "\u2063";
-  blattOeffnen("Info und Hilfe", t.map(([f, a]) => { const [frage, antwort] = ausschreiben(`${f}${TRENNER}${a}`).split(TRENNER); return `<h3 class="hilfe-frage">${esc(frage)}</h3><p class="hilfe-antwort">${esc(antwort)}</p>`; }).join(""));
+  // Die Frage ist eine Überschrift: ganzes Wort statt Abkürzung; die Antwort ein Satz: Abkürzung mit Langform (Bill, 07.10.2026)
+  blattOeffnen("Info und Hilfe", t.map(([f, a]) => `<h3 class="hilfe-frage">${esc(ausschreibenTitel(f))}</h3><p class="hilfe-antwort">${esc(ausschreiben(a))}</p>`).join(""));
 }
 
 async function neuesLaden() {
@@ -1543,7 +1542,7 @@ function modulKarte(e, quelle) {
   return `<div class="card pkg modul-karte of-karte of-paket" data-modul-karte="${esc(e.id)}">
     <div class="pkg-head"><h3 style="margin:0">${esc(e.titel)}</h3><span><span class="tag of-plakette">${skin ? "Skin" : "Modul"}</span>${quelle.art === "ordner" ? ' <span class="tag tag-warn of-plakette of-plakette--warnung">lokal, nicht veröffentlicht</span>' : ""}${inst ? ` <span class="tag of-plakette ${aktiv ? "tag-ok of-plakette--offline" : ""}">${aktiv ? "Geladen" : "Inaktiv"}</span>` : ""}</span></div>
     <p>${esc(e.beschreibung)}</p>
-    ${(inst?.manifest.ki_generiert ?? e.ki_generiert) ? `<p class="muted of-klein" style="margin:-.3rem 0 .5rem"><span class="tag of-plakette">KI</span> Bilder mit künstlicher Intelligenz (KI) erzeugt, Herkunft im Paket</p>` : ""}
+    ${(inst?.manifest.ki_generiert ?? e.ki_generiert) ? `<p class="muted of-klein" style="margin:-.3rem 0 .5rem"><span class="tag of-plakette">Künstliche Intelligenz</span> Bilder damit erzeugt, Herkunft im Paket</p>` : ""}
     ${sliderHtml(sliderSchluessel(e.id, quelle), e)}
     <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(e.groesse)}${e.version ? ` · ${esc(e.version)}` : ""}${e.alter_ab ? ` · ab ${e.alter_ab} Jahren` : ""}</span><span class="modul-steuerung">${steuerung}</span></div>
     ${state.modul.loeschen === e.id ? loeschDialog(e.id) : ""}
@@ -1902,7 +1901,7 @@ async function tresorAktion(b) {
     if (b.dataset.tresorAnhangLoeschen) { if (!confirm("Anhang endgültig löschen?")) return; const n = await client.tresorAnhangLoeschen(t.aktiv, b.dataset.tresorAnhangLoeschen); Object.assign(t.notizen.find((x) => x.id === n.id), n); vorschauFrei(); return render(); }
     if (b.hasAttribute("data-tresor-pw-aendern")) { await client.tresorPasswortAendern(wert("tresor-alt"), wert("tresor-neu")); return tresorMeldung("Passwort geändert.", "ok"); }
     if (b.hasAttribute("data-tresor-code-neu")) { const code = await client.tresorCodeErneuern(wert("tresor-pw-code")); const gruppen = [0, 1, 2, 3, 4, 5].sort(() => Math.random() - 0.5).slice(0, 4).sort(); state.tresor = { ...t, status: "code", code, codeGruppen: gruppen, einstellungen: false, msg: "", msgArt: "" }; return render(); }
-    if (b.hasAttribute("data-tresor-sichern")) { const ziel = await client.ordnerWaehlen("Ordner für die Sicherung wählen (z. B. USB-Stick)"); if (!ziel) return; const wo = await client.tresorSichern(ziel); return tresorMeldung(`Gesichert nach ${esc(wo)}.`, "ok"); }
+    if (b.hasAttribute("data-tresor-sichern")) { const ziel = await client.ordnerWaehlen("Ordner für die Sicherung wählen (z. B. Speicherstick)"); if (!ziel) return; const wo = await client.tresorSichern(ziel); return tresorMeldung(`Gesichert nach ${esc(wo)}.`, "ok"); }
     if (b.hasAttribute("data-tresor-zurueckspielen")) { const q = await client.ordnerWaehlen("Ordner „OFFLINE-Tresor-Sicherung“ wählen"); if (!q) return; if (!confirm("Den Tresor auf diesem Gerät durch die Sicherung ersetzen?")) return; await client.tresorZurueckspielen(q); await tresorLaden(); return tresorMeldung("Sicherung zurückgespielt – mit dem Passwort der Sicherung öffnen.", "ok"); }
   } catch (e) { tresorMeldung(esc(String(e?.message ?? e)), "err"); }
 }

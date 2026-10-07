@@ -40,7 +40,7 @@ test("Startseite: kein KI-Versprechen im Startbild, Geplantes mit „kommt“", 
   for (const t of [...meta, lead]) assert.doesNotMatch(t, /\bKI\b|KI-|Wikipedia|Karte/, t);
   assert.equal(meta.length, 2);
   const kommt = (text) => new RegExp(`${text}[^<]*<span class="tag tag-warn">kommt</span>`).test(html);
-  for (const t of ["Nach Bundesland", "Österreich-Paket nach Bundesland", "RIS-Gesetzesauszug, wöchentlich", "Karte Österreich und Wikipedia auf Deutsch", "Zentral verwaltete Updates"]) assert.ok(kommt(t), t);
+  for (const t of ["Nach Bundesland", "Österreich-Paket nach Bundesland", "Gesetzesauszug aus dem Rechtsinformationssystem, wöchentlich", "Karte Österreich und Wikipedia auf Deutsch", "Zentral verwaltete Updates"]) assert.ok(kommt(t), t);
   assert.match(html, /<h3>Karten <span class="tag tag-warn">kommt<\/span><\/h3>/);
   assert.match(html, /Wikivoyage auf Deutsch\. Wikipedia und Wiktionary kommen\./);
   assert.match(html, /Wikivoyage, Österreich-Paket Grundversion<\/li>\s*<li class="muted">Wikipedia und Karte kommen<\/li>/);

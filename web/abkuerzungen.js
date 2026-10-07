@@ -37,6 +37,7 @@ export const LISTE = {
   LWL: "Landschaftsverband Westfalen-Lippe", HWDA: "Handwörterbuch des deutschen Aberglaubens",
   ÖAB: "Österreichisches Arzneibuch", "Ph. Eur.": "Europäisches Arzneibuch",
   // Recht
+  BMLUK: "Bundesministerium für Land- und Forstwirtschaft, Klima- und Umweltschutz, Regionen und Wasserwirtschaft",
   RIS: "Rechtsinformationssystem des Bundes", SMG: "Suchtmittelgesetz", NPSG: "Neue-Psychoaktive-Substanzen-Gesetz",
   AMG: "Arzneimittelgesetz", LGBl: "Landesgesetzblatt", VO: "Verordnung", EG: "Europäische Gemeinschaft",
   CITES: "Washingtoner Artenschutzübereinkommen", FFH: "Fauna-Flora-Habitat", GAP: "Gemeinsame Agrarpolitik",
@@ -56,7 +57,7 @@ export const LISTE = {
   HLA: "humanes Leukozytenantigen", PRES: "posteriores reversibles Enzephalopathie-Syndrom", PDE5: "Phosphodiesterase 5",
   GABA: "Gamma-Aminobuttersäure", MAO: "Monoaminoxidase", PPI: "Protonenpumpenhemmer", LSD: "Lysergsäurediethylamid",
   DOM: "Dimethoxymethylamphetamin", UV: "ultraviolett", SO2: "Schwefeldioxid", NH3: "Ammoniak", NOx: "Stickoxide",
-  OCR: "Texterkennung", FAQ: "häufige Fragen", "k.A.": "keine Angabe", MB: "Megabyte", AT: "Österreich",
+  OCR: "Texterkennung", FAQ: "häufige Fragen", "k.A.": "keine Angabe", AT: "Österreich",
   BArtSchV: "Bundesartenschutzverordnung", BNatSchG: "Bundesnaturschutzgesetz", VG: "Verwaltungsgericht", BC: "vor Christus",
   GYO: "Grow your own", PR: "Öffentlichkeitsarbeit", WK: "Weltkrieg", DC: "Dünnschichtchromatographie",
   ULB: "Universitäts- und Landesbibliothek", BRIT: "Botanical Research Institute of Texas",
@@ -74,13 +75,13 @@ export const KEINE = {
   XARELTO: "Handelsname", WebFetch: "Name eines Werkzeugs", PubMed: "Name einer Datenbank", DocCheck: "Name einer Seite",
   MedUni: "Teil eines Namens (MedUni Wien)", HgS: "chemische Formel", MeO: "Teil eines Stoffnamens", IDs: "Kennungen",
   TOBIAS: "Name eines Archivs (TOBIAS-lib)", PTAheute: "Name einer Zeitschrift",
+  MB: "Maßeinheit neben einer Zahl, bleibt wie die Alltagskürzel (Bill, 07.10.2026)", GB: "Maßeinheit neben einer Zahl, bleibt wie die Alltagskürzel",
 };
 
 /** Noch offen: Langform von Bill erbeten; bis dahin bleibt die Abkürzung, wie sie ist. */
 export const OFFEN = {
-  BMLUK: "Name des Bundesministeriums in der aktuellen Fassung",
   PI: "zwei Bedeutungen in den Texten (Proteasehemmer, Fachinformation des Herstellers)",
-  DGAM: "Gesellschaft nicht eindeutig", ÖGC: "Gesellschaft nicht eindeutig",
+  DGAM: "Gesellschaft nicht eindeutig (Fundstellen in „OFFLINE - Home/abkuerzungen-offen.md“)", ÖGC: "Gesellschaft nicht eindeutig (Fundstellen in „OFFLINE - Home/abkuerzungen-offen.md“)",
 };
 
 const re = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -99,38 +100,63 @@ const inAdresse = (text, i) => { const vor = text.slice(0, i), anfang = Math.max
  * Internetadressen bleiben unangetastet.
  */
 const ALLE = new RegExp(`(?<![\\p{L}\\p{N}_@.])(?:${MUSTER.map(([k]) => re(k)).join("|")})(?![\\p{L}\\p{N}_@])`, "gu");
+/** Klammer einfügen; folgt dort schon eine Klammer, wird es eine: „(WC: Toilette; Kanister, …)“ (Bill, 07.10.2026). */
+const klammer = (aus, pos, inhalt) => (aus.slice(pos).startsWith(" (") ? `${aus.slice(0, pos)} (${inhalt}; ${aus.slice(pos + 2)}` : `${aus.slice(0, pos)} (${inhalt})${aus.slice(pos)}`);
+/** Überschriftszeilen im Markdown (### …) bekommen das ganze Wort statt einer Klammer; im Fließtext zählen sie nicht mit. */
+const UEBERSCHRIFT = /^#{1,6}[ \t].*$/gm, PLATZ = "\u2063";
+
 export function ausschreiben(text, liste = LISTE) {
   if (typeof text !== "string" || text.length < 2) return text;
-  const da = new Set(text.match(ALLE) ?? []); // nur die Abkürzungen, die in diesem Text vorkommen
-  if (!da.size) return text;
-  let aus = text;
+  if (!ALLE.test(text)) { ALLE.lastIndex = 0; return text; }
+  ALLE.lastIndex = 0;
+  const titel = [];
+  let aus = text.replace(UEBERSCHRIFT, (z) => { titel.push(ausschreibenTitel(z, liste)); return `${PLATZ}${titel.length - 1}${PLATZ}`; });
+  const da = new Set(aus.match(ALLE) ?? []); // nur die Abkürzungen, die im Fließtext vorkommen
   for (const [k, muster] of MUSTER) {
     if (!da.has(k)) continue;
     const lang = liste[k]; if (!lang) continue;
-    if (aus.includes(`${k} (${lang})`) || aus.includes(`${lang} (${k})`) || aus.includes(`(${k}: ${lang}`) || aus.includes(`${k}: ${lang})`)) continue; // schon erklärt
+    if (aus.includes(`${k} (${lang}`) || aus.includes(`${lang} (${k}`) || aus.includes(`(${k}: ${lang}`) || aus.includes(`${k}: ${lang}`)) continue; // schon erklärt
     muster.lastIndex = 0;
     let m;
     while ((m = muster.exec(aus)) && inAdresse(aus, m.index)) { /* weiter suchen */ }
     if (!m) continue;
     const davor = aus.slice(0, m.index), wo = davor.search(new RegExp(`${re(lang)}(?![\\p{L}])`, "u")); // ganze Langform, nicht „Studie“ in „Studien“
-    if (wo >= 0) { // Langform steht schon davor: die Abkürzung gleich dahinter nennen, wenn sie dort nicht schon steht
-      if (!aus.slice(wo + lang.length).startsWith(` (${k}`)) aus = `${aus.slice(0, wo + lang.length)} (${k})${aus.slice(wo + lang.length)}`;
-      continue;
-    }
+    if (wo >= 0) { if (!aus.slice(wo + lang.length).startsWith(` (${k}`)) aus = klammer(aus, wo + lang.length, k); continue; } // Langform steht schon davor
     const i = m.index, ende = i + k.length, vorne = aus[i - 1], hinten = aus[ende];
     if (hinten === "-" || vorne === "-") { // Wortzusammensetzung (PA-haltig, BfR-PDF): hinter dem ganzen Wort erklären
       const wortEnde = ende + (/^[-/\p{L}\p{N}]*/u.exec(aus.slice(ende))?.[0].length ?? 0);
-      aus = `${aus.slice(0, wortEnde)} (${k}: ${lang})${aus.slice(wortEnde)}`;
+      aus = klammer(aus, wortEnde, `${k}: ${lang}`);
     } else if (vorne === "(" && hinten === ")") aus = `${aus.slice(0, ende)}: ${lang}${aus.slice(ende)}`; // „(EMA)“ → „(EMA: …)“
-    else aus = `${aus.slice(0, ende)} (${lang})${aus.slice(ende)}`; // Abkürzung bleibt im Satz, Langform in Klammern: kein Fallfehler
+    else aus = klammer(aus, ende, lang); // Abkürzung bleibt im Satz, Langform in Klammern: kein Fallfehler
+  }
+  return titel.length ? aus.replace(new RegExp(`${PLATZ}(\\d+)${PLATZ}`, "g"), (_, n) => titel[Number(n)]) : aus;
+}
+
+/**
+ * Überschriften, Knöpfe, Auswahlfelder (Bill, 07.10.2026): nicht verlängern; statt der Abkürzung steht das ganze Wort.
+ * „Teil 7: TCM“ → „Teil 7: Traditionelle Chinesische Medizin“; in Zusammensetzungen durchgekoppelt
+ * („TCM-Begriffe“ → „Traditionelle-Chinesische-Medizin-Begriffe“). Internetadressen bleiben.
+ */
+export function ausschreibenTitel(text, liste = LISTE) {
+  if (typeof text !== "string" || text.length < 2) return text;
+  let aus = text;
+  for (const [k, muster] of MUSTER) {
+    const lang = liste[k]; if (!lang) continue;
+    muster.lastIndex = 0;
+    aus = aus.replace(muster, (treffer, i, ganz) => {
+      if (inAdresse(ganz, i)) return treffer;
+      return ganz[i + k.length] === "-" || ganz[i - 1] === "-" ? lang.replace(/,? /g, "-") : lang;
+    });
   }
   return aus;
 }
 
+/** Felder, die als Überschrift, Knopf oder Auswahl erscheinen: ganzes Wort statt Klammer. */
+const TITELFELDER = /^(titel|name|merkmal|beschwerde|ueberschrift|kapitel_titel|gruppe)$/;
 /** Alle Texte in Paketdaten ausschreiben (jede Zeichenkette ist ein Text für sich). Schlüssel und Kennungen bleiben. */
-export function texteAusschreiben(daten, liste = LISTE) {
-  if (typeof daten === "string") return ausschreiben(daten, liste);
-  if (Array.isArray(daten)) return daten.map((x) => texteAusschreiben(x, liste));
-  if (daten && typeof daten === "object") return Object.fromEntries(Object.entries(daten).map(([k, v]) => [k, /^(id|ids|pfad|bild|url|buch|wort|lumisch|umschrift|ipa)$/.test(k) ? v : texteAusschreiben(v, liste)]));
+export function texteAusschreiben(daten, liste = LISTE, feld = "") {
+  if (typeof daten === "string") return TITELFELDER.test(feld) ? ausschreibenTitel(daten, liste) : ausschreiben(daten, liste);
+  if (Array.isArray(daten)) return daten.map((x) => texteAusschreiben(x, liste, feld));
+  if (daten && typeof daten === "object") return Object.fromEntries(Object.entries(daten).map(([k, v]) => [k, /^(id|ids|pfad|bild|url|buch|wort|lumisch|umschrift|ipa)$/.test(k) ? v : texteAusschreiben(v, liste, k)]));
   return daten;
 }

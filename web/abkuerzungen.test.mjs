@@ -5,7 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { LISTE, KEINE, OFFEN, ausschreiben, texteAusschreiben } from "./abkuerzungen.js";
+import { LISTE, KEINE, OFFEN, ausschreiben, ausschreibenTitel, texteAusschreiben } from "./abkuerzungen.js";
 import { HILFE } from "./hilfe.js";
 import { TEXTE as LUMI_TEXTE } from "./wesen.js";
 
@@ -28,7 +28,7 @@ async function oeffentlicheTexte() {
   texteVon(await json("../pakete/lumi-buch/inhalt/buch.json"), t);
   texteVon(await json("../pakete/lumi-philosophie/inhalt/gedanken.json"), t);
   texteVon((await json("./neues.json")).versionen, t);
-  for (const fragen of Object.values(HILFE)) for (const [f, a] of fragen) t.push(`${f}\n${a}`); // Frage und Antwort sind ein Text
+  for (const fragen of Object.values(HILFE)) for (const [f, a] of fragen) t.push(a); // die Fragen sind Überschriften (eigener Test)
   texteVon(LUMI_TEXTE, t);
   return t;
 }
@@ -48,7 +48,8 @@ function unbekannte(texte) {
 /** Ganze Wörter in Großbuchstaben mitten in einer Hervorhebung (**NICHT**) zählen als Betonung, nicht als Abkürzung. */
 const hervorhebung = (t, i) => /\*\*[^*]*$/.test(t.slice(0, i));
 /** Ist k in diesem Text erklärt? */
-const erklaert = (t, k) => [`${k} (${LISTE[k]})`, `${LISTE[k]} (${k})`, `(${k}: ${LISTE[k]}`, `${k}: ${LISTE[k]})`].some((s) => t.includes(s)) || t.indexOf(LISTE[k]) >= 0 && t.indexOf(LISTE[k]) < t.indexOf(k);
+const erklaert = (t, k) => { const l = LISTE[k], i = t.search(new RegExp(`(?<![\\p{L}\\p{N}_@.])${k.replace(/[.]/g, "\\.")}(?![\\p{L}\\p{N}_@])`, "u"));
+  return [`${k} (${l}`, `${l} (${k}`, `(${k}: ${l}`, `${k}: ${l}`].some((s) => t.includes(s)) || (t.indexOf(l) >= 0 && t.indexOf(l) < i) || t.slice(i - 1, i + k.length + 1) === `(${k})` || t.slice(i - 1, i + k.length + 1) === `(${k}:`; }; // auch von Hand: „im drahtlosen Netz (WLAN)“
 const kommtVor = (t, k) => new RegExp(`(?<![\\p{L}\\p{N}_@.])${k.replace(/[.]/g, "\\.")}(?![\\p{L}\\p{N}_@])`, "u").test(ohneAdressen(t));
 
 test("Ausschreiben: Abkürzung bleibt im Satz, Langform in Klammern; Zusammensetzungen, Klammern, schon Erklärtes, Adressen", () => {
@@ -99,8 +100,24 @@ test("Naturheilkunde und Erste-Hilfe-Karte: jede Abkürzung eingeordnet und erkl
 test("Die App wendet die Regel überall an: Pakete, Hilfe, Was ist neu; eigene Sätze tragen die Langform", async () => {
   const app = await readFile(url("./app.js"), "utf8");
   for (const s of ['const buchDaten = () => texte(PB(), "inhalt/buch.json");', 'texte(installiertesPaket(GEDANKEN_PAKET), "inhalt/gedanken.json")', 'tipps: () => texte(PW(), "inhalt/tipps.json")',
-    "const D = (name) => texte(P(), `inhalt/${name}.json`);", 'const naturDaten = () => texte(naturPaket(), "inhalt/naturheilkunde.json");', "ausschreiben(`${f}${TRENNER}${a}`)", "state.neues = texteAusschreiben("]) assert.ok(app.includes(s), s);
+    "const D = (name) => texte(P(), `inhalt/${name}.json`);", 'const naturDaten = () => texte(naturPaket(), "inhalt/naturheilkunde.json");', "esc(ausschreibenTitel(f))", "state.neues = texteAusschreiben("]) assert.ok(app.includes(s), s);
   assert.ok(!/inhalt\(P\(\), "inhalt\/bundeslaender/.test(app), "Bundesländer über texte()");
   assert.match(LUMI_TEXTE.ki, /künstlicher Intelligenz \(KI\)/);
   assert.match(app, /Österreichische Rundfunk \(ORF\)/);
+});
+
+test("Bill 07.10.: eine Klammer statt zwei (Strichpunkt), Überschriften und Knöpfe mit ganzem Wort, BMLUK, Webseite", async () => {
+  assert.equal(ausschreiben("Wasser für die WC-Spülung (Kanister, gefüllte Badewanne)"), "Wasser für die WC-Spülung (WC: Toilette; Kanister, gefüllte Badewanne)");
+  assert.equal(ausschreiben("zusätzlich BfR-PDF (Verwechslung)"), "zusätzlich BfR-PDF (BfR: Bundesinstitut für Risikobewertung; PDF: Portable Document Format; Verwechslung)");
+  assert.equal(ausschreibenTitel("Teil 7: TCM"), "Teil 7: Traditionelle Chinesische Medizin");
+  assert.equal(ausschreibenTitel("TCM-Begriffe"), "Traditionelle-Chinesische-Medizin-Begriffe");
+  assert.equal(ausschreiben("### Laut BfR\nDas BfR sagt"), "### Laut Bundesinstitut für Risikobewertung\nDas BfR (Bundesinstitut für Risikobewertung) sagt", "Überschriftszeilen ohne Klammer");
+  assert.deepEqual(texteAusschreiben({ titel: "Teil 7: TCM", text: "Die TCM" }), { titel: "Teil 7: Traditionelle Chinesische Medizin", text: "Die TCM (Traditionelle Chinesische Medizin)" });
+  assert.equal(LISTE.BMLUK, "Bundesministerium für Land- und Forstwirtschaft, Klima- und Umweltschutz, Regionen und Wasserwirtschaft");
+  assert.ok(!("BMLUK" in OFFEN) && "PI" in OFFEN && "DGAM" in OFFEN && "ÖGC" in OFFEN);
+  for (const fragen of Object.values(HILFE)) for (const [f] of fragen) assert.equal(ausschreibenTitel(f), f, `Hilfe-Frage ohne Abkürzung: ${f}`);
+  const seite = (await readFile(url("./index.html"), "utf8")).replace(/<script[\s\S]*?<\/script>|<[^>]+>/g, " ");
+  for (const t of seite.split(/\n/)) for (const k of Object.keys(LISTE)) if (kommtVor(t, k) && !["AT"].includes(k)) assert.ok(erklaert(t, k), `Webseite: ${k} in „${t.trim().slice(0, 90)}“`);
+  const app = await readFile(url("./app.js"), "utf8");
+  for (const s of ['modell: "Künstliche Intelligenz"', '["ki", "Künstliche Intelligenz"]', "Vom Speicherstick oder Ordner einspielen", "<strong>Nur im drahtlosen Netz</strong>"]) assert.ok(app.includes(s), s);
 });
