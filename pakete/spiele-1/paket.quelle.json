@@ -26,7 +26,6 @@
   "app_min": "0.6.5",
   "aenderungen": "Minen: Ein langer Druck setzt die Fahne. Aus der Bibliothek geöffnet stehen Name und Anleitung über dem Spiel.",
   "alter_ab": 14,
-  "kategorie": "jeden-tag",
   "braucht_netz": false,
   "abnahme": "Redaktion (Code), 07.10.2026: alle sieben Spiele in WebKit über den echten Modulserver gespielt, hell und dunkel, bei 360 px",
   "datenversion": 1

@@ -10,7 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { tageBereichFehler, tageInhaltFehler } from "./tage-format.mjs";
 import { tippsFehler } from "./tipps-format.mjs";
-import { pauseFehler, pauseFormenFehler } from "./pause-format.mjs";
+import { pauseFehler, pauseFormenFehler, lumischFehler } from "./pause-format.mjs";
 import { buchFehler, zuordnungFehler } from "./buch-format.mjs";
 import { gedankenFehler } from "./gedanken-format.mjs";
 
@@ -18,7 +18,8 @@ const ARTEN = ["inhalt", "zim", "karte", "modell", "kurs", "software", "modul", 
 const PREISE = ["gratis", "pro", "kauf"];
 const PRUEFSTATUS = ["redaktion", "herausgeber", "community"];
 const ALTER = [0, 6, 10, 14, 18];
-const KATEGORIEN = ["ernstfall", "wissen", "jeden-tag", "du-und-die-deinen", "unterwegs", "verbindung", "miteinander", "aussehen"];
+// Bereiche (0.7.0, Bill 07.10.2026: ersetzen die Kategorie). Gleiche Liste in web/pakete.js, werkzeug/kern.mjs, kern/src/manifest.rs.
+const BEREICHE = ["lumi", "pause", "heute", "ernstfall", "wissen", "karten", "miteinander", "aussehen"];
 const ROLLEN = ["wofuer", "aussehen", "inhalt", "platz", "herkunft"];
 const TYPEN = [".json", ".md", ".txt", ".html", ".css", ".js", ".svg", ".png", ".webp", ".jpg", ".mp3", ".ogg", ".pdf", ".zim", ".pmtiles", ".gguf", ".woff2", ".woff"];
 const SKIN_TYPEN = [".css", ".woff2", ".woff", ".webp", ".png", ".jpg", ".svg", ".md", ".txt", ".json"];
@@ -112,18 +113,22 @@ async function pruefen(ordner) {
   if (meta.pro === false && meta.preis !== "gratis") F("pro ist false, preis ist aber nicht gratis");
   if (!PRUEFSTATUS.includes(meta.pruefstatus)) F(`pruefstatus ungültig: ${meta.pruefstatus}`);
   if (!ALTER.includes(meta.alter_ab)) F(`alter_ab ungültig: ${meta.alter_ab} (erlaubt: ${ALTER.join(", ")})`);
-  if (!KATEGORIEN.includes(meta.kategorie)) F(`kategorie ungültig: ${meta.kategorie}`);
+  // Bereich statt Kategorie (0.7.0). Tagesinhalte gehören immer zu „heute“ und brauchen ihn nicht (sonst bräuchten sie app_min 0.7.0).
+  if (meta.kategorie !== undefined) H("kategorie gibt es nicht mehr: bereich verwenden");
+  if (meta.bereich === undefined) { if (meta.art !== "tage") F(`bereich fehlt (${BEREICHE.join(", ")})`); }
+  else if (!BEREICHE.includes(meta.bereich)) F(`bereich ungültig: ${meta.bereich} (${BEREICHE.join(", ")})`);
+  else if (txt(meta.app_min) && versionKleiner(meta.app_min, meta.art === "modul" && meta.bereich === "pause" ? "0.6.5" : "0.7.0")) F(`bereich: app_min muss ${meta.art === "modul" && meta.bereich === "pause" ? "0.6.5" : "0.7.0"} oder höher sein (ältere Apps lehnen das Feld ab)`);
+  if (meta.pflicht !== undefined && typeof meta.pflicht !== "boolean") F("pflicht muss true oder false sein");
   if (meta.braucht_netz !== false) {
     if (meta.braucht_netz === true) H("braucht_netz ist true: nur mit Begründung im LIESMICH zulässig"); else F("braucht_netz muss false sein");
   }
   if (!txt(meta.abnahme)) F("abnahme fehlt (\"keine\" oder wer abnimmt und Stand)");
   if (meta.art === "modul" && !(Number.isInteger(meta.datenversion) && meta.datenversion >= 1)) F("datenversion fehlt (ganze Zahl ab 1, Pflicht bei art = modul)");
   // 0.6.5: bereich (die App bindet das Modul selbst ein, heute nur „pause“) und wasm (WebAssembly, SICHERHEIT.md)
-  if (meta.art !== "modul" && (meta.bereich !== undefined || meta.wasm !== undefined)) F("bereich und wasm gibt es nur bei Modulen");
-  if (meta.bereich !== undefined && meta.bereich !== "pause") F(`bereich ungültig: ${meta.bereich} (erlaubt: pause)`);
+  if (meta.art !== "modul" && meta.wasm !== undefined) F("wasm gibt es nur bei Modulen");
   if (meta.wasm !== undefined && typeof meta.wasm !== "boolean") F("wasm muss true oder false sein");
   if (meta.wasm === true && meta.pruefstatus !== "redaktion") F("wasm nur für Module der Redaktion (eigener Herausgeber)");
-  if ((meta.bereich !== undefined || meta.wasm === true) && txt(meta.app_min) && versionKleiner(meta.app_min, "0.6.5")) F("bereich und wasm: app_min muss 0.6.5 oder höher sein");
+  if (meta.wasm === true && txt(meta.app_min) && versionKleiner(meta.app_min, "0.6.5")) F("wasm: app_min muss 0.6.5 oder höher sein");
   if (meta.ki_generiert !== undefined && typeof meta.ki_generiert !== "boolean") F("ki_generiert muss true oder false sein");
   if ((meta.art === "modul" || meta.art === "skin") && txt(meta.app_min) && appMinZuAlt(meta.app_min)) F(`art = ${meta.art}: app_min muss 0.2.0 oder höher sein (ältere Apps kennen Module und Skins nicht)`);
   if (meta.art === "modul" && meta.pruefstatus !== "redaktion") F("art = modul: pruefstatus muss redaktion sein (SICHERHEIT.md, Module, Bedingung 2)");
@@ -214,7 +219,7 @@ async function pruefen(ordner) {
       else if (d.rel.startsWith("skin/") && !SKIN_TYPEN.includes(path.extname(d.rel).toLowerCase())) F(`art = skin: Dateityp nicht erlaubt: inhalt/${d.rel}`);
     }
     if ((summe ?? 0) > SKIN_GRENZE) F(`Skin zu groß: ${kb(summe)} > 20 MB`);
-    if (meta.kategorie !== "aussehen") H("art = skin: kategorie sollte aussehen sein");
+    if (meta.bereich !== "aussehen") H("art = skin: bereich sollte aussehen sein");
     if (meta.ki_generiert === undefined) F("art = skin: ki_generiert angeben (true, wenn Bilder mit KI erzeugt sind)");
     R("Skin in hell und dunkel und bei 360 px angesehen; Notfallseiten bleiben im Grundaussehen.");
     if (meta.ki_generiert) R("KI-Bilder: Herkunft (Modell, Datum, Prompts) liegt im Paket, z. B. inhalt/skin/HERKUNFT.md.");
@@ -283,6 +288,13 @@ async function pruefen(ordner) {
     if (txt(meta.app_min) && versionKleiner(meta.app_min, "0.4.0")) F("Pause-Inhalte: app_min muss 0.4.0 oder höher sein");
   }
 
+  // --- Lumisch (inhalt/lumisch.json, Paket „lumisch“, ab 0.7.0) ---
+  if (liste.find((d) => d.rel === "lumisch.json")) {
+    let t = null;
+    try { t = JSON.parse(await readFile(path.join(inhalt, "lumisch.json"), "utf8")); } catch { F("inhalt/lumisch.json: kein gültiges JSON"); }
+    if (t) { if (t.format !== 1) F("inhalt/lumisch.json: format muss 1 sein"); for (const f of lumischFehler(t)) F(`inhalt/lumisch.json: ${f}`); }
+  }
+
   // --- Modul im Bereich Pause (inhalt/pause-formen.json): Spiele als Happen-Formen ---
   if (meta.art === "modul" && meta.bereich === "pause") {
     let t = null;
@@ -299,7 +311,7 @@ async function pruefen(ordner) {
     let j;
     try { j = JSON.parse(await readFile(path.join(inhalt, d.rel), "utf8")); } catch { F(`inhalt/${d.rel}: kein gültiges JSON`); continue; }
     for (const q of quellenVerweise(j)) if (!quellenIds.has(q)) F(`inhalt/${d.rel}: verweist auf Quelle „${q}", die in paket.quelle.json → quellen fehlt`);
-    const notfall = j?.notfall === true || (NOTFALL_TYPEN.includes(j?.typ) && meta.kategorie === "ernstfall");
+    const notfall = j?.notfall === true || (NOTFALL_TYPEN.includes(j?.typ) && meta.bereich === "ernstfall");
     if (notfall) {
       const n = j.notruf;
       if (!n || typeof n !== "object") F(`inhalt/${d.rel}: Notfallanleitung ohne Notrufhinweis (Feld notruf mit frage und nummer, Regel 4.5)`);
@@ -328,9 +340,9 @@ async function pruefen(ordner) {
 
   // --- Regeln nach Inhalt ---
   if (meta.alter_ab < 18) R(`alter_ab = ${meta.alter_ab}: keine Kontaktmöglichkeit zu Fremden, keine Links nach außen, Sprache fürs Alter.`);
-  if (meta.kategorie === "ernstfall") {
+  if (meta.bereich === "ernstfall") {
     R("Jede Notfallanleitung beginnt mit „Ist jemand in Gefahr?\" und der Notrufnummer.");
-    if (/^keine$/i.test(meta.abnahme ?? "")) H("kategorie = ernstfall, aber abnahme = keine – fachliche Abnahme nötig?");
+    if (/^keine$/i.test(meta.abnahme ?? "")) H("bereich = ernstfall, aber abnahme = keine – fachliche Abnahme nötig?");
   }
   R("Lizenz und Quellen stimmen mit dem Inhalt überein.");
   R("Texte gelesen: kurze Sätze, österreichische Begriffe, keine Floskeln.");
@@ -383,7 +395,7 @@ export async function pruefeQuellordner(ordner, { vorher = null, bericht = true 
   const m = r.meta ?? {};
   const kopf = `# Prüfbericht: ${m.id ?? "?"}\n\n*${new Date().toISOString().slice(0, 16).replace("T", " ")} UTC · Paket-Kit 1 · ${vorher ? `Update gegen ${vorher}` : "neues Paket"}*\n\n` +
     `**Ergebnis: ${fehler.length ? `${fehler.length} Fehler – nicht einbaufertig` : "keine Fehler – bereit für die Redaktion"}**\n\n` +
-    `| | |\n|---|---|\n| Titel | ${m.titel ?? ""} |\n| Art | ${m.art ?? ""} |\n| Kategorie | ${m.kategorie ?? ""} |\n| Alter ab | ${m.alter_ab ?? ""} |\n| Preis | ${m.preis ?? ""} |\n| Dateien | ${r.liste.length}, ${kb(r.summe ?? 0)} |\n\n`;
+    `| | |\n|---|---|\n| Titel | ${m.titel ?? ""} |\n| Art | ${m.art ?? ""} |\n| Bereich | ${m.bereich ?? ""} |\n| Alter ab | ${m.alter_ab ?? ""} |\n| Preis | ${m.preis ?? ""} |\n| Dateien | ${r.liste.length}, ${kb(r.summe ?? 0)} |\n\n`;
   const abschnitt = (t, l, z) => `## ${t}\n\n${l.length ? l.map((x) => `${z} ${x}`).join("\n") : "keine"}\n\n`;
   const text = kopf + abschnitt("Fehler", fehler, "-") + abschnitt("Hinweise", hinweise, "-") + abschnitt("Für die Redaktion", redaktion, "- [ ]");
   if (bericht) await writeFile(path.join(ordner, "PRUEFBERICHT.md"), text);

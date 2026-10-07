@@ -10,10 +10,10 @@
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",
-  "app_min": "0.2.0",
+  "app_min": "0.7.0",
   "aenderungen": "Testfall.",
   "alter_ab": 0,
-  "kategorie": "aussehen",
+  "bereich": "aussehen",
   "braucht_netz": false,
   "abnahme": "keine",
   "ki_generiert": false

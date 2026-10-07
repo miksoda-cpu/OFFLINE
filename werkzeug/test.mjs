@@ -213,7 +213,7 @@ test("Paket-Kit: quellen[].id ist Pflicht, eindeutig, und Verweise müssen passe
 
 test("Paket-Kit: Notfallanleitung ohne Notrufhinweis ist ein Fehler", async () => {
   const o = await kitKopie("beispiel/wichteln");
-  await quelleAendern(o, (m) => { m.art = "inhalt"; m.kategorie = "ernstfall"; delete m.datenversion; });
+  await quelleAendern(o, (m) => { m.art = "inhalt"; m.bereich = "ernstfall"; delete m.datenversion; });
   await rm(path.join(o, "inhalt", "modul"), { recursive: true });
   const guide = { typ: "guide", titel: "Blackout", phasen: [] };
   await writeFile(path.join(o, "inhalt", "guide.json"), JSON.stringify(guide));
@@ -229,7 +229,7 @@ test("Paket-Kit: Notfallanleitung ohne Notrufhinweis ist ein Fehler", async () =
   assert.deepEqual(r.fehler, []);
 
   // auch außerhalb von „ernstfall“, wenn der Inhalt sich selbst als Notfall kennzeichnet
-  await quelleAendern(o, (m) => { m.kategorie = "unterwegs"; });
+  await quelleAendern(o, (m) => { m.bereich = "karten"; });
   await writeFile(path.join(o, "inhalt", "zecke.json"), JSON.stringify({ typ: "nachschlage-guide", notfall: true }));
   r = await pruefeQuellordner(o, { bericht: false });
   assert.ok(r.fehler.some((f) => /zecke.json: Notfallanleitung ohne Notrufhinweis/.test(f)));
@@ -269,7 +269,8 @@ test("Paket-Kit: Weg aus Abschnitt 9 – prüfen, ablegen, bauen, Manifest mit K
   await cp(abgabe, quelleImRepo, { recursive: true });                                 // 2. Quelle ablegen
   const { ziel: ordner, manifest } = await paketBauen(quelleImRepo, path.join(repo, "web", "pakete"), privat, { pruefen: true }); // 3. bauen, signieren
   assert.ok((await paketPruefen(ordner, bekannte)).ok);
-  assert.equal(manifest.kategorie, "miteinander");
+  assert.equal(manifest.bereich, "miteinander", "bereich statt kategorie (0.7.0)");
+  assert.equal(manifest.kategorie, undefined);
   assert.equal(manifest.alter_ab, 6);
   assert.equal(manifest.preis, "gratis");
   assert.equal(manifest.pruefstatus, "redaktion");
@@ -277,8 +278,21 @@ test("Paket-Kit: Weg aus Abschnitt 9 – prüfen, ablegen, bauen, Manifest mit K
   assert.deepEqual(manifest.quellen, [{ id: "eigen", name: "eigene Entwicklung", url: "" }]);
   assert.ok(!manifest.dateien.some((d) => /PRUEFBERICHT|LIESMICH|paket\.quelle/.test(d.pfad)), "nur inhalt/ wird ausgeliefert");
   const { katalog } = await katalogBauen([ordner], { basis: "x/", bekannte, privat });  // 4. Katalog
-  assert.equal(katalog.pakete[0].kategorie, "miteinander");
+  assert.equal(katalog.pakete[0].bereich, "miteinander");
   await rm(repo, { recursive: true });
+});
+
+test("Paket-Kit: bereich statt kategorie (0.7.0) – Pflicht außer bei Tagesinhalten, Liste, app_min, pflicht", async () => {
+  const o = await kitKopie("beispiel/wichteln");
+  const fehler = async (aendern) => { await quelleAendern(o, aendern); return (await pruefeQuellordner(o, { bericht: false })).fehler.join("\n"); };
+  assert.equal(await fehler(() => {}), "", "Beispiel ist sauber");
+  assert.match(await fehler((m) => { delete m.bereich; }), /bereich fehlt/);
+  assert.match(await fehler((m) => { m.bereich = "jeden-tag"; }), /bereich ungültig/);
+  assert.match(await fehler((m) => { m.bereich = "lumi"; m.app_min = "0.6.5"; }), /app_min muss 0\.7\.0/);
+  assert.match(await fehler((m) => { m.app_min = "0.7.0"; m.pflicht = "ja"; }), /pflicht muss true oder false/);
+  assert.equal(await fehler((m) => { m.pflicht = true; }), "");
+  const h = await quelleAendern(o, (m) => { m.kategorie = "miteinander"; }).then(() => pruefeQuellordner(o, { bericht: false }));
+  assert.ok(h.hinweise.some((x) => /kategorie gibt es nicht mehr/.test(x)));
 });
 
 test("Paket-Kit: bauen mit --pruefen verweigert ein fehlerhaftes Paket", async () => {
@@ -460,7 +474,7 @@ test("Katalog: Module tragen ihre Slideshow mit Prüfsummen der Bilder", async (
 
 import { cssFehler } from "./kern.mjs";
 
-const SKIN_META = { art: "skin", kategorie: "aussehen", ki_generiert: false, app_min: "0.2.0" };
+const SKIN_META = { art: "skin", bereich: "aussehen", ki_generiert: false, app_min: "0.7.0" };
 const SKIN_GUT = { "skin/skin.css": ".of-app{--of-moos:#3f6b34} @font-face{font-family:A;src:url(\"fonts/a.woff2\")} .of-leer{background:url('flechten/dorf.webp')}", "skin/fonts/a.woff2": "x", "skin/flechten/dorf.webp": "x" };
 
 test("Skins: sauber gebaut und mit Paket- oder Redaktionsschlüssel signiert ist gültig", async () => {

@@ -730,3 +730,33 @@ body.blatt-offen { overflow: hidden; }
 .natur-gross { margin: 0; }
 .natur-gross img { width: 100%; height: auto; }
 .natur-text .natur-nachweise { padding-left: 0; }
+
+/* ---------- Die Lumi-Seite (0.7.0) ---------- */
+.lumi-seite-kopf { text-align: center; margin: 0 0 .8rem; }
+.lumi-seite-kopf .wesen { margin: 0 auto; }
+.lumi-seite-bereit { margin: .1rem 0 0; }
+.lumi-satz-des-tages { margin: 0 0 1rem; font-size: 1rem; line-height: 1.45; }
+.lumi-satz-marke { font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--lumi-ton); margin-right: .3rem; }
+.lumi-reiter { display: flex; gap: .5rem; overflow-x: auto; scrollbar-width: none; margin: 0 0 1rem; padding: 2px; -webkit-overflow-scrolling: touch; }
+.lumi-reiter::-webkit-scrollbar { display: none; }
+.lumi-reiter-knopf { flex: 0 0 auto; min-height: 44px; padding: 0 1rem; border-radius: 999px; border: 1px solid var(--z-hair); background: var(--z-karte); color: var(--text); font: inherit; font-size: .95rem; cursor: pointer; }
+.lumi-reiter-knopf[aria-selected="true"] { border-color: var(--accent); color: var(--accent); }
+.lumi-kaestchen { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+@media (min-width: 720px) { .lumi-kaestchen { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.lumi-kaestchen-feld { display: flex; flex-direction: column; justify-content: space-between; gap: .9rem; min-height: 104px; padding: 1rem; border: 1px solid var(--z-hair); border-radius: var(--radius-sm); background: var(--z-karte); color: var(--text); text-decoration: none; text-align: left; font: inherit; cursor: pointer; }
+.lumi-kaestchen-titel { font: var(--z-titel-gewicht) 1.15rem/1.25 var(--z-serif); }
+.lumi-kaestchen-zeile { color: var(--muted); font-size: .88rem; line-height: 1.35; }
+.lumi-mehr { margin: 1rem 0 0; font-size: .92rem; }
+.lumi-teil-titel { font-size: 1.05rem; margin: 0 0 .7rem; }
+.lumi-hilfe .card h3 { margin: 0 0 .35rem; font-size: 1rem; }
+.lumi-hilfe .card { margin-bottom: .6rem; }
+.wesen--klein { cursor: pointer; }
+
+/* ---------- Die Bibliothek als Laden (0.7.0) ---------- */
+.laden-abschnitt { margin: 1.6rem 0 0; }
+.laden-abschnitt > h2 { font: var(--z-h-gewicht) 1.45rem/1.2 var(--z-serif); margin: 0 0 .2rem; }
+.laden-abschnitt > .laden-satz { margin: 0 0 .9rem; color: var(--muted); }
+.laden-karte .pkg-head h3 { font: var(--z-titel-gewicht) 1.15rem/1.3 var(--z-serif); }
+.laden-bereich { display: block; margin: .3rem 0 .5rem; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.laden-steuerung { display: inline-flex; flex-wrap: wrap; gap: .5rem; align-items: center; justify-content: flex-end; }
+.laden-immer { font-size: .85rem; color: var(--muted); }

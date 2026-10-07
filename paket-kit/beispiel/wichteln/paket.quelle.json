@@ -16,10 +16,10 @@
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",
-  "app_min": "0.2.0",
+  "app_min": "0.7.0",
   "aenderungen": "Meldet eine ausgeloste Runde ins Spiel-Log der App (ab App 0.4.0, für Pause). Sonst unverändert.",
   "alter_ab": 6,
-  "kategorie": "miteinander",
+  "bereich": "miteinander",
   "braucht_netz": false,
   "abnahme": "keine",
   "datenversion": 1

@@ -9,9 +9,9 @@
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",
-  "kategorie": "miteinander",
+  "bereich": "lumi",
   "alter_ab": 0,
-  "app_min": "0.2.0",
+  "app_min": "0.7.0",
   "aenderungen": "Jeder Tipp zeigt jetzt auf seinen Absatz im Lumi-Buch. Ab App 0.5.0 steht unter den Sätzen der Lumi „Aus dem Lumi-Buch“.",
   "quellen": [
     {

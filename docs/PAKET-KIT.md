@@ -53,12 +53,12 @@ Alles unter `inhalt/` wird signiert und ausgeliefert. Alles außerhalb bleibt be
 | `app_min` | ja | kleinste App-Version, z. B. `0.1.0`; Module und Skins mindestens `0.2.0`. Ab App 0.2.0 lädt die App kein Paket, dessen `app_min` über ihrer Version liegt. |
 | `aenderungen` | ja | was neu ist, in einem Satz für „Was ist neu?" |
 | `alter_ab` | ja | ab welchem Alter das Paket im Kinder-Modus sichtbar ist: `0` für alle, `6`, `10`, `14`, `18` |
-| `kategorie` | ja | eine der Gruppen der Paketseite: `ernstfall`, `wissen`, `jeden-tag`, `du-und-die-deinen`, `unterwegs`, `verbindung`, `miteinander`, `aussehen` |
+| `bereich` | ja, außer bei `tage` | seit 0.7.0 statt `kategorie`: `lumi`, `pause`, `heute`, `ernstfall`, `wissen`, `karten`, `miteinander`, `aussehen`. Die App ordnet danach in der Bibliothek und auf der Lumi-Seite. Braucht `app_min` 0.7.0 (Module mit `pause`: 0.6.5). Tagesinhalte sind immer `heute` |
+| `pflicht` | nein | `true`: „immer an“, lässt sich nicht ausschalten (Österreich-Basis; Tage sind es ohnehin) |
 | `braucht_netz` | ja | `false`. Ein Paket, das Netz braucht, ist kein OFFLINE-Paket. Ausnahme nur mit Begründung im LIESMICH |
 | `abnahme` | ja | `keine`, oder wer fachlich abgenommen hat bzw. abnehmen muss (`Feuerwehr`, `Rettung`, …) und der Stand (`angefragt`, `erteilt am …`). Dieses Feld führt. Ein Feld `fachlich_abgenommen` in einzelnen Inhalten (etwa im Guide-Format) zeigt höchstens den Stand je Inhalt an und ersetzt `abnahme` nie |
 | `ki_generiert` | bei `skin`, sonst nein | `true`, wenn Bilder oder andere Inhalte mit KI erzeugt sind. Die Katalogkarte zeigt dann „Bilder KI-generiert, Herkunft im Paket“; die Herkunft (Modell, Datum, Prompts) liegt im Paket |
 | `datenversion` | bei `modul` | ganze Zahl, beginnt bei 1. Erhöhen, wenn sich das Format gespeicherter Nutzerdaten ändert (siehe 7) |
-| `bereich` | nein (nur `modul`) | `pause`: die App zeigt die Spiele des Moduls als Formen in Pause; dazu `inhalt/pause-formen.json`. Ab `app_min` 0.6.5 |
 | `wasm` | nein (nur `modul`) | `true`, wenn das Modul WebAssembly ausführt. Nur für Module der Redaktion (eigener Herausgeber); ohne Anmeldung sperrt die Sandbox es. Ab `app_min` 0.6.5 |
 
 ## 3. Die Slideshow `inhalt/vorschau/`
@@ -91,7 +91,7 @@ Regeln: Titel höchstens 50 Zeichen, Text höchstens 160, `alt` (Bildbeschreibun
 4. **Sprache:** kurze Sätze, ein Gedanke pro Satz, österreichische Begriffe (Jänner, Rettung 144). Keine Werbung, keine Floskeln.
 5. **Notfallinhalte:** Jede Anleitung für den Ernstfall beginnt mit „Ist jemand in Gefahr?" und der Notrufnummer. Dieser Notrufhinweis ist ein Pflichtfeld jeder Notfallanleitung; fehlt er, ist das ein Fehler, kein Hinweis. Sie ist fester Text, keine KI. Ohne Abnahme bleibt sie im Status `angefragt` und die App zeigt das an.
    - **Feld:** `"notruf": { "frage": "Ist jemand in Gefahr?", "nummer": "144" }` auf oberster Ebene der Anleitung. `frage` wörtlich so, `nummer` drei bis fünf Ziffern.
-   - **Als Notfallanleitung gilt** (so erkennt es das Prüfprogramm): jede JSON-Datei mit `"typ": "guide"` oder `"nachschlage-guide"` in einem Paket der Kategorie `ernstfall`, und jede JSON-Datei mit `"notfall": true`, egal in welcher Kategorie. Anleitungen, die das Programm so nicht erkennt, prüft die Redaktion.
+   - **Als Notfallanleitung gilt** (so erkennt es das Prüfprogramm): jede JSON-Datei mit `"typ": "guide"` oder `"nachschlage-guide"` in einem Paket im Bereich `ernstfall`, und jede JSON-Datei mit `"notfall": true`, egal in welcher Kategorie. Anleitungen, die das Programm so nicht erkennt, prüft die Redaktion.
 6. **Barrierefreiheit:** Jeder Text muss vorlesbar sein (kein Text nur in Bildern). Kontrast bei eigener Gestaltung mindestens 4,5 : 1.
 7. **Kinder:** Pakete mit `alter_ab` unter 18 enthalten keine Kontaktmöglichkeit zu Fremden und keine Links nach außen.
 8. **Quellen und Lizenz** stehen vollständig in `paket.quelle.json`. Was nicht gemeinfrei, offen lizenziert oder eigenes Werk ist, kommt nicht hinein.

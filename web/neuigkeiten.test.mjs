@@ -66,12 +66,13 @@ test("0.5.4: Info und Hilfe auf sieben weiteren Seiten, Bills Texte Wort für Wo
   const soll = Object.fromEntries(teil2.split("\n### ").slice(1).map((b) => [b.split(/[\s(]/)[0].trim(), [...b.matchAll(/^\d+\. \*\*(.+?)\*\* (.+)$/gm)].map((m) => [m[1], m[2].trim()])]));
   assert.deepEqual(Object.keys(soll), ["tresor", "bibliothek", "bereit", "pause-linie", "lumi", "werkzeuge", "lumi-buch"]);
   korrekturAnwenden(soll, await korrekturLesen());
+  aenderungen070(soll);
   for (const [k, v] of Object.entries(soll)) assert.deepEqual(HILFE[k], v, `Texte ${k} Wort für Wort`);
   assert.equal(HILFE.notfall, undefined, "Notfall bleibt ohne");
   const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
   assert.match(app, /get tresor\(\) \{ return desktop \? "tresor" : null; \}/, "Tresor nur in der Desktop-App");
   for (const s of ["bibliothek", "werkzeuge", "pause-linie", "lumi-buch"]) assert.ok(app.includes(`"${s}"`) && app.includes("main.innerHTML = seiten[seite]() + hilfeZeile(HILFE_SEITE[seite]);"), `${s}: letzte Zeile der Seite`);
-  assert.match(app, /hilfeZeile\("bereit", "bereit-hilfe"\)/); assert.match(app, /hilfeZeile\("lumi", "bereit-hilfe"\)/);
+  assert.match(app, /hilfeZeile\("bereit", "bereit-hilfe"\)/); assert.match(app, /reiter === "hilfe"\) teil = `<div class="lumi-hilfe">\$\{\(HILFE\.lumi \?\? \[\]\)/, "0.7.0: Hilfe der Lumi im Menü der Lumi-Seite");
   assert.doesNotMatch(app, /notfall: "notfall"/);
 });
 
@@ -85,6 +86,21 @@ async function korrekturLesen() {
   const teil = t.slice(t.indexOf("\n## pause-linie"), t.indexOf("## Fertig, wenn"));
   return Object.fromEntries(teil.split("\n## ").slice(1).map((b) => [b.split("\n")[0].trim(),
     [...b.matchAll(/^- \*\*(\d+)(?: \(Frage neu: „(.+?)“\))?:\*\* (.+)$/gm)].map((m) => [Number(m[1]), m[2] ?? null, auspacken(m[3])])]));
+}
+/**
+ * 0.7.0 (Probe „Lumi-Seite und Bibliothek als Laden“, von Mik freigegeben, Bill 07.10.2026): Die Bibliothek ist ein Laden
+ * (Neu · Bald · Auf deinem Gerät, an/aus, „Laden“ und „Löschen“), die Lumi hat eine eigene Seite. Nur diese Stellen ändern
+ * sich; neue Fragen stehen am Ende, alles andere bleibt Wort für Wort.
+ */
+function aenderungen070(soll) {
+  soll.bibliothek[0] = ["Was zeigt die Bibliothek?", "Die Bibliothek zeigt alle Pakete in drei Teilen. „Neu“ ist verfügbar und noch nicht auf deinem Gerät. „Bald“ ist angekündigt. „Auf deinem Gerät“ ist geladen und geht ohne Internet. Bei jedem Paket stehen Bereich, Größe und Version."];
+  soll.bibliothek[1] = ["Was passiert beim Laden?", soll.bibliothek[1][1]];
+  soll.bibliothek[4] = ["Was tut „Löschen“?", "„Löschen“ nimmt das Paket von diesem Gerät. Deine Notizen und dein Tresor bleiben. Du kannst das Paket später wieder laden."];
+  soll.bibliothek.push(["Was heißt „an“ und „aus“?", "Ein Paket, das aus ist, siehst du in der App nicht mehr. Es bleibt aber auf dem Gerät. Deine Daten und dein Lesestand bleiben auch. Schaltest du es wieder an, ist alles wieder da."],
+    ["Warum steht „immer an“ da?", "Die Österreich-Basis und die Tage für die Tagesseite sind immer an. Ohne sie fehlen Notrufe, Vorsorge und die Karten des Tages."]);
+  soll.lumi.push(["Was steht auf der Lumi-Seite?", "Oben stehen die Lumi und der Satz des Tages. Darunter ist ein Menü: Übersicht, Alles Gesagte, Gelernt, Einstellungen und Hilfe. In der Übersicht steht ein Kästchen für jedes Paket der Lumi, dazu das Heft und deine Vorhaben."],
+    ["Wie komme ich zur Lumi-Seite?", "Tippe auf „Heute“ auf die Lumi. Oder öffne „Mehr“ und dann „Lumi“."],
+    ["Warum fehlt ein Kästchen?", "Ein Kästchen gibt es nur für Pakete, die an sind. In der Bibliothek unter „Auf deinem Gerät“ schaltest du sie an oder aus. Dein Lesestand bleibt dabei."]);
 }
 function korrekturAnwenden(soll, korr) {
   for (const [k, liste] of Object.entries(korr)) for (const [n, frage, antwort] of liste) soll[k][n - 1] = [frage ?? soll[k][n - 1][0], antwort];

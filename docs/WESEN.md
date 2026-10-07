@@ -4,6 +4,16 @@
 
 ## B. Umsetzung (App 0.1.5, 28.09.2026; Lumi und Bereit 2 in 0.2.0, 29.09.2026)
 
+### Die Lumi-Seite (seit 0.7.0)
+
+Alles zur Lumi steht auf einer eigenen Seite `#lumi` (unter „Mehr“, kein Tab; Probe von Mik freigegeben, Fragen entschieden von Bill am 07.10.2026):
+- **Oben** die Figur mit Anstupsen, Nachtschlaf und Namensfrage, darunter der Satz des Tages. Ohne Figur (Textkarten oder aus) steht dort „Lumi zeigen“.
+- **Menü:** Übersicht · Alles Gesagte (Log) · Gelernt · Einstellungen (mit „Mein Tag“) · Hilfe.
+- **Übersicht:** ein Kästchen je aktivem Paket im Bereich `lumi` (Tipps, Lumi-Buch, Was die Lumis denken, Lumisch), dazu Heft und Vorhaben (führt nach Vorsorge). Ein ausgeschaltetes Paket hat kein Kästchen; Daten und Lesestand bleiben. Unten „Mehr für die Lumi in der Bibliothek“.
+- **Auf „Heute“** bleibt die Figur klein mit dem Satz des Tages; ein Tipp auf sie öffnet die Lumi-Seite. Nach „Ja“ in der Einladung geht es zur Namensfrage auf die Lumi-Seite.
+- **Lumisch** ist ein eigenes Paket im Bereich `lumi`. Ist es an, gibt es die Lumisch-Happen in Pause.
+- Der frühere Lumi-Abschnitt der Übersicht, das Log dort und die Buch-Zeile entfallen. „Zeig mir“ `lumi` und `lumi-log` führen zu den Reitern Einstellungen und Alles Gesagte.
+
 **Tipps, die auf eine Funktion warten** (Bedingung `funktion`, Stand 0.4.0, 20 Tipps; sie kommen erst, wenn das Wort in `FUNKTIONEN` steht):
 
 | Funktion | Tipps |

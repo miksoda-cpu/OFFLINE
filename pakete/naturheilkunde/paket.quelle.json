@@ -12,9 +12,9 @@
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",
-  "kategorie": "wissen",
+  "bereich": "wissen",
   "alter_ab": 18,
-  "app_min": "0.6.0",
+  "app_min": "0.7.0",
   "quellen": [
     {
       "id": "redaktion",

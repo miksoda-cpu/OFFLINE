@@ -486,25 +486,28 @@ export class Wesen {
   }
 
   // ---------- Bühne (HTML) ----------
-  buehneHtml() {
-    const g = { klein: 144, mittel: 240, gross: 336 }[this.e.groesse] || 240;
+  /** Die Figur. klein (0.7.0, Bill Frage 1): auf „Heute“ klein, ohne Namensfrage; ein Tipp öffnet die Lumi-Seite. */
+  buehneHtml({ klein = false } = {}) {
+    const g = klein ? 120 : { klein: 144, mittel: 240, gross: 336 }[this.e.groesse] || 240;
     if (!this.mitFigur()) return "";
     const figur = this.e.figur === "pixel"
       ? `<div class="wesen-buehne"><canvas id="wesen-pixel" width="${B}" height="${H}" role="img" aria-label="${esc(this.anzeigename())}: ${esc(ZUSTAND_TEXT[this.zustand])}" tabindex="0"></canvas><canvas id="wesen-glut" width="${B}" height="${H}"></canvas></div>`
       : `<div class="lumi-buehne" id="lumi-buehne" role="img" tabindex="0" aria-label="${esc(this.anzeigename())}: ${esc(ZUSTAND_TEXT[this.zustand])}"><div class="lumi-figur" id="lumi-figur"><img id="lumi-bild" alt="" src="${MIMIK.ruhe.bild}"><span class="lumi-licht" id="lumi-licht-0" style="background-image:url(${LICHT_BILD})"></span><span class="lumi-licht" id="lumi-licht-1" style="background-image:url(${LICHT_BILD})"></span></div></div>`;
-    const frage = !this.benannt() && this.namensfrage
+    const frage = klein ? "" : !this.benannt() && this.namensfrage
       ? `<form class="lumi-name" data-lumi-name-form><label for="lumi-name-feld"><strong>${esc(TEXTE.namensfrage)}</strong></label>
           <input class="of-input" id="lumi-name-feld" type="text" maxlength="24" autocomplete="off" placeholder="Max, Horst, Susi …" data-lumi-zuhoeren>
           <span class="lumi-name-knoepfe"><button type="submit" class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer">${esc(TEXTE.namenGeben)}</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi="spaeter">${esc(TEXTE.spaeter)}</button></span></form>`
       : !this.benannt() ? `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-lumi="namensfrage">${esc(TEXTE.namenGeben)}</button>` : "";
-    return `<div class="wesen" style="--wb:${g}px">${figur}
+    return `<div class="wesen${klein ? " wesen--klein" : ""}" style="--wb:${g}px">${figur}
       <div class="wesen-blase-platz"><div class="wesen-blase" id="wesen-blase" role="status" aria-live="polite" hidden></div></div>
       <div class="wesen-text"><strong>${esc(this.anzeigename())}</strong> <span class="muted of-klein" id="wesen-zustand">${esc(ZUSTAND_TEXT[this.zustand])}</span></div>${frage}</div>`;
   }
-  einbauen() {
+  /** tippen (0.7.0): was ein Tipp auf die Figur tut; ohne Angabe stupst er sie an (Lumi-Seite), auf „Heute“ öffnet er die Lumi-Seite. */
+  einbauen({ tippen = null } = {}) {
     clearInterval(this.anim);
     const c = document.getElementById("wesen-pixel") ?? document.getElementById("lumi-buehne"); if (!c) return;
-    c.onclick = () => this.anstupsen(); c.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); this.anstupsen(); } };
+    const tipp = tippen ?? (() => this.anstupsen());
+    c.onclick = () => tipp(); c.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tipp(); } };
     const feld = document.getElementById("lumi-name-feld");
     if (feld) { feld.onfocus = () => { this.hoertZu = true; this.zeichnen(); }; feld.onblur = () => { this.hoertZu = false; this.zeichnen(); }; }
     this.anim = setInterval(() => { this.frame++; if (!document.getElementById("wesen-pixel") && !document.getElementById("lumi-buehne")) { clearInterval(this.anim); return; } this.zeichnen(); }, 125);

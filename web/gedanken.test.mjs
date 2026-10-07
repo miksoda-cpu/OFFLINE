@@ -81,7 +81,7 @@ test("Für Erwachsene, öffentlich mit der nächsten Version; keine Tipps, nicht
   assert.equal(q.id, PAKET); assert.equal(q.art, "inhalt"); assert.equal(q.alter_ab, 18);
   assert.equal(q.titel, "Was die Lumis denken"); assert.equal(q.beschreibung, "Fünfzehn Gedanken, für Erwachsene.");
   assert.equal(q.hinweis, "Die Lumis sind erfunden, die Philosophen nicht.");
-  assert.equal(q.app_min, "0.6.2"); assert.equal(q.pro, false); assert.ok(!q.kanal, "nicht intern");
+  assert.equal(q.app_min, "0.7.0", "seit dem Bereich (0.7.0)"); assert.equal(q.bereich, "lumi"); assert.equal(q.pro, false); assert.ok(!q.kanal, "nicht intern");
   assert.ok(!existsSync(url("../pakete/lumi-philosophie/inhalt/tipps.json")), "keine Tipps, also auch keine der Sorte „Kind“");
   const wir = JSON.parse(await lies("../pakete/wir/inhalt/tipps.json"));
   assert.ok(!JSON.stringify(wir).includes("lumi-philosophie") && !JSON.stringify(wir).includes("#gedanke"), "kein Tipp zeigt auf das Paket");
@@ -100,7 +100,7 @@ test("Paket klein: unter 10 MB, Bilder höchstens 1200 Pixel", MIT, async () => 
 
 test("App: Lesen aus der Bibliothek, Hinweis auf der Karte, Bilder im Cache-Speicher, Lautsprecher spricht", async () => {
   const app = await lies("./app.js"), client = await lies("./paket-client.js");
-  assert.ok(app.includes('p.id === GEDANKEN_PAKET ? `<a class="btn btn-sm of-btn of-btn--klein" href="#gedanken">Lesen</a> `'));
+  assert.ok(app.includes('p.id === GEDANKEN_PAKET ? `<a class="btn btn-sm of-btn of-btn--klein" href="#gedanken">Lesen</a>`'), "Lesen im Laden");
   assert.ok(app.includes("p.hinweis ? `<p class=\"muted of-klein pkg-hinweis\">${esc(p.hinweis)}</p>`"));
   assert.ok(app.includes("gedanken() {") && app.includes("gedanke() {") && app.includes("gedankenNachZeichnen()"));
   assert.ok(app.includes("lumischSprechen(b.dataset.hoeren)"));

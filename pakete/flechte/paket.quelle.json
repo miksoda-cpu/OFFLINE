@@ -17,10 +17,10 @@
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",
-  "app_min": "0.2.0",
+  "app_min": "0.7.0",
   "aenderungen": "Zart wie die App 0.4.3: Knöpfe als feine Felder, Karten ohne Rand, leichtere Titel; vier Farben etwas dunkler, damit jeder Text 4,5 : 1 erreicht.",
   "alter_ab": 0,
-  "kategorie": "aussehen",
+  "bereich": "aussehen",
   "braucht_netz": false,
   "abnahme": "keine",
   "ki_generiert": true

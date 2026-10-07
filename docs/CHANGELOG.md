@@ -1,7 +1,12 @@
 # Änderungen
 
-## Nächste Version (Branch `spiele-nachtrag`, Bill zu 0.6.5)
+## 0.7.0 · 07.10.2026 · Lumi-Seite, Bibliothek als Laden, Lumisch als Paket (Teil B), Nachtrag Spielpaket
 
+- **Lumi-Seite** (`#lumi`, unter „Mehr“, kein Tab; Probe von Mik freigegeben, Fragen entschieden von Bill am 07.10.): Figur mit Anstupsen, Nachtschlaf und Namensfrage, Satz des Tages, Menü Übersicht · Alles Gesagte · Gelernt · Einstellungen · Hilfe. Kästchen je aktivem Paket im Bereich Lumi (Tipps, Lumi-Buch, Was die Lumis denken, Lumisch) und für Heft und Vorhaben (führt nach Vorsorge). Ohne Figur oben „Lumi zeigen“. Auf „Heute“ bleibt die Figur klein mit dem Satz des Tages; ein Tipp öffnet die Lumi-Seite. Die Einladung führt zur Namensfrage auf der Lumi-Seite. In der Übersicht fallen Lumi-Abschnitt, Log und Buch-Zeile weg (ein Verweis bleibt). „Zeig mir“ `lumi` und `lumi-log` zeigen auf die Reiter.
+- **Bibliothek als Laden** (`web/pakete.js`): Neu · Bald (nur `status: geplant`, nie Internes) · Auf deinem Gerät. An/aus für alle Pakete (`pakete-aus` im Gerätespeicher, Module weiter im Kern); aus heißt unsichtbar, Daten und Lesestand bleiben. „Immer an“: Österreich-Basis und Tage (`pflicht`). Jede Karte trägt ihren Bereich. „Laden“ und „Löschen“ statt „Installieren“ und „Entfernen“.
+- **`bereich` ersetzt `kategorie`** (Kern, Werkzeug, Web, Kit, Katalog): lumi, pause, heute, ernstfall, wissen, karten, miteinander, aussehen. Alle Paketquellen umgestellt. Weil der Kern von 0.6.5 `bereich` außerhalb von Modulen ablehnt, braucht ein Paket mit Bereich `app_min` 0.7.0 (Kit prüft das); bis zur nächsten Ausgabe leitet die App den Bereich bestehender Pakete selbst ab. Tagesinhalte brauchen keinen (immer „heute“). Neues Feld `pflicht`.
+- **Lumisch als eigenes Paket** `lumisch` (Bereich lumi), wortgleich aus `pause.json`; nur wenn es an ist, gibt es die Lumisch-Happen. Wer Pause hat, bekommt es einmal still dazu. `pause.json` bleibt für ältere Apps unverändert.
+- **Hilfe:** „bibliothek“ und „lumi“ an den Laden und die Lumi-Seite angepasst, neue Fragen am Ende (Test nennt jede Änderung).
 - **Minen:** Ein langer Druck (450 ms, Finger, Stift oder Maus) setzt die Fahne; der Umschalter bleibt. Rechte und mittlere Maustaste gehen wie bisher direkt durch.
 - **Rätsel aus der Bibliothek geöffnet:** Über dem Spiel stehen Name und Anleitung (gleich der Einladung in Pause). Die App gibt dem Modul auch hier die Farben des Skins mit; ohne Angabe folgt es dem Farbschema des Geräts.
 - **Über · Lizenzen fremder Teile:** beim Tatham-Hinweis „angepasst für OFFLINE“.

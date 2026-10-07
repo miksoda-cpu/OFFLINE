@@ -10,9 +10,9 @@
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",
-  "kategorie": "miteinander",
+  "bereich": "lumi",
   "alter_ab": 18,
-  "app_min": "0.6.2",
+  "app_min": "0.7.0",
   "aenderungen": "Die Aquarelle sind jetzt als KI-generiert gekennzeichnet. Sonst unverändert.",
   "quellen": [
     {

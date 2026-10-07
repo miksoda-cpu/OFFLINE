@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "spiele-1",
-  "version": "2026.10.07",
+  "version": "2026.10.07.1",
   "titel": "Rätsel zum Knobeln",
   "beschreibung": "Sieben Rätsel für Pause: Lichter, Netz, Muster, Brücken, Minen, Sudoku und 2048. Jeden Tag für alle dasselbe, von leicht bis schwer.",
   "art": "modul",
@@ -11,15 +11,14 @@
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",
-  "kategorie": "jeden-tag",
   "alter_ab": 14,
   "abnahme": "Redaktion (Code), 07.10.2026: alle sieben Spiele in WebKit über den echten Modulserver gespielt, hell und dunkel, bei 360 px",
   "datenversion": 1,
   "bereich": "pause",
   "wasm": true,
   "app_min": "0.6.5",
-  "erstellt": "2026-10-07T09:13:52Z",
-  "aenderungen": "Neu: sieben Rätsel für Pause, von leicht bis schwer.",
+  "erstellt": "2026-10-07T10:46:43Z",
+  "aenderungen": "Minen: Ein langer Druck setzt die Fahne. Aus der Bibliothek geöffnet stehen Name und Anleitung über dem Spiel.",
   "quellen": [
     {
       "id": "tatham",
@@ -60,8 +59,8 @@
     },
     {
       "pfad": "inhalt/modul/index.html",
-      "sha256": "b13e72850b617312fdae5862b13a4f5616785fbd7c954207814542e7d5c61dc1",
-      "groesse": 2745
+      "sha256": "1e97c43ff922a151ea17e358c96ebb69db099a7035c4d89f85c9152128ee40d0",
+      "groesse": 2952
     },
     {
       "pfad": "inhalt/modul/lizenzen.txt",
@@ -70,13 +69,13 @@
     },
     {
       "pfad": "inhalt/modul/spiel.css",
-      "sha256": "6d2abf70991813decbff4bcc936c887140e7470fa0158fb45c1a32e66ba8f44f",
-      "groesse": 5764
+      "sha256": "82779b5ce8cec81fd777c0356e493342dbfe23c123ad941e27e9721fd5fa7997",
+      "groesse": 5979
     },
     {
       "pfad": "inhalt/modul/spiel.js",
-      "sha256": "0fe38bd41a5f8fe6287740bab0541a524b73b0e152c00070070f53a14d2e5d78",
-      "groesse": 18509
+      "sha256": "804027be44c9f953bde94e7c1e8aca3c6e91ad1a794ca2f70970081be1301b7b",
+      "groesse": 21635
     },
     {
       "pfad": "inhalt/modul/tatham/bridges.js",
@@ -179,5 +178,5 @@
       "groesse": 1434
     }
   ],
-  "groesse": 1626639
+  "groesse": 1630187
 }

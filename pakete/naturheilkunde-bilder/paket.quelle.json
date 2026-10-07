@@ -12,9 +12,9 @@
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",
-  "kategorie": "wissen",
+  "bereich": "wissen",
   "alter_ab": 18,
-  "app_min": "0.6.1",
+  "app_min": "0.7.0",
   "aenderungen": "Erste interne Fassung der Bilder.",
   "quellen": [
     { "id": "commons", "name": "Wikimedia Commons (Einzelnachweise in inhalt/bildnachweise.json)", "url": "https://commons.wikimedia.org" }

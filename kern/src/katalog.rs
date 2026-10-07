@@ -33,6 +33,12 @@ pub struct KatalogEintrag {
     pub pruefstatus: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub kategorie: Option<String>,
+    /// Bereich (0.7.0, ersetzt `kategorie`): lumi, pause, heute, ernstfall, wissen, karten, miteinander, aussehen.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bereich: Option<String>,
+    /// „Immer an“ (0.7.0): lässt sich nicht ausschalten (Österreich-Basis, Tage-Vorrat).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pflicht: Option<bool>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub alter_ab: Option<u32>,
     /// Kurzer Hinweis unter der Beschreibung (0.6.2)

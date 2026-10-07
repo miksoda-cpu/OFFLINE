@@ -168,7 +168,7 @@ for (const [monat, daten] of monate) {
     beschreibung: `Für die Tagesseite: jeden Tag ein Rätsel${werke.length ? ` und ein Stück vom Roman der Woche (${werke.map((w) => w.split(" (")[0]).join(", ")})` : ""}. Tag für Tag freigeschaltet.`,
     art: "tage", tage: bereich, sprache: "de-AT",
     lizenz: "Rätsel CC BY-SA 4.0 (eigene Texte); Romane gemeinfrei (Wikisource), Herkunft in inhalt/herkunft.md",
-    herausgeber: "The Digioneer / digitalworld Academy", pro: false, preis: "gratis", pruefstatus: "redaktion", kategorie: "jeden-tag", alter_ab: 10, braucht_netz: false, abnahme: `Redaktion (Code), ${ABNAHME[monat] ?? "30.09.2026"}: Rätsel nachgerechnet, Romane gegen die Wikisource-Textdaten geprüft`,
+    herausgeber: "The Digioneer / digitalworld Academy", pro: false, preis: "gratis", pruefstatus: "redaktion", alter_ab: 10, braucht_netz: false, abnahme: `Redaktion (Code), ${ABNAHME[monat] ?? "30.09.2026"}: Rätsel nachgerechnet, Romane gegen die Wikisource-Textdaten geprüft`,
     app_min: "0.3.0", aenderungen: AENDERUNGEN[monat] ?? `Erste Ausgabe: ${daten.length} Tage.`,
     quellen: [{ id: "redaktion", name: "Eigene Rätsel der Redaktion", url: "" }, { id: "wikisource", name: "Wikisource (gemeinfreie Texte)", url: "https://de.wikisource.org" }],
   }, null, 2) + "\n");

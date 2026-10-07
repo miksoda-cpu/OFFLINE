@@ -2,6 +2,17 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.7.0",
+      "datum": "2026-10-07",
+      "punkte": [
+        "Die Lumi hat eine eigene Seite: oben sie selbst und der Satz des Tages, darunter Kästchen für Tipps, Lumi-Buch, Lumisch, Heft und Vorhaben. Du findest sie unter „Mehr“ oder mit einem Tipp auf die Lumi auf „Heute“.",
+        "Die Bibliothek ist jetzt ein Laden: „Neu“, „Bald“ und „Auf deinem Gerät“. Jedes Paket lässt sich ein- und ausschalten, Daten und Lesestand bleiben.",
+        "Die Österreich-Basis und die Tage für die Tagesseite sind immer an.",
+        "Lumisch ist ein eigenes Paket. Wer Pause hat, bekommt es von selbst dazu.",
+        "Bei den Minen setzt ein langer Druck die Fahne. Aus der Bibliothek geöffnet stehen bei jedem Rätsel Name und Anleitung."
+      ]
+    },
+    {
       "version": "0.6.5",
       "datum": "2026-10-07",
       "punkte": [

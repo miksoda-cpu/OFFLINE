@@ -65,11 +65,12 @@ Der Ordnername ist `<id>-<version>`. Er ist nur Konvention; maßgeblich ist das 
 | `pro` | ja | `true`, wenn nur mit Pro-Lizenz. Die App zeigt es an; die Durchsetzung passiert beim Download-Server. |
 | `preis` | nein | `gratis`, `pro` (im Abo enthalten) oder `kauf` (Einzelkauf). Fehlt es, gilt `pro ? "pro" : "gratis"`. Vorbereitung für Ebene 2 und 3, siehe Abschnitt 8. |
 | `pruefstatus` | nein | `redaktion` (von uns geprüft), `herausgeber` (vom Herausgeber verantwortet, von uns freigegeben), `community` (später, Marktplatz). Fehlt es, gilt `redaktion`. Die App zeigt es im Regal an. |
-| `kategorie` | nein | Gruppe auf der Paketseite (`ernstfall`, `wissen`, `jeden-tag`, `du-und-die-deinen`, `unterwegs`, `verbindung`, `miteinander`, `aussehen`). Kommt aus `paket.quelle.json`, siehe `docs/PAKET-KIT.md`. |
+| `kategorie` | nein | Bis 0.6.x: Gruppe auf der Paketseite. Seit 0.7.0 ersetzt durch `bereich`; ältere Ausgaben tragen sie noch, die App ordnet sie selbst zu (`web/pakete.js`). |
 | `alter_ab` | nein | Ab welchem Alter das Paket im Kinder-Modus sichtbar ist (`0`, `6`, `10`, `14`, `18`). Fehlt es, gilt `0`. |
 | `abnahme` | nein | Fachliche Abnahme wie in `paket.quelle.json` (`keine`, oder wer und Stand). |
 | `datenversion` | nur bei `modul` | Formatversion der gespeicherten Nutzerdaten eines Moduls, ab 1. |
-| `bereich` | nur bei `modul`, optional (ab App 0.6.5) | Wo die App das Modul selbst einbindet. Heute nur `pause`: Die Spiele des Moduls stehen als Happen-Formen in Pause; die Formen beschreibt `inhalt/pause-formen.json` (Format `paket-kit/pause-format.mjs`, `pauseFormenFehler`). |
+| `bereich` | ja (außer Tagesinhalte, die sind immer `heute`) | Seit 0.7.0 für alle Pakete, ersetzt `kategorie`: `lumi`, `pause`, `heute`, `ernstfall`, `wissen`, `karten`, `miteinander`, `aussehen`. Bibliothek und Lumi-Seite ordnen danach. Ein Modul mit `pause` bringt Formen für Pause mit (`inhalt/pause-formen.json`, ab 0.6.5). Weil der Kern von 0.6.5 `bereich` außerhalb von Modulen ablehnt, braucht ein Paket mit Bereich `app_min` 0.7.0 (Module mit `pause`: 0.6.5). |
+| `pflicht` | nein (ab App 0.7.0) | `true`: „immer an“, lässt sich in der Bibliothek nicht ausschalten (Österreich-Basis; Tage sind es ohnehin). |
 | `wasm` | nur bei `modul`, optional (ab App 0.6.5) | `true`: Das Modul führt WebAssembly aus. Erlaubt nur mit einem Schlüssel mit Zweck `wasm` (SICHERHEIT.md, Abschnitt Module); ohne Anmeldung sperrt die Sandbox WebAssembly. |
 | `app_min` | ja | Kleinste App-Version, die das Paket versteht. |
 | `erstellt` | ja | Zeitpunkt der Erstellung, ISO 8601 UTC. |
@@ -108,7 +109,7 @@ Seit 29.09.2026 (`docs/SICHERHEIT.md`, Abschnitt Module). Zusätzlich zu allem o
 - Signiert mit einem Schlüssel mit Zweck **`module`**, der **nicht** zugleich `katalog` hat (Redaktionsschlüssel). Mit einem Paket- oder Katalogschlüssel signierte Module lehnt die App ab, und der Redaktionsschlüssel signiert keine anderen Pakete.
 - `pruefstatus` ist `redaktion`, `datenversion` ist eine ganze Zahl ab 1, `inhalt/modul/index.html` ist vorhanden.
 - Alle Dateien unter `inhalt/modul/` zusammen höchstens 2 MB.
-- `bereich` nur `pause`, `wasm` nur `true` oder `false`; beide nur bei Modulen und ab `app_min` 0.6.5. WebAssembly läuft nur, wenn `wasm` gesetzt ist und der Schlüssel den Zweck `wasm` hat. Daten-JSON außerhalb von `inhalt/modul/` (z. B. `inhalt/pause-formen.json`) liest die App wie bei Textpaketen.
+- `wasm` nur `true` oder `false`, nur bei Modulen und ab `app_min` 0.6.5; `bereich` aus der Liste oben. WebAssembly läuft nur, wenn `wasm` gesetzt ist und der Schlüssel den Zweck `wasm` hat. Daten-JSON außerhalb von `inhalt/modul/` (z. B. `inhalt/pause-formen.json`) liest die App wie bei Textpaketen.
 - Code nur unter `inhalt/modul/`: Dateien `.js`/`.mjs` anderswo sind ein Fehler. Seiten (`.html`, `.htm`, `.xhtml`, `.svg`) außerhalb von `inhalt/modul/` werden beim Prüfen gelesen und abgelehnt, wenn sie `<script`, ein Ereignis-Attribut (` on…=`) oder `javascript:` enthalten.
 
 Für alle anderen Arten gilt dasselbe noch strenger: gar kein Code, weder als `.js` noch in Seiten. Jede `.css` außerhalb einer Modul-Oberfläche wird gelesen und abgelehnt, wenn sie `@import`, eine `url()` außerhalb des Pakets, `expression()`, `javascript:`, `behavior:`/`-moz-binding` oder Backslash-Escapes enthält.

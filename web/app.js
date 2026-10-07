@@ -19,10 +19,16 @@ import { hoerenZeigen, sprechen as lumischSprechen } from "./stimme.js";
 import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE, LUECKE_WARTET as BUCH_LUECKE_WARTET, wartendeAbsaetze as buchWartend, mitSchluss as buchMitSchluss } from "./buch.js";
 import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
+import { BEREICHE, bereichVon, bereichName, pflicht as paketPflicht, paketAn, umschalten as paketUmschalten, abschnitte as ladenAbschnitte } from "./pakete.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
-const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
+const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket: paketRoh, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
+// An/aus für alle Pakete (0.7.0, Bibliothek als Laden): Ausgeschaltete bleiben installiert, die App liest sie nur nicht.
+// Daten und Lesestand liegen getrennt und bleiben. Pflichtpakete (Österreich-Basis, Tage) sind immer an. Module: Stand im Kern.
+const paketeAus = () => speicher.get("pakete-aus", []);
+const modulStandJetzt = () => { try { return state.modul.stand; } catch { return {}; } };
+const installiertesPaket = (id) => { const p = paketRoh(id); return p && paketAn(p, { aus: paketeAus(), modulStand: modulStandJetzt() }) ? p : null; };
 const desktop = client.istDesktop ? await client.init() : null;
 // ---------- Interner Kanal (0.6.0): Schlüssel aus dem Link-Fragment, nur auf diesem Gerät, sofort aus der Adresszeile ----------
 const internBasis = desktop ? INTERN_WEB_BASIS : `${location.origin}/intern/`;
@@ -40,7 +46,7 @@ async function internFreischalten(schluessel) {
   if (k) { history.replaceState(null, "", `${location.pathname}${location.search}#updates`); await internFreischalten(k); }
   else if (location.hash.startsWith("#kanal=")) history.replaceState(null, "", `${location.pathname}${location.search}#updates`);
 }
-const APP_VERSION = "0.6.5";
+const APP_VERSION = "0.7.0";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -72,6 +78,7 @@ function notizbuchLaden() {
 const notizId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 
 const state = {
+  lumiReiter: "uebersicht", // 0.7.0: Menü der Lumi-Seite
   natur: { weg: "start" }, internFeld: null, internMeldung: null, // 0.6.0: Naturheilkunde, interner Kanal
   checks: speicher.get("checks", {}),
   bestaetigt: null, // Bereit Version 2: positionId → ISO-Datum der letzten Bestätigung (siehe bereit.js), unten geladen
@@ -141,7 +148,7 @@ if (speicher.get("bereit-v2", null) === null && (Object.values(state.checks).som
 state.bestaetigt = speicher.get("bereit-v2", null) ?? bereitUebertragen({ checks: state.checks, bestaetigungenV1: speicher.get("bestaetigungen", {}) });
 speicher.set("bereit-v2", state.bestaetigt);
 function bereit() {
-  const arten = installierteIds().map(installiertesPaket).filter(Boolean).map((x) => x.manifest.art);
+  const arten = installierteIds().map(paketRoh).filter(Boolean).map((x) => x.manifest.art); // auch ausgeschaltete liegen am Gerät
   const notfallmappe = desktop ? state.tresor.status !== null && state.tresor.status !== "kein" : undefined; // ohne Tresor zählt sie nicht
   return bereitBerechnen({ checks: state.checks, bestaetigt: state.bestaetigt, geraet: { paketErstellt: P()?.manifest.erstellt ?? null, arten, notfallmappe }, sockel: sockelFestlegen(arten) }, testJetzt());
 }
@@ -184,9 +191,10 @@ const I = {
   tresor: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
   updates: '<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
   natur: '<path d="M5 21c0-9 6-15 15-16-1 9-7 15-15 16z"/><path d="M5 21l9-9"/>',
+  lumi: '<path d="M6 20c0-5 2.7-9 6-9s6 4 6 9"/><circle cx="10" cy="15" r=".8"/><circle cx="14" cy="15" r=".8"/><path d="M9 11 7 4M15 11l2-7"/>',
 };
 const ROUTEN = [
-  ["start", "Heute"], ["pause", "Pause"], ["uebersicht", "Übersicht"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
+  ["start", "Heute"], ["pause", "Pause"], ["lumi", "Lumi"], ["uebersicht", "Übersicht"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
   ["karte", "Karte"], ["ki", "Künstliche Intelligenz"], ["notizen", "Notizen"], ["tresor", "Tresor"], ["updates", "Updates & Abo"],
 ];
 const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
@@ -273,9 +281,11 @@ function tagesSatzZeigen() {
   wesen.satzDesTages(t);
 }
 /** „Zeig mir“: an die Stelle in der App, Abschnitte der Übersicht aufklappen. */
-const ANKER = { tagesplan: "tagesplan", lumi: "lumi-einstellungen", "lumi-log": "lumi-log" };
+const ANKER = { tagesplan: "tagesplan" };
 function zielOeffnen(ziel) {
   if (!ZIELE.includes(ziel)) return;
+  // 0.7.0: Einstellungen und Log der Lumi stehen auf der Lumi-Seite
+  if (ziel === "lumi" || ziel === "lumi-log") { state.lumiReiter = ziel === "lumi" ? "einstellungen" : "gesagt"; if (location.hash === "#lumi") render(); else location.hash = "#lumi"; return; }
   const anker = ANKER[ziel];
   location.hash = `#${anker ? "uebersicht" : ziel}`;
   if (anker) setTimeout(() => { const el = document.getElementById(anker); if (el) { if (el.tagName === "DETAILS") el.open = true; el.scrollIntoView({ block: "start" }); } }, 60);
@@ -442,7 +452,7 @@ const seiten = {
       ${meinTagVorschlagHtml()}
       ${pauseKarteHtml()}
       <div class="buehne-kopf" id="wesen-karte">
-        ${wesen.mitFigur() && !plan.sparmodus ? wesen.buehneHtml() : ""}
+        ${wesen.mitFigur() && !plan.sparmodus ? wesen.buehneHtml({ klein: true }) : ""}
         <div class="bereit-kopf">
           <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="muted of-klein">Bereit</span><span class="muted of-klein" style="font-size:.85rem">${b.wert < 30 ? "Anfang" : b.wert < 60 ? "unterwegs" : b.wert < 80 ? "gut" : "bereit"}</span></div>
           <div class="bereit-zahl">${b.wert}</div>
@@ -482,10 +492,13 @@ const seiten = {
   gedanken() { const d = gedankenDaten(); return d ? gedankenInhaltHtml(d) : gedankenFehlt(); },
   gedanke() { const d = gedankenDaten(); return d ? gedankeSeiteHtml(d, state.gedanke ?? 0, { liest: state.gedankenLiest }) : gedankenFehlt(); },
 
+  /** Die Lumi-Seite (0.7.0): alles zur Lumi an einem Ort. */
+  lumi() { return lumiSeiteHtml(); },
+
   /** Heft „Was Lumi gesagt hat“: gemerkte Sätze, ohne Netz durchsuchbar, einzeln löschbar. */
   heft() {
     return `${kopf(`Was ${esc(wesen.anzeigename())} gesagt hat`, "Die Sätze, die du dir gemerkt hast. Sie bleiben auf diesem Gerät.")}
-      <p style="margin:0 0 1rem"><a href="#uebersicht">‹ Übersicht</a></p>
+      <p style="margin:0 0 1rem"><a href="#lumi">‹ Lumi</a></p>
       ${wesen.heft.length ? `<label for="heft-suche" class="of-klein">Im Heft suchen</label><br><input class="of-input" type="search" id="heft-suche" value="${esc(state.heftSuche ?? "")}" autocomplete="off" style="margin:.3rem 0 1rem;max-width:28rem;width:100%">` : ""}
       <div class="card of-karte" id="heft-liste">${wesen.heftHtml(state.heftSuche ?? "")}</div>`;
   },
@@ -528,13 +541,12 @@ const seiten = {
     const laender = D("bundeslaender")?.laender ?? [];
     const erledigt = Object.values(state.checks).filter(Boolean).length;
     const gesamt = vorsorge.gruppen.reduce((s, g) => s + g.punkte.length, 0);
-    const installierte = installierteIds().map(installiertesPaket).filter(Boolean);
+    const installierte = installierteIds().map(paketRoh).filter(Boolean);
     const belegt = installierte.reduce((s, x) => s + x.manifest.groesse, 0);
     const k = katalog();
     const updates = k ? verfuegbareUpdates(k).length : 0;
     const land = laender.find((l) => l.name === state.bundesland);
     const b = bereit(); wesen.setScore(b); const schritt = naechsterSchritt(b);
-    const wl = state.wesenLog;
     return `
       <div class="gruss of-gruss"><div><h1>Übersicht</h1><p class="muted of-klein">Alles hier funktioniert ohne Internet.</p></div>
         <select class="of-select" id="bl" aria-label="Dein Bundesland">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>
@@ -558,9 +570,7 @@ const seiten = {
       </div>
       ${tagesplanHtml()}
       <a class="card of-karte pause-zeile" href="#pause" style="margin-bottom:1rem"><strong>⏸ Pause</strong> <span class="muted of-klein">· ${pauseE().an ? `ein · Appetit ${esc(pauseE().appetit)}` : "aus"} · Happen für zwischendurch, jetzt mit eigenem Raum</span></a>
-      <details class="card of-karte" id="lumi-einstellungen" style="margin-bottom:1rem" ${wesen.ausschaltenFrage ? "open" : ""}><summary><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? `${esc(wesen.anzeigename())} · Einstellungen` : wesen.aktiv() ? "Textkarten" : "Tipps aus"}</span></summary><div style="margin-top:.8rem">${wesen.einstellungenHtml()}${lumiMeinTagZeile()}${hilfeZeile("lumi", "bereit-hilfe")}</div></details>
-      ${buchDaten() && wesen.mitFigur() ? `<a class="card of-karte buch-zeile" href="#buch" style="margin-bottom:1rem"><strong>Das Lumi-Buch</strong> <span class="muted of-klein">· Band ${buchDaten().band} · ${buchAnteil(buchDaten(), buchFrei())} % lesbar</span></a>` : ""}
-      ${wesen.aktiv() || wesen.log.length ? `<details class="card of-karte" id="lumi-log" style="margin-bottom:1rem" ${wl.filter || wl.suche ? "open" : ""}><summary><strong>${wesen.mitFigur() ? `Alles, was ${esc(wesen.anzeigename())} gesagt hat` : "Bisherige Tipps"}</strong> <span class="muted of-klein" id="wesen-log-zahl">· ${wesen.log.length}</span></summary><div style="margin-top:.8rem" id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></details>` : ""}
+      <a class="card of-karte pause-zeile" href="#lumi" style="margin-bottom:1rem"><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? esc(wesen.anzeigename()) : wesen.aktiv() ? "Textkarten" : "Tipps aus"} · Tipps, Buch, Heft und Einstellungen auf der Lumi-Seite</span></a>
       ${updates ? `<a class="card of-karte" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn of-plakette of-plakette--warnung">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted of-klein">· ${intervallText()}</span></a>` : ""}
       ${land ? `<div class="card of-karte" style="margin-top:0"><strong>${esc(land.name)}</strong> <span class="muted of-klein">· Landeshauptstadt ${esc(land.hauptstadt)} · im Krisenfall informiert <strong>${esc(land.orf_radio)}</strong></span></div>` : ""}
       <h2 style="margin-top:2rem">Installiert</h2>
@@ -746,36 +756,28 @@ const seiten = {
       </div>`;
   },
 
+  /**
+   * Die Bibliothek als Laden (0.7.0, Teil B): Neu (verfügbar, noch nicht geladen) · Bald (nur Angekündigtes, nie Internes) ·
+   * Auf deinem Gerät (an/aus, Löschen; Österreich-Basis und Tage „immer an“). Jede Karte trägt ihren Bereich.
+   * Logik: web/pakete.js. Module und Skins behalten ihre Karte mit Vorschau (modulKarte).
+   */
   bibliothek() {
     const k = katalog();
     if (!k) return `${kopf("Bibliothek", "Der Paketkatalog wurde noch nie geladen.")}<div class="card of-karte"><p class="muted of-klein">Geh einmal online, dann holt OFFLINE den Katalog und merkt ihn sich.</p><button class="btn btn-primary of-btn of-btn--primaer" data-katalog>Katalog laden</button><p class="form-msg of-meldung" id="bib-msg"></p></div>`;
-    const typen = ["Alle", ...new Set(k.pakete.map((p) => ARTEN[p.art] ?? p.art)), ...(state.modul.lokal?.pakete.length && !k.pakete.some((p) => p.art === "modul") ? [ARTEN.modul] : [])];
-    const liste = k.pakete.filter((p) => state.filter === "Alle" || (ARTEN[p.art] ?? p.art) === state.filter);
+    const inst = installierteIds().map(paketRoh).filter(Boolean);
+    const { neu, bald, geraet } = ladenAbschnitte(k, inst, { versionVergleich });
+    const abschnitt = (titel, satz, karten, leer) => `<section class="laden-abschnitt" aria-label="${esc(titel)}"><h2>${esc(titel)}</h2><p class="laden-satz of-klein">${esc(satz)}</p>${karten.length ? `<div class="grid grid-2">${karten.join("")}</div>` : `<p class="muted of-klein">${esc(leer)}</p>`}</section>`;
     return `
-      ${kopf("Bibliothek", `Katalog vom ${datum(k.erstellt)} · Signatur geprüft ✓${desktop ? "" : " · Pakete im Browser sind Textpakete, große kommen in die Desktop-App."}`)}
-      ${desktop ? `<div class="card of-karte" style="margin-bottom:1rem"><h3>Vom Speicherstick oder Ordner einspielen</h3>
+      ${kopf("Bibliothek", `Katalog vom ${datum(k.erstellt)} · Signatur geprüft ✓${desktop ? "" : " · Im Browser gehen Textpakete, große Pakete kommen in die Desktop-App."}`)}
+      <p class="form-msg of-meldung" id="bib-msg"></p>
+      ${abschnitt("Neu", "Verfügbar, noch nicht auf deinem Gerät.", neu.map((p) => (p.art === "modul" || p.art === "skin" ? modulKarte(p, { art: "katalog" }) : ladenKarte(p, null))), "Alles Verfügbare liegt schon auf deinem Gerät.")}
+      ${bald.length ? abschnitt("Bald", "Angekündigt. Kommt, sobald es fertig ist.", bald.map((p) => ladenKarte(p, null)), "") : ""}
+      ${abschnitt("Auf deinem Gerät", "Aus heißt: nicht sichtbar, Daten und Lesestand bleiben. Löschen nimmt alles weg.", geraet.map((g) => (g.eintrag.art === "modul" || g.eintrag.art === "skin" ? modulKarte(g.eintrag, { art: "katalog" }) : ladenKarte(g.eintrag, g))), "Noch nichts geladen.")}
+      ${desktop ? `<div class="card of-karte laden-abschnitt"><h3>Vom Speicherstick oder Ordner einspielen</h3>
         <p class="muted of-klein" style="margin:0 0 .75rem">Ohne Internet: Paketordner vom Stick auswählen. Der Kern prüft Signatur und jede Datei, bevor etwas übernommen wird.</p>
         <button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-stick-suchen>Datenträger durchsuchen</button> <button class="btn btn-sm of-btn of-btn--klein" data-ordner-waehlen>Ordner wählen …</button>
         <div id="stick-funde" style="margin-top:.75rem">${(state.funde ?? []).map((f) => `<div class="switch of-liste__zeile"><span><strong>${esc(f.titel)}</strong> <span class="muted of-klein">${esc(f.version)} · ${groesse(f.groesse)}</span><br><span class="muted mono of-klein of-mono" style="font-size:.8rem">${esc(f.pfad)}</span></span><button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-stick="${esc(f.pfad)}">Einspielen</button></div>`).join("")}</div></div>` : ""}
-      <div class="filters of-reiter">${typen.map((t) => `<button data-filter="${esc(t)}" aria-pressed="${t === state.filter}">${esc(t)}</button>`).join("")}</div>
-      <p class="form-msg of-meldung" id="bib-msg"></p>
-      ${desktop ? lokaleQuelleHtml() : ""}
-      <div class="grid grid-2">${state.filter === "Alle" || state.filter === ARTEN.modul ? `<div class="card of-karte pkg"><div class="pkg-head"><h3 style="margin:0">⏸ Pause</h3><span><span class="tag of-plakette">eingebaut</span> <span class="tag of-plakette ${pauseE().an ? "tag-ok of-plakette--offline" : ""}">${pauseE().an ? "Ein" : "Aus"}</span></span></div><p class="muted of-klein" style="margin:.4rem 0 .6rem">Ein Happen für zwischendurch, mit eigenem Raum direkt unter „Heute“. Teil der App, standardmäßig aus; die Inhalte kommen als Paket „Pause“.</p><a class="btn btn-sm of-btn of-btn--klein" href="#pause">${pauseE().an ? "Zur Pause" : "Einschalten"}</a></div>` : ""}${liste.map((p) => {
-        if (p.art === "modul" || p.art === "skin") return modulKarte(p, { art: "katalog" });
-        const inst = installiertesPaket(p.id);
-        const update = inst && p.status === "verfuegbar" && versionVergleich(p.version, inst.manifest.version) > 0 && appPasst(p);
-        let knopf;
-        if (inst) knopf = `${p.id === "lumi-buch" ? `<a class="btn btn-sm of-btn of-btn--klein" href="#buch">Lesen</a> ` : p.id === GEDANKEN_PAKET ? `<a class="btn btn-sm of-btn of-btn--klein" href="#gedanken">Lesen</a> ` : ""}${update ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${p.id}">Aktualisieren</button> ` : ""}${desktop && p.art === "zim" ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-oeffnen-zim="${p.id}">Öffnen</button> ` : ""}${desktop && p.art === "karte" ? `<a class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" href="#karte">Karte öffnen</a> ` : ""}<button class="btn btn-sm of-btn of-btn--klein" data-remove="${p.id}">Entfernen</button>`;
-        else if (p.status !== "verfuegbar") knopf = `<span class="tag tag-warn of-plakette of-plakette--warnung">Geplant</span>`;
-        else if (p.pro) knopf = `<button class="btn btn-sm of-btn of-btn--klein" disabled title="Nur mit Pro">Nur mit Pro</button>`;
-        else if (!desktop && p.art !== "inhalt" && p.art !== "tage") knopf = `<span class="tag of-plakette">Nur in der Desktop-App</span>`;
-        else if (!appPasst(p)) knopf = braucht(p);
-        else knopf = `<button class="btn btn-sm of-btn of-btn--klein" data-install="${p.id}">Installieren</button>`;
-        return `<div class="card pkg of-karte of-paket">
-          <div class="pkg-head"><h3 style="margin:0">${esc(p.titel)}</h3><span>${p.pro ? '<span class="tag tag-pro of-plakette of-plakette--pro">Pro</span> ' : ""}${inst ? `<span class="tag tag-ok of-plakette of-plakette--offline">${update ? "Update " + esc(p.version) : "Installiert"}</span>` : ""}</span></div>
-          <p>${esc(p.beschreibung)}</p>${p.hinweis ? `<p class="muted of-klein pkg-hinweis">${esc(p.hinweis)}</p>` : ""}
-          <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(p.groesse)}${p.version ? ` · ${esc(p.version)}` : ""}${p.alter_ab ? ` · ab ${p.alter_ab} Jahren` : ""}</span><span>${knopf}</span></div></div>`;
-      }).join("")}</div>`;
+      ${desktop ? lokaleQuelleHtml() : ""}`;
   },
 
   karte() {
@@ -1165,12 +1167,17 @@ const PP = () => installiertesPaket("pause");
 // Dazu (0.6.5) die Spiele aus Modulen im Bereich „pause“ (Spielpaket 1), nur in der Desktop-App und nur aktive Module.
 let pauseDatenMerk = null;
 const pauseModule = () => (desktop ? installierteIds().map(installiertesPaket).filter((p) => p?.manifest.art === "modul" && p.manifest.bereich === "pause" && (state.modul.stand[p.manifest.id]?.aktiv ?? true)) : []);
+// Lumisch (0.7.0, Bill Frage 4): eigenes Paket „lumisch“ im Bereich Lumi. Nur wenn es an ist, gibt es die Lumisch-Happen;
+// was in pause.json noch steht, ist für Apps vor 0.7.0 da.
+const PL = () => installiertesPaket("lumisch");
+const lumischDaten = () => inhalt(PL(), "inhalt/lumisch.json");
 const pauseDaten = () => {
   const p = PP();
   if (!p) return null;
-  const module = pauseModule(), v = `${p.manifest.version}|${module.map((m) => `${m.manifest.id}@${m.manifest.version}`).join(",")}`;
+  const module = pauseModule(), l = PL(), v = `${p.manifest.version}|${l ? l.manifest.version : "-"}|${module.map((m) => `${m.manifest.id}@${m.manifest.version}`).join(",")}`;
   if (pauseDatenMerk?.v !== v) {
-    const d = pauseAufbereiten(inhalt(p, "inhalt/pause.json"));
+    const roh = pauseAufbereiten(inhalt(p, "inhalt/pause.json")), lumisch = lumischDaten();
+    const d = roh?.formen ? { ...roh, lumisch, formen: roh.formen.filter((f) => f.id !== "lumisch" || lumisch) } : roh;
     const dazu = module.flatMap((m) => pauseModulFormen(m.manifest.id, texte(m, "inhalt/pause-formen.json"), (d?.formen ?? []).map((f) => f.id)));
     pauseDatenMerk = { v, d: d?.formen ? { ...d, formen: [...d.formen, ...dazu] } : d };
   }
@@ -1277,7 +1284,7 @@ function pauseFokusEinbauen() {
       return PAUSE_FORMEN[form.id](el, {
         form, linie: pauseL(), daten, rahmen, rnd: Math.random, jetzt: testJetzt, antwortRichtig,
         gesehen: new Set(log.filter((e) => e.id === "fehler").slice(-10).map((e) => e.ergebnis?.geschichte)),
-        heute: lumischHeute(spielLog(), daten.lumisch, heute),
+        heute: daten.lumisch ? lumischHeute(spielLog(), daten.lumisch, heute) : null,
         umbenannt: lumischUmbenannt(spielLog(), speicher.get("lumisch-umbenannt", [])), umbenanntGezeigt: (alt) => speicher.set("lumisch-umbenannt", [...speicher.get("lumisch-umbenannt", []), alt]),
         roman: pauseRoman(), vermutung: speicher.get("pause-vermutung", null), vermutungSpeichern: (v) => speicher.set("pause-vermutung", v), gestern: pauseGestern(),
         saetze: lumischSaetze(gedankenDaten(), daten.lumisch?.woerterbuch ?? daten.lumisch?.woerter), // Lumisch Stufe 3
@@ -1421,6 +1428,59 @@ function linieHtml() {
     <p class="muted of-klein">Alles hier bleibt auf diesem Gerät. Es wird nichts gezählt, um dich festzuhalten.</p>`;
 }
 
+// ---------- Die Lumi-Seite (0.7.0, Teil B; Probe „Lumi-Seite und Bibliothek als Laden“, Entscheidungen Bill 07.10.2026) ----------
+// Oben die Figur (Anstupsen, Nachtschlaf, Namensfrage) und der Satz des Tages; ohne Figur der Knopf „Lumi zeigen“. Darunter
+// ein eigenes kleines Menü: Übersicht · Alles Gesagte · Gelernt · Einstellungen · Hilfe. In der Übersicht ein Kästchen je
+// aktivem Paket im Bereich Lumi (Tipps, Lumi-Buch, Was die Lumis denken, Lumisch), dazu Heft und Vorhaben (App-Teile).
+// Ein ausgeschaltetes Paket hat kein Kästchen; Daten und Lesestand bleiben.
+const LUMI_REITER = [["uebersicht", "Übersicht"], ["gesagt", "Alles Gesagte"], ["gelernt", "Gelernt"], ["einstellungen", "Einstellungen"], ["hilfe", "Hilfe"]];
+/** Die Kästchen der Übersicht: { titel, zeile, ziel (Adresse) oder knopf (Attribute) }. */
+function lumiKaestchen() {
+  const k = [], zahl = (n, eins, viele) => `${n} ${n === 1 ? eins : viele}`;
+  const tipps = texte(PW(), "inhalt/tipps.json")?.tipps;
+  if (tipps) k.push({ titel: "Tipps", zeile: `${zahl(tipps.length, "Satz", "Sätze")}${wesen.aktiv() && wesen.e.takt !== "aus" ? ` · ${wesen.e.takt === "seltener" ? "seltener" : "alle 90 s"}` : " · aus"}`, knopf: 'data-lumi-reiter="gesagt"' });
+  const b = buchDaten();
+  if (b) k.push({ titel: "Das Lumi-Buch", zeile: `Band ${b.band} · ${buchAnteil(b, buchFrei())} % lesbar`, ziel: "#buch" });
+  const g = gedankenDaten();
+  if (g) k.push({ titel: "Was die Lumis denken", zeile: `${zahl(g.gedanken?.length ?? 0, "Gedanke", "Gedanken")} · ab ${installiertesPaket(GEDANKEN_PAKET)?.manifest.alter_ab ?? 18}`, ziel: "#gedanken" });
+  const l = lumischDaten();
+  if (l) {
+    const h = lumischHeute(spielLog(), l, heuteDatum()), stand = h.art === "plan" ? `Tag ${h.tag} von ${l.plan.length}` : h.art === "neu" ? "ein neues Wort" : "Wiederholung";
+    k.push({ titel: "Lumisch", zeile: `${stand} · ${l.woerterbuch?.length ?? l.woerter.length} Wörter`, ...(pauseE().an && PP() ? { knopf: 'data-pause="spielen" data-form="lumisch"' } : { ziel: "#pause" }) });
+  }
+  if (wesen.aktiv() || wesen.heft.length) k.push({ titel: "Heft", zeile: zahl(wesen.heft.length, "gemerkter Satz", "gemerkte Sätze"), ziel: "#heft" });
+  const vh = vorhaben(), offen = vh.filter((v) => !v.erledigt).length;
+  if (vh.length) k.push({ titel: "Vorhaben", zeile: `${offen} offen`, ziel: "#vorsorge", anker: "vorhaben" });
+  return k;
+}
+function lumiSeiteHtml() {
+  const reiter = state.lumiReiter ?? "uebersicht", b = bereit(); wesen.setScore(b);
+  const satz = wesen.aktiv() ? textkarteHeute(heuteDatum()) : null;
+  const kopfTeil = wesen.mitFigur()
+    ? `<div class="lumi-seite-kopf">${wesen.buehneHtml()}</div>`
+    : `<div class="card of-karte lumi-seite-zeigen"><h1 class="z-h1" style="margin:0 0 .4rem">Lumi</h1><p style="margin:0 0 .7rem">${esc(LUMI_TEXTE.beschreibung)}</p><button type="button" class="btn btn-primary of-btn of-btn--primaer" data-lumi="einschalten">Lumi zeigen</button>
+        <p class="muted of-klein" style="margin:.6rem 0 0">${wesen.aktiv() ? "Jetzt kommen Tipps als Textkarte, ohne Figur." : "Jetzt sind die Tipps aus."} ${esc(LUMI_TEXTE.ki)}</p></div>`;
+  const satzTeil = satz ? `<div class="card of-karte lumi-satz-des-tages"><span class="lumi-satz-marke">Satz des Tages</span> ${esc(satz.text)}</div>` : "";
+  const menue = `<div class="lumi-reiter" role="tablist" aria-label="Lumi">${LUMI_REITER.map(([id, name]) => `<button type="button" role="tab" aria-selected="${id === reiter}" class="lumi-reiter-knopf" data-lumi-reiter="${id}">${esc(name)}</button>`).join("")}</div>`;
+  let teil;
+  if (reiter === "gesagt") {
+    const wl = state.wesenLog;
+    teil = wesen.aktiv() || wesen.log.length ? `<div class="card of-karte"><h2 class="lumi-teil-titel">${wesen.mitFigur() ? `Alles, was ${esc(wesen.anzeigename())} gesagt hat` : "Bisherige Tipps"} <span class="muted of-klein" id="wesen-log-zahl">· ${wesen.log.length}</span></h2><div id="wesen-log">${wesen.logHtml(wl.filter, wl.suche)}</div></div>`
+      : `<div class="card of-karte"><p class="muted" style="margin:0">Noch nichts gesagt. Die Tipps sind aus.</p></div>`;
+  } else if (reiter === "gelernt") teil = `<div class="card of-karte">${wesen.gelerntHtml()}</div>`;
+  else if (reiter === "einstellungen") teil = `<div class="card of-karte" id="lumi-einstellungen">${wesen.einstellungenHtml()}${lumiMeinTagZeile()}</div>`;
+  else if (reiter === "hilfe") teil = `<div class="lumi-hilfe">${(HILFE.lumi ?? []).map(([f, a]) => `<div class="card of-karte"><h3>${esc(ausschreibenTitel(f))}</h3><p style="margin:0">${esc(ausschreiben(a))}</p></div>`).join("")}</div>`;
+  else {
+    const k = lumiKaestchen();
+    teil = `${k.length ? `<div class="lumi-kaestchen">${k.map((x) => x.knopf
+      ? `<button type="button" class="lumi-kaestchen-feld of-karte" ${x.knopf}><span class="lumi-kaestchen-titel">${esc(x.titel)}</span><span class="lumi-kaestchen-zeile">${esc(x.zeile)}</span></button>`
+      : `<a class="lumi-kaestchen-feld of-karte" href="${x.ziel}" ${x.anker ? `data-anker="${x.anker}"` : ""}><span class="lumi-kaestchen-titel">${esc(x.titel)}</span><span class="lumi-kaestchen-zeile">${esc(x.zeile)}</span></a>`).join("")}</div>`
+      : `<div class="card of-karte"><p class="muted" style="margin:0">Hier stehen die Pakete der Lumi, sobald sie geladen und an sind.</p></div>`}
+      <p class="lumi-mehr"><a href="#bibliothek">Mehr für die Lumi in der Bibliothek</a></p>`;
+  }
+  return `<div class="lumi-seite">${kopfTeil}${satzTeil}${menue}<div class="lumi-teil" role="tabpanel">${teil}</div></div>`;
+}
+
 // ---------- Das Lumi-Buch (Auftrag 2026-10-04-lumi-buch-app): lesbar wird, was man unter einem Satz der Lumi öffnet ----------
 // Logik in web/buch.js. Milde Zugkraft: oben nur der Anteil in Prozent, keine Liste fehlender Tipps, kein Hinweis aufs
 // schnellere Freischalten. Gespeichert wird nur, welche Absätze lesbar sind ("lumi-buch-frei").
@@ -1548,7 +1608,7 @@ function skinFuerSeite() {
 const schieber = ({ an, art, text, attr }) => `<button type="button" role="switch" aria-checked="${an}" class="schieber schieber-${art}" ${attr}><span class="schieber-bahn" aria-hidden="true"><span class="schieber-knopf"></span></span><span class="schieber-text">${text}</span></button>`;
 
 function sliderSchluessel(id, quelle) {
-  if (installiertesPaket(id)) return `inst:${id}`;
+  if (paketRoh(id)) return `inst:${id}`;
   return quelle.art === "ordner" ? `ordner:${quelle.pfad}` : `katalog:${id}`;
 }
 
@@ -1579,22 +1639,23 @@ function loeschDialog(id) {
 
 /** Katalogkarte eines Moduls. quelle: { art: "katalog" } oder { art: "ordner", pfad } (lokal, nicht veröffentlicht). */
 function modulKarte(e, quelle) {
-  const inst = installiertesPaket(e.id);
+  const inst = paketRoh(e.id); // auch ausgeschaltet bleibt es installiert
   const skin = (inst?.manifest.art ?? e.art) === "skin";
   const aktiv = skin ? state.modul.skin === e.id : state.modul.stand[e.id]?.aktiv ?? true;
   let steuerung;
   if (!desktop) steuerung = `<span class="tag of-plakette">Nur in der Desktop-App</span>`;
   else if (inst) {
     const neuer = e.version && versionVergleich(e.version, inst.manifest.version) > 0 && appPasst(e);
-    steuerung = `${schieber({ an: aktiv, art: "aktiv", text: aktiv ? "aktiv" : "inaktiv", attr: `data-modul-aktiv="${esc(e.id)}" aria-label="${esc(e.titel)} ${aktiv ? "aktiv" : "inaktiv"}"` })}
-      ${skin ? "" : `<button type="button" class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-modul-start="${esc(e.id)}" ${aktiv ? "" : "disabled title=\"Erst aktiv schalten\""}>Öffnen</button>`}
+    steuerung = `${schieber({ an: aktiv, art: "aktiv", text: aktiv ? "an" : "aus", attr: `data-modul-aktiv="${esc(e.id)}" aria-label="${esc(e.titel)} ${aktiv ? "an" : "aus"}"` })}
+      ${skin ? "" : `<button type="button" class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-modul-start="${esc(e.id)}" ${aktiv ? "" : "disabled title=\"Erst einschalten\""}>Öffnen</button>`}
       ${neuer ? `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-modul-laden="${esc(e.id)}" ${quelle.art === "ordner" ? `data-pfad="${esc(quelle.pfad)}"` : ""}>Aktualisieren</button>` : ""}
-      <button type="button" class="btn btn-sm of-btn of-btn--klein" data-modul-loeschen="${esc(e.id)}">löschen</button>`;
-  } else if (e.status && e.status !== "verfuegbar") steuerung = `<span class="tag tag-warn of-plakette of-plakette--warnung">Geplant</span>`;
+      <button type="button" class="btn btn-sm of-btn of-btn--klein" data-modul-loeschen="${esc(e.id)}">Löschen</button>`;
+  } else if (e.status && e.status !== "verfuegbar") steuerung = `<span class="tag tag-warn of-plakette of-plakette--warnung">Bald</span>`;
   else if (!darfLaden(e)) steuerung = braucht(e);
   else steuerung = schieber({ an: false, art: "laden", text: "laden", attr: `data-modul-laden="${esc(e.id)}" ${quelle.art === "ordner" ? `data-pfad="${esc(quelle.pfad)}"` : ""} aria-label="${esc(e.titel)} laden"` });
   return `<div class="card pkg modul-karte of-karte of-paket" data-modul-karte="${esc(e.id)}">
-    <div class="pkg-head"><h3 style="margin:0">${esc(e.titel)}</h3><span><span class="tag of-plakette">${skin ? "Skin" : "Modul"}</span>${quelle.art === "ordner" ? ' <span class="tag tag-warn of-plakette of-plakette--warnung">lokal, nicht veröffentlicht</span>' : ""}${inst ? ` <span class="tag of-plakette ${aktiv ? "tag-ok of-plakette--offline" : ""}">${aktiv ? "Geladen" : "Inaktiv"}</span>` : ""}</span></div>
+    <div class="pkg-head"><h3 style="margin:0">${esc(e.titel)}</h3><span>${quelle.art === "ordner" ? '<span class="tag tag-warn of-plakette of-plakette--warnung">lokal, nicht veröffentlicht</span>' : ""}</span></div>
+    <span class="laden-bereich">${esc(bereichName(inst?.manifest ?? e))} · ${skin ? "Skin" : "Modul"}</span>
     <p>${esc(e.beschreibung)}</p>
     ${(inst?.manifest.ki_generiert ?? e.ki_generiert) ? `<p class="muted of-klein" style="margin:-.3rem 0 .5rem"><span class="tag of-plakette">Künstliche Intelligenz</span> Bilder damit erzeugt, Herkunft im Paket</p>` : ""}
     ${sliderHtml(sliderSchluessel(e.id, quelle), e)}
@@ -1603,11 +1664,37 @@ function modulKarte(e, quelle) {
   </div>`;
 }
 
+/**
+ * Karte im Laden für alle anderen Pakete. g (nur „Auf deinem Gerät“): { paket, update }. Neu: Schieber „laden“; Bald: Plakette;
+ * auf dem Gerät: Schieber an/aus (Pflichtpakete „immer an“), Öffnen je Art, Aktualisieren, Löschen (nicht bei Pflichtpaketen).
+ */
+function ladenKarte(p, g) {
+  let steuerung;
+  if (g) {
+    const an = paketPflicht(p) || !paketeAus().includes(p.id);
+    const oeffnen = !an ? "" : p.id === "lumi-buch" ? `<a class="btn btn-sm of-btn of-btn--klein" href="#buch">Lesen</a>` : p.id === GEDANKEN_PAKET ? `<a class="btn btn-sm of-btn of-btn--klein" href="#gedanken">Lesen</a>`
+      : desktop && p.art === "zim" ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-oeffnen-zim="${esc(p.id)}">Öffnen</button>` : desktop && p.art === "karte" ? `<a class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" href="#karte">Karte öffnen</a>` : "";
+    steuerung = `${paketPflicht(p) ? `<span class="laden-immer">immer an</span>` : schieber({ an, art: "aktiv", text: an ? "an" : "aus", attr: `data-paket-an="${esc(p.id)}" aria-label="${esc(p.titel)} ${an ? "an" : "aus"}"` })}
+      ${oeffnen}${g.update && appPasst(p) ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${esc(p.id)}">Aktualisieren</button>` : ""}
+      ${paketPflicht(p) ? "" : `<button class="btn btn-sm of-btn of-btn--klein" data-remove="${esc(p.id)}">Löschen</button>`}`;
+  } else if (p.status !== "verfuegbar") steuerung = `<span class="tag tag-warn of-plakette of-plakette--warnung">Bald</span>`;
+  else if (p.pro) steuerung = `<button class="btn btn-sm of-btn of-btn--klein" disabled title="Nur mit Pro">Nur mit Pro</button>`;
+  else if (!desktop && p.art !== "inhalt" && p.art !== "tage") steuerung = `<span class="tag of-plakette">Nur in der Desktop-App</span>`;
+  else if (!appPasst(p)) steuerung = braucht(p);
+  else steuerung = schieber({ an: false, art: "laden", text: "laden", attr: `data-install="${esc(p.id)}" aria-label="${esc(p.titel)} laden"` });
+  return `<div class="card pkg of-karte of-paket laden-karte" data-laden-karte="${esc(p.id)}">
+    <div class="pkg-head"><h3 style="margin:0">${esc(p.titel)}</h3><span>${p.pro ? '<span class="tag tag-pro of-plakette of-plakette--pro">Pro</span>' : ""}</span></div>
+    <span class="laden-bereich">${esc(bereichName(p))}</span>
+    <p>${esc(p.beschreibung)}</p>${p.hinweis ? `<p class="muted of-klein pkg-hinweis">${esc(p.hinweis)}</p>` : ""}
+    ${p.ki_generiert ? `<p class="muted of-klein" style="margin:-.3rem 0 .5rem"><span class="tag of-plakette">Künstliche Intelligenz</span> Bilder damit erzeugt, Herkunft im Paket</p>` : ""}
+    <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(p.groesse)}${g && p.version ? ` · ${esc(p.version)}` : ""}${p.alter_ab ? ` · ab ${p.alter_ab} Jahren` : ""}</span><span class="laden-steuerung">${steuerung}</span></div></div>`;
+}
+
 /** Lokale Quelle: ein Ordner mit signierten, noch nicht veröffentlichten Paketen (Redaktionsablage). */
 function lokaleQuelleHtml() {
   const l = state.modul.lokal;
   const inKatalog = new Set((katalog()?.pakete ?? []).map((p) => p.id));
-  const karten = (l?.pakete ?? []).filter((p) => (p.art === "modul" || p.art === "skin") && !inKatalog.has(p.id) && (state.filter === "Alle" || state.filter === ARTEN[p.art]));
+  const karten = (l?.pakete ?? []).filter((p) => (p.art === "modul" || p.art === "skin") && !inKatalog.has(p.id));
   const probe = desktop.info?.entwickler ? ` <button type="button" class="btn btn-sm of-btn of-btn--klein" data-modul-probe>Sandbox-Probe …</button>` : "";
   return `<div class="card of-karte" style="margin-bottom:1rem"><h3>Lokale Quelle</h3>
     <p class="muted of-klein" style="margin:0 0 .75rem">Module und Skins, die noch nicht im Katalog sind (Redaktionsablage). Geladen wird wie vom Stick: Der Kern prüft Signatur, Redaktionsschlüssel und jede Datei.</p>
@@ -2161,12 +2248,12 @@ function render() {
   const seite = seiten[route] && (route !== "natur" || naturDaten()) ? route : "start";
   if (seite !== "natur" && state.natur.liest) naturVorlesenStop();
   main.innerHTML = seiten[seite]() + hilfeZeile(HILFE_SEITE[seite]);
-  if (seite === "start") wesen.einbauen(); else wesen.setScore(bereit());
+  if (seite === "start") wesen.einbauen({ tippen: () => { location.hash = "#lumi"; } }); else if (seite === "lumi") wesen.einbauen(); else wesen.setScore(bereit());
   wesen.ansicht(seite);
   if (seite === "start") { tagesSatzZeigen(); pauseKarteWischen(); }
   if (seite !== "gedanke" && state.gedankenLiest) gedankenVorlesenStop();
   if (seite === "gedanken" || seite === "gedanke") gedankenNachZeichnen();
-  const aktiv = seite === "lesen" || seite === "gedanken" || seite === "gedanke" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" || seite === "buch" || seite === "absatz" ? "uebersicht" : seite === "linie" ? "pause" : seite;
+  const aktiv = seite === "lesen" || seite === "gedanken" || seite === "gedanke" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" || seite === "buch" || seite === "absatz" ? "lumi" : seite === "linie" ? "pause" : seite;
   if (seite !== "kapitel" && state.tag.liest) vorlesenStop();
   if (seite !== "buch" && state.buchLiest) { try { speechSynthesis.cancel(); } catch { /* egal */ } state.buchLiest = false; }
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
@@ -2222,6 +2309,8 @@ function beiKlick(e) {
   if (b.dataset.filter) { state.filter = b.dataset.filter; render(); }
   if (b.dataset.bestaetigen) return bestaetigen(b.dataset.bestaetigen);
   if (b.dataset.lumi) return lumiAktion(b.dataset.lumi);
+  if (b.dataset.paketAn) { const p = paketRoh(b.dataset.paketAn); if (p) { speicher.set("pakete-aus", paketUmschalten(paketeAus(), p)); pauseDatenMerk = null; } return render(); }
+  if (b.dataset.lumiReiter) { state.lumiReiter = b.dataset.lumiReiter; if (location.hash !== "#lumi") location.hash = "#lumi"; else render(); return; }
   if (b.dataset.testMonate) { speicher.set("test-monate", Number(b.dataset.testMonate)); return render(); }
   if (b.dataset.testTage !== undefined) { speicher.set("test-tage", Number(b.dataset.testTage)); state.tag = { offen: {}, nochmal: false, datum: heuteDatum(), liest: false, lesen: null, schlussGezeigt: null }; vorratAuffuellen(); return render(); }
   if (b.dataset.tag) return tagAktion(b);
@@ -2270,6 +2359,8 @@ function lumiAktion(a) {
   else if (a === "ausschalten") wesen.ausschalten();
   else if (a === "spaeter") wesen.spaeter();
   else if (a === "namensfrage") wesen.namensfrage = true;
+  // 0.7.0: Die Namensfrage steht auf der Lumi-Seite; von „Heute“ geht es dorthin
+  if ((a === "namensfrage" || a === "einladung-ja") && location.hash !== "#lumi" && wesen.fragtNachNamen()) { state.lumiReiter = "uebersicht"; location.hash = "#lumi"; setTimeout(() => document.getElementById("lumi-name-feld")?.focus(), 80); return; }
   render();
   if (a === "namensfrage" || a === "einladung-ja" || a === "einschalten") document.getElementById("lumi-name-feld")?.focus();
 }
@@ -2555,6 +2646,8 @@ if (desktop) (async () => {
   if (PW() && !(inhalt(PW(), "inhalt/tipps.json")?.tipps ?? []).some((t) => t.buch) && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "wir" && p.status === "verfuegbar"); if (e && appPasst(e) && versionVergleich(e.version, PW().manifest.version) > 0) { await installiere(k, e); render(); } } catch (err) { console.error("wir", err); } }
   // Pause: ist sie an und das Paket fehlt, still holen; dann der Happen beim Öffnen
   if (pauseE().an && !PP() && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "pause" && p.status === "verfuegbar"); if (e && appPasst(e)) await installiere(k, e); } catch (err) { console.error("Pause", err); } }
+  // 0.7.0: Lumisch ist ein eigenes Paket. Wer Pause hat, bekommt es einmal still dazu (sonst fehlten die Lumisch-Happen)
+  if (paketRoh("pause") && !paketRoh("lumisch") && !speicher.get("lumisch-geholt", false) && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "lumisch" && p.status === "verfuegbar"); if (e && appPasst(e)) { await installiere(k, e); speicher.set("lumisch-geholt", true); pauseDatenMerk = null; render(); } } catch (err) { console.error("Lumisch", err); } }
   pauseBeimOeffnen();
   webVersionStill(); // 0.5.5: Web still nach neuer Version fragen, höchstens einmal am Tag
   internAbgleichen(); // 0.6.0: interner Kanal, nur mit Schlüssel

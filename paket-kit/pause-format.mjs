@@ -48,20 +48,7 @@ export function pauseFehler(j) {
     if (!text(g.erklaerung, 300)) F("erklaerung fehlt");
     if (![1, 2, 3].includes(g.stufe)) F("stufe: 1 bis 3");
   });
-  const l = j.lumisch;
-  if (!l || !Array.isArray(l.plan) || l.plan.length < 7 || !Array.isArray(l.woerter) || l.woerter.length < 10) f.push("lumisch: plan (mindestens 7 Tage) und woerter (mindestens 10)");
-  else {
-    l.plan.forEach((p, i) => { if (p.tag !== i + 1 || typeof p.wort !== "string" || !text(p.bedeutung, 80) || !text(p.aufgabe, 200)) f.push(`lumisch.plan[${i}]: tag, wort, bedeutung, aufgabe`); });
-    l.woerter.forEach((w, i) => { if (!/^[a-z]{1,12}$/.test(w?.wort ?? "") || !text(w.deutsch, 60)) f.push(`lumisch.woerter[${i}]: wort (a–z) und deutsch`); });
-    if (l.woerterbuch !== undefined) {
-      if (!Array.isArray(l.woerterbuch)) f.push("lumisch.woerterbuch: Liste");
-      else l.woerterbuch.forEach((w, i) => {
-        if (!/^[a-z]{1,12}$/.test(w?.wort ?? "") || !text(w.deutsch, 80) || !text(w.gruppe, 40)) f.push(`lumisch.woerterbuch[${i}]: wort, deutsch, gruppe`);
-        if (w.hinweis !== undefined && !text(w.hinweis, 300)) f.push(`lumisch.woerterbuch[${i}]: hinweis höchstens 300 Zeichen`);
-        if (w.beispiel !== undefined && !(text(w.beispiel?.lumisch, 120) && text(w.beispiel?.deutsch, 160))) f.push(`lumisch.woerterbuch[${i}]: beispiel { lumisch, deutsch }`);
-      });
-    }
-  }
+  f.push(...lumischFehler(j.lumisch));
   const ohneCode = !/<script\b|\son[a-z]+\s*=|javascript:/i.test(JSON.stringify(j));
   if (!ohneCode) f.push("enthält Code (Skript, Ereignis-Attribut oder javascript:)");
   return f;
@@ -97,5 +84,24 @@ export function pauseFormenFehler(j) {
     for (const k of Object.keys(x)) if (!["id", "spiel", "titel", "einladung", "gruppe", "art", "dauer", "alter", "tageszeit", "zone", "beim", "ende"].includes(k)) F(`unbekanntes Feld: ${k}`);
   });
   if (/<script\b|\son[a-z]+\s*=|javascript:/i.test(JSON.stringify(j))) f.push("enthält Code (Skript, Ereignis-Attribut oder javascript:)");
+  return f;
+}
+
+/** Lumisch (Plan, Abfragewörter, Wörterbuch): im Paket „pause“ (bis 0.6.x) und im eigenen Paket „lumisch“ (ab 0.7.0). */
+export function lumischFehler(l) {
+  const f = [];
+  if (!l || !Array.isArray(l.plan) || l.plan.length < 7 || !Array.isArray(l.woerter) || l.woerter.length < 10) f.push("lumisch: plan (mindestens 7 Tage) und woerter (mindestens 10)");
+  else {
+    l.plan.forEach((p, i) => { if (p.tag !== i + 1 || typeof p.wort !== "string" || !text(p.bedeutung, 80) || !text(p.aufgabe, 200)) f.push(`lumisch.plan[${i}]: tag, wort, bedeutung, aufgabe`); });
+    l.woerter.forEach((w, i) => { if (!/^[a-z]{1,12}$/.test(w?.wort ?? "") || !text(w.deutsch, 60)) f.push(`lumisch.woerter[${i}]: wort (a–z) und deutsch`); });
+    if (l.woerterbuch !== undefined) {
+      if (!Array.isArray(l.woerterbuch)) f.push("lumisch.woerterbuch: Liste");
+      else l.woerterbuch.forEach((w, i) => {
+        if (!/^[a-z]{1,12}$/.test(w?.wort ?? "") || !text(w.deutsch, 80) || !text(w.gruppe, 40)) f.push(`lumisch.woerterbuch[${i}]: wort, deutsch, gruppe`);
+        if (w.hinweis !== undefined && !text(w.hinweis, 300)) f.push(`lumisch.woerterbuch[${i}]: hinweis höchstens 300 Zeichen`);
+        if (w.beispiel !== undefined && !(text(w.beispiel?.lumisch, 120) && text(w.beispiel?.deutsch, 160))) f.push(`lumisch.woerterbuch[${i}]: beispiel { lumisch, deutsch }`);
+      });
+    }
+  }
   return f;
 }

@@ -285,7 +285,8 @@ test("Ziele: gleiche Liste wie das Kit, jedes Ziel gibt es in der App, jeder Tip
   const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
   const seiten = app.slice(app.indexOf("const seiten = {"));
   for (const z of ZIELE) {
-    const anker = { tagesplan: 'id="tagesplan"', lumi: 'id="lumi-einstellungen"', "lumi-log": 'id="lumi-log"' }[z];
+    // 0.7.0: Einstellungen und Log der Lumi stehen auf der Lumi-Seite (Reiter „Einstellungen“ und „Alles Gesagte“)
+    const anker = { tagesplan: 'id="tagesplan"', lumi: 'state.lumiReiter = ziel === "lumi" ? "einstellungen" : "gesagt"', "lumi-log": 'state.lumiReiter = ziel === "lumi" ? "einstellungen" : "gesagt"' }[z];
     assert.ok(anker ? app.includes(anker) : new RegExp(`\\n  ${z}\\(\\) \\{`).test(seiten), `Ziel ${z} fehlt in der App`);
   }
   for (const t of tipps.filter((x) => x.ziel)) assert.ok(ZIELE.includes(t.ziel), t.id);

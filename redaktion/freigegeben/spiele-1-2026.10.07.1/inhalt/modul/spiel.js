@@ -8,19 +8,19 @@
   "use strict";
 
   var SPIELE = {
-    lichter: { titel: "Lichter", tatham: "lightup", stufen: ["7x7b20s4d0", "7x7b20s4d1", "7x7b20s4d2"], groesse: ["7 × 7, leicht", "7 × 7, mittel", "7 × 7, schwer"],
+    lichter: { titel: "Lichter", regel: "Stell Lampen so, dass jedes Feld hell ist. Zwei Lampen dürfen sich nicht sehen.", tatham: "lightup", stufen: ["7x7b20s4d0", "7x7b20s4d1", "7x7b20s4d2"], groesse: ["7 × 7, leicht", "7 × 7, mittel", "7 × 7, schwer"],
       taste: "Punkt setzen", bedienung: "Tippen stellt eine Lampe. Mit „Punkt setzen“ markierst du Felder ohne Lampe." },
-    netz: { titel: "Netz", tatham: "net", stufen: ["5x5", "7x7", "9x9"], groesse: ["5 × 5", "7 × 7", "9 × 9"],
+    netz: { titel: "Netz", regel: "Dreh die Teile, bis alles verbunden ist und kein Ende frei bleibt.", tatham: "net", stufen: ["5x5", "7x7", "9x9"], groesse: ["5 × 5", "7 × 7", "9 × 9"],
       taste: "Rechtsherum", bedienung: "Tippen dreht ein Teil nach links, mit „Rechtsherum“ nach rechts." },
-    muster: { titel: "Muster", tatham: "pattern", stufen: ["5x5", "10x10", "15x15"], groesse: ["5 × 5", "10 × 10", "15 × 15"],
+    muster: { titel: "Muster", regel: "Die Zahlen sagen, wie viele Felder in Folge dunkel sind. Daraus wird ein Bild.", tatham: "pattern", stufen: ["5x5", "10x10", "15x15"], groesse: ["5 × 5", "10 × 10", "15 × 15"],
       taste: "Leer markieren", bedienung: "Tippen oder ziehen färbt Felder. Mit „Leer markieren“ setzt du Punkte." },
-    bruecken: { titel: "Brücken", tatham: "bridges", stufen: ["7x7i30e10m2d0", "7x7i30e10m2d1", "7x7i30e10m2d2"], groesse: ["7 × 7, leicht", "7 × 7, mittel", "7 × 7, schwer"],
+    bruecken: { titel: "Brücken", regel: "Verbinde alle Inseln. Die Zahl sagt, wie viele Brücken an der Insel enden.", tatham: "bridges", stufen: ["7x7i30e10m2d0", "7x7i30e10m2d1", "7x7i30e10m2d2"], groesse: ["7 × 7, leicht", "7 × 7, mittel", "7 × 7, schwer"],
       bedienung: "Zieh von Insel zu Insel. Noch einmal ziehen gibt eine zweite Brücke, ein drittes Mal nimmt sie weg." },
-    minen: { titel: "Minen", tatham: "mines", stufen: ["9x9n10", "9x9n35", "16x16n40"], groesse: ["9 × 9, 10 Minen", "9 × 9, 35 Minen", "16 × 16, 40 Minen"],
-      taste: "Fahne setzen", aufgeben: true, bedienung: "Tippen deckt auf. Mit „Fahne setzen“ markierst du eine Mine." },
-    sudoku: { titel: "Sudoku", tatham: "solo", stufen: ["3x3db", "3x3di", "3x3da"], groesse: ["leicht", "mittel", "schwer"], ziffern: true,
+    minen: { titel: "Minen", regel: "Deck alle Felder ohne Mine auf. Die Zahl sagt, wie viele Minen rundum liegen.", tatham: "mines", stufen: ["9x9n10", "9x9n35", "16x16n40"], groesse: ["9 × 9, 10 Minen", "9 × 9, 35 Minen", "16 × 16, 40 Minen"],
+      taste: "Fahne setzen", langerDruck: true, aufgeben: true, bedienung: "Tippen deckt auf. Lange drücken oder „Fahne setzen“ markiert eine Mine." },
+    sudoku: { titel: "Sudoku", regel: "Jede Zeile, jede Spalte und jedes Kästchen hat jede Ziffer einmal.", tatham: "solo", stufen: ["3x3db", "3x3di", "3x3da"], groesse: ["leicht", "mittel", "schwer"], ziffern: true,
       bedienung: "Tipp ein Feld an, dann die Ziffer darunter." },
-    "2048": { titel: "2048", ziel: [512, 1024, 2048], groesse: ["bis 512", "bis 1024", "bis 2048"], aufgeben: true,
+    "2048": { titel: "2048", regel: "Schieb die Zahlen zusammen. Zwei gleiche werden eins, bis zur Zielzahl.", ziel: [512, 1024, 2048], groesse: ["bis 512", "bis 1024", "bis 2048"], aufgeben: true,
       bedienung: "Wisch oder nimm die Pfeiltasten. Die Punkte zählen nur in dieser Runde." },
   };
   var REIHE = ["lichter", "netz", "muster", "bruecken", "minen", "sudoku", "2048"];
@@ -38,6 +38,8 @@
   // ---------- Farben aus dem Skin (die App gibt sie in der Adresse mit; ohne Angabe die hellen Werte der App) ----------
   var F = { grund: "#eef3f6", text: "#1c1b19", leise: "#5f5b53", ink: "#3e5866", strich: "#c7d1d6", ruhig: "#e3ebf0", karte: "#ffffff",
     haupt: "#fbe6e9", hauptInk: "#c8102e", warn: "#c8102e", licht: "#8a5a00", lichtZart: "#f1e6c9", dunkel: false };
+  // Ohne Angabe richtet sich das Modul nach dem Farbschema des Geräts (dunkle Werte der App)
+  try { if (!par.has("f") && matchMedia("(prefers-color-scheme: dark)").matches) F = { grund: "#1d2529", text: "#ecebe7", leise: "#a3a09a", ink: "#a9c4d1", strich: "#33363b", ruhig: "#171e22", karte: "#141517", haupt: "#3a1419", hauptInk: "#ff4d63", warn: "#ff4d63", licht: "#f0c060", lichtZart: "#362a0e", dunkel: true }; } catch (e) {}
   try { var f = JSON.parse(par.get("f") || "{}"); for (var k in F) if (typeof f[k] === typeof F[k] && (typeof f[k] !== "string" || /^#[0-9a-f]{6}$/i.test(f[k]))) F[k] = f[k]; } catch (e) {}
   var rgb = function (h) { return [1, 3, 5].map(function (i) { return parseInt(h.substr(i, 2), 16); }); };
   var hex = function (c) { return "#" + c.map(function (v) { return Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0"); }).join(""); };
@@ -108,6 +110,38 @@
   }
   var waechter = null;
 
+  // ---------- Langer Druck = zweite Taste (Minen: Fahne; Bill zu 0.6.5) ----------
+  // Das Rätselprogramm hört auf Mausereignisse. Hier kommen Finger, Stift und Maus als Zeiger an: kurz → linke Taste
+  // (oder die zweite, wenn der Umschalter an ist), mindestens LANG ms ohne Bewegung → zweite Taste. Echte Klicks mit der
+  // rechten oder mittleren Maustaste gehen unverändert durch.
+  var LANG = 450;
+  function langerDruck(c) {
+    var druck = null;
+    ["mousedown", "mouseup", "mousemove"].forEach(function (typ) {
+      c.addEventListener(typ, function (e) { if (e.isTrusted && e.button === 0) e.stopImmediatePropagation(); }, true);
+    });
+    var maus = function (typ, wo, knopf) {
+      c.dispatchEvent(new MouseEvent(typ, { bubbles: true, cancelable: true, clientX: wo.x, clientY: wo.y, button: knopf, buttons: typ === "mouseup" ? 0 : (knopf === 2 ? 2 : 1) }));
+    };
+    c.addEventListener("pointerdown", function (e) {
+      if (e.button !== 0 || !e.isPrimary) return;
+      var wo = { x: e.clientX, y: e.clientY };
+      druck = { wo: wo, lang: false, uhr: setTimeout(function () { druck.lang = true; maus("mousedown", wo, 2); maus("mouseup", wo, 2); }, LANG) };
+    });
+    c.addEventListener("pointermove", function (e) {
+      if (druck && !druck.lang && Math.abs(e.clientX - druck.wo.x) + Math.abs(e.clientY - druck.wo.y) > 12) { clearTimeout(druck.uhr); druck = null; }
+    });
+    var los = function (e, abbruch) {
+      if (!druck) return;
+      clearTimeout(druck.uhr);
+      if (!druck.lang && !abbruch) { maus("mousedown", druck.wo, 0); maus("mouseup", { x: e.clientX, y: e.clientY }, 0); }
+      druck = null;
+    };
+    c.addEventListener("pointerup", function (e) { los(e, false); });
+    c.addEventListener("pointercancel", function (e) { los(e, true); });
+    c.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+  }
+
   // ---------- Tatham-Rätsel ----------
   function tatham(spiel, stufe) {
     var s = SPIELE[spiel], aufgeloest = false, taste = false;
@@ -126,6 +160,7 @@
       weg.onclick = function () { if (window.offlineSpiel) window.offlineSpiel.key(8, "Backspace", "", 0, 0, 0); };
       z.appendChild(weg);
     }
+    if (s.langerDruck) langerDruck($("puzzlecanvas"));
     // Startwert statt Zufall: „#Parameter#Startwert“ wie ein Link aufs Rätsel; WebAssembly aus dem Paket
     window.offlineSpielId = "#" + s.stufen[stufe - 1] + "#" + startwert(spiel, stufe);
     window.offlineKeinNetz = function () { return Promise.reject(new Error("Kein Netz im Modul")); };
@@ -218,6 +253,7 @@
   function starten(spiel, stufe) {
     var s = SPIELE[spiel];
     $("spiel").hidden = false;
+    if (!imHappen) { $("titel").textContent = s.titel; $("regel").textContent = s.regel; $("titel").hidden = $("regel").hidden = false; }
     $("stand").textContent = (n > 1 ? "Noch eins für heute" : "Rätsel des Tages") + " · Stufe " + stufe + " von 3 · " + s.groesse[stufe - 1];
     aufl.innerHTML = "<span class=\"leise\"></span>";
     aufl.firstChild.textContent = s.bedienung;

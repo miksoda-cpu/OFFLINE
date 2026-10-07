@@ -9,9 +9,10 @@
   "pro": false,
   "preis": "gratis",
   "pruefstatus": "redaktion",
-  "kategorie": "ernstfall",
+  "bereich": "ernstfall",
+  "pflicht": true,
   "alter_ab": 0,
-  "app_min": "0.1.0",
+  "app_min": "0.7.0",
   "aenderungen": "Sirenen: Hinweis zum Blackout korrigiert. Viele Sirenen brauchen Strom.",
   "quellen": [
     {

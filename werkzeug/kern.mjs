@@ -15,8 +15,8 @@ export const TAGE_ENDUNGEN = [".json", ".md", ".txt"];
 // nur mit dem Redaktionsschlüssel (Zweck „module“) signiert und mit pruefstatus „redaktion“.
 export const MODUL_ORDNER = "inhalt/modul/";
 export const MODUL_GRENZE = 2 * 1024 * 1024;
-/** Bereiche, in denen die App ein Modul selbst einbindet (0.6.5): Spiele als Happen-Formen in Pause. */
-export const BEREICHE = ["pause"];
+/** Bereiche (0.7.0, ersetzen die Kategorie; 0.6.5 nur „pause“ für Module). Gleiche Liste in web/pakete.js und kern/src/manifest.rs. */
+export const BEREICHE = ["lumi", "pause", "heute", "ernstfall", "wissen", "karten", "miteinander", "aussehen"];
 export const SKRIPT_ENDUNGEN = [".js", ".mjs"];
 export const SEITEN_ENDUNGEN = [".html", ".htm", ".xhtml", ".svg"];
 // Skins (Aussehen): nur Stil, Schriften, Bilder, Lizenzen, Herkunft – unter inhalt/skin/, Einstieg skin.css, höchstens 20 MB.
@@ -145,12 +145,15 @@ export function manifestPruefenStruktur(m) {
     if (versionVergleich(m.app_min || "0", "0.3.0") < 0) f.push("Tagesinhalte brauchen app_min 0.3.0 oder höher");
   }
   if ((m.art === "modul" || m.art === "skin") && versionVergleich(m.app_min || "0", "0.2.0") < 0) f.push(`${m.art === "modul" ? "Module" : "Skins"} brauchen app_min 0.2.0 oder höher (ältere Apps kennen die Art nicht)`);
-  if (m.art !== "modul" && (m.bereich !== undefined || m.wasm !== undefined)) f.push("bereich und wasm gibt es nur bei Modulen");
+  if (m.art !== "modul" && m.wasm !== undefined) f.push("wasm gibt es nur bei Modulen");
+  // bereich (0.7.0 für alle Pakete; 0.6.5 nur Module mit „pause“): Ältere Apps lehnen ihn ab, also app_min passend
+  if (m.bereich !== undefined && !BEREICHE.includes(m.bereich)) f.push(`bereich ungültig (${BEREICHE.join(", ")})`);
+  if (m.bereich !== undefined && versionVergleich(m.app_min || "0", m.art === "modul" && m.bereich === "pause" ? "0.6.5" : "0.7.0") < 0) f.push(`bereich braucht app_min ${m.art === "modul" && m.bereich === "pause" ? "0.6.5" : "0.7.0"} oder höher (ältere Apps lehnen das Feld ab)`);
+  if (m.pflicht !== undefined && typeof m.pflicht !== "boolean") f.push("pflicht: true oder false");
   if (m.art === "modul") {
-    // 0.6.5: bereich (wo die App das Modul einbindet) und wasm (führt WebAssembly aus; erlaubt nur mit Schlüssel-Zweck „wasm“)
-    if (m.bereich !== undefined && !BEREICHE.includes(m.bereich)) f.push(`bereich ungültig (${BEREICHE.join(", ")})`);
+    // 0.6.5: wasm (führt WebAssembly aus; erlaubt nur mit Schlüssel-Zweck „wasm“)
     if (m.wasm !== undefined && typeof m.wasm !== "boolean") f.push("wasm: true oder false");
-    if ((m.bereich !== undefined || m.wasm === true) && versionVergleich(m.app_min || "0", "0.6.5") < 0) f.push("bereich und wasm brauchen app_min 0.6.5 oder höher (ältere Apps kennen sie nicht)");
+    if (m.wasm === true && versionVergleich(m.app_min || "0", "0.6.5") < 0) f.push("wasm braucht app_min 0.6.5 oder höher (ältere Apps kennen es nicht)");
     if (m.pruefstatus !== "redaktion") f.push("Module nur mit pruefstatus redaktion");
     if (!Number.isInteger(m.datenversion) || m.datenversion < 1) f.push("Module brauchen datenversion (ganze Zahl ab 1)");
     if (!m.dateien.some((d) => d.pfad === MODUL_ORDNER + "index.html")) f.push("Modul ohne inhalt/modul/index.html");

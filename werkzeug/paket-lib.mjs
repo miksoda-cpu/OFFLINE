@@ -206,7 +206,8 @@ function angaben(meta) {
   for (const k of ["preis", "pruefstatus", "kategorie", "alter_ab", "hinweis", "abnahme", "ki_generiert"]) if (meta[k] !== undefined) a[k] = meta[k];
   if (meta.art === "tage" && meta.tage !== undefined) a.tage = meta.tage;
   if (meta.art === "modul" && meta.datenversion !== undefined) a.datenversion = meta.datenversion;
-  if (meta.art === "modul" && meta.bereich !== undefined) a.bereich = meta.bereich;
+  if (meta.bereich !== undefined) a.bereich = meta.bereich;
+  if (meta.pflicht !== undefined) a.pflicht = meta.pflicht;
   if (meta.art === "modul" && meta.wasm !== undefined) a.wasm = meta.wasm;
   return a;
 }
@@ -284,7 +285,7 @@ export async function katalogBauen(paketOrdner, { basis, geplant = [], gueltigTa
     const vorschau = await vorschauFuerKatalog(ordner, m);
     pakete.push({
       id: m.id, version: m.version, titel: m.titel, beschreibung: m.beschreibung, art: m.art, pro: m.pro,
-      ...Object.fromEntries(["preis", "pruefstatus", "kategorie", "alter_ab", "hinweis", "ki_generiert", "tage", "bereich"].filter((k) => m[k] !== undefined).map((k) => [k, m[k]])),
+      ...Object.fromEntries(["preis", "pruefstatus", "kategorie", "alter_ab", "hinweis", "ki_generiert", "tage", "bereich", "pflicht"].filter((k) => m[k] !== undefined).map((k) => [k, m[k]])),
       ...(vorschau ? { vorschau } : {}),
       groesse: m.groesse, app_min: m.app_min, erstellt: m.erstellt, aenderungen: m.aenderungen,
       pfad: `${path.basename(ordner)}/`, sha256_manifest: sha256(bytes), status: "verfuegbar",
