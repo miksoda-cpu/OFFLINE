@@ -84,6 +84,22 @@
     "text": "Handwörterbuch des deutschen Aberglaubens",
     "grund": "Titel eines öffentlichen Werks, Langform zur Abkürzung HWDA"
    }
+  ],
+  "pakete/lumisch/inhalt/lumisch.json": [
+   {
+    "text": "Der Anfang jedes Gesprächs. nesap sap = wir wissen, dass wir nichts wissen.",
+    "grund": "Wörterbuch-Hinweis, mit 0.7.1 veröffentlicht (Korrektur Bill 07.10.2026); steht auch in der verschlüsselten Quelle"
+   },
+   {
+    "text": "Zahlen werden Ziffer für Ziffer gesprochen: 1 ist ka, 2 ist sa.",
+    "grund": "Erklärung einer Lumisch-Aufgabe, mit 0.7.1 veröffentlicht; dieselbe Regel steht im Wörterbuch (verschlüsselte Quelle)"
+   }
+  ],
+  "pakete/pause/inhalt/pause.json": [
+   {
+    "text": "Der Anfang jedes Gesprächs. nesap sap = wir wissen, dass wir nichts wissen.",
+    "grund": "Wörterbuch-Hinweis, mit 0.7.1 veröffentlicht (Korrektur Bill 07.10.2026); steht auch in der verschlüsselten Quelle"
+   }
   ]
  }
 }

@@ -21,15 +21,5 @@
     }
   ],
   "abnahme": "Redaktion (Code), 07.10.2026: Inhalt wortgleich mit Lumisch im Paket pause 2026.10.05.2 (Test web/lumi-seite.test.mjs)",
-  "braucht_netz": false,
-  "freigegeben": false,
-  "offen": [
-    "LIESMICH.md",
-    "inhalt/vorschau/1.svg",
-    "inhalt/vorschau/2.webp",
-    "inhalt/vorschau/3.svg",
-    "inhalt/vorschau/4.svg",
-    "inhalt/vorschau/5.svg",
-    "inhalt/vorschau/folien.json"
-  ]
+  "braucht_netz": false
 }
