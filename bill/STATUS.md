@@ -29,7 +29,7 @@ Alles andere im Repo ist veröffentlicht: Tagesseite mit Roman der Woche und Vor
 ## Offen bei Code (wartet)
 - **Rundgang vor jedem Release** (Regel Bill 07.10.): frisches Gerät und langjähriger Benutzer, Bilder in „OFFLINE - Home/rundgang/<version>/“.
 - **Fünf Pause-Geschichten mit „Susi“** zurückgestellt (feh-1-04, feh-3-07, feh-4-11, feh-5-07, feh-5-12), warten auf Korrektur.
-- **Startreife-Liste** (iPhone, Android, Mac, Windows) als nächster Auftrag.
+- **Startreife** (Nr. 18, 07.10.): Liste in `bill/rueckmeldung/2026-10-07-startreife.md`. Zuerst D-U-N-S-Nummer und Konten (Mik), Signaturen für Mac und Windows, dann die Handys (Kiwix im Kern).
 - **Bereich in bestehenden Paketen:** at-basis, wir, lumi-buch, lumi-philosophie, pause tragen `bereich`/`pflicht` erst mit ihrer nächsten Ausgabe (`app_min` 0.7.0); bis dahin ordnet die App sie selbst zu.
 - CI `tests.yml` läuft seit 29.09. bei jedem Push (Werkzeug, Kit, Bereit, Lumi, Kern, Sandbox-Probe).
 - Sandbox-Probe in der App: Windows grün (Windows-Probe 07.10., 49 von 49 Angriffen blockiert, dazu Spiele-Probe unter Edge); Linux in der App noch offen (Berechtigungstest läuft auf Linux).
