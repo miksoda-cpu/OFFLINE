@@ -1,0 +1,183 @@
+{
+  "format": 1,
+  "id": "spiele-1",
+  "version": "2026.10.07",
+  "titel": "Rätsel zum Knobeln",
+  "beschreibung": "Sieben Rätsel für Pause: Lichter, Netz, Muster, Brücken, Minen, Sudoku und 2048. Jeden Tag für alle dasselbe, von leicht bis schwer.",
+  "art": "modul",
+  "sprache": "de-AT",
+  "lizenz": "MIT (Simon Tatham; Gabriele Cirulli)",
+  "herausgeber": "The Digioneer",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "kategorie": "jeden-tag",
+  "alter_ab": 14,
+  "abnahme": "Redaktion (Code), 07.10.2026: alle sieben Spiele in WebKit über den echten Modulserver gespielt, hell und dunkel, bei 360 px",
+  "datenversion": 1,
+  "bereich": "pause",
+  "wasm": true,
+  "app_min": "0.6.5",
+  "erstellt": "2026-10-07T09:13:52Z",
+  "aenderungen": "Neu: sieben Rätsel für Pause, von leicht bis schwer.",
+  "quellen": [
+    {
+      "id": "tatham",
+      "name": "Simon Tatham's Portable Puzzle Collection (MIT-Lizenz), Quelltext vom 22.09.2026, für OFFLINE gebaut",
+      "url": "https://www.chiark.greenend.org.uk/~sgtatham/puzzles/"
+    },
+    {
+      "id": "cirulli",
+      "name": "2048 von Gabriele Cirulli (MIT-Lizenz), Spiellogik",
+      "url": "https://github.com/gabrielecirulli/2048"
+    }
+  ],
+  "dateien": [
+    {
+      "pfad": "inhalt/lizenzen.txt",
+      "sha256": "3af9b26f5a659886396158816befec761355a257a1af6f9360c12316e276ebeb",
+      "groesse": 1072
+    },
+    {
+      "pfad": "inhalt/modul/2048/game_manager.js",
+      "sha256": "b02baa6b75f8c8cad8606e680b6f73b7c843c61e3a643ee48410022499a649f0",
+      "groesse": 7627
+    },
+    {
+      "pfad": "inhalt/modul/2048/grid.js",
+      "sha256": "169428f5ff7f726c38112fcf1c918028cbca3a1d9f9239838fbc7eb4396b9f9a",
+      "groesse": 2526
+    },
+    {
+      "pfad": "inhalt/modul/2048/license.txt",
+      "sha256": "57e12c39a6ad9d98b2e451065bfdfbd15fc9e0c2ed3bf4dc1d09acab41ff02fc",
+      "groesse": 1083
+    },
+    {
+      "pfad": "inhalt/modul/2048/tile.js",
+      "sha256": "13699e51d62179a6d36874108831a29901a98d6e11329918e64cfb5ee82d58e3",
+      "groesse": 594
+    },
+    {
+      "pfad": "inhalt/modul/index.html",
+      "sha256": "b13e72850b617312fdae5862b13a4f5616785fbd7c954207814542e7d5c61dc1",
+      "groesse": 2745
+    },
+    {
+      "pfad": "inhalt/modul/lizenzen.txt",
+      "sha256": "b7e0e098fe8b4c0f4b7c7b555542ee3ca981c2026d563974e0d307453ff6e8ed",
+      "groesse": 1048
+    },
+    {
+      "pfad": "inhalt/modul/spiel.css",
+      "sha256": "6d2abf70991813decbff4bcc936c887140e7470fa0158fb45c1a32e66ba8f44f",
+      "groesse": 5764
+    },
+    {
+      "pfad": "inhalt/modul/spiel.js",
+      "sha256": "0fe38bd41a5f8fe6287740bab0541a524b73b0e152c00070070f53a14d2e5d78",
+      "groesse": 18509
+    },
+    {
+      "pfad": "inhalt/modul/tatham/bridges.js",
+      "sha256": "a84f47115b225072700f69529112ba5c11aabb2d7f9747cd79723e9ac13f2530",
+      "groesse": 40827
+    },
+    {
+      "pfad": "inhalt/modul/tatham/bridges.wasm.js",
+      "sha256": "a5431bff3e97d3721b5e7e27c2d62844f819e5a6c54bba1731c9f29db60b9da0",
+      "groesse": 164620
+    },
+    {
+      "pfad": "inhalt/modul/tatham/licence.txt",
+      "sha256": "eb18a1d915cb923b2da9fb1e79bcdf677b17ebfaada9ce5d5252e384266029c6",
+      "groesse": 1350
+    },
+    {
+      "pfad": "inhalt/modul/tatham/lightup.js",
+      "sha256": "59660d7b731de4761e433f77ac1ebbc5d37515b330fc70098ef3701b8b880d65",
+      "groesse": 40827
+    },
+    {
+      "pfad": "inhalt/modul/tatham/lightup.wasm.js",
+      "sha256": "1ecd4904393a6c8af0fe2aeb8b13fe5041ee874063b0aaf6304a43d916e4dfd9",
+      "groesse": 160008
+    },
+    {
+      "pfad": "inhalt/modul/tatham/mines.js",
+      "sha256": "e06c8ce9657d5f2bfcb95d103ede9beba1c93572afd05b043719f6945e358967",
+      "groesse": 40823
+    },
+    {
+      "pfad": "inhalt/modul/tatham/mines.wasm.js",
+      "sha256": "9f24f73d6191dc3ed981fac2eed641ce33dcbce41d7567366d657c041da4bd02",
+      "groesse": 483288
+    },
+    {
+      "pfad": "inhalt/modul/tatham/net.js",
+      "sha256": "18fdab98befc6dc0743eb18e19a6208cdbccabb6b01ff6f47bdee51e3d98efb4",
+      "groesse": 39229
+    },
+    {
+      "pfad": "inhalt/modul/tatham/net.wasm.js",
+      "sha256": "1045e7a6d7daaa52c2e74f46a5ca1a493d33863279309f0e1608fae20dfd0f75",
+      "groesse": 171556
+    },
+    {
+      "pfad": "inhalt/modul/tatham/pattern.js",
+      "sha256": "d522228b62ef6f3f3c1e0c464512915b9608190ed8bf3a1a49c6b77e15bd3104",
+      "groesse": 40827
+    },
+    {
+      "pfad": "inhalt/modul/tatham/pattern.wasm.js",
+      "sha256": "93dbda2241efa63aba3bdf6e91eedaba38379f9bb694ed76c50d2e922a30a39b",
+      "groesse": 145524
+    },
+    {
+      "pfad": "inhalt/modul/tatham/solo.js",
+      "sha256": "488be975f3a265aa2a227dec42711a56d7327c2b1e3745ef3d9a511b9d7bb49e",
+      "groesse": 40821
+    },
+    {
+      "pfad": "inhalt/modul/tatham/solo.wasm.js",
+      "sha256": "30be2956dc55131fb17608bbafba44f0129a52c1fc55451718e7b0a560b1e7af",
+      "groesse": 190932
+    },
+    {
+      "pfad": "inhalt/pause-formen.json",
+      "sha256": "52b09e3a1401534bd0398fdb1653d92e8fe50cdab76f1abc86af5cc810db73bb",
+      "groesse": 4211
+    },
+    {
+      "pfad": "inhalt/vorschau/1.svg",
+      "sha256": "08b2ae72ed38163d2d9d02d0d7cbc696c67defa68a7ec4407ecda3b98dbcbacc",
+      "groesse": 2450
+    },
+    {
+      "pfad": "inhalt/vorschau/2.webp",
+      "sha256": "8d0affc09a800f387f96e491de17606c4783cbc16087bc7472fdf0f8a3fa261f",
+      "groesse": 13672
+    },
+    {
+      "pfad": "inhalt/vorschau/3.svg",
+      "sha256": "9d1b87f838cb4fe5e37eb4e41042c424a11ee0b580a793130780e07fcb441e61",
+      "groesse": 1103
+    },
+    {
+      "pfad": "inhalt/vorschau/4.svg",
+      "sha256": "08191b5fa52742d262a94cf6bfd77029f40d935b272a18798ca6f5a698e31bc8",
+      "groesse": 1077
+    },
+    {
+      "pfad": "inhalt/vorschau/5.svg",
+      "sha256": "0b3d92e127f093b59fc1a3a8538cb6f656feee8432a06c49b0c120ff9ab9c398",
+      "groesse": 1092
+    },
+    {
+      "pfad": "inhalt/vorschau/folien.json",
+      "sha256": "16505a73c8ef8064ab8718ba224e8d5ebd2b088433d117ba1c24c03bfeb6be59",
+      "groesse": 1434
+    }
+  ],
+  "groesse": 1626639
+}

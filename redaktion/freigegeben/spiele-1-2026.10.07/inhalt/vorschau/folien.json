@@ -1,0 +1,44 @@
+{
+ "folien": [
+  {
+   "nr": 1,
+   "rolle": "wofuer",
+   "bild": "1.svg",
+   "titel": "Ein Rätsel für zwischendurch",
+   "text": "Jeden Tag ein neues Rätsel, für alle dasselbe, auch ohne Netz. Pause stellt die Stufe auf dich ein.",
+   "alt": "Kleines Gitter aus hellen, beleuchteten und dunklen Feldern mit einer Lampe"
+  },
+  {
+   "nr": 2,
+   "rolle": "aussehen",
+   "bild": "2.webp",
+   "titel": "So sieht es aus",
+   "text": "Lichter und Sudoku im Happen von Pause, mit Ziffernleiste fürs Handy.",
+   "alt": "Zwei Bildschirme: das Rätsel Lichter auf einem 7-mal-7-Gitter und ein Sudoku mit Ziffernleiste darunter"
+  },
+  {
+   "nr": 3,
+   "rolle": "inhalt",
+   "bild": "3.svg",
+   "titel": "Was drin ist",
+   "text": "Lichter, Netz, Muster, Brücken, Minen, Sudoku und 2048, je mit drei Stufen.",
+   "alt": "Liste der sieben Spiele und was man damit tun kann"
+  },
+  {
+   "nr": 4,
+   "rolle": "platz",
+   "bild": "4.svg",
+   "titel": "Klein und ohne Netz",
+   "text": "Etwa 1,6 MB, läuft in der Desktop-App in einer abgeschlossenen Sandbox. Ergebnisse bleiben auf dem Gerät.",
+   "alt": "Angaben zu Größe, Gerät und Sandbox"
+  },
+  {
+   "nr": 5,
+   "rolle": "herkunft",
+   "bild": "5.svg",
+   "titel": "Tatham und Cirulli",
+   "text": "Freie Spiele unter MIT-Lizenz, für OFFLINE angepasst und von der Redaktion geprüft. Gratis, ab 14 Jahren.",
+   "alt": "Angaben zu Herkunft, Lizenz, Prüfung, Preis und Alter"
+  }
+ ]
+}

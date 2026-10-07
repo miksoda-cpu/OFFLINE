@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+<rect width="800" height="600" fill="#f6f4ef"/>
+<text x="40" y="80" font-size="18" letter-spacing="3" fill="#5f5b53" font-family="system-ui, sans-serif">OFFLINE · PAUSE</text>
+<text x="40" y="140" font-size="48" font-weight="700" fill="#1c1b19" font-family="Alegreya, Georgia, serif">Wie viel Platz</text><text x="40" y="200" font-size="28" fill="#1c1b19" font-family="Atkinson Hyperlegible, system-ui, sans-serif">Etwa 1,6 MB für alle sieben Spiele.</text><text x="40" y="246" font-size="28" fill="#1c1b19" font-family="Atkinson Hyperlegible, system-ui, sans-serif">Läuft in der Desktop-App, ohne Netz,</text><text x="40" y="292" font-size="28" fill="#1c1b19" font-family="Atkinson Hyperlegible, system-ui, sans-serif">in einer abgeschlossenen Sandbox.</text><text x="40" y="338" font-size="28" fill="#1c1b19" font-family="Atkinson Hyperlegible, system-ui, sans-serif">Ergebnisse bleiben auf dem Gerät.</text>
+<rect x="40" y="560" width="120" height="6" rx="3" fill="#c8102e"/></svg>

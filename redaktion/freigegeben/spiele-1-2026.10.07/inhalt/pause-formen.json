@@ -1,0 +1,221 @@
+{
+ "format": 1,
+ "formen": [
+  {
+   "id": "lichter",
+   "spiel": "lichter",
+   "titel": "Lichter",
+   "einladung": "Stell Lampen so, dass jedes Feld hell ist. Zwei Lampen dürfen sich nicht sehen.",
+   "gruppe": "raetsel",
+   "art": [
+    "beweglichkeit",
+    "ausdauer"
+   ],
+   "dauer": {
+    "von": 90,
+    "bis": 420
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "zone": {
+    "stufen": 3,
+    "start": 2
+   },
+   "beim": "bei den Lichtern",
+   "ende": {
+    "geloest": "Alles hell. Kein Feld liegt mehr im Dunkeln.",
+    "offen": "Jetzt kennst du die Lösung. Morgen gibt es ein neues Rätsel."
+   }
+  },
+  {
+   "id": "netz",
+   "spiel": "netz",
+   "titel": "Netz",
+   "einladung": "Dreh die Teile, bis alles verbunden ist und kein Ende frei bleibt.",
+   "gruppe": "raetsel",
+   "art": [
+    "beweglichkeit",
+    "ausdauer"
+   ],
+   "dauer": {
+    "von": 60,
+    "bis": 300
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "zone": {
+    "stufen": 3,
+    "start": 2
+   },
+   "beim": "beim Netz",
+   "ende": {
+    "geloest": "Alles verbunden. Der Strom kommt überall an.",
+    "offen": "Jetzt kennst du die Lösung. Morgen gibt es ein neues Rätsel."
+   }
+  },
+  {
+   "id": "muster",
+   "spiel": "muster",
+   "titel": "Muster",
+   "einladung": "Die Zahlen sagen, wie viele Felder in Folge dunkel sind. Daraus wird ein Bild.",
+   "gruppe": "raetsel",
+   "art": [
+    "beweglichkeit",
+    "ausdauer"
+   ],
+   "dauer": {
+    "von": 120,
+    "bis": 600
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "zone": {
+    "stufen": 3,
+    "start": 2
+   },
+   "beim": "beim Muster",
+   "ende": {
+    "geloest": "Das Bild steht.",
+    "offen": "Jetzt kennst du die Lösung. Morgen gibt es ein neues Rätsel."
+   }
+  },
+  {
+   "id": "bruecken",
+   "spiel": "bruecken",
+   "titel": "Brücken",
+   "einladung": "Verbinde alle Inseln. Die Zahl sagt, wie viele Brücken an der Insel enden.",
+   "gruppe": "raetsel",
+   "art": [
+    "beweglichkeit",
+    "ausdauer"
+   ],
+   "dauer": {
+    "von": 120,
+    "bis": 480
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "zone": {
+    "stufen": 3,
+    "start": 2
+   },
+   "beim": "bei den Brücken",
+   "ende": {
+    "geloest": "Alle Inseln hängen zusammen.",
+    "offen": "Jetzt kennst du die Lösung. Morgen gibt es ein neues Rätsel."
+   }
+  },
+  {
+   "id": "minen",
+   "spiel": "minen",
+   "titel": "Minen",
+   "einladung": "Deck alle Felder ohne Mine auf. Die Zahl sagt, wie viele Minen rundum liegen.",
+   "gruppe": "raetsel",
+   "art": [
+    "beweglichkeit",
+    "ausdauer"
+   ],
+   "dauer": {
+    "von": 60,
+    "bis": 300
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "zone": {
+    "stufen": 3,
+    "start": 2
+   },
+   "beim": "bei den Minen",
+   "ende": {
+    "geloest": "Alle Felder offen, keine Mine erwischt.",
+    "offen": "Diesmal hat eine Mine gewonnen. Morgen liegen sie anders."
+   }
+  },
+  {
+   "id": "sudoku",
+   "spiel": "sudoku",
+   "titel": "Sudoku",
+   "einladung": "Jede Zeile, jede Spalte und jedes Kästchen hat jede Ziffer einmal.",
+   "gruppe": "raetsel",
+   "art": [
+    "beweglichkeit",
+    "ausdauer"
+   ],
+   "dauer": {
+    "von": 300,
+    "bis": 900
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "zone": {
+    "stufen": 3,
+    "start": 2
+   },
+   "beim": "beim Sudoku",
+   "ende": {
+    "geloest": "Jede Ziffer an ihrem Platz.",
+    "offen": "Jetzt kennst du die Lösung. Morgen gibt es ein neues Rätsel."
+   }
+  },
+  {
+   "id": "2048",
+   "spiel": "2048",
+   "titel": "2048",
+   "einladung": "Schieb die Zahlen zusammen. Zwei gleiche werden eins, bis zur Zielzahl.",
+   "gruppe": "spiel",
+   "art": [
+    "beweglichkeit"
+   ],
+   "dauer": {
+    "von": 120,
+    "bis": 600
+   },
+   "alter": [
+    "J",
+    "M1",
+    "M2",
+    "A"
+   ],
+   "tageszeit": "jederzeit",
+   "zone": {
+    "stufen": 3,
+    "start": 2
+   },
+   "beim": "bei 2048",
+   "ende": {
+    "geloest": "Die Zielzahl steht.",
+    "offen": "Für heute gut. Morgen fängt es neu an."
+   }
+  }
+ ]
+}
