@@ -44,8 +44,16 @@ export const WERTE = {
   routineTage: 4,
   // Pilz: Blitzdauer in ms je Stufe (Stufe 1 = lang), Runden je Happen
   pilz: { msStufe1: 800, msSchritt: 70, msMin: 150, runden: 3, rundenAbStufe7: 5 },
-  // Zeitgefühl: so viele Minuten daneben zählen noch als „getroffen“, je Stufe
-  zeitToleranzMin: [30, 20, 10],
+  // Zeitgefühl: so viele Minuten daneben zählen noch als „getroffen“, je Stufe (0.7.1: fünf Stufen, Pause-Stufen 9.2)
+  zeitToleranzMin: [30, 20, 10, 5, 2],
+  // Fünf Stufen (0.7.1, OFFLINE-Pause-Stufen.md): die Wörter in der App, nie eine Zahl
+  stufenWoerter: ["leicht", "gemütlich", "mit Biss", "knifflig", "Knackpunkt"],
+  // Höherstellen nur als Einladung (Abschnitt 3): nach so vielen Happen in Folge gelungen (höchstens ein Tipp) oder nach
+  // zweimal „Zu leicht“; höchstens einmal am Tag; zwischen zwei Aufstiegen einer Form drei Tage und drei Happen;
+  // „So lassen“ ruht 30 Tage
+  einladung: { nachHappen: 5, zuLeicht: 2, abstandTage: 3, abstandHappen: 3, ruhenTage: 30 },
+  // Abstieg leise: nach zweimal „Zu schwer“ oder drei Happen in Folge ohne Gelingen; Untergrenze für Erwachsene
+  abstieg: { zuSchwer: 2, ohneGelingen: 3, untergrenze: 2 },
   // Spiel-Log: höchstens so viele Einträge am Gerät
   logMax: 3000,
 };

@@ -4,7 +4,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { modulFormen, spielNummerHeute, stufeVon, linieLaden, raumFormen, zoneAnpassen, logDazu, dauerText } from "./pause.js";
+import { modulFormen, spielNummerHeute, stufeVon, linieLaden, raumFormen, zoneAnpassen, logDazu, dauerText, einladungFaellig } from "./pause.js";
 import { modulHappen } from "./pause-happen.js";
 import { pruefeSpielMeldung } from "./modul-host.js";
 import { manifestPruefenStruktur } from "./paket-kern.js";
@@ -56,10 +56,11 @@ test("Der Happen eines Modulspiels: Stufe an das Modul, Ende aus dem Paket, Tref
   assert.equal(offen.satz, "Morgen wieder.");
   assert.equal(offen.treffer, 0);
   assert.equal((await modulHappen(el, { form, linie: linieLaden(null), starten: async () => null })).treffer, 0, "ließ sich nicht öffnen");
-  // Zone: dreimal gelöst → eine Stufe schwerer (wie bei den anderen Formen)
+  // 0.7.1: fünfmal gelöst → Einladung zum Höherstellen (nie still hinauf), wie bei den anderen Formen
   let log = [];
-  for (let i = 0; i < 3; i++) log = logDazu(log, { quelle: "pause", id: "lichter", art: form.art, ergebnis: geloest.ergebnis, dauer: 100 });
-  assert.equal(zoneAnpassen(linieLaden({ stufe: { lichter: 2 } }), form, log).stufe.lichter, 3);
+  for (let i = 0; i < 5; i++) log = logDazu(log, { quelle: "pause", id: "lichter", art: form.art, ergebnis: geloest.ergebnis, dauer: 100 });
+  assert.equal(zoneAnpassen(linieLaden({ stufe: { lichter: 2 } }), form, log).stufe.lichter, 2);
+  assert.equal(einladungFaellig(linieLaden({ stufe: { lichter: 2 } }), form, log, Date.now()), true);
 });
 
 test("Die Meldung des Moduls kommt durch die Prüfung der Brücke (ohne Punkte, nichts zum Vergleichen)", () => {

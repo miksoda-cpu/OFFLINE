@@ -43,7 +43,7 @@ export const pauseEintraege = (log) => (log ?? []).filter((e) => e.quelle === "p
 
 // ---------- Deine Linie ----------
 export function linieLaden(g) {
-  const x = g && typeof g === "object" ? g : {};
+  const x = skalaAnheben(g && typeof g === "object" ? g : {});
   const zahlen = (o, min, max) => Object.fromEntries(Object.entries(o && typeof o === "object" ? o : {}).filter(([, v]) => typeof v === "number" && Number.isFinite(v)).map(([k, v]) => [k, Math.min(max, Math.max(min, v))]));
   return {
     gewicht: zahlen(x.gewicht, WERTE.gewicht.tief, WERTE.gewicht.hoch),
@@ -54,11 +54,35 @@ export function linieLaden(g) {
     auffrischung: x.auffrischung && typeof x.auffrischung === "object" ? { ...x.auffrischung } : {},
     rueckspiegelAm: typeof x.rueckspiegelAm === "string" ? x.rueckspiegelAm : null,
     happen: Number.isInteger(x.happen) ? x.happen : 0, // nur für „jeder fünfte“, wird nie gezeigt
+    // 0.7.1: Zähler für „Zu leicht“/„Zu schwer“ und die Einladung zum Höherstellen (nie angezeigt)
+    zuLeicht: zahlen(x.zuLeicht, 0, 99), zuSchwer: zahlen(x.zuSchwer, 0, 99),
+    einladung: { tag: typeof x.einladung?.tag === "string" ? x.einladung.tag : null, ruhen: { ...(x.einladung?.ruhen ?? {}) }, hoch: { ...(x.einladung?.hoch ?? {}) } },
+    skala: 5,
   };
 }
+/** 0.7.1: Fehler, Lumisch und Zeitgefühl haben fünf statt drei Stufen. Gespeicherte Stufen rücken eins nach oben (1→2, 2→3, 3→4). */
+const SKALA_5 = ["fehler", "lumisch", "zeitgefuehl"];
+function skalaAnheben(x) {
+  if (!x || typeof x !== "object" || x.skala === 5 || !x.stufe || typeof x.stufe !== "object") return x;
+  const stufe = { ...x.stufe };
+  for (const id of SKALA_5) if (Number.isInteger(stufe[id])) stufe[id] = Math.min(5, stufe[id] + 1);
+  return { ...x, stufe };
+}
 export const gewichtVon = (linie, id) => linie.gewicht[id] ?? WERTE.gewicht.start;
-/** Startstufe (0.6.4, Bill): ab 14 Jahren beginnt jede Form auf Stufe 2; Pause gibt es nur ab 14. Höchstens die oberste Stufe. */
-export const startStufe = (form) => (form.zone ? Math.min(form.zone.stufen, WERTE.startStufeAb14) : 1);
+/** Startstufe: ab 14 aus der Form (0.7.1: zone.start, „mit Biss“ = Stufe 3 von 5, Pilz 5 von 10); ohne Angabe wie 0.6.4. */
+export const startStufe = (form) => (form.zone ? Math.min(form.zone.stufen, form.zone.start ?? WERTE.startStufeAb14) : 1);
+/** Das Wort einer Stufe (nie die Zahl): fünf Wörter, bei zehn Stufen je zwei, bei anderen Zahlen anteilig. */
+export function stufenWort(form, stufe) {
+  const n = form.zone?.stufen ?? 1, w = WERTE.stufenWoerter;
+  const i = n === 5 ? stufe - 1 : n === 10 ? Math.ceil(stufe / 2) - 1 : Math.round(((stufe - 1) * (w.length - 1)) / Math.max(1, n - 1));
+  return w[Math.max(0, Math.min(w.length - 1, i))];
+}
+/** Die Stufen, die man in „Deine Linie“ wählen kann: je Wort eine (bei zehn Stufen die untere des Paars). */
+export function stufenWahl(form) {
+  const n = form.zone?.stufen ?? 1, liste = [];
+  for (let s = 1; s <= n; s++) { const wort = stufenWort(form, s); if (!liste.some((x) => x.wort === wort)) liste.push({ stufe: s, wort }); }
+  return liste;
+}
 /** Stufe einer Form: gespeichert oder Startstufe, nie über der obersten (z. B. wenn eine Stufe wegfällt). */
 export const stufeVon = (linie, form) => Math.min(linie.stufe[form.id] ?? startStufe(form), form.zone?.stufen ?? 1);
 /**
@@ -113,24 +137,103 @@ export function bewerten(linie, formen, id, art) {
   return l;
 }
 export function zurueckholen(linie, id) { const l = linieLaden(linie); l.aus = l.aus.filter((x) => x !== id); return l; }
-/** Zu leicht / Genau richtig / Zu schwer stellt die Stufe direkt. */
+/**
+ * „Zu leicht / Genau richtig / Zu schwer“ (0.7.1, OFFLINE-Pause-Stufen.md Abschnitt 3): stellt nicht mehr direkt hoch.
+ * Zweimal „Zu leicht“ macht die Einladung fällig; zweimal „Zu schwer“ geht leise eine Stufe tiefer (nicht unter 2).
+ */
 export function schwierigkeit(linie, form, urteil) {
-  const l = linieLaden(linie), s = stufeVon(l, form), max = form.zone?.stufen ?? 1;
-  if (urteil === "leicht") l.stufe[form.id] = Math.min(max, s + 1);
-  if (urteil === "schwer") l.stufe[form.id] = Math.max(1, s - 1);
+  const l = linieLaden(linie), id = form.id;
+  if (urteil === "leicht") { l.zuLeicht[id] = (l.zuLeicht[id] ?? 0) + 1; l.zuSchwer[id] = 0; }
+  if (urteil === "richtig") { l.zuLeicht[id] = 0; l.zuSchwer[id] = 0; }
+  if (urteil === "schwer") {
+    l.zuSchwer[id] = (l.zuSchwer[id] ?? 0) + 1; l.zuLeicht[id] = 0;
+    if (l.zuSchwer[id] >= WERTE.abstieg.zuSchwer) { l.stufe[id] = runter(stufeVon(l, form)); l.zuSchwer[id] = 0; }
+  }
   return l;
 }
-/** Zone 2 halten: Liegt die Trefferquote der letzten Happen dieser Form über 85 %, eine Stufe schwerer, unter 75 % leichter. */
+const runter = (s) => (s > WERTE.abstieg.untergrenze ? s - 1 : s);
+/** In „Deine Linie“ selbst gestellt (Bedingung 3): direkt, auch auf Stufe 1. */
+export function stufeSetzen(linie, form, stufe) {
+  const l = linieLaden(linie);
+  if (form.zone && Number.isInteger(stufe) && stufe >= 1 && stufe <= form.zone.stufen) { l.stufe[form.id] = stufe; l.zuLeicht[form.id] = 0; l.zuSchwer[form.id] = 0; }
+  return l;
+}
+const versuche = (log, form) => pauseEintraege(log).filter((e) => e.id === form.id && !e.abgebrochen && typeof e.ergebnis?.von === "number" && e.ergebnis.von > 0);
+const gelungen = (e) => e.ergebnis.treffer >= e.ergebnis.von && (e.ergebnis.tipps ?? 0) <= 1;
+/** Abstieg leise (0.7.1): drei Happen derselben Form in Folge ohne Gelingen, dann eine Stufe tiefer (nicht unter 2). Nie hinauf. */
 export function zoneAnpassen(linie, form, log) {
   const l = linieLaden(linie);
   if (!form.zone) return l;
-  const letzte = pauseEintraege(log).filter((e) => e.id === form.id && !e.abgebrochen && typeof e.ergebnis?.von === "number" && e.ergebnis.von > 0).slice(-WERTE.zone.beurteilenNach);
-  if (letzte.length < WERTE.zone.beurteilenNach) return l;
-  const quote = letzte.reduce((s, e) => s + e.ergebnis.treffer, 0) / letzte.reduce((s, e) => s + e.ergebnis.von, 0);
-  const s = stufeVon(l, form);
-  if (quote > WERTE.zone.obere) l.stufe[form.id] = Math.min(form.zone.stufen, s + 1);
-  else if (quote < WERTE.zone.untere) l.stufe[form.id] = Math.max(1, s - 1);
+  const letzte = versuche(log, form).slice(-WERTE.abstieg.ohneGelingen);
+  if (letzte.length === WERTE.abstieg.ohneGelingen && letzte.every((e) => !(e.ergebnis.treffer > 0))) {
+    const neu = runter(stufeVon(l, form));
+    if (neu !== stufeVon(l, form)) { l.stufe[form.id] = neu; l.ohneGelingenBis = { ...(l.ohneGelingenBis ?? {}), [form.id]: letzte.at(-1).zeit }; }
+  }
   return l;
+}
+/**
+ * Ist die Einladung zum Höherstellen fällig (Abschnitt 3)? Höchstens einmal am Tag (über alle Formen), nicht während „So lassen“
+ * ruht, nicht auf der obersten Stufe, mindestens drei Tage und drei Happen nach dem letzten Aufstieg dieser Form. Bedingung:
+ * die letzten fünf Happen gelungen (höchstens ein Tipp) oder zweimal „Zu leicht“.
+ */
+export function einladungFaellig(linie, form, log, jetzt) {
+  const l = linieLaden(linie), E = WERTE.einladung, heute = tagVon(jetzt), id = form.id;
+  if (!form.zone || stufeVon(l, form) >= form.zone.stufen || l.einladung.tag === heute) return false;
+  if (l.einladung.ruhen[id] && heute < l.einladung.ruhen[id]) return false;
+  const v = versuche(log, form), h = l.einladung.hoch[id];
+  if (h) {
+    if (tageZwischen(Date.parse(`${h.datum}T12:00:00`), jetzt) < E.abstandTage) return false;
+    if (v.filter((e) => Date.parse(e.zeit) > Date.parse(`${h.datum}T00:00:00`)).length < E.abstandHappen) return false;
+  }
+  const letzte = v.slice(-E.nachHappen);
+  return (letzte.length === E.nachHappen && letzte.every(gelungen)) || (l.zuLeicht[id] ?? 0) >= E.zuLeicht;
+}
+/** Antwort auf die Einladung: „ja“ eine Stufe höher (nur eine), „noch“ heute nicht mehr, „lassen“ 30 Tage Ruhe für diese Form. */
+export function einladungAntwort(linie, form, antwort, jetzt) {
+  const l = linieLaden(linie), heute = tagVon(jetzt), id = form.id;
+  l.einladung.tag = heute;
+  if (antwort === "ja" && form.zone) { l.stufe[id] = Math.min(form.zone.stufen, stufeVon(l, form) + 1); l.einladung.hoch[id] = { datum: heute }; l.zuLeicht[id] = 0; }
+  if (antwort === "lassen") { const d = new Date(jetzt); d.setDate(d.getDate() + WERTE.einladung.ruhenTage); l.einladung.ruhen[id] = tagVon(d); }
+  return l;
+}
+export const EINLADUNG_TEXT = { frage: "Das ging dir leicht von der Hand. Magst du es kniffliger?", ja: "Ja, probier’s", noch: "Noch nicht", lassen: "So lassen" };
+
+/** Ist die Lumi an (0.7.1)? Nur mit Figur. „Aus mit Textkarten“ und „Tipps aus“ gelten als aus. */
+export const lumiAn = (darstellung) => darstellung === "wesen";
+/**
+ * Pause ohne Lumi (0.7.1, Auftrag Abschnitt 2): keine Form Lumisch, keine Geschichten mit nur_mit_lumi. Die Ruhe-Varianten und
+ * der Gedanke am Fluss lassen beim Zeigen den Lumisch-Satz weg (siehe ruheText, flussEnde).
+ */
+export function ohneLumi(daten) {
+  if (!daten?.formen) return daten;
+  return { ...daten, lumisch: null, formen: daten.formen.filter((f) => f.id !== "lumisch"), fehler: (daten.fehler ?? []).filter((g) => !g.nur_mit_lumi) };
+}
+/** Eine Ruhe-Variante, wie sie gezeigt wird: ohne Lumi der Ersatztext und kein Lumisch. */
+export function ruheText(v, mitLumi) {
+  const o = !mitLumi && v.ohne_lumi ? { ...v, ...v.ohne_lumi } : v;
+  const lumisch = mitLumi && o.lumisch ? { lumisch: o.lumisch, uebersetzung: o.uebersetzung } : null;
+  return { ...o, ohne_lumi: undefined, lumisch: lumisch?.lumisch ?? null, uebersetzung: lumisch?.uebersetzung ?? null };
+}
+/**
+ * Welche Ruhe-Variante heute (0.7.1): die erste der Liste, die in den letzten 30 Tagen nicht gespielt wurde; sind alle
+ * gespielt, die am längsten nicht. So wiederholt sich einen Monat lang keine.
+ */
+export function ruheVariante(liste, log, formId, jetzt) {
+  if (!liste?.length) return null;
+  const zuletzt = new Map();
+  for (const e of pauseEintraege(log)) if (e.id === formId && e.ergebnis?.variante) zuletzt.set(e.ergebnis.variante, Date.parse(e.zeit));
+  const grenze = jetzt - 30 * TAG_MS;
+  return liste.find((v) => !(zuletzt.get(v.id) > grenze)) ?? [...liste].sort((a, b) => (zuletzt.get(a.id) ?? 0) - (zuletzt.get(b.id) ?? 0))[0];
+}
+/** Eine Aufgabe auf der eigenen Stufe, zuerst eine noch nicht gesehene; gibt es auf der Stufe keine, die nächst leichtere. */
+export function aufgabeWaehlen(liste, stufe, gesehen = new Set(), rnd = Math.random) {
+  for (let s = stufe; s >= 1; s--) {
+    const auf = (liste ?? []).filter((a) => a.stufe === s);
+    if (!auf.length) continue;
+    const frisch = auf.filter((a) => !gesehen.has(a.id)), topf = frisch.length ? frisch : auf;
+    return topf[Math.floor(rnd() * topf.length) % topf.length];
+  }
+  return null;
 }
 export function zoneText(linie, form, log) {
   const letzte = pauseEintraege(log).filter((e) => e.id === form.id && typeof e.ergebnis?.von === "number" && e.ergebnis.von > 0).slice(-5);
@@ -290,7 +393,7 @@ export function wochenSatz(linie, log, formen, jetzt) {
  * Rückspiegel: einmal im Monat eine ruhige Karte in Worten, ohne Punkte. Vergleicht den Pilz (Blitzdauer) oder die Zahl der
  * gelernten Lumisch-Wörter mit vor einem Monat. Gibt einen Satz oder null.
  */
-export function rueckspiegel(log, linie, einstellungen, jetzt, formen = []) {
+export function rueckspiegel(log, linie, einstellungen, jetzt, formen = [], { mitLumi = true } = {}) {
   const l = linieLaden(linie), e = einstellungenLaden(einstellungen);
   if (!e.seit || tageZwischen(e.seit, jetzt) < WERTE.rueckspiegelTage) return null;
   if (l.rueckspiegelAm && tageZwischen(l.rueckspiegelAm, jetzt) < WERTE.rueckspiegelTage) return null;
@@ -298,10 +401,12 @@ export function rueckspiegel(log, linie, einstellungen, jetzt, formen = []) {
   const p = pauseEintraege(log);
   const pilz = p.filter((x) => x.id === "pilz" && typeof x.ergebnis?.ms === "number");
   const frueh = pilz.filter((x) => Date.parse(x.zeit) <= vorMonat).at(-1), jetztP = pilz.at(-1);
-  if (frueh && jetztP && jetztP.ergebnis.ms < frueh.ergebnis.ms) return `Vor einem Monat blitzte der Pilz noch ${frueh.ergebnis.ms} Millisekunden lang. Heute findest du ihn schon nach ${jetztP.ergebnis.ms}.`;
+  // 0.7.1: ohne Leistungszahl (keine Millisekunden), nur der Vergleich in Worten
+  if (frueh && jetztP && jetztP.ergebnis.ms < frueh.ergebnis.ms) return "Vor einem Monat musste der Pilz noch länger blitzen. Heute findest du ihn schneller.";
+  // Lumisch nur, wenn die Lumi an ist (0.7.1)
   const woerter = (bis) => new Set(p.filter((x) => x.id === "lumisch" && Date.parse(x.zeit) <= bis && x.ergebnis?.wort).map((x) => x.ergebnis.wort)).size;
   const a = woerter(vorMonat), b = woerter(jetzt);
-  if (b > a) return a ? `Vor einem Monat kanntest du ${zahlText(a)} Lumisch-Wörter. Heute sind es ${zahlText(b)}.` : `Vor einem Monat war Lumisch noch fremd. Heute kennst du ${b === 1 ? "ein Wort" : `${zahlText(b)} Wörter`}.`;
+  if (mitLumi && b > a) return a ? `Vor einem Monat kanntest du ${zahlText(a)} Lumisch-Wörter. Heute sind es ${zahlText(b)}.` : `Vor einem Monat war Lumisch noch fremd. Heute kennst du ${b === 1 ? "ein Wort" : `${zahlText(b)} Wörter`}.`;
   // Kein Fortschritt: höchstens die Lieblingsformen des Monats, in Worten und ohne Zahl (nie Tage oder Besuche zählen)
   const zaehl = {};
   for (const x of p.filter((y) => Date.parse(y.zeit) > vorMonat && !y.abgebrochen)) zaehl[x.id] = (zaehl[x.id] ?? 0) + 1;

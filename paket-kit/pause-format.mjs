@@ -9,7 +9,7 @@ export const ALTER = ["J", "M1", "M2", "A"]; // Jung 14–29, Mittel 1 30–49, 
 export const TAGESZEITEN = ["jederzeit", "morgen", "abend"];
 export const BRAUCHT = ["roman", "gestern"];
 /** Formen, die App 0.4.0 spielen kann (alle anderen brauchen bedingung.funktion). */
-export const GEBAUT = ["pilz", "fehler", "lumisch", "naechstes", "tuersteher", "rueckwaerts", "zeitgefuehl", "atem"];
+export const GEBAUT = ["pilz", "fehler", "lumisch", "naechstes", "tuersteher", "rueckwaerts", "zeitgefuehl", "atem", "kaffeehaus", "kopfnuss", "fluss"]; // die letzten drei ab 0.7.1
 const ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const text = (v, max) => typeof v === "string" && v.trim().length > 0 && v.length <= max;
 
@@ -43,12 +43,14 @@ export function pauseFehler(j) {
   else j.fehler.forEach((g, i) => {
     const F = (s) => f.push(`fehler[${i}]: ${s}`);
     if (!ID.test(g?.id ?? "")) F("id ungültig");
-    if (!Array.isArray(g.saetze) || g.saetze.length < 3 || g.saetze.length > 6 || !g.saetze.every((s) => text(s, 200))) F("saetze: drei bis sechs Sätze");
+    if (!Array.isArray(g.saetze) || g.saetze.length < 3 || g.saetze.length > 12 || !g.saetze.every((s) => text(s, 240))) F("saetze: drei bis zwölf Sätze");
     else if (!Number.isInteger(g.fehler) || g.fehler < 0 || g.fehler >= g.saetze.length) F("fehler: Nummer eines Satzes (ab 0)");
     if (!text(g.erklaerung, 300)) F("erklaerung fehlt");
-    if (![1, 2, 3].includes(g.stufe)) F("stufe: 1 bis 3");
+    if (![1, 2, 3, 4, 5].includes(g.stufe)) F("stufe: 1 bis 5");
+    if (g.nur_mit_lumi !== undefined && g.nur_mit_lumi !== true) F("nur_mit_lumi: nur true");
   });
   f.push(...lumischFehler(j.lumisch));
+  f.push(...ab071Fehler(j));
   const ohneCode = !/<script\b|\son[a-z]+\s*=|javascript:/i.test(JSON.stringify(j));
   if (!ohneCode) f.push("enthält Code (Skript, Ereignis-Attribut oder javascript:)");
   return f;
@@ -103,5 +105,40 @@ export function lumischFehler(l) {
       });
     }
   }
+  return f;
+}
+
+const STUFE = (x) => [1, 2, 3, 4, 5].includes(x?.stufe);
+/** Inhalte ab 0.7.1 (Pause-Session 07.10.2026): Ruhe-Varianten, Kaffeehaus-Logik, Kopfnuss, Ein Gedanke am Fluss. Alles optional. */
+export function ab071Fehler(j) {
+  const f = [];
+  const lumiTeil = (x, wo) => { if (x.lumisch !== undefined && !(text(x.lumisch, 120) && text(x.uebersetzung, 160))) f.push(`${wo}: lumisch mit uebersetzung`); };
+  if (j.ruhe !== undefined) {
+    const r = j.ruhe;
+    if (!Array.isArray(r?.rueckwaerts) || !Array.isArray(r?.atem)) f.push("ruhe: { rueckwaerts, atem }");
+    else {
+      r.rueckwaerts.forEach((v, i) => { const wo = `ruhe.rueckwaerts[${i}]`; if (!ID.test(v.id ?? "") || !Array.isArray(v.fragen) || v.fragen.length < 2 || !v.fragen.every((s) => text(s, 200)) || !text(v.schluss, 240)) f.push(`${wo}: id, fragen, schluss`); lumiTeil(v, wo); if (v.ohne_lumi && !(Array.isArray(v.ohne_lumi.fragen ?? v.fragen) && text(v.ohne_lumi.schluss ?? v.schluss, 240))) f.push(`${wo}: ohne_lumi`); });
+      r.atem.forEach((v, i) => { const wo = `ruhe.atem[${i}]`; if (!ID.test(v.id ?? "") || !text(v.ein, 160) || !text(v.aus, 160) || !text(v.ende, 240)) f.push(`${wo}: id, ein, aus, ende`); lumiTeil(v, wo); });
+    }
+  }
+  for (const [k, pruef] of [
+    ["kaffeehaus", (a) => text(a.frage, 600) && Array.isArray(a.antworten) && a.antworten.length >= 2 && a.antworten.every((x) => text(x, 120)) && Number.isInteger(a.richtig) && a.richtig >= 0 && a.richtig < a.antworten.length && text(a.erklaerung, 600)],
+    ["kopfnuss", (a) => text(a.frage, 600) && typeof a.antwort === "number" && Number.isFinite(a.antwort) && text(a.tipp, 300) && text(a.weg, 600)],
+    ["fluss", (a) => text(a.gedanke, 400) && Array.isArray(a.schritte) && a.schritte.length >= 1 && a.schritte.every((s) => text(s, 300)) && text(a.ende_ohne_lumi, 240)],
+  ]) {
+    if (j[k] === undefined) continue;
+    if (!Array.isArray(j[k]) || !j[k].length) { f.push(`${k}: Liste`); continue; }
+    j[k].forEach((a, i) => { if (!ID.test(a?.id ?? "") || !STUFE(a) || !pruef(a)) f.push(`${k}[${i}]: Felder unvollständig`); if (k === "fluss") lumiTeil(a, `${k}[${i}]`); });
+    for (let s = 1; s <= 5; s++) if (!j[k].some((a) => a.stufe === s)) f.push(`${k}: keine Aufgabe auf Stufe ${s}`);
+  }
+  return f;
+}
+/** Lumisch-Aufgaben (Paket „lumisch“, ab 0.7.1): Auswahl wie das Lumisch-Quiz, fünf Stufen. */
+export function lumischAufgabenFehler(liste) {
+  const f = [];
+  if (liste === undefined) return f;
+  if (!Array.isArray(liste) || !liste.length) return ["aufgaben: Liste"];
+  liste.forEach((a, i) => { if (!ID.test(a?.id ?? "") || !STUFE(a) || !text(a.frage, 200) || !text(a.richtig, 160) || !Array.isArray(a.falsch) || a.falsch.length < 1 || !a.falsch.every((x) => text(x, 160)) || a.falsch.includes(a.richtig) || !text(a.erklaerung, 400)) f.push(`aufgaben[${i}]: id, stufe, frage, richtig, falsch, erklaerung`); });
+  for (let s = 1; s <= 5; s++) if (!liste.some((a) => a.stufe === s)) f.push(`aufgaben: keine Aufgabe auf Stufe ${s}`);
   return f;
 }

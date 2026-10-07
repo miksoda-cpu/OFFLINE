@@ -5,7 +5,7 @@
 // höchstens eine Rückfrage) → „Noch einen“ oder „Zurück“. Kein Falsch-Ton, keine rote Zahl: Falsches führt zu „Schau, so war's“.
 // Die Daten kommen aus dem Paket „pause“, die Auswahl aus web/pause.js. Aussehen: die zarten Werte (--z-*) in styles.css.
 
-import { WERTE, stufeVon, zahlText, lumischAntworten, reihenfolgeRichtig } from "./pause.js";
+import { WERTE, stufeVon, zahlText, lumischAntworten, reihenfolgeRichtig, ruheText, ruheVariante, aufgabeWaehlen, EINLADUNG_TEXT } from "./pause.js";
 import { hoerenKnopf, hoerenZeigen, sprechen } from "./stimme.js";
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -54,15 +54,15 @@ export const FORMEN = {
       rahmen?.fortschritt?.((runde + 1) / runden);
       await warte(1100);
     }
-    const satz = treffer === runden ? `Heute: alle ${zahlText(runden)} Pilze gefunden.` : treffer ? `Heute: ${zahlText(treffer)} von ${zahlText(runden)} Pilzen gefunden.` : "Heute hat sich der Pilz gut versteckt. Nächstes Mal blitzt er etwas länger.";
+    // 0.7.1: ohne Zahl über Leistung
+    const satz = treffer === runden ? "Heute hast du jeden Pilz gefunden." : treffer * 2 >= runden ? "Heute hast du die meisten Pilze gefunden." : treffer ? "Ein paar Pilze hast du heute erwischt." : "Heute hat sich der Pilz gut versteckt. Nächstes Mal blitzt er etwas länger.";
     return { treffer, von: runden, satz, ergebnis: { treffer, von: runden, ms, stufe } };
   },
 
   async fehler(el, { form, linie, daten, gesehen, rnd }) {
     const stufe = stufeVon(linie, form);
-    const passend = daten.fehler.filter((g) => g.stufe <= stufe);
-    const frisch = passend.filter((g) => !gesehen.has(g.id));
-    const g = (frisch.length ? frisch : passend)[zufall((frisch.length ? frisch : passend).length, rnd)];
+    // 0.7.1: fünf Stufen, die Geschichte von der eigenen Stufe, zuerst eine noch nicht gelesene
+    const g = aufgabeWaehlen(daten.fehler, stufe, gesehen, rnd);
     el.innerHTML = `<p class="pause-anleitung">Tipp auf den Satz, der nicht stimmt. Mh?</p>
       <ol class="pause-geschichte">${g.saetze.map((s, i) => `<li><button type="button" class="pause-satz" data-satz="${i}">${esc(s)}</button></li>`).join("")}</ol><div class="pause-aufloesung" role="status" aria-live="polite"></div>`;
     const knoepfe = [...el.querySelectorAll(".pause-satz")];
@@ -75,7 +75,7 @@ export const FORMEN = {
     return { treffer: richtig ? 1 : 0, von: 1, satz: richtig ? "Den Fehler hast du gefunden." : "Jetzt kennst du die Geschichte ganz.", ergebnis: { treffer: richtig ? 1 : 0, von: 1, geschichte: g.id } };
   },
 
-  async lumisch(el, { form, linie, daten, heute, antwortRichtig, rnd, umbenannt, umbenanntGezeigt, saetze = [] }) {
+  async lumisch(el, { form, linie, daten, heute, antwortRichtig, rnd, umbenannt, umbenanntGezeigt, saetze = [], gesehen: gesehenLumisch = new Set() }) {
     // heute: lumischHeute(…) aus web/pause.js – Plan (Tag 1–21), neues Wort (jeder dritte Tag danach) oder Wiederholung
     const plan = daten.lumisch.plan, stufe = stufeVon(linie, form), wb = daten.lumisch.woerterbuch ?? daten.lumisch.woerter;
     const weiter = (text = "Weiter") => new Promise((r) => { el.insertAdjacentHTML("beforeend", knopf(text, "data-pause-weiter", true)); el.querySelector("[data-pause-weiter]").onclick = r; });
@@ -89,7 +89,25 @@ export const FORMEN = {
     const beispiel = (w) => (w?.beispiel ? `<p class="muted of-klein">Zum Beispiel: <span lang="x-lumisch">${esc(w.beispiel.lumisch)}</span> – ${esc(w.beispiel.deutsch)}</p>` : "");
     // Stufen (0.6.4): 1 Lumisch → Deutsch, drei Antworten · 2 Deutsch → Lumisch, vier Antworten, jede zum Anhören ·
     // 3 einen Satz aus „Was die Lumis denken“ in die richtige Reihenfolge legen (ohne passende Sätze wie Stufe 2)
+    // 0.7.1: 100 Aufgaben in fünf Stufen (Paket lumisch), Bauart wie das Quiz: Frage, Antworten, Auflösung mit Erklärung
+    const aufgaben = daten.lumisch.aufgaben ?? [];
+    const aufgabe = async (ziel) => {
+      const a = aufgabeWaehlen(aufgaben, stufe, gesehenLumisch, rnd);
+      const wahl = mischen([a.richtig, ...a.falsch], rnd);
+      ziel.innerHTML = `<p>${esc(a.frage)}</p><div class="pause-wahl pause-wahl--lumisch" role="group">${wahl.map((w, i) => `<span class="pause-wahl-zeile">${feld(esc(w), `data-wahl="${i}"`)}${hoer(w)}</span>`).join("")}</div><p class="pause-aufloesung" role="status" aria-live="polite"></p>`;
+      zeigen();
+      const kn = [...ziel.querySelectorAll("[data-wahl]")];
+      const i = await new Promise((r) => kn.forEach((b, j) => { b.onclick = () => r(j); }));
+      kn.forEach((b) => { b.disabled = true; });
+      const ok = wahl[i] === a.richtig;
+      kn[wahl.indexOf(a.richtig)].classList.add("pause-wahl--richtig");
+      ziel.querySelector(".pause-aufloesung").innerHTML = `<strong>${ok ? "Ak! Genau." : "Schau, so war's:"}</strong> ${esc(a.erklaerung)}`;
+      gestellt = a.id;
+      return ok;
+    };
+    let gestellt = null;
     const abfrage = async (frage, richtigText, ziel) => {
+      if (aufgaben.length) return aufgabe(ziel);
       if (stufe >= 3 && saetze.length) return ordnen(ziel);
       const rueckwaerts = stufe >= 2, anzahl = rueckwaerts ? 4 : 3;
       const andere = mischen((daten.lumisch.woerter ?? wb).filter((w) => w.wort !== frage && w.deutsch !== richtigText), rnd).slice(0, anzahl - 1);
@@ -146,7 +164,7 @@ export const FORMEN = {
       el.innerHTML = `${neuName}<p class="pause-anleitung">Neues Wort · ${esc(w.gruppe)}</p><p class="pause-wort"><span lang="x-lumisch">${esc(w.wort)}</span>${hoer(w.wort)} heißt <strong>${esc(w.deutsch)}</strong>.</p>${w.hinweis ? `<p class="muted of-klein">${esc(w.hinweis)}</p>` : ""}${beispiel(w)}<div class="pause-quiz"></div>`;
       const ok = await abfrage(w.wort, w.deutsch, el.querySelector(".pause-quiz"));
       await weiter();
-      return { treffer: ok ? 1 : 0, von: 1, satz: `Neues Wort: ${w.wort} heißt ${w.deutsch}.`, ergebnis: { treffer: ok ? 1 : 0, von: 1, wort: w.wort, abgefragt: w.wort, neu: true, tag: heute.tag } };
+      return { treffer: ok ? 1 : 0, von: 1, satz: `Neues Wort: ${w.wort} heißt ${w.deutsch}.`, ergebnis: { treffer: ok ? 1 : 0, von: 1, wort: w.wort, abgefragt: w.wort, neu: true, tag: heute.tag, ...(gestellt ? { aufgabe: gestellt } : {}) } };
     }
     const tagE = heute.eintrag, tag = heute.tag;
     const bekannt = plan.slice(0, tag).filter((x) => x.wort);
@@ -158,7 +176,7 @@ export const FORMEN = {
     if (!frage) { await weiter(); return { satz: "Heute: dein eigener Satz auf Lumisch.", mitnehmen: tagE.aufgabe, ergebnis: { tag } }; }
     const ok = await abfrage(frage.wort, frage.bedeutung, el.querySelector(".pause-quiz"));
     await weiter();
-    return { treffer: ok ? 1 : 0, von: 1, satz: tagE.wort ? `Heute: ${tagE.wort} heißt ${tagE.bedeutung}.` : "Ein Satz auf Lumisch, ganz von dir.", mitnehmen: tagE.aufgabe, ergebnis: { treffer: ok ? 1 : 0, von: 1, wort: tagE.wort || null, abgefragt: frage.wort, tag } };
+    return { treffer: ok ? 1 : 0, von: 1, satz: tagE.wort ? `Heute: ${tagE.wort} heißt ${tagE.bedeutung}.` : "Ein Satz auf Lumisch, ganz von dir.", mitnehmen: tagE.aufgabe, ergebnis: { treffer: ok ? 1 : 0, von: 1, wort: tagE.wort || null, abgefragt: frage.wort, tag, ...(gestellt ? { aufgabe: gestellt } : {}) } };
   },
 
   async naechstes(el, { roman, vermutung, vermutungSpeichern }) {
@@ -208,17 +226,21 @@ export const FORMEN = {
     return { treffer: richtig ? 1 : 0, von: 1, satz: "Was man liest, bleibt eher, wenn man es wieder hervorholt.", ergebnis: { treffer: richtig ? 1 : 0, von: 1, frage: "roman" } };
   },
 
-  async rueckwaerts(el, { daten, rahmen }) {
+  // 0.7.1: je 30 Varianten (Pause-Session 07.10.2026), einen Monat lang keine zweimal; ohne Lumi der Ersatztext und kein Lumisch
+  async rueckwaerts(el, { daten, rahmen, log = [], jetzt = Date.now, lumi = true }) {
     rahmen.classList.add("happen--ruhig");
-    const t = daten.texte.rueckwaerts;
-    for (let i = 0; i < t.schritte.length; i++) {
-      el.innerHTML = `<p class="pause-anleitung">${i + 1} von ${t.schritte.length}</p><p class="pause-wort">${esc(t.schritte[i])}</p><p class="z-leise">Nur im Kopf. Nichts wird aufgeschrieben.</p>`;
-      rahmen.fortschritt?.((i + 1) / t.schritte.length);
+    const roh = ruheVariante(daten.ruhe?.rueckwaerts, log, "rueckwaerts", jetzt());
+    const v = roh ? ruheText(roh, lumi) : { fragen: daten.texte.rueckwaerts.schritte, schluss: lumi ? daten.texte.rueckwaerts.ende : "Gute Nacht." };
+    const schritte = v.fragen;
+    for (let i = 0; i < schritte.length; i++) {
+      el.innerHTML = `<p class="pause-anleitung">${i + 1} von ${schritte.length}</p><p class="pause-wort">${esc(schritte[i])}</p><p class="z-leise">Nur im Kopf. Nichts wird aufgeschrieben.</p>`;
+      rahmen.fortschritt?.((i + 1) / schritte.length);
       await new Promise((r) => { el.insertAdjacentHTML("beforeend", knopf("Ich hab's", "data-pause-weiter", true)); el.querySelector("[data-pause-weiter]").onclick = r; });
     }
-    return { satz: t.ende, ergebnis: { schritte: t.schritte.length } };
+    return { satz: v.schluss, ...(v.lumisch ? { lumisch: { text: v.lumisch, deutsch: v.uebersetzung } } : {}), ergebnis: { schritte: schritte.length, ...(roh ? { variante: roh.id } : {}) } };
   },
 
+  // 0.7.1: fünf Stufen (Toleranz 30, 20, 10, 5, 2 Minuten); am Ende die echte Uhrzeit und ein Wort, keine Minuten daneben
   async zeitgefuehl(el, { form, linie, jetzt, daten }) {
     const stufe = stufeVon(linie, form), tol = WERTE.zeitToleranzMin[Math.min(WERTE.zeitToleranzMin.length, stufe) - 1];
     const t = daten.texte.zeitgefuehl;
@@ -227,14 +249,15 @@ export const FORMEN = {
     const d = new Date(jetzt()); el.querySelector("#pause-stunde").value = String((d.getHours() + 23) % 24);
     await new Promise((r) => { el.insertAdjacentHTML("beforeend", knopf("Das schätze ich", "data-pause-weiter", true)); el.querySelector("[data-pause-weiter]").onclick = r; });
     const n = new Date(jetzt()), geschaetzt = Number(el.querySelector("#pause-stunde").value) * 60 + Number(el.querySelector("#pause-minute").value), echt = n.getHours() * 60 + n.getMinutes();
-    const ab = Math.min(Math.abs(geschaetzt - echt), 1440 - Math.abs(geschaetzt - echt)), getroffen = ab <= tol;
-    el.innerHTML = `<p class="pause-wort">Es ist ${n.getHours()}:${String(n.getMinutes()).padStart(2, "0")}.</p><p>${ab <= 5 ? esc(t.knapp) : getroffen ? esc(t.nah) : esc(t.weit)} ${ab > 5 ? `Du lagst ${ab} Minuten daneben.` : ""}</p>`;
+    const { wort, getroffen, ab } = zeitWort(geschaetzt, echt, tol);
+    el.innerHTML = `<p class="pause-wort">Es ist ${n.getHours()}:${String(n.getMinutes()).padStart(2, "0")}.</p><p>${esc(wort)}</p>`;
     await new Promise((r) => { el.insertAdjacentHTML("beforeend", knopf("Weiter", "data-pause-weiter", true)); el.querySelector("[data-pause-weiter]").onclick = r; });
     return { treffer: getroffen ? 1 : 0, von: 1, satz: getroffen ? "Dein Zeitgefühl stimmt heute." : "Morgen früh fragt die Uhr vielleicht wieder.", ergebnis: { treffer: getroffen ? 1 : 0, von: 1, minuten: ab } };
   },
 
-  async atem(el, { daten, rahmen }) {
-    const t = daten.texte.atem, ruhig = ruhigBewegt();
+  async atem(el, { daten, rahmen, log = [], jetzt = Date.now, lumi = true }) {
+    const roh = ruheVariante(daten.ruhe?.atem, log, "atem", jetzt());
+    const t = roh ? ruheText(roh, lumi) : daten.texte.atem, ruhig = ruhigBewegt();
     rahmen.classList.add("happen--ruhig");
     el.innerHTML = `<div class="pause-atem ${ruhig ? "pause-atem--ruhig" : ""}" aria-hidden="true"></div><p class="pause-wort" role="status" aria-live="polite"></p><p class="muted of-klein pause-zaehler"></p>`;
     const kreis = el.querySelector(".pause-atem"), text = el.querySelector(".pause-wort"), z = el.querySelector(".pause-zaehler");
@@ -244,9 +267,73 @@ export const FORMEN = {
       text.textContent = t.aus; kreis.classList.remove("pause-atem--ein"); await warte(6000);
       rahmen.fortschritt?.((i + 1) / 4);
     }
-    return { satz: t.ende, ergebnis: { atemzuege: 4 } };
+    return { satz: t.ende, ...(t.lumisch ? { lumisch: { text: t.lumisch, deutsch: t.uebersetzung } } : {}), ergebnis: { atemzuege: 4, ...(roh ? { variante: roh.id } : {}) } };
+  },
+
+  // ---------- Neue Formen (0.7.1, Pause-Session 07.10.2026), auf bestehenden Bauarten ----------
+  /** Kaffeehaus-Logik: Auswahl wie beim Quiz, danach die Erklärung. */
+  async kaffeehaus(el, { form, linie, daten, gesehen = new Set(), rnd }) {
+    const a = aufgabeWaehlen(daten.kaffeehaus, stufeVon(linie, form), gesehen, rnd);
+    el.innerHTML = `<p class="pause-wort pause-raetsel">${esc(a.frage)}</p><div class="pause-wahl" role="group">${a.antworten.map((w, i) => feld(esc(w), `data-wahl="${i}"`)).join("")}</div><div class="pause-aufloesung" role="status" aria-live="polite"></div>`;
+    const kn = [...el.querySelectorAll("[data-wahl]")];
+    const i = await new Promise((r) => kn.forEach((b, j) => { b.onclick = () => r(j); }));
+    kn.forEach((b) => { b.disabled = true; });
+    const ok = i === a.richtig;
+    kn[a.richtig].classList.add("pause-wahl--richtig");
+    el.querySelector(".pause-aufloesung").innerHTML = `<p><strong>${ok ? "Genau." : "Schau, so war's:"}</strong> ${esc(a.erklaerung)}</p>`;
+    await new Promise((r) => { el.insertAdjacentHTML("beforeend", knopf("Weiter", "data-pause-weiter", true)); el.querySelector("[data-pause-weiter]").onclick = r; });
+    return { treffer: ok ? 1 : 0, von: 1, satz: ok ? "Gut kombiniert." : "Jetzt kennst du den Weg dorthin.", ergebnis: { treffer: ok ? 1 : 0, von: 1, aufgabe: a.id } };
+  },
+  /** Kopfnuss: Zahl eintippen, ein Tipp auf Wunsch, zwei Versuche, dann der Weg. */
+  async kopfnuss(el, { form, linie, daten, gesehen = new Set(), rnd }) {
+    const a = aufgabeWaehlen(daten.kopfnuss, stufeVon(linie, form), gesehen, rnd);
+    el.innerHTML = `<p class="pause-wort pause-raetsel">${esc(a.frage)}</p>
+      <form class="tag-antwort" data-pause-form autocomplete="off"><label for="pause-antwort">Deine Zahl</label><div class="tag-antwort-zeile"><input id="pause-antwort" class="z-eingabe" type="text" inputmode="decimal" maxlength="12" autocapitalize="off" spellcheck="false"><button type="submit" class="z-haupt">Prüfen</button></div></form>
+      <p class="pause-kopfnuss-knoepfe">${knopf("Ein Tipp", "data-pause-tipp")} ${knopf("Weiß ich nicht", "data-pause-aufdecken")}</p><div class="pause-aufloesung" role="status" aria-live="polite"></div>`;
+    const aufl = el.querySelector(".pause-aufloesung"), feldEin = el.querySelector("#pause-antwort");
+    let tipps = 0, versuch = 0, ok = false;
+    el.querySelector("[data-pause-tipp]").onclick = (e) => { tipps = 1; e.target.remove(); aufl.innerHTML = `<p>Tipp: ${esc(a.tipp)}</p>`; feldEin.focus(); };
+    const zahl = (s) => Number(String(s).trim().replace(/\s/g, "").replace(",", "."));
+    await new Promise((fertig) => {
+      el.querySelector("[data-pause-form]").onsubmit = (e) => {
+        e.preventDefault();
+        if (!feldEin.value.trim()) return;
+        versuch++;
+        ok = zahl(feldEin.value) === a.antwort;
+        if (ok || versuch >= 2) return fertig();
+        aufl.innerHTML = `<p>Noch nicht ganz. ${tipps ? "Schau dir den Tipp noch einmal an." : "Magst du einen Tipp?"}</p>${tipps ? `<p>Tipp: ${esc(a.tipp)}</p>` : ""}`;
+        feldEin.select();
+      };
+      el.querySelector("[data-pause-aufdecken]").onclick = () => fertig();
+    });
+    el.querySelector("[data-pause-form]").remove(); el.querySelector(".pause-kopfnuss-knoepfe").remove();
+    aufl.innerHTML = `<p><strong>${ok ? "Genau." : "Schau, so war's:"}</strong> ${esc(a.weg)}</p>`;
+    await new Promise((r) => { el.insertAdjacentHTML("beforeend", knopf("Weiter", "data-pause-weiter", true)); el.querySelector("[data-pause-weiter]").onclick = r; });
+    return { treffer: ok ? 1 : 0, von: 1, satz: ok ? (tipps ? "Mit einem Tipp geknackt." : "Geknackt.") : "Das war ein harter Brocken. Erzähl jemandem, wie du ihn angepackt hast.", ergebnis: { treffer: ok ? 1 : 0, von: 1, tipps, aufgabe: a.id } };
+  },
+  /** Ein Gedanke am Fluss: Text ohne Wertung, Schritt für Schritt; nichts wird gespeichert. Ohne Lumi kein Lumisch am Ende. */
+  async fluss(el, { form, linie, daten, gesehen = new Set(), rnd, rahmen, lumi = true }) {
+    const a = aufgabeWaehlen(daten.fluss, stufeVon(linie, form), gesehen, rnd);
+    rahmen?.classList?.add("happen--ruhig");
+    el.innerHTML = `<p class="pause-wort pause-gedanke">${esc(a.gedanke)}</p><div class="pause-schritt"></div>`;
+    const platz = el.querySelector(".pause-schritt");
+    for (let i = 0; i < a.schritte.length; i++) {
+      platz.innerHTML = `<p class="pause-anleitung">${i + 1} von ${a.schritte.length}</p><p>${esc(a.schritte[i])}</p><p class="z-leise">Nur im Kopf. Es gibt kein Richtig und kein Falsch.</p>`;
+      rahmen?.fortschritt?.((i + 1) / a.schritte.length);
+      await new Promise((r) => { platz.insertAdjacentHTML("beforeend", knopf(i < a.schritte.length - 1 ? "Weiter" : "Fertig gedacht", "data-pause-weiter", true)); platz.querySelector("[data-pause-weiter]").onclick = r; });
+    }
+    const mitLumisch = lumi && a.lumisch;
+    return { satz: mitLumisch ? a.uebersetzung : a.ende_ohne_lumi, ...(mitLumisch ? { lumisch: { text: a.lumisch, deutsch: a.uebersetzung } } : {}), ergebnis: { aufgabe: a.id } };
   },
 };
+
+/** Zeitgefühl in einem Wort (0.7.1): innerhalb der Toleranz „fast auf den Punkt“, sonst ein Stück zu früh oder zu spät. */
+export function zeitWort(geschaetzt, echt, tol) {
+  let d = geschaetzt - echt;
+  if (d > 720) d -= 1440; if (d < -720) d += 1440;
+  const ab = Math.abs(d), getroffen = ab <= tol;
+  return { wort: getroffen ? "Fast auf den Punkt." : d < 0 ? "Ein Stück zu früh." : "Ein Stück zu spät.", getroffen, ab };
+}
 
 // ---------- Spiele aus einem Modul (0.6.5, Spielpaket 1) ----------
 /**
@@ -316,9 +403,12 @@ export function happenFokus(el, a) {
       if (zu) return;
       laeuft = null;
       a.gespielt(form, erg, sek());
-      const frage = a.rueckfrage(), schwer = !!form.zone && a.schwierigkeitFragen();
+      // 0.7.1: Ist die Einladung zum Höherstellen fällig, kommt sie statt der Frage nach der Schwierigkeit (ein Satz, drei Knöpfe)
+      const einladung = !!form.zone && !!a.einladungFaellig?.(form);
+      const frage = a.rueckfrage(), schwer = !einladung && !!form.zone && a.schwierigkeitFragen();
       el.classList.add("happen--ende"); el.fortschritt(1); einl.textContent = "";
-      inhalt.innerHTML = `<p class="happen-satz">${esc(erg.satz)}</p>${erg.mitnehmen ? `<p class="z-mit">Zum Mitnehmen: ${esc(erg.mitnehmen)}</p>` : ""}
+      inhalt.innerHTML = `${erg.lumisch ? `<p class="happen-lumisch"><span lang="x-lumisch">${esc(erg.lumisch.text)}</span></p>` : ""}<p class="happen-satz">${esc(erg.satz)}</p>${erg.mitnehmen ? `<p class="z-mit">Zum Mitnehmen: ${esc(erg.mitnehmen)}</p>` : ""}
+        ${einladung ? `<div class="pause-einladung-hoch" role="group" aria-label="Kniffliger?"><p class="happen-frage">${esc(EINLADUNG_TEXT.frage)}</p><div class="z-reihe">${[["ja", EINLADUNG_TEXT.ja], ["noch", EINLADUNG_TEXT.noch], ["lassen", EINLADUNG_TEXT.lassen]].map(([k, l]) => feld(esc(l), `data-pause-einladung="${k}"`)).join("")}</div></div>` : ""}
         <p class="z-leise happen-frage">Wie war das?</p>
         <div class="z-reihe" role="group" aria-label="Wie war der Happen?">${[["mehr", "Mehr davon"], ["passt", "Passt"], ["nicht", "Nicht mehr"]].map(([k, l]) => feld(l, `data-pause-bewerten="${k}" aria-pressed="false"`)).join("")}</div>
         ${schwer ? `<p class="z-leise happen-frage">Und die Schwierigkeit?</p><div class="z-reihe" role="group" aria-label="Wie schwer war es?">${[["leicht", "Zu leicht"], ["richtig", "Genau richtig"], ["schwer", "Zu schwer"]].map(([k, l]) => feld(l, `data-pause-schwer="${k}" aria-pressed="false"`)).join("")}</div>` : ""}
@@ -326,6 +416,7 @@ export function happenFokus(el, a) {
         <div class="happen-fuss">${knopf("Noch einen", "data-pause-noch", true)}${knopf(esc(a.zurueckText), "data-happen-zurueck")}</div>`;
       inhalt.querySelectorAll("[data-pause-bewerten]").forEach((b) => { b.onclick = () => { inhalt.querySelectorAll("[data-pause-bewerten]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); a.bewertet(form, b.dataset.pauseBewerten); }; });
       inhalt.querySelectorAll("[data-pause-schwer]").forEach((b) => { b.onclick = () => { inhalt.querySelectorAll("[data-pause-schwer]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); a.schwierigkeit(form, b.dataset.pauseSchwer); }; });
+      inhalt.querySelectorAll("[data-pause-einladung]").forEach((b) => { b.onclick = () => { const k = b.dataset.pauseEinladung; a.einladungAntwort(form, k); b.closest(".pause-einladung-hoch").innerHTML = `<p class="z-leise">${k === "ja" ? "Gut. Der nächste Happen wird kniffliger." : k === "lassen" ? "Gut, dann bleibt es so." : "In Ordnung."}</p>`; }; });
       inhalt.querySelectorAll("[data-pause-antwort]").forEach((b) => { b.onclick = () => { a.beantwortet(frage.id, b.dataset.pauseAntwort || null); b.closest(".pause-rueckfrage").innerHTML = `<p class="z-leise">Danke. Du kannst es in „Deine Linie“ jederzeit ändern.</p>`; }; });
       fokus();
       const weiter = await new Promise((ja) => { inhalt.querySelector("[data-pause-noch]").onclick = () => ja(true); inhalt.querySelector("[data-happen-zurueck]").onclick = () => ja(false); });

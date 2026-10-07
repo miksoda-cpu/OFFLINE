@@ -59,6 +59,15 @@ Hauptknopf: helles Rot (`--accent-soft`) mit roter Schrift, 12,5 px, Gewicht 500
 
 **Warten auf eine Funktion** (im Paket mit `bedingung.funktion`, nicht gebaut): Sonnengruß-Kette (`bilderfolge`), Wo liegt es? und Nachbar-Namen (`tresor-fragen`), Rezept nur einmal (`kochbuch`), Weg im Kopf (`karte-offline`), Frag jemanden (`tagebuch`). Das Tagesrätsel bleibt ein eigenes Paket und meldet sein Ergebnis ins Spiel-Log (`quelle: "raetsel"`). Wichteln meldet eine ausgeloste Runde über `offline.spiel.melden`.
 
+## Fünf Stufen, neue Inhalte, Lumi aus (seit 0.7.1)
+
+Auftrag 2026-10-07-17, Grundlage `OFFLINE-Pause-Stufen.md` der Pause-Session (Abschnitte 2, 3 und 9).
+- **Fünf Stufen je Form**, in der App nur als Wörter: leicht, gemütlich, mit Biss, knifflig, Knackpunkt (`WERTE.stufenWoerter`). Der Pilz behält zehn Stufen, je zwei sind ein Wort. Ab 14 beginnt jede Form auf „mit Biss“ (`zone.start`: 3 von 5, Pilz 5 von 10). In „Deine Linie“ stellt man die Stufe mit einem Wort, nie mit einer Zahl.
+- **Höherstellen nur als Einladung** am Ende eines Happens: „Das ging dir leicht von der Hand. Magst du es kniffliger?“ mit „Ja, probier’s“, „Noch nicht“ und „So lassen“. Fällig nach fünf gelungenen Happen derselben Form (höchstens ein Tipp) oder zweimal „Zu leicht“; höchstens einmal am Tag, zwischen zwei Aufstiegen drei Tage und drei Happen, „So lassen“ ruht 30 Tage. Abstieg leise nach zweimal „Zu schwer“ oder drei Happen ohne Gelingen, nicht unter Stufe 2.
+- **Neue Inhalte:** Geschichten für den eingebauten Fehler auf fünf Stufen, je 30 Varianten für den Tag rückwärts und das Atemfenster (einen Monat lang keine zweimal), Lumisch-Aufgaben in fünf Stufen (Paket `lumisch`), drei neue Formen: **Kaffeehaus-Logik** (Auswahl, dann die Erklärung), **Kopfnuss** (eine Zahl eintippen, ein Tipp auf Wunsch, zwei Versuche, dann der Weg), **Ein Gedanke am Fluss** (drei Schritte zum Nachdenken, kein Richtig und Falsch, nichts gespeichert).
+- **Lumi aus** (ohne Figur, also auch „Aus mit Textkarten“): keine Form Lumisch, keine Geschichte mit der Lumi, bei den Ruhe-Varianten und beim Gedanken am Fluss kein Lumisch-Satz und, wo vorhanden, der Ersatztext.
+- **Keine Zahlen über Leistung:** Zeitgefühl zeigt die echte Uhrzeit und ein Wort („Fast auf den Punkt.“, „Ein Stück zu früh.“, „Ein Stück zu spät.“), Toleranz je Stufe 30, 20, 10, 5, 2 Minuten. Der Pilz endet mit einem Satz ohne Zahl, der Rückspiegel ohne Millisekunden. Das Feld `intern.trainiert` der Inhalte zeigt die App nie.
+
 ## Spiele aus Modulen (seit 0.6.5, Spielpaket 1)
 
 Ein Modul mit `"bereich": "pause"` bringt eigene Formen mit (`inhalt/pause-formen.json`, Format `pauseFormenFehler` in `paket-kit/pause-format.mjs`). Das erste ist `spiele-1`, „Rätsel zum Knobeln“: Lichter, Netz, Muster, Brücken, Minen, Sudoku (Simon Tatham, MIT) und 2048 (Gabriele Cirulli, MIT). Nur in der Desktop-App, weil der Web-Prototyp keine Module annimmt.

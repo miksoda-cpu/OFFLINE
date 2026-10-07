@@ -50,7 +50,7 @@ export const LISTE = {
   HIV: "Humanes Immundefizienz-Virus", DOAK: "direkte orale Antikoagulanzien", ASS: "Acetylsalicylsäure",
   SSRI: "selektive Serotonin-Wiederaufnahmehemmer", ACE: "Angiotensin-konvertierendes Enzym", DKA: "diabetische Ketoazidose",
   VKA: "Vitamin-K-Antagonisten", G6PD: "Glukose-6-Phosphat-Dehydrogenase", DMT: "Dimethyltryptamin",
-  DNA: "Desoxyribonukleinsäure", NNRTI: "nicht-nukleosidische Reverse-Transkriptase-Hemmer",
+  DNA: "Desoxyribonukleinsäure", NNRTI: "nicht-nukleosidische Reverse-Transkriptase-Hemmer", PI: "Proteasehemmer", // 0.7.1, Bill: „Bayer-PI“ ausgeschrieben, DGAM und ÖGC ersetzt
   TDI: "tolerierbare tägliche Aufnahmemenge", AUC: "Fläche unter der Konzentrationskurve", KG: "Körpergewicht",
   TVT: "tiefe Venenthrombose", LE: "Lungenembolie", ZNS: "Zentralnervensystem", FSME: "Frühsommer-Meningoenzephalitis",
   CYP: "Cytochrom P450", CYP3A4: "Cytochrom-P450-Enzym 3A4", CYP2C9: "Cytochrom-P450-Enzym 2C9", CYP2C19: "Cytochrom-P450-Enzym 2C19",
@@ -80,8 +80,6 @@ export const KEINE = {
 
 /** Noch offen: Langform von Bill erbeten; bis dahin bleibt die Abkürzung, wie sie ist. */
 export const OFFEN = {
-  PI: "zwei Bedeutungen in den Texten (Proteasehemmer, Fachinformation des Herstellers)",
-  DGAM: "Gesellschaft nicht eindeutig (Fundstellen in „OFFLINE - Home/abkuerzungen-offen.md“)", ÖGC: "Gesellschaft nicht eindeutig (Fundstellen in „OFFLINE - Home/abkuerzungen-offen.md“)",
 };
 
 const re = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

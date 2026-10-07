@@ -76,7 +76,7 @@ test("Milde Zugkraft: keine Zahlen außer dem Anteil, kein Druck in den Texten",
   const teil = quelle.slice(quelle.indexOf("// ---------- Das Lumi-Buch"), quelle.indexOf("// ---------- Das Lumi-Buch ende")).replace(/^\s*\/\/.*$/gm, "");
   assert.ok(teil.length > 200, "Abschnitt in app.js gefunden");
   assert.doesNotMatch(teil, /nur noch|noch \$\{|fehlen noch|schneller|Tage(n)? in Folge|Serie/, "kein Hinweis aufs schnellere Freischalten, keine Zählung");
-  assert.match(teil, /% lesbar/);
+  assert.match(teil, /buchStand\(b, frei\)/, "0.7.1: Anteil in Worten, bei 0 „noch nichts aufgeschlagen“");
 });
 
 test("0.5.1: Absätze, die heute niemand erreichen kann, aus den Bedingungen berechnet, mit eigener Lücke", async () => {

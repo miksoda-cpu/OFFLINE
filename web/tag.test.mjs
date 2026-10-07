@@ -61,15 +61,15 @@ test("Vorrat: jeder kommende Tag mit Inhalt; leer ist 0, kein Fehler", () => {
   assert.equal(vorratTage([nachNummer], "2026-11-05", "2026-11-05"), 2);
 });
 
-test("Vorratstiefe 7/30/90: welche Tagespakete geladen, welche weggeräumt werden", () => {
+test("Vorrat (0.7.1): jedes Tagespaket, das noch nicht vorbei ist, kommt von selbst; alte werden weggeräumt", () => {
   const e = (id, von, bis, version = "2026.09.30") => ({ id, art: "tage", status: "verfuegbar", version, tage: { von, bis } });
   const katalog = { pakete: [e("tage-2026-10", "2026-10-01", "2026-10-31"), e("tage-2026-11", "2026-11-01", "2026-11-30"), e("tage-2026-12", "2026-12-01", "2026-12-31"), { id: "wir", art: "inhalt", status: "verfuegbar" }] };
   const ids = (t, heute = "2026-10-20", inst = []) => vorzuladen(katalog, inst, heute, t, "2026-10-01").map((x) => x.id);
-  assert.deepEqual(ids(7), ["tage-2026-10"]);
-  assert.deepEqual(ids(30), ["tage-2026-10", "tage-2026-11"]);
-  assert.deepEqual(ids(90), ["tage-2026-10", "tage-2026-11", "tage-2026-12"]);
-  assert.deepEqual(ids(30, "2026-10-20", [{ id: "tage-2026-10", version: "2026.09.30" }]), ["tage-2026-11"], "schon da");
-  assert.deepEqual(ids(30, "2026-10-20", [{ id: "tage-2026-10", version: "2026.09.01" }]), ["tage-2026-10", "tage-2026-11"], "neuere Ausgabe");
+  // Mik sah 55 statt 116 Tage: mit Tiefe 30 fehlte der Dezember. Die Tiefe zählt nicht mehr.
+  for (const t of [7, 30, 90]) assert.deepEqual(ids(t), ["tage-2026-10", "tage-2026-11", "tage-2026-12"], `Tiefe ${t}`);
+  assert.deepEqual(ids(30, "2026-10-20", [{ id: "tage-2026-10", version: "2026.09.30" }]), ["tage-2026-11", "tage-2026-12"], "schon da");
+  assert.deepEqual(ids(30, "2026-10-20", [{ id: "tage-2026-10", version: "2026.09.01" }]), ["tage-2026-10", "tage-2026-11", "tage-2026-12"], "neuere Ausgabe");
+  assert.deepEqual(ids(30, "2026-11-10"), ["tage-2026-11", "tage-2026-12"], "Oktober ist vorbei, nie nachladen und wieder wegräumen");
   assert.equal(bereichTrifft({ von_tag: 1, bis_tag: 60 }, "2026-10-05", 7, "2026-10-01"), true);
   assert.equal(bereichTrifft({ von_tag: 1, bis_tag: 3 }, "2026-10-05", 7, "2026-10-01"), false);
   assert.equal(bereichVorbei({ von: "2026-10-01", bis: "2026-10-31" }, "2026-11-07", "2026-10-01"), false);

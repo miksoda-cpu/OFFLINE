@@ -58,7 +58,8 @@ export function abschnitte(katalog, installiert = [], { versionVergleich = () =>
   const reihe = Object.keys(BEREICHE);
   const sortiere = (a, b) => reihe.indexOf(bereichVon(a.eintrag ?? a)) - reihe.indexOf(bereichVon(b.eintrag ?? b)) || String((a.eintrag ?? a).titel).localeCompare(String((b.eintrag ?? b).titel), "de");
   const intern = (p) => p.kanal === "intern" || p.intern === true;
-  const neu = pakete.filter((p) => p.status === "verfuegbar" && !da.has(p.id) && !intern(p)).sort(sortiere);
+  // Tagespakete stehen nie unter „Neu“: Sie kommen von selbst (0.7.1, Mik)
+  const neu = pakete.filter((p) => p.status === "verfuegbar" && !da.has(p.id) && !intern(p) && p.art !== "tage").sort(sortiere);
   const bald = pakete.filter((p) => p.status === "geplant" && !intern(p) && !da.has(p.id)).sort(sortiere);
   const geraet = [...da.values()].map((p) => {
     const e = pakete.find((x) => x.id === p.manifest.id && x.status === "verfuegbar") ?? null;

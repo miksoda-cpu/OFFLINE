@@ -66,10 +66,14 @@ export function bereichVorbei(bereich, heute, start) {
   return tagNummer(start, heute) - bereich.bis_tag > 7;
 }
 
-/** Welche Katalogeinträge soll die Vorratskammer holen? Tagespakete für die Vorratstiefe, die noch nicht da sind. */
+/**
+ * Welche Katalogeinträge soll die Vorratskammer holen? 0.7.1 (Mik, Bill): jedes verfügbare Tagespaket, das noch nicht vorbei
+ * ist – Tage kommen von selbst, nicht nur für eine Vorratstiefe (bei 30 Tagen fehlte Mik der Dezember). tiefe bleibt nur für
+ * ältere Aufrufer und wird nicht mehr benutzt.
+ */
 export function vorzuladen(katalog, installiert, heute, tiefe, start) {
   const da = new Map(installiert.map((p) => [p.id, p.version]));
-  return (katalog?.pakete ?? []).filter((e) => e.art === "tage" && e.status === "verfuegbar" && bereichTrifft(e.tage, heute, tiefe, start)
+  return (katalog?.pakete ?? []).filter((e) => e.art === "tage" && e.status === "verfuegbar" && e.tage && !bereichVorbei(e.tage, heute, start)
     && (!da.has(e.id) || versionNeuer(e.version, da.get(e.id))));
 }
 const versionNeuer = (a, b) => { const A = String(a).split(".").map(Number), B = String(b).split(".").map(Number); for (let i = 0; i < Math.max(A.length, B.length); i++) { if ((A[i] ?? 0) !== (B[i] ?? 0)) return (A[i] ?? 0) > (B[i] ?? 0); } return false; };

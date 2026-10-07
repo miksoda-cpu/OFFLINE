@@ -10,7 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { tageBereichFehler, tageInhaltFehler } from "./tage-format.mjs";
 import { tippsFehler } from "./tipps-format.mjs";
-import { pauseFehler, pauseFormenFehler, lumischFehler } from "./pause-format.mjs";
+import { pauseFehler, pauseFormenFehler, lumischFehler, lumischAufgabenFehler } from "./pause-format.mjs";
 import { buchFehler, zuordnungFehler } from "./buch-format.mjs";
 import { gedankenFehler } from "./gedanken-format.mjs";
 
@@ -292,7 +292,7 @@ async function pruefen(ordner) {
   if (liste.find((d) => d.rel === "lumisch.json")) {
     let t = null;
     try { t = JSON.parse(await readFile(path.join(inhalt, "lumisch.json"), "utf8")); } catch { F("inhalt/lumisch.json: kein gültiges JSON"); }
-    if (t) { if (t.format !== 1) F("inhalt/lumisch.json: format muss 1 sein"); for (const f of lumischFehler(t)) F(`inhalt/lumisch.json: ${f}`); }
+    if (t) { if (t.format !== 1) F("inhalt/lumisch.json: format muss 1 sein"); for (const f of [...lumischFehler(t), ...lumischAufgabenFehler(t.aufgaben)]) F(`inhalt/lumisch.json: ${f}`); }
   }
 
   // --- Modul im Bereich Pause (inhalt/pause-formen.json): Spiele als Happen-Formen ---

@@ -114,10 +114,12 @@ test("Bill 07.10.: eine Klammer statt zwei (Strichpunkt), Überschriften und Kn�
   assert.equal(ausschreiben("### Laut BfR\nDas BfR sagt"), "### Laut Bundesinstitut für Risikobewertung\nDas BfR (Bundesinstitut für Risikobewertung) sagt", "Überschriftszeilen ohne Klammer");
   assert.deepEqual(texteAusschreiben({ titel: "Teil 7: TCM", text: "Die TCM" }), { titel: "Teil 7: Traditionelle Chinesische Medizin", text: "Die TCM (Traditionelle Chinesische Medizin)" });
   assert.equal(LISTE.BMLUK, "Bundesministerium für Land- und Forstwirtschaft, Klima- und Umweltschutz, Regionen und Wasserwirtschaft");
-  assert.ok(!("BMLUK" in OFFEN) && "PI" in OFFEN && "DGAM" in OFFEN && "ÖGC" in OFFEN);
+  assert.ok(!("BMLUK" in OFFEN));
+  // 0.7.1 (Bill): PI = Proteasehemmer, „Bayer-PI“ ausgeschrieben, DGAM und ÖGC durch „ärztlicher Fachgesellschaften“ ersetzt
+  assert.deepEqual(OFFEN, {}, "keine offene Abkürzung mehr"); assert.equal(LISTE.PI, "Proteasehemmer");
   for (const fragen of Object.values(HILFE)) for (const [f] of fragen) assert.equal(ausschreibenTitel(f), f, `Hilfe-Frage ohne Abkürzung: ${f}`);
   const seite = (await readFile(url("./index.html"), "utf8")).replace(/<script[\s\S]*?<\/script>|<[^>]+>/g, " ");
   for (const t of seite.split(/\n/)) for (const k of Object.keys(LISTE)) if (kommtVor(t, k) && !["AT"].includes(k)) assert.ok(erklaert(t, k), `Webseite: ${k} in „${t.trim().slice(0, 90)}“`);
   const app = await readFile(url("./app.js"), "utf8");
-  for (const s of ['modell: "Künstliche Intelligenz"', '["ki", "Künstliche Intelligenz"]', "Vom Speicherstick oder Ordner einspielen", "<strong>Nur im drahtlosen Netz</strong>"]) assert.ok(app.includes(s), s);
+  for (const s of ['modell: "Künstliche Intelligenz"', "Vom Speicherstick oder Ordner einspielen", "<strong>Nur im drahtlosen Netz</strong>"]) assert.ok(app.includes(s), s);
 });

@@ -417,6 +417,9 @@ export class Wesen {
   }
   ansicht(name) {
     const vorher = this.ansichtName; this.ansichtName = name;
+    // 0.7.1 (Rundgang): Ein Tipp gehört zu seiner Seite. Wer die Seite wechselt, nimmt ihn nicht mit (sonst stand „Du bist im
+    // Tresor“ auch auf Notizen und im Heft).
+    if (name !== vorher && vorher) { const toast = document.getElementById("wesen-toast"); if (toast) { toast.remove(); this.aktuellerTipp = null; } }
     if (name === "start") { const toast = document.getElementById("wesen-toast"); if (toast) { toast.remove(); this.aktuellerTipp = null; } this.planen(); return; }
     // Notfall, Naturheilkunde und die Leseseiten (Lumi-Buch, „Was die Lumis denken“, 0.6.3): hier schweigt sie, auch ein offener Satz geht
     if (STILL.includes(name)) { const toast = document.getElementById("wesen-toast"); if (toast) { toast.remove(); this.aktuellerTipp = null; } return; }
@@ -638,14 +641,14 @@ export class Wesen {
       <label>Name<br><input class="of-input" type="text" data-wesen="name" value="${esc(e.name)}" maxlength="24" autocomplete="off" placeholder="noch ohne Namen"></label>
       ${stufen}
       <label>Figur<br><select class="of-select" data-wesen="figur">${opt("foto", "Foto", e.figur)}${opt("pixel", "Pixel (sparsam)", e.figur)}</select></label>
-      <label>Tipps<br><select class="of-select" data-wesen="takt">${opt("normal", "normal (alle 90 s)", e.takt)}${opt("seltener", "seltener", e.takt)}${opt("aus", "aus", e.takt)}</select></label>
+      <label>Tipps<br><select class="of-select" data-wesen="takt">${opt("normal", "normal (alle 90 Sekunden)", e.takt)}${opt("seltener", "seltener", e.takt)}${opt("aus", "aus", e.takt)}</select></label>
       <label>Größe<br><select class="of-select" data-wesen="groesse">${opt("klein", "klein", e.groesse)}${opt("mittel", "mittel", e.groesse)}${opt("gross", "groß", e.groesse)}</select></label>
       <label>Fell (Pixel)<br><select class="of-select" data-wesen="fell">${Object.keys(FELLE).map((k) => opt(k, k[0].toUpperCase() + k.slice(1), e.fell)).join("")}</select></label>
       <div><label><input type="checkbox" data-wesen="laute" ${e.laute ? "checked" : ""}> Laute in Sprechblasen</label><br><label><input type="checkbox" data-wesen="toene" ${e.toene ? "checked" : ""}> drei leise Töne</label><br><label><input type="checkbox" data-wesen="baut" ${e.baut ? "checked" : ""}> baut über 80</label></div>
     </div>
     <p class="muted of-klein" style="margin:.8rem 0 .3rem">Welche Tipps kommen</p>
     <div style="display:flex;gap:.8rem;flex-wrap:wrap">${Object.entries(SORTEN).map(([k, l]) => `<label><input type="checkbox" data-wesen-sorte="${k}" ${e.sorten[k] ? "checked" : ""}> ${l}${k === "digital" ? ' <span class="muted of-klein">(Einstieg in die digitale Welt)</span>' : ""}</label>`).join("")}</div>
-    <p class="muted of-klein" style="margin:.8rem 0 0;font-size:.85rem">Gelernt: Tipps alle ${this.gelernt.intervall} s (${this.gelernt.gelesen} gelesen, ${this.gelernt.weitergewischt} weitergewischt). <button class="btn btn-sm of-btn of-btn--klein" data-wesen-gelernt-zurueck>Zurücksetzen</button></p>
+    <p class="muted of-klein" style="margin:.8rem 0 0;font-size:.85rem">Gelernt: Tipps alle ${this.gelernt.intervall} Sekunden (${this.gelernt.gelesen} gelesen, ${this.gelernt.weitergewischt} weitergewischt). <button class="btn btn-sm of-btn of-btn--klein" data-wesen-gelernt-zurueck>Zurücksetzen</button></p>
     <p class="muted of-klein" style="margin:.4rem 0 .8rem;font-size:.85rem">${esc(TEXTE.ki)}</p>
     ${this.gelerntHtml()}
     ${aus}`;
@@ -667,8 +670,11 @@ export class Wesen {
   heftHtml(suche = "") {
     const q = suche.trim().toLowerCase();
     const liste = this.heft.filter((h) => !q || h.text.toLowerCase().includes(q));
-    return `${this.heft.length ? `<p class="muted of-klein" style="margin:0 0 .6rem">${liste.length} von ${this.heft.length}</p>` : ""}
-      ${liste.length ? `<ul class="lumi-heft">${liste.map((h) => `<li><p style="margin:0 0 .3rem">${esc(h.text)}</p><span class="muted of-klein">${esc(SORTEN[h.sorte] ?? h.sorte)} · ${new Date(h.datum).toLocaleDateString("de-AT", { day: "numeric", month: "long", year: "numeric" })}</span> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-heft-weg="${esc(h.id)}" aria-label="Aus dem Heft nehmen (Stern entfernen)">Aus dem Heft</button></li>`).join("")}</ul>`
+    // 0.7.1 (Mik): Zahl in Worten, und was „Aus dem Heft nehmen“ tut
+    const n = this.heft.length, satz = (k) => (k === 1 ? "ein gemerkter Satz" : `${k} gemerkte Sätze`);
+    const zeile = !n ? "" : q ? `${liste.length === 1 ? "Ein Satz passt" : `${liste.length} Sätze passen`} zur Suche, von ${satz(n).replace(/^ein /, "einem ").replace("gemerkte Sätze", "gemerkten Sätzen")}.` : `${satz(n)[0].toUpperCase()}${satz(n).slice(1)}. „Aus dem Heft nehmen“ löscht einen Satz hier; im Verlauf „Alles Gesagte“ bleibt er.`;
+    return `${zeile ? `<p class="muted of-klein" style="margin:0 0 .6rem">${zeile}</p>` : ""}
+      ${liste.length ? `<ul class="lumi-heft">${liste.map((h) => `<li><p style="margin:0 0 .3rem">${esc(h.text)}</p><span class="muted of-klein">${esc(SORTEN[h.sorte] ?? h.sorte)} · ${new Date(h.datum).toLocaleDateString("de-AT", { day: "numeric", month: "long", year: "numeric" })}</span> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-heft-weg="${esc(h.id)}" aria-label="Aus dem Heft nehmen (Stern entfernen)">Aus dem Heft nehmen</button></li>`).join("")}</ul>`
         : this.heft.length ? `<p class="muted">Nichts gefunden.</p>` : `<p class="muted">Noch leer. Unter einem Satz von ${esc(this.anzeigename())} legt „Merken“ ihn hierher.</p>`}`;
   }
   logHtml(filter = "", suche = "") {

@@ -78,7 +78,7 @@ test("Lumisch: eigenes Paket im Bereich Lumi, wortgleich mit dem Stand in pause.
   assert.deepEqual(lumischFehler(l), []);
   for (const k of ["plan", "woerter", "woerterbuch", "hinweis"]) assert.deepEqual(l[k], p[k], k);
   const q = await json("../pakete/lumisch/paket.quelle.json");
-  assert.equal(q.bereich, "lumi"); assert.equal(q.app_min, "0.7.0"); assert.equal(q.art, "inhalt");
+  assert.equal(q.bereich, "lumi"); assert.equal(q.app_min, "0.7.1", "seit den Aufgaben (0.7.1)"); assert.equal(q.art, "inhalt");
 });
 
 test("App: Lumi-Seite unter „Mehr“ (kein Tab), Kästchen, Menü, Heute mit kleiner Figur, Übersicht ohne Lumi-Abschnitt", async () => {

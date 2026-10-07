@@ -4,6 +4,7 @@ import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUeb
 import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch, tippPool, tippKnoepfeHtml, ZIELE, FUNKTIONEN } from "./wesen.js";
 import { WERTE as PAUSE_WERTE, LEBENSABSCHNITTE, APPETIT, ART_TEXT, angeboten as pauseAngeboten, einstellungenLaden as pauseEinstellungenLaden, linieLaden as pauseLinieLaden,
   logDazu as pauseLogDazu, happenFaellig, waehle as pauseWaehle, bewerten as pauseBewerten, schwierigkeit as pauseSchwierigkeit, zoneAnpassen, zoneText, zurueckholen as pauseZurueckholen,
+  einladungFaellig as pauseEinladungFaellig, einladungAntwort as pauseEinladungAntwort, stufeSetzen as pauseStufeSetzen, stufenWort, stufenWahl, lumiAn as pauseLumiAn, ohneLumi as pauseOhneLumi,
   rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, soSeheIchDich, wochenSatz, rueckspiegel, lumischHeute, lumischUmbenannt, lumischSaetze, pauseAufbereiten, modulFormen as pauseModulFormen, spielNummerHeute, imKennenlernen, gewichtVon, stufeVon, verfuegbar as pauseVerfuegbar, tagVon, raumFormen, dauerText } from "./pause.js";
 import { FORMEN as PAUSE_FORMEN, happenFokus, modulHappen } from "./pause-happen.js";
 import { ungesehen as neuUngesehen, alsGesehen as neuAlsGesehen, inhaltsAenderungen, inhalteStart, webVersionPruefen, stillPruefenFaellig, webNeuerDa } from "./neuigkeiten.js";
@@ -46,7 +47,7 @@ async function internFreischalten(schluessel) {
   if (k) { history.replaceState(null, "", `${location.pathname}${location.search}#updates`); await internFreischalten(k); }
   else if (location.hash.startsWith("#kanal=")) history.replaceState(null, "", `${location.pathname}${location.search}#updates`);
 }
-const APP_VERSION = "0.7.0";
+const APP_VERSION = "0.7.1";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -195,7 +196,7 @@ const I = {
 };
 const ROUTEN = [
   ["start", "Heute"], ["pause", "Pause"], ["lumi", "Lumi"], ["uebersicht", "Übersicht"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
-  ["karte", "Karte"], ["ki", "Künstliche Intelligenz"], ["notizen", "Notizen"], ["tresor", "Tresor"], ["updates", "Updates & Abo"],
+  ["karte", "Karte"], ["notizen", "Notizen"], // 0.7.1 (Mik): „Künstliche Intelligenz“ erst, wenn es das Modell gibt ["tresor", "Tresor"], ["updates", "Updates & Abo"],
 ];
 const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
 document.getElementById("nav").innerHTML = ROUTEN.map(([id, name]) => `<a href="#${id}" data-route="${id}">${icon(id)}${name}</a>`).join("");
@@ -264,6 +265,8 @@ function tagSetzen(karte, status) {
   for (const alt of Object.keys(v).sort().slice(0, -45)) { delete v[alt]; speicher.del(`tag:${alt}`); }
   speicher.set("tag-verlauf", v);
 }
+/** Bereit auf „Heute“ (0.7.1, Mik): eine Zahl und ein Satz, der sie erklärt; kein Wort wie „unterwegs“, nichts über die Vorversion. */
+const bereitSatz = (w) => `So gut bist du auf einen Notfall vorbereitet, von 0 bis 100. ${w < 30 ? "Ein Anfang ist gemacht." : w < 60 ? "Gut die Hälfte fehlt noch." : w < 80 ? "Das meiste ist da." : "Du bist gut vorbereitet."}`;
 /** Die Textkarte (oder der Satz der Lumi) des Tages: aus demselben Pool wie die Tipps, fest für den Tag. */
 function textkarteHeute(d) {
   const k = { ...wesen.kontext(), ansicht: "start", jetzt: testJetzt() };
@@ -310,7 +313,11 @@ function tagKarteHtml(k, status) {
   const titel = k.art === "raetsel" ? "Tagesrätsel" : k.art === "kapitel" ? "Roman der Woche" : k.art === "lumi" ? `${esc(wesen.anzeigename())} sagt` : k.art === "text" ? `Textkarte des Tages${k.sorte ? ` · ${esc(SORTEN[k.sorte] ?? k.sorte)}` : ""}` : "Lektion des Tages";
   const r = state.tag.offen[k.id] ?? {};
   if (status === "erledigt" && k.art === "raetsel" && r.richtig) return `<article class="card of-karte tag-karte" data-tag-karte="${esc(k.id)}"><p class="tag-art">${titel} <span class="tag tag-ok of-plakette of-plakette--offline">erledigt</span></p><p class="tag-frage">${esc(k.frage)}</p><div class="tag-loesung tag-richtig" role="status"><p style="margin:0"><strong>Richtig!</strong> ${esc(k.loesung)}</p>${k.erklaerung ? `<p class="muted of-klein" style="margin:.4rem 0 0">${esc(k.erklaerung)}</p>` : ""}</div></article>`;
-  if (status) return `<div class="card of-karte tag-karte tag-karte--fertig" data-tag-karte="${esc(k.id)}"><span><span class="tag-art">${titel}</span> ${status === "erledigt" ? `<span class="tag tag-ok of-plakette of-plakette--offline">erledigt</span>` : `<span class="muted of-klein">weggelegt</span>`}</span><button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="zurueck" data-tag-id="${esc(k.id)}">Zurückholen</button></div>`;
+  // 0.7.1 (Mik): erledigt zeigt das Rätsel mit Lösung klein; ein Satz sagt, was „Zurückholen“ tut
+  if (status) return `<div class="card of-karte tag-karte tag-karte--fertig" data-tag-karte="${esc(k.id)}"><div><span class="tag-art">${titel}</span> ${status === "erledigt" ? `<span class="tag tag-ok of-plakette of-plakette--offline">erledigt</span>` : `<span class="muted of-klein">weggelegt</span>`}
+      ${k.art === "raetsel" && status === "erledigt" ? `<p class="of-klein tag-fertig-raetsel" style="margin:.4rem 0 0">${esc(k.frage)}</p><p class="muted of-klein" style="margin:.2rem 0 0">Lösung: ${esc(k.loesung)}</p>` : ""}
+      <p class="muted of-klein" style="margin:.4rem 0 0">${k.art === "raetsel" && status === "erledigt" ? "„Zurückholen“ legt das Rätsel wieder offen hin, dann kannst du es noch einmal lösen." : "„Zurückholen“ legt die Karte wieder auf die Tagesseite."}</p></div>
+    <button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="zurueck" data-tag-id="${esc(k.id)}">Zurückholen</button></div>`;
   const o = state.tag.offen[k.id] ?? {};
   const weg = `<button type="button" class="btn of-btn" data-tag="weg" data-tag-id="${esc(k.id)}">Weglegen</button>`;
   let inhaltHtml = "", knoepfe = "";
@@ -340,7 +347,7 @@ function tagesplanHtml() {
     <div style="margin-top:.8rem" class="tagesplan">
       <fieldset><legend>Welche Karten</legend>${TAG_KARTEN.map((k) => `<label class="tagesplan-zeile"><input type="checkbox" data-tagesplan-karte="${k.id}" ${p.karten[k.id] && !k.spaeter ? "checked" : ""} ${k.spaeter ? "disabled" : ""}> ${esc(k.titel)}${k.spaeter ? ' <span class="muted of-klein">(kommt später)</span>' : ""}</label>`).join("")}</fieldset>
       ${meinTagHtml(p)}
-      <label class="tagesplan-zeile">Vorrat<br><select class="of-select" data-tagesplan="tiefe">${TIEFEN.map((t) => `<option value="${t}" ${p.tiefe === t ? "selected" : ""}>${t} Tage im Voraus laden</option>`).join("")}</select></label>
+      <p class="tagesplan-zeile muted of-klein">Vorrat: Alle Tage, die es schon gibt, kommen von selbst auf das Gerät.</p>
       <label class="tagesplan-zeile"><input type="checkbox" data-tagesplan="sparmodus" ${p.sparmodus ? "checked" : ""}> Sparmodus: Tagesseite ohne Bilder</label>
       ${eingefroren.length ? `<p class="muted of-klein">Fest eingestellt (zweimal zurückgenommen): ${eingefroren.map((a) => esc(TAG_KARTEN.find((k) => k.id === a)?.titel ?? a)).join(", ")}. <button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="gelernt-zuruecksetzen">Gelerntes zurücksetzen</button></p>` : ""}
       ${hilfeZeile("tagesplan", "bereit-hilfe")}
@@ -454,10 +461,10 @@ const seiten = {
       <div class="buehne-kopf" id="wesen-karte">
         ${wesen.mitFigur() && !plan.sparmodus ? wesen.buehneHtml({ klein: true }) : ""}
         <div class="bereit-kopf">
-          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="muted of-klein">Bereit</span><span class="muted of-klein" style="font-size:.85rem">${b.wert < 30 ? "Anfang" : b.wert < 60 ? "unterwegs" : b.wert < 80 ? "gut" : "bereit"}</span></div>
+          <span class="muted of-klein">Bereit</span>
           <div class="bereit-zahl">${b.wert}</div>
           <div class="progress of-balken" style="margin:.4rem 0 .8rem"><div style="width:${b.wert}%"></div></div>
-          ${b.sockel ? `<p class="muted of-klein" id="bereit-sockel" style="margin:0 0 .4rem">Aus der Vorversion übernommen. Neu sind Familie, Nachbar, Anlaufstelle und Kocher. Bestätigt, trägt sich die Zahl selbst (jetzt ${b.eigen}).</p>` : ""}
+          <p class="muted of-klein bereit-satz" style="margin:0 0 .5rem">${esc(bereitSatz(b.wert))}</p>
           <p style="margin:0 0 .3rem"><a href="${schritt.ziel}">${esc(schritt.text)}</a></p>
           <p class="of-klein" style="margin:0"><a href="#uebersicht">Alles zur Bereitschaft</a></p>
         </div>
@@ -468,7 +475,7 @@ const seiten = {
         <button type="button" class="btn btn-primary of-btn of-btn--primaer" data-lumi="einladung-ja">${esc(LUMI_TEXTE.einladungJa)}</button> <button type="button" class="btn of-btn" data-lumi="einladung-nein">${esc(LUMI_TEXTE.einladungNein)}</button>
         <p class="lumi-einladung-klein">${esc(LUMI_TEXTE.einladungHinweis)} ${esc(LUMI_TEXTE.ki)}</p></div></div>` : ""}
       ${g.hinweis ? `<div class="card of-karte tag-gelernt" role="status"><p style="margin:0 0 .6rem">${esc(g.hinweis.text)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="lern-zurueck">Rückgängig</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="lern-ok">In Ordnung</button></div>` : ""}
-      ${(() => { if (!pauseE().an || !pauseDaten()) return ""; const t = rueckspiegel(spielLog(), pauseL(), speicher.get("pause", null), testJetzt(), pauseDaten().formen); return t ? `<div class="card of-karte pause-rueckspiegel" role="status"><p class="muted of-klein" style="margin:0 0 .3rem">⏸ Pause · Rückspiegel</p><p style="margin:0 0 .6rem">${esc(t)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause="rueckspiegel-ok">Schön</button></div>` : ""; })()}
+      ${(() => { if (!pauseE().an || !pauseDaten()) return ""; const t = rueckspiegel(spielLog(), pauseL(), speicher.get("pause", null), testJetzt(), pauseDaten().formen, { mitLumi: lumiInPause() }); return t ? `<div class="card of-karte pause-rueckspiegel" role="status"><p class="muted of-klein" style="margin:0 0 .3rem">⏸ Pause · Rückspiegel</p><p style="margin:0 0 .6rem">${esc(t)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause="rueckspiegel-ok">Schön</button></div>` : ""; })()}
       <section class="tag-karten" aria-label="Heute">
         ${schluss ? `${karten.filter((k) => k.art === "raetsel" && zustand[k.id] === "erledigt" && state.tag.offen[k.id]?.richtig).map((k) => tagKarteHtml(k, "erledigt")).join("")}<div class="card of-karte tag-schluss" role="status"><p class="tag-schluss-satz">${esc(SCHLUSS)}</p>${karten.length ? `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="nochmal">Heute noch einmal ansehen</button>` : ""}</div>`
           : karten.length ? karten.map((k) => tagKarteHtml(k, zustand[k.id])).join("")
@@ -551,9 +558,10 @@ const seiten = {
       <div class="gruss of-gruss"><div><h1>Übersicht</h1><p class="muted of-klein">Alles hier funktioniert ohne Internet.</p></div>
         <select class="of-select" id="bl" aria-label="Dein Bundesland">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>
       <div class="card of-karte bereit-kopf" style="margin-bottom:1rem">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem"><span class="muted of-klein">Bereit</span><span class="muted of-klein" style="font-size:.85rem">${b.wert < 30 ? "Anfang" : b.wert < 60 ? "unterwegs" : b.wert < 80 ? "gut" : "bereit"}</span></div>
+        <span class="muted of-klein">Bereit</span>
         <div class="bereit-zahl">${b.wert}</div>
         <div class="progress of-balken" style="margin:.4rem 0 .8rem"><div style="width:${b.wert}%"></div></div>
+        <p class="muted of-klein" style="margin:0 0 .5rem">${esc(bereitSatz(b.wert))}</p>
         <p style="margin:0 0 .6rem"><a href="${schritt.ziel}">${esc(schritt.text)}</a></p>
         ${b.quellen.map((q) => `<div class="bereit-quelle"><span>${esc(q.name)} <span class="muted of-klein">· ${esc(q.text)}</span></span><span class="mono of-mono">${q.punkte}/${q.max}</span></div>`).join("")}
         ${hilfeZeile("bereit", "bereit-hilfe")}
@@ -1174,15 +1182,19 @@ const lumischDaten = () => inhalt(PL(), "inhalt/lumisch.json");
 const pauseDaten = () => {
   const p = PP();
   if (!p) return null;
-  const module = pauseModule(), l = PL(), v = `${p.manifest.version}|${l ? l.manifest.version : "-"}|${module.map((m) => `${m.manifest.id}@${m.manifest.version}`).join(",")}`;
+  const module = pauseModule(), l = PL(), lumi = lumiInPause(), v = `${p.manifest.version}|${l ? l.manifest.version : "-"}|${lumi}|${module.map((m) => `${m.manifest.id}@${m.manifest.version}`).join(",")}`;
   if (pauseDatenMerk?.v !== v) {
     const roh = pauseAufbereiten(inhalt(p, "inhalt/pause.json")), lumisch = lumischDaten();
     const d = roh?.formen ? { ...roh, lumisch, formen: roh.formen.filter((f) => f.id !== "lumisch" || lumisch) } : roh;
     const dazu = module.flatMap((m) => pauseModulFormen(m.manifest.id, texte(m, "inhalt/pause-formen.json"), (d?.formen ?? []).map((f) => f.id)));
-    pauseDatenMerk = { v, d: d?.formen ? { ...d, formen: [...d.formen, ...dazu] } : d };
+    const alle = d?.formen ? { ...d, formen: [...d.formen, ...dazu] } : d;
+    // 0.7.1: Ist die Lumi aus, gibt es in Pause kein Lumisch und keine Geschichten mit der Lumi
+    pauseDatenMerk = { v, d: lumi ? alle : pauseOhneLumi(alle) };
   }
   return pauseDatenMerk.d;
 };
+/** Lumi an (0.7.1): nur mit Figur; „Aus mit Textkarten“ und „Tipps aus“ gelten in Pause als aus. */
+const lumiInPause = () => pauseLumiAn(wesen.e.darstellung);
 /** Farben des Skins für ein Spiel im Modul (nur volle Farben als #rrggbb; was fehlt, ersetzt das Modul selbst). */
 function spielFarben() {
   const s = getComputedStyle(document.documentElement), c = document.createElement("canvas").getContext("2d");
@@ -1281,9 +1293,11 @@ function pauseFokusEinbauen() {
     spielen: (form, el, rahmen) => {
       if (form.modul) return modulHappen(el, { form, linie: pauseL(), rahmen, starten: (platz, stufe) => pauseModulStarten(form, platz, stufe) });
       const log = spielLog().filter((e) => e.quelle === "pause"), heute = heuteDatum();
+      // schon gesehen: die letzten Geschichten bzw. Aufgaben dieser Form (zuerst kommt Neues)
+      const gesehen = new Set(log.filter((e) => e.id === form.id).slice(-30).map((e) => e.ergebnis?.geschichte ?? e.ergebnis?.aufgabe).filter(Boolean));
       return PAUSE_FORMEN[form.id](el, {
-        form, linie: pauseL(), daten, rahmen, rnd: Math.random, jetzt: testJetzt, antwortRichtig,
-        gesehen: new Set(log.filter((e) => e.id === "fehler").slice(-10).map((e) => e.ergebnis?.geschichte)),
+        form, linie: pauseL(), daten, rahmen, rnd: Math.random, jetzt: testJetzt, antwortRichtig, log: spielLog(), lumi: lumiInPause(),
+        gesehen,
         heute: daten.lumisch ? lumischHeute(spielLog(), daten.lumisch, heute) : null,
         umbenannt: lumischUmbenannt(spielLog(), speicher.get("lumisch-umbenannt", [])), umbenanntGezeigt: (alt) => speicher.set("lumisch-umbenannt", [...speicher.get("lumisch-umbenannt", []), alt]),
         roman: pauseRoman(), vermutung: speicher.get("pause-vermutung", null), vermutungSpeichern: (v) => speicher.set("pause-vermutung", v), gestern: pauseGestern(),
@@ -1309,6 +1323,9 @@ function pauseFokusEinbauen() {
     rueckfrage: () => { const q = rueckfrageFaellig(pauseL(), speicher.get("pause", null), testJetzt()); if (q) { const l = pauseL(); l.letzteRueckfrage = new Date(testJetzt()).toISOString(); linieSpeichern(l); } return q; },
     beantwortet: (id, a) => linieSpeichern(rueckfrageBeantworten(pauseL(), id, a, testJetzt())),
     schwierigkeitFragen: () => pauseL().happen % PAUSE_WERTE.schwierigkeitAlleN === 0,
+    // 0.7.1: Höherstellen nur als Einladung (höchstens einmal am Tag); „Zu leicht“ stellt nicht mehr direkt hoch
+    einladungFaellig: (form) => pauseEinladungFaellig(pauseL(), form, spielLog(), testJetzt()),
+    einladungAntwort: (form, k) => linieSpeichern(pauseEinladungAntwort(pauseL(), form, k, testJetzt())),
   });
 }
 /** Beim Öffnen der App (und beim Zurückkommen): höchstens eine Einladung je Öffnen, als Karte oben auf Heute, nie im Notfall-Bereich. */
@@ -1404,15 +1421,16 @@ function linieHtml() {
   const termine = auffrischungTermine(l, daten.formen);
   const fmt = (d) => new Date(`${d}T12:00:00`).toLocaleDateString("de-AT", { day: "numeric", month: "long", year: "numeric" });
   return `${kopf("⏸ Deine Linie", "Was Pause über dich gelernt hat. Jede Annahme kannst du hier ändern oder zurücksetzen.")}
-    <p style="margin:0 0 1rem"><a href="#uebersicht">‹ Übersicht</a></p>
+    <p style="margin:0 0 1rem"><a href="#pause">‹ Pause</a></p>
     ${bild && !imKennenlernen(e, jetzt) ? `<div class="card of-karte" style="margin-bottom:1rem"><p style="margin:0"><strong>So sehe ich dich:</strong> ${esc(bild)}</p></div>` : imKennenlernen(e, jetzt) ? `<div class="card of-karte" style="margin-bottom:1rem"><p style="margin:0">Wir lernen uns noch kennen. In den ersten drei Wochen kommt viel Abwechslung.</p></div>` : ""}
     <div class="card of-karte" style="margin-bottom:1rem"><h3 style="margin-top:0">Was du magst</h3>
       <ul class="lumi-balken linie-balken">${formen.filter((f) => !l.aus.includes(f.id)).map((f) => { const g = gewichtVon(l, f.id); return `<li><span>${esc(f.titel)}</span><span class="lumi-balken-spur" role="img" aria-label="${esc(f.titel)}: ${g < 1 ? "seltener" : g > 1 ? "öfter" : "normal"}"><span style="width:${Math.round((g / max) * 100)}%"></span></span><span class="muted of-klein">${gespielt(f.id) ? (g < 1 ? "seltener" : g > 1 ? "öfter" : "normal") : "neu"}</span></li>`; }).join("")}</ul>
       ${l.aus.length ? `<p class="of-klein" style="margin:.8rem 0 .3rem"><strong>Nicht mehr</strong></p><ul class="lumi-aus">${l.aus.map((id) => `<li><span>${esc(daten.formen.find((f) => f.id === id)?.titel ?? id)}</span> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause-zurueck="${esc(id)}">Zurückholen</button></li>`).join("")}</ul>` : ""}
     </div>
     <div class="card of-karte" style="margin-bottom:1rem"><h3 style="margin-top:0">Wie schwer</h3>
-      <p class="muted of-klein" style="margin:0 0 .5rem">Die Aufgaben stellen sich so ein, dass es meist klappt. Du kannst nachhelfen.</p>
-      <ul class="lumi-aus">${formen.filter((f) => f.zone).map((f) => `<li><span>${esc(f.titel)}: Stufe ${stufeVon(l, f)} von ${f.zone.stufen} · ${esc(zoneText(l, f, log))}</span> <span><button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause-stufe="${f.id}" data-richtung="schwer" aria-label="${esc(f.titel)} leichter">leichter</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause-stufe="${f.id}" data-richtung="leicht" aria-label="${esc(f.titel)} schwerer">schwerer</button></span></li>`).join("")}</ul>
+      <p class="muted of-klein" style="margin:0 0 .5rem">Jede Form hat fünf Stufen, von leicht bis Knackpunkt. Schwerer wird es nur, wenn du Ja sagst; ist es öfter zu schwer, wird es leise leichter. Hier stellst du selbst.</p>
+      <ul class="lumi-aus linie-stufen">${formen.filter((f) => f.zone).map((f) => { const s = stufenWort(f, stufeVon(l, f)); return `<li><label for="stufe-${esc(f.id)}"><span>${esc(f.titel)}</span> <span class="muted of-klein">· ${esc(zoneText(l, f, log))}</span></label>
+        <select class="of-select" id="stufe-${esc(f.id)}" data-pause-stufe="${esc(f.id)}" aria-label="${esc(f.titel)}: wie schwer">${stufenWahl(f).map((w) => `<option value="${w.stufe}" ${w.wort === s ? "selected" : ""}>${esc(w.wort)}</option>`).join("")}</select></li>`; }).join("")}</ul>
     </div>
     <div class="card of-karte" style="margin-bottom:1rem"><h3 style="margin-top:0">Über die Woche</h3><p style="margin:0">${esc(wochenSatz(l, log, daten.formen, jetzt))}</p>
       ${termine.length ? `<p class="of-klein" style="margin:.6rem 0 0">Auffrischung vorgemerkt: ${termine.map((t) => `${esc(t.titel)} am ${t.termine.map((x) => `${fmt(x.datum)}${x.erledigt ? " (erledigt)" : ""}`).join(" und am ")}`).join("; ")}. Ohne Pushnachricht: Der Happen kommt einfach an dem Tag.</p>` : ""}
@@ -1428,6 +1446,8 @@ function linieHtml() {
     <p class="muted of-klein">Alles hier bleibt auf diesem Gerät. Es wird nichts gezählt, um dich festzuhalten.</p>`;
 }
 
+/** Stand des Lumi-Buchs in Worten (0.7.1, Mik): bei 0 % „noch nichts aufgeschlagen“. */
+const buchStand = (b, frei) => { const p = buchAnteil(b, frei); return p > 0 ? `${p} % aufgeschlagen` : "noch nichts aufgeschlagen"; };
 // ---------- Die Lumi-Seite (0.7.0, Teil B; Probe „Lumi-Seite und Bibliothek als Laden“, Entscheidungen Bill 07.10.2026) ----------
 // Oben die Figur (Anstupsen, Nachtschlaf, Namensfrage) und der Satz des Tages; ohne Figur der Knopf „Lumi zeigen“. Darunter
 // ein eigenes kleines Menü: Übersicht · Alles Gesagte · Gelernt · Einstellungen · Hilfe. In der Übersicht ein Kästchen je
@@ -1438,13 +1458,13 @@ const LUMI_REITER = [["uebersicht", "Übersicht"], ["gesagt", "Alles Gesagte"], 
 function lumiKaestchen() {
   const k = [], zahl = (n, eins, viele) => `${n} ${n === 1 ? eins : viele}`;
   const tipps = texte(PW(), "inhalt/tipps.json")?.tipps;
-  if (tipps) k.push({ titel: "Tipps", zeile: `${zahl(tipps.length, "Satz", "Sätze")}${wesen.aktiv() && wesen.e.takt !== "aus" ? ` · ${wesen.e.takt === "seltener" ? "seltener" : "alle 90 s"}` : " · aus"}`, knopf: 'data-lumi-reiter="gesagt"' });
+  if (tipps) k.push({ titel: "Tipps", zeile: `${zahl(tipps.length, "Satz", "Sätze")}${wesen.aktiv() && wesen.e.takt !== "aus" ? ` · ${wesen.e.takt === "seltener" ? "seltener" : "alle 90 Sekunden"}` : " · aus"}`, knopf: 'data-lumi-reiter="gesagt"' });
   const b = buchDaten();
-  if (b) k.push({ titel: "Das Lumi-Buch", zeile: `Band ${b.band} · ${buchAnteil(b, buchFrei())} % lesbar`, ziel: "#buch" });
+  if (b) k.push({ titel: "Das Lumi-Buch", zeile: `Band ${b.band} · ${buchStand(b, buchFrei())}`, ziel: "#buch" });
   const g = gedankenDaten();
   if (g) k.push({ titel: "Was die Lumis denken", zeile: `${zahl(g.gedanken?.length ?? 0, "Gedanke", "Gedanken")} · ab ${installiertesPaket(GEDANKEN_PAKET)?.manifest.alter_ab ?? 18}`, ziel: "#gedanken" });
   const l = lumischDaten();
-  if (l) {
+  if (l && lumiInPause()) { // 0.7.1: ohne Lumi kein Lumisch
     const h = lumischHeute(spielLog(), l, heuteDatum()), stand = h.art === "plan" ? `Tag ${h.tag} von ${l.plan.length}` : h.art === "neu" ? "ein neues Wort" : "Wiederholung";
     k.push({ titel: "Lumisch", zeile: `${stand} · ${l.woerterbuch?.length ?? l.woerter.length} Wörter`, ...(pauseE().an && PP() ? { knopf: 'data-pause="spielen" data-form="lumisch"' } : { ziel: "#pause" }) });
   }
@@ -1508,10 +1528,10 @@ function absatzHtml() {
 }
 function buchHtml() {
   const b = buchDaten();
-  if (!b) return `${kopf("Das Lumi-Buch", "Das Buch kommt mit dem Paket „Das Lumi-Buch“.")}<div class="card of-karte"><p style="margin:0">${navigator.onLine ? "Es wird gerade geladen oder lässt sich in der Bibliothek installieren." : "Sobald du online bist, lädt OFFLINE es."}</p></div>`;
+  if (!b) return `${kopf("Das Lumi-Buch", "Das Buch kommt mit dem Paket „Das Lumi-Buch“.")}<div class="card of-karte"><p style="margin:0">${navigator.onLine ? "Es wird gerade geladen, oder du lädst es in der Bibliothek." : "Sobald du online bist, lädt OFFLINE es."}</p></div>`;
   const frei = buchFrei();
   return `<article class="buch-lesen" lang="de">
-    <header class="buch-titel"><h1>${esc(b.titel)}</h1><p class="buch-band">Band ${b.band} · ${buchAnteil(b, frei)} % lesbar</p>
+    <header class="buch-titel"><h1>${esc(b.titel)}</h1><p class="buch-band">Band ${b.band} · ${buchStand(b, frei)}</p>
       <p class="buch-hinweis">${esc(b.hinweis)}</p>
       <p class="buch-werkzeug">${frei.absaetze.length ? `<button type="button" class="z-neben" data-buch="vorlesen">${state.buchLiest ? "Anhalten" : "Vorlesen"}</button>` : ""}<a class="z-neben" href="#uebersicht">Zurück</a></p></header>
     ${frei.absaetze.length ? "" : `<p class="buch-leer">Unter einem Satz deiner Lumi steht „Aus dem Lumi-Buch“. Was du dort aufschlägst, steht danach hier.</p>`}
@@ -1531,7 +1551,7 @@ function buchVorlesen() {
 }
 // ---------- Das Lumi-Buch ende ----------
 // ---------- Was die Lumis denken (0.6.2) ----------
-const gedankenFehlt = () => `${kopf("Was die Lumis denken", "Die Gedanken kommen mit dem Paket „Was die Lumis denken“.")}<div class="card of-karte"><p style="margin:0">Es lässt sich in der Bibliothek installieren.</p></div>`;
+const gedankenFehlt = () => `${kopf("Was die Lumis denken", "Die Gedanken kommen mit dem Paket „Was die Lumis denken“.")}<div class="card of-karte"><p style="margin:0">Du findest es in der Bibliothek unter „Neu“ und lädst es dort.</p></div>`;
 function gedankeOeffnen(i) {
   if (state.gedankenLiest) gedankenVorlesenStop();
   state.gedanke = Math.max(0, Math.min(Number(i) || 0, gedankenSeiten(gedankenDaten()).length - 1));
@@ -2273,6 +2293,8 @@ function render() {
 }
 
 main.addEventListener("change", (e) => {
+  // „Deine Linie“ (0.7.1): Stufe als Wort selbst stellen
+  if (e.target.dataset?.pauseStufe) { const f = pauseDaten()?.formen.find((x) => x.id === e.target.dataset.pauseStufe); if (f) { linieSpeichern(pauseStufeSetzen(pauseL(), f, Number(e.target.value))); render(); } return; }
   const t = e.target;
   if (t.dataset.tagesplanKarte) { const p = tagesplan(); p.karten[t.dataset.tagesplanKarte] = t.checked; planSpeichern(p); return; }
   if (t.dataset.tagesplan) {
@@ -2436,7 +2458,7 @@ document.addEventListener("click", (e) => {
   if (b.dataset.hoeren !== undefined && (location.hash === "#gedanke")) { if (state.gedankenLiest) gedankenVorlesenStop(); lumischSprechen(b.dataset.hoeren); return; }
   if (b.dataset.pause) return pauseKnopf(b.dataset.pause, b);
   if (b.dataset.pauseZurueck) { linieSpeichern(pauseZurueckholen(pauseL(), b.dataset.pauseZurueck)); return render(); }
-  if (b.dataset.pauseStufe) { const f = pauseDaten()?.formen.find((x) => x.id === b.dataset.pauseStufe); if (f) linieSpeichern(pauseSchwierigkeit(pauseL(), f, b.dataset.richtung)); return render(); }
+
   if (b.dataset.lumiBewerten) return lumiBewerten(b);
   if (b.dataset.lumiZurueckholen) { wesen.zurueckholen(b.dataset.lumiZurueckholen); return render(); }
   if (b.hasAttribute("data-lumi-lernen-zuruecksetzen")) { wesen.lernenZuruecksetzen(); return render(); }
@@ -2555,7 +2577,8 @@ sheetHinter.addEventListener("click", () => blattSetzen(false));
 function netz() {
   const on = navigator.onLine;
   document.getElementById("net-dot").className = "dot " + (on ? "on" : "off");
-  document.getElementById("net-text").textContent = on ? "Online – Abo kann laden" : "Offline – alles verfügbar";
+  // 0.7.1 (Mik): ein klarer Satz, nicht abgeschnitten
+  document.getElementById("net-text").textContent = on ? (state.abo?.aktiv ? "Online. Neue Inhalte kommen von selbst." : "Online.") : "Offline. Alles auf dem Gerät geht weiter.";
   const d2 = document.getElementById("net-dot-oben"), t2 = document.getElementById("net-text-oben"); if (d2) d2.className = "dot " + (on ? "on" : "off"); if (t2) t2.textContent = on ? "Online" : "Offline";
 }
 async function appAngaben() {

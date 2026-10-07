@@ -2,6 +2,17 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.7.1",
+      "datum": "2026-10-07",
+      "punkte": [
+        "Pause hat jetzt fünf Stufen und drei neue Formen: Kaffeehaus-Logik, Kopfnuss und Ein Gedanke am Fluss.",
+        "Neue Geschichten für „Der eingebaute Fehler“, 100 Lumisch-Aufgaben und je 30 Varianten für den Tag rückwärts und das Atemfenster.",
+        "Erwachsene beginnen auf „mit Biss“. Schwerer wird es nur, wenn du auf die Frage Ja sagst; ist es öfter zu schwer, wird es leise leichter.",
+        "Ist die Lumi aus, gibt es in Pause kein Lumisch und keine Lumi.",
+        "Zeitgefühl zeigt die echte Uhrzeit und ein Wort, keine Minuten mehr."
+      ]
+    },
+    {
       "version": "0.7.0",
       "datum": "2026-10-07",
       "punkte": [

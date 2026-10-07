@@ -164,7 +164,10 @@ function freigegebeneTexte(r) {
   try { tag = git("describe", "--tags", "--abbrev=0", "--match", "v*", "HEAD").toString().trim(); }
   catch { console.error("Klartext-Wache: kein Release-Tag (vX.Y.Z) gefunden, auch Veröffentlichtes zählt als Fund. In der CI: checkout mit fetch-depth 0."); return []; }
   const pfade = zeilen(git("ls-tree", "-r", "--name-only", tag)).filter((p) => TEXT.test(p) || /\.(m?js|css|rs)$/.test(p));
-  return pfade.filter((p) => (p.startsWith("web/") || p.startsWith("app/src") || /^pakete\/[^/]+\/inhalt\//.test(p)) && !p.startsWith("web/pakete/") && !schutzGrund(p, r))
+  // Die Web-Kopie der Pakete (web/pakete/<id>-<version>/inhalt/) ist genau das, was im öffentlichen Katalog steht (0.7.1:
+  // nötig, wenn ein veröffentlichtes Paket bis zur nächsten Ausgabe wieder gesperrt ist, z. B. pause und lumisch)
+  const webKopie = (p) => /^web\/pakete\/[^/]+\/inhalt\/[^/]+\.(json|md|txt)$/.test(p);
+  return pfade.filter((p) => webKopie(p) || ((p.startsWith("web/") || p.startsWith("app/src") || /^pakete\/[^/]+\/inhalt\//.test(p)) && !p.startsWith("web/pakete/") && !schutzGrund(p, r)))
     .map((p) => git("show", `${tag}:${p}`).toString("utf8"));
 }
 /** Fingerabdrücke aus dem lokalen Klartext unveröffentlichter Quellen: Ordner quelle/, alles unter bill/ und die .md-Dateien im

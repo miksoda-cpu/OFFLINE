@@ -1,7 +1,7 @@
 {
   "id": "pause",
   "titel": "Pause · Happen für zwischendurch",
-  "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten – Pilze finden, Geschichten von unten, Lumisch, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
+  "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten, in fünf Stufen – Pilze finden, Geschichten mit einem Fehler, Kaffeehaus-Logik, Kopfnuss, Gedanken am Fluss, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
   "art": "inhalt",
   "sprache": "de-AT",
   "lizenz": "CC BY-SA 4.0",
@@ -11,8 +11,8 @@
   "pruefstatus": "redaktion",
   "bereich": "pause",
   "alter_ab": 14,
-  "app_min": "0.7.0",
-  "aenderungen": "Lumisch zum Anhören: Zu jedem Wort kommt die Aussprache mit.",
+  "app_min": "0.7.1",
+  "aenderungen": "Pause hat jetzt fünf Stufen, 60 neue Geschichten, je 30 Varianten für den Tag rückwärts und das Atemfenster und drei neue Formen: Kaffeehaus-Logik, Kopfnuss und Ein Gedanke am Fluss.",
   "quellen": [
     {
       "id": "redaktion",
@@ -21,5 +21,15 @@
     }
   ],
   "abnahme": "Redaktion (Code), 05.10.2026: Lumisch gegen die Beilage der Wortprüfung vom 05.10.2026 (500 Wörter nach dem Nachtrag 2026-10-05-05, Plan in 21 Tagen, von Mik freigegeben); Geschichten auf genau einen falschen Satz geprüft",
-  "braucht_netz": false
+  "braucht_netz": false,
+  "freigegeben": false,
+  "offen": [
+    "LIESMICH.md",
+    "inhalt/vorschau/1.svg",
+    "inhalt/vorschau/2.jpg",
+    "inhalt/vorschau/3.svg",
+    "inhalt/vorschau/4.svg",
+    "inhalt/vorschau/5.svg",
+    "inhalt/vorschau/folien.json"
+  ]
 }

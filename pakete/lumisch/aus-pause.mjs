@@ -10,6 +10,9 @@ import { fileURLToPath } from "node:url";
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const pause = JSON.parse(await readFile(path.join(HIER, "..", "pause", "inhalt", "pause.json"), "utf8"));
 const { plan, woerter, woerterbuch, hinweis } = pause.lumisch;
-const aus = { format: 1, hinweis, plan, woerter, woerterbuch };
+// Die Aufgaben (seit 0.7.1, 100 in fünf Stufen) stehen nur hier; sie bleiben beim Neuschreiben erhalten
+let aufgaben;
+try { aufgaben = JSON.parse(await readFile(path.join(HIER, "inhalt", "lumisch.json"), "utf8")).aufgaben; } catch {}
+const aus = { format: 1, hinweis, plan, woerter, woerterbuch, ...(aufgaben ? { aufgaben } : {}) };
 await writeFile(path.join(HIER, "inhalt", "lumisch.json"), JSON.stringify(aus, null, 1) + "\n");
 console.log(`lumisch.json: Plan ${plan.length} Tage, ${woerter.length} Abfragewörter, Wörterbuch ${woerterbuch.length}`);

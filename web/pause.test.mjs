@@ -8,7 +8,8 @@ import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { WERTE, einstellungenLaden, angeboten, happenFaellig, waehle, linieLaden, bewerten, zurueckholen, schwierigkeit, zoneAnpassen, verfuegbar,
   rueckfrageFaellig, rueckfrageBeantworten, auffrischungFaellig, auffrischungTermine, rueckspiegel, lumischHeute, lumischAntworten, startStufe, pauseAufbereiten, lumischSaetze, reihenfolgeRichtig, soSeheIchDich, wochenSatz, logDazu, imKennenlernen, gewichtVon, stufeVon, tagVon, raumFormen, dauerText, LUMISCH_ALT, lumischUmbenannt } from "./pause.js";
-import { pilzMs } from "./pause-happen.js";
+import { pilzMs, zeitWort } from "./pause-happen.js";
+import { einladungFaellig, einladungAntwort, EINLADUNG_TEXT, stufenWort, stufenWahl, stufeSetzen } from "./pause.js";
 import { pruefeNachricht, pruefeSpielMeldung, GRENZEN } from "./modul-host.js";
 import { pauseFehler, GEBAUT } from "../paket-kit/pause-format.mjs";
 import { FUNKTIONEN } from "./wesen.js";
@@ -132,16 +133,49 @@ test("Linie: Mehr davon hebt die Form und Verwandtes, Nicht mehr nimmt sie herau
   assert.ok(gewichtVon(l, "pilz") >= WERTE.gewicht.tief, "Verwandtes fällt nie unter die Grenze");
 });
 
-test("Zone: über 85 % eine Stufe schwerer, unter 75 % leichter; Zu leicht / Zu schwer stellt direkt; Pilz blitzt kürzer", () => {
+test("0.7.1: Höherstellen nur als Einladung; Zu leicht stellt nicht hoch; Abstieg leise bis Stufe 2; Pilz blitzt kürzer", () => {
   const pilz = formen.find((f) => f.id === "pilz");
-  const log = (treffer) => Array.from({ length: 3 }, () => ({ quelle: "pause", id: "pilz", art: ["tempo"], ergebnis: { treffer, von: 3 }, zeit: "2026-10-05T10:00:00Z" }));
-  assert.equal(stufeVon(zoneAnpassen({}, pilz, log(3)), pilz), startStufe(pilz) + 1);
-  assert.equal(stufeVon(zoneAnpassen({}, pilz, log(2)), pilz), startStufe(pilz) - 1, "2 von 3 = 67 %");
-  assert.equal(stufeVon(zoneAnpassen({}, pilz, log(3).slice(0, 2)), pilz), startStufe(pilz), "zu wenig Happen: nichts verstellen");
-  assert.equal(stufeVon(schwierigkeit({}, pilz, "leicht"), pilz), startStufe(pilz) + 1);
-  assert.equal(stufeVon(schwierigkeit({}, pilz, "schwer"), pilz), startStufe(pilz) - 1);
-  assert.equal(stufeVon(schwierigkeit({}, pilz, "richtig"), pilz), startStufe(pilz));
+  const log = (treffer, n = 3) => Array.from({ length: n }, () => ({ quelle: "pause", id: "pilz", art: ["tempo"], ergebnis: { treffer, von: 3 }, zeit: "2026-10-05T10:00:00Z" }));
+  assert.equal(stufeVon(zoneAnpassen({}, pilz, log(3, 6)), pilz), startStufe(pilz), "nie still hinauf");
+  assert.equal(stufeVon(zoneAnpassen({}, pilz, log(0)), pilz), startStufe(pilz) - 1, "drei Happen ohne Gelingen: eine leichter");
+  assert.equal(stufeVon(zoneAnpassen({ stufe: { pilz: 2 } }, pilz, log(0)), pilz), 2, "Untergrenze Stufe 2");
+  assert.equal(stufeVon(zoneAnpassen({}, pilz, log(2)), pilz), startStufe(pilz), "teilweise gelungen: bleibt");
+  assert.equal(stufeVon(schwierigkeit({}, pilz, "leicht"), pilz), startStufe(pilz), "Zu leicht stellt nicht direkt hoch");
+  let l = schwierigkeit({}, pilz, "schwer"); assert.equal(stufeVon(l, pilz), startStufe(pilz), "einmal Zu schwer: noch nichts");
+  l = schwierigkeit(l, pilz, "schwer"); assert.equal(stufeVon(l, pilz), startStufe(pilz) - 1, "zweimal: leise eine leichter");
   assert.ok(pilzMs(1) > pilzMs(5) && pilzMs(10) >= WERTE.pilz.msMin);
+});
+
+test("0.7.1: Die Einladung – fünf gelungene Happen oder zweimal Zu leicht, einmal am Tag, Abstand, So lassen ruht 30 Tage", () => {
+  const f = formen.find((x) => x.id === "fehler"), tag = (d) => T(`2026-10-${d}T10:00:00`);
+  const gut = (n, d = "05") => Array.from({ length: n }, () => ({ quelle: "pause", id: "fehler", art: f.art, ergebnis: { treffer: 1, von: 1 }, zeit: `2026-10-${d}T09:00:00` }));
+  assert.equal(einladungFaellig({}, f, gut(4), tag("05")), false, "vier reichen nicht");
+  assert.equal(einladungFaellig({}, f, gut(5), tag("05")), true);
+  assert.equal(einladungFaellig({}, f, [...gut(4), { ...gut(1)[0], ergebnis: { treffer: 1, von: 1, tipps: 2 } }], tag("05")), false, "mehr als ein Tipp zählt nicht als gelungen");
+  let l = schwierigkeit(schwierigkeit({}, f, "leicht"), f, "leicht");
+  assert.equal(einladungFaellig(l, f, [], tag("05")), true, "zweimal Zu leicht");
+  l = einladungAntwort(l, f, "ja", tag("05"));
+  assert.equal(stufeVon(l, f), startStufe(f) + 1, "Ja: genau eine Stufe höher");
+  assert.equal(einladungFaellig(l, f, gut(5, "05"), tag("05")), false, "höchstens einmal am Tag");
+  assert.equal(einladungFaellig(l, f, gut(5, "06"), tag("07")), false, "drei Tage Abstand");
+  assert.equal(einladungFaellig(l, f, gut(5, "08"), tag("08")), true, "nach drei Tagen und drei Happen wieder");
+  const r = einladungAntwort({}, f, "lassen", tag("05"));
+  assert.equal(einladungFaellig(r, f, gut(5, "20"), tag("20")), false, "So lassen ruht");
+  assert.equal(einladungFaellig(r, f, gut(5, "05").map((e) => ({ ...e, zeit: "2026-11-05T09:00:00" })), T("2026-11-05T10:00:00")), true, "nach 30 Tagen wieder");
+  assert.equal(einladungFaellig({ stufe: { fehler: 5 } }, f, gut(5), tag("05")), false, "oben keine Einladung");
+  assert.match(EINLADUNG_TEXT.frage, /^Das ging dir leicht von der Hand\. Magst du es kniffliger\?$/);
+  assert.deepEqual([EINLADUNG_TEXT.ja, EINLADUNG_TEXT.noch, EINLADUNG_TEXT.lassen], ["Ja, probier’s", "Noch nicht", "So lassen"]);
+});
+
+test("0.7.1: Fünf Wörter statt Zahlen, Start auf Stufe 3 von 5 (Pilz 5 von 10), alte Stufen rücken nach", () => {
+  const f = (id) => formen.find((x) => x.id === id);
+  for (const id of ["fehler", "lumisch", "zeitgefuehl", "kaffeehaus", "kopfnuss", "fluss"]) { assert.deepEqual(f(id).zone, { stufen: 5, start: 3 }, id); assert.equal(stufenWort(f(id), startStufe(f(id))), "mit Biss", id); }
+  assert.deepEqual(f("pilz").zone, { stufen: 10, start: 5 }); assert.equal(stufenWort(f("pilz"), 5), "mit Biss"); assert.equal(stufenWort(f("pilz"), 10), "Knackpunkt");
+  assert.deepEqual(stufenWahl(f("fehler")).map((w) => w.wort), WERTE.stufenWoerter);
+  assert.deepEqual(stufenWahl(f("pilz")).map((w) => w.stufe), [1, 3, 5, 7, 9]);
+  assert.deepEqual(linieLaden({ stufe: { fehler: 1, lumisch: 2, zeitgefuehl: 3, pilz: 7 } }).stufe, { fehler: 2, lumisch: 3, zeitgefuehl: 4, pilz: 7 }, "0.7.0 → 0.7.1");
+  assert.deepEqual(linieLaden(linieLaden({ stufe: { fehler: 2 } })).stufe, { fehler: 3 }, "nur einmal");
+  assert.equal(stufeVon(stufeSetzen({}, f("fehler"), 1), f("fehler")), 1, "selbst gestellt geht auch auf leicht");
 });
 
 test("Rückfragen: höchstens eine am Tag im Kennenlernen, danach eine je Woche, jede nur einmal, überspringen fragt nicht wieder", () => {
@@ -173,7 +207,7 @@ test("Rückspiegel einmal im Monat in Worten, ohne Punkte; Wochen- und Kennenler
   const e = { ...an, seit: "2026-08-01" }, jetzt = T("2026-10-05T10:00:00");
   const log = [{ quelle: "pause", id: "pilz", art: ["tempo"], ergebnis: { treffer: 3, von: 3, ms: 660 }, zeit: "2026-08-20T10:00:00" }, { quelle: "pause", id: "pilz", art: ["tempo"], ergebnis: { treffer: 3, von: 3, ms: 450 }, zeit: "2026-10-04T10:00:00" }];
   const t = rueckspiegel(log, {}, e, jetzt);
-  assert.match(t, /Vor einem Monat .*660.*450/); assert.doesNotMatch(t, /Punkt|%/);
+  assert.match(t, /Vor einem Monat musste der Pilz noch länger blitzen/); assert.doesNotMatch(t, /\d|Punkt|%/, "0.7.1: keine Zahl über Leistung");
   assert.equal(rueckspiegel(log, { rueckspiegelAm: "2026-09-20T10:00:00" }, e, jetzt), null, "höchstens einmal im Monat");
   assert.equal(rueckspiegel(log, {}, { ...e, seit: "2026-09-20" }, jetzt), null, "frühestens nach einem Monat Pause");
   assert.match(soSeheIchDich(linieLaden({ antworten: { tempo: "ruhiger" } }), log, formen), /Wo war der Pilz\?.*ruhig/);
@@ -372,24 +406,17 @@ test("Lumisch anhören: Umschrift und Lautschrift im Paket, Stimme de-AT zuerst,
   assert.match(hoerenKnopf(w("vau")), /data-hoeren="wa u"[^>]*aria-label="vau anhören"[^>]*hidden/, "erst sichtbar, wenn es eine Stimme gibt");
   assert.equal(hoerenKnopf({ wort: "alt" }), "", "ohne Umschrift (altes Paket) kein Knopf");
   const happen = await readFile(new URL("./pause-happen.js", import.meta.url), "utf8");
-  assert.equal((happen.match(/\$\{hoer\(/g) ?? []).length, 5, "neben jedem Lumisch-Wort: Plan, neues Wort, Wiederholung, Abfrage Stufe 1 und jede Antwort in Stufe 2");
+  assert.equal((happen.match(/\$\{hoer\(/g) ?? []).length, 6, "neben jedem Lumisch-Wort: Plan, neues Wort, Wiederholung, Abfrage Stufe 1, jede Antwort in Stufe 2 und in den Aufgaben (0.7.1)");
 });
 
 // ---------- Pause fordert mehr (0.6.4) ----------
-test("0.6.4: ab 14 beginnt jede Form mit Stufen auf Stufe 2; gespeicherte Stufen bleiben, nie über der obersten", () => {
-  for (const f of formen.filter((x) => x.zone)) { assert.equal(startStufe(f), 2, f.id); assert.equal(stufeVon({ stufe: {} }, f), 2, f.id); }
+test("0.7.1: gespeicherte Stufen bleiben, nie über der obersten; Formen ohne Stufen auf 1", () => {
   const pilz = formen.find((f) => f.id === "pilz");
   assert.equal(stufeVon({ stufe: { pilz: 7 } }, pilz), 7, "wer schon weiter ist, bleibt dort");
   assert.equal(startStufe(formen.find((f) => f.id === "atem")), 1, "Formen ohne Stufen");
-});
-
-test("0.6.4: Der eingebaute Fehler endet bei Stufe 2, solange es keine Geschichten für Stufe 3 gibt", () => {
   const d = pauseAufbereiten(daten), f = d.formen.find((x) => x.id === "fehler");
-  assert.equal(f.zone.stufen, Math.max(...daten.fehler.map((g) => g.stufe)));
-  assert.equal(f.zone.stufen, 2);
-  assert.equal(stufeVon({ stufe: { fehler: 3 } }, f), 2, "eine gespeicherte Stufe 3 wird zu 2");
-  assert.equal(stufeVon(schwierigkeit({ stufe: { fehler: 2 } }, f, "leicht"), f), 2, "„Zu leicht“ geht nicht über 2");
-  assert.equal(daten.formen.find((x) => x.id === "fehler").zone.stufen, 3, "das Paket selbst bleibt unverändert");
+  assert.equal(f.zone.stufen, 5, "Geschichten auf allen fünf Stufen");
+  for (let s = 1; s <= 5; s++) assert.ok(daten.fehler.filter((g) => g.stufe === s).length >= 10, `Stufe ${s}`);
 });
 
 test("0.6.4: Lumisch Stufe 3 – nur Sätze aus „Was die Lumis denken“, alle Wörter im Wörterbuch, mindestens drei Wörter", async () => {

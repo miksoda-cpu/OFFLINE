@@ -11,8 +11,8 @@
   "pruefstatus": "redaktion",
   "bereich": "lumi",
   "alter_ab": 14,
-  "app_min": "0.7.0",
-  "aenderungen": "Neu: Lumisch als eigenes Paket. Bisher steckte es im Paket Pause.",
+  "app_min": "0.7.1",
+  "aenderungen": "100 neue Aufgaben in fünf Stufen. Im Wörterbuch heißt es jetzt „Wir wissen, dass wir nichts wissen“ und „tel3“.",
   "quellen": [
     {
       "id": "redaktion",
@@ -21,5 +21,15 @@
     }
   ],
   "abnahme": "Redaktion (Code), 07.10.2026: Inhalt wortgleich mit Lumisch im Paket pause 2026.10.05.2 (Test web/lumi-seite.test.mjs)",
-  "braucht_netz": false
+  "braucht_netz": false,
+  "freigegeben": false,
+  "offen": [
+    "LIESMICH.md",
+    "inhalt/vorschau/1.svg",
+    "inhalt/vorschau/2.webp",
+    "inhalt/vorschau/3.svg",
+    "inhalt/vorschau/4.svg",
+    "inhalt/vorschau/5.svg",
+    "inhalt/vorschau/folien.json"
+  ]
 }

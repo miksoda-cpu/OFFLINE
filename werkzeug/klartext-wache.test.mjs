@@ -75,11 +75,11 @@ test("Fingerabdruck: Freigegebenes zählt nicht; Rahmen und Aufzählungszeichen 
 
 test("Die Regeln im Repo: Naturheilkunde, Bilder und Flechte gekennzeichnet; Unveröffentlichtes liegt verschlüsselt", () => {
   const r = regelnAusRepo();
-  assert.deepEqual(r.pakete.map((p) => p.wurzel).sort(), ["pakete/flechte/", "pakete/naturheilkunde-bilder/", "pakete/naturheilkunde/"]);
+  assert.deepEqual(r.pakete.map((p) => p.wurzel).sort(), ["pakete/flechte/", "pakete/lumisch/", "pakete/naturheilkunde-bilder/", "pakete/naturheilkunde/", "pakete/pause/"]); // pause und lumisch bis zur Freigabe mit 0.7.1
   for (const p of ["pakete/flechte/inhalt/skin/skin.css", "pakete/pause/quelle/OFFLINE-Lumisch-Woerterbuch-2026-10-05.md", "pakete/pause/quelle/OFFLINE-Lumisch-Aussprache.json",
     "bill/eingang/2026-10-04-pause-quellen/OFFLINE-Modul-Pause-Konzept.md", "bill/eingang/2026-09-29-bill/material/pakete/wir/inhalt/tipps.json", "bill/beilagen/2026-10-06-auszuege.md"])
     assert.ok(r.spiegel.has(p) && schutzGrund(p, r), p);
-  assert.equal(schutzGrund("pakete/pause/inhalt/pause.json", r), null, "freigegebener Paketinhalt bleibt offen");
+  assert.equal(schutzGrund("pakete/at-basis/inhalt/notrufe.json", r), null, "freigegebener Paketinhalt bleibt offen");
 });
 
 test("Jede Freigabe hat einen Grund und ist kurz (Namen und Redaktionssätze, kein Inhalt)", async () => {
