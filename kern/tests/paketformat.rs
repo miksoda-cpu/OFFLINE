@@ -40,7 +40,10 @@ fn echtes_paket_wird_akzeptiert_und_stimmt_mit_node_ueberein() {
     let Some(p) = echtes_paket() else { eprintln!("kein gebautes Paket – übersprungen"); return };
     let g = paket_pruefen(&p, &bekannte(), HEUTE).expect("echtes Paket muss gültig sein");
     assert_eq!(g.manifest.id, "at-basis");
-    assert_eq!(g.manifest.dateien.len(), 5);
+    // Das Manifest nennt jede Datei des Ordners (ohne paket.json und paket.sig); seit 0.8.0 mit Szenarien und Tondateien
+    fn zaehle(d: &Path) -> usize { std::fs::read_dir(d).unwrap().flatten().map(|e| if e.path().is_dir() { zaehle(&e.path()) } else { 1 }).sum() }
+    assert_eq!(g.manifest.dateien.len(), zaehle(&p.join("inhalt")));
+    assert!(g.manifest.dateien.len() >= 5);
     // Node-Werkzeug muss zum selben Ergebnis kommen
     let aus = Command::new("node").arg(wurzel().join("werkzeug/paket.mjs")).arg("pruefen").arg(&p).output().unwrap();
     assert!(aus.status.success(), "node: {}", String::from_utf8_lossy(&aus.stderr));
