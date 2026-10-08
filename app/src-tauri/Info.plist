@@ -4,7 +4,5 @@
 <dict>
   <key>NSMicrophoneUsageDescription</key>
   <string>Für Sprachnotizen (Diktat) in Notizen und Tresor. Aufnahmen bleiben auf diesem Gerät.</string>
-  <key>NSCameraUsageDescription</key>
-  <string>Für Fotos zu Notizen und Scans im Tresor. Bilder bleiben auf diesem Gerät.</string>
 </dict>
 </plist>

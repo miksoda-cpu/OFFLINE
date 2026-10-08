@@ -219,6 +219,44 @@ export async function bildUrl(id, pfad) {
   } catch { return null; }
 }
 
+// ---------- Vorschau (0.7.2) ----------
+const VORSCHAU_GRENZE = 200 * 1024;
+const VORSCHAU_MIME = { ...MIME, svg: "image/svg+xml" };
+/**
+ * Vorschau eines Katalogeintrags im Browser: Folien aus dem signierten Katalog, Bilder vom Paketordner der Web-Version,
+ * jedes gegen Größe und Prüfsumme im Katalog (wie vorschau.rs im Kern). Liegt das Paket schon auf dem Gerät, kommen die
+ * Bilder von dort. Ein Bild, das nicht kommt (offline), fehlt nur – die Folie bleibt mit Text.
+ */
+export async function vorschauKatalog(id) {
+  const k = katalogAusSpeicher()?.katalog;
+  const e = k?.pakete.find((p) => p.id === id);
+  const v = e?.vorschau;
+  if (!v?.folien?.length) return [];
+  if ((v.dateien ?? []).reduce((s, d) => s + d.groesse, 0) > VORSCHAU_GRENZE) throw new Error("Vorschau: Bilder zusammen über 200 kB");
+  const inst = installiertesPaket(id);
+  const url = paketUrl(k, e);
+  const aus = [];
+  for (const folie of v.folien) {
+    const pfad = `inhalt/vorschau/${folie.bild}`;
+    const d = (v.dateien ?? []).find((x) => x.pfad === pfad);
+    const typ = VORSCHAU_MIME[String(folie.bild).split(".").pop().toLowerCase()];
+    let bild_daten = null;
+    try {
+      if (!d || !typ) throw new Error("ohne Bild");
+      if (inst?.manifest.version === e.version && inst.inhalt?.[pfad] != null) bild_daten = URL.createObjectURL(new Blob([inst.inhalt[pfad]], { type: typ }));
+      else if (inst?.manifest.version === e.version && inst.binaer?.includes(pfad)) bild_daten = await bildUrl(id, pfad);
+      if (!bild_daten) {
+        const bytes = await holeBytes(url + pfad);
+        if (bytes.length !== d.groesse || (await sha256Hex(bytes)) !== d.sha256) throw new Error(`Vorschau: ${pfad} passt nicht zum Katalog (Prüfsumme)`);
+        bild_daten = URL.createObjectURL(new Blob([bytes], { type: typ }));
+      }
+    } catch { bild_daten = null; }
+    aus.push({ ...folie, bild_daten });
+  }
+  return aus;
+}
+export const vorschauInstalliert = vorschauKatalog;
+
 /** Welche installierten Pakete haben im Katalog eine neuere Version? */
 export function verfuegbareUpdates(katalog) {
   const aus = [];

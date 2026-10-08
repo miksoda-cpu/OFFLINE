@@ -293,7 +293,7 @@ textarea { border-radius: var(--radius-sm) !important; }
 
 /* ---------- Module: Katalogkarte, Schieber, Slideshow, Löschen, Ansicht in der Sandbox, Druck ---------- */
 .modul-steuerung { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; justify-content: flex-end; }
-.modul-karte .btn, .modul-karte .slider-nav .btn, .modul-kopf .btn { min-height: 44px; min-width: 44px; }
+.modul-karte .btn, .modul-kopf .btn { min-height: 44px; min-width: 44px; }
 .schieber { display: inline-flex; align-items: center; gap: .55rem; min-height: 44px; padding: 0 .4rem; background: none; border: 0; color: inherit; font: inherit; font-weight: 500; cursor: pointer; border-radius: 999px; }
 .schieber:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .schieber:disabled { cursor: progress; opacity: .8; }
@@ -305,12 +305,36 @@ textarea { border-radius: var(--radius-sm) !important; }
 .schieber-laden .schieber-bahn { background: var(--ok-soft); box-shadow: inset 0 0 0 1px var(--ok); }
 .schieber-laden .schieber-text { color: var(--ok); }
 .schieber-laden[aria-checked="true"] .schieber-bahn { background: var(--ok); }
-.slider { border: 1px solid var(--line); border-radius: 10px; padding: .6rem; margin: .5rem 0 .8rem; display: grid; gap: .45rem; }
-.slider-leer { min-height: 3rem; place-items: center; }
-.slider-bild { display: grid; place-items: center; aspect-ratio: 16 / 9; max-height: 320px; background: var(--bg, #f6f6f4); border-radius: 6px; overflow: hidden; }
-.slider-bild img { max-width: 100%; max-height: 100%; object-fit: contain; }
-.slider-text { display: grid; gap: .15rem; }
-.slider-nav { display: flex; justify-content: space-between; align-items: center; }
+/* Vorschau (0.7.2): Titelbild in der Karte, großes Fenster über der Seite (am Handy ganzer Bildschirm) */
+.vorschau-titel { display: grid; gap: .4rem; margin: 0 0 .7rem; }
+.vorschau-titel--leer { min-height: 3rem; place-items: center; border: 1px solid var(--z-hair); border-radius: var(--z-radius); }
+.vorschau-titelbild { position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 16 / 9; padding: 0; border: 1px solid var(--z-hair); border-radius: var(--z-radius); background: var(--surface-2); overflow: hidden; cursor: zoom-in; color: inherit; font: inherit; }
+.vorschau-titelbild img, .vorschau-bild img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.vorschau-ansehen { justify-self: start; min-height: 44px; padding: 0 .1rem; background: none; border: 0; color: var(--eis-ink); font: inherit; font-size: .95rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.vorschau-fenster { position: fixed; inset: 0; z-index: 1200; display: flex; align-items: center; justify-content: center; }
+.vorschau-fenster[hidden] { display: none; }
+.vorschau-hinter { position: absolute; inset: 0; background: rgb(20 18 16 / .5); animation: blatt-hinter .18s ease-out; }
+.vorschau-dialog { position: relative; display: flex; flex-direction: column; width: min(760px, calc(100vw - 48px)); max-height: min(92vh, 900px); overflow-y: auto; overscroll-behavior: contain; background: var(--surface); color: var(--text); border-radius: 18px; box-shadow: 0 16px 50px rgb(0 0 0 / .25); padding: 10px 20px max(18px, env(safe-area-inset-bottom)); animation: blatt-auf .22s ease-out; }
+.vorschau-kopf { display: flex; align-items: center; justify-content: space-between; gap: .5rem; border-bottom: 1px solid var(--z-hair); margin: 0 -8px 14px 0; padding-bottom: 6px; }
+.vorschau-kopf h2 { font-family: var(--z-serif); font-weight: 400; font-size: 1.15rem; margin: 0; }
+.vorschau-x { width: 44px; height: 44px; flex: none; display: grid; place-items: center; background: none; border: 0; color: var(--muted); font-size: 1.7rem; line-height: 1; cursor: pointer; border-radius: var(--z-radius); }
+.vorschau-x:focus { outline: none; } .vorschau-x:focus-visible { outline: 1.5px solid var(--eis-ink); outline-offset: -4px; }
+.vorschau-seite { margin: 0; touch-action: pan-y; user-select: none; }
+.vorschau-bild { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 10; max-height: 56vh; background: var(--surface-2); border-radius: var(--z-radius); overflow: hidden; }
+.vorschau-bild img { pointer-events: none; }
+.vorschau-seite figcaption { padding: 14px 2px 4px; }
+.vorschau-seite h3 { font-family: var(--z-serif); font-weight: 400; font-size: 1.25rem; margin: 0 0 .35rem; }
+.vorschau-seite p { font-size: 1rem; line-height: 1.6; margin: 0; }
+.vorschau-nav { display: flex; justify-content: space-between; align-items: center; gap: .5rem; margin: 12px 0 4px; }
+.vorschau-nav .btn { min-width: 44px; min-height: 44px; font-size: 1.3rem; }
+.vorschau-fuss { display: flex; justify-content: center; padding-top: 10px; margin-top: 6px; border-top: 1px solid var(--z-hair); }
+.vorschau-fuss p { margin: .4rem 0; }
+body.vorschau-offen { overflow: hidden; }
+@media (max-width: 640px) {
+  .vorschau-dialog { width: 100vw; height: 100dvh; max-height: none; border-radius: 0; padding-top: max(8px, env(safe-area-inset-top)); }
+  .vorschau-bild { aspect-ratio: auto; height: 50vh; max-height: none; }
+  .vorschau-fuss { margin-top: auto; }
+}
 .modul-loeschen { border-top: 1px solid var(--line); margin-top: .8rem; padding-top: .8rem; display: grid; gap: .55rem; }
 .modul-loeschen input[type="text"] { min-height: 44px; font-size: 1rem; }
 .modul-loeschen fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: .35rem; }
@@ -761,3 +785,4 @@ body.blatt-offen { overflow: hidden; }
 .laden-bereich { display: block; margin: .3rem 0 .5rem; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .laden-steuerung { display: inline-flex; flex-wrap: wrap; gap: .5rem; align-items: center; justify-content: flex-end; }
 .laden-immer { font-size: .85rem; color: var(--muted); }
+.alter-frage { display: inline-flex; flex-wrap: wrap; gap: .4rem; align-items: center; justify-content: flex-end; }

@@ -393,7 +393,7 @@ export function wochenSatz(linie, log, formen, jetzt) {
  * Rückspiegel: einmal im Monat eine ruhige Karte in Worten, ohne Punkte. Vergleicht den Pilz (Blitzdauer) oder die Zahl der
  * gelernten Lumisch-Wörter mit vor einem Monat. Gibt einen Satz oder null.
  */
-export function rueckspiegel(log, linie, einstellungen, jetzt, formen = [], { mitLumi = true } = {}) {
+export function rueckspiegel(log, linie, einstellungen, jetzt, formen = [], { mitLumi = true, mitLumisch = mitLumi } = {}) {
   const l = linieLaden(linie), e = einstellungenLaden(einstellungen);
   if (!e.seit || tageZwischen(e.seit, jetzt) < WERTE.rueckspiegelTage) return null;
   if (l.rueckspiegelAm && tageZwischen(l.rueckspiegelAm, jetzt) < WERTE.rueckspiegelTage) return null;
@@ -406,7 +406,7 @@ export function rueckspiegel(log, linie, einstellungen, jetzt, formen = [], { mi
   // Lumisch nur, wenn die Lumi an ist (0.7.1)
   const woerter = (bis) => new Set(p.filter((x) => x.id === "lumisch" && Date.parse(x.zeit) <= bis && x.ergebnis?.wort).map((x) => x.ergebnis.wort)).size;
   const a = woerter(vorMonat), b = woerter(jetzt);
-  if (mitLumi && b > a) return a ? `Vor einem Monat kanntest du ${zahlText(a)} Lumisch-Wörter. Heute sind es ${zahlText(b)}.` : `Vor einem Monat war Lumisch noch fremd. Heute kennst du ${b === 1 ? "ein Wort" : `${zahlText(b)} Wörter`}.`;
+  if (mitLumisch && b > a) return a ? `Vor einem Monat kanntest du ${zahlText(a)} Lumisch-Wörter. Heute sind es ${zahlText(b)}.` : `Vor einem Monat war Lumisch noch fremd. Heute kennst du ${b === 1 ? "ein Wort" : `${zahlText(b)} Wörter`}.`;
   // Kein Fortschritt: höchstens die Lieblingsformen des Monats, in Worten und ohne Zahl (nie Tage oder Besuche zählen)
   const zaehl = {};
   for (const x of p.filter((y) => Date.parse(y.zeit) > vorMonat && !y.abgebrochen)) zaehl[x.id] = (zaehl[x.id] ?? 0) + 1;

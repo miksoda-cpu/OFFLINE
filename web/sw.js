@@ -1,10 +1,9 @@
 // OFFLINE Service Worker: App-Hülle vorab speichern, Kartenkacheln beim Ansehen merken.
-const VERSION = "offline-v32";
+const VERSION = "offline-v33";
 const HUELLE = [
   "/", "/index.html", "/app.html", "/app.js", "/styles.css", "/icon.svg",
   "/manifest.webmanifest", "/anmeldung.js", "/datenschutz.html", "/paket-kern.js", "/paket-client.js", "/bereit.js", "/wesen.js", "/wesen.css", "/modul-host.js", "/tag.js", "/pause.js", "/pause-werte.js", "/pause-happen.js", "/buch.js", "/neuigkeiten.js", "/hilfe.js", "/blatt.js", "/meintag.js", "/stimme.js", "/intern.js", "/natur.js", "/gedanken.js", "/abkuerzungen.js", "/pakete.js", "/neues.json", "/schluessel/oeffentlich.json",
-  "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css",
-  "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js",
+  "/lib/leaflet/leaflet.min.css", "/lib/leaflet/leaflet.min.js", // 0.7.2: Leaflet liegt bei uns, keine Anfrage an Cloudflare
 ];
 const KACHELN = "offline-kacheln";
 const MAX_KACHELN = 800;
@@ -54,7 +53,7 @@ self.addEventListener("fetch", (e) => {
   e.respondWith(
     fetch(frisch)
       .then((res) => {
-        if (res.ok && (url.origin === location.origin || url.hostname === "cdnjs.cloudflare.com")) {
+        if (res.ok && url.origin === location.origin) {
           const copy = res.clone();
           caches.open(VERSION).then((c) => c.put(req, copy));
         }

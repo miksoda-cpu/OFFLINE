@@ -21,7 +21,7 @@ export async function init() {
   verbindungMelden();
   addEventListener("online", verbindungMelden);
   addEventListener("offline", verbindungMelden);
-  return { datenordner: await invoke("datenordner") };
+  return { datenordner: await invoke("datenordner"), info: await invoke("app_info").catch(() => null) };
 }
 
 async function cacheLaden() {

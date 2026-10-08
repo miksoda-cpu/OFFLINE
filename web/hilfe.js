@@ -14,7 +14,7 @@ export const HILFE = {
     ["Was zeigt „Was ist neu“?", "Der Reiter „App“ zeigt, was sich an der App geändert hat. Der Reiter „Inhalte“ zeigt, was sich in den Paketen geändert hat. Ein roter Punkt zeigt: Hier gibt es etwas, das du noch nicht gesehen hast."],
     ["Was prüft „Offline-Bereitschaft“?", "Die App prüft, ob alles für die Nutzung ohne Internet am Gerät ist."],
     ["Was tun „Zurücksetzen“ und „Restlos löschen“?", "„Alles zurücksetzen“ löscht alle Daten und lädt die App neu. „Restlos löschen“ löscht alle Daten und die Offline-Kopie. Beide Schritte fragen zweimal nach. Gelöschte Daten kann niemand wiederherstellen, auch wir nicht."],
-    ["Woher kommen die Daten?", "Die Pakete kommen von unserem Server. Die App sendet nur die Versionen deiner Pakete. Bei Pro sendet sie auch deinen Lizenzschlüssel. Die App sendet keine Inhalte und keine Notizen."],
+    ["Woher kommen die Daten?", "Die Pakete kommen von unserem Server. Die App sendet nur die Versionen deiner Pakete, keine Inhalte und keine Notizen."],
   ],
   tresor: [
     ["Was ist der Tresor?", "Der Tresor ist ein verschlüsselter Bereich auf diesem Gerät. Hier liegen Notizen, Fotos und Dateien, die niemand sonst sehen soll. Den Tresor gibt es nur in der Desktop-App."],

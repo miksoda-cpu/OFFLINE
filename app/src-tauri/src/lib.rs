@@ -545,12 +545,15 @@ fn downloads_offen(z: State<Zustand>) -> Vec<OffenerDownload> {
     offen
 }
 
-// ---------- App-Update (Tauri-Updater; nur mit Feature tls eingebaut) ----------
+// ---------- App-Update (Tauri-Updater; nur mit Feature updater eingebaut, nie im Store-Build) ----------
+
+#[cfg(all(feature = "store", feature = "updater"))]
+compile_error!("Der Store-Build hat keinen eigenen Updater: --no-default-features --features store");
 
 #[derive(Serialize)]
 pub struct AppUpdate { pub version: String, pub aktuell: String, pub datum: Option<String>, pub hinweise: Option<String> }
 
-#[cfg(feature = "tls")]
+#[cfg(feature = "updater")]
 mod app_update {
     use super::*;
     use tauri_plugin_updater::UpdaterExt;
@@ -583,7 +586,7 @@ mod app_update {
     }
 }
 
-#[cfg(not(feature = "tls"))]
+#[cfg(not(feature = "updater"))]
 mod app_update {
     use super::*;
     #[tauri::command]
@@ -598,7 +601,7 @@ fn app_neustart(app: AppHandle) {
 }
 
 #[derive(Serialize)]
-struct AppInfo { version: &'static str, tauri: &'static str, system: &'static str, arch: &'static str, ort: String, ort_problem: Option<String>, entwickler: bool }
+struct AppInfo { version: &'static str, tauri: &'static str, system: &'static str, arch: &'static str, ort: String, ort_problem: Option<String>, entwickler: bool, store: bool }
 
 /// Läuft die App von einem Ort, an dem sie sich nicht selbst aktualisieren kann? (DMG, App-Translocation, Downloads)
 fn ort_pruefen(ort: &Path) -> Option<String> {
@@ -625,7 +628,7 @@ fn app_info() -> AppInfo {
         s.find(".app/").map(|i| PathBuf::from(&s[..i + 4])).or(Some(p))
     }).unwrap_or_default();
     let ort_problem = ort_pruefen(&ort);
-    AppInfo { version: env!("CARGO_PKG_VERSION"), tauri: tauri::VERSION, system, arch, ort: ort.display().to_string(), ort_problem, entwickler: cfg!(debug_assertions) }
+    AppInfo { version: env!("CARGO_PKG_VERSION"), tauri: tauri::VERSION, system, arch, ort: ort.display().to_string(), ort_problem, entwickler: cfg!(debug_assertions), store: cfg!(feature = "store") }
 }
 
 /// Interner Kanal (0.6.0): Schlüssel und Stand nur im Datenordner dieses Geräts, nie im Tresor, in keiner Sicherung.
@@ -635,12 +638,14 @@ fn intern_datei(z: &Zustand) -> PathBuf {
 
 #[tauri::command]
 fn intern_lesen(z: State<Zustand>) -> Option<serde_json::Value> {
+    if cfg!(feature = "store") { return None; } // Store-Build: kein interner Kanal
     std::fs::read(intern_datei(&z)).ok().and_then(|b| serde_json::from_slice(&b).ok())
 }
 
 /// stand = null löscht den Schlüssel („Entfernen“).
 #[tauri::command]
 fn intern_setzen(z: State<Zustand>, stand: Option<serde_json::Value>) -> Result<(), String> {
+    if cfg!(feature = "store") && stand.is_some() { return Err("Den internen Kanal gibt es in dieser Ausgabe nicht.".into()); }
     match stand {
         None => match std::fs::remove_file(intern_datei(&z)) {
             Err(e) if e.kind() != std::io::ErrorKind::NotFound => Err(e.to_string()),
@@ -1012,7 +1017,7 @@ pub fn start() {
     let builder = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init());
-    #[cfg(feature = "tls")]
+    #[cfg(feature = "updater")]
     let builder = builder.plugin(tauri_plugin_updater::Builder::new().build());
     builder
         .setup(|app: &mut tauri::App| {

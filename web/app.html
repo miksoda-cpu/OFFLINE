@@ -8,12 +8,12 @@
   <meta name="theme-color" content="#c8102e">
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="lib/leaflet/leaflet.min.css">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/wesen.css">
 </head>
 <body class="of-app">
-  <div class="proto-banner" id="proto-banner">Prototyp – so wird die Desktop-App aussehen. <a href="/">Zur Übersicht</a></div>
+  <div class="proto-banner" id="proto-banner">Prototyp – so wird die Desktop-App aussehen. <a href="/">Zur Startseite</a></div>
   <div class="topbar of-kopfleiste">
     <a class="brand of-marke" href="#start"><span class="brand-flag" aria-hidden="true"></span>OFFLINE</a>
     <span class="status-zeile" style="gap:.4rem;font-size:.85rem;color:var(--muted)"><span class="dot" id="net-dot-oben"></span><span id="net-text-oben"></span></span>
@@ -36,7 +36,7 @@
   <button class="sheet-hinter" id="sheet-hinter" aria-label="Menü schließen" hidden></button>
   <button class="menu-btn" id="menu" hidden aria-controls="sidebar" aria-expanded="false">Menü</button>
   <div id="druck-bereich" class="druck-bereich"></div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="lib/leaflet/leaflet.min.js"></script>
   <script type="module" src="/app.js"></script>
 </body>
 </html>

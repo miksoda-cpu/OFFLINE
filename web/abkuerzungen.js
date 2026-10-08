@@ -132,8 +132,8 @@ export function ausschreiben(text, liste = LISTE) {
 
 /**
  * Überschriften, Knöpfe, Auswahlfelder (Bill, 07.10.2026): nicht verlängern; statt der Abkürzung steht das ganze Wort.
- * „Teil 7: TCM“ → „Teil 7: Traditionelle Chinesische Medizin“; in Zusammensetzungen durchgekoppelt
- * („TCM-Begriffe“ → „Traditionelle-Chinesische-Medizin-Begriffe“). Internetadressen bleiben.
+ * „Teil 7: TCM“ → „Teil 7: Traditionelle Chinesische Medizin“. Wörter mit Bindestrich bleiben, wie sie sind
+ * („KI-Bilder“, „TCM-Begriffe“): Die Ersetzung zerlegt keine Wortverbindungen (Bill, 0.7.2). Internetadressen bleiben.
  */
 export function ausschreibenTitel(text, liste = LISTE) {
   if (typeof text !== "string" || text.length < 2) return text;
@@ -142,8 +142,8 @@ export function ausschreibenTitel(text, liste = LISTE) {
     const lang = liste[k]; if (!lang) continue;
     muster.lastIndex = 0;
     aus = aus.replace(muster, (treffer, i, ganz) => {
-      if (inAdresse(ganz, i)) return treffer;
-      return ganz[i + k.length] === "-" || ganz[i - 1] === "-" ? lang.replace(/,? /g, "-") : lang;
+      if (inAdresse(ganz, i) || ganz[i + k.length] === "-" || ganz[i - 1] === "-") return treffer;
+      return lang;
     });
   }
   return aus;

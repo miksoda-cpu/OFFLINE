@@ -1,6 +1,6 @@
 [package]
 name = "offline-app"
-version = "0.7.1"
+version = "0.7.2"
 description = "OFFLINE – Wissen, das nicht ausfällt"
 authors = ["The Digioneer / digitalworld Academy"]
 edition = "2021"
@@ -24,8 +24,14 @@ base64 = "0.22"
 offline-kern = { path = "../../kern", default-features = false }
 
 [features]
-default = ["tls"]
-tls = ["offline-kern/tls", "dep:tauri-plugin-updater"]
+default = ["tls", "updater"]
+# Netz mit TLS (Pakete, Katalog) – ohne es geht nur die Typprüfung ohne C-Compiler
+tls = ["offline-kern/tls"]
+# Eigener App-Updater (latest.json auf Hetzner) – nur im Direkt-Download
+updater = ["tls", "dep:tauri-plugin-updater"]
+# Store-Build (0.7.2, Startreife): ohne eigenen Updater und ohne internen Kanal; die Stores aktualisieren selbst.
+# Bauen: npx tauri build --no-default-features --features store --config src-tauri/tauri.store.conf.json
+store = ["tls"]
 
 [dev-dependencies]
 # Mock-Laufzeit für den Berechtigungstest (IPC-Anfragen mit der Adresse des Modulservers)

@@ -54,13 +54,5 @@
     "art": "inhalt",
     "pro": true,
     "groesse": 800000000
-  },
-  {
-    "id": "ki-basis",
-    "titel": "KI-Modell Deutsch · Basis",
-    "beschreibung": "Lokales Sprachmodell für Fragen an deine Bibliothek. Ab 8 GB RAM.",
-    "art": "modell",
-    "pro": false,
-    "groesse": 4700000000
   }
 ]

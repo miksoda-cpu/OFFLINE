@@ -12,7 +12,7 @@
   "bereich": "pause",
   "alter_ab": 14,
   "app_min": "0.7.1",
-  "aenderungen": "Pause hat jetzt fünf Stufen, 60 neue Geschichten, je 30 Varianten für den Tag rückwärts und das Atemfenster und drei neue Formen: Kaffeehaus-Logik, Kopfnuss und Ein Gedanke am Fluss.",
+  "aenderungen": "Fünf Geschichten mit einem Fehler sind dazugekommen. Damit sind es 60, zwölf auf jeder Stufe.",
   "quellen": [
     {
       "id": "redaktion",
@@ -21,5 +21,15 @@
     }
   ],
   "abnahme": "Redaktion (Code), 05.10.2026: Lumisch gegen die Beilage der Wortprüfung vom 05.10.2026 (500 Wörter nach dem Nachtrag 2026-10-05-05, Plan in 21 Tagen, von Mik freigegeben); Geschichten auf genau einen falschen Satz geprüft",
-  "braucht_netz": false
+  "braucht_netz": false,
+  "freigegeben": false,
+  "offen": [
+    "LIESMICH.md",
+    "inhalt/vorschau/1.svg",
+    "inhalt/vorschau/2.jpg",
+    "inhalt/vorschau/3.svg",
+    "inhalt/vorschau/4.svg",
+    "inhalt/vorschau/5.svg",
+    "inhalt/vorschau/folien.json"
+  ]
 }

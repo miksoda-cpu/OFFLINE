@@ -11,9 +11,10 @@ const daten = JSON.parse(await lies("../pakete/pause/inhalt/pause.json"));
 const lumisch = JSON.parse(await lies("../pakete/lumisch/inhalt/lumisch.json"));
 const jeStufe = (liste) => [1, 2, 3, 4, 5].map((s) => liste.filter((x) => x.stufe === s).length);
 
-test("Inhalte: Geschichten auf fünf Stufen (ohne die mit „Susi“), Ruhe je 30, neue Formen je 25, Lumisch-Aufgaben 100", () => {
+test("Inhalte: 60 Geschichten, zwölf je Stufe (0.7.2: die fünf ohne „Susi“ nachgetragen), Ruhe je 30, neue Formen je 25, Lumisch-Aufgaben 100", () => {
   assert.deepEqual(pauseFehler(daten), []);
-  assert.ok(jeStufe(daten.fehler).every((n) => n >= 10), String(jeStufe(daten.fehler)));
+  assert.deepEqual(jeStufe(daten.fehler), [12, 12, 12, 12, 12]);
+  for (const id of ["feh-1-04", "feh-3-07", "feh-4-11", "feh-5-07", "feh-5-12"]) assert.equal(daten.fehler.find((g) => g.id === id)?.nur_mit_lumi, true, id);
   assert.ok(!/Susi/.test(JSON.stringify([daten.fehler, daten.ruhe, daten.kaffeehaus, daten.kopfnuss, daten.fluss, lumisch.aufgaben])), "kein Name in den neuen Inhalten (das Wörterbuch nutzt „Susi“ seit 0.5 als Beispielnamen)");
   for (const g of daten.fehler) assert.ok(g.fehler >= 0 && g.fehler < g.saetze.length, g.id);
   // Die Beilage zählt ab 1; nach der Übernahme ab 0 – Stichprobe: der Kühlschrank beim Bäcker
@@ -59,9 +60,9 @@ test("Lumi aus: kein Lumisch und keine Lumi in Pause – Formen, Geschichten, Ru
 
 test("Die App wendet „Lumi aus“ an: Daten, Rückspiegel, Lumi-Seite; intern.trainiert wird nie gezeigt", async () => {
   const app = await lies("./app.js"), happen = await lies("./pause-happen.js");
-  assert.ok(app.includes("pauseDatenMerk = { v, d: lumi ? alle : pauseOhneLumi(alle) };"));
-  assert.ok(app.includes("{ mitLumi: lumiInPause() }"), "Rückspiegel ohne Lumisch");
-  assert.ok(app.includes("if (l && lumiInPause()) { // 0.7.1: ohne Lumi kein Lumisch"));
+  assert.ok(app.includes("const ohne = lumi ? alle : pauseOhneLumi(alle);"));
+  assert.ok(app.includes("{ mitLumi: lumiInPause(), mitLumisch: lumischInPause() }"), "Rückspiegel ohne Lumisch");
+  assert.ok(app.includes("if (l && lumischInPause()) { // 0.7.1: ohne Lumi kein Lumisch"));
   assert.ok(happen.includes("const mitLumisch = lumi && a.lumisch;") && happen.includes("ruheText(roh, lumi)"));
   assert.ok(!/trainiert/.test(happen) && !/\.trainiert\b/.test(app), "nie angezeigt");
 });

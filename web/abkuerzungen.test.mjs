@@ -47,6 +47,8 @@ function unbekannte(texte) {
 }
 /** Ganze Wörter in Großbuchstaben mitten in einer Hervorhebung (**NICHT**) zählen als Betonung, nicht als Abkürzung. */
 const hervorhebung = (t, i) => /\*\*[^*]*$/.test(t.slice(0, i));
+/** Steht k nur in Wörtern mit Bindestrich („TCM-Begriffe“)? In Überschriften bleiben die seit 0.7.2 unangetastet (Bill). */
+const nurImBindestrichWort = (t, k) => { const m = [...t.matchAll(new RegExp(`(?<![\\p{L}\\p{N}_@.])${k.replace(/[.]/g, "\\.")}(?![\\p{L}\\p{N}_@])`, "gu"))]; return m.length > 0 && m.every((x) => t[x.index - 1] === "-" || t[x.index + k.length] === "-"); };
 /** Ist k in diesem Text erklärt? */
 const erklaert = (t, k) => { const l = LISTE[k], i = t.search(new RegExp(`(?<![\\p{L}\\p{N}_@.])${k.replace(/[.]/g, "\\.")}(?![\\p{L}\\p{N}_@])`, "u"));
   return [`${k} (${l}`, `${l} (${k}`, `(${k}: ${l}`, `${k}: ${l}`].some((s) => t.includes(s)) || (t.indexOf(l) >= 0 && t.indexOf(l) < i) || t.slice(i - 1, i + k.length + 1) === `(${k})` || t.slice(i - 1, i + k.length + 1) === `(${k}:`; }; // auch von Hand: „im drahtlosen Netz (WLAN)“
@@ -88,7 +90,7 @@ test("Naturheilkunde und Erste-Hilfe-Karte: jede Abkürzung eingeordnet und erkl
   const roh = JSON.parse(await readFile(NATUR, "utf8")), texte = texteVon(roh);
   assert.deepEqual(Object.fromEntries(unbekannte(texte)), {}, "neue Abkürzung in der Naturheilkunde");
   const d = texteAusschreiben(roh);
-  for (const t of texteVon(d)) for (const k of Object.keys(LISTE)) if (kommtVor(t, k)) assert.ok(erklaert(t, k), `${k} nicht erklärt in: ${t.slice(0, 120)}`);
+  for (const t of texteVon(d)) for (const k of Object.keys(LISTE)) if (kommtVor(t, k)) assert.ok(erklaert(t, k) || nurImBindestrichWort(t, k), `${k} nicht erklärt in: ${t.slice(0, 120)}`);
   const { naturHtml, ersteHilfeHtml } = await import("./natur.js");
   const karte = ersteHilfeHtml(d);
   assert.match(karte, /href="tel:/, "Nummern bleiben antippbar");
@@ -110,7 +112,7 @@ test("Bill 07.10.: eine Klammer statt zwei (Strichpunkt), Überschriften und Kn�
   assert.equal(ausschreiben("Wasser für die WC-Spülung (Kanister, gefüllte Badewanne)"), "Wasser für die WC-Spülung (WC: Toilette; Kanister, gefüllte Badewanne)");
   assert.equal(ausschreiben("zusätzlich BfR-PDF (Verwechslung)"), "zusätzlich BfR-PDF (BfR: Bundesinstitut für Risikobewertung; PDF: Portable Document Format; Verwechslung)");
   assert.equal(ausschreibenTitel("Teil 7: TCM"), "Teil 7: Traditionelle Chinesische Medizin");
-  assert.equal(ausschreibenTitel("TCM-Begriffe"), "Traditionelle-Chinesische-Medizin-Begriffe");
+  assert.equal(ausschreibenTitel("TCM-Begriffe"), "TCM-Begriffe", "0.7.2: Bindestrich-Wörter bleiben");
   assert.equal(ausschreiben("### Laut BfR\nDas BfR sagt"), "### Laut Bundesinstitut für Risikobewertung\nDas BfR (Bundesinstitut für Risikobewertung) sagt", "Überschriftszeilen ohne Klammer");
   assert.deepEqual(texteAusschreiben({ titel: "Teil 7: TCM", text: "Die TCM" }), { titel: "Teil 7: Traditionelle Chinesische Medizin", text: "Die TCM (Traditionelle Chinesische Medizin)" });
   assert.equal(LISTE.BMLUK, "Bundesministerium für Land- und Forstwirtschaft, Klima- und Umweltschutz, Regionen und Wasserwirtschaft");
@@ -122,4 +124,15 @@ test("Bill 07.10.: eine Klammer statt zwei (Strichpunkt), Überschriften und Kn�
   for (const t of seite.split(/\n/)) for (const k of Object.keys(LISTE)) if (kommtVor(t, k) && !["AT"].includes(k)) assert.ok(erklaert(t, k), `Webseite: ${k} in „${t.trim().slice(0, 90)}“`);
   const app = await readFile(url("./app.js"), "utf8");
   for (const s of ['modell: "Künstliche Intelligenz"', "Vom Speicherstick oder Ordner einspielen", "<strong>Nur im drahtlosen Netz</strong>"]) assert.ok(app.includes(s), s);
+});
+
+test("0.7.2 (Bill): Bindestrich-Wörter werden nicht zerlegt; KI-Zeile in der Bibliothek", async () => {
+  const app = await readFile(url("./app.js"), "utf8");
+  for (const w of ["KI-Bilder", "TCM-Begriffe", "WC-Spülung", "SIM-Karte"]) {
+    assert.equal(ausschreibenTitel(w), w, `Titel: ${w}`);
+    assert.ok(ausschreiben(`Die ${w} hier`).startsWith(`Die ${w} (`), `Fließtext: ${w} bleibt ganz, die Erklärung folgt dahinter`);
+  }
+  assert.deepEqual(texteAusschreiben({ titel: "KI-Bilder" }), { titel: "KI-Bilder" });
+  assert.ok(!/Künstliche Intelligenz<\/span> Bilder damit erzeugt/.test(app));
+  assert.equal((app.match(/Bilder mit künstlicher Intelligenz \(KI\) erzeugt, Herkunft im Paket/g) ?? []).length, 2, "Modul- und Paketkarte");
 });

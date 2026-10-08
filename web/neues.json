@@ -2,6 +2,18 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.7.2",
+      "datum": "2026-10-08",
+      "punkte": [
+        "Die Vorschau in der Bibliothek öffnet sich groß: oben das Bild, darunter der Text, zum Blättern mit Pfeilen oder Wischen.",
+        "„Übersicht“ heißt jetzt „Bereit“.",
+        "Fünf Geschichten mit einem Fehler sind dazugekommen.",
+        "Wer das Paket Lumisch selbst lädt, bekommt Lumisch in Pause auch ohne Figur.",
+        "Pakete ab 18 fragen beim ersten Laden einmal nach dem Alter. Die Antwort bleibt auf dem Gerät.",
+        "Die Karte lädt ihr Programm nicht mehr von einem fremden Server."
+      ]
+    },
+    {
       "version": "0.7.1",
       "datum": "2026-10-07",
       "punkte": [

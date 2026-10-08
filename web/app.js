@@ -31,9 +31,11 @@ const paketeAus = () => speicher.get("pakete-aus", []);
 const modulStandJetzt = () => { try { return state.modul.stand; } catch { return {}; } };
 const installiertesPaket = (id) => { const p = paketRoh(id); return p && paketAn(p, { aus: paketeAus(), modulStand: modulStandJetzt() }) ? p : null; };
 const desktop = client.istDesktop ? await client.init() : null;
+// Store-Build (0.7.2): kein eigener App-Updater, kein interner Kanal – die Stores aktualisieren selbst
+const storeBuild = !!desktop?.info?.store;
 // ---------- Interner Kanal (0.6.0): Schlüssel aus dem Link-Fragment, nur auf diesem Gerät, sofort aus der Adresszeile ----------
 const internBasis = desktop ? INTERN_WEB_BASIS : `${location.origin}/intern/`;
-let internStand = desktop ? await client.internLesen().catch(() => null) : client.speicher.get("intern-kanal", null);
+let internStand = storeBuild ? null : desktop ? await client.internLesen().catch(() => null) : client.speicher.get("intern-kanal", null);
 async function internSpeichern(stand) {
   internStand = stand;
   if (desktop) await client.internSetzen(stand).catch(() => {});
@@ -43,11 +45,11 @@ async function internFreischalten(schluessel) {
   await internSpeichern({ schluessel, pakete: internStand?.schluessel === schluessel ? internStand.pakete ?? [] : [], zuletzt: null });
 }
 {
-  const k = schluesselAusLink(location.hash);
+  const k = storeBuild ? null : schluesselAusLink(location.hash);
   if (k) { history.replaceState(null, "", `${location.pathname}${location.search}#updates`); await internFreischalten(k); }
   else if (location.hash.startsWith("#kanal=")) history.replaceState(null, "", `${location.pathname}${location.search}#updates`);
 }
-const APP_VERSION = "0.7.1";
+const APP_VERSION = "0.7.2";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -96,7 +98,7 @@ const state = {
   filter: "Alle",
   meldung: null, // { text, art } für die Update-Seite
   // Module (art = "modul"): Stand je Modul, geladene Vorschauen, gewählte Folie, offener Löschdialog, lokale Quelle, laufendes Modul
-  modul: { stand: {}, vorschau: {}, folie: {}, loeschen: null, lokal: null, offen: null, skin: null },
+  modul: { stand: {}, vorschau: {}, loeschen: null, lokal: null, offen: null, skin: null },
 };
 
 if (desktop?.abo) {
@@ -195,7 +197,7 @@ const I = {
   lumi: '<path d="M6 20c0-5 2.7-9 6-9s6 4 6 9"/><circle cx="10" cy="15" r=".8"/><circle cx="14" cy="15" r=".8"/><path d="M9 11 7 4M15 11l2-7"/>',
 };
 const ROUTEN = [
-  ["start", "Heute"], ["pause", "Pause"], ["lumi", "Lumi"], ["uebersicht", "Übersicht"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
+  ["start", "Heute"], ["pause", "Pause"], ["lumi", "Lumi"], ["uebersicht", "Bereit"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
   ["karte", "Karte"], ["notizen", "Notizen"], // 0.7.1 (Mik): „Künstliche Intelligenz“ erst, wenn es das Modell gibt ["tresor", "Tresor"], ["updates", "Updates & Abo"],
 ];
 const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
@@ -283,7 +285,7 @@ function tagesSatzZeigen() {
   if (!t || z[`lumi-${t.id}`] || !tagesplan().karten.lumi) return;
   wesen.satzDesTages(t);
 }
-/** „Zeig mir“: an die Stelle in der App, Abschnitte der Übersicht aufklappen. */
+/** „Zeig mir“: an die Stelle in der App, Abschnitte der Seite „Bereit“ (bis 0.7.1 „Übersicht“) aufklappen. */
 const ANKER = { tagesplan: "tagesplan" };
 function zielOeffnen(ziel) {
   if (!ZIELE.includes(ziel)) return;
@@ -475,7 +477,7 @@ const seiten = {
         <button type="button" class="btn btn-primary of-btn of-btn--primaer" data-lumi="einladung-ja">${esc(LUMI_TEXTE.einladungJa)}</button> <button type="button" class="btn of-btn" data-lumi="einladung-nein">${esc(LUMI_TEXTE.einladungNein)}</button>
         <p class="lumi-einladung-klein">${esc(LUMI_TEXTE.einladungHinweis)} ${esc(LUMI_TEXTE.ki)}</p></div></div>` : ""}
       ${g.hinweis ? `<div class="card of-karte tag-gelernt" role="status"><p style="margin:0 0 .6rem">${esc(g.hinweis.text)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="lern-zurueck">Rückgängig</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="lern-ok">In Ordnung</button></div>` : ""}
-      ${(() => { if (!pauseE().an || !pauseDaten()) return ""; const t = rueckspiegel(spielLog(), pauseL(), speicher.get("pause", null), testJetzt(), pauseDaten().formen, { mitLumi: lumiInPause() }); return t ? `<div class="card of-karte pause-rueckspiegel" role="status"><p class="muted of-klein" style="margin:0 0 .3rem">⏸ Pause · Rückspiegel</p><p style="margin:0 0 .6rem">${esc(t)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause="rueckspiegel-ok">Schön</button></div>` : ""; })()}
+      ${(() => { if (!pauseE().an || !pauseDaten()) return ""; const t = rueckspiegel(spielLog(), pauseL(), speicher.get("pause", null), testJetzt(), pauseDaten().formen, { mitLumi: lumiInPause(), mitLumisch: lumischInPause() }); return t ? `<div class="card of-karte pause-rueckspiegel" role="status"><p class="muted of-klein" style="margin:0 0 .3rem">⏸ Pause · Rückspiegel</p><p style="margin:0 0 .6rem">${esc(t)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause="rueckspiegel-ok">Schön</button></div>` : ""; })()}
       <section class="tag-karten" aria-label="Heute">
         ${schluss ? `${karten.filter((k) => k.art === "raetsel" && zustand[k.id] === "erledigt" && state.tag.offen[k.id]?.richtig).map((k) => tagKarteHtml(k, "erledigt")).join("")}<div class="card of-karte tag-schluss" role="status"><p class="tag-schluss-satz">${esc(SCHLUSS)}</p>${karten.length ? `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="nochmal">Heute noch einmal ansehen</button>` : ""}</div>`
           : karten.length ? karten.map((k) => tagKarteHtml(k, zustand[k.id])).join("")
@@ -555,7 +557,7 @@ const seiten = {
     const land = laender.find((l) => l.name === state.bundesland);
     const b = bereit(); wesen.setScore(b); const schritt = naechsterSchritt(b);
     return `
-      <div class="gruss of-gruss"><div><h1>Übersicht</h1><p class="muted of-klein">Alles hier funktioniert ohne Internet.</p></div>
+      <div class="gruss of-gruss"><div><h1>Bereit</h1><p class="muted of-klein">Alles hier funktioniert ohne Internet.</p></div>
         <select class="of-select" id="bl" aria-label="Dein Bundesland">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>
       <div class="card of-karte bereit-kopf" style="margin-bottom:1rem">
         <span class="muted of-klein">Bereit</span>
@@ -903,6 +905,7 @@ const seiten = {
 /** App-Version und Suche nach einer neuen Version, als Teil von „Stand“ (Desktop seit 0.5.2, Web seit 0.5.5). */
 function appUpdateZeile() {
   if (!desktop) return webUpdateZeile();
+  if (storeBuild) return `<div class="upd-zeile upd-app"><span>${versionKnopf()} · <span class="muted of-klein">Neue Versionen der App kommen über den Store.</span></span></div>${ueberHtml()}`;
   const u = state.appUpdate ?? { status: "" };
   let inhalt;
   switch (u.status) {
@@ -929,6 +932,7 @@ function appUpdateZeile() {
 const UEBER_LIZENZEN = [
   ["Rätsel zum Knobeln: Lichter, Netz, Muster, Brücken, Minen, Sudoku", "Simon Tatham's Portable Puzzle Collection, angepasst für OFFLINE. Copyright (c) 2004–2024 Simon Tatham; Teile Copyright Richard Boulton, James Harvey, Mike Pinna, Jonas Kölker, Dariusz Olszewski, Michael Schierl, Lambros Lambrou, Bernd Schmidt, Steffen Bauer, Lennard Sprong, Rogier Goossens, Michael Quevillon, Asher Gordon, Didi Kohen, Ben Harris und Anders Höglund. MIT-Lizenz."],
   ["Rätsel zum Knobeln: 2048", "Spiellogik von Gabriele Cirulli. Copyright (c) 2014 Gabriele Cirulli. MIT-Lizenz."],
+  ["Karte (online)", "Leaflet 1.9.4. Copyright (c) 2010–2023 Volodymyr Agafonkin, Copyright (c) 2010–2011 CloudMade. BSD-2-Klausel-Lizenz, Text in lib/leaflet/LICENSE."],
 ];
 const ueberHtml = () => `<details class="upd-zeile ueber"><summary class="muted of-klein">Über · Lizenzen fremder Teile</summary><ul class="of-klein">${UEBER_LIZENZEN.map(([was, wer]) => `<li><strong>${esc(was)}</strong>: ${esc(wer)}</li>`).join("")}</ul></details>`;
 /** Die Versionsnummer; siebenmal Tippen öffnet das Feld für einen Freischalt-Link (Desktop, wo es keinen Link-Aufruf gibt). */
@@ -936,16 +940,18 @@ const versionKnopf = () => `<button type="button" class="upd-version" data-versi
 let versionTipps = [];
 function versionTippen() {
   const jetzt = Date.now(); versionTipps = [...versionTipps.filter((t) => jetzt - t < 4000), jetzt];
-  if (versionTipps.length >= 7) { versionTipps = []; state.internFeld = state.internFeld ?? ""; render(); document.getElementById("intern-link")?.focus(); }
+  if (versionTipps.length >= 7 && !storeBuild) { versionTipps = []; state.internFeld = state.internFeld ?? ""; render(); document.getElementById("intern-link")?.focus(); }
 }
 /** Zeile „Interner Kanal“: nur, wenn freigeschaltet (oder abgelaufen); sonst nichts, auch kein leerer Platz. */
 function internZeileHtml() {
+  if (storeBuild) return "";
   const feld = state.internFeld != null ? `<div class="upd-zeile intern-feld"><label for="intern-link" class="muted of-klein">Freischalt-Link</label><input id="intern-link" class="of-feld" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="button" class="btn btn-sm of-btn of-btn--klein" data-intern-freischalten>Freischalten</button>${state.internFeld ? `<p class="muted of-klein" role="status">${esc(state.internFeld)}</p>` : ""}</div>` : "";
   const z = kanalZeile(internStand);
   return (z ? `<div class="upd-zeile intern-zeile"><span>${esc(z.text)}${state.internMeldung ? ` <span class="muted of-klein">${esc(state.internMeldung)}</span>` : ""}</span><button type="button" class="btn btn-sm of-btn of-btn--klein" data-intern-entfernen>Entfernen</button></div>` : "") + feld;
 }
 /** Abgleich mit dem internen Kanal: still, nur mit Schlüssel und Netz. Neuere Pakete werden eingespielt. */
 async function internAbgleichen({ zeigen = false } = {}) {
+  if (storeBuild) return;
   const st = internStand;
   if (!st?.schluessel || st.abgelaufen || !navigator.onLine) return;
   try {
@@ -1152,6 +1158,7 @@ async function installiereMitMeldung(id, ziel) {
     const text = alt
       ? `${esc(paket.manifest.titel)} auf ${esc(paket.manifest.version)} aktualisiert – ${groesse(geladen)} geladen (${d.laden.length} von ${paket.manifest.dateien.length} Dateien), Signatur und Prüfsummen geprüft.`
       : `${esc(paket.manifest.titel)} ${esc(paket.manifest.version)} installiert – ${groesse(geladen)}, Signatur und Prüfsummen geprüft.`;
+    if (id === "lumisch" && !alt) { speicher.set("lumisch-selbst", true); pauseDatenMerk = null; } // selbst geladen: Lumisch auch ohne Figur
     state.meldung = { art: "ok", titel: alt ? "Aktualisiert" : "Installiert", text };
     render();
     zeige(ziel, text, "ok");
@@ -1182,19 +1189,23 @@ const lumischDaten = () => inhalt(PL(), "inhalt/lumisch.json");
 const pauseDaten = () => {
   const p = PP();
   if (!p) return null;
-  const module = pauseModule(), l = PL(), lumi = lumiInPause(), v = `${p.manifest.version}|${l ? l.manifest.version : "-"}|${lumi}|${module.map((m) => `${m.manifest.id}@${m.manifest.version}`).join(",")}`;
+  const module = pauseModule(), l = PL(), lumi = lumiInPause(), mitLumisch = lumischInPause(), v = `${p.manifest.version}|${l ? l.manifest.version : "-"}|${lumi}|${mitLumisch}|${module.map((m) => `${m.manifest.id}@${m.manifest.version}`).join(",")}`;
   if (pauseDatenMerk?.v !== v) {
     const roh = pauseAufbereiten(inhalt(p, "inhalt/pause.json")), lumisch = lumischDaten();
     const d = roh?.formen ? { ...roh, lumisch, formen: roh.formen.filter((f) => f.id !== "lumisch" || lumisch) } : roh;
     const dazu = module.flatMap((m) => pauseModulFormen(m.manifest.id, texte(m, "inhalt/pause-formen.json"), (d?.formen ?? []).map((f) => f.id)));
     const alle = d?.formen ? { ...d, formen: [...d.formen, ...dazu] } : d;
     // 0.7.1: Ist die Lumi aus, gibt es in Pause kein Lumisch und keine Geschichten mit der Lumi
-    pauseDatenMerk = { v, d: lumi ? alle : pauseOhneLumi(alle) };
+    // 0.7.2 (Bill): Wer das Paket lumisch selbst geladen hat, bekommt Lumisch auch ohne Figur – nur die Form Lumisch
+    const ohne = lumi ? alle : pauseOhneLumi(alle);
+    pauseDatenMerk = { v, d: !lumi && mitLumisch && alle?.formen ? { ...ohne, lumisch: alle.lumisch, formen: [...ohne.formen, ...alle.formen.filter((f) => f.id === "lumisch")] } : ohne };
   }
   return pauseDatenMerk.d;
 };
 /** Lumi an (0.7.1): nur mit Figur; „Aus mit Textkarten“ und „Tipps aus“ gelten in Pause als aus. */
 const lumiInPause = () => pauseLumiAn(wesen.e.darstellung);
+/** Lumisch in Pause (0.7.2): mit Figur, oder ohne Figur, wenn jemand das Paket lumisch selbst geladen (oder eingeschaltet) hat. */
+const lumischInPause = () => lumiInPause() || (speicher.get("lumisch-selbst", false) && !!PL());
 /** Farben des Skins für ein Spiel im Modul (nur volle Farben als #rrggbb; was fehlt, ersetzt das Modul selbst). */
 function spielFarben() {
   const s = getComputedStyle(document.documentElement), c = document.createElement("canvas").getContext("2d");
@@ -1396,6 +1407,7 @@ function pauseRaumHtml() {
     <h2 class="z-ueber">Alle Spiele</h2>
     <ul class="z-liste pause-liste">${liste.map((x) => `<li><button type="button" class="pause-zeile-wahl" data-pause="spielen" data-form="${esc(x.form.id)}" ${x.geht ? "" : "disabled"}><span class="z-name">${esc(x.form.titel)}</span><span class="z-unter">${esc(x.stand)}</span></button></li>`).join("")}</ul>
     ${desktop && !installiertesPaket("spiele-1") && katalog()?.pakete.some((p) => p.id === "spiele-1") ? `<p class="z-leise">Mehr zum Knobeln: „Rätsel zum Knobeln“ findest du in der <a href="#bibliothek">Bibliothek</a> unter Module.</p>` : ""}
+    ${desktop ? "" : `<p class="z-leise pause-knobeln-web">Die Rätsel zum Knobeln gibt es in der Desktop-App.</p>`}
     <div class="z-zeile pause-raum-fuss"><a class="z-neben" href="#linie">Deine Linie</a></div>
     <details class="pause-einst" id="pause-einstellungen"><summary class="z-neben">Einstellungen</summary><div>${pauseEinstellungenHtml()}</div></details></div>`;
 }
@@ -1464,7 +1476,7 @@ function lumiKaestchen() {
   const g = gedankenDaten();
   if (g) k.push({ titel: "Was die Lumis denken", zeile: `${zahl(g.gedanken?.length ?? 0, "Gedanke", "Gedanken")} · ab ${installiertesPaket(GEDANKEN_PAKET)?.manifest.alter_ab ?? 18}`, ziel: "#gedanken" });
   const l = lumischDaten();
-  if (l && lumiInPause()) { // 0.7.1: ohne Lumi kein Lumisch
+  if (l && lumischInPause()) { // 0.7.1: ohne Lumi kein Lumisch; 0.7.2: außer das Paket wurde selbst geladen
     const h = lumischHeute(spielLog(), l, heuteDatum()), stand = h.art === "plan" ? `Tag ${h.tag} von ${l.plan.length}` : h.art === "neu" ? "ein neues Wort" : "Wiederholung";
     k.push({ titel: "Lumisch", zeile: `${stand} · ${l.woerterbuch?.length ?? l.woerter.length} Wörter`, ...(pauseE().an && PP() ? { knopf: 'data-pause="spielen" data-form="lumisch"' } : { ziel: "#pause" }) });
   }
@@ -1599,6 +1611,19 @@ function naturVorlesen() {
 
 /** Darf man dieses Modul laden? Heute darf es jeder. Kauf oder Abo (offen) kommen hier davor. */
 const darfLaden = (e) => appPasst(e);
+/**
+ * Sperre nach Alter (0.7.2, Startreife): Pakete mit `alter_ab` (z. B. „Was die Lumis denken“, ab 18) fragen beim ersten
+ * Laden einmal „Bist du mindestens 18?“. Die Antwort bleibt auf dem Gerät; kein Ausweis, keine Daten. Im Kinder-Modus
+ * (kommt) sind sie fest gesperrt. Gibt den Ersatz für den „laden“-Schieber zurück, oder null, wenn geladen werden darf.
+ */
+const alterAntwort = (n) => speicher.get("alter-bestaetigt", {})[n];
+function alterSperre(p, ladenAttr) {
+  const n = Number(p.alter_ab);
+  if (!n || alterAntwort(n) === true) return null;
+  if (alterAntwort(n) === false) return `<span class="tag of-plakette">Ab ${n} Jahren</span>`;
+  if (state.alterFrage === p.id) return `<span class="alter-frage" role="group" aria-label="Altersfrage"><span class="of-klein">Bist du mindestens ${n}?</span> <button type="button" class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-alter-ja="${n}" ${ladenAttr}>Ja, laden</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-alter-nein="${n}">Nein</button></span>`;
+  return schieber({ an: false, art: "laden", text: "laden", attr: `data-alter-frage="${esc(p.id)}" aria-label="${esc(p.titel)} laden"` });
+}
 
 async function moduleStandLaden() {
   if (!desktop) return;
@@ -1632,18 +1657,107 @@ function sliderSchluessel(id, quelle) {
   return quelle.art === "ordner" ? `ordner:${quelle.pfad}` : `katalog:${id}`;
 }
 
-function sliderHtml(key, e) {
+/**
+ * Vorschau (0.7.2, Bill): Die Karte zeigt das Titelbild (erste Seite) und „Vorschau ansehen“; der Klick öffnet ein großes
+ * Fenster über der Seite (am Handy ganzer Bildschirm) – je Seite oben das Bild, darunter der Text, Pfeile und Wischen,
+ * „1 von 4“, Schließen mit ×, Esc und Tippen daneben, „laden“ unten. Gilt für Pakete und Module mit Vorschau.
+ */
+function vorschauFolien(key, e) {
   const v = state.modul.vorschau[key];
-  const folien = Array.isArray(v) && v.length ? v : (e.vorschau?.folien ?? []); // ohne Bilder: die Texte aus dem Katalog
-  if (!folien.length) return v === undefined ? `<div class="slider slider-leer" data-slider="${esc(key)}"><span class="muted of-klein">Vorschau wird geladen …</span></div>` : "";
-  const i = Math.min(state.modul.folie[key] ?? 0, folien.length - 1);
-  const f = folien[i];
-  return `<div class="slider" data-slider="${esc(key)}" role="group" aria-roledescription="Slideshow" aria-label="Vorschau, Folie ${i + 1} von ${folien.length}">
-    <div class="slider-bild">${f.bild_daten ? `<img src="${esc(f.bild_daten)}" alt="${esc(f.alt)}">` : `<span class="muted of-klein">${esc(f.alt)}</span>`}</div>
-    <div class="slider-text"><strong>${esc(f.titel)}</strong><span>${esc(f.text)}</span></div>
-    <div class="slider-nav"><button type="button" class="btn btn-sm of-btn of-btn--klein" data-folie="${esc(key)}" data-richtung="-1" aria-label="Vorherige Folie">‹</button><span class="muted mono of-klein of-mono">${i + 1} / ${folien.length}</span><button type="button" class="btn btn-sm of-btn of-btn--klein" data-folie="${esc(key)}" data-richtung="1" aria-label="Nächste Folie">›</button></div>
+  return Array.isArray(v) && v.length ? v : (e.vorschau?.folien ?? []); // ohne Bilder: die Texte aus dem Katalog
+}
+function vorschauTitelHtml(key, e) {
+  const folien = vorschauFolien(key, e);
+  const laedt = state.modul.vorschau[key] === undefined;
+  if (!folien.length) return laedt ? `<div class="vorschau-titel vorschau-titel--leer" data-slider="${esc(key)}" data-vorschau-id="${esc(e.id)}"><span class="muted of-klein">Vorschau wird geladen …</span></div>` : "";
+  const f = folien[0];
+  return `<div class="vorschau-titel" data-slider="${esc(key)}" data-vorschau-id="${esc(e.id)}">
+    <button type="button" class="vorschau-titelbild" data-vorschau-oeffnen="${esc(key)}" aria-label="Vorschau ansehen: ${esc(e.titel)}">${f.bild_daten ? `<img src="${esc(f.bild_daten)}" alt="${esc(f.alt)}">` : `<span class="muted of-klein">${esc(f.titel)}</span>`}</button>
+    <button type="button" class="vorschau-ansehen" data-vorschau-oeffnen="${esc(key)}">Vorschau ansehen</button>
   </div>`;
 }
+
+const vorschauFenster = { key: null, id: null, i: 0, vorher: null };
+function vorschauEintrag(id) { return katalog()?.pakete.find((p) => p.id === id) ?? state.modul.lokal?.pakete.find((p) => p.id === id) ?? paketRoh(id)?.manifest ?? { id }; }
+/** Was unten im Fenster steht: der „laden“-Schieber der Karte (gleiche Wirkung), sonst ihr Stand in Worten. */
+function vorschauFuss(id) {
+  const karte = main.querySelector(`[data-laden-karte="${CSS.escape(id)}"], [data-modul-karte="${CSS.escape(id)}"]`);
+  const laden = karte?.querySelector('.schieber-laden[aria-checked="false"]:not([disabled])');
+  if (laden) return `<button type="button" class="btn btn-primary of-btn of-btn--primaer" data-vorschau-laden>laden</button>`;
+  if (paketRoh(id)) return `<p class="muted of-klein">Liegt schon auf deinem Gerät.</p>`;
+  const stand = karte?.querySelector(".laden-steuerung, .modul-steuerung")?.textContent.trim();
+  return stand ? `<p class="muted of-klein">${esc(stand)}</p>` : "";
+}
+function vorschauFensterZeichnen() {
+  const el = document.getElementById("vorschau-fenster");
+  const { key, id } = vorschauFenster;
+  if (!el || !key) return;
+  const e = vorschauEintrag(id), folien = vorschauFolien(key, e);
+  const n = folien.length, i = Math.min(vorschauFenster.i, Math.max(n - 1, 0)), f = folien[i];
+  el.querySelector(".vorschau-dialog").innerHTML = `
+    <div class="vorschau-kopf"><h2 id="vorschau-name">${esc(e.titel ?? id)}</h2><button type="button" class="vorschau-x" data-vorschau-zu aria-label="Vorschau schließen">×</button></div>
+    ${f ? `<figure class="vorschau-seite" aria-live="polite">
+      <div class="vorschau-bild">${f.bild_daten ? `<img src="${esc(f.bild_daten)}" alt="${esc(f.alt)}">` : state.modul.vorschau[key] === undefined ? `<span class="muted of-klein">Bild wird geladen …</span>` : `<span class="muted of-klein">${esc(f.alt ?? "")}</span>`}</div>
+      <figcaption><h3>${esc(f.titel)}</h3><p>${esc(f.text)}</p></figcaption>
+    </figure>` : `<p class="muted">Vorschau wird geladen …</p>`}
+    ${n > 1 ? `<div class="vorschau-nav"><button type="button" class="btn of-btn" data-vorschau-schritt="-1" aria-label="Vorherige Seite">‹</button><span class="of-klein">${i + 1} von ${n}</span><button type="button" class="btn of-btn" data-vorschau-schritt="1" aria-label="Nächste Seite">›</button></div>` : ""}
+    <div class="vorschau-fuss">${vorschauFuss(id)}</div>`;
+}
+function vorschauOeffnen(key, id, ausloeser) {
+  let el = document.getElementById("vorschau-fenster");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "vorschau-fenster"; el.className = "vorschau-fenster"; el.hidden = true;
+    el.innerHTML = `<div class="vorschau-hinter" data-vorschau-zu></div><div class="vorschau-dialog" role="dialog" aria-modal="true" aria-labelledby="vorschau-name"></div>`;
+    document.body.append(el);
+    el.addEventListener("click", vorschauKlick);
+    let x0 = null;
+    el.addEventListener("pointerdown", (ev) => { if (ev.target.closest(".vorschau-seite")) x0 = ev.clientX; });
+    el.addEventListener("pointerup", (ev) => { if (x0 === null) return; const dx = ev.clientX - x0; x0 = null; if (Math.abs(dx) > 50) vorschauBlaettern(dx < 0 ? 1 : -1); });
+  }
+  Object.assign(vorschauFenster, { key, id, i: 0, vorher: ausloeser ?? document.activeElement });
+  vorschauFensterZeichnen();
+  el.hidden = false; document.body.classList.add("vorschau-offen");
+  el.querySelector(".vorschau-x")?.focus();
+  if (!(key in state.modul.vorschau)) vorschauLaden(key);
+}
+function vorschauZu() {
+  const el = document.getElementById("vorschau-fenster");
+  if (!el || el.hidden) return;
+  el.hidden = true; document.body.classList.remove("vorschau-offen");
+  const vorher = vorschauFenster.vorher; vorschauFenster.key = null;
+  if (vorher?.isConnected) vorher.focus();
+}
+function vorschauBlaettern(r) {
+  const n = vorschauFolien(vorschauFenster.key, vorschauEintrag(vorschauFenster.id)).length;
+  if (n < 2) return;
+  vorschauFenster.i = (vorschauFenster.i + r + n) % n;
+  vorschauFensterZeichnen();
+  document.querySelector(`#vorschau-fenster [data-vorschau-schritt="${r}"]`)?.focus();
+}
+function vorschauKlick(ev) {
+  const b = ev.target.closest("[data-vorschau-zu], [data-vorschau-schritt], [data-vorschau-laden]");
+  if (!b) return;
+  if (b.hasAttribute("data-vorschau-zu")) return vorschauZu();
+  if (b.dataset.vorschauSchritt) return vorschauBlaettern(Number(b.dataset.vorschauSchritt));
+  const id = vorschauFenster.id;
+  vorschauZu();
+  main.querySelector(`[data-laden-karte="${CSS.escape(id)}"] .schieber-laden, [data-modul-karte="${CSS.escape(id)}"] .schieber-laden`)?.click();
+}
+document.addEventListener("keydown", (ev) => {
+  const el = document.getElementById("vorschau-fenster");
+  if (!el || el.hidden) return;
+  if (ev.key === "Escape") { ev.preventDefault(); return vorschauZu(); }
+  if (ev.key === "ArrowRight" || ev.key === "ArrowLeft") { ev.preventDefault(); return vorschauBlaettern(ev.key === "ArrowRight" ? 1 : -1); }
+  if (ev.key === "Tab") { // Fokus bleibt im Fenster
+    const f = [...el.querySelectorAll(".vorschau-dialog button")];
+    if (!f.length) return;
+    const erst = f[0], letzt = f[f.length - 1];
+    if (ev.shiftKey && document.activeElement === erst) { ev.preventDefault(); letzt.focus(); }
+    else if (!ev.shiftKey && document.activeElement === letzt) { ev.preventDefault(); erst.focus(); }
+    else if (!el.contains(document.activeElement)) { ev.preventDefault(); erst.focus(); }
+  }
+});
 
 function loeschDialog(id) {
   const bytes = state.modul.stand[id]?.daten_bytes ?? 0;
@@ -1672,13 +1786,14 @@ function modulKarte(e, quelle) {
       <button type="button" class="btn btn-sm of-btn of-btn--klein" data-modul-loeschen="${esc(e.id)}">Löschen</button>`;
   } else if (e.status && e.status !== "verfuegbar") steuerung = `<span class="tag tag-warn of-plakette of-plakette--warnung">Bald</span>`;
   else if (!darfLaden(e)) steuerung = braucht(e);
+  else if (alterSperre(e, `data-modul-laden="${esc(e.id)}"${quelle.art === "ordner" ? ` data-pfad="${esc(quelle.pfad)}"` : ""}`)) steuerung = alterSperre(e, `data-modul-laden="${esc(e.id)}"${quelle.art === "ordner" ? ` data-pfad="${esc(quelle.pfad)}"` : ""}`);
   else steuerung = schieber({ an: false, art: "laden", text: "laden", attr: `data-modul-laden="${esc(e.id)}" ${quelle.art === "ordner" ? `data-pfad="${esc(quelle.pfad)}"` : ""} aria-label="${esc(e.titel)} laden"` });
   return `<div class="card pkg modul-karte of-karte of-paket" data-modul-karte="${esc(e.id)}">
+    ${vorschauTitelHtml(sliderSchluessel(e.id, quelle), e)}
     <div class="pkg-head"><h3 style="margin:0">${esc(e.titel)}</h3><span>${quelle.art === "ordner" ? '<span class="tag tag-warn of-plakette of-plakette--warnung">lokal, nicht veröffentlicht</span>' : ""}</span></div>
     <span class="laden-bereich">${esc(bereichName(inst?.manifest ?? e))} · ${skin ? "Skin" : "Modul"}</span>
     <p>${esc(e.beschreibung)}</p>
-    ${(inst?.manifest.ki_generiert ?? e.ki_generiert) ? `<p class="muted of-klein" style="margin:-.3rem 0 .5rem"><span class="tag of-plakette">Künstliche Intelligenz</span> Bilder damit erzeugt, Herkunft im Paket</p>` : ""}
-    ${sliderHtml(sliderSchluessel(e.id, quelle), e)}
+    ${(inst?.manifest.ki_generiert ?? e.ki_generiert) ? `<p class="muted of-klein" style="margin:-.3rem 0 .5rem">Bilder mit künstlicher Intelligenz (KI) erzeugt, Herkunft im Paket</p>` : ""}
     <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(e.groesse)}${e.version ? ` · ${esc(e.version)}` : ""}${e.alter_ab ? ` · ab ${e.alter_ab} Jahren` : ""}</span><span class="modul-steuerung">${steuerung}</span></div>
     ${state.modul.loeschen === e.id ? loeschDialog(e.id) : ""}
   </div>`;
@@ -1701,12 +1816,14 @@ function ladenKarte(p, g) {
   else if (p.pro) steuerung = `<button class="btn btn-sm of-btn of-btn--klein" disabled title="Nur mit Pro">Nur mit Pro</button>`;
   else if (!desktop && p.art !== "inhalt" && p.art !== "tage") steuerung = `<span class="tag of-plakette">Nur in der Desktop-App</span>`;
   else if (!appPasst(p)) steuerung = braucht(p);
+  else if (alterSperre(p, `data-install="${esc(p.id)}"`)) steuerung = alterSperre(p, `data-install="${esc(p.id)}"`);
   else steuerung = schieber({ an: false, art: "laden", text: "laden", attr: `data-install="${esc(p.id)}" aria-label="${esc(p.titel)} laden"` });
   return `<div class="card pkg of-karte of-paket laden-karte" data-laden-karte="${esc(p.id)}">
+    ${p.vorschau?.folien?.length ? vorschauTitelHtml(sliderSchluessel(p.id, { art: "katalog" }), p) : ""}
     <div class="pkg-head"><h3 style="margin:0">${esc(p.titel)}</h3><span>${p.pro ? '<span class="tag tag-pro of-plakette of-plakette--pro">Pro</span>' : ""}</span></div>
     <span class="laden-bereich">${esc(bereichName(p))}</span>
     <p>${esc(p.beschreibung)}</p>${p.hinweis ? `<p class="muted of-klein pkg-hinweis">${esc(p.hinweis)}</p>` : ""}
-    ${p.ki_generiert ? `<p class="muted of-klein" style="margin:-.3rem 0 .5rem"><span class="tag of-plakette">Künstliche Intelligenz</span> Bilder damit erzeugt, Herkunft im Paket</p>` : ""}
+    ${p.ki_generiert ? `<p class="muted of-klein" style="margin:-.3rem 0 .5rem">Bilder mit künstlicher Intelligenz (KI) erzeugt, Herkunft im Paket</p>` : ""}
     <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(p.groesse)}${g && p.version ? ` · ${esc(p.version)}` : ""}${p.alter_ab ? ` · ab ${p.alter_ab} Jahren` : ""}</span><span class="laden-steuerung">${steuerung}</span></div></div>`;
 }
 
@@ -1729,39 +1846,32 @@ async function lokaleQuelleLaden(pfad) {
   catch (e) { zeige("bib-msg", "Ordner nicht lesbar: " + esc(String(e?.message ?? e)), "err"); }
 }
 
-/** Vorschaubilder nachladen, ohne die Seite neu aufzubauen: nur der jeweilige Slider wird ersetzt. */
+/** Vorschaubilder nachladen, ohne die Seite neu aufzubauen: nur das jeweilige Titelbild (und ein offenes Fenster) wird ersetzt. */
 const vorschauLaeuft = new Set();
+function vorschauLaden(key) {
+  if (key in state.modul.vorschau || vorschauLaeuft.has(key)) return;
+  const [art, ...rest] = key.split(":"); const wert = rest.join(":");
+  if (!desktop && art === "ordner") return;
+  vorschauLaeuft.add(key);
+  const laden = art === "inst" ? client.vorschauInstalliert(wert) : art === "ordner" ? client.vorschauOrdner(wert) : client.vorschauKatalog(wert);
+  laden.then((f) => { state.modul.vorschau[key] = f; }, () => { state.modul.vorschau[key] = []; }).finally(() => { vorschauLaeuft.delete(key); sliderErneuern(key); });
+}
 function vorschauenNachladen() {
-  if (!desktop) return;
-  for (const el of main.querySelectorAll("[data-slider]")) {
-    const key = el.dataset.slider;
-    if (key in state.modul.vorschau || vorschauLaeuft.has(key)) continue;
-    vorschauLaeuft.add(key);
-    const [art, ...rest] = key.split(":"); const wert = rest.join(":");
-    const laden = art === "inst" ? client.vorschauInstalliert(wert) : art === "ordner" ? client.vorschauOrdner(wert) : client.vorschauKatalog(wert);
-    laden.then((f) => { state.modul.vorschau[key] = f; }, () => { state.modul.vorschau[key] = []; }).finally(() => { vorschauLaeuft.delete(key); sliderErneuern(key); });
-  }
+  for (const el of main.querySelectorAll("[data-slider]")) vorschauLaden(el.dataset.slider);
 }
 function sliderErneuern(key) {
   for (const el of main.querySelectorAll(`[data-slider="${CSS.escape(key)}"]`)) {
-    const karte = el.closest("[data-modul-karte]");
-    const id = karte?.dataset.modulKarte;
-    const e = katalog()?.pakete.find((p) => p.id === id) ?? state.modul.lokal?.pakete.find((p) => p.id === id) ?? {};
-    const neu = sliderHtml(key, e);
+    const neu = vorschauTitelHtml(key, vorschauEintrag(el.dataset.vorschauId));
     if (neu) el.outerHTML = neu; else el.remove();
   }
+  if (vorschauFenster.key === key) vorschauFensterZeichnen();
 }
 
 async function modulAktion(b) {
   const d = b.dataset;
-  if (d.folie) {
-    const n = (state.modul.vorschau[d.folie]?.length || 5);
-    state.modul.folie[d.folie] = ((state.modul.folie[d.folie] ?? 0) + Number(d.richtung) + n) % n;
-    return sliderErneuern(d.folie);
-  }
   if (b.hasAttribute("data-modul-quelle")) { const p = await client.ordnerWaehlen("Ordner mit Modulen wählen"); if (p) { await lokaleQuelleLaden(p); render(); } return; }
   if (d.modulLaden) {
-    b.setAttribute("aria-checked", "true"); b.disabled = true; b.querySelector(".schieber-text").textContent = "lädt …";
+    b.setAttribute("aria-checked", "true"); b.disabled = true; const st = b.querySelector(".schieber-text"); if (st) st.textContent = "lädt …";
     if (d.pfad) await einspielenVonOrdner(d.pfad); else await installiereMitMeldung(d.modulLaden, "bib-msg");
     delete state.modul.vorschau[`katalog:${d.modulLaden}`];
     await moduleStandLaden(); return render();
@@ -2331,20 +2441,23 @@ function beiKlick(e) {
   if (b.dataset.filter) { state.filter = b.dataset.filter; render(); }
   if (b.dataset.bestaetigen) return bestaetigen(b.dataset.bestaetigen);
   if (b.dataset.lumi) return lumiAktion(b.dataset.lumi);
-  if (b.dataset.paketAn) { const p = paketRoh(b.dataset.paketAn); if (p) { speicher.set("pakete-aus", paketUmschalten(paketeAus(), p)); pauseDatenMerk = null; } return render(); }
+  if (b.dataset.paketAn) { const p = paketRoh(b.dataset.paketAn); if (p) { if (p.manifest.id === "lumisch" && paketeAus().includes("lumisch")) speicher.set("lumisch-selbst", true); speicher.set("pakete-aus", paketUmschalten(paketeAus(), p)); pauseDatenMerk = null; } return render(); }
   if (b.dataset.lumiReiter) { state.lumiReiter = b.dataset.lumiReiter; if (location.hash !== "#lumi") location.hash = "#lumi"; else render(); return; }
   if (b.dataset.testMonate) { speicher.set("test-monate", Number(b.dataset.testMonate)); return render(); }
   if (b.dataset.testTage !== undefined) { speicher.set("test-tage", Number(b.dataset.testTage)); state.tag = { offen: {}, nochmal: false, datum: heuteDatum(), liest: false, lesen: null, schlussGezeigt: null }; vorratAuffuellen(); return render(); }
   if (b.dataset.tag) return tagAktion(b);
   if (b.hasAttribute("data-wesen-gelernt-zurueck")) { wesen.gelernt = { intervall: 90, gelesen: 0, weitergewischt: 0 }; wesen.speichern(); return render(); }
+  if (b.dataset.alterFrage) { state.alterFrage = b.dataset.alterFrage; render(); main.querySelector("[data-alter-ja]")?.focus(); return; }
+  if (b.dataset.alterJa || b.dataset.alterNein) { speicher.set("alter-bestaetigt", { ...speicher.get("alter-bestaetigt", {}), [b.dataset.alterJa ?? b.dataset.alterNein]: !!b.dataset.alterJa }); state.alterFrage = null; if (b.dataset.alterNein) return render(); }
   if (b.dataset.install) installiereMitMeldung(b.dataset.install, "bib-msg");
-  if ([...b.attributes].some((a) => a.name.startsWith("data-modul") || a.name === "data-folie")) return modulAktion(b);
+  if ([...b.attributes].some((a) => a.name.startsWith("data-modul"))) return modulAktion(b);
+  if (b.dataset.vorschauOeffnen) return vorschauOeffnen(b.dataset.vorschauOeffnen, b.closest("[data-vorschau-id]")?.dataset.vorschauId, b);
   if ([...b.attributes].some((a) => a.name.startsWith("data-tresor")) || (b.hasAttribute("data-aufnahme") && location.hash === "#tresor")) return tresorAktion(b);
   if ([...b.attributes].some((a) => a.name.startsWith("data-notiz")) || (b.hasAttribute("data-aufnahme") && location.hash === "#notizen")) return notizAktion(b);
   if (b.hasAttribute("data-lesen-zurueck")) { try { document.getElementById("lesen-rahmen")?.contentWindow.history.back(); } catch {} }
   if (b.hasAttribute("data-lesen-start")) { const f = document.getElementById("lesen-rahmen"); if (f) f.src = state.lesen.url; }
   if (b.hasAttribute("data-lesen-fenster")) client.fensterOeffnen(state.lesen.url, `OFFLINE – ${state.lesen.titel}`).catch(() => {});
-  if (b.dataset.remove) Promise.resolve(entferne(b.dataset.remove)).then(render);
+  if (b.dataset.remove) { if (b.dataset.remove === "lumisch") speicher.set("lumisch-selbst", false); pauseDatenMerk = null; Promise.resolve(entferne(b.dataset.remove)).then(render); }
   if (b.hasAttribute("data-stick-suchen")) client.stickSuchen().then((f) => { state.funde = f; render(); if (!f.length) zeige("bib-msg", "Kein signiertes Paket auf einem Datenträger gefunden.", "err"); });
   if (b.hasAttribute("data-ordner-waehlen")) client.ordnerWaehlen().then((p) => p && einspielenVonOrdner(p));
   if (b.dataset.stick) einspielenVonOrdner(b.dataset.stick);

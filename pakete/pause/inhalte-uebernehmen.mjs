@@ -5,6 +5,7 @@
 // - OFFLINE-Pause-Ruhe-Varianten.json    → pause.json „ruhe“ (je 30 Varianten Tag rückwärts und Atemfenster)
 // - OFFLINE-Pause-Neue-Formen.json       → pause.json „kaffeehaus“, „kopfnuss“, „fluss“ (je 25 Aufgaben) und drei Formen
 // - OFFLINE-Pause-Lumisch-Aufgaben.json  → pakete/lumisch/inhalt/lumisch.json „aufgaben“ (100, 20 je Stufe)
+// - 2026-10-07-nachtrag-fuenf-geschichten.json (0.7.2, Nr. 19): ersetzt die fünf Geschichten mit „Susi“ gleicher id
 // Fünf Stufen je Form (OFFLINE-Pause-Stufen.md, Abschnitt 9.2), Start ab 14 auf Stufe 3, der Pilz auf 5 von 10.
 // Das Feld intern.trainiert bleibt in den Daten, die App zeigt es nie.
 import { readFile, writeFile } from "node:fs/promises";
@@ -20,6 +21,8 @@ const ohne = (o, ...k) => Object.fromEntries(Object.entries(o).filter(([x]) => !
 const PAUSE = path.join(HIER, "inhalt", "pause.json"), LUMISCH = path.join(HIER, "..", "lumisch", "inhalt", "lumisch.json");
 const d = JSON.parse(await readFile(PAUSE, "utf8"));
 const fehler = await lies("OFFLINE-Pause-Fehler-Geschichten.json");
+const nachtrag = await lies("2026-10-07-nachtrag-fuenf-geschichten.json").catch(() => null);
+if (nachtrag) fehler.geschichten = fehler.geschichten.map((g) => nachtrag.geschichten.find((n) => n.id === g.id) ?? g);
 const ruhe = await lies("OFFLINE-Pause-Ruhe-Varianten.json");
 const neu = await lies("OFFLINE-Pause-Neue-Formen.json");
 const lumisch = await lies("OFFLINE-Pause-Lumisch-Aufgaben.json");

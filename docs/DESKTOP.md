@@ -114,6 +114,20 @@ npm run tauri build    # Installer unter src-tauri/target/release/bundle/
 
 **macOS ohne Entwicklerzertifikat:** Der Workflow signiert das Bundle nach dem Bauen ad-hoc – zuerst die mitgelieferten Programme (`kiwix-serve`), dann das Hauptprogramm, dann das Bundle – prüft es mit `codesign --verify --deep --strict` und baut daraus das `.dmg`. Ein gezipptes `.app` aus dem Build-Ordner startet auf Apple Silicon sonst nicht („Killed: 9“, Signatur passt nicht mehr zu den Ressourcen). Immer das `.dmg` verwenden.
 
+## Store-Build (seit 0.7.2)
+
+Für den Mac App Store und den Microsoft Store (und später die Handys) gibt es einen Schalter beim Bauen. Der Direkt-Download bleibt, wie er ist.
+
+```
+cd app && npx tauri build --no-default-features --features store --config src-tauri/tauri.store.conf.json
+```
+
+- **Ohne eigenen Updater:** Das Feature `updater` (Tauri-Updater, `latest.json`) fehlt, `createUpdaterArtifacts` ist aus. Die Seite „Updates & Abo“ sagt: „Neue Versionen der App kommen über den Store.“ `store` und `updater` zusammen bricht beim Bauen ab.
+- **Ohne internen Kanal:** Der Freischalt-Link wird nicht gelesen, das Feld hinter der Versionsnummer gibt es nicht, `intern_setzen` lehnt ab. Verborgene Funktionen lehnen die Stores ab.
+- **Pakete und Abo bleiben:** Katalog, Pakete, Delta-Updates und der Paket-Signaturschlüssel sind dieselben.
+- **Die CI prüft** bei jedem Push, dass der Store-Build baut (`tests.yml`).
+- **Symbole:** `icons/icon-1024.png` (rund, wie bisher) und `icons/store-1024.png` (eckig, ohne Transparenz, für App Store und Google Play), aus `web/icon.svg`. Das Symbol ist noch der Platzhalter aus `docs/DESIGN.md`.
+
 ## Signieren (vor dem ersten öffentlichen Download)
 
 Ohne Code-Signing warnen Windows („Unbekannter Herausgeber“) und macOS („kann nicht geöffnet werden“, Gatekeeper). Für die interne Erprobung ist das hinnehmbar; für den Start braucht es:
