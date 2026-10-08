@@ -23,7 +23,10 @@ function texteVon(x, aus = []) {
 }
 async function oeffentlicheTexte() {
   const t = [];
-  for (const f of ["blackout", "bundeslaender", "notrufe", "sirenen", "vorsorge"]) texteVon(await json(`../pakete/at-basis/inhalt/${f}.json`), t);
+  // 0.8.0: zwölf Szenarien, Grundvorsorge und Radio im Österreich-Paket (die alte Checkliste bleibt nur für den Abgleich)
+  const { readdir } = await import("node:fs/promises");
+  for (const f of ["bundeslaender", "notrufe", "sirenen", "grundvorsorge", "radio"]) texteVon(await json(`../pakete/at-basis/inhalt/${f}.json`), t);
+  for (const f of (await readdir(new URL("../pakete/at-basis/inhalt/szenarien/", import.meta.url))).filter((x) => x.endsWith(".json"))) texteVon(await json(`../pakete/at-basis/inhalt/szenarien/${f}`), t);
   texteVon(await json("../pakete/wir/inhalt/tipps.json"), t);
   texteVon(await json("../pakete/lumi-buch/inhalt/buch.json"), t);
   texteVon(await json("../pakete/lumi-philosophie/inhalt/gedanken.json"), t);

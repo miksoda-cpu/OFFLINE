@@ -13,7 +13,9 @@ export const QUELLEN = [
   { id: "koennen", titel: "Können", gewicht: 20, ziel: "#start" },
 ];
 
-// Positionen. `check`: Punkt der Vorsorge-Checkliste im Österreich-Paket (Gruppe-Punkt). `auto`: liest die App vom Gerät.
+// Positionen. `check`: Punkt der Grundvorsorge im Österreich-Paket (seit 0.8.0 seine id; `alt`: Schlüssel der Checkliste bis 0.7,
+// gilt weiter, bis die App die Häkchen übertragen hat). `auto`: liest die App vom Gerät. Die ids der Positionen bleiben (c-0-0 …),
+// damit Bestätigungen und Fristen erhalten bleiben.
 // Alle anderen bestätigt man auf der Übersicht. `verfall` in Monaten: so lange zählt eine Bestätigung voll.
 // `gewicht` relativ innerhalb der Quelle (Standard 1). Fristen aus Kapitel 4: Wasser 12, Batterien 24, Kontakte 6 (Treffpunkt und Anlaufstelle 12, Festlegung Bill 29.09.), Können 12;
 // die übrigen Fristen sind ein Vorschlag (Bereit-Patch der Lumis-Session).
@@ -25,29 +27,29 @@ export const POSITIONEN = [
   { id: "karte", quelle: "inhalte", titel: "Karte ohne Netz", auto: "karte" },
 
   // Dinge (Vorsorge-Checkliste)
-  { id: "c-0-0", check: "0-0", quelle: "dinge", titel: "Trinkwasser für 14 Tage", verfall: 12, gewicht: 3 },
-  { id: "c-0-1", check: "0-1", quelle: "dinge", titel: "Haltbare Lebensmittel", verfall: 12, gewicht: 2 },
-  { id: "c-0-2", check: "0-2", quelle: "dinge", titel: "Essen für Haustiere und Babynahrung", verfall: 12, gewicht: 0.5 },
-  { id: "c-0-3", check: "0-3", quelle: "dinge", titel: "Campingkocher mit Brennstoff", verfall: 24 },
-  { id: "c-0-4", check: "0-4", quelle: "dinge", titel: "Dosenöffner, Feuerzeug, Streichhölzer", verfall: 24, gewicht: 0.5 },
-  { id: "c-1-0", check: "1-0", quelle: "dinge", titel: "Radio mit Batterie oder Kurbel", verfall: 24, gewicht: 2 },
-  { id: "c-1-1", check: "1-1", quelle: "dinge", titel: "Taschenlampen und Ersatzbatterien", verfall: 24, gewicht: 2 },
-  { id: "c-1-2", check: "1-2", quelle: "dinge", titel: "Geladene Powerbanks", verfall: 6 },
-  { id: "c-1-3", check: "1-3", quelle: "dinge", titel: "Kerzen, Zünder, Löschdecke", verfall: 24, gewicht: 0.5 },
-  { id: "c-1-4", check: "1-4", quelle: "dinge", titel: "Warme Decken und Kleidung", verfall: 24, gewicht: 0.5 },
-  { id: "c-2-0", check: "2-0", quelle: "dinge", titel: "Hausapotheke und Erste-Hilfe-Set", verfall: 24 },
-  { id: "c-2-1", check: "2-1", quelle: "dinge", titel: "Dauermedikamente für 14 Tage", verfall: 6, gewicht: 2 },
-  { id: "c-2-2", check: "2-2", quelle: "dinge", titel: "Hygieneartikel, Müllsäcke, Toilettenpapier", verfall: 24, gewicht: 0.5 },
-  { id: "c-2-3", check: "2-3", quelle: "dinge", titel: "Wasser für die Toilettenspülung", verfall: 12, gewicht: 0.5 },
-  { id: "c-2-4", check: "2-4", quelle: "dinge", titel: "Desinfektionsmittel, Handschuhe, Masken", verfall: 24, gewicht: 0.5 },
-  { id: "c-3-0", check: "3-0", quelle: "dinge", titel: "Bargeld in kleinen Scheinen", verfall: 12, gewicht: 1.5 },
-  { id: "c-3-1", check: "3-1", quelle: "dinge", titel: "Dokumentenmappe", verfall: 24 },
-  { id: "c-3-4", check: "3-4", quelle: "dinge", titel: "Tank mindestens halb voll", verfall: 3, gewicht: 0.5 },
+  { id: "c-0-0", check: "trinkwasser", alt: "0-0", quelle: "dinge", titel: "Trinkwasser für 14 Tage", verfall: 12, gewicht: 3 },
+  { id: "c-0-1", check: "lebensmittel", alt: "0-1", quelle: "dinge", titel: "Haltbare Lebensmittel", verfall: 12, gewicht: 2 },
+  { id: "c-0-2", check: "tier-baby-nahrung", alt: "0-2", quelle: "dinge", titel: "Essen für Haustiere und Babynahrung", verfall: 12, gewicht: 0.5 },
+  { id: "c-0-3", check: "kocher", alt: "0-3", quelle: "dinge", titel: "Campingkocher mit Brennstoff", verfall: 24 },
+  { id: "c-0-4", check: "oeffner-feuer", alt: "0-4", quelle: "dinge", titel: "Dosenöffner, Feuerzeug, Streichhölzer", verfall: 24, gewicht: 0.5 },
+  { id: "c-1-0", check: "radio", alt: "1-0", quelle: "dinge", titel: "Radio mit Batterie oder Kurbel", verfall: 24, gewicht: 2 },
+  { id: "c-1-1", check: "lampen", alt: "1-1", quelle: "dinge", titel: "Taschenlampen und Ersatzbatterien", verfall: 24, gewicht: 2 },
+  { id: "c-1-2", check: "powerbanks", alt: "1-2", quelle: "dinge", titel: "Geladene Powerbanks", verfall: 6 },
+  { id: "c-1-3", check: "kerzen-loeschen", alt: "1-3", quelle: "dinge", titel: "Kerzen, Zünder, Löschdecke", verfall: 24, gewicht: 0.5 },
+  { id: "c-1-4", check: "waerme", alt: "1-4", quelle: "dinge", titel: "Warme Decken und Kleidung", verfall: 24, gewicht: 0.5 },
+  { id: "c-2-0", check: "hausapotheke", alt: "2-0", quelle: "dinge", titel: "Hausapotheke und Erste-Hilfe-Set", verfall: 24 },
+  { id: "c-2-1", check: "dauermedikamente", alt: "2-1", quelle: "dinge", titel: "Dauermedikamente für 14 Tage", verfall: 6, gewicht: 2 },
+  { id: "c-2-2", check: "hygieneartikel", alt: "2-2", quelle: "dinge", titel: "Hygieneartikel, Müllsäcke, Toilettenpapier", verfall: 24, gewicht: 0.5 },
+  { id: "c-2-3", check: "wc-wasser", alt: "2-3", quelle: "dinge", titel: "Wasser für die Toilettenspülung", verfall: 12, gewicht: 0.5 },
+  { id: "c-2-4", check: "desinfektion", alt: "2-4", quelle: "dinge", titel: "Desinfektionsmittel, Handschuhe, Masken", verfall: 24, gewicht: 0.5 },
+  { id: "c-3-0", check: "bargeld", alt: "3-0", quelle: "dinge", titel: "Bargeld in kleinen Scheinen", verfall: 12, gewicht: 1.5 },
+  { id: "c-3-1", check: "dokumentenmappe", alt: "3-1", quelle: "dinge", titel: "Dokumentenmappe", verfall: 24 },
+  { id: "c-3-4", check: "tank", alt: "3-4", quelle: "dinge", titel: "Tank mindestens halb voll", verfall: 3, gewicht: 0.5 },
 
   // Menschen: Familiengruppe, Treffpunkt, Nachbarn, Anlaufstellen, Notfallmappe
   { id: "familie", quelle: "menschen", titel: "Familiengruppe: wer wen im Notfall anruft", verfall: 6, gewicht: 2, hinweis: "Einmal durchsprechen, wer wen erreicht, wenn das Handynetz wackelt." },
-  { id: "c-3-2", check: "3-2", quelle: "menschen", titel: "Treffpunkt mit der Familie vereinbart", verfall: 12, gewicht: 2 },
-  { id: "c-3-3", check: "3-3", quelle: "menschen", titel: "Wichtige Nummern auf Papier", verfall: 6 },
+  { id: "c-3-2", check: "treffpunkt", alt: "3-2", quelle: "menschen", titel: "Treffpunkt mit der Familie vereinbart", verfall: 12, gewicht: 2 },
+  { id: "c-3-3", check: "telefonliste", alt: "3-3", quelle: "menschen", titel: "Wichtige Nummern auf Papier", verfall: 6 },
   { id: "nachbar", quelle: "menschen", titel: "Einen Nachbarn, den ich im Notfall fragen kann", verfall: 6, hinweis: "Einmal anläuten und Nummern tauschen." },
   { id: "anlaufstelle", quelle: "menschen", titel: "Ich weiß, wo die Anlaufstelle meiner Gemeinde ist", verfall: 12, hinweis: "Die Gemeinde nennt sie auf ihrer Seite oder am Amt." },
   { id: "notfallmappe", quelle: "menschen", titel: "Notfallmappe im Tresor", auto: "notfallmappe", gewicht: 2 },
@@ -85,7 +87,7 @@ export function datumFuer(pos, { checks = {}, bestaetigt = {}, geraet = {} } = {
   if (pos.auto === "wissen") return (geraet.arten ?? []).includes("zim") ? jetzt : null;
   if (pos.auto === "karte") return (geraet.arten ?? []).includes("karte") ? jetzt : null;
   if (pos.auto === "notfallmappe") return geraet.notfallmappe === undefined ? undefined : geraet.notfallmappe ? jetzt : null;
-  if (pos.check && !checks[pos.check]) return null; // abgehakt und bestätigt: beides nötig
+  if (pos.check && !checks[pos.check] && !(pos.alt && checks[pos.alt])) return null; // abgehakt und bestätigt: beides nötig
   return bestaetigt[pos.id] ?? null;
 }
 
@@ -179,6 +181,6 @@ export function uebertragen({ checks = {}, bestaetigungenV1 = {} } = {}, bestaet
     const d = bestaetigungenV1[alt];
     if (d && !neu[id]) neu[id] = d;
   }
-  for (const p of POSITIONEN) if (p.check && checks[p.check] && !neu[p.id]) neu[p.id] = heute;
+  for (const p of POSITIONEN) if (p.check && (checks[p.check] || (p.alt && checks[p.alt])) && !neu[p.id]) neu[p.id] = heute;
   return neu;
 }

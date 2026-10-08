@@ -2,6 +2,17 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.8.0",
+      "datum": "2026-10-08",
+      "punkte": [
+        "Zwölf Szenarien von Hochwasser bis Blackout: was die Gefahr ist, was du vorher tun kannst, wie du richtig reagierst und was danach kommt, je mit eigener Checkliste.",
+        "Die Grundvorsorge hat jetzt sechs Bereiche. Deine bisherigen Häkchen sind übernommen.",
+        "Unter Vorsorge stellst du einmal deinen Haushalt ein. Dann siehst du nur, was zu dir passt.",
+        "Merkliste, Liste exportieren und Drucken für die Grundvorsorge.",
+        "Auf Notfall: die Radiosender deines Bundeslands und die Sirenen zum Anhören."
+      ]
+    },
+    {
       "version": "0.7.2",
       "datum": "2026-10-08",
       "punkte": [

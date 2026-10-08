@@ -58,6 +58,7 @@ pub(crate) fn typ(p: &Path) -> &'static str {
         Some("woff2") => "font/woff2",
         Some("mp3") => "audio/mpeg",
         Some("ogg") => "audio/ogg",
+        Some("m4a") => "audio/mp4", // Sirenen zum Anhören (0.8.0)
         Some("pbf") => "application/x-protobuf",
         Some("pmtiles") => "application/octet-stream",
         Some("zim") => "application/octet-stream",

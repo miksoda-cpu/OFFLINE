@@ -7,6 +7,12 @@
 
 /** Abkürzung → Langform. Reihenfolge egal; Langformen enthalten selbst keine Abkürzung aus der Liste. */
 export const LISTE = {
+  // 0.8.0: Szenarien, Grundvorsorge und Radio im Österreich-Paket
+  BBK: "Bundesamt für Bevölkerungsschutz und Katastrophenhilfe", BMI: "Bundesministerium für Inneres", EAWS: "European Avalanche Warning Services",
+  EPZ: "Elementarschaden Präventionszentrum", FVA: "Forstliche Versuchs- und Forschungsanstalt", LVS: "Lawinenverschüttetensuchgerät",
+  ORS: "Österreichische Rundfunksender", SLF: "Institut für Schnee- und Lawinenforschung", StVO: "Straßenverkehrsordnung", UKW: "Ultrakurzwelle",
+  WLV: "Wildbach- und Lawinenverbauung", ZAMG: "Zentralanstalt für Meteorologie und Geodynamik", EN: "Europäische Norm",
+  "ÖAMTC": "Österreichischer Automobil-, Motorrad- und Touringclub",
   // App, Hilfe, Österreich-Paket, Tipps
   KI: "künstliche Intelligenz", KIs: "künstliche Intelligenzen", WLAN: "drahtloses lokales Netzwerk", ORF: "Österreichischer Rundfunk",
   SIM: "Teilnehmer-Identitätsmodul", TV: "Fernsehen", WC: "Toilette", USB: "Universal Serial Bus", QR: "Quick Response",
@@ -65,6 +71,7 @@ export const LISTE = {
 
 /** Keine Abkürzung zum Ausschreiben: Namen, Hervorhebungen, Nummern von Quellen, Codes. */
 export const KEINE = {
+  GeoSphere: "Name (GeoSphere Austria)", HORA: "Name der Naturgefahrenplattform", DEC112: "Name des Notruf-Chats", FFP2: "Schutzklasse von Masken", "ÖNORM": "Name der österreichischen Normenreihe",
   OFFLINE: "Name der App", "Ö3": "Name des Senders", ENTWURF: "Hervorhebung", WARNUNG: "Hervorhebung", NICHT: "Hervorhebung",
   HOCH: "Gefahrenstufe", SEHR: "Gefahrenstufe", TÖDLICH: "Gefahrenstufe", NIEMALS: "Hervorhebung", KEINE: "Hervorhebung",
   KEIN: "Hervorhebung", HANDELN: "Hervorhebung", ERST: "Hervorhebung", DANN: "Hervorhebung", ODER: "Hervorhebung",

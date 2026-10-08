@@ -47,6 +47,15 @@ export const HILFE = {
     ["Warum steht „verdächtig gut“ da?", "Über 95 fragt die App nach deinem letzten Probeabend, wenn du in den letzten drei Monaten keinen bestätigt hast. Ein Probeabend ist ein Abend ohne Strom. Er zeigt, was wirklich fehlt."],
     ["Wer sieht meine Zahl?", "Nur du. Die Zahl bleibt auf diesem Gerät."],
   ],
+  vorsorge: [
+    ["Was ist die Grundvorsorge?", "Was jeder Haushalt für 14 Tage ohne Einkaufen, Strom und fließendes Wasser braucht, in sechs Bereichen. Jeder Bereich zeigt, wie viel du schon hast."],
+    ["Was bewirkt „Dein Haushalt“?", "Du gibst einmal an, wer bei dir lebt und wie du wohnst. Dann zeigt die App nur die Punkte, die dazu passen, und in den Szenarien nur die Zusätze für dich. Ohne Angabe zeigt sie alles. Die Angabe bleibt auf diesem Gerät."],
+    ["Wozu ist der Stern?", "Mit dem Stern kommt ein Punkt auf die Merkliste, zum Beispiel für den nächsten Einkauf. „Merkliste“ zeigt nur diese Punkte."],
+    ["Wie nehme ich die Liste mit?", "„Liste exportieren“ speichert sie als Textdatei, „Drucken“ druckt sie aus. Beide zeigen nur die Punkte, die zu deinem Haushalt passen, mit deinen Häkchen."],
+    ["Was macht „Zurücksetzen“?", "Es löscht alle Häkchen der Grundvorsorge und die Merkliste. Die App fragt vorher noch einmal. Dein Haushalt bleibt eingestellt."],
+    ["Zählen alle Punkte für die Bereit-Zahl?", "Für die Zahl zählen die 20 Punkte, die es schon vor den sechs Bereichen gab, mit ihren Fristen. Die übrigen Punkte und die Checklisten der Szenarien helfen dir beim Vorbereiten. Die Zahl ändern sie nicht."],
+    ["Was sind die Szenarien?", "Zwölf Ernstfälle von Hochwasser bis Blackout. Jede Karte erklärt die Gefahr, was du vorher tun kannst, wie du richtig reagierst und was danach kommt. Dazu kommt eine eigene Checkliste."],
+  ],
   tagesplan: [
     ["Was ist „Mein Tag“?", "Hier stellst du ein, wann dein Tag endet und wann er beginnt. Zur Schluss-Zeit sagt die App: „Das war dein Tag.“ Die Lumi schläft bis zum Aufstehen."],
     ["Warum schlägt die App eine Zeit vor?", "Die App merkt sich, wann du abends zuletzt etwas tust. Sie fragt höchstens zweimal. Du entscheidest."],

@@ -1,5 +1,16 @@
 # Änderungen
 
+## 0.8.0 · 08.10.2026 · Zwölf Szenarien, Grundvorsorge in sechs Bereichen, Radio und Sirenen zum Anhören
+
+- **Inhalte** (Auftrag Nr. 20, unverändert übernommen) im Österreich-Paket `at-basis`, neue Ausgabe mit `app_min` 0.8.0: `inhalt/szenarien/<id>.json` (zwölf Karten, Reihenfolge in `inhalt/szenarien.json`), `inhalt/grundvorsorge.json` (sechs Bereiche, 74 Punkte mit `fuer`), `inhalt/radio.json` (Ö3, Ö1, Regionalradio je Bundesland). `blackout.json` und `vorsorge.json` sind ersetzt; die alte Checkliste liegt als `inhalt/alt/vorsorge-0.7.json` nur für den Abgleich der Häkchen.
+- **Notfall und Vorsorge** zeigen die zwölf Szenarien als Kacheln mit Fortschritt; jede Karte (`#szenario-<id>`) hat Merksätze, fünf aufklappbare Teile, „Für dich zusätzlich“ (nur passende Zusätze), eigene Checkliste, Verweise und Quellen. Notfallseiten bleiben im Grundaussehen, ohne Skin.
+- **Haushalt und Wohnsituation** (Vorsorge, oben, nur lokal): filtert Grundvorsorge und Zusätze; ohne Angabe alles.
+- **Grundvorsorge** in sechs Bereichen mit Fortschritt je Bereich, Merkliste (Stern), „Liste exportieren“ (Textdatei; Desktop über den Systemdialog und den neuen Befehl `text_speichern`, der nur `.txt` schreibt), „Drucken“ und „Zurücksetzen“ in zwei Schritten. Häkchen der alten Liste wandern über den Text auf die neuen ids (`checksUebertragen`); Bereit behält die 20 Positionen mit ihren ids und Fristen und liest bis zur Übertragung auch die alten Schlüssel.
+- **Radio:** „Wie du informiert bleibst“ auf Notfall, mit dem eingestellten Bundesland.
+- **Sirenen zum Anhören:** Warnung, Alarm, Entwarnung und die Probe als kurze AAC-Dateien im Paket (`inhalt/sirenen/*.m4a`, nachgebildet mit `werkzeug/sirenen-ton.py`); der Kern liefert `audio/mp4`, die Inhaltsrichtlinie erlaubt Ton vom lokalen Server.
+- **Abkürzungen** der neuen Texte in der Liste (BBK, BMI, LVS, StVO, UKW, WLV, ZAMG …); Namen wie GeoSphere, HORA, DEC112 unter „keine Abkürzung“.
+- **Test** `web/szenarien.test.mjs`: Inhalte, Verweise, Häkchen-Übernahme, Haushalt, Export, Radio, Töne, kein Inhalt im Code; der Name der staatlichen Zivilschutz-App kommt nirgends vor (geprüft über einen Fingerabdruck).
+
 ## 0.7.2 · 08.10.2026 · Vorschau als großes Fenster, Nachtrag zu 0.7.1, Startreife Teil 1 (ohne Konten)
 
 - **Vorschau in der Bibliothek** (Auftrag Nr. 19): Die Karte zeigt das Titelbild (erste Seite) und „Vorschau ansehen“; das Fenster über der Seite (am Handy ganzer Bildschirm) zeigt je Seite oben das Bild, darunter den Text, mit Pfeilen, Pfeiltasten und Wischen, „1 von 5“, Schließen mit ×, Esc und Tippen daneben, „laden“ unten (dieselbe Wirkung wie der Schieber der Karte). Gilt für Module und für alle Pakete mit Vorschau im Katalog; im Browser kommen die Bilder aus dem Paketordner der Web-Version, jedes gegen Größe und Prüfsumme im signierten Katalog (`vorschauKatalog` in `web/paket-client.js`). Die Slideshow in der Box ist weg.

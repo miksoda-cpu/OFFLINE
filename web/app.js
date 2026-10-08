@@ -20,6 +20,7 @@ import { hoerenZeigen, sprechen as lumischSprechen } from "./stimme.js";
 import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE, LUECKE_WARTET as BUCH_LUECKE_WARTET, wartendeAbsaetze as buchWartend, mitSchluss as buchMitSchluss } from "./buch.js";
 import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
+import { haushaltHtml, grundvorsorgeHtml, kachelnHtml, karteHtml, radioHtml, checksUebertragen, punkteFuer, fortschritt as gvFortschritt, verweisZiel, exportText as gvExportText } from "./szenarien.js";
 import { BEREICHE, bereichVon, bereichName, pflicht as paketPflicht, paketAn, umschalten as paketUmschalten, abschnitte as ladenAbschnitte } from "./pakete.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
@@ -49,7 +50,7 @@ async function internFreischalten(schluessel) {
   if (k) { history.replaceState(null, "", `${location.pathname}${location.search}#updates`); await internFreischalten(k); }
   else if (location.hash.startsWith("#kanal=")) history.replaceState(null, "", `${location.pathname}${location.search}#updates`);
 }
-const APP_VERSION = "0.7.2";
+const APP_VERSION = "0.8.0";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -84,6 +85,8 @@ const state = {
   lumiReiter: "uebersicht", // 0.7.0: Menü der Lumi-Seite
   natur: { weg: "start" }, internFeld: null, internMeldung: null, // 0.6.0: Naturheilkunde, interner Kanal
   checks: speicher.get("checks", {}),
+  // 0.8.0 (Auftrag Nr. 20): Haushalt (lokal), Merkliste der Grundvorsorge, Häkchen der Szenario-Checklisten
+  haushalt: speicher.get("haushalt", []), merk: speicher.get("merkliste", []), nurMerk: false, gvZurueck: false, szChecks: speicher.get("szenario-checks", {}), szenarioVon: "#notfall", anker: null,
   bestaetigt: null, // Bereit Version 2: positionId → ISO-Datum der letzten Bestätigung (siehe bereit.js), unten geladen
   wesenLog: { filter: "", suche: "" },
   abo: speicher.get("abo", { intervall: "woechentlich", nurWlan: true, fenster: true, von: "02:00", bis: "05:00", aktiv: true }),
@@ -158,7 +161,7 @@ function bereit() {
 /** Sockel aus Version 1: wird einmal festgelegt, sobald der Tresor-Stand bekannt ist; bis dahin vorläufig ohne Notfallmappe. */
 function sockelFestlegen(arten) {
   if (!speicher.get("bereit-sockel-offen", false)) return speicher.get("bereit-sockel", null);
-  const vorsorge = D("vorsorge");
+  const vorsorge = D("alt/vorsorge-0.7") ?? D("vorsorge"); // Sockel aus Version 1: gerechnet mit der alten Liste von 20 Punkten
   const gesamt = vorsorge ? vorsorge.gruppen.reduce((n, g) => n + g.punkte.length, 0) : 0;
   const bekannt = !desktop || state.tresor.status !== null;
   const sockel = { wert: bereitWertV1({ erledigt: Object.values(state.checks).filter(Boolean).length, gesamt, notfallmappe: !!desktop && bekannt && state.tresor.status !== "kein", arten, bestaetigungenV1: speicher.get("bestaetigungen", {}) }), am: new Date().toISOString() };
@@ -177,6 +180,23 @@ function bestaetigen(id, ja = true) {
   render();
 }
 const D = (name) => texte(P(), `inhalt/${name}.json`);
+// 0.8.0: zwölf Szenarien und Grundvorsorge aus dem Österreich-Paket
+const grund = () => D("grundvorsorge");
+const szReihe = () => D("szenarien")?.reihenfolge ?? [];
+const szKarten = () => Object.fromEntries(szReihe().map((id) => [id, D(`szenarien/${id}`)]).filter(([, k]) => k));
+/** Erledigt und gesamt der Grundvorsorge, nur Punkte, die zum Haushalt passen (für Bereit und die Kacheln). */
+function grundStand() {
+  const g = grund();
+  if (!g) return { erledigt: 0, gesamt: 0 };
+  return gvFortschritt(g.bereiche.flatMap((b) => punkteFuer(b, state.haushalt)), state.checks);
+}
+/** Häkchen der alten Checkliste (bis 0.7) auf die Grundvorsorge übertragen, sobald beide Listen da sind (Abgleich über den Text). */
+function checksAngleichen() {
+  const alt = D("alt/vorsorge-0.7") ?? D("vorsorge"), g = grund();
+  if (!alt || !g) return;
+  const { checks, geaendert } = checksUebertragen(state.checks, alt, g);
+  if (geaendert) { state.checks = checks; speicher.set("checks", checks); }
+}
 const katalog = () => katalogAusSpeicher()?.katalog ?? null;
 
 // ---------- Navigation ----------
@@ -546,10 +566,8 @@ const seiten = {
   uebersicht() {
     const p = P();
     if (!p) return fehlt();
-    const vorsorge = D("vorsorge");
     const laender = D("bundeslaender")?.laender ?? [];
-    const erledigt = Object.values(state.checks).filter(Boolean).length;
-    const gesamt = vorsorge.gruppen.reduce((s, g) => s + g.punkte.length, 0);
+    const { erledigt, gesamt } = grundStand();
     const installierte = installierteIds().map(paketRoh).filter(Boolean);
     const belegt = installierte.reduce((s, x) => s + x.manifest.groesse, 0);
     const k = katalog();
@@ -596,46 +614,54 @@ const seiten = {
     const n = D("notrufe"), s = D("sirenen");
     if (!n || !s) return fehlt();
     const welle = { konstant: "M2 22 H298", heulend: "M2 22 " + Array.from({ length: 6 }, (_, i) => `Q${27 + i * 50} ${i % 2 ? 42 : 2} ${52 + i * 50} 22`).join(" ") };
+    const hoeren = (pfad, name) => (pfad ? `<button type="button" class="btn btn-sm of-btn of-btn--klein sirene-hoeren" data-ton="${esc(pfad)}" aria-label="${esc(name)} anhören">▶ Anhören</button>` : "");
+    const karten = szKarten(), radio = D("radio"), laender = (D("bundeslaender")?.laender ?? []).map((l) => l.name);
     return `
       ${kopf("Notfall", "Tippe auf eine Nummer, um anzurufen.")}
-      <div class="grid grid-2">${n.eintraege.map((e) => `
+      <div class="grid grid-2" id="notrufe">${n.eintraege.map((e) => `
         <div class="card notruf of-karte"><a class="notruf-nr ${e.nr.length > 4 ? "long" : ""}" href="tel:${e.nr.replace(/\s/g, "")}">${esc(e.nr)}</a>
           <div><h3>${esc(e.name)}</h3><p>${esc(e.info)}</p></div></div>`).join("")}
       </div>
       <p class="muted of-klein" style="margin-top:1rem">${esc(n.hinweis)}</p>
+      ${Object.keys(karten).length ? `<h2 style="margin-top:2rem">Was tun bei …</h2>${kachelnHtml(karten, szReihe(), state.szChecks)}` : ""}
+      ${radio ? radioHtml(radio, state.bundesland, laender) : ""}
       <h2 style="margin-top:2rem">Sirenensignale</h2>
       <p class="muted of-klein">${esc(s.einleitung)}</p>
       <div class="grid grid-3">${s.signale.map((x) => `
         <div class="card siren of-karte"><h3>${esc(x.name)} <span class="muted of-klein" style="font-weight:500;font-size:.9rem">– ${esc(x.bedeutung)}</span></h3>
           <svg viewBox="0 0 300 44" preserveAspectRatio="none" aria-hidden="true"><path d="${welle[x.muster]}"/></svg>
-          <p><strong>${esc(x.dauer)}</strong></p><p class="muted of-klein" style="margin:0">${esc(x.tun)}</p></div>`).join("")}
+          <p><strong>${esc(x.dauer)}</strong></p><p class="muted of-klein">${esc(x.tun)}</p>
+          ${hoeren(x.ton, x.name)}${x.ton_laenge ? ` <span class="muted of-klein">${esc(x.ton_laenge)}</span>` : ""}</div>`).join("")}
       </div>
-      <div class="card of-karte" style="margin-top:1rem"><p class="muted of-klein" style="margin:0 0 .5rem">${esc(s.probe)}</p><p class="muted of-klein" style="margin:0 0 .5rem">${esc(s.feuerwehr)}</p><p class="muted of-klein" style="margin:0">${esc(s.warn_app)}</p></div>`;
+      ${s.ton_hinweis ? `<p class="muted of-klein">${esc(s.ton_hinweis)}</p>` : ""}
+      <div class="card of-karte" style="margin-top:1rem"><p class="muted of-klein" style="margin:0 0 .5rem">${esc(s.probe)} ${hoeren(s.probe_ton, "Sirenenprobe")}</p><p class="muted of-klein" style="margin:0 0 .5rem">${esc(s.feuerwehr)}</p><p class="muted of-klein" style="margin:0">${esc(s.warn_app)}</p></div>`;
   },
 
   vorsorge() {
-    const v = D("vorsorge"), b = D("blackout");
-    if (!v || !b) return fehlt();
-    const gesamt = v.gruppen.reduce((s, g) => s + g.punkte.length, 0);
-    const erledigt = Object.values(state.checks).filter(Boolean).length;
+    const g = grund();
+    if (!g) return P() ? `${kopf("Vorsorge", "Die neue Vorsorge kommt mit dem nächsten Österreich-Paket.")}<div class="card of-karte"><p>Auf diesem Gerät liegt noch die vorige Ausgabe des Österreich-Pakets. Deine Häkchen bleiben und werden übernommen.</p><button class="btn btn-primary of-btn of-btn--primaer" data-install="${BASISPAKET}">Österreich-Paket aktualisieren</button><p class="form-msg of-meldung" id="bib-msg"></p></div>` : fehlt();
     const bereitStand = bereit(), vh = vorhaben();
+    const faellig = new Map(bereitStand.positionen.filter((x) => x.check && x.stand === "faellig").map((x) => [x.check, x.id]));
+    const st = grundStand();
     const vorhabenHtml = vh.length ? `<div class="card of-karte vorhaben" id="vorhaben" style="margin-bottom:1rem"><h3 style="margin-top:0">Vorhaben</h3>
       <p class="muted of-klein" style="margin:0 0 .6rem">Was du dir nach einem Satz von ${esc(wesen.anzeigename())} vorgenommen hast. Eine Erinnerung für dich, sie ändert die Bereit-Zahl nicht.</p>
       <ul class="check">${vh.map((v) => `<li><label><input type="checkbox" data-vorhaben="${esc(v.id)}" ${v.erledigt ? "checked" : ""}><span>${esc(v.text)}</span></label> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-vorhaben-weg="${esc(v.id)}" aria-label="Vorhaben löschen">Löschen</button></li>`).join("")}</ul></div>` : "";
+    const karten = szKarten();
     return `
-      ${kopf("Blackout-Vorsorge", esc(v.einleitung), `<div style="min-width:220px"><div class="muted of-klein" style="font-size:.9rem;margin-bottom:.3rem">${erledigt} von ${gesamt} erledigt</div><div class="progress of-balken"><div style="width:${(erledigt / gesamt) * 100}%"></div></div></div>`)}
-      ${vorhabenHtml}<div class="grid grid-2">${v.gruppen.map((g, gi) => `
-        <div class="card of-karte"><h3>${esc(g.gruppe)}</h3><ul class="check">${g.punkte.map((p, pi) => {
-          const id = `${gi}-${pi}`;
-          const pos = bereitStand.positionen.find((x) => x.check === id);
-          return `<li><label><input type="checkbox" data-check="${id}" ${state.checks[id] ? "checked" : ""}><span>${esc(p)}${pos?.stand === "faellig" ? ` <span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span>` : ""}</span></label>${pos?.stand === "faellig" ? ` <button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-bestaetigen="${pos.id}">Erneuert</button>` : ""}</li>`;
-        }).join("")}</ul></div>`).join("")}
-      </div>
-      <h2 style="margin-top:2rem">Wenn der Strom ausfällt</h2>
-      <p class="muted of-klein">${esc(b.einleitung)}</p>
-      <div class="card of-karte"><ol class="timeline">${b.ablauf.map((s) => `<li><h3>${esc(s.t)}</h3><p class="muted of-klein" style="margin:0">${esc(s.text)}</p></li>`).join("")}</ol></div>
-      <div class="card of-karte" style="margin-top:1rem;border-color:var(--accent)"><ul style="margin:0;padding-left:1.1rem">${b.merksaetze.map((m) => `<li>${esc(m)}</li>`).join("")}</ul></div>
-      <p class="muted of-klein" style="margin-top:1rem;font-size:.9rem">Quellen: ${(P()?.manifest.quellen ?? []).map((q) => `<a href="${esc(q.url)}" rel="noopener">${esc(q.name)}</a>`).join(" · ")}</p>`;
+      ${kopf("Vorsorge", "Grundvorsorge, Szenarien und dein Haushalt.", `<div style="min-width:220px"><div class="muted of-klein" style="font-size:.9rem;margin-bottom:.3rem">${st.erledigt} von ${st.gesamt} erledigt</div><div class="progress of-balken"><div style="width:${st.gesamt ? (st.erledigt / st.gesamt) * 100 : 0}%"></div></div></div>`)}
+      ${haushaltHtml(state.haushalt)}
+      ${vorhabenHtml}
+      ${grundvorsorgeHtml(g, { checks: state.checks, haushalt: state.haushalt, merk: state.merk, nurMerk: state.nurMerk, zuruecksetzen: state.gvZurueck, faellig })}
+      ${Object.keys(karten).length ? `<h2 style="margin-top:2rem">Szenarien</h2><p class="muted of-klein">Was du für jeden Ernstfall zusätzlich brauchst und wie du richtig reagierst.</p>${kachelnHtml(karten, szReihe(), state.szChecks)}` : ""}
+      ${g.quellen?.length ? `<details class="sz-quellen" style="margin-top:1.5rem"><summary class="muted of-klein">Quellen der Grundvorsorge (Stand ${esc(g.stand ?? "")})</summary><ul class="muted of-klein">${g.quellen.map((q) => `<li>${q.url ? `<a href="${esc(q.url)}" rel="noopener">${esc(q.name)}</a>` : esc(q.name)}</li>`).join("")}</ul></details>` : ""}`;
+  },
+
+  /** Eine Szenario-Karte (0.8.0): Adresse #szenario-<id>; Notfallseiten im Grundaussehen, ohne Skin. */
+  szenario() {
+    const karten = szKarten(), k = karten[state.szenario];
+    if (!k) return seiten.notfall();
+    const verweise = (k.verweise ?? []).map((v) => verweisZiel(v, grund(), karten)).filter(Boolean);
+    return karteHtml(k, { haushalt: state.haushalt, abgehakt: state.szChecks[k.id] ?? [], verweise, zurueck: state.szenarioVon });
   },
 
   tresor() {
@@ -1057,7 +1083,7 @@ function neuAlleZeigen(reiter) {
   blattOeffnen(reiter === "app" ? "Was ist neu · App" : "Was ist neu · Inhalte", neuListe(reiter, null, katalogAusSpeicher()?.katalog));
 }
 /** „Info und Hilfe“ als letzte Zeile einer Seite (Muster seit 0.5.2). Tresor nur in der Desktop-App, Notfall nie. */
-const HILFE_SEITE = { bibliothek: "bibliothek", werkzeuge: "werkzeuge", linie: "pause-linie", buch: "lumi-buch", get tresor() { return desktop ? "tresor" : null; } };
+const HILFE_SEITE = { vorsorge: "vorsorge", bibliothek: "bibliothek", werkzeuge: "werkzeuge", linie: "pause-linie", buch: "lumi-buch", get tresor() { return desktop ? "tresor" : null; } };
 const hilfeZeile = (seite, klasse = "upd-info") => (seite && HILFE[seite] ? `<p class="${klasse}"><button type="button" class="z-neben" data-hilfe="${seite}">Info und Hilfe</button></p>` : "");
 function hilfeZeigen(seite) {
   const t = HILFE[seite]; if (!t) return;
@@ -1644,10 +1670,10 @@ async function skinAnwenden() {
   skinFuerSeite();
 }
 function skinFuerSeite() {
-  if (!skinStil) return;
   const route = location.hash.slice(1) || "start";
-  skinStil.media = route === "notfall" ? "not all" : "all"; // Notfall: immer Grundaussehen
-  document.body.classList.toggle("of-grundaussehen", route === "notfall");
+  const notfallSeite = route === "notfall" || route.startsWith("szenario-"); // Notfall und die Szenario-Karten (0.8.0): immer Grundaussehen
+  document.body.classList.toggle("of-grundaussehen", notfallSeite);
+  if (skinStil) skinStil.media = notfallSeite ? "not all" : "all";
 }
 
 const schieber = ({ an, art, text, attr }) => `<button type="button" role="switch" aria-checked="${an}" class="schieber schieber-${art}" ${attr}><span class="schieber-bahn" aria-hidden="true"><span class="schieber-knopf"></span></span><span class="schieber-text">${text}</span></button>`;
@@ -2337,14 +2363,15 @@ async function karteStarten() {
 // ---------- KI (Prototyp: Stichwortsuche im Paket) ----------
 function antworte(frage) {
   const f = frage.toLowerCase();
-  const n = D("notrufe"), s = D("sirenen"), v = D("vorsorge"), b = D("blackout");
+  const n = D("notrufe"), s = D("sirenen"), g = grund(), b = D("szenarien/blackout"); // 0.8.0: Grundvorsorge und Szenario-Karte
   if (!n) return "Kein Österreich-Paket installiert.";
   const treffer = [];
   for (const e of n.eintraege) if (f.includes(e.nr) || f.includes(e.name.toLowerCase().split(" ")[0])) treffer.push(`<strong>${e.nr} – ${e.name}:</strong> ${e.info}`);
   for (const x of s.signale) if (f.includes(x.name.toLowerCase()) || (f.includes("heul") && x.muster === "heulend") || (f.includes("sirene") && !treffer.length)) treffer.push(`<strong>${x.name}</strong> (${x.dauer}): ${x.tun}`);
-  if (/wasser|trink/.test(f)) treffer.push(v.gruppen[0].punkte[0] + ". Dazu Wasser für die Toilettenspülung.");
-  if (/blackout|strom/.test(f)) b.ablauf.slice(0, 2).forEach((x) => treffer.push(`<strong>${x.t}:</strong> ${x.text}`));
-  if (/geld|bargeld|bankomat/.test(f)) treffer.push(v.gruppen[3].punkte[0] + ".");
+  const punkt = (id) => g?.bereiche.flatMap((x) => x.punkte).find((p) => p.id === id)?.text;
+  if (/wasser|trink/.test(f) && punkt("trinkwasser")) treffer.push(punkt("trinkwasser") + ".");
+  if (/blackout|strom/.test(f) && b) b.reagieren.slice(0, 2).forEach((x) => treffer.push(`<strong>${x.t}:</strong> ${x.text}`));
+  if (/geld|bargeld|bankomat/.test(f) && punkt("bargeld")) treffer.push(punkt("bargeld") + ".");
   if (/rettung|arzt|krank|verletzt/.test(f) && !treffer.length) treffer.push("<strong>144 – Rettung</strong> im Notfall, <strong>141</strong> für den Ärztenotdienst, <strong>1450</strong> für Beratung.");
   return treffer.length
     ? [...new Set(treffer)].slice(0, 4).map(esc).map((t) => t.replace(/&lt;(\/?)strong&gt;/g, "<$1strong>")).join("<br><br>") + `<br><br><span class="muted of-klein" style="font-size:.85rem">Quelle: ${esc(P().manifest.titel)} ${esc(P().manifest.version)}</span>`
@@ -2357,7 +2384,9 @@ const sidebar = document.getElementById("sidebar");
 const menu = document.getElementById("menu");
 
 function render() {
-  const route = location.hash.slice(1) || "start";
+  let route = location.hash.slice(1) || "start";
+  if (route.startsWith("szenario-")) { state.szenario = route.slice(9); route = "szenario"; } // 0.8.0: eine Karte je Szenario
+  checksAngleichen();
   blattWeg();
   if (route === "modul") { modulAnsichtZeigen(); return; }
   modulAnsichtVerbergen();
@@ -2383,7 +2412,7 @@ function render() {
   if (seite === "start") { tagesSatzZeigen(); pauseKarteWischen(); }
   if (seite !== "gedanke" && state.gedankenLiest) gedankenVorlesenStop();
   if (seite === "gedanken" || seite === "gedanke") gedankenNachZeichnen();
-  const aktiv = seite === "lesen" || seite === "gedanken" || seite === "gedanke" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" || seite === "buch" || seite === "absatz" ? "lumi" : seite === "linie" ? "pause" : seite;
+  const aktiv = seite === "lesen" || seite === "gedanken" || seite === "gedanke" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" || seite === "buch" || seite === "absatz" ? "lumi" : seite === "linie" ? "pause" : seite === "szenario" ? state.szenarioVon.slice(1) : seite;
   if (seite !== "kapitel" && state.tag.liest) vorlesenStop();
   if (seite !== "buch" && state.buchLiest) { try { speechSynthesis.cancel(); } catch { /* egal */ } state.buchLiest = false; }
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
@@ -2392,6 +2421,8 @@ function render() {
   state.tag.seiteVorher = seite;
   if (seite === "natur") { naturBilderLaden(); document.title = "OFFLINE – Naturheilkunde"; document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === "natur" ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"))); }
   else document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : seite === "heft" ? `Was ${wesen.anzeigename()} gesagt hat` : seite === "linie" ? "Deine Linie" : seite === "buch" || seite === "absatz" ? "Das Lumi-Buch" : seite === "gedanken" || seite === "gedanke" ? "Was die Lumis denken" : state.lesen?.titel ?? "Lesen")}`;
+  if (seite === "szenario") document.title = `OFFLINE – ${szKarten()[state.szenario]?.titel ?? "Notfall"}`;
+  if (state.anker) { const ziel = document.getElementById(state.anker); state.anker = null; if (ziel) { if (ziel.tagName === "DETAILS") ziel.open = true; ziel.scrollIntoView({ block: "start" }); } }
   if (seite === "karte") karteStarten();
   if (seite === "bibliothek") vorschauenNachladen();
   skinFuerSeite();
@@ -2412,7 +2443,23 @@ main.addEventListener("change", (e) => {
     p[k] = k === "sparmodus" ? t.checked : k === "schluss" ? (t.value === "" ? null : Number(t.value)) : Number(t.value);
     planSpeichern(p); if (k === "schluss" || k === "aufstehen") { wesen.zustandBerechnen?.(); render(); } if (k === "tiefe") vorratAuffuellen(); return;
   }
-  if (t.dataset.check) { state.checks[t.dataset.check] = t.checked; speicher.set("checks", state.checks); return bestaetigen(`c-${t.dataset.check}`, t.checked); }
+  if (t.dataset.check) { // Grundvorsorge (0.8.0: Punkte über ihre id); zählt ein Punkt für Bereit, gilt die Bestätigung seiner Position
+    state.checks[t.dataset.check] = t.checked; speicher.set("checks", state.checks);
+    const pos = BEREIT_POSITIONEN.find((p) => p.check === t.dataset.check);
+    return pos ? bestaetigen(pos.id, t.checked) : render();
+  }
+  if (t.dataset.haushalt) { // Haushalt und Wohnsituation: nur auf diesem Gerät
+    const k = t.dataset.haushalt; state.haushalt = t.checked ? [...new Set([...state.haushalt, k])] : state.haushalt.filter((x) => x !== k);
+    speicher.set("haushalt", state.haushalt); render(); const d = document.getElementById("haushalt"); if (d) d.open = true; return; // offen lassen, solange man wählt
+  }
+  if (t.dataset.szCheck) { // Checkliste einer Szenario-Karte: gemerkt wird der Satz, nicht die Stelle
+    const k = szKarten()[t.dataset.szCheck], satz = k?.checkliste_spezifisch[Number(t.dataset.szPunkt)];
+    if (!satz) return;
+    const alt = state.szChecks[k.id] ?? [];
+    state.szChecks = { ...state.szChecks, [k.id]: t.checked ? [...new Set([...alt, satz])] : alt.filter((x) => x !== satz) };
+    speicher.set("szenario-checks", state.szChecks); return render();
+  }
+  if (t.id === "bl3") { state.bundesland = t.value; speicher.set("bundesland", t.value); return render(); }
   if (t.dataset.pauseEinstellung) {
     const k = t.dataset.pauseEinstellung, roh = speicher.get("pause", null) ?? {};
     const v = k === "neuigkeit" ? Number(t.value) : t.value;
@@ -2483,6 +2530,54 @@ function beiKlick(e) {
   if (b.hasAttribute("data-speicherort-standard")) speicherortSetzen(null);
 }
 main.addEventListener("click", beiKlick);
+// 0.8.0: Szenarien, Grundvorsorge, Sirenen zum Anhören
+let sireneTon = null;
+main.addEventListener("click", async (e) => {
+  const a = e.target.closest("a");
+  if (a?.classList.contains("sz-kachel")) state.szenarioVon = location.hash.startsWith("#vorsorge") ? "#vorsorge" : "#notfall";
+  if (a?.dataset.ankerZiel) { state.anker = a.dataset.ankerZiel; if (a.getAttribute("href") === location.hash) { e.preventDefault(); render(); } return; }
+  const b = e.target.closest("button");
+  if (!b) return;
+  if (b.dataset.ton) {
+    const war = sireneTon?.pfad === b.dataset.ton;
+    if (sireneTon) { sireneTon.audio.pause(); sireneTon.knopf.textContent = "▶ Anhören"; sireneTon = null; }
+    if (war) return;
+    const url = await client.bildUrl?.(BASISPAKET, `inhalt/${b.dataset.ton}`);
+    if (!url) return;
+    const audio = new Audio(url);
+    sireneTon = { pfad: b.dataset.ton, audio, knopf: b };
+    b.textContent = "■ Anhalten";
+    audio.addEventListener("ended", () => { b.textContent = "▶ Anhören"; if (sireneTon?.audio === audio) sireneTon = null; });
+    audio.play().catch(() => { b.textContent = "▶ Anhören"; sireneTon = null; });
+    return;
+  }
+  if (b.dataset.merk) { const id = b.dataset.merk; state.merk = state.merk.includes(id) ? state.merk.filter((x) => x !== id) : [...state.merk, id]; speicher.set("merkliste", state.merk); return render(); }
+  const gv = b.dataset.gv;
+  if (!gv) return;
+  if (gv === "merkliste") { state.nurMerk = !state.nurMerk; return render(); }
+  if (gv === "zuruecksetzen") { state.gvZurueck = true; render(); document.querySelector('[data-gv="zuruecksetzen-nein"]')?.focus(); return; }
+  if (gv === "zuruecksetzen-nein") { state.gvZurueck = false; return render(); }
+  if (gv === "zuruecksetzen-ja") { // zweiter Schritt: Häkchen der Grundvorsorge und Merkliste weg, Bestätigungen dieser Punkte ebenso
+    const ids = new Set(grund()?.bereiche.flatMap((x) => x.punkte.map((p) => p.id)) ?? []);
+    state.checks = Object.fromEntries(Object.entries(state.checks).filter(([k]) => !ids.has(k))); speicher.set("checks", state.checks);
+    for (const p of BEREIT_POSITIONEN) if (p.check && ids.has(p.check)) delete state.bestaetigt[p.id];
+    speicher.set("bereit-v2", state.bestaetigt);
+    state.merk = []; speicher.set("merkliste", []); state.gvZurueck = false; state.nurMerk = false; return render();
+  }
+  const g = grund(); if (!g) return;
+  const text = gvExportText(g, state.checks, state.haushalt, state.merk);
+  if (gv === "export") {
+    if (desktop) { try { const pfad = await client.textSpeichern("OFFLINE-Grundvorsorge.txt", text); if (pfad) zeige("gv-msg", `Gespeichert: ${esc(pfad)}`, "ok"); } catch (err) { zeige("gv-msg", esc(String(err?.message ?? err)), "err"); } return; }
+    const l = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" })), download: "OFFLINE-Grundvorsorge.txt" });
+    document.body.append(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(l.href), 5000); return;
+  }
+  if (gv === "drucken") {
+    const zeilen = text.split("\n").map((z) => esc(z));
+    document.getElementById("druck-bereich").replaceChildren(druckTeil(`<div class="druck-liste">${zeilen.map((z) => (z.startsWith("[") ? `<p>${z.replace(/^\[x\]/, "☑").replace(/^\[ \]/, "☐")}</p>` : z ? `<h3>${z}</h3>` : "")).join("")}</div>`));
+    try { await client.drucken?.(); } catch { print(); }
+    if (!desktop) print();
+  }
+});
 main.addEventListener("click", (e) => { const l = e.target.closest("[data-tag-lesen]"); if (l) state.tag.lesen = l.dataset.tagLesen; });
 // Lumi: Startablauf (Einladung, Einschalten, Namensgabe, Ausschalten mit Rückfrage), siehe wesen.js
 function lumiAktion(a) {

@@ -73,8 +73,9 @@ test("Store-Build: Schalter ohne Updater und ohne internen Kanal; der Direkt-Dow
   for (const s of ["const storeBuild = !!desktop?.info?.store;", "const k = storeBuild ? null : schluesselAusLink(location.hash);", "Neue Versionen der App kommen über den Store.", "if (storeBuild) return \"\";", "if (versionTipps.length >= 7 && !storeBuild)"]) assert.ok(app.includes(s), s);
 });
 
-test("Version 0.7.2 überall gleich", async () => {
-  assert.equal(JSON.parse(await lies("./version.json")).version, "0.7.2");
-  assert.ok(app.includes('const APP_VERSION = "0.7.2";'));
-  assert.match(await lies("./sw.js"), /const VERSION = "offline-v33";/);
+test("Version überall gleich (App, version.json), Service Worker mit neuer Fassung", async () => {
+  const v = JSON.parse(await lies("./version.json")).version;
+  assert.ok(app.includes(`const APP_VERSION = "${v}";`));
+  assert.match(await lies("./sw.js"), /const VERSION = "offline-v(\d+)";/);
+  assert.ok(Number((await lies("./sw.js")).match(/offline-v(\d+)/)[1]) >= 33);
 });

@@ -595,6 +595,20 @@ mod app_update {
     pub async fn app_update_installieren(_app: AppHandle) -> Result<String, String> { Err("App-Updates sind in diesem Build nicht eingebaut.".into()) }
 }
 
+/// Text als Datei sichern (0.8.0, „Liste exportieren“ der Grundvorsorge). Den Pfad hat der Systemdialog geliefert;
+/// geschrieben wird nur eine .txt-Datei, nichts anderes.
+#[tauri::command]
+fn text_speichern(pfad: String, inhalt: String) -> Result<(), String> {
+    let p = PathBuf::from(&pfad);
+    if !p.extension().and_then(|e| e.to_str()).is_some_and(|e| e.eq_ignore_ascii_case("txt")) {
+        return Err("Nur Textdateien (.txt)".into());
+    }
+    if inhalt.len() > 1_000_000 {
+        return Err("Zu lang".into());
+    }
+    std::fs::write(&p, inhalt).map_err(|e| e.to_string())
+}
+
 #[tauri::command]
 fn app_neustart(app: AppHandle) {
     app.restart()
@@ -1065,7 +1079,7 @@ pub fn start() {
         .invoke_handler(tauri::generate_handler![
             datenordner, intern_lesen, intern_setzen, installierte, paket_lesen, einspielen_ordner, einspielen_bytes, entfernen, stick_suchen, aufraeumen_start,
             abo_lesen, abo_schreiben, verbindung_melden, speicherort_setzen, katalog_laden, paket_laden, download_abbrechen, updates_jetzt, abo_status,
-            lokal_url, kiwix_url, fenster_oeffnen, alles_loeschen, app_info, downloads_offen,
+            lokal_url, kiwix_url, fenster_oeffnen, alles_loeschen, app_info, downloads_offen, text_speichern,
             tresor_status, tresor_anlegen, tresor_oeffnen, tresor_oeffnen_code, tresor_sperren, tresor_sperre_setzen, tresor_notizen,
             tresor_notiz_schreiben, tresor_notiz_loeschen, tresor_notfallmappe, tresor_anhang_aus_datei, tresor_anhang_lesen, tresor_anhang_loeschen,
             tresor_passwort_aendern, tresor_code_erneuern, tresor_sichern, tresor_zurueckspielen, tresor_anhang_bytes,

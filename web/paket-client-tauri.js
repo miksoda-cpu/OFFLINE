@@ -151,6 +151,14 @@ export async function einspielenOrdner(pfad, downgrade = false) {
   return e;
 }
 
+/** Text als Datei sichern (0.8.0, „Liste exportieren“): Speicherort wählt man im Systemdialog, der Kern schreibt nur .txt. */
+export async function textSpeichern(name, inhalt) {
+  const pfad = await T.dialog.save({ defaultPath: name, filters: [{ name: "Text", extensions: ["txt"] }] });
+  if (!pfad) return null;
+  await invoke("text_speichern", { pfad, inhalt });
+  return pfad;
+}
+
 export async function ordnerWaehlen(titel = "Paketordner wählen (mit paket.json)") {
   return T.dialog.open({ directory: true, multiple: false, title: titel });
 }

@@ -203,8 +203,8 @@ export function entferne(id) {
 }
 
 // ---------- Bilder aus Paketen (0.6.1) ----------
-const BINAER = /\.(webp|png|jpe?g|gif)$/i;
-const MIME = { webp: "image/webp", png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif" };
+const BINAER = /\.(webp|png|jpe?g|gif|m4a)$/i; // m4a: Sirenen zum Anhören (0.8.0)
+const MIME = { webp: "image/webp", png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", gif: "image/gif", m4a: "audio/mp4" };
 export const BILD_SPEICHER = "offline-paket-bilder";
 const bildSchluessel = (id, pfad) => `/paket-bild/${encodeURIComponent(id)}/${pfad.split("/").map(encodeURIComponent).join("/")}`;
 const bildUrls = new Map();

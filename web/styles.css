@@ -786,3 +786,49 @@ body.blatt-offen { overflow: hidden; }
 .laden-steuerung { display: inline-flex; flex-wrap: wrap; gap: .5rem; align-items: center; justify-content: flex-end; }
 .laden-immer { font-size: .85rem; color: var(--muted); }
 .alter-frage { display: inline-flex; flex-wrap: wrap; gap: .4rem; align-items: center; justify-content: flex-end; }
+
+/* Szenarien, Grundvorsorge, Radio (0.8.0) */
+.haushalt summary { cursor: pointer; display: flex; flex-wrap: wrap; gap: .5rem; align-items: baseline; }
+.haushalt-gruppe { border: 0; padding: 0; margin: .6rem 0 0; display: flex; flex-wrap: wrap; gap: .4rem 1rem; }
+.haushalt-gruppe legend { color: var(--muted); margin-bottom: .3rem; }
+.haushalt-wahl { display: inline-flex; align-items: center; gap: .35rem; min-height: 44px; }
+.gv { margin-top: 1.5rem; }
+.gv-kopf { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: .5rem; }
+.gv-kopf h2 { margin: 0; }
+.gv-werkzeug { display: flex; flex-wrap: wrap; gap: .4rem; margin: .4rem 0 .8rem; align-items: center; }
+.gv-zurueck { display: inline-flex; flex-wrap: wrap; gap: .4rem; align-items: center; }
+.gv-bereich h3 { margin-bottom: .2rem; }
+.gv-stand { color: var(--muted); margin: .3rem 0 .2rem; }
+.gv-liste { margin-top: .6rem; }
+.gv-punkt { display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 0 .4rem; }
+.gv-punkt > label { grid-column: 1; }
+.gv-merk { grid-column: 2; grid-row: 1; min-width: 44px; min-height: 44px; background: none; border: 0; font-size: 1.2rem; color: var(--warn); cursor: pointer; }
+.gv-detail { grid-column: 1 / -1; margin: -.2rem 0 .3rem 1.8rem; }
+.gv-detail summary { color: var(--eis-ink); cursor: pointer; }
+.gv-detail p { margin: .3rem 0 0; }
+.sz-kacheln { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .6rem; margin-bottom: 1rem; }
+.sz-kachel { display: grid; gap: .3rem; text-decoration: none; color: inherit; padding: .8rem .9rem; }
+.sz-kachel strong { font-size: 1.02rem; }
+.sz-zurueck { margin: 0 0 .5rem; }
+.sz-merk { border-color: var(--accent); }
+.sz-merk ul { margin: 0; padding-left: 1.1rem; }
+.sz-merk li { margin: .2rem 0; font-weight: 600; }
+.sz-teil { padding: 0; }
+.sz-teil > summary { cursor: pointer; padding: .9rem 1rem; list-style-position: inside; }
+.sz-teil > summary h2 { display: inline; font-size: 1.15rem; margin: 0; }
+.sz-teil[open] > summary { border-bottom: 1px solid var(--line); }
+.sz-liste { margin: 0; padding: .6rem 1rem .8rem 2rem; }
+.sz-liste li { margin: .45rem 0; }
+.sz-zusatz h3 { margin: .8rem 0 .2rem; font-size: 1rem; }
+.sz-verweise { margin: 1rem 0; }
+.sz-quellen { margin-top: 1.2rem; }
+.sz-quellen ul { padding-left: 1.1rem; }
+.sz-quellen a { overflow-wrap: anywhere; }
+.radio-box { margin-top: 1.5rem; }
+.radio-kopf { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem; }
+.radio-kopf h2 { margin: 0; }
+.radio-tabelle { width: 100%; border-collapse: collapse; margin: .6rem 0; }
+.radio-tabelle th, .radio-tabelle td { text-align: left; padding: .35rem .4rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+.radio-tabelle th { font-size: .85rem; color: var(--muted); font-weight: 600; }
+.sirene-hoeren { margin-top: .4rem; min-height: 44px; }
+@media print { .druck-bereich .druck-liste p { margin: 1mm 0; } .druck-bereich .druck-liste h3 { margin: 4mm 0 1mm; } }
