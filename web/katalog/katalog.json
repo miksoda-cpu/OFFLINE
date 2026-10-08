@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-10-07T12:21:49Z",
-  "gueltig_bis": "2027-01-05T12:21:49Z",
+  "erstellt": "2026-10-08T03:39:02Z",
+  "gueltig_bis": "2027-01-06T03:39:02Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -297,7 +297,7 @@
     },
     {
       "id": "pause",
-      "version": "2026.10.07",
+      "version": "2026.10.08",
       "titel": "Pause · Happen für zwischendurch",
       "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten, in fünf Stufen – Pilze finden, Geschichten mit einem Fehler, Kaffeehaus-Logik, Kopfnuss, Gedanken am Fluss, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
       "art": "inhalt",
@@ -377,12 +377,12 @@
           }
         ]
       },
-      "groesse": 284815,
+      "groesse": 287777,
       "app_min": "0.7.1",
-      "erstellt": "2026-10-07T12:17:45Z",
-      "aenderungen": "Pause hat jetzt fünf Stufen, 60 neue Geschichten, je 30 Varianten für den Tag rückwärts und das Atemfenster und drei neue Formen: Kaffeehaus-Logik, Kopfnuss und Ein Gedanke am Fluss.",
-      "pfad": "pause-2026.10.07/",
-      "sha256_manifest": "acd1938e36b71fc4c064c97471d9fd45a0a6d140cd0fde841e2aa3f245b120f1",
+      "erstellt": "2026-10-08T03:20:26Z",
+      "aenderungen": "Fünf Geschichten mit einem Fehler sind dazugekommen. Damit sind es 60, zwölf auf jeder Stufe.",
+      "pfad": "pause-2026.10.08/",
+      "sha256_manifest": "c4d307cd07141ea84e9dfa9124e11cce44d01184edc33255df97684363213cc0",
       "status": "verfuegbar"
     },
     {
@@ -557,15 +557,6 @@
       "art": "inhalt",
       "pro": true,
       "groesse": 800000000,
-      "status": "geplant"
-    },
-    {
-      "id": "ki-basis",
-      "titel": "KI-Modell Deutsch · Basis",
-      "beschreibung": "Lokales Sprachmodell für Fragen an deine Bibliothek. Ab 8 GB RAM.",
-      "art": "modell",
-      "pro": false,
-      "groesse": 4700000000,
       "status": "geplant"
     }
   ]

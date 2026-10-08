@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "pause",
-  "version": "2026.10.07",
+  "version": "2026.10.08",
   "titel": "Pause · Happen für zwischendurch",
   "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten, in fünf Stufen – Pilze finden, Geschichten mit einem Fehler, Kaffeehaus-Logik, Kopfnuss, Gedanken am Fluss, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
   "art": "inhalt",
@@ -15,8 +15,8 @@
   "abnahme": "Redaktion (Code), 05.10.2026: Lumisch gegen die Beilage der Wortprüfung vom 05.10.2026 (500 Wörter nach dem Nachtrag 2026-10-05-05, Plan in 21 Tagen, von Mik freigegeben); Geschichten auf genau einen falschen Satz geprüft",
   "bereich": "pause",
   "app_min": "0.7.1",
-  "erstellt": "2026-10-07T12:17:45Z",
-  "aenderungen": "Pause hat jetzt fünf Stufen, 60 neue Geschichten, je 30 Varianten für den Tag rückwärts und das Atemfenster und drei neue Formen: Kaffeehaus-Logik, Kopfnuss und Ein Gedanke am Fluss.",
+  "erstellt": "2026-10-08T03:20:26Z",
+  "aenderungen": "Fünf Geschichten mit einem Fehler sind dazugekommen. Damit sind es 60, zwölf auf jeder Stufe.",
   "quellen": [
     {
       "id": "redaktion",
@@ -27,8 +27,8 @@
   "dateien": [
     {
       "pfad": "inhalt/pause.json",
-      "sha256": "23c6b23dfe17409773b04d3df1ae281b4477236738e8d644ae5d6211a50bfdfa",
-      "groesse": 224500
+      "sha256": "db823bd08e9802c0063454fef253ece4460f3c4e197f0e86c250c3722817593f",
+      "groesse": 227462
     },
     {
       "pfad": "inhalt/vorschau/1.svg",
@@ -61,5 +61,5 @@
       "groesse": 1562
     }
   ],
-  "groesse": 284815
+  "groesse": 287777
 }

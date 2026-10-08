@@ -505,6 +505,21 @@
    "erklaerung": "Um Mitternacht ist es Nacht. Die Sonne scheint dann nicht über dem Wald."
   },
   {
+   "id": "feh-1-04",
+   "stufe": 1,
+   "titel": "Am warmen Fluss",
+   "art": "Lumi",
+   "saetze": [
+    "Eine kleine Lumi sitzt am warmen Fluss in der Höhle.",
+    "Sie backt sich ein Brot im Feuer.",
+    "Das heiße Wasser kommt aus dem Spalt.",
+    "Dann isst sie einen frischen Pilz."
+   ],
+   "fehler": 1,
+   "erklaerung": "Unten bei den Lumis gibt es weder Brot noch Feuer. Es gibt Pilze und heißes Wasser.",
+   "nur_mit_lumi": true
+  },
+  {
    "id": "feh-1-05",
    "stufe": 1,
    "titel": "Die Katze",
@@ -878,6 +893,22 @@
    "erklaerung": "Mit der Höhe wird es kühler. Das erklärt Jacken und Schnee, aber nicht den Satz, dass es wärmer wird."
   },
   {
+   "id": "feh-3-07",
+   "stufe": 3,
+   "titel": "Der Vorrat",
+   "art": "Lumi",
+   "saetze": [
+    "Eine Lumi reißt einen Pilz ab und legt ihn zur Seite.",
+    "Nach einer Weile ist er zäh und grau geworden.",
+    "Deshalb legt sie sich einen großen Vorrat für die nächste Woche an.",
+    "Ein abgerissener Pilz bleibt unten nicht frisch.",
+    "Pilze wachsen an derselben Stelle immer wieder nach."
+   ],
+   "fehler": 2,
+   "erklaerung": "Weil abgerissene Pilze zäh werden und frische nachwachsen, legt unten niemand einen Vorrat an.",
+   "nur_mit_lumi": true
+  },
+  {
    "id": "feh-3-08",
    "stufe": 3,
    "titel": "Beim Friseur",
@@ -1123,6 +1154,24 @@
    "erklaerung": "Ben kann nur im dritten Haus wohnen, denn im zweiten wäre er Annas Nachbar. Cara wohnt dann im vierten, Dora im zweiten."
   },
   {
+   "id": "feh-4-11",
+   "stufe": 4,
+   "titel": "Die Zahlenstunde",
+   "art": "Lumi",
+   "saetze": [
+    "Ein Lumi-Kind lernt Zahlen: ka ist eins, sa ist zwei, ro ist drei, le ist vier.",
+    "Dazu pa fünf, ni sechs, tu sieben, vo acht und ze neun.",
+    "Die Null heißt ne.",
+    "Gesprochen wird jede Ziffer einzeln.",
+    "Die Zahl 48 sagt man vo le.",
+    "Die Zahl 12 sagt man daher ka sa.",
+    "Die Zahl 305 sagt man ro ne pa."
+   ],
+   "fehler": 4,
+   "erklaerung": "48 sind die Ziffern 4 und 8, also le vo. Die Reihenfolge bleibt wie in der Zahl.",
+   "nur_mit_lumi": true
+  },
+  {
    "id": "feh-4-12",
    "stufe": 4,
    "titel": "Das Bügeleisen",
@@ -1252,6 +1301,24 @@
    "erklaerung": "10 mal 2 sind 20 Quadratmeter, nicht 24. Der Umfang stimmt (2 mal 12 sind 24)."
   },
   {
+   "id": "feh-5-07",
+   "stufe": 5,
+   "titel": "Das Kind",
+   "art": "Lumi",
+   "saetze": [
+    "Eine Lumi trägt ihr Kind seit vier Monaten.",
+    "Lumis tragen ein Kind sieben Monate.",
+    "Es kommt also in vier Monaten zur Welt.",
+    "Unten wird kein Pilzvorrat angelegt, weil Pilze ohne Frische zäh werden.",
+    "Sie isst deshalb jeden Tag frische Pilze direkt am Spalt.",
+    "Zum Schlafen liegt sie auf Moos und Flechte.",
+    "In der Dunkelheit der Höhle leuchten die Antennen der Lumis."
+   ],
+   "fehler": 2,
+   "erklaerung": "Sieben Monate minus vier ergibt drei. In drei Monaten kommt das Kind.",
+   "nur_mit_lumi": true
+  },
+  {
    "id": "feh-5-08",
    "stufe": 5,
    "titel": "Das Schaltjahr",
@@ -1320,6 +1387,25 @@
    ],
    "fehler": 7,
    "erklaerung": "12 Kilometer durch 66 Stundenkilometer sind knapp 11 Minuten. In dieser Zeit fährt das Auto gut 16 Kilometer."
+  },
+  {
+   "id": "feh-5-12",
+   "stufe": 5,
+   "titel": "Syllogismen am Fluss",
+   "art": "Logik",
+   "saetze": [
+    "Alle Lumis leben unter dem Eis.",
+    "Die Älteste am Fluss ist eine Lumi.",
+    "Also lebt die Älteste unter dem Eis.",
+    "Kein Wesen unter dem Eis hat je Regen gesehen.",
+    "Also hat die Älteste nie Regen gesehen.",
+    "Manche Lumis sind Philosophen.",
+    "Die Älteste ist eine Lumi, also ist sie eine Philosophin.",
+    "Wer Regen nie gesehen hat, kann nur aus Geschichten von ihm wissen."
+   ],
+   "fehler": 6,
+   "erklaerung": "Aus „manche Lumis“ folgt nichts über die Älteste. Sie kann eine Philosophin sein, muss es aber nicht.",
+   "nur_mit_lumi": true
   }
  ],
  "lumisch": {
