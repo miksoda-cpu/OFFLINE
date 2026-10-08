@@ -1619,7 +1619,7 @@ const darfLaden = (e) => appPasst(e);
 const alterAntwort = (n) => speicher.get("alter-bestaetigt", {})[n];
 function alterSperre(p, ladenAttr) {
   const n = Number(p.alter_ab);
-  if (!n || alterAntwort(n) === true) return null;
+  if (!(n >= 18) || alterAntwort(n) === true) return null; // gefragt wird nur ab 18 (Bill); Pause (ab 14) und Wichteln nicht
   if (alterAntwort(n) === false) return `<span class="tag of-plakette">Ab ${n} Jahren</span>`;
   if (state.alterFrage === p.id) return `<span class="alter-frage" role="group" aria-label="Altersfrage"><span class="of-klein">Bist du mindestens ${n}?</span> <button type="button" class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-alter-ja="${n}" ${ladenAttr}>Ja, laden</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-alter-nein="${n}">Nein</button></span>`;
   return schieber({ an: false, art: "laden", text: "laden", attr: `data-alter-frage="${esc(p.id)}" aria-label="${esc(p.titel)} laden"` });

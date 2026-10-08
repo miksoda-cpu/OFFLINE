@@ -42,6 +42,7 @@ test("Lumisch ohne Figur nur, wenn das Paket selbst geladen (oder eingeschaltet)
 test("Sperre nach Alter: einmalige Frage beim ersten Laden eines Pakets ab 18, Antwort gemerkt, keine Daten", () => {
   assert.ok(app.includes('Bist du mindestens ${n}?') && app.includes('speicher.get("alter-bestaetigt", {})'));
   assert.ok(app.includes("alterSperre(p, `data-install=") && app.includes("alterSperre(e, `data-modul-laden="), "Pakete und Module");
+  assert.ok(app.includes("if (!(n >= 18) || alterAntwort(n) === true) return null;"), "nur ab 18, nicht bei Pause (ab 14)");
   assert.ok(app.includes('if (alterAntwort(n) === false) return `<span class="tag of-plakette">Ab ${n} Jahren</span>`;'));
 });
 
