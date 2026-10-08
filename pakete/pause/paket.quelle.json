@@ -21,15 +21,5 @@
     }
   ],
   "abnahme": "Redaktion (Code), 05.10.2026: Lumisch gegen die Beilage der Wortprüfung vom 05.10.2026 (500 Wörter nach dem Nachtrag 2026-10-05-05, Plan in 21 Tagen, von Mik freigegeben); Geschichten auf genau einen falschen Satz geprüft",
-  "braucht_netz": false,
-  "freigegeben": false,
-  "offen": [
-    "LIESMICH.md",
-    "inhalt/vorschau/1.svg",
-    "inhalt/vorschau/2.jpg",
-    "inhalt/vorschau/3.svg",
-    "inhalt/vorschau/4.svg",
-    "inhalt/vorschau/5.svg",
-    "inhalt/vorschau/folien.json"
-  ]
+  "braucht_netz": false
 }
