@@ -7,7 +7,7 @@ const BEFEHLE: &[&str] = &[
         "datenordner", "intern_lesen", "intern_setzen", "installierte", "paket_lesen", "einspielen_ordner", "einspielen_bytes", "entfernen",
         "stick_suchen", "aufraeumen_start", "abo_lesen", "abo_schreiben", "verbindung_melden", "speicherort_setzen",
         "katalog_laden", "paket_laden", "download_abbrechen", "updates_jetzt", "abo_status", "lokal_url", "kiwix_url",
-        "fenster_oeffnen", "alles_loeschen", "app_info", "downloads_offen", "tresor_status", "tresor_anlegen",
+        "fenster_oeffnen", "alles_loeschen", "app_info", "downloads_offen", "text_speichern", "tresor_status", "tresor_anlegen",
         "tresor_oeffnen", "tresor_oeffnen_code", "tresor_sperren", "tresor_sperre_setzen", "tresor_notizen",
         "tresor_notiz_schreiben", "tresor_notiz_loeschen", "tresor_notfallmappe", "tresor_anhang_aus_datei",
         "tresor_anhang_lesen", "tresor_anhang_loeschen", "tresor_passwort_aendern", "tresor_code_erneuern",

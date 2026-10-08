@@ -28,6 +28,7 @@ permissions = [
   "allow-alles-loeschen",
   "allow-app-info",
   "allow-downloads-offen",
+  "allow-text-speichern",
   "allow-tresor-status",
   "allow-tresor-anlegen",
   "allow-tresor-oeffnen",

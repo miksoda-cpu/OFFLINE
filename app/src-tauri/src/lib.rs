@@ -1138,7 +1138,7 @@ mod berechtigungen {
     fn modulserver_bekommt_keinen_befehl() {
         let (_app, w) = fenster();
         let befehle = ["app_info", "tresor_status", "tresor_notizen", "tresor_notfallmappe", "modul_speicher_lesen", "alles_loeschen",
-            "speicherort_setzen", "app_update_installieren", "plugin:opener|open_url", "plugin:dialog|open", "plugin:event|emit"];
+            "speicherort_setzen", "app_update_installieren", "text_speichern", "plugin:opener|open_url", "plugin:dialog|open", "plugin:dialog|save", "plugin:event|emit"];
         for url in ["http://127.0.0.1:43210/geheim-9f2c/index.html", "http://localhost:43210/x/index.html", "https://example.org/", "null://x"] {
             for cmd in befehle {
                 let r = get_ipc_response(&w, anfrage(cmd, url));
