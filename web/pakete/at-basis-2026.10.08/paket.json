@@ -1,0 +1,152 @@
+{
+  "format": 1,
+  "id": "at-basis",
+  "version": "2026.10.08",
+  "titel": "Österreich-Paket · Grundversion",
+  "beschreibung": "Notrufe, Sirenensignale zum Anhören, zwölf Szenarien von Hochwasser bis Blackout, Grundvorsorge in sechs Bereichen, Radio je Bundesland und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
+  "art": "inhalt",
+  "sprache": "de-AT",
+  "lizenz": "CC BY-SA 4.0",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "alter_ab": 0,
+  "bereich": "ernstfall",
+  "pflicht": true,
+  "app_min": "0.8.0",
+  "erstellt": "2026-10-08T15:28:55Z",
+  "aenderungen": "Zwölf Szenarien von Hochwasser bis Blackout, je mit Vorsorge, richtigem Verhalten und eigener Checkliste. Die Grundvorsorge hat jetzt sechs Bereiche mit 74 Punkten, passend zu deinem Haushalt. Dazu Radio je Bundesland und die Sirenen zum Anhören.",
+  "quellen": [
+    {
+      "name": "Österreichischer Zivilschutzverband",
+      "url": "https://zivilschutz.at"
+    },
+    {
+      "name": "oesterreich.gv.at – Notrufnummern",
+      "url": "https://www.oesterreich.gv.at"
+    },
+    {
+      "name": "Bundesministerium für Inneres – Zivilschutz-Warnsystem",
+      "url": "https://www.bmi.gv.at"
+    }
+  ],
+  "dateien": [
+    {
+      "pfad": "inhalt/alt/vorsorge-0.7.json",
+      "sha256": "97e3056598574d8532130fed29d9fe7eedbab014c1641f6f41d7c2d3569fcd7e",
+      "groesse": 1694
+    },
+    {
+      "pfad": "inhalt/bundeslaender.json",
+      "sha256": "0dd33ffdcc7a20cda797aca509f715d9d12eaf5b1599afb96733d36d7db22c43",
+      "groesse": 1130
+    },
+    {
+      "pfad": "inhalt/grundvorsorge.json",
+      "sha256": "c9e91881616f4d17a1074a6b9ee02df779002554617ee60bd06ad770d0ecd577",
+      "groesse": 27026
+    },
+    {
+      "pfad": "inhalt/notrufe.json",
+      "sha256": "35c5339cc17d61b9085fac6949263e78536a0419000d07848e2713124bd9d9c3",
+      "groesse": 1778
+    },
+    {
+      "pfad": "inhalt/radio.json",
+      "sha256": "0f49cf18dc169a71a2cb7c11dbb7616f978fa5238a68be1d3a436a0d4b65b656",
+      "groesse": 13081
+    },
+    {
+      "pfad": "inhalt/sirenen/alarm.m4a",
+      "sha256": "91b0c7cf78ba821db4b4ff2d3353b9f221d49164683f45ac750b52db9b1a99cc",
+      "groesse": 46366
+    },
+    {
+      "pfad": "inhalt/sirenen/entwarnung.m4a",
+      "sha256": "6520420ccbcd4447f7b070020c4275ceed83d615740935b51b554fd69a636732",
+      "groesse": 31418
+    },
+    {
+      "pfad": "inhalt/sirenen/probe.m4a",
+      "sha256": "6520420ccbcd4447f7b070020c4275ceed83d615740935b51b554fd69a636732",
+      "groesse": 31418
+    },
+    {
+      "pfad": "inhalt/sirenen/warnung.m4a",
+      "sha256": "6520420ccbcd4447f7b070020c4275ceed83d615740935b51b554fd69a636732",
+      "groesse": 31418
+    },
+    {
+      "pfad": "inhalt/sirenen.json",
+      "sha256": "bbf85c02af736547b654c5db5919ab03501d577a4e49b24fe1a32e29a2b8d587",
+      "groesse": 1994
+    },
+    {
+      "pfad": "inhalt/szenarien/blackout.json",
+      "sha256": "001b2fb84cad5f98393ec7b925c4633676c49744d498876298bc9803560bff3c",
+      "groesse": 10649
+    },
+    {
+      "pfad": "inhalt/szenarien/erdbeben.json",
+      "sha256": "55fc75156f0de4b0909d19e35966793af97c3b1803f59a15843e4563d0e970e9",
+      "groesse": 9085
+    },
+    {
+      "pfad": "inhalt/szenarien/hagel.json",
+      "sha256": "9588fe24cea4f750277998408b89695e0d09f5afa5f0aa7f899267ffe8ad4db0",
+      "groesse": 6662
+    },
+    {
+      "pfad": "inhalt/szenarien/hitze.json",
+      "sha256": "28f28e0c1c4f34fb9ab237ff82912f67f06c03bd1125260a1fb8b9dcb8999bcc",
+      "groesse": 7596
+    },
+    {
+      "pfad": "inhalt/szenarien/hochwasser.json",
+      "sha256": "2f9bc2854b911aa08f027eae0250f743e6430d6a3164b1147e2b361abfd42b63",
+      "groesse": 10075
+    },
+    {
+      "pfad": "inhalt/szenarien/kernkraftwerk.json",
+      "sha256": "0a5fff70b6fb650a4918d64c4b578ffa50166d222c84bcc294dfc6042dc22082",
+      "groesse": 10261
+    },
+    {
+      "pfad": "inhalt/szenarien/krankheiten.json",
+      "sha256": "07204ee1355ef99f91493a8cf8a75c1ae0ab2add2bd0581fefb60c46817a622a",
+      "groesse": 9011
+    },
+    {
+      "pfad": "inhalt/szenarien/lawine.json",
+      "sha256": "d40867f0ec67d53e8d6054665bc211f603daa46334286d95469521be84186982",
+      "groesse": 6983
+    },
+    {
+      "pfad": "inhalt/szenarien/schnee-eis.json",
+      "sha256": "73d29ade1b21aebc29d535ef7d184cb47aff25f318a5f72a5f17504c55228e7f",
+      "groesse": 6584
+    },
+    {
+      "pfad": "inhalt/szenarien/starkregen.json",
+      "sha256": "06ab6febc6fa1b90cf79d3ee0245f80d536c6748bafe130d9a01e2cee8f48e24",
+      "groesse": 8061
+    },
+    {
+      "pfad": "inhalt/szenarien/waldbrand.json",
+      "sha256": "03b48a7ddd3da2b2f23259e6cd21ae6f2b3744c3f264922aa6b9c6ee8cf3d2b6",
+      "groesse": 9765
+    },
+    {
+      "pfad": "inhalt/szenarien/wildbach.json",
+      "sha256": "dce4792815100d27b94a290385143590dfeaec441e7c8881f49de45af19768de",
+      "groesse": 7901
+    },
+    {
+      "pfad": "inhalt/szenarien.json",
+      "sha256": "e829cff13e583d022e040a5bd6b1cbd57682bab84b1f98bb0fc56bc0f599bfb6",
+      "groesse": 225
+    }
+  ],
+  "groesse": 290181
+}
