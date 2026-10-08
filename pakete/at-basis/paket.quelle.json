@@ -27,11 +27,5 @@
       "name": "Bundesministerium für Inneres – Zivilschutz-Warnsystem",
       "url": "https://www.bmi.gv.at"
     }
-  ],
-  "freigegeben": false,
-  "offen": [
-    "inhalt/bundeslaender.json",
-    "inhalt/notrufe.json",
-    "inhalt/alt/vorsorge-0.7.json"
   ]
 }

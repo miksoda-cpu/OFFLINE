@@ -1,0 +1,154 @@
+{
+  "id": "lawine",
+  "titel": "Lawine",
+  "verstehen": [
+    "Eine Lawine löst sich, wenn eine schwache Schicht in der Schneedecke nachgibt. Gefährlich sind steile Hänge, Rinnen und Stellen hinter Kanten, wo der Wind Schnee hingeblasen hat. Auslöser sind Wetterumschwünge, Neuschnee, Wind, oder ein Mensch, der in den Hang fährt.",
+    "Betroffen sind vor allem Leute abseits gesicherter Pisten: auf Skitour, beim Freeriden, mit Schneeschuhen. In Lawinengebieten trifft es auch Straßen und Ortsteile. Dort sperren Gemeinde und Behörden, wenn es gefährlich wird.",
+    "Die Warnstufe 3 klingt mittelmäßig, ist es aber nicht. Laut den europäischen Lawinenwarndiensten passiert rund die Hälfte aller tödlichen Lawinenunfälle bei Stufe 3, „erheblich“."
+  ],
+  "vorsorgen": [
+    {
+      "t": "Lagebericht lesen",
+      "text": "Die Lawinenwarndienste der Länder geben täglich einen Lagebericht heraus: Gefahrenstufe, typische Probleme, besonders kritische Hänge. Lies ihn vor jeder Tour."
+    },
+    {
+      "t": "Die drei Dinge",
+      "text": "Lawinenverschüttetensuchgerät (LVS), Sonde und Schaufel hat jede und jeder dabei. Nur alle drei zusammen machen eine schnelle Rettung möglich. Und: Üben, bevor es ernst wird."
+    },
+    {
+      "t": "Nie allein",
+      "text": "Geh nicht allein. Sag jemandem, wohin du gehst und wann du zurück bist. Leg vorher fest, wo ihr umdreht."
+    },
+    {
+      "t": "Mehr dabei",
+      "text": "Handy voll geladen, Erste-Hilfe-Set, Biwaksack, warme Reserve. Ein Lawinenairbag erhöht die Chance, oben zu bleiben."
+    },
+    {
+      "t": "Sperren respektieren",
+      "text": "Gesperrte Pisten, Wege und Straßen sind gesperrt, weil jemand die Lage beurteilt hat. Auch in Orten mit Lawinengefahr gilt, was die Gemeinde anordnet."
+    }
+  ],
+  "reagieren": [
+    {
+      "t": "Notruf",
+      "text": "Alpinnotruf (140), oder Euro-Notruf (112), der in jedem verfügbaren Netz geht. Wenn ihr mehrere seid: Eine Person ruft, alle anderen suchen sofort. Kein Netz? Standort wechseln, oder zwei Leute zur nächsten Hütte oder Liftstation schicken."
+    },
+    {
+      "t": "Wenn du erfasst wirst",
+      "text": "Airbag auslösen. Kämpf dich mit Schwimmbewegungen nach oben. Kurz bevor die Lawine stoppt, Arme vor Gesicht und Brust, damit dir ein Hohlraum zum Atmen bleibt."
+    },
+    {
+      "t": "Hinschauen",
+      "text": "Siehst du jemanden verschwinden, merk dir genau, wo du ihn zuletzt gesehen hast. Dort beginnt die Suche."
+    },
+    {
+      "t": "Sofort suchen",
+      "text": "Die ersten 15 Minuten entscheiden. Danach sinkt die Überlebenschance schnell. Alle, die nicht suchen, schalten ihr LVS auf Senden oder aus, damit es nicht stört. Benachbarte Hänge meiden, es kann nachrutschen."
+    },
+    {
+      "t": "Ausgraben",
+      "text": "Mit der Sonde orten, dann schaufeln. Kopf und Brust zuerst freilegen, Atemwege freimachen. Den Hohlraum vor dem Gesicht nicht zertreten."
+    },
+    {
+      "t": "Versorgen",
+      "text": "Atmung und Kreislauf prüfen, vor Kälte schützen, bis die Bergrettung da ist."
+    },
+    {
+      "t": "Alpines Notsignal",
+      "text": "Ohne Telefon: sechsmal pro Minute ein Licht- oder Tonsignal, eine Minute Pause, wiederholen."
+    }
+  ],
+  "danach": [
+    {
+      "t": "Infos für die Retter",
+      "text": "Wo, wann, wie viele Verschüttete, wo zuletzt gesehen, welche Ausrüstung hatten sie? Die Leitstelle fragt danach, und genau das spart Zeit."
+    },
+    {
+      "t": "Tour beenden",
+      "text": "Nach einem Lawinenabgang geht ihr nicht weiter. Die Lage ist offensichtlich heikel."
+    },
+    {
+      "t": "Sperren bleiben",
+      "text": "In Orten und auf Straßen gilt eine Sperre, bis Gemeinde oder Behörde sie aufheben, auch wenn es ruhig aussieht."
+    },
+    {
+      "t": "Üben",
+      "text": "Ein Lawinenkurs oder ein Nachmittag mit LVS-Training bei einem alpinen Verein macht den Ernstfall weniger chaotisch."
+    }
+  ],
+  "informiert": [
+    "Die Lawinenwarndienste der österreichischen Bundesländer veröffentlichen täglich im Winter einen Lagebericht, gesammelt unter „Lawinenwarndienste Österreich“. Tirol gibt ihn gemeinsam mit Südtirol und dem Trentino als Euregio-Lawinenreport heraus.",
+    "Die europäische Gefahrenskala hat fünf Stufen: 1 gering, 2 mäßig, 3 erheblich, 4 groß, 5 sehr groß. Ab Stufe 3 kann schon ein einzelner Mensch eine Lawine auslösen.",
+    "GeoSphere Austria, der staatliche Wetterdienst, warnt vor starkem Schneefall. Bei Rot sind Lawinen wahrscheinlich.",
+    "Alpinnotruf 140, Euro-Notruf 112. Alpines Notsignal: sechs Signale pro Minute, eine Minute Pause."
+  ],
+  "merksaetze": [
+    "Drei Dinge: LVS, Sonde, Schaufel.",
+    "Die ersten 15 Minuten gehören den Begleitern.",
+    "Drei ist nicht mittel. Drei ist erheblich."
+  ],
+  "zusatz": {
+    "kinder": [
+      "Mit Kindern bleibst du auf geöffneten Pisten und geräumten Winterwanderwegen.",
+      "Erklär ihnen, warum Absperrungen keine Empfehlung sind."
+    ],
+    "aeltere": [],
+    "pflege": [],
+    "behinderung": [],
+    "tiere": [],
+    "haus": [],
+    "miete": [],
+    "keller": []
+  },
+  "checkliste_spezifisch": [
+    "LVS-Gerät mit vollen Batterien",
+    "Lawinensonde",
+    "Lawinenschaufel aus Metall",
+    "Handy voll geladen",
+    "Erste-Hilfe-Set und Biwaksack",
+    "Stirnlampe",
+    "Lawinenairbag (wenn vorhanden)"
+  ],
+  "verweise": [
+    "notrufe",
+    "radio"
+  ],
+  "quellen": [
+    {
+      "name": "European Avalanche Warning Services (EAWS): Lawinengefahrenskala",
+      "url": "https://www.avalanches.org/standards/avalanche-danger-scale/",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Lawinenwarndienste Österreich",
+      "url": "https://www.lawinen.at",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "naturgefahren.at (BMLUK): Lawinen",
+      "url": "https://www.naturgefahren.at/schwerpunkte/gravitativenaturgefahren/lawinen.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "oesterreich.gv.at: Verhalten bei Lawinenunglücken und Bergunfällen",
+      "url": "https://www.oesterreich.gv.at/de/themen/notfaelle_unfaelle_und_kriminalitaet/katastrophenfaelle/1/Seite.29500327",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "WSL-Institut für Schnee- und Lawinenforschung SLF / Kern-Ausbildungsteam Lawinenunfall: Merkblatt Lawinenunfall",
+      "url": "https://content.whiterisk.ch/assets/2020_kat_merkblatt_lawinenunfall_de.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "GeoSphere Austria: Warninformationen",
+      "url": "https://portale.geosphere.at/portallib/html/warninfo/warninfo_alle.php",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "ÖAMTC: Lawinengefahr in Österreich (ergänzend, Selbstrettung)",
+      "url": "https://www.oeamtc.at/autotouring/reportage/lawinengefahr-in-oesterreich-so-bleiben-wintersportler-sicher-unterwegs-85292611",
+      "abgerufen": "2026-10-08"
+    }
+  ],
+  "stand": "2026-10-08"
+}

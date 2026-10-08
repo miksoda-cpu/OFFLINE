@@ -1,0 +1,177 @@
+{
+  "id": "wildbach",
+  "titel": "Wildbach und Mure",
+  "verstehen": [
+    "Ein Wildbach ist ein steiler Bach, der nach Gewitter oder Schneeschmelze in kurzer Zeit anschwillt und Geröll, Schlamm und Holz mitreißt. Österreich hat rund 12.500 solcher Einzugsgebiete, nicht nur in den Alpen, auch an steilen Hängen im Hügelland.",
+    "Wird das Gemisch zäh wie Brei, ist es eine Mure. Sie ist schneller, als du laufen kannst, und kommt meist ohne Vorwarnung. Oft löst sie sich, wenn eine Verstopfung aus Holz an einer Brücke oder einem Durchlass bricht.",
+    "Deshalb hilft hier vor allem eines: wissen, wo die Gefahr liegt, und bei Starkregen gar nicht erst am Bach sein."
+  ],
+  "vorsorgen": [
+    {
+      "t": "Gefahrenzonenplan ansehen",
+      "text": "Die Wildbach- und Lawinenverbauung (WLV) zeichnet für jede betroffene Gemeinde rote und gelbe Zonen. Rot heißt: kein Neubau. Einsicht am Gemeindeamt oder im Kartendienst auf naturgefahren.at."
+    },
+    {
+      "t": "Bachbett frei halten",
+      "text": "Kein Holz, Schnittgut, Material oder Müll ins Gerinne oder an die Böschung. Was dort liegt, verstopft beim nächsten Gewitter den Durchlass."
+    },
+    {
+      "t": "Öffnungen sichern",
+      "text": "Kellerfenster, Zugänge und tief liegende Räume gegen Wasser und Geröll schützen. Schlafräume nicht auf der Seite zum Bach oder Hang."
+    },
+    {
+      "t": "Zufahrten frei lassen",
+      "text": "Wege, die Einsatzkräfte brauchen, nicht zustellen. Ablagerungen nach kleinen Ereignissen gleich wegräumen."
+    },
+    {
+      "t": "Notgepäck bereit",
+      "text": "Bei Muren und Rutschungen wird oft kurzfristig evakuiert. Gepackt ist gepackt."
+    }
+  ],
+  "reagieren": [
+    {
+      "t": "Menschen in Gefahr: Notruf",
+      "text": "Feuerwehr (122), Euro-Notruf (112), Rettung (144), im Gebirge Bergrettung (140). Eine Mure oder einen Hangrutsch gleich unter 122 melden."
+    },
+    {
+      "t": "Weg vom Bach",
+      "text": "Bei Gewitter und Starkregen Bäche, Gräben und Dämme verlassen. Nicht stehen bleiben, um zu schauen."
+    },
+    {
+      "t": "Kommt eine Mure: sofort raus",
+      "text": "Verlass den Gefahrenbereich sofort. Sandsäcke und mobile Sperren helfen gegen eine Mure nicht."
+    },
+    {
+      "t": "Kein Weg hinaus: im Haus nach oben",
+      "text": "Bleib im Haus in einem höheren Stockwerk, auf der Seite, die vom Bach oder Hang abgewandt ist. Keller und Tiefgarage nicht betreten."
+    },
+    {
+      "t": "Am Berg umdrehen",
+      "text": "Bei Gewitterwarnung Touren abbrechen oder verschieben. Gesperrte Wege sind gesperrt, auch wenn es gerade ruhig aussieht."
+    },
+    {
+      "t": "Anweisungen folgen",
+      "text": "Bei Zivilschutzalarm im Haus bleiben, Radio einschalten, Evakuierungen sofort befolgen."
+    }
+  ],
+  "danach": [
+    {
+      "t": "Abstand halten",
+      "text": "Wildbäche bleiben nach dem Unwetter gefährlich, der Boden ist aufgeweicht. Abstand zu Bach, Hang und Ablagerungen."
+    },
+    {
+      "t": "Haus erst nach Freigabe",
+      "text": "Nach einer Mure oder Rutschung das Gebäude erst betreten, wenn Fachleute es geprüft haben."
+    },
+    {
+      "t": "Hang beobachten",
+      "text": "Neue Risse oder Senken im Boden, schiefe Mauern oder klemmende Türen sofort der Feuerwehr (122) oder der Gemeinde melden."
+    },
+    {
+      "t": "Schäden melden",
+      "text": "Fotografieren, Versicherung und Gemeinde informieren."
+    }
+  ],
+  "informiert": [
+    "Gewitter- und Unwetterwarnungen gibt die GeoSphere Austria in vier Stufen heraus. Ab Orange, Stufe drei, gilt: weg von Bächen.",
+    "Für einige Wildbäche gibt es eigene Warnsysteme vor Ort. Frag die Gemeinde, ob dein Bach dazugehört.",
+    "Wenn das Netz weg ist: ORF-Radio mit Batterie oder Kurbel. Dort kommen die Anweisungen der Behörden, dazu Lautsprecherdurchsagen von Feuerwehr und Gemeinde.",
+    "Sirenen: 3 Minuten gleichbleibender Ton heißt Warnung, Radio einschalten. 1 Minute auf- und abschwellender Ton heißt Alarm, geschützten Ort aufsuchen. 1 Minute gleichbleibender Ton heißt Entwarnung. 15 Sekunden sind nur die Probe.",
+    "Bei akuter Gefahr warnen die Behörden auch über das Bevölkerungswarnsystem AT-Alert direkt aufs Handy."
+  ],
+  "merksaetze": [
+    "Eine Mure ist schneller als du. Weg vom Bach, bevor sie kommt.",
+    "Bei Gewitter schaut man nicht in den Bach.",
+    "Was im Bachbett liegt, kommt beim nächsten Regen zu dir zurück."
+  ],
+  "zusatz": {
+    "kinder": [
+      "Bäche sind im Sommer Spielplätze. Mach mit Kindern eine klare Regel: Donnert es, geht ihr weg vom Wasser."
+    ],
+    "aeltere": [],
+    "pflege": [],
+    "behinderung": [],
+    "tiere": [
+      "Weidetiere in Bachnähe bei Unwetterwarnung früh auf sicheres Gelände bringen."
+    ],
+    "haus": [
+      "Vor Kauf oder Bau den Gefahrenzonenplan prüfen. Gelbe Zone heißt Bauen mit Auflagen.",
+      "Uferbesitzer müssen Ufer und Abflussbereiche pflegen und frei halten."
+    ],
+    "miete": [],
+    "keller": [
+      "Bei Mure und Wildbachhochwasser Keller und Tiefgarage nicht betreten, auch nicht, um Sachen zu holen."
+    ]
+  },
+  "checkliste_spezifisch": [
+    "Notgepäck für eine schnelle Evakuierung",
+    "Dokumentenmappe griffbereit",
+    "Batterieradio",
+    "Notiz: Wer holt wen ab, wo ist der Treffpunkt abseits vom Bach"
+  ],
+  "verweise": [
+    "notfall-rucksack",
+    "radio",
+    "notrufe",
+    "hochwasser",
+    "starkregen"
+  ],
+  "quellen": [
+    {
+      "name": "BMLUK: Wildbäche und Muren",
+      "url": "https://www.bmluk.gv.at/themen/wald/wald-und-naturgefahren/leben-mit-naturgefahren/wildbaeche.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "naturgefahren.at (BMLUK): Hochwasser und Muren",
+      "url": "https://www.naturgefahren.at/schwerpunkte/hydrologischenaturgefahren/hochwasserundmuren.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "naturgefahren.at (BMLUK): Naturgefahren verstehen, Schutz vor Muren",
+      "url": "https://www.naturgefahren.at/naturgefahrenarten.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "naturgefahren.at (BMLUK): Gefahrenzonenplan",
+      "url": "https://www.naturgefahren.at/gefahrenzonenplan.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BMLUK: Der Gefahrenzonenplan",
+      "url": "https://www.bmluk.gv.at/themen/wald/wald-in-oesterreich/raumplanung/gefahrenzonenplan/Gefahrenzonenplan.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BMLUK: Leben mit Naturgefahren – Ratgeber für die Eigenvorsorge",
+      "url": "https://www.bmluk.gv.at/dam/jcr:08832d46-b9d1-4763-b794-7cf264852dbf/B%20+%20Barrierefrei%20-%20Leben%20mit%20Naturgefahren_Stand_150409_BF.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "OÖ Zivilschutz: Unwetter – Hangrutschung",
+      "url": "https://zivilschutz-ooe.at/wp-content/uploads/2023/07/Unwetter2022-Web.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Land Tirol: Zivilschutzalarm wegen Muren in Gschnitz (2025)",
+      "url": "https://www.tirol.gv.at/presse/meldungen/meldung/at-alert-und-zivilschutzalarm-in-gschnitz-ausgeloest/",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Land Tirol: Orange Unwetterwarnung, Verhaltensempfehlungen",
+      "url": "https://www.tirol.gv.at/presse/meldungen/meldung/orange-unwetterwarnung-fuer-innsbruck-und-unterland",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "oesterreich.gv.at: Verhalten bei Unwetter",
+      "url": "https://www.oesterreich.gv.at/de/themen/notfaelle_unfaelle_und_kriminalitaet/katastrophenfaelle/1/Seite.29500325",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Land Steiermark, Katastrophenschutz: Zivilschutz-Probealarm und Signale",
+      "url": "https://katastrophenschutz.steiermark.at/cms/beitrag/12925951/443",
+      "abgerufen": "2026-10-08"
+    }
+  ],
+  "stand": "2026-10-08"
+}

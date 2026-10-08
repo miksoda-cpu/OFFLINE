@@ -1,0 +1,177 @@
+{
+  "id": "kernkraftwerk",
+  "titel": "Kernkraftwerks-Unfall",
+  "verstehen": [
+    "Österreich hat selbst kein Kernkraftwerk, aber rundherum stehen welche, etwa Temelín in Tschechien und weitere in Tschechien, der Slowakei, Ungarn und Slowenien. Mehrere davon liegen weniger als 200 Kilometer von der Grenze entfernt. Bei einem schweren Unfall können radioaktive Stoffe mit dem Wind bis zu uns kommen.",
+    "Gefährlich ist die radioaktive Wolke auf zwei Wegen: Du atmest Teilchen ein, und sie lagern sich als Staub auf Boden, Pflanzen und Wasser ab. Radioaktives Jod sammelt sich in der Schilddrüse. Kinder, Jugendliche und Schwangere sind dabei am stärksten gefährdet.",
+    "Die gute Nachricht: Österreich erfährt von einem Unfall meist früh, über internationale Meldesysteme und das eigene Strahlenfrühwarnsystem. Bis die Luft hier ankommt, bleibt oft Zeit. Die wichtigste Schutzmaßnahme ist einfach: rein ins Haus, Fenster zu, Radio an."
+  ],
+  "vorsorgen": [
+    {
+      "t": "Vorrat für zwei Wochen",
+      "text": "Leg Essen und Getränke für mindestens 14 Tage an, auch Mineralwasser in Flaschen. Dann musst du während und nach dem Durchzug nicht einkaufen und nichts Frisches essen."
+    },
+    {
+      "t": "Kaliumiodid-Tabletten besorgen",
+      "text": "Wer im Haushalt unter 40 ist, sollte Tabletten daheim haben. Kinder und Jugendliche unter 18, Schwangere und Stillende bekommen sie gratis in der Apotheke, 18- bis 40-Jährige zahlen einen kleinen Betrag. Lagere sie in der Hausapotheke und nimm sie nie auf Verdacht."
+    },
+    {
+      "t": "Schutzraum aussuchen",
+      "text": "Such dir schon jetzt den sichersten Raum aus: dicke Wände, wenige Fenster, am besten unter der Erde. Dachgeschoss, Veranda und Wintergarten eignen sich nicht."
+    },
+    {
+      "t": "Radio mit Batterien",
+      "text": "Ein Batterie- oder Kurbelradio gehört in jeden Haushalt. Darüber sagen die Behörden, wer was tun soll und in welcher Region."
+    },
+    {
+      "t": "Familie absprechen",
+      "text": "Besprecht, wer wo ist und wo ihr euch trefft. Nutzt den Probealarm am ersten Samstag im Oktober, um die Sirenensignale zu üben."
+    }
+  ],
+  "reagieren": [
+    {
+      "t": "Ist jemand in Gefahr?",
+      "text": "Dann sofort Notruf: Euro-Notruf (112), Rettung (144), Feuerwehr (122), Polizei (133). Sonst Leitungen frei halten, die Netze sind schnell überlastet."
+    },
+    {
+      "t": "Radio oder Fernsehen einschalten",
+      "text": "Heult die Sirene oder hörst du von einem Unfall, schalte den ORF ein. Dort sagen die Strahlenschutzbehörden, welche Regionen betroffen sind und was zu tun ist."
+    },
+    {
+      "t": "Vor der Wolke: alles rein",
+      "text": "Wäsche, Spielzeug und Haustiere ins Haus holen. Sag den Nachbarn Bescheid, besonders Familien mit Kindern und Menschen, die Hilfe brauchen."
+    },
+    {
+      "t": "Drinnen bleiben, dicht machen",
+      "text": "Fenster und Türen schließen, Lüftung, Umluftanlage und Wärmerückgewinnung abschalten. Alte Fugen mit breitem Klebeband abdichten. Geh in deinen Schutzraum und bleib nicht lang direkt am Fenster."
+    },
+    {
+      "t": "Kaliumiodid nur auf Anordnung",
+      "text": "Die Tablette schützt nur die Schilddrüse vor radioaktivem Jod, sonst vor nichts. Sie wirkt nur, wenn sie vor dem Eintreffen der Wolke genommen wird. Nimm sie erst, wenn die Behörden im Radio oder Fernsehen sagen, dass deine Region und deine Altersgruppe sie nehmen soll. Über 40 nimmst du sie nicht: Der Nutzen ist gering, das Risiko schwerer Nebenwirkungen hoch."
+    },
+    {
+      "t": "Wenn du raus musst",
+      "text": "Nur wenn es nicht anders geht. Glatte, wetterfeste Kleidung und eine Feinstaubmaske tragen, für kurze Wege hilft ein feuchtes Tuch vor Mund und Nase. Schuhe und Oberbekleidung vor der Wohnungstür ausziehen, dann gründlich duschen, vor allem Hände und Haare."
+    }
+  ],
+  "danach": [
+    {
+      "t": "Aus dem Vorrat essen",
+      "text": "Nimm Lebensmittel, die vor dem Unfall verpackt oder hergestellt wurden. Kein Obst und Gemüse aus dem Garten oder vom Feld, bis die Behörden es freigeben. Bei Milch, Fleisch und Eiern auf die behördlichen Hinweise achten."
+    },
+    {
+      "t": "Wasser nach Freigabe",
+      "text": "Trink Mineralwasser oder Säfte aus dem Vorrat. Brunnen-, Quell- und Zisternenwasser kann belastet sein: Verwende es erst, wenn die Behörden Entwarnung geben."
+    },
+    {
+      "t": "Feucht putzen, nicht aufwirbeln",
+      "text": "Böden, Fensterbänke und Lampen feucht wischen. Teppiche nicht ausklopfen, sondern nass reinigen. Wenn möglich einen Staubsauger mit Feinfilter verwenden."
+    },
+    {
+      "t": "Draußen abspritzen",
+      "text": "Einfahrt, Terrasse und Wege mit dem Gartenschlauch abspritzen statt kehren. Schuhe bleiben weiter vor der Tür."
+    },
+    {
+      "t": "Entwarnung abwarten",
+      "text": "Die Entwarnung kommt per Sirene (eine Minute Dauerton) und über Radio und Fernsehen. Auch danach gelten oft noch Regeln für Lebensmittel und Garten."
+    }
+  ],
+  "informiert": [
+    "Wichtigste Quelle im Ernstfall: ORF-Radio und -Fernsehen. Die Strahlenschutzbehörden sagen dort, welche Regionen und Altersgruppen betroffen sind.",
+    "Sirenensignale: drei Minuten gleichbleibender Ton heißt Warnung, Radio einschalten. Eine Minute auf- und abschwellender Ton heißt Alarm, sofort in einen schützenden Raum. Eine Minute gleichbleibender Ton heißt Entwarnung.",
+    "Das Strahlenfrühwarnsystem des Umweltministeriums misst österreichweit rund um die Uhr. Steigen die Werte, schlägt es Alarm. Einen Teil der Messwerte zeigt der ORF-Teletext auf Seite 623.",
+    "Solange Netz da ist: Die Strahlenschutz-Notfallseite des Umweltministeriums (radiologischesereignis.gv.at) und die Messwert-Seite des Strahlenschutzes des Bundes zeigen die aktuelle Lage.",
+    "Kinderbetreuungseinrichtungen und Schulen haben eigene Vorräte an Kaliumiodid-Tabletten, damit Kinder sie auch während der Schulzeit rechtzeitig bekommen."
+  ],
+  "merksaetze": [
+    "Rein, zu, Radio an.",
+    "Die Jodtablette nimmst du nur, wenn die Behörde es sagt. Und über 40 gar nicht.",
+    "Gegessen wird aus dem Vorrat, nicht aus dem Garten."
+  ],
+  "zusatz": {
+    "kinder": [
+      "Kinder und Jugendliche sind am stärksten gefährdet, deshalb bekommen sie Kaliumiodid gratis in der Apotheke. Hol die Packung jetzt, nicht erst im Ernstfall.",
+      "Schulen und Kindergärten haben eigene Tablettenvorräte. Wann und ob Kinder sie dort bekommen, entscheiden die Behörden.",
+      "Denk an Babynahrung im Vorrat, damit du kein frisches Obst oder Gemüse brauchst.",
+      "Schwangere und Stillende bekommen Kaliumiodid ebenfalls gratis in der Apotheke."
+    ],
+    "aeltere": [
+      "Ab 40 nimmst du keine Kaliumiodid-Tabletten. Dein Schutz sind Haus, geschlossene Fenster und der Vorrat."
+    ],
+    "pflege": [
+      "Wenn du jemanden zu Hause pflegst: Plane Vorrat und Medikamente für diese Person mit ein, damit ihr beide zwei Wochen nicht raus müsst."
+    ],
+    "behinderung": [
+      "Wer Hilfe braucht, sollte mit Nachbarn oder Angehörigen schon vorher ausmachen, wer im Ernstfall vorbeischaut und Bescheid gibt."
+    ],
+    "tiere": [
+      "Haustiere vor der Wolke ins Haus holen und Futter für zwei Wochen einplanen.",
+      "Wer Nutztiere hat, achtet auf die Hinweise der Behörden zu Weide, Stall und Futter."
+    ],
+    "haus": [
+      "Kontrollierte Wohnraumlüftung, Wärmerückgewinnung und Umluftheizung abschalten. Kamin und Abzüge lassen ebenfalls Außenluft herein.",
+      "Nach dem Durchzug Einfahrt und Terrasse abspritzen, nicht kehren."
+    ],
+    "miete": [],
+    "keller": [
+      "Ein Kellerraum mit massiven Wänden ist der beste Schutzraum. Bleib nicht durchgehend ohne Frischluft: Nach einiger Zeit Luft aus angrenzenden Räumen hereinlassen, nicht von draußen."
+    ]
+  },
+  "checkliste_spezifisch": [
+    "Kaliumiodid-Tabletten für alle im Haushalt unter 40, in der Hausapotheke",
+    "Breites Klebeband zum Abdichten von Fenster- und Türfugen",
+    "Mineralwasser und Säfte in Flaschen",
+    "Feinstaubmasken für unvermeidliche Wege nach draußen",
+    "Glatte, wetterfeste Überkleidung, die sich leicht abwaschen lässt",
+    "Staubsauger mit Feinfilter, wenn vorhanden"
+  ],
+  "verweise": [
+    "radio",
+    "notrufe",
+    "vorrat",
+    "hausapotheke"
+  ],
+  "quellen": [
+    {
+      "name": "Bundesministerium für Land- und Forstwirtschaft, Klima- und Umweltschutz, Regionen und Wasserwirtschaft (BMLUK): Strahlenfrühwarnsystem",
+      "url": "https://www.bmluk.gv.at/themen/klima-und-umwelt/strahlenschutz/fruehwarnsystem/strahlenfruehwarnsystem.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BMLUK: Radiologisches Notfallmanagement",
+      "url": "https://www.bmluk.gv.at/themen/klima-und-umwelt/strahlenschutz/notfallmanagement/radiologisch.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BMLUK: Notfallseite Strahlenschutz",
+      "url": "https://radiologischesereignis.gv.at/de/home",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Gesundheitsministerium (sozialministerium.gv.at): Kaliumiodid-Tabletten",
+      "url": "https://www.sozialministerium.gv.at/Themen/Gesundheit/Strahlenschutz/Kaliumiodid-Tabletten.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Österreichische Agentur für Gesundheit und Ernährungssicherheit (AGES): Nukleare Notfallvorsorge",
+      "url": "https://www.ages.at/umwelt/radioaktivitaet/nukleare-notfallvorsorge",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Steirischer Zivilschutzverband: Strahlenschutztipps",
+      "url": "https://www.zivilschutz.steiermark.at/wp-content/uploads/Strahlenschutztipps_StZSV.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Land Oberösterreich: Strahlenschutz-Ratgeber",
+      "url": "https://www.land-oberoesterreich.gv.at/files/publikationen/Strahlenschutz.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Land Tirol: Selbstschutz und Bevorratung",
+      "url": "https://tirol.gv.at/sicherheit/katziv/einsatzorganisationen/zivilschutz-und-krisenvorsorge/selbstschutz-und-bevorratung",
+      "abgerufen": "2026-10-08"
+    }
+  ],
+  "stand": "2026-10-08"
+}

@@ -1,0 +1,155 @@
+{
+  "id": "hitze",
+  "titel": "Hitzeperioden",
+  "verstehen": [
+    "Bei Hitze arbeitet dein Körper ständig daran, sich zu kühlen: Er schwitzt und pumpt mehr Blut in die Haut. Das kostet Herz und Kreislauf Kraft. Kühlen auch die Nächte nicht mehr ab, fehlt die Erholung, und die Belastung wächst von Tag zu Tag.",
+    "Am härtesten trifft es Babys und Kleinkinder, ältere und chronisch kranke Menschen und alle, die keinen kühlen Raum haben. Ältere spüren weniger Durst, Babys können ihn nicht sagen. Manche Medikamente machen die Hitze zusätzlich schwerer erträglich.",
+    "Wie ernst das ist, zeigt eine Schätzung der Agentur für Gesundheit und Ernährungssicherheit (AGES): Im Sommer 2026 starben in Österreich rund 1.000 Menschen an den Folgen der Hitze. Die gute Nachricht: Fast alles, was schützt, ist einfach."
+  ],
+  "vorsorgen": [
+    {
+      "t": "Wohnung vorbereiten",
+      "text": "Beschattung wirkt am besten außen: Rollläden, Außenjalousien, Markise. Besorg einen Ventilator, bevor die Hitzewelle kommt, dann sind sie oft ausverkauft."
+    },
+    {
+      "t": "Kühlsten Raum finden",
+      "text": "Häng ein Thermometer auf und schau, welcher Raum am kühlsten bleibt. Dort schläfst du in Hitzenächten."
+    },
+    {
+      "t": "Medikamente klären",
+      "text": "Nimmst du regelmäßig Medikamente, etwa entwässernde Mittel, Beruhigungsmittel oder Betablocker, frag in der Ordination oder Apotheke, worauf du bei Hitze achten musst. Lagere Medikamente kühl."
+    },
+    {
+      "t": "Trinkmenge abklären",
+      "text": "Wer eine Herz- oder Nierenerkrankung hat, klärt mit der Ärztin oder dem Arzt, wie viel er trinken darf."
+    },
+    {
+      "t": "Telefonkette ausmachen",
+      "text": "Vereinbare mit älteren Nachbarn oder Angehörigen, dass du dich an heißen Tagen täglich meldest, und wer einkauft."
+    }
+  ],
+  "reagieren": [
+    {
+      "t": "Notfall erkennen",
+      "text": "Hitzschlag ist ein Notfall: hohe Körpertemperatur, Kopfschmerzen, Erbrechen, Krämpfe, Verwirrtheit bis Bewusstlosigkeit. Ruf die Rettung (144), bring die Person in den Schatten oder einen kühlen Raum und kühl sie. Ist sie bewusstlos und atmet, leg sie in die stabile Seitenlage."
+    },
+    {
+      "t": "Erschöpfung ernst nehmen",
+      "text": "Schwindel, Übelkeit und rasender Puls sind Zeichen von Hitzeerschöpfung. Hinlegen, kühlen, trinken. Wird es nicht besser, ruf die Gesundheitsberatung (1450) oder die Rettung (144)."
+    },
+    {
+      "t": "Trinken, bevor der Durst kommt",
+      "text": "Über den Tag verteilt Wasser oder ungesüßten Tee trinken. Alkohol und stark gezuckerte Getränke lässt du weg. Iss lieber mehrere kleine, leichte Portionen, viel Obst und Gemüse."
+    },
+    {
+      "t": "Tagsüber zu, nachts auf",
+      "text": "Fenster tagsüber schließen und abdunkeln. Gelüftet wird früh am Morgen und in der Nacht. Feuchte Tücher und ein Ventilator helfen zusätzlich."
+    },
+    {
+      "t": "Mittagshitze meiden",
+      "text": "Zwischen 11 und 17 Uhr raus aus der direkten Sonne. Sport, Einkäufe und Spaziergänge mit Kindern auf den Morgen oder Abend legen. Helle, luftige Kleidung und eine Kopfbedeckung tragen."
+    },
+    {
+      "t": "Gastherme mitdenken",
+      "text": "Bei großer Hitze können die Abgase einer Gastherme schlechter abziehen. Lüfte regelmäßig, wenn sie läuft, und betreib sie nicht gleichzeitig mit einem mobilen Klimagerät."
+    },
+    {
+      "t": "Nachfragen",
+      "text": "Ruf täglich bei älteren, kranken oder alleinlebenden Menschen an: Wie viel hast du heute getrunken? Wie geht es dir?"
+    }
+  ],
+  "danach": [
+    {
+      "t": "Beschwerden abklären",
+      "text": "Bleiben Schwindel, Kreislaufprobleme oder Schwäche nach der Hitzewelle, lass das abklären: Gesundheitsberatung 1450 oder Hausärztin."
+    },
+    {
+      "t": "Medikamente prüfen",
+      "text": "Waren Medikamente längere Zeit zu warm gelagert, frag in der Apotheke, ob sie noch wirken."
+    },
+    {
+      "t": "Für den nächsten Sommer merken",
+      "text": "Was hat gefehlt? Beschattung, Ventilator, ein kühler Schlafplatz? Jetzt ist die Zeit, das zu besorgen."
+    }
+  ],
+  "informiert": [
+    "GeoSphere Austria (der staatliche Wetterdienst) warnt je Bezirk nach der gefühlten Temperatur: Gelb ab 30 °C, Orange ab 35 °C, Rot ab 40 °C.",
+    "Das Hitzetelefon des Gesundheitsministeriums, betreut von der AGES, ist kostenlos: 0800 880 800. Im Sommer 2026 war es Montag bis Freitag von 6 bis 22 Uhr, Samstag 8 bis 20 Uhr und Sonntag 8 bis 18 Uhr erreichbar.",
+    "Bei gesundheitlichen Fragen hilft rund um die Uhr die Gesundheitsberatung 1450.",
+    "Die Bundesländer haben eigene Hitzeschutzpläne. Bei Orange und Rot werden dort zum Beispiel Pflegeheime, Spitäler und Kinderbetreuung verständigt.",
+    "Wetterwarnungen bringen auch Radio und Fernsehen."
+  ],
+  "merksaetze": [
+    "Trinken, bevor der Durst kommt.",
+    "Tagsüber zu, nachts auf.",
+    "Ein Anruf bei der Oma ist Hitzeschutz."
+  ],
+  "zusatz": {
+    "kinder": [
+      "Babys und Kleinkinder können nicht sagen, dass sie Durst haben. Biete ihnen regelmäßig zu trinken an.",
+      "Draußen sein am Morgen und am Abend, mittags in den Schatten oder ins Kühle.",
+      "Lass Kinder nie allein im geparkten Auto, auch nicht kurz."
+    ],
+    "aeltere": [
+      "Mit dem Alter lässt das Durstgefühl nach. Stell dir ein Glas sichtbar hin oder trink nach Uhrzeit.",
+      "Frag bei deinen Medikamenten nach, ob bei Hitze etwas anders ist."
+    ],
+    "pflege": [
+      "Trinkmenge und Befinden der gepflegten Person mehrmals täglich prüfen.",
+      "Pflegeheime und mobile Dienste arbeiten nach Hitzeschutzplänen mit Maßnahmen je Warnstufe. Frag nach, was dort vorgesehen ist."
+    ],
+    "behinderung": [],
+    "tiere": [],
+    "haus": [
+      "Außenbeschattung nachrüsten wirkt stärker als jeder Vorhang innen.",
+      "Hast du eine Gastherme, an heißen Tagen besonders regelmäßig lüften."
+    ],
+    "miete": [],
+    "keller": []
+  },
+  "checkliste_spezifisch": [
+    "Ventilator",
+    "Thermometer für drinnen",
+    "Verdunkelung oder Außenbeschattung",
+    "Trinkflaschen",
+    "Kopfbedeckung und helle, luftige Kleidung",
+    "Tücher zum Befeuchten oder Sprühflasche"
+  ],
+  "verweise": [
+    "notrufe",
+    "radio"
+  ],
+  "quellen": [
+    {
+      "name": "Gesundheitsministerium / gesundheit.gv.at: Nationaler Hitzeschutzplan",
+      "url": "https://www.gesundheit.gv.at/news/aktuelles/aktuell-2024/nationaler-hitzeschutzplan.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "gesundheit.gv.at: Hitzewarnungen und Hitzeschutzpläne (Gastherme, Notrufnummern)",
+      "url": "https://www.gesundheit.gv.at/leben/umwelt/gesund-bei-hitze/hitze.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Sozialministerium: Hitzetelefon 2026",
+      "url": "https://www.sozialministerium.gv.at/Services/Aktuelles/archiv-2026/hitzetelefon.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "AGES: Informationen zu Hitze",
+      "url": "https://www.ages.at/umwelt/klima/klimawandelanpassung/hitze",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "GeoSphere Austria: Hitze",
+      "url": "https://www.geosphere.at/en/topics/disaster-protection/heat",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Land Tirol: Hitzewelle und Hitzewarnung",
+      "url": "https://tirol.gv.at/gesundheit-vorsorge/oeffentliche-gesundheit/hitze-und-gesundheit/hitzewelle-und-hitzewarnung",
+      "abgerufen": "2026-10-08"
+    }
+  ],
+  "stand": "2026-10-08"
+}
