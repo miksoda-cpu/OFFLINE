@@ -832,3 +832,4 @@ body.blatt-offen { overflow: hidden; }
 .radio-tabelle th { font-size: .85rem; color: var(--muted); font-weight: 600; }
 .sirene-hoeren { margin-top: .4rem; min-height: 44px; }
 @media print { .druck-bereich .druck-liste p { margin: 1mm 0; } .druck-bereich .druck-liste h3 { margin: 4mm 0 1mm; } }
+.sz-liste li > strong { display: block; margin-bottom: .1rem; }

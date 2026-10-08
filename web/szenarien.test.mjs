@@ -116,6 +116,9 @@ test("Kein Inhalt im Code; Notfallseiten ohne Skin; Seiten bauen aus dem Paket",
   assert.equal((app.match(/kachelnHtml\(karten, szReihe\(\), state\.szChecks\)/g) ?? []).length, 2);
   assert.ok(app.includes("radioHtml(radio, state.bundesland, laender)"));
   assert.match(await lies("../app/src-tauri/src/lib.rs"), /fn text_speichern\(pfad: String, inhalt: String\)/);
+  // Häkchen zeichnen die Seite neu: aufgeklappte Teile (Karte, Erklärungen) bleiben offen
+  assert.ok(app.includes('const offen = render.seite === location.hash ? [...main.querySelectorAll("details[open][id]")].map((d) => d.id) : [];'));
+  assert.ok(modul.includes('<details class="gv-detail" id="gvd-') && modul.includes('id="sz-${id}"'));
   const q = await json("../pakete/at-basis/paket.quelle.json");
   assert.equal(q.app_min, "0.8.0");
 });

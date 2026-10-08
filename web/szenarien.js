@@ -107,7 +107,7 @@ export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = []
   const alle = grund.bereiche.flatMap((b) => punkteFuer(b, haushalt)), gesamt = fortschritt(alle, checks);
   const punkt = (p) => `<li class="gv-punkt"><label><input type="checkbox" data-check="${esc(p.id)}" ${checks[p.id] ? "checked" : ""}><span>${esc(p.text)}${faellig.has(p.id) ? ` <span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span>` : ""}</span></label>${faellig.has(p.id) ? ` <button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-bestaetigen="${esc(faellig.get(p.id))}">Erneuert</button>` : ""}
       <button type="button" class="gv-merk" data-merk="${esc(p.id)}" aria-pressed="${merk.includes(p.id)}" aria-label="${merk.includes(p.id) ? "Von der Merkliste nehmen" : "Auf die Merkliste"}: ${esc(p.text)}">${merk.includes(p.id) ? "★" : "☆"}</button>
-      ${p.detail ? `<details class="gv-detail"><summary class="of-klein">Erklärung</summary><p class="muted of-klein">${esc(p.detail)}</p></details>` : ""}</li>`;
+      ${p.detail ? `<details class="gv-detail" id="gvd-${esc(p.id)}"><summary class="of-klein">Erklärung</summary><p class="muted of-klein">${esc(p.detail)}</p></details>` : ""}</li>`;
   const bereiche = grund.bereiche.map((b) => {
     const punkte = punkteFuer(b, haushalt), f = fortschritt(punkte, checks), sicht = nurMerk ? punkte.filter((p) => merk.includes(p.id)) : punkte;
     if (nurMerk && !sicht.length) return "";

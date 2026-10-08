@@ -2406,7 +2406,11 @@ function render() {
   naturMenue();
   const seite = seiten[route] && (route !== "natur" || naturDaten()) ? route : "start";
   if (seite !== "natur" && state.natur.liest) naturVorlesenStop();
+  // Aufgeklappte Teile bleiben offen, wenn dieselbe Seite neu gezeichnet wird (0.8.0: Häkchen in Szenario und Grundvorsorge)
+  const offen = render.seite === location.hash ? [...main.querySelectorAll("details[open][id]")].map((d) => d.id) : [];
   main.innerHTML = seiten[seite]() + hilfeZeile(HILFE_SEITE[seite]);
+  for (const id of offen) { const d = document.getElementById(id); if (d?.tagName === "DETAILS") d.open = true; }
+  render.seite = location.hash;
   if (seite === "start") wesen.einbauen({ tippen: () => { location.hash = "#lumi"; } }); else if (seite === "lumi") wesen.einbauen(); else wesen.setScore(bereit());
   wesen.ansicht(seite);
   if (seite === "start") { tagesSatzZeigen(); pauseKarteWischen(); }
