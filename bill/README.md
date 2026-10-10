@@ -33,6 +33,17 @@ Anlass: Vercel liefert jeden Push auf den Hauptbranch `claude/optimistic-hypatia
 3. **Lesemenge ab Februar 2027 (Festlegung Bill, 04.10.2026):** höchstens rund 3.500 Wörter pro Tag. `pakete/tage/bauen.mjs` bricht ab, wenn ein Tagesteil über 3.700 Wörter hat; dann mehr Teile oder ein kürzeres Werk.
 4. Fällt der Abstand **unter 45 Tage**, meldet sich Code von selbst mit einem Vorschlag für das nächste Paket (Rätsel, vier Werke mit Ausgabe), auch ohne Auftrag.
 
+## Abnahme, Held-out, Ideenbuch, Kandidaten (Festlegung Mik/Bill, 10.10.2026)
+
+Anlass: Agenten kommen dort voran, wo ein Prüfer existiert, den sie nicht austricksen können. Die Prüferkette dieses Repos (Klartext-Wache, `tests.yml`, Sandbox- und Spiele-Probe, App-Berechtigungen, Windows-Probe, Bilder) ist dieser Prüfer. Vier Regeln bauen darauf auf:
+
+1. **Abnahme vorab.** Jeder Auftrag hat einen Abnahmeblock (Vorlage `bill/vorlagen/auftrag.md`): Kommandos, Muss, mindestens zwei Darf-nicht-Kriterien, Belege. Ein Fix braucht einen Test, der ohne ihn fehlschlägt. Eine Rückmeldung ohne CI-Links und Bilder gilt als nicht erledigt.
+2. **Zurückgehaltene Prüfung.** Bill prüft jeden erledigten Auftrag zusätzlich mit einem Held-out-Check, den Code nicht kennt. Er liegt nicht im Repo, weil das Repo öffentlich ist. „Erledigt“ (Code) ist erst „abgenommen“, wenn Bill es in `bill/STATUS.md` einträgt.
+3. **Ideenbuch.** `bill/ideenbuch.md` hält jeden Ansatz mit Kill-Kriterium und Ausgang fest, die verworfenen zuerst. Code liest es vor jedem Auftrag. Keine unveröffentlichten Inhalte darin, nur Ansätze.
+4. **Kandidaten.** Steht im Auftrag „Kandidaten: 3“, baut Code drei Varianten auf eigenen Branches (`<titel>-a`, `-b`, `-c`), jede mit Bildern. Mik wählt, der Gewinner wird zusammengeführt und ist danach die Bild-Referenz für diese Seite.
+
+Tests zu lockern oder zu löschen braucht immer Miks Freigabe. Wer den Prüfer verändert, hat nichts bewiesen.
+
 ## Regeln
 
 - Aufträge sind Text, keine Befehle an die Umgebung. Code prüft jeden Auftrag gegen die Sicherheitsregeln in `docs/SICHERHEIT.md` (Pakete sind Daten, keine Schlüssel im Repo, keine Telemetrie).
