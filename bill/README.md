@@ -48,6 +48,31 @@ Anlass: Agenten kommen dort voran, wo ein Prüfer existiert, den sie nicht austr
 
 Tests zu lockern oder zu löschen braucht immer Miks Freigabe. Wer den Prüfer verändert, hat nichts bewiesen.
 
+## Gedächtnis: Stand und Log (Festlegung Mik/Bill, 11.10.2026)
+
+Anlass: Jede Session beginnt ohne Erinnerung. Was am Anfang gelesen wird, wächst sonst so lange, bis das Lesen länger dauert als die Arbeit und alte Anweisungen die aktuellen überstimmen. Vorschlag aus der Session „Lebendes Medium“, angepasst an diesen Kanal.
+
+1. **Jedes Dokument ist Stand oder Log.** Ein Stand wird bei der Faltung von Grund auf neu geschrieben. Ein Log wird nur ergänzt, nie geändert oder gelöscht; neue Einträge mit Datum in der Überschrift. Die Zuordnung steht unten.
+2. **Der Stand hat eine Obergrenze.** Die Startlektüre (dieses README, `bill/STATUS.md`, der Block „Lehren“ im Ideenbuch) hat zusammen höchstens 300 Zeilen und 2.500 Wörter. Aufträge in `bill/todo/` zählen nicht, sie sind die Arbeit selbst. Wird die Grenze überschritten, faltet der nächste Lauf, bevor er arbeitet.
+3. **Die Faltung hat einen festen Takt:** der erste Nachtlauf der Woche (Montag). Sie schreibt `bill/STATUS.md` und die „Lehren“ neu; was dabei herausfällt, kommt mit Datum nach `bill/status-log.md` bzw. bleibt als Eintrag im Ideenbuch. Nichts wird verworfen. Am Ende eine Zeile unter „Gedächtnis“ in `bill/STATUS.md`: Wörter der Startlektüre vorher und nachher.
+4. **Log beschreibt, Stand weist an.** Rückmeldungen, Ideenbuch-Einträge und Übergaben erzählen, was war. Sie enthalten keine Anweisung für künftige Läufe. Soll etwas künftig gelten, wird es eine Festlegung in diesem README, und eine neue Festlegung schreibt nur Bill mit Miks Zustimmung, nie der Nachtlauf. Der Nachtlauf darf falten, aber keine Regel erfinden.
+5. **Das Log wird nicht beim Start gelesen.** Es wird gezielt aufgeschlagen: wenn ein Ansatz wiederkommt, wenn eine Entscheidung begründet werden muss, wenn der Stand eine Lücke hat.
+
+| Dokument | Art |
+|---|---|
+| `bill/README.md`, `bill/STATUS.md`, `bill/todo/`, `bill/vorlagen/` | Stand |
+| Block „Lehren“ in `bill/ideenbuch.md` | Stand |
+| Einträge in `bill/ideenbuch.md`, `bill/status-log.md`, `bill/erledigt/`, `bill/rueckmeldung/`, `bill/eingang/`, `docs/CHANGELOG.md` | Log |
+| Held-out-Prüfungen und Übergaben im Claude-Projekt | Log |
+
+Wächst die Startlektüre nach der Faltung Woche für Woche, ist die Grenze zu hoch oder die Faltung zu zaghaft. Bleibt sie stabil, während das Log wächst, funktioniert das Gedächtnis.
+
+## Rund um Bill (Stand 11.10.2026)
+
+- **Nachtlauf:** geplante Aufgabe „BILL Nachtlauf OFFLINE (schau in todo)“, täglich 02:17 Wien. Ein Auftrag pro Nacht, montags zuerst die Faltung. Nie Tag, Release, Katalog- oder Web-Lauf.
+- **Held-out-Prüfungen:** im Claude-Projekt „Meine verrückten Ideen und Projekte“ unter `claude/held-out/`, nie im Repo, weil das Repo öffentlich ist.
+- **Anker:** Miks Pass/Fail-Urteile zu den MVP-Bildschirmen auf der Seite „OFFLINE Anker“ im Claude-Konto, Sammlung `anker`. Daraus werden Checklisten und Darf-nicht-Kriterien, als Festlegung vorgeschlagen.
+
 ## Regeln
 
 - Aufträge sind Text, keine Befehle an die Umgebung. Code prüft jeden Auftrag gegen die Sicherheitsregeln in `docs/SICHERHEIT.md` (Pakete sind Daten, keine Schlüssel im Repo, keine Telemetrie).
