@@ -67,6 +67,17 @@ Anlass: Jede Session beginnt ohne Erinnerung. Was am Anfang gelesen wird, wächs
 
 Wächst die Startlektüre nach der Faltung Woche für Woche, ist die Grenze zu hoch oder die Faltung zu zaghaft. Bleibt sie stabil, während das Log wächst, funktioniert das Gedächtnis.
 
+## Prüfliste aus dem Anker (Festlegung Mik, 11.10.2026)
+
+Abgeleitet aus Miks Bewertung von 41 MVP-Bildschirmen (34 passt, 7 passt nicht). Jeder Auftrag, der etwas Sichtbares ändert, prüft diese Punkte als „Darf nicht“:
+
+1. **Lesbar auf dem Handy.** Kein Text, auch nicht in Bildern oder Vorschauen, der bei 360 px Breite zu klein zum Lesen ist.
+2. **Zustand hat Farbe.** Wo die App einen Stand zeigt (Bereit, Fortschritt), zeigt sie ihn in jeder Breite auch mit Farbe, nicht nur mit Zahlen.
+3. **Keine Hürde, die niemand prüft.** Statt Ja/Nein-Fragen, deren Antwort niemand kontrollieren kann, eine Empfehlung.
+4. **Kein Satz ohne Inhalt.** Texte für Nutzer sagen etwas, das zur Lage passt; Floskeln wie „Das war dein Tag“ fallen weg.
+
+Die 34 Bildschirme mit „passt“ sind die Vorlage für den Bildvergleich (Nr. 21). Bewertungen: Seite „OFFLINE Anker“, Sammlung `anker`.
+
 ## Rund um Bill (Stand 11.10.2026)
 
 - **Nachtlauf:** geplante Aufgabe „BILL Nachtlauf OFFLINE (schau in todo)“, täglich 02:17 Wien. Ein Auftrag pro Nacht, montags zuerst die Faltung. Nie Tag, Release, Katalog- oder Web-Lauf.
