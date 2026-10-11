@@ -33,6 +33,10 @@ Anlass: Vercel liefert jeden Push auf den Hauptbranch `claude/optimistic-hypatia
 3. **Lesemenge ab Februar 2027 (Festlegung Bill, 04.10.2026):** höchstens rund 3.500 Wörter pro Tag. `pakete/tage/bauen.mjs` bricht ab, wenn ein Tagesteil über 3.700 Wörter hat; dann mehr Teile oder ein kürzeres Werk.
 4. Fällt der Abstand **unter 45 Tage**, meldet sich Code von selbst mit einem Vorschlag für das nächste Paket (Rätsel, vier Werke mit Ausgabe), auch ohne Auftrag.
 
+## MVP (Festlegung Mik, 11.10.2026)
+
+Das MVP ist alles, was die staatliche Zivilschutz-App inhaltlich bietet (Inhalts-Gleichstand, siehe Nr. 20), dazu die Spiele, ohne Lumi. Herausgeber der App ist Michael Kainz als Privatperson, keine Firma. Prüfungen, Bildsätze und Aufträge richten sich zuerst nach diesem Umfang; Lumi, Lumisch, Lumi-Buch und „Was die Lumis denken“ bleiben im Repo, sind aber nicht Teil der Startreife.
+
 ## Abnahme, Held-out, Ideenbuch, Kandidaten (Festlegung Mik/Bill, 10.10.2026)
 
 Anlass: Agenten kommen dort voran, wo ein Prüfer existiert, den sie nicht austricksen können. Die Prüferkette dieses Repos (Klartext-Wache, `tests.yml`, Sandbox- und Spiele-Probe, App-Berechtigungen, Windows-Probe, Bilder) ist dieser Prüfer. Vier Regeln bauen darauf auf:
