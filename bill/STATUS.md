@@ -20,6 +20,8 @@ Bill schreibt Aufträge nach `bill/todo/`, Code meldet nach `bill/rueckmeldung/`
 Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (Android und iOS), Schließfach. Gesamtkonzept als Projektdokument „OFFLINE-Gesamtkonzept“, noch nicht in `docs/`.
 
 ## Offen bei Code
+- **Nr. 24** Wikipedia und Wikivoyage als Module (Desktop, nicht im Installer), Nachtrag zu 0.8.0: Österreich-Basis lädt still nach, doppelte Klammer bei USB (`bill/todo/`).
+- **Nr. 23** Befunde aus Miks Anker-Bewertung: Vorschau-Bilder lesbar, Altersfrage wird Empfehlung, drei Kandidaten für den Satz am Tagesende, Farbcode in Bereit breit (`bill/todo/`).
 - **Nr. 22** Impressum und Datenschutz mit den Daten der OG (`bill/todo/`).
 - **Nr. 21** Bildvergleich und Barrierefreiheit, nur MVP-Seiten, mit Anker-Bildsatz (`bill/todo/`).
 - **Rückfragen zu 0.8.0** (Nr. 20): Bereit zählt nur die 20 alten Punkte; Sirenentöne nachgebildet (prüfen); Haushalt-Wörter; doppelte Klammer bei USB.
