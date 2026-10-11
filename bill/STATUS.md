@@ -20,6 +20,7 @@ Bill schreibt Aufträge nach `bill/todo/`, Code meldet nach `bill/rueckmeldung/`
 Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (Android und iOS), Schließfach. Gesamtkonzept als Projektdokument „OFFLINE-Gesamtkonzept“, noch nicht in `docs/`.
 
 ## Offen bei Code
+- **Nr. 22** Impressum und Datenschutz mit den Daten der OG (`bill/todo/`).
 - **Nr. 21** Bildvergleich und Barrierefreiheit, nur MVP-Seiten, mit Anker-Bildsatz (`bill/todo/`).
 - **Rückfragen zu 0.8.0** (Nr. 20): Bereit zählt nur die 20 alten Punkte; Sirenentöne nachgebildet (prüfen); Haushalt-Wörter; doppelte Klammer bei USB.
 - **Große Downloads:** Fortschritt und Abbruch nur je 64-MB-Teil (Ideenbuch, offen).
@@ -28,8 +29,7 @@ Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (An
 - **Hilfe-Sätze:** 14 Sätze passen nicht genau zum Code, vor allem „Pause ist Training für den Kopf“; wartet auf Bills Wortlaut.
 
 ## Offen bei Mik
-- **Herausgeber der App:** digitalworld Academy OG oder Michael Kainz privat; davon hängen Konten, Impressum und Hetzner ab. Festlegung vom 11.10. sagt „privat“, Bill empfiehlt die OG.
-- **Startreife:** Kontakt-E-Mail fürs Impressum; je nach Herausgeber D-U-N-S und Konten; Auftragsverarbeitung mit Hetzner. Liste: `bill/rueckmeldung/2026-10-07-startreife.md`.
+- **Startreife:** D-U-N-S-Nummer für die digitalworld Academy OG beantragen (Herausgeber seit 11.10.), dann Apple Developer Program und Google Play als Firma, Azure Artifact Signing für Windows; Auftragsverarbeitung mit Hetzner im bestehenden diwo-Konto. Liste: `bill/rueckmeldung/2026-10-07-startreife.md`.
 - **Anker:** 42 MVP-Bildschirme bewerten.
 
 ## Extern wartend

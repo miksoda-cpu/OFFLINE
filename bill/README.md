@@ -35,7 +35,7 @@ Anlass: Vercel liefert jeden Push auf den Hauptbranch `claude/optimistic-hypatia
 
 ## MVP (Festlegung Mik, 11.10.2026)
 
-Das MVP ist alles, was die staatliche Zivilschutz-App inhaltlich bietet (Inhalts-Gleichstand, siehe Nr. 20), dazu die Spiele, ohne Lumi. Herausgeber der App ist Michael Kainz als Privatperson, keine Firma. Prüfungen, Bildsätze und Aufträge richten sich zuerst nach diesem Umfang; Lumi, Lumisch, Lumi-Buch und „Was die Lumis denken“ bleiben im Repo, sind aber nicht Teil der Startreife.
+Das MVP ist alles, was die staatliche Zivilschutz-App inhaltlich bietet (Inhalts-Gleichstand, siehe Nr. 20), dazu die Spiele, ohne Lumi. Herausgeber der App ist die digitalworld Academy OG (Große Schiffgasse 18/Top 2, 1020 Wien, FN 477728t, Kontakt office@diwo.at); so entschieden von Mik am 11.10.2026 nach Abwägung, die frühere Angabe „Privatperson“ vom selben Tag gilt nicht mehr. Prüfungen, Bildsätze und Aufträge richten sich zuerst nach diesem Umfang; Lumi, Lumisch, Lumi-Buch und „Was die Lumis denken“ bleiben im Repo, sind aber nicht Teil der Startreife.
 
 ## Abnahme, Held-out, Ideenbuch, Kandidaten (Festlegung Mik/Bill, 10.10.2026)
 
