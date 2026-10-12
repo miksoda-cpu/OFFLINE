@@ -6,11 +6,11 @@ Nur Ansätze, keine unveröffentlichten Inhalte (Regel Nr. 13, `docs/INTERN.md`)
 
 ## Lehren
 
-Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Block gehört zur Startlektüre; die Einträge darunter werden gezielt aufgeschlagen, wenn ein Ansatz wiederkommt. Stand: Faltung 11.10.2026.
+Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Block gehört zur Startlektüre; die Einträge darunter werden gezielt aufgeschlagen, wenn ein Ansatz wiederkommt. Stand: Faltung 12.10.2026.
 
 - Jede Arbeit auf eigenem Branch, zusammenführen erst nach grüner Prüferkette (seit 0.2.1, Festlegung 30.09.).
 - Fremde Programmteile gehören in die App, nicht ins Netz. Vor jedem Store-Build die Verbindungen gegen die Datenschutz-Angaben prüfen (seit 0.7.2).
-- Große Downloads: Fortschritt je 64-MB-Teil ist offen, nicht gelöst.
+- Große Downloads: Fortschritt je 64-MB-Teil ist offen, nicht gelöst (Auftrag Nr. 19).
 
 ## Vorlage
 
