@@ -835,6 +835,7 @@ body.blatt-offen { overflow: hidden; }
 .sz-liste li > strong { display: block; margin-bottom: .1rem; }
 /* Impressum unter „Über“ (Auftrag Nr. 22): Begriff links, Angabe rechts; schmal untereinander */
 .ueber-impressum { display: grid; grid-template-columns: max-content 1fr; gap: .2rem .8rem; margin: 0; }
+.ueber-titel { font-weight: 600; margin: .7rem 0 .3rem; }
 .ueber-impressum dt { color: var(--muted); }
 .ueber-impressum dd { margin: 0; overflow-wrap: anywhere; }
 @media (max-width: 480px) { .ueber-impressum { grid-template-columns: 1fr; gap: 0; } .ueber-impressum dd { margin-bottom: .3rem; } }
