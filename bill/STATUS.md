@@ -18,7 +18,8 @@ Skin Flechte und die internen Pakete `naturheilkunde`, `naturheilkunde-bilder` l
 Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (Android, iOS), Schließfach. Gesamtkonzept als Projektdokument „OFFLINE-Gesamtkonzept“, nicht in `docs/`.
 
 ## Offen bei Code
-- Aufträge in `bill/todo/`: Nr. 21 Bildvergleich und Barrierefreiheit, Nr. 22 Impressum und Datenschutz (hoch), Nr. 23 Anker-Befunde, Nr. 24 Wissen-Module und Nachtrag 0.8.0.
+- Aufträge in `bill/todo/`: Nr. 21 Bildvergleich und Barrierefreiheit, Nr. 23 Anker-Befunde, Nr. 24 Wissen-Module und Nachtrag 0.8.0.
+- Nr. 22 Impressum und Datenschutz: erledigt am 12.10. und im Web ausgeliefert, wartet auf Bills Held-out (`bill/rueckmeldung/2026-10-12-nr-22-impressum-und-datenschutz.md`).
 - Rückfragen zu 0.8.0 (Nr. 20): Bereit zählt nur die 20 alten Punkte; Sirenentöne nachgebildet (prüfen); Haushalt-Wörter; doppelte Klammer bei USB (Teil von Nr. 24).
 - Große Downloads: Fortschritt und Abbruch nur je 64-MB-Teil (Ideenbuch, offen).
 - `bereich`/`pflicht` in at-basis, wir, lumi-buch, lumi-philosophie, pause erst mit der nächsten Ausgabe.
@@ -28,6 +29,7 @@ Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (An
 ## Offen bei Mik
 - **Startreife:** D-U-N-S-Nummer für die digitalworld Academy OG, dann Apple Developer Program und Google Play als Firma, Azure Artifact Signing für Windows; Auftragsverarbeitung mit Hetzner im diwo-Konto. Liste: `bill/rueckmeldung/2026-10-07-startreife.md`.
 - **Anker:** 42 MVP-Bildschirme bewerten.
+- **Impressum:** Unternehmensgegenstand, Wirtschaftskammer, Gewerbebehörde und Offenlegung nach § 25 Mediengesetz fehlen (markiert „wird ergänzt“).
 
 ## Extern wartend
 Anwalt (35 Fragen, Haftung einer Notfall-App), Lizenzanfragen an Institutionen, ärztliche Prüfung der Guides.
