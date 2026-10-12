@@ -24,6 +24,12 @@ Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Bl
 
 ## Einträge
 
+### 2026-10-12 · Auftrag Nr. 22 · Update-Test der Windows-Probe gegen den öffentlichen Katalog
+- Idee: Die Windows-Probe installiert die alte App 0.1.8, lässt sie das Österreich-Paket aus dem öffentlichen Katalog laden und vergleicht danach mit der neuen App
+- Kill-Kriterium: Die alte App kann das Paket aus dem öffentlichen Katalog nicht mehr laden
+- Ausgang: offen, eingetreten seit dem Katalog vom 08.10.2026 15:29 UTC (at-basis mit `app_min` 0.8.0); Lauf 38187853812 rot in den Fällen A und B, Sandbox, Spiele und Module grün
+- Lehre: Der Update-Test hängt an einem Katalog, der sich ohne Änderung im Repo ändert
+
 ### 2026-10-08 · Auftrag Nr. 19 · Fortschritt bei großen Downloads je 64-MB-Teil
 - Idee: Fortschritt und Abbruch je 64-MB-Teil eines Pakets
 - Kill-Kriterium: Der Balken steht bei langsamer Leitung länger still, als ein Mensch ohne Sorge wartet

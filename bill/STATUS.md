@@ -18,12 +18,13 @@ Skin Flechte und die internen Pakete `naturheilkunde`, `naturheilkunde-bilder` l
 Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (Android, iOS), Schließfach. Gesamtkonzept als Projektdokument „OFFLINE-Gesamtkonzept“, nicht in `docs/`.
 
 ## Offen bei Code
-- Aufträge in `bill/todo/`: Nr. 21 Bildvergleich und Barrierefreiheit, Nr. 23 Anker-Befunde, Nr. 24 Wissen-Module und Nachtrag 0.8.0.
-- Nr. 22 Impressum und Datenschutz: erledigt am 12.10. und im Web ausgeliefert, wartet auf Bills Held-out (`bill/rueckmeldung/2026-10-12-nr-22-impressum-und-datenschutz.md`).
+- Aufträge in `bill/todo/`: Nr. 22 Impressum (hoch, wartet auf die Probe), Nr. 21 Bildvergleich und Barrierefreiheit, Nr. 23 Anker-Befunde, Nr. 24 Wissen-Module und Nachtrag 0.8.0.
+- Nr. 22 Impressum und Datenschutz: gebaut auf Branch `nr-22-impressum`, `tests.yml` grün, **nicht zusammengeführt**, weil die Windows-Probe rot ist (Rückmeldung 12.10.).
 - Rückfragen zu 0.8.0 (Nr. 20): Bereit zählt nur die 20 alten Punkte; Sirenentöne nachgebildet (prüfen); Haushalt-Wörter; doppelte Klammer bei USB (Teil von Nr. 24).
 - Große Downloads: Fortschritt und Abbruch nur je 64-MB-Teil (Ideenbuch, offen).
 - `bereich`/`pflicht` in at-basis, wir, lumi-buch, lumi-philosophie, pause erst mit der nächsten Ausgabe.
-- Sandbox-Probe in der App unter Linux offen; Windows grün.
+- Windows-Probe rot seit dem Katalog vom 08.10. 15:29 UTC: at-basis verlangt `app_min` 0.8.0, die alte App 0.1.8 im Update-Test kann es nicht laden. Blockiert jedes Zusammenführen, das die App berührt.
+- Sandbox-Probe in der App unter Linux offen.
 - Hilfe-Sätze: 14 passen nicht genau zum Code (vor allem „Pause ist Training für den Kopf“), wartet auf Bills Wortlaut.
 
 ## Offen bei Mik
