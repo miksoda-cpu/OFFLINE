@@ -969,7 +969,7 @@ const HERAUSGEBER = [
   ["E-Mail", "office@diwo.at"],
   ["Telefon", "+43 1 890 0195"],
 ];
-const herausgeberHtml = () => `<h3 class="of-klein" style="margin:.6rem 0 .3rem">Impressum</h3><dl class="of-klein ueber-impressum">${HERAUSGEBER.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl><h3 class="of-klein" style="margin:.6rem 0 .3rem">Lizenzen fremder Teile</h3>`;
+const herausgeberHtml = () => `<p class="of-klein ueber-titel">Impressum</p><dl class="of-klein ueber-impressum">${HERAUSGEBER.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl><p class="of-klein ueber-titel">Lizenzen fremder Teile</p>`;
 const ueberHtml = () => `<details class="upd-zeile ueber"><summary class="muted of-klein">Über · Impressum und Lizenzen</summary>${herausgeberHtml()}<ul class="of-klein">${UEBER_LIZENZEN.map(([was, wer]) => `<li><strong>${esc(was)}</strong>: ${esc(wer)}</li>`).join("")}</ul></details>`;
 /** Die Versionsnummer; siebenmal Tippen öffnet das Feld für einen Freischalt-Link (Desktop, wo es keinen Link-Aufruf gibt). */
 const versionKnopf = () => `<button type="button" class="upd-version" data-version-tippen>App ${esc(APP_VERSION)}</button>`;
