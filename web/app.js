@@ -960,7 +960,17 @@ const UEBER_LIZENZEN = [
   ["Rätsel zum Knobeln: 2048", "Spiellogik von Gabriele Cirulli. Copyright (c) 2014 Gabriele Cirulli. MIT-Lizenz."],
   ["Karte (online)", "Leaflet 1.9.4. Copyright (c) 2010–2023 Volodymyr Agafonkin, Copyright (c) 2010–2011 CloudMade. BSD-2-Klausel-Lizenz, Text in lib/leaflet/LICENSE."],
 ];
-const ueberHtml = () => `<details class="upd-zeile ueber"><summary class="muted of-klein">Über · Lizenzen fremder Teile</summary><ul class="of-klein">${UEBER_LIZENZEN.map(([was, wer]) => `<li><strong>${esc(was)}</strong>: ${esc(wer)}</li>`).join("")}</ul></details>`;
+/** Impressum in der App (Auftrag Nr. 22): dieselben Angaben wie web/impressum.html, als Text, ohne Link nach außen. */
+const HERAUSGEBER = [
+  ["Herausgeber", "digitalworld Academy OG"],
+  ["Anschrift", "Große Schiffgasse 18/Top 2, 1020 Wien, Österreich"],
+  ["Firmenbuch", "FN 477728t, Handelsgericht Wien"],
+  ["UID", "ATU72706716"],
+  ["E-Mail", "office@diwo.at"],
+  ["Telefon", "+43 1 890 0195"],
+];
+const herausgeberHtml = () => `<h3 class="of-klein" style="margin:.6rem 0 .3rem">Impressum</h3><dl class="of-klein ueber-impressum">${HERAUSGEBER.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl><h3 class="of-klein" style="margin:.6rem 0 .3rem">Lizenzen fremder Teile</h3>`;
+const ueberHtml = () => `<details class="upd-zeile ueber"><summary class="muted of-klein">Über · Impressum und Lizenzen</summary>${herausgeberHtml()}<ul class="of-klein">${UEBER_LIZENZEN.map(([was, wer]) => `<li><strong>${esc(was)}</strong>: ${esc(wer)}</li>`).join("")}</ul></details>`;
 /** Die Versionsnummer; siebenmal Tippen öffnet das Feld für einen Freischalt-Link (Desktop, wo es keinen Link-Aufruf gibt). */
 const versionKnopf = () => `<button type="button" class="upd-version" data-version-tippen>App ${esc(APP_VERSION)}</button>`;
 let versionTipps = [];
