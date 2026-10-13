@@ -18,7 +18,8 @@ Skin Flechte und die internen Pakete `naturheilkunde`, `naturheilkunde-bilder` l
 Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (Android, iOS), Schließfach. Gesamtkonzept als Projektdokument „OFFLINE-Gesamtkonzept“, nicht in `docs/`.
 
 ## Offen bei Code
-- Aufträge in `bill/todo/`: Nr. 21 Bildvergleich und Barrierefreiheit, Nr. 23 Anker-Befunde, Nr. 24 Wissen-Module und Nachtrag 0.8.0.
+- Aufträge in `bill/todo/`: Nr. 23 Anker-Befunde, Nr. 24 Wissen-Module und Nachtrag 0.8.0. Beide berühren die App und warten damit auf eine grüne Windows-Probe.
+- Nr. 21 erledigt (13.10., Rückmeldung): Bildvergleich und Barrierefreiheit (axe-core) laufen in `tests.yml`; vier kleine Barrierefreiheits-Befunde der App stehen mit Grund in `werkzeug/barrierefrei-ausnahmen.json` und warten auf die Windows-Probe. Wartet auf Bills Held-out.
 - Nr. 22 Impressum und Datenschutz (hoch, liegt in todo): gebaut auf Branch `nr-22-impressum`, `tests.yml` grün, **nicht zusammengeführt**, weil die Windows-Probe rot ist (Rückmeldung 12.10.).
 - Rückfragen zu 0.8.0 (Nr. 20): Bereit zählt nur die 20 alten Punkte; Sirenentöne nachgebildet (prüfen); Haushalt-Wörter; doppelte Klammer bei USB (Teil von Nr. 24).
 - Große Downloads: Fortschritt und Abbruch nur je 64-MB-Teil (Ideenbuch, offen).
@@ -29,7 +30,8 @@ Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (An
 
 ## Offen bei Mik
 - **Startreife:** D-U-N-S-Nummer für die digitalworld Academy OG, dann Apple Developer Program und Google Play als Firma, Azure Artifact Signing für Windows; Auftragsverarbeitung mit Hetzner im diwo-Konto. Liste: `bill/rueckmeldung/2026-10-07-startreife.md`.
-- **Anker:** 42 MVP-Bildschirme bewerten.
+- **Anker:** 42 MVP-Bildschirme bewerten; dazu der Bildsatz aus Nr. 21 (88 JPG, `bill/rueckmeldung/bilder/2026-10-anker-mvp/`), erst danach gelten die Referenzbilder als abgenommen.
+- **GitHub:** Wegwerf-Branches `wegwerf-nr21-abstand` und `wegwerf-nr21-alt` löschen (der Nachtlauf darf nicht löschen, HTTP 403).
 - **Impressum:** Unternehmensgegenstand, Wirtschaftskammer, Gewerbebehörde und Offenlegung nach § 25 Mediengesetz fehlen (markiert „wird ergänzt“).
 
 ## Extern wartend

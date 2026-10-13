@@ -24,6 +24,17 @@ Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Bl
 
 ## Einträge
 
+### 2026-10-13 · Auftrag Nr. 21 · Referenzbilder lokal aufnehmen
+- Idee: Die Referenzbilder des Bildvergleichs im Arbeitsrechner aufnehmen (Chromium 141) und ins Repo legen
+- Kill-Kriterium: Die Aufnahme in der CI weicht ohne Änderung an der App ab
+- Ausgang: verworfen vor dem ersten Push. Die Web-App nutzt Systemschriften; lokal war die Tageskarte bei 360 px 44 px zu breit, in der CI (Chrome 154, Ubuntu) nicht. Übernommen: Referenz aus dem Artefakt eines CI-Laufs ohne Referenz; der zweite Lauf auf einem anderen Runner wich um kein Pixel ab
+- Lehre: Bilder, die als Prüfer dienen, entstehen dort, wo geprüft wird
+
+### 2026-10-13 · Auftrag Nr. 21 · Wegwerf-Branches nach der Gegenprobe löschen
+- Idee: Die Branches der Gegenproben nach dem Lauf per `git push --delete` entfernen
+- Kill-Kriterium: Der Push wird abgelehnt
+- Ausgang: gescheitert, HTTP 403 aus der Umgebung des Nachtlaufs; die Branches bleiben auf GitHub
+
 ### 2026-10-12 · Auftrag Nr. 22 · Update-Test der Windows-Probe gegen den öffentlichen Katalog
 - Idee: Die Windows-Probe installiert die alte App 0.1.8, lässt sie das Österreich-Paket aus dem öffentlichen Katalog laden und vergleicht danach mit der neuen App
 - Kill-Kriterium: Die alte App kann das Paket aus dem öffentlichen Katalog nicht mehr laden
