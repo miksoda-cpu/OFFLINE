@@ -3,3 +3,4 @@
 redaktion/freigegeben/** -text
 web/pakete/** -text
 web/katalog/** -text
+werkzeug/probe-katalog/** -text
