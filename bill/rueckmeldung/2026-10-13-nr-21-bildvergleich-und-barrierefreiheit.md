@@ -27,7 +27,7 @@
 
 ## Geprüft
 - `node --test werkzeug/bildvergleich.test.mjs`: 9 von 9 grün (PNG, Verschiebung um 2 px, Größe, Schwelle, Ausnahmeliste, Referenzen passend zur Seitenliste, Sperre im CI); ohne die Änderung fehlt das Modul, alle rot.
-- Grün mit Referenz, ohne Abweichung in einem neuen Runner: https://github.com/miksoda-cpu/OFFLINE/actions/runs/38328327983 (danach Lauf für `3cab872`, siehe STATUS)
+- Grün mit Referenz, ohne Abweichung in einem neuen Runner: https://github.com/miksoda-cpu/OFFLINE/actions/runs/38328327983, für `3cab872`: https://github.com/miksoda-cpu/OFFLINE/actions/runs/38329160289
 - Gegenprobe Abstand: `.tag-karten` 2 px mehr Abstand oben, rot genau bei den vier Heute-Aufnahmen (Höhe 1685 → 1687 px), alle anderen 84 gleich: https://github.com/miksoda-cpu/OFFLINE/actions/runs/38328337783 · Differenzbild: `bill/rueckmeldung/bilder/2026-10-13-nr-21/gegenprobe-heute-360-hell-differenz.png`
 - Gegenprobe Alternativtext: Bild ohne `alt` in der Kopfleiste, Barrierefreiheit rot mit 22 offenen `image-alt` (critical): https://github.com/miksoda-cpu/OFFLINE/actions/runs/38328345400
 - Erster Lauf ohne Referenz (lieferte die Referenzbilder): https://github.com/miksoda-cpu/OFFLINE/actions/runs/38327507367
