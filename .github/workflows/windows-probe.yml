@@ -136,6 +136,14 @@ jobs:
             rm -rf "$ziel" "$LOCALAPPDATA/at.digioneer.offline" "$APPDATA/at.digioneer.offline"
           }
           fehler=0
+          # Nach einem Update genau ein Eintrag „OFFLINE“ unter den installierten Apps (Nr. 25, Hersteller-Feld aus Nr. 22):
+          # Der Eintrag hängt am Hersteller; ändert sich der, darf kein verwaister Eintrag der alten Version bleiben.
+          eintraege() {
+            local n
+            n=$(reg query 'HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall' //s //v DisplayName 2>/dev/null | grep -cE 'REG_SZ[[:space:]]+OFFLINE[[:space:]]*$' || true)
+            reg query 'HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall' //s //f OFFLINE 2>/dev/null | grep -E 'HKEY|DisplayName|DisplayVersion|Publisher' || true
+            if [ "$n" = "1" ]; then echo "  ✓ Ein Eintrag unter den installierten Apps ($1)"; else echo "  ✗ $n Einträge unter den installierten Apps ($1)"; fehler=1; fi
+          }
           # A: benanntes Wesen
           katalog "$eingefroren"
           installieren "$alt"
@@ -143,6 +151,7 @@ jobs:
           installieren "$neu"   # schließt die alte App vorher
           katalog "$live"
           node werkzeug/app-probe.mjs neu --app "$(cygpath -w "$(exe)")" --vorher probe/a-alt.json --aus probe/a-neu.json || fehler=1
+          eintraege "Fall A"
           # Module in der neuen App
           node werkzeug/app-probe.mjs module --app "$(cygpath -w "$(exe)")" --boese "$(cygpath -w "$PWD/werkzeug/testmodule/boese")" --quelle "$(cygpath -w "$PWD/redaktion/freigegeben")" --aus probe/module.json || fehler=1
           # B: Wesen ohne Namen, frisches Gerät
@@ -163,6 +172,7 @@ jobs:
           node werkzeug/app-probe.mjs alt --stand 0.8 --app "$(cygpath -w "$(exe)")" --name Betty --aus probe/d-alt08.json || fehler=1
           installieren "$neu"
           node werkzeug/app-probe.mjs neu --app "$(cygpath -w "$(exe)")" --vorher probe/d-alt08.json --aus probe/d-neu.json || fehler=1
+          eintraege "Fall D"
           aufraeumen
           installieren "$alt08"
           node werkzeug/app-probe.mjs alt --stand 0.8 --app "$(cygpath -w "$(exe)")" --aus probe/e-alt08.json || fehler=1
