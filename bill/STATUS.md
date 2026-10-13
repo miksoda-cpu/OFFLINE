@@ -18,13 +18,13 @@ Skin Flechte und die internen Pakete `naturheilkunde`, `naturheilkunde-bilder` l
 Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (Android, iOS), Schließfach. Gesamtkonzept als Projektdokument „OFFLINE-Gesamtkonzept“, nicht in `docs/`.
 
 ## Offen bei Code
-- Aufträge in `bill/todo/`: Nr. 23 Anker-Befunde, Nr. 24 Wissen-Module und Nachtrag 0.8.0. Beide berühren die App und warten damit auf eine grüne Windows-Probe.
-- Nr. 21 erledigt (13.10., Rückmeldung): Bildvergleich und Barrierefreiheit (axe-core) laufen in `tests.yml`; vier kleine Barrierefreiheits-Befunde der App stehen mit Grund in `werkzeug/barrierefrei-ausnahmen.json` und warten auf die Windows-Probe. Wartet auf Bills Held-out.
-- Nr. 22 Impressum und Datenschutz (hoch, liegt in todo): gebaut auf Branch `nr-22-impressum`, `tests.yml` grün, **nicht zusammengeführt**, weil die Windows-Probe rot ist (Rückmeldung 12.10.).
+- Aufträge in `bill/todo/`: Nr. 23 Anker-Befunde, Nr. 24 Wissen-Module und Nachtrag 0.8.0. Die Windows-Probe ist wieder grün (Nr. 25), beide können zusammengeführt werden, sobald sie gebaut sind.
+- Nr. 25 erledigt (13.10., Rückmeldung): Windows-Probe grün auf dem Hauptbranch, ohne Lockerung. Die alte App 0.1.8 läuft gegen einen eingefrorenen, signierten Katalog (`werkzeug/probe-katalog/`), dazu der Weg 0.8.0 → neu und genau ein Eintrag unter den installierten Apps. Befund an der App: Ein offenes Blatt schließt sich beim Neuzeichnen aus dem Hintergrund (Ideenbuch).
+- Nr. 21 von Bill abgenommen (13.10.): Bildvergleich und Barrierefreiheit (axe-core) laufen in `tests.yml`. Die vier kleinen Barrierefreiheits-Befunde der App stehen mit Grund in `werkzeug/barrierefrei-ausnahmen.json`; sie zu beheben berührt die App und kann jetzt kommen.
+- Nr. 22 Impressum und Datenschutz zusammengeführt (13.10.) nach grüner Windows-Probe; das Hersteller-Feld lässt das Update unter Windows sauber (ein Eintrag, gleicher Ort, Daten bleiben). Die Web-Version zeigt das Impressum seit dem Zusammenführen (Vercel baut den Hauptbranch selbst).
 - Rückfragen zu 0.8.0 (Nr. 20): Bereit zählt nur die 20 alten Punkte; Sirenentöne nachgebildet (prüfen); Haushalt-Wörter; doppelte Klammer bei USB (Teil von Nr. 24).
 - Große Downloads: Fortschritt und Abbruch nur je 64-MB-Teil (Ideenbuch, offen).
 - `bereich`/`pflicht` in at-basis, wir, lumi-buch, lumi-philosophie, pause erst mit der nächsten Ausgabe.
-- Windows-Probe rot seit dem Katalog vom 08.10. 15:29 UTC: at-basis verlangt `app_min` 0.8.0, die alte App 0.1.8 im Update-Test kann es nicht laden. Blockiert jedes Zusammenführen, das die App berührt.
 - Sandbox-Probe in der App unter Linux offen.
 - Hilfe-Sätze: 14 passen nicht genau zum Code (vor allem „Pause ist Training für den Kopf“), wartet auf Bills Wortlaut.
 

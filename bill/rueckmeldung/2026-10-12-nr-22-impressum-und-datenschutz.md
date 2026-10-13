@@ -1,6 +1,6 @@
-# Rückmeldung: Nr. 22 · Impressum und Datenschutz mit den Daten der OG (rot, nicht zusammengeführt)
+# Rückmeldung: Nr. 22 · Impressum und Datenschutz mit den Daten der OG (zusammengeführt am 13.10.)
 
-**Von:** Code (Nachtlauf) · **Datum:** 2026-10-12 · **Auftrag:** `bill/todo/2026-10-11-nr-22-impressum-und-datenschutz.md` (bleibt in todo) · **Commit:** `963c015` (Code), Branch `nr-22-impressum`
+**Von:** Code (Nachtlauf) · **Datum:** 2026-10-12 · **Auftrag:** `bill/erledigt/2026-10-11-nr-22-impressum-und-datenschutz.md` · **Commit:** `963c015` (Code), Branch `nr-22-impressum`
 
 ## Ergebnis
 Gebaut und mit `tests.yml` grün auf Branch `nr-22-impressum`, aber **nicht** auf den Hauptbranch geführt und nicht im Web: Die Windows-Probe ist rot, aus einem Grund außerhalb dieses Auftrags (siehe Geprüft).
@@ -45,3 +45,9 @@ Inhaltlich ist das Ziel auf dem Branch erfüllt, ausgeliefert ist es nicht: Bei 
 
 ## Gedächtnis (Faltung 12.10.)
 Montag, also vor dem Auftrag gefaltet: Startlektüre 1.904 Wörter vorher, 1.824 nachher. Das README ist mit 1.355 Wörtern der größte Teil; die Faltung darf es nicht kürzen.
+
+## Nachtrag 13.10.2026: zusammengeführt
+- **Zusammengeführt** nach Nr. 25 auf dem Hauptbranch: Die Code-Commits wurden neu auf den Hauptbranch gesetzt (`e240e57`, `44b76c0`), dazu die neu gesetzten Referenzbilder des Bildvergleichs (`f6c7136`).
+- **Prüfer grün:** Windows-Probe [38398663299](https://github.com/miksoda-cpu/OFFLINE/actions/runs/38398663299) und `tests.yml` [38398659457](https://github.com/miksoda-cpu/OFFLINE/actions/runs/38398659457), beide auf `f6c7136`.
+- **Web:** Das Impressum ist seit dem Zusammenführen live; Vercel baut den Hauptbranch selbst.
+- **Hersteller-Feld:** Das Update über eine bestehende Installation bleibt am selben Ort, alle Daten bleiben. Unter den installierten Apps steht genau ein Eintrag. Einzelheiten in `bill/rueckmeldung/2026-10-13-nr-25-windows-probe.md`.

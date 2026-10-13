@@ -24,6 +24,18 @@ Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Bl
 
 ## Einträge
 
+### 2026-10-13 · Auftrag Nr. 25 · Eingefrorener Katalog für die alte App im Update-Test
+- Idee: 0.1.8 läuft gegen einen festen, schon veröffentlichten signierten Stand (Web-Katalog 08.10. 03:39 UTC mit at-basis und wir), lokal ausgeliefert; die Pakete werden wie vom Stick eingespielt, weil die Adresse im Katalog die alten Ausgaben nicht mehr liefert
+- Kill-Kriterium: Der Kern von 0.1.8 lehnt den Stand ab (Signatur, Schlüssel) oder ein bisheriger Vergleich muss dafür fallen
+- Ausgang: übernommen. Erster Lauf rot, weil der Windows-Checkout CRLF setzte; `.gitattributes` behebt das. Danach grün in allen Fällen
+- Lehre: Was signiert im Repo liegt, braucht `-text` in `.gitattributes`, sonst stimmt die Signatur nur auf dem Mac
+
+### 2026-10-13 · Auftrag Nr. 25 · Offenes Blatt schließt sich beim Neuzeichnen aus dem Hintergrund
+- Idee: In der App lässt ein Neuzeichnen, das nicht vom Menschen kommt (Abo-Stand aus dem Kern, Pakete im Hintergrund), ein offenes Blatt stehen
+- Kill-Kriterium: Das Blatt zeigt danach veraltete Angaben
+- Ausgang: offen, Befund aus der Windows-Probe (Läufe 38384951349, 38388627760). Die Probe wartet bis dahin, bis die Seite ruhig ist; die App ist nicht geändert (Nr. 25 verbietet es)
+- Lehre: Ein Prüfer, der „zufällig“ rot wird, zeigt oft einen echten Fehler in der App
+
 ### 2026-10-13 · Auftrag Nr. 21 · Referenzbilder lokal aufnehmen
 - Idee: Die Referenzbilder des Bildvergleichs im Arbeitsrechner aufnehmen (Chromium 141) und ins Repo legen
 - Kill-Kriterium: Die Aufnahme in der CI weicht ohne Änderung an der App ab
@@ -38,7 +50,7 @@ Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Bl
 ### 2026-10-12 · Auftrag Nr. 22 · Update-Test der Windows-Probe gegen den öffentlichen Katalog
 - Idee: Die Windows-Probe installiert die alte App 0.1.8, lässt sie das Österreich-Paket aus dem öffentlichen Katalog laden und vergleicht danach mit der neuen App
 - Kill-Kriterium: Die alte App kann das Paket aus dem öffentlichen Katalog nicht mehr laden
-- Ausgang: offen, eingetreten seit dem Katalog vom 08.10.2026 15:29 UTC (at-basis mit `app_min` 0.8.0); Lauf 38187853812 rot in den Fällen A und B, Sandbox, Spiele und Module grün
+- Ausgang: verworfen am 13.10.2026, eingetreten seit dem Katalog vom 08.10.2026 15:29 UTC (at-basis mit `app_min` 0.8.0); Lauf 38187853812 rot in den Fällen A und B. Ersetzt durch den eingefrorenen Katalog (Nr. 25)
 - Lehre: Der Update-Test hängt an einem Katalog, der sich ohne Änderung im Repo ändert
 
 ### 2026-10-08 · Auftrag Nr. 19 · Fortschritt bei großen Downloads je 64-MB-Teil
