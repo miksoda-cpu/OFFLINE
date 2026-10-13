@@ -71,7 +71,9 @@ async function main() {
   }
   const reihe = ["critical", "serious", "moderate", "minor"], liste = [...zeilen.values()].sort((a, b) => reihe.indexOf(a.stufe) - reihe.indexOf(b.stufe) || a.regel.localeCompare(b.regel) || a.seite.localeCompare(b.seite));
   const offen = liste.filter((b) => ERNST.includes(b.stufe) && !b.ausnahme);
-  for (const b of liste) console.log(`  ${ERNST.includes(b.stufe) ? (b.ausnahme ? "~" : "✗") : "·"} ${b.stufe.padEnd(8)} ${b.regel.padEnd(24)} ${b.seite.padEnd(22)} ${b.ziel}  [${b.wo.join(", ")}]${b.ausnahme ? `  – Ausnahme: ${b.ausnahme}` : ""}`);
+  for (const b of liste) console.log(`  ${ERNST.includes(b.stufe) ? (b.ausnahme ? "~" : "✗") : "·"} ${b.stufe.padEnd(8)} ${b.regel.padEnd(27)} ${b.seite.padEnd(22)} ${b.ziel}  [${b.wo.join(", ")}]`);
+  const gruende = [...genutzt].map((a) => `  ~ ${a.regel}${a.seite ? ` (${a.seite})` : ""}: ${a.grund}`);
+  if (gruende.length) console.log(`\nAusnahmen (~), mit Grund:\n${gruende.join("\n")}`);
   const ungenutzt = ausnahmen.filter((a) => !genutzt.has(a));
   if (ungenutzt.length && !NUR) console.log(`\nAusnahmen ohne Befund (können weg): ${ungenutzt.map((a) => `${a.regel}${a.seite ? ` auf ${a.seite}` : ""}`).join(", ")}`);
   await writeFile(path.join(AUS, "bericht.json"), JSON.stringify({ chrome: chrome.version, befunde: liste, offen: offen.length }, null, 2));

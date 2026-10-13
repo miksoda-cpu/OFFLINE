@@ -13,7 +13,7 @@
     {
       "regel": "link-in-text-block",
       "seite": "karte",
-      "grund": "Dieselbe Quellenzeile von Leaflet: Links nur durch Farbe vom Text unterschieden (in 1280 px). Korrektur (Unterstreichung) im App-CSS, wartet auf grüne Windows-Probe."
+      "grund": "Dieselbe Quellenzeile von Leaflet: Links nur durch Farbe vom Text unterschieden. Korrektur (Unterstreichung) im App-CSS, wartet auf grüne Windows-Probe."
     },
     {
       "regel": "scrollable-region-focusable",
