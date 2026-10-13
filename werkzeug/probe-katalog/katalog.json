@@ -1,0 +1,563 @@
+{
+  "format": 1,
+  "erstellt": "2026-10-08T03:39:02Z",
+  "gueltig_bis": "2027-01-06T03:39:02Z",
+  "basis": "https://offline-liart.vercel.app/pakete/",
+  "pakete": [
+    {
+      "id": "at-basis",
+      "version": "2026.09.29.1",
+      "titel": "Österreich-Paket · Grundversion",
+      "beschreibung": "Notrufe, Sirenensignale, Blackout-Vorsorge, Checkliste und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
+      "art": "inhalt",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "kategorie": "ernstfall",
+      "alter_ab": 0,
+      "groesse": 7953,
+      "app_min": "0.1.0",
+      "erstellt": "2026-09-29T16:09:59Z",
+      "aenderungen": "Sirenen: Hinweis zum Blackout korrigiert. Viele Sirenen brauchen Strom.",
+      "pfad": "at-basis-2026.09.29.1/",
+      "sha256_manifest": "7647f176312eb0658a494819003e5ea3b53f87318de70ca40b9bd866baa5406d",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "lumi-buch",
+      "version": "2026.10.05.2",
+      "titel": "Das Lumi-Buch · Band 1",
+      "beschreibung": "Die Geschichte der Lumi von unter dem Eis, in zwölf Kapiteln. Das ganze Buch liegt auf dem Gerät; lesbar wird ein Stück, wenn du es nach einem Satz deiner Lumi aufschlägst. Eine erfundene Geschichte.",
+      "art": "inhalt",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "kategorie": "miteinander",
+      "alter_ab": 0,
+      "vorschau": {
+        "folien": [
+          {
+            "nr": 1,
+            "rolle": "wofuer",
+            "bild": "1.svg",
+            "titel": "Eine Geschichte, Stück für Stück",
+            "text": "Nach einem Satz deiner Lumi kannst du den passenden Absatz aus ihrem Buch lesen. Was du gelesen hast, bleibt im Buch.",
+            "alt": "Titel „Eine Geschichte, Stück für Stück“ mit drei Zeilen Erklärung"
+          },
+          {
+            "nr": 2,
+            "rolle": "aussehen",
+            "bild": "2.jpg",
+            "titel": "Lesen, wenn du magst",
+            "text": "Unter dem Satz steht leise „Aus dem Lumi-Buch“. Ein Tipp öffnet eine ruhige Leseseite mit dem Kapitelnamen.",
+            "alt": "Bildschirm der Web-Version bei 360 Pixel Breite: ein Absatz aus Kapitel 1 „Der Fluss“ in Serifenschrift, oben ein feines ✕ und der Kapitelname"
+          },
+          {
+            "nr": 3,
+            "rolle": "inhalt",
+            "bild": "3.svg",
+            "titel": "Was drin ist",
+            "text": "Band 1: zwölf Kapitel, 127 Absätze Der Fluss, Die Hellen, Das Klopfen … Über dem Eis: das letzte Kapitel Vorlesen wie beim Roman der Woche",
+            "alt": "Liste: zwölf Kapitel, 127 Absätze, Vorlesen"
+          },
+          {
+            "nr": 4,
+            "rolle": "platz",
+            "bild": "4.svg",
+            "titel": "Klein und ohne Netz",
+            "text": "Unter 200 kB, das Buch selbst ist nur Text. Das ganze Buch liegt auf dem Gerät. Was du gelesen hast, weiß nur dein Gerät.",
+            "alt": "Angaben zu Größe, Netz und Daten"
+          },
+          {
+            "nr": 5,
+            "rolle": "herkunft",
+            "bild": "5.svg",
+            "titel": "Von The Digioneer",
+            "text": "Eine erfundene Geschichte, geschrieben für OFFLINE. Gratis, für alle. Band 2 kommt später als eigenes Paket.",
+            "alt": "Angaben zu Herausgeber, Preis und Band"
+          }
+        ],
+        "dateien": [
+          {
+            "pfad": "inhalt/vorschau/1.svg",
+            "groesse": 1042,
+            "sha256": "249e77a0065250a1fe2f70860384460a61644d57a16018748bbb720af0ad611c"
+          },
+          {
+            "pfad": "inhalt/vorschau/2.jpg",
+            "groesse": 111303,
+            "sha256": "0699f9aba9db805f52a6ac6efdb01b1def1eb85a3cd19117d04b82657c717101"
+          },
+          {
+            "pfad": "inhalt/vorschau/3.svg",
+            "groesse": 1195,
+            "sha256": "c7398875e59255cbbae0f8052907b30503989ccfd8b31b865205a86eec08a90a"
+          },
+          {
+            "pfad": "inhalt/vorschau/4.svg",
+            "groesse": 1033,
+            "sha256": "0136b4074c604a7cf1fd1cde5d24e0dce2052562342b9f0ef8683f76975e73c1"
+          },
+          {
+            "pfad": "inhalt/vorschau/5.svg",
+            "groesse": 1018,
+            "sha256": "e05825842efc8e211145f6d5bb97884115232135316522c654ce4685587cd4ee"
+          }
+        ]
+      },
+      "groesse": 191053,
+      "app_min": "0.5.0",
+      "erstellt": "2026-10-05T11:51:04Z",
+      "aenderungen": "Lumi-Buch: drei Absätze in Kapitel 9 und 11 überarbeitet.",
+      "pfad": "lumi-buch-2026.10.05.2/",
+      "sha256_manifest": "29a03363c8cbc2175b689ca8ab429d77369e321c36980df8512648c32c75195c",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "lumi-philosophie",
+      "version": "2026.10.06.1",
+      "titel": "Was die Lumis denken",
+      "beschreibung": "Fünfzehn Gedanken, für Erwachsene.",
+      "art": "inhalt",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "kategorie": "miteinander",
+      "alter_ab": 18,
+      "hinweis": "Die Lumis sind erfunden, die Philosophen nicht.",
+      "ki_generiert": true,
+      "vorschau": {
+        "folien": [
+          {
+            "nr": 1,
+            "rolle": "wofuer",
+            "bild": "1.svg",
+            "titel": "Fünfzehn Gedanken",
+            "text": "Zwölf Philosophen der Menschen und drei Gedanken der Lumis, je mit Aquarell, Satz auf Lumisch und einem kurzen Text. Für Erwachsene.",
+            "alt": "Titel „Fünfzehn Gedanken“ mit drei Zeilen Erklärung"
+          },
+          {
+            "nr": 2,
+            "rolle": "aussehen",
+            "bild": "2.jpg",
+            "titel": "Eine Seite je Gedanke",
+            "text": "Bild, Name, Titel, der Satz auf Lumisch groß mit Lautsprecher, Wort für Wort, Deutsch, dann der Text.",
+            "alt": "Bildschirm der Web-Version bei 360 Pixel Breite: Gedanke 1, Sokrates, mit Aquarell, Titel „Was wir nicht wissen“ und dem Satz „nu sap nesap.“ mit Lautsprecher"
+          },
+          {
+            "nr": 3,
+            "rolle": "inhalt",
+            "bild": "3.svg",
+            "titel": "Was drin ist",
+            "text": "Sokrates, Heraklit, Platon, Aristoteles, Epikur und die Stoa, Descartes, Kant, Kierkegaard, Schopenhauer, Camus, Wittgenstein, Buber und drei Lumis",
+            "alt": "Liste der zwölf Philosophen und der drei Gedanken der Lumis"
+          },
+          {
+            "nr": 4,
+            "rolle": "platz",
+            "bild": "4.svg",
+            "titel": "Klein und ohne Netz",
+            "text": "Rund 1,8 MB mit allen fünfzehn Bildern. Alles liegt auf dem Gerät. Vorlesen und Anhören mit der Stimme des Geräts.",
+            "alt": "Angaben zu Größe, Netz und Stimme"
+          },
+          {
+            "nr": 5,
+            "rolle": "herkunft",
+            "bild": "5.svg",
+            "titel": "Von The Digioneer",
+            "text": "Die Lumis sind erfunden, die Philosophen nicht. Gratis, ab 18 Jahren.",
+            "alt": "Angaben zu Herausgeber, Preis und Alter"
+          }
+        ],
+        "dateien": [
+          {
+            "pfad": "inhalt/vorschau/1.svg",
+            "groesse": 1183,
+            "sha256": "1e4862d608f6014c2d75903019e794a098763d8f9ef9dfde26eee68c0d8f0274"
+          },
+          {
+            "pfad": "inhalt/vorschau/2.jpg",
+            "groesse": 53044,
+            "sha256": "77d64f44b133df1b85d5d017208a1bb39f2631f8352f5d11db2bdd1361593e3f"
+          },
+          {
+            "pfad": "inhalt/vorschau/3.svg",
+            "groesse": 1190,
+            "sha256": "9852a8661c4bb63457c110b27e963c980afcafac876f96d23b465338e6cdae48"
+          },
+          {
+            "pfad": "inhalt/vorschau/4.svg",
+            "groesse": 1034,
+            "sha256": "47d628f388e9dc59c9d009a0e2d1ff2eecce424b1e6779517cb7e4ecb1fd3cda"
+          },
+          {
+            "pfad": "inhalt/vorschau/5.svg",
+            "groesse": 849,
+            "sha256": "c095f7376cb03ccd15916f297a5a140b96ab6b1e4a50b5e1611747343257cbba"
+          }
+        ]
+      },
+      "groesse": 1986608,
+      "app_min": "0.6.2",
+      "erstellt": "2026-10-06T12:53:51Z",
+      "aenderungen": "Die Aquarelle sind jetzt als KI-generiert gekennzeichnet. Sonst unverändert.",
+      "pfad": "lumi-philosophie-2026.10.06.1/",
+      "sha256_manifest": "8453dc9224caa372c8ed47d12b6ab6554f40e56f93c9894ebf7c75038f0fb641",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "lumisch",
+      "version": "2026.10.07.1",
+      "titel": "Lumisch · die Sprache der Lumis",
+      "beschreibung": "Ein Wort am Tag, 21 Tage lang, danach Wiederholung aus dem Kopf und neue Wörter aus dem Wörterbuch. 500 Wörter, jedes zum Anhören.",
+      "art": "inhalt",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "alter_ab": 14,
+      "bereich": "lumi",
+      "vorschau": {
+        "folien": [
+          {
+            "nr": 1,
+            "rolle": "wofuer",
+            "bild": "1.svg",
+            "titel": "Die Sprache der Lumis",
+            "text": "Ein Wort am Tag, 21 Tage lang, danach Wiederholung und neue Wörter. Jedes Wort zum Anhören.",
+            "alt": "Titel „Die Sprache der Lumis“ mit vier Zeilen zum Ablauf"
+          },
+          {
+            "nr": 2,
+            "rolle": "aussehen",
+            "bild": "2.webp",
+            "titel": "So sieht es aus",
+            "text": "Ein Lumisch-Happen in Pause: das Wort des Tages, eine Aufgabe und eine Frage mit Lautsprechern.",
+            "alt": "Bildschirm eines Lumisch-Happens: zan heißt Licht, darunter vier Antworten mit Lautsprecher"
+          },
+          {
+            "nr": 3,
+            "rolle": "inhalt",
+            "bild": "3.svg",
+            "titel": "Was drin ist",
+            "text": "Plan für 21 Tage, 500 Wörter in Gruppen, Umschrift und Lautschrift zu jedem Wort.",
+            "alt": "Liste mit dem Inhalt des Pakets"
+          },
+          {
+            "nr": 4,
+            "rolle": "platz",
+            "bild": "4.svg",
+            "titel": "Klein und ohne Netz",
+            "text": "Etwa 150 kB, nur Text. Gelernte Wörter bleiben auf dem Gerät.",
+            "alt": "Angaben zu Größe und Gerät"
+          },
+          {
+            "nr": 5,
+            "rolle": "herkunft",
+            "bild": "5.svg",
+            "titel": "Von der Redaktion",
+            "text": "Geprüft am 05.10.2026, bisher im Paket Pause. Gratis, ab 14 Jahren.",
+            "alt": "Angaben zu Herkunft, Prüfung, Preis und Alter"
+          }
+        ],
+        "dateien": [
+          {
+            "pfad": "inhalt/vorschau/1.svg",
+            "groesse": 1065,
+            "sha256": "6a2f6898780ab9b45ad1fc354b7239222b1117bddc122c1f7c11a08871490381"
+          },
+          {
+            "pfad": "inhalt/vorschau/2.webp",
+            "groesse": 15132,
+            "sha256": "6b53a51a513e15a395279943ae93dcf33b4e4c7963e5a5633ef0ede973fd2c80"
+          },
+          {
+            "pfad": "inhalt/vorschau/3.svg",
+            "groesse": 1082,
+            "sha256": "5a5e08bf2b41cd96dac61dbed2924a38a02f800fc5107f311da09f4175507e92"
+          },
+          {
+            "pfad": "inhalt/vorschau/4.svg",
+            "groesse": 934,
+            "sha256": "12adab803bc598aa1752cdb4aa34ee3123d24718267965109aa1e7bbd7c98fed"
+          },
+          {
+            "pfad": "inhalt/vorschau/5.svg",
+            "groesse": 932,
+            "sha256": "dfcf1affac5b2b7ab3ee15e1ff48c030f48710112fe6c2b3172b1cccf481ed22"
+          }
+        ]
+      },
+      "groesse": 178734,
+      "app_min": "0.7.1",
+      "erstellt": "2026-10-07T12:18:40Z",
+      "aenderungen": "100 neue Aufgaben in fünf Stufen. Im Wörterbuch heißt es jetzt „Wir wissen, dass wir nichts wissen“ und „tel3“.",
+      "pfad": "lumisch-2026.10.07.1/",
+      "sha256_manifest": "22f2ac47b0f455cc25e17ba1c28d4791065ad1a45c48d8d8dd46d2deae6e49e3",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "pause",
+      "version": "2026.10.08",
+      "titel": "Pause · Happen für zwischendurch",
+      "beschreibung": "Die Inhalte für Pause: kurze Happen von 30 Sekunden bis 3 Minuten, in fünf Stufen – Pilze finden, Geschichten mit einem Fehler, Kaffeehaus-Logik, Kopfnuss, Gedanken am Fluss, Zeitgefühl, Atemfenster. Nur Text, kein Code; Pause selbst ist Teil der App und standardmäßig aus.",
+      "art": "inhalt",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "alter_ab": 14,
+      "bereich": "pause",
+      "vorschau": {
+        "folien": [
+          {
+            "nr": 1,
+            "rolle": "wofuer",
+            "bild": "1.svg",
+            "titel": "Ein Happen für zwischendurch",
+            "text": "Beim Öffnen der App ein kurzer Happen: etwas, auf das man sich konzentriert, ein Gelingen, ein Satz zum Mitnehmen.",
+            "alt": "Titel „Ein Happen für zwischendurch“ mit drei Zeilen: kurz, freundlich, überspringbar"
+          },
+          {
+            "nr": 2,
+            "rolle": "aussehen",
+            "bild": "2.jpg",
+            "titel": "Wo war der Pilz?",
+            "text": "Ein Pilz blitzt kurz auf, du tippst, wo er war. Danach: Mehr davon, Passt oder Nicht mehr.",
+            "alt": "Bildschirm der Web-Version bei 360 Pixel Breite: der Happen „Wo war der Pilz?“ mit neun Feldern, dem Punkt in der Mitte und den Knöpfen „Los“ und „Nicht jetzt“"
+          },
+          {
+            "nr": 3,
+            "rolle": "inhalt",
+            "bild": "3.svg",
+            "titel": "Was drin ist",
+            "text": "Acht Happen: Pilz, eingebauter Fehler, Lumisch, Was kommt als Nächstes?, Türsteherfrage, Tag rückwärts, Zeitgefühl, Atemfenster.",
+            "alt": "Liste mit acht Happen-Formen"
+          },
+          {
+            "nr": 4,
+            "rolle": "platz",
+            "bild": "4.svg",
+            "titel": "Klein und ohne Netz",
+            "text": "Unter 50 kB, nur Text. Spiel-Log und deine Linie bleiben auf dem Gerät. Keine KI, keine Pushnachrichten.",
+            "alt": "Angaben zu Größe, Netz und Daten"
+          },
+          {
+            "nr": 5,
+            "rolle": "herkunft",
+            "bild": "5.svg",
+            "titel": "Von The Digioneer",
+            "text": "Eigene Inhalte der Redaktion, gratis, ab 14 Jahren. Pause selbst ist Teil der App und standardmäßig aus.",
+            "alt": "Angaben zu Herausgeber, Preis und Alter"
+          }
+        ],
+        "dateien": [
+          {
+            "pfad": "inhalt/vorschau/1.svg",
+            "groesse": 914,
+            "sha256": "99e6138fe048d5b474d88a9cd1a55a61ebd00b07b488d7fc7e9be65408018fa7"
+          },
+          {
+            "pfad": "inhalt/vorschau/2.jpg",
+            "groesse": 54477,
+            "sha256": "74d10f49e7ffcadf5dfa07eaba85bc63c71b406c81671d10504e56f92692c300"
+          },
+          {
+            "pfad": "inhalt/vorschau/3.svg",
+            "groesse": 1393,
+            "sha256": "d03e5571c3623dbf9162eb65a23cb65c60adc6a56beee95d5729394433caa780"
+          },
+          {
+            "pfad": "inhalt/vorschau/4.svg",
+            "groesse": 1051,
+            "sha256": "e8bf1df4489a11620f9b5c8cc4bc328b0ce1d40e39e82e1091ad6d9ea4e7ba0a"
+          },
+          {
+            "pfad": "inhalt/vorschau/5.svg",
+            "groesse": 918,
+            "sha256": "172249490cc1fbed688c1fd5601622830e2b620e7f24265f4204d26a6d92af8f"
+          }
+        ]
+      },
+      "groesse": 287777,
+      "app_min": "0.7.1",
+      "erstellt": "2026-10-08T03:20:26Z",
+      "aenderungen": "Fünf Geschichten mit einem Fehler sind dazugekommen. Damit sind es 60, zwölf auf jeder Stufe.",
+      "pfad": "pause-2026.10.08/",
+      "sha256_manifest": "c4d307cd07141ea84e9dfa9124e11cce44d01184edc33255df97684363213cc0",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "tage-2026-10",
+      "version": "2026.10.04",
+      "titel": "Tage im Oktober 2026",
+      "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Kleider machen Leute, Die Judenbuche, Aus dem Leben eines Taugenichts, Der Schimmelreiter). Tag für Tag freigeschaltet.",
+      "art": "tage",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "kategorie": "jeden-tag",
+      "alter_ab": 10,
+      "tage": {
+        "von": "2026-10-01",
+        "bis": "2026-10-31"
+      },
+      "groesse": 628119,
+      "app_min": "0.3.0",
+      "erstellt": "2026-10-04T09:54:28Z",
+      "aenderungen": "Rätsel mit eindeutiger Kurzantwort lassen sich jetzt eintippen und prüfen (Antworten ergänzt).",
+      "pfad": "tage-2026-10-2026.10.04/",
+      "sha256_manifest": "09284ceb06935b9a510cc4811995c55b3895ab55f220559cf92280eed346ac6b",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "tage-2026-11",
+      "version": "2026.10.04",
+      "titel": "Tage im November 2026",
+      "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Der Schimmelreiter). Tag für Tag freigeschaltet.",
+      "art": "tage",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "kategorie": "jeden-tag",
+      "alter_ab": 10,
+      "tage": {
+        "von": "2026-11-01",
+        "bis": "2026-11-30"
+      },
+      "groesse": 46487,
+      "app_min": "0.3.0",
+      "erstellt": "2026-10-04T09:54:28Z",
+      "aenderungen": "Rätsel mit eindeutiger Kurzantwort lassen sich jetzt eintippen und prüfen (Antworten ergänzt).",
+      "pfad": "tage-2026-11-2026.10.04/",
+      "sha256_manifest": "365d0f40b7d76036c259a83c0ce1d967be81bd7bfe2f542dec3d6eee39b72543",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "tage-2026-12",
+      "version": "2026.10.04",
+      "titel": "Tage im Dezember 2026",
+      "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Das kalte Herz, Immensee, Wintermärchen der Brüder Grimm, Kalendergeschichten aus dem Schatzkästlein). Tag für Tag freigeschaltet.",
+      "art": "tage",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "kategorie": "jeden-tag",
+      "alter_ab": 10,
+      "tage": {
+        "von": "2026-12-01",
+        "bis": "2026-12-31"
+      },
+      "groesse": 235189,
+      "app_min": "0.3.0",
+      "erstellt": "2026-10-04T09:54:28Z",
+      "aenderungen": "Rätsel mit eindeutiger Kurzantwort lassen sich jetzt eintippen und prüfen (Antworten ergänzt).",
+      "pfad": "tage-2026-12-2026.10.04/",
+      "sha256_manifest": "1a8807e68e3592545304694225d78d638396c10ed112d61d4b78ed6e5a17b93f",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "tage-2027-01",
+      "version": "2026.10.04",
+      "titel": "Tage im Jänner 2027",
+      "beschreibung": "Für die Tagesseite: jeden Tag ein Rätsel und ein Stück vom Roman der Woche (Der Condor, Mozart auf der Reise nach Prag, Die schwarze Spinne, Unterm Birnbaum). Tag für Tag freigeschaltet.",
+      "art": "tage",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "kategorie": "jeden-tag",
+      "alter_ab": 10,
+      "tage": {
+        "von": "2027-01-01",
+        "bis": "2027-01-31"
+      },
+      "groesse": 595566,
+      "app_min": "0.3.0",
+      "erstellt": "2026-10-04T09:54:28Z",
+      "aenderungen": "Rätsel mit eindeutiger Kurzantwort lassen sich jetzt eintippen und prüfen (Antworten ergänzt).",
+      "pfad": "tage-2027-01-2026.10.04/",
+      "sha256_manifest": "17875ea716de13f454b176866183d80e84b7f50a4b7ebb44f1813815860424bc",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "wir",
+      "version": "2026.10.04.4",
+      "titel": "Wir · die Lumi und ihre Tipps",
+      "beschreibung": "Die Tipps der Lumi von unter dem Eis: wie man sich in OFFLINE zurechtfindet, was die Bereitschaft hebt, und Dinge des Lebens. Nur Text, kein Code – die Lumi selbst ist Teil der App.",
+      "art": "inhalt",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "kategorie": "miteinander",
+      "alter_ab": 0,
+      "groesse": 45083,
+      "app_min": "0.2.0",
+      "erstellt": "2026-10-04T21:02:08Z",
+      "aenderungen": "Jeder Tipp zeigt jetzt auf seinen Absatz im Lumi-Buch. Ab App 0.5.0 steht unter den Sätzen der Lumi „Aus dem Lumi-Buch“.",
+      "pfad": "wir-2026.10.04.4/",
+      "sha256_manifest": "556832ae3103e215a5850577f9f3a04ecaadf2495bb311a901b3379024c0ae99",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "at-pro",
+      "titel": "Österreich-Paket Pro",
+      "beschreibung": "Nach Bundesland: Behördenwege, Anlaufstellen, Landeswarnzentralen, Apotheken, Krankenhäuser. Laufend gepflegt.",
+      "art": "inhalt",
+      "pro": true,
+      "groesse": 400000000,
+      "status": "geplant"
+    },
+    {
+      "id": "karte-at",
+      "titel": "Karte Österreich",
+      "beschreibung": "Ganz Österreich, basemap.at und OpenStreetMap, zoombar bis zur Straße.",
+      "art": "karte",
+      "pro": false,
+      "groesse": 1200000000,
+      "status": "geplant"
+    },
+    {
+      "id": "wiki-de-mini",
+      "titel": "Wikipedia Deutsch · kompakt",
+      "beschreibung": "Einleitungen aller Artikel, ohne Bilder. Ideal für Laptops.",
+      "art": "zim",
+      "pro": false,
+      "groesse": 3100000000,
+      "status": "geplant"
+    },
+    {
+      "id": "wiki-de-nopic",
+      "titel": "Wikipedia Deutsch · ohne Bilder",
+      "beschreibung": "Alle Artikel vollständig, ohne Bilder.",
+      "art": "zim",
+      "pro": false,
+      "groesse": 12500000000,
+      "status": "geplant"
+    },
+    {
+      "id": "wiki-de-maxi",
+      "titel": "Wikipedia Deutsch · komplett",
+      "beschreibung": "Alle Artikel mit Bildern. Braucht eine große Festplatte.",
+      "art": "zim",
+      "pro": false,
+      "groesse": 42000000000,
+      "status": "geplant"
+    },
+    {
+      "id": "wikivoyage-de",
+      "titel": "Wikivoyage Deutsch",
+      "beschreibung": "Reiseführer – auch für jede Region in Österreich.",
+      "art": "zim",
+      "pro": false,
+      "groesse": 900000000,
+      "status": "geplant"
+    },
+    {
+      "id": "ris-bund",
+      "titel": "Rechtsinformationssystem (RIS) · Bundesrecht (Auszug)",
+      "beschreibung": "Geltende Fassungen wichtiger Bundesgesetze, wöchentlich aktualisiert.",
+      "art": "inhalt",
+      "pro": true,
+      "groesse": 800000000,
+      "status": "geplant"
+    }
+  ]
+}

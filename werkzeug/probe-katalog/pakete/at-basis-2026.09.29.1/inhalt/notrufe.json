@@ -1,0 +1,16 @@
+{
+  "hinweis": "Notrufe sind kostenlos und funktionieren von jedem Telefon. 112 auch ohne SIM-Karte und bei gesperrtem Handy. Bleib am Telefon, bis die Leitstelle auflegt.",
+  "eintraege": [
+    { "nr": "112", "name": "Euro-Notruf", "info": "Funktioniert in ganz Europa, auch ohne SIM-Karte und bei gesperrtem Handy. Verbindet in Österreich zur Polizei, die weiterleitet." },
+    { "nr": "122", "name": "Feuerwehr", "info": "Brand, technische Hilfe, Unwetter, Gefahrstoffe, Personen eingeschlossen." },
+    { "nr": "133", "name": "Polizei", "info": "Verbrechen, Unfälle mit Verletzten oder Gefahr, Bedrohung." },
+    { "nr": "144", "name": "Rettung", "info": "Medizinischer Notfall: Bewusstlosigkeit, Atemnot, starke Blutung, Verdacht auf Herzinfarkt oder Schlaganfall." },
+    { "nr": "140", "name": "Bergrettung", "info": "Alpiner Notfall, Lawine, Absturz. In manchen Bundesländern über 144 – 140 wird weitergeleitet." },
+    { "nr": "141", "name": "Ärztenotdienst", "info": "Wenn der Hausarzt nicht erreichbar ist – nachts, am Wochenende, an Feiertagen." },
+    { "nr": "1450", "name": "Gesundheitsberatung", "info": "Telefonische Gesundheitsberatung: Was tun, wohin gehen? Kein Notruf." },
+    { "nr": "147", "name": "Rat auf Draht", "info": "Für Kinder, Jugendliche und Eltern – anonym, rund um die Uhr." },
+    { "nr": "128", "name": "Gasnotruf", "info": "Gasgeruch: kein Licht, keine Klingel, kein Handy im Raum. Fenster auf, Gebäude verlassen, dann anrufen." },
+    { "nr": "01 406 43 43", "name": "Vergiftungsinformationszentrale", "info": "Vergiftungen bei Mensch und Tier, rund um die Uhr. Verpackung des Stoffs bereithalten." },
+    { "nr": "142", "name": "Telefonseelsorge", "info": "Bei seelischer Not, rund um die Uhr, anonym und kostenlos." }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "hinweis": "Im Krisenfall informiert das jeweilige ORF-Regionalradio. Landeswarnzentrale und Anlaufstellen der Gemeinde werden im Pro-Paket ergänzt.",
+  "laender": [
+    { "name": "Burgenland", "kuerzel": "B", "hauptstadt": "Eisenstadt", "orf_radio": "Radio Burgenland" },
+    { "name": "Kärnten", "kuerzel": "K", "hauptstadt": "Klagenfurt am Wörthersee", "orf_radio": "Radio Kärnten" },
+    { "name": "Niederösterreich", "kuerzel": "NÖ", "hauptstadt": "St. Pölten", "orf_radio": "Radio Niederösterreich" },
+    { "name": "Oberösterreich", "kuerzel": "OÖ", "hauptstadt": "Linz", "orf_radio": "Radio Oberösterreich" },
+    { "name": "Salzburg", "kuerzel": "S", "hauptstadt": "Salzburg", "orf_radio": "Radio Salzburg" },
+    { "name": "Steiermark", "kuerzel": "St", "hauptstadt": "Graz", "orf_radio": "Radio Steiermark" },
+    { "name": "Tirol", "kuerzel": "T", "hauptstadt": "Innsbruck", "orf_radio": "Radio Tirol" },
+    { "name": "Vorarlberg", "kuerzel": "V", "hauptstadt": "Bregenz", "orf_radio": "Radio Vorarlberg" },
+    { "name": "Wien", "kuerzel": "W", "hauptstadt": "Wien", "orf_radio": "Radio Wien" }
+  ]
+}

@@ -2,9 +2,11 @@
 // OFFLINE – automatischer Durchlauf durch die echte Desktop-App über WebDriver (tauri-driver, unter Windows mit
 // msedgedriver gegen WebView2). Läuft in der CI („Windows-Probe“, .github/workflows/windows-probe.yml).
 //
-//   node werkzeug/app-probe.mjs alt    --app <exe> [--name Betty] --aus <datei.json>
+//   node werkzeug/app-probe.mjs alt    --app <exe> [--name Betty] [--pakete <ordner>] [--stand 0.8] --aus <datei.json>
 //        Eine installierte 0.1.8 mit Daten füllen (Checkliste, Bestätigungen, Wesen mit oder ohne Namen) und die
-//        Bereit-Zahl ablesen.
+//        Bereit-Zahl ablesen. --pakete: die signierten Paketordner des eingefrorenen Katalogs (werkzeug/probe-katalog,
+//        Nr. 25) einspielen wie vom Stick, weil die Adresse in diesem Katalog die alten Ausgaben nicht mehr liefert.
+//        --stand 0.8: dieselben Daten in einer installierten 0.8.0 (Grundvorsorge, Bereit Version 2), Weg 0.8.0 → neu.
 //   node werkzeug/app-probe.mjs neu    --app <exe> --vorher <datei.json> --aus <datei.json>
 //        Nach dem Update: Die Bereit-Zahl darf nicht fallen, die Daten sind noch da, ein benanntes Wesen ist an,
 //        ein unbenanntes ist aus und die Einladung kommt erst nach einer Woche.
@@ -17,6 +19,7 @@
 import { writeFile, readFile, readdir } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { HILFE } from "../web/hilfe.js";
+import { POSITIONEN as BEREIT_POSITIONEN } from "../web/bereit.js";
 
 const argv = process.argv.slice(2);
 const SCHRITT = argv[0];
@@ -111,9 +114,29 @@ const bereitZahl = () => js("const z = document.querySelector('.bereit-zahl'); r
 const TAG = 86400000;
 const vor = (monate) => new Date(Date.now() - monate * 30.44 * TAG).toISOString();
 
+/** Paketordner einspielen wie „Ordner wählen …“ oder ein Datenträger; der Kern prüft Signatur und jede Datei. */
+async function einspielen(ordner) {
+  for (const name of (await readdir(ordner)).sort()) {
+    const pfad = `${ordner.replace(/[\\/]$/, "")}${ordner.includes("\\") ? "\\" : "/"}${name}`;
+    let ein;
+    const ende = Date.now() + 120_000;
+    // Solange die App im Hintergrund lädt (oder es versucht), sperrt der Kern weitere Vorgänge: dann erneut versuchen
+    for (;;) {
+      ein = await invoke("einspielen_ordner", { pfad, downgrade: false });
+      if (!/anderer Vorgang/.test(ein.fehler ?? "") || Date.now() > ende) break;
+      await warte(2000);
+    }
+    pruefe(`Eingefrorenes Paket ${name}`, !ein.fehler, ein.fehler ?? "Signatur geprüft, eingespielt");
+  }
+  await neuLaden();
+}
+
 async function alt() {
+  if (opt("stand") === "0.8") return alt08();
   await starten(opt("app"));
-  // Erster Start: 0.1.8 holt das Österreich-Paket selbst (Checkliste mit 20 Punkten)
+  // Erster Start: 0.1.8 holte das Österreich-Paket früher selbst aus dem Live-Katalog. Seit at-basis app_min 0.8.0 verlangt,
+  // läuft 0.1.8 gegen den eingefrorenen Katalog und bekommt dessen signierte Pakete (Checkliste mit 20 Punkten) eingespielt.
+  if (opt("pakete")) await einspielen(opt("pakete"));
   await gehe("#start");
   await bis(() => js("return [...document.querySelectorAll('.bereit-quelle')].some((q) => /von 20 erledigt/.test(q.textContent))"), "Österreich-Paket installiert", 180_000);
   const checks = {};
@@ -133,6 +156,31 @@ async function alt() {
   const version = await js("return document.body.innerText.match(/0\\.1\\.\\d+/)?.[0] ?? null");
   bericht.werte = { ...bericht.werte, wert, checks, bestaetigungen, name: name ?? null, wesen: await ls("wesen") };
   pruefe("0.1.8 mit Daten", wert > 0, `Bereit ${wert}${name ? `, Wesen „${name}“` : ", Wesen ohne Namen"}`);
+}
+
+/** Weg 0.8.0 → neu (Nr. 25): dieselben Daten wie bei 0.1.8, in der Form von 0.8.0 (Grundvorsorge-ids, Bereit Version 2). */
+async function alt08() {
+  await starten(opt("app"));
+  await gehe("#start");
+  await bis(async () => (await invoke("installierte", {})).ok?.some((p) => p.manifest.id === "at-basis" && p.inhalt?.["inhalt/grundvorsorge.json"]), "Österreich-Paket mit Grundvorsorge installiert", 180_000);
+  // dieselben 14 Punkte wie bei 0.1.8 (Gruppe-Punkt bis „2-3“), unter ihrer id in der Grundvorsorge
+  const checks = {};
+  for (const p of BEREIT_POSITIONEN) if (p.alt) { const [g, n] = p.alt.split("-").map(Number); if (g * 5 + n < 14) checks[p.check] = true; }
+  const v2 = { "c-0-0": vor(1), radio: vor(2), probeabend: vor(3) };
+  for (const p of BEREIT_POSITIONEN) if (p.check && checks[p.check] && !v2[p.id]) v2[p.id] = vor(0.5);
+  await lsSetzen("checks", checks);
+  await lsSetzen("bereit-v2", v2);
+  const name = opt("name");
+  const wesen = (await ls("wesen")) ?? {};
+  if (name) { wesen.name = name; wesen.darstellung = "wesen"; } else delete wesen.name; // mit Namen und Figur, wie bei 0.1.8 mit Namen
+  await lsSetzen("wesen", wesen);
+  await neuLaden(); await gehe("#start");
+  const nachher = { checks: await ls("checks"), v2: await ls("bereit-v2"), wesen: await ls("wesen") };
+  pruefe("Daten eingetragen", JSON.stringify(nachher.checks) === JSON.stringify(checks) && JSON.stringify(nachher.v2) === JSON.stringify(v2) && (name ? nachher.wesen?.name === name : !nachher.wesen?.name), JSON.stringify(nachher.wesen?.name ?? null));
+  const wert = await bis(async () => { const z = await bereitZahl(); return z > 0 ? z : null; }, "Bereit-Zahl");
+  const bestaetigungen = { wasser: v2["c-0-0"], radio: v2.radio, probeabend: v2.probeabend };
+  bericht.werte = { ...bericht.werte, wert, checks, bestaetigungen, bereitV2: v2, name: name ?? null, wesen: await ls("wesen") };
+  pruefe("0.8.0 mit Daten", wert > 0, `Bereit ${wert}${name ? `, Lumi „${name}“ mit Figur` : ", Lumi ohne Namen"}`);
 }
 
 async function neu() {
@@ -166,7 +214,7 @@ async function neu() {
   // Lumi-Buch (0.5.0): der Bereich öffnet sich; mit Paket Titelseite und Anteil, ohne Paket der Hinweis, nie ein Fehler
   await gehe("#buch");
   const buch = await bis(() => js("const h = document.querySelector('main h1'); return h && h.textContent === 'Das Lumi-Buch' ? (document.querySelector('.buch-band')?.textContent ?? 'ohne Paket') : null"), "Lumi-Buch", 15_000).catch(() => null);
-  pruefe("Lumi-Buch", !!buch && (buch === "ohne Paket" || /^Band \d+ · \d+ % lesbar$/.test(buch)), buch ?? "keine Seite");
+  pruefe("Lumi-Buch", !!buch && (buch === "ohne Paket" || /^Band \d+ · (\d+ % aufgeschlagen|noch nichts aufgeschlagen)$/.test(buch)), buch ?? "keine Seite");
   // Updates & Abo (0.5.2): Stand, Was ist neu, Einstellungen zugeklappt, Info und Hilfe als Blatt, das die Zurück-Taste schließt
   await gehe("#updates");
   const upd = await bis(() => js("const m = document.querySelector('main'); if (!m.querySelector('#upd-einstellungen')) return null; const reihe = ['[aria-label=Stand]', '.upd-neu', '#upd-einstellungen', '[data-hilfe=updates]', '[aria-label=\"Daten löschen\"]'].map((s) => m.querySelector(s)); return { da: reihe.every(Boolean), geordnet: reihe.every((e, i) => !i || (reihe[i - 1].compareDocumentPosition(e) & 4)), zu: !m.querySelector('#upd-einstellungen').open }"), "Updates-Seite", 15_000).catch(() => null);

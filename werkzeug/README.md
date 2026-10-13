@@ -27,3 +27,16 @@ node werkzeug/barrierefrei.mjs --chrome   [--nur <seite>] [--aus <ordner>]
 - Ausnahmen: `barrierefrei-ausnahmen.json`, je Eintrag Regel, optional Seite und Ziel, und ein Grund. Leer ist besser; nicht mehr gebrauchte Ausnahmen meldet das Werkzeug.
 
 Tests ohne Browser: `node --test werkzeug/bildvergleich.test.mjs`.
+
+## Eingefrorener Katalog für die Windows-Probe
+
+`probe-katalog/` (Nr. 25) hält einen festen, schon veröffentlichten Stand: den signierten Web-Katalog vom 08.10.2026, 03:39 UTC (Commit `db393f1`), und die beiden Pakete daraus, die die alte App 0.1.8 früher selbst geladen hat (`at-basis` 2026.09.29.1 und `wir` 2026.10.04.4).
+
+- **Warum:** Der Update-Test installiert 0.1.8, füllt sie mit Daten und installiert dann die neue Version darüber. Seit dem Katalog vom 08.10. 15:29 UTC verlangt `at-basis` die App 0.8.0. Gegen den Live-Katalog bekommt 0.1.8 also zu Recht kein Paket mehr, und der Test hätte nichts zu vergleichen.
+- **Wie:** Die Probe liefert den Katalog lokal aus und trägt seine Adresse in die `abo.json` der alten App ein. Die Pakete spielt sie ein wie vom Stick (der Kern prüft Signatur und jede Datei), weil die Adresse im Katalog die alten Ausgaben nicht mehr liefert. Die neue App bekommt danach wieder den Live-Katalog.
+- **Nichts neu signiert:** Katalog und Pakete sind Bytes von damals. `probe-katalog.test.mjs` prüft die Signatur, das `app_min` von `at-basis` gegen 0.1.8 und dass jeder Paketordner per Prüfsumme zum Katalog gehört.
+- **Erneuern**, wenn
+  - der Schlüssel `1504cefc5d5d7e11` aus `schluessel/oeffentlich.json` verschwindet,
+  - oder die alte App im Update-Test eine andere Version wird.
+  - Der Ablauf `gueltig_bis` (06.01.2027) zwingt nicht dazu: Ein abgelaufener Katalog gilt nur als „veraltet“, nicht als ungültig.
+- **Zweiter Weg:** Daneben prüft die Probe den Weg heutiger Nutzer, 0.8.0 (Tag `v0.8.0`) → neu, gegen den Live-Katalog.

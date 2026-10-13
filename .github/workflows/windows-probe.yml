@@ -4,6 +4,8 @@
 #      installieren – einmal mit benanntem Wesen, einmal ohne Namen. Bereit darf nicht fallen, Daten bleiben.
 #   3. In der neuen App: Sandbox-Probe mit dem bösartigen Testmodul, Wichteln aus redaktion/freigegeben laden, spielen,
 #      inaktiv, löschen.
+#   4. (Nr. 25) Die alte App 0.1.8 läuft gegen einen eingefrorenen, signierten Katalog (werkzeug/probe-katalog, siehe
+#      werkzeug/README.md), die neue gegen den Live-Katalog. Dazu der Weg 0.8.0 (Tag v0.8.0) → neu, mit und ohne Namen.
 # Beide Test-Builds sind Entwickler-Builds mit Debug-Anschluss (Port 9222, nur für diese Probe; Tauri setzt eigene
 # WebView2-Argumente, deshalb greift die Umgebungsvariable von tauri-driver nicht). Der Treiber hängt sich an die laufende
 # App. Signiert nichts, veröffentlicht nichts.
@@ -29,6 +31,7 @@ jobs:
             kern
             app/src-tauri
             alt/app/src-tauri
+            alt08/app/src-tauri
 
       - name: Sandbox-Probe gegen Edge
         shell: bash
@@ -40,15 +43,18 @@ jobs:
         shell: bash
         run: CHROME="C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe" node werkzeug/spiele-probe.mjs --chrome
 
-      - name: Quellstand 0.1.8 daneben legen
+      - name: Quellstände 0.1.8 und 0.8.0 daneben legen
         shell: bash
-        # Der Cache legt alt/app/src-tauri/target schon an; beiseitelegen, Quellstand holen, zurücklegen
+        # Der Cache legt <ordner>/app/src-tauri/target schon an; beiseitelegen, Quellstand holen, zurücklegen
         run: |
           set -euo pipefail
-          [ -d alt/app/src-tauri/target ] && mv alt/app/src-tauri/target alt-target || true
-          rm -rf alt
-          git worktree add alt 2deada3
-          [ -d alt-target ] && mv alt-target alt/app/src-tauri/target || true
+          for paar in "alt 2deada3" "alt08 v0.8.0"; do
+            set -- $paar
+            [ -d $1/app/src-tauri/target ] && mv $1/app/src-tauri/target $1-target || true
+            rm -rf $1
+            git worktree add $1 $2
+            [ -d $1-target ] && mv $1-target $1/app/src-tauri/target || true
+          done
 
       - name: kiwix-serve als mitgeliefertes Programm holen
         shell: bash
@@ -58,13 +64,13 @@ jobs:
           holen() { curl -fsSL --ssl-no-revoke --retry 3 --retry-delay 10 --retry-all-errors -o paket "$1"; }
           holen https://download.kiwix.org/release/kiwix-tools/kiwix-tools_win-x86_64.zip || holen https://download.kiwix.org/release/kiwix-tools/kiwix-tools_win-i686.zip
           unzip -q paket
-          for z in ../app ../alt/app; do mkdir -p $z/src-tauri/binaries; cp "$(find . -type f -name kiwix-serve.exe | head -1)" $z/src-tauri/binaries/kiwix-serve-x86_64-pc-windows-msvc.exe; done
+          for z in ../app ../alt/app ../alt08/app; do mkdir -p $z/src-tauri/binaries; cp "$(find . -type f -name kiwix-serve.exe | head -1)" $z/src-tauri/binaries/kiwix-serve-x86_64-pc-windows-msvc.exe; done
 
-      - name: Test-Builds alt (0.1.8) und neu, mit Debug-Anschluss (NSIS)
+      - name: Test-Builds alt (0.1.8), 0.8.0 und neu, mit Debug-Anschluss (NSIS)
         shell: bash
         run: |
           set -euo pipefail
-          for z in alt/app app; do
+          for z in alt/app alt08/app app; do
             node -e '
               const fs = require("fs"); const c = JSON.parse(fs.readFileSync(process.argv[1] + "/src-tauri/tauri.conf.json", "utf8"));
               const w = c.app.windows.map((f) => ({ ...f, additionalBrowserArgs: "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --remote-debugging-port=9222" }));
@@ -72,7 +78,7 @@ jobs:
             ' "$z"
             (cd "$z" && npm install && npx tauri build --debug --bundles nsis --config probe.json)
           done
-          ls alt/app/src-tauri/target/debug/bundle/nsis/ app/src-tauri/target/debug/bundle/nsis/
+          ls alt/app/src-tauri/target/debug/bundle/nsis/ alt08/app/src-tauri/target/debug/bundle/nsis/ app/src-tauri/target/debug/bundle/nsis/
 
       - name: Passender msedgedriver
         shell: pwsh
@@ -101,8 +107,26 @@ jobs:
           treiber/msedgedriver.exe --port=9515 > treiber/msedgedriver.log 2>&1 &
           for i in $(seq 30); do curl -fs http://127.0.0.1:9515/status >/dev/null && break; sleep 1; done
           alt=$(ls alt/app/src-tauri/target/debug/bundle/nsis/*-setup.exe | head -1)
+          alt08=$(ls alt08/app/src-tauri/target/debug/bundle/nsis/*-setup.exe | head -1)
           neu=$(ls app/src-tauri/target/debug/bundle/nsis/*-setup.exe | head -1)
-          echo "alt: $alt"; echo "neu: $neu"
+          echo "alt: $alt"; echo "alt08: $alt08"; echo "neu: $neu"
+          # Eingefrorener Katalog für 0.1.8 (Nr. 25): lokal ausgeliefert; die neue App bekommt wieder den Live-Katalog
+          python -m http.server 8898 --bind 127.0.0.1 --directory werkzeug/probe-katalog > probe/katalog-server.log 2>&1 &
+          for i in $(seq 30); do curl -fs http://127.0.0.1:8898/katalog.json >/dev/null && break; sleep 1; done
+          daten="$APPDATA/at.digioneer.offline"
+          katalog() { # Katalog-Adresse in abo.json setzen, alles andere bleibt
+            mkdir -p "$daten"
+            node -e '
+              const fs = require("fs"), f = process.argv[1]; let a = {};
+              try { a = JSON.parse(fs.readFileSync(f, "utf8")); } catch {}
+              a.einstellungen = { aktiv: true, intervall: "woechentlich", nur_wlan: true, fenster: true, von: "02:00", bis: "05:00", ...(a.einstellungen ?? {}), katalog_url: process.argv[2] };
+              a.zustand ??= { letzte_pruefung: null, katalog_erstellt: null, letzter_fehler: null }; a.speicherort ??= null;
+              fs.writeFileSync(f, JSON.stringify(a));
+            ' "$daten/abo.json" "$1"
+          }
+          eingefroren="http://127.0.0.1:8898/katalog.json"
+          live="https://offline-pakete.fsn1.your-objectstorage.com/katalog/katalog.json"
+          pakete="$(cygpath -w "$PWD/werkzeug/probe-katalog/pakete")"
           ziel="$LOCALAPPDATA/OFFLINE"
           installieren() { taskkill //F //IM offline-app.exe >/dev/null 2>&1 || true; sleep 2; "$1" //S; sleep 5; }
           exe() { find "$ziel" -maxdepth 1 -name "*.exe" ! -iname "uninstall*" ! -iname "kiwix*" | head -1; }
@@ -113,22 +137,37 @@ jobs:
           }
           fehler=0
           # A: benanntes Wesen
+          katalog "$eingefroren"
           installieren "$alt"
-          node werkzeug/app-probe.mjs alt --app "$(cygpath -w "$(exe)")" --name Betty --aus probe/a-alt.json || fehler=1
-          installieren "$neu"
+          node werkzeug/app-probe.mjs alt --app "$(cygpath -w "$(exe)")" --name Betty --pakete "$pakete" --aus probe/a-alt.json || fehler=1
+          installieren "$neu"   # schließt die alte App vorher
+          katalog "$live"
           node werkzeug/app-probe.mjs neu --app "$(cygpath -w "$(exe)")" --vorher probe/a-alt.json --aus probe/a-neu.json || fehler=1
           # Module in der neuen App
           node werkzeug/app-probe.mjs module --app "$(cygpath -w "$(exe)")" --boese "$(cygpath -w "$PWD/werkzeug/testmodule/boese")" --quelle "$(cygpath -w "$PWD/redaktion/freigegeben")" --aus probe/module.json || fehler=1
           # B: Wesen ohne Namen, frisches Gerät
           aufraeumen
+          katalog "$eingefroren"
           installieren "$alt"
-          node werkzeug/app-probe.mjs alt --app "$(cygpath -w "$(exe)")" --aus probe/b-alt.json || fehler=1
-          installieren "$neu"
+          node werkzeug/app-probe.mjs alt --app "$(cygpath -w "$(exe)")" --pakete "$pakete" --aus probe/b-alt.json || fehler=1
+          installieren "$neu"   # schließt die alte App vorher
+          katalog "$live"
           node werkzeug/app-probe.mjs neu --app "$(cygpath -w "$(exe)")" --vorher probe/b-alt.json --aus probe/b-neu.json || fehler=1
           # C: frische Installation der neuen Version, ohne Vorgänger
           aufraeumen
           installieren "$neu"
           node werkzeug/app-probe.mjs module --app "$(cygpath -w "$(exe)")" --boese "$(cygpath -w "$PWD/werkzeug/testmodule/boese")" --quelle "$(cygpath -w "$PWD/redaktion/freigegeben")" --aus probe/c-frisch.json || fehler=1
+          # D und E (Nr. 25): der Weg heutiger Nutzer, 0.8.0 → neu, beide gegen den Live-Katalog; mit und ohne Namen
+          aufraeumen
+          installieren "$alt08"
+          node werkzeug/app-probe.mjs alt --stand 0.8 --app "$(cygpath -w "$(exe)")" --name Betty --aus probe/d-alt08.json || fehler=1
+          installieren "$neu"
+          node werkzeug/app-probe.mjs neu --app "$(cygpath -w "$(exe)")" --vorher probe/d-alt08.json --aus probe/d-neu.json || fehler=1
+          aufraeumen
+          installieren "$alt08"
+          node werkzeug/app-probe.mjs alt --stand 0.8 --app "$(cygpath -w "$(exe)")" --aus probe/e-alt08.json || fehler=1
+          installieren "$neu"
+          node werkzeug/app-probe.mjs neu --app "$(cygpath -w "$(exe)")" --vorher probe/e-alt08.json --aus probe/e-neu.json || fehler=1
           exit $fehler
 
       - name: Berichte
