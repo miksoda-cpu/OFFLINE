@@ -1,0 +1,5 @@
+{
+  "erklaerung": "Bildvergleich (werkzeug/bildvergleich.mjs): Ein Pixel weicht ab, wenn ein Farbkanal um mehr als „schwelle“ (0–255) abweicht. Eine Seite fällt durch, wenn mehr als „anteil“ (0–1) ihrer Pixel abweichen oder ihre Größe nicht stimmt. Ausnahmen je Seite nur mit Grund.",
+  "standard": { "schwelle": 16, "anteil": 0 },
+  "seiten": {}
+}

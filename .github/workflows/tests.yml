@@ -25,7 +25,7 @@ jobs:
           set -euo pipefail
           [ -n "$OFFLINE_INTERN_SCHLUESSEL" ] || { echo "Kein Kanal-Schlüssel: Inhaltstests werden übersprungen"; exit 0; }
           find . -type d -name verschluesselt -not -path "./node_modules/*" | while read -r v; do node werkzeug/intern.mjs entschluesseln "$v" "$(dirname "$v")" > /dev/null; done
-      - run: node --test werkzeug/test.mjs werkzeug/klartext-wache.test.mjs
+      - run: node --test werkzeug/test.mjs werkzeug/klartext-wache.test.mjs werkzeug/bildvergleich.test.mjs
       - run: node --test web/bereit.test.mjs web/wesen.test.mjs web/tag.test.mjs web/neues.test.mjs web/pause.test.mjs web/stil.test.mjs web/buch.test.mjs web/neuigkeiten.test.mjs web/meintag.test.mjs web/intern.test.mjs web/naturheilkunde.test.mjs web/naturbilder.test.mjs web/gedanken.test.mjs web/abkuerzungen.test.mjs web/spiele.test.mjs web/lumi-seite.test.mjs web/pause-inhalte.test.mjs web/startreife.test.mjs web/szenarien.test.mjs
       - name: Paket-Kit gegen Beispiel und Vorlage
         run: |
@@ -57,6 +57,32 @@ jobs:
       # Spielpaket 1: zwei Geräte, dasselbe Rätsel des Tages; ohne WebAssembly-Freigabe startet keins
       - run: node werkzeug/spiele-probe.mjs --chrome
         env: { CHROME: google-chrome }
+
+  bild-und-barrierefreiheit:
+    name: Bildvergleich und Barrierefreiheit (Web-App, Headless-Chrome)
+    # Auftrag Nr. 21: MVP-Seiten in 360 und 1280 px, hell und dunkel, gegen werkzeug/referenz/ und mit axe-core (WCAG 2.1 AA).
+    # Die Referenz wird hier nie gesetzt (nur von Hand mit --referenz-setzen); bei Abweichung Aufnahmen und Differenzbilder als Artefakt.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with: { node-version: 22 }
+      - name: Bildvergleich
+        run: node werkzeug/bildvergleich.mjs --chrome --aus bildvergleich-aus --anker bildvergleich-aus/anker
+        env: { CHROME: google-chrome }
+      - name: Barrierefreiheit
+        if: success() || failure()
+        run: node werkzeug/barrierefrei.mjs --chrome --aus barrierefrei-aus
+        env: { CHROME: google-chrome }
+      - name: Aufnahmen und Differenzbilder
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: bildvergleich-${{ github.sha }}
+          path: |
+            bildvergleich-aus/
+            barrierefrei-aus/
+          retention-days: 14
 
   app-berechtigungen:
     name: App-Berechtigungen (${{ matrix.os }})
