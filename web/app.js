@@ -142,7 +142,7 @@ function vorhabenDazu(t) {
   l.unshift({ id: `v-${Date.now().toString(36)}`, tipp: t.id, text: t.text, datum: new Date().toISOString(), erledigt: null });
   vorhabenSpeichern(l);
 }
-const wesen = new Wesen({ speicher, meinTag: () => meinTagJetzt(), istVorhaben: (id) => vorhaben().some((v) => v.tipp === id), buchLink: (t) => buchLinkErlaubt(t, wesen.e, buchDaten()), tipps: () => texte(PW(), "inhalt/tipps.json")?.tipps ?? [], onLog: () => {
+const wesen = new Wesen({ speicher, nurVorschau: true, meinTag: () => meinTagJetzt(), istVorhaben: (id) => vorhaben().some((v) => v.tipp === id), buchLink: (t) => buchLinkErlaubt(t, wesen.e, buchDaten()), tipps: () => texte(PW(), "inhalt/tipps.json")?.tipps ?? [], onLog: () => {
   const z = document.getElementById("wesen-log-zahl"); if (z) z.textContent = `· ${wesen.log.length}`;
   const el = document.getElementById("wesen-log"); if (el) el.innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche);
 } });
@@ -218,7 +218,8 @@ const I = {
   lumi: '<path d="M6 20c0-5 2.7-9 6-9s6 4 6 9"/><circle cx="10" cy="15" r=".8"/><circle cx="14" cy="15" r=".8"/><path d="M9 11 7 4M15 11l2-7"/>',
 };
 const ROUTEN = [
-  ["start", "Heute"], ["pause", "Pause"], ["lumi", "Lumi"], ["uebersicht", "Bereit"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
+  // Nr. 27: die Lumi-Seite nur für eine Lumi mit Namen
+  ["start", "Heute"], ["pause", "Pause"], ...(wesen.nurVorschau ? [] : [["lumi", "Lumi"]]), ["uebersicht", "Bereit"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
   ["karte", "Karte"], ["notizen", "Notizen"], // 0.7.1 (Mik): „Künstliche Intelligenz“ erst, wenn es das Modell gibt ["tresor", "Tresor"], ["updates", "Updates & Abo"],
 ];
 const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
@@ -599,7 +600,7 @@ const seiten = {
       </div>
       ${tagesplanHtml()}
       <a class="card of-karte pause-zeile" href="#pause" style="margin-bottom:1rem"><strong>⏸ Pause</strong> <span class="muted of-klein">· ${pauseE().an ? `ein · Appetit ${esc(pauseE().appetit)}` : "aus"} · Happen für zwischendurch, jetzt mit eigenem Raum</span></a>
-      <a class="card of-karte pause-zeile" href="#lumi" style="margin-bottom:1rem"><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? esc(wesen.anzeigename()) : wesen.aktiv() ? "Textkarten" : "Tipps aus"} · Tipps, Buch, Heft und Einstellungen auf der Lumi-Seite</span></a>
+      ${wesen.nurVorschau ? "" : `<a class="card of-karte pause-zeile" href="#lumi" style="margin-bottom:1rem"><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? esc(wesen.anzeigename()) : wesen.aktiv() ? "Textkarten" : "Tipps aus"} · Tipps, Buch, Heft und Einstellungen auf der Lumi-Seite</span></a>`}
       ${updates ? `<a class="card of-karte" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn of-plakette of-plakette--warnung">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted of-klein">· ${intervallText()}</span></a>` : ""}
       ${land ? `<div class="card of-karte" style="margin-top:0"><strong>${esc(land.name)}</strong> <span class="muted of-klein">· Landeshauptstadt ${esc(land.hauptstadt)} · im Krisenfall informiert <strong>${esc(land.orf_radio)}</strong></span></div>` : ""}
       <h2 style="margin-top:2rem">Installiert</h2>
@@ -2412,6 +2413,7 @@ const menu = document.getElementById("menu");
 function render() {
   let route = location.hash.slice(1) || "start";
   if (route.startsWith("szenario-")) { state.szenario = route.slice(9); route = "szenario"; } // 0.8.0: eine Karte je Szenario
+  if (wesen.nurVorschau && (route === "lumi" || route === "heft")) { location.replace("#start"); return; } // Nr. 27: keine Lumi-Seite
   checksAngleichen();
   blattWeg();
   if (route === "modul") { modulAnsichtZeigen(); return; }
@@ -2896,11 +2898,11 @@ async function basisStillAktualisieren() {
 // Erster Start: Österreich-Paket automatisch holen, wenn noch keins da ist. Danach still nach Updates sehen.
 (async () => {
   await offeneDownloads();
-  if (!P() || !PW()) {
+  if (!P() || (!PW() && !wesen.nurVorschau)) { // Nr. 27: die Lumi-Tipps (wir) nur für eine Lumi mit Namen
     if (!navigator.onLine) return;
     try {
       const { katalog: k } = await ladeKatalog();
-      for (const id of [BASISPAKET, "wir"]) { // Nr. 24: das Lumi-Buch kommt mit dem Lumi-Update
+      for (const id of [BASISPAKET, ...(wesen.nurVorschau ? [] : ["wir"])]) { // Nr. 24: das Lumi-Buch kommt mit dem Lumi-Update, Nr. 27: die Tipps auch
         if (installiertesPaket(id)) continue;
         const e = k.pakete.find((p) => p.id === id && p.status === "verfuegbar");
         if (e && appPasst(e)) { await installiere(k, e); render(); }

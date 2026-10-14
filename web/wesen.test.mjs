@@ -383,3 +383,18 @@ test("Drei Tipps (Auftrag 2026-10-04-wir-drei-tipps): app-011 ohne „Wissen“,
   for (const f of ["wikipedia-varianten", "export"]) assert.ok(!FUNKTIONEN.has(f), f);
   assert.equal(tipps.filter((x) => x.bedingung?.funktion && ![].concat(x.bedingung.funktion).every((f) => FUNKTIONEN.has(f))).length, 20, "20 Tipps warten auf eine Funktion");
 });
+
+test("Nr. 27: Im MVP ohne Namen nur Vorschau – keine Figur, keine Tipps, keine Einladung; gespeichert bleibt die eigene Darstellung", () => {
+  globalThis.addEventListener ??= () => {};
+  const sp = (start) => { const m = new Map(Object.entries(start)); return { get: (k, d) => (m.has(k) ? m.get(k) : d), set: (k, v) => m.set(k, v), m }; };
+  const alt = new Date(Date.now() - 9 * 86400000).toISOString();
+  const frisch = sp({ "lumi-start": { erstStart: alt, karte: "offen" } });
+  const w = new Wesen({ speicher: frisch, nurVorschau: true, tipps: () => [] });
+  assert.ok(w.nurVorschau && !w.aktiv() && !w.mitFigur() && !w.einladungFaellig() && !w.fragtNachNamen());
+  w.speichern();
+  assert.equal(frisch.m.get("wesen").darstellung, "karten", "nicht auf „aus“ umgestellt");
+  assert.ok(new Wesen({ speicher: sp({ "lumi-start": { erstStart: alt, karte: "offen" } }), tipps: () => [] }).einladungFaellig(), "ohne Vorschau wäre die Einladung fällig");
+  const fini = sp({ wesen: { version: 3, name: "Fini", darstellung: "wesen" } });
+  const mit = new Wesen({ speicher: fini, nurVorschau: true, tipps: () => [] });
+  assert.ok(!mit.nurVorschau && mit.mitFigur() && mit.aktiv(), "mit Namen alles wie bisher");
+});

@@ -250,6 +250,11 @@ export class Wesen {
   constructor(o) {
     this.sp = o.speicher; this.tippsQuelle = o.tipps; this.onLog = o.onLog;
     this.e = lumiEinstellungenLaden(this.sp.get("wesen", null));
+    // Nr. 27 (Mik, 14.10.2026): Im MVP ist die Lumi nur angekündigt („Das Lumi-Update“ unter „Bald“). Ohne Namen gibt es
+    // keine Figur, keine Einladung, keine Tipps und keine Lumi-Seite; wer schon eine Lumi mit Namen hat, behält alles.
+    // Gespeichert bleibt die eigene Darstellung, damit sie mit dem Lumi-Update unverändert zurückkommt.
+    this.nurVorschau = !!o.nurVorschau && !this.benannt();
+    if (this.nurVorschau) { this.eigeneDarstellung = this.e.darstellung; this.e = { ...this.e, darstellung: "aus" }; }
     this.start = this.sp.get("lumi-start", null) ?? { erstStart: new Date().toISOString(), karte: "offen" };
     this.sp.set("lumi-start", this.start);
     this.positionen = {}; this.sprichtBis = 0; this.denktBis = 0; this.freudeBis = 0; this.hoertZu = false;
@@ -276,7 +281,7 @@ export class Wesen {
     addEventListener("keydown", eingabe);
   }
 
-  speichern() { this.sp.set("lumi-start", this.start); this.sp.set("wesen", this.e); this.sp.set("wesen-gelernt", this.gelernt); this.sp.set("wesen-log", this.logKuerzen()); this.sp.set("lumi-bewertung", this.bewertung); }
+  speichern() { this.sp.set("lumi-start", this.start); this.sp.set("wesen", this.nurVorschau ? { ...this.e, darstellung: this.eigeneDarstellung } : this.e); this.sp.set("wesen-gelernt", this.gelernt); this.sp.set("wesen-log", this.logKuerzen()); this.sp.set("lumi-bewertung", this.bewertung); }
   /** Log höchstens 500 Einträge, Gemerktes (Stern) fällt nie heraus – es ist das Heft. */
   logKuerzen() { const n = this.log.length; this.log = this.log.filter((l, i) => l.stern || i >= n - 500); return this.log; }
   aktiv() { return this.e.darstellung !== "aus"; } // es kommen Tipps (als Lumi oder als Textkarte)

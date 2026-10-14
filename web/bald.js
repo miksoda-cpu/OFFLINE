@@ -35,7 +35,7 @@ export const BALD = [
   {
     id: "bald-lumi", titel: "Das Lumi-Update", bereich: "lumi",
     beschreibung: "Die Lumis kommen mit einem eigenen Update: ihr Buch, ihre Sprache und ihre Gedanken.",
-    ersetzt: ["lumi-buch", "lumi-philosophie", "lumisch"],
+    ersetzt: ["lumi-buch", "lumi-philosophie", "lumisch", "wir"], // wir: die Tipps der Lumi (Nr. 27)
     folien: [
       folie("lumi-1.svg", "Das Lumi-Update", "Das Lumi-Buch, Lumisch und die Gedanken der Lumis kommen gesammelt mit einem späteren Update.", "Titelseite: Das Lumi-Update"),
       folie("lumi-2.svg", "Buch, Sprache, Gedanken", "Drei Teile: zum Lesen, zum Lernen und zum Nachdenken.", "Drei Kärtchen: Buch, Sprache, Gedanken"),

@@ -235,8 +235,11 @@ async function neu() {
     pruefe("Unbenanntes Wesen ist aus", !buehne, buehne ?? "keine Figur");
     pruefe("Keine Einladung am ersten Tag", !einladung);
     await lsSetzen("test-monate", 0.25); await neuLaden(); await gehe("#start");
-    // Das Test-Datum gilt erst, wenn die App-Info geladen ist: Seite neu zeichnen, bis die Karte kommt
-    pruefe("Einladung nach einer Woche", await bis(async () => { await gehe("#vorsorge"); await warte(200); await gehe("#start"); await warte(300); return js("return !!document.querySelector('.lumi-einladung')"); }, "Einladung", 20_000).catch(() => false));
+    // Nr. 27 (Mik, 14.10.2026): Im MVP ist die Lumi nur angekündigt. Ohne Namen gibt es auch nach einer Woche keine
+    // Einladung und keine Lumi im Menü. Das Test-Datum gilt erst, wenn die App-Info geladen ist: Seite neu zeichnen, bis die
+    // Entwickler-Leiste mit dem verschobenen Datum da ist, dann zählt die Prüfung.
+    const woche = await bis(async () => { await gehe("#vorsorge"); await warte(200); await gehe("#start"); await warte(300); return js("return document.querySelector('[data-test-monate]') ? { einladung: !!document.querySelector('.lumi-einladung'), menue: !!document.querySelector('#nav [data-route=lumi]'), figur: !!document.getElementById('lumi-buehne') } : null"); }, "Entwickler-Leiste", 20_000).catch(() => null);
+    pruefe("Nach einer Woche keine Einladung, keine Lumi (Nr. 27)", !!woche && !woche.einladung && !woche.menue && !woche.figur, woche ? JSON.stringify(woche) : "keine Entwickler-Leiste");
     await lsSetzen("test-monate", 0);
   }
 }
