@@ -24,6 +24,12 @@ Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Bl
 
 ## Einträge
 
+### 2026-10-14 · Auftrag Nr. 24 · Lumi nur angekündigt, nicht ladbar (Mik)
+- Idee: Für den Start im App Store steht die Lumi nur als „Das Lumi-Update“ unter „Bald“; die Lumi-Pakete werden weder per Knopf noch still geladen, wer sie hat, behält sie
+- Kill-Kriterium: Eine Seite der App setzt ein Lumi-Paket voraus und zeigt ohne es einen Fehler oder eine leere Seite
+- Ausgang: übernommen für die Pakete (Rundgang: Lumi, Buch, Gedanken ohne Paket gehen auf, ohne Fehler). Offen: Miks Ziel geht weiter, die Grundversion soll die Lumi nur anteasern (Figur, Lumi-Seite, Lumi-Tipps). Das braucht einen eigenen Auftrag von Bill
+- Lehre: Ankündigungen leben in der App (`web/bald.js`), nicht im Katalog; so gilt es sofort, ohne neu signierten Katalog, und alte Apps bleiben unberührt
+
 ### 2026-10-14 · Auftrag Nr. 23 · Vorschau lesbar durch festen Ausschnitt
 - Idee: Im Vorschau-Fenster statt des ganzen Bildschirmfotos nur einen Ausschnitt in Lesegröße zeigen
 - Kill-Kriterium: Ein Ausschnitt verliert bei einem der vorhandenen Bildformate den Teil, um den es geht

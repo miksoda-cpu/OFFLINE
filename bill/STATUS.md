@@ -18,14 +18,14 @@ Skin Flechte und die internen Pakete `naturheilkunde`, `naturheilkunde-bilder` l
 Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (Android, iOS), Schließfach. Gesamtkonzept als Projektdokument „OFFLINE-Gesamtkonzept“, nicht in `docs/`.
 
 ## Offen bei Code
-- Auftrag in `bill/todo/`: Nr. 24 Wissen-Module und Nachtrag 0.8.0.
+- Nr. 24 erledigt auf Branch `nr-24-nachtrag` (14.10., Rückmeldung), CI und Windows-Probe grün, Zusammenführen wartet auf Miks Wort (Web geht damit live): Österreich-Basis aktualisiert sich still, eine Klammer bei „USB-Stick“, unter „Bald“ Wikipedia, Wikivoyage, Karte und „Das Lumi-Update“ als Vorschau, nicht ladbar (Mik 14.10.; Abschnitt B entfällt fürs MVP). Rundgang liegt jetzt in `werkzeug/rundgang/`. Offen: Grundversion ohne Lumi (Figur, Lumi-Seite) braucht einen Auftrag.
 - Nr. 22 Nachtrag erledigt (14.10.): Impressum vollständig nach dem Firmenbuchauszug (Rechtsform, Unternehmensgegenstand Bildungsinstitut, Offenlegung nach § 25 Mediengesetz mit Gesellschaftern und Blattlinie), kein „wird ergänzt“ mehr; Wirtschaftskammer und Gewerbebehörde entfallen.
 - Nr. 26 Hilfe-Blatt und Barrierefreiheit liegt in `bill/todo/` für den Nachtlauf.
 - Nr. 23 erledigt und zusammengeführt (14.10., Rückmeldung und Nachtrag), jeweils nach grüner Windows-Probe: Vorschau-Bild zum Vergrößern antippen, „Empfohlen ab …“ statt Altersfrage, Bereit mit Farbcode je Quelle; Referenzbilder von Bereit und Bibliothek neu gesetzt. Satz am Tagesende nach Miks Wahl (Kandidat a): „Genug für heute. Morgen geht es hier weiter.“ Der Lumi-Tipp in `wir` nennt noch den alten Satz (nächste Ausgabe des Pakets).
 - Nr. 25 erledigt (13.10., Rückmeldung): Windows-Probe grün auf dem Hauptbranch, ohne Lockerung. Die alte App 0.1.8 läuft gegen einen eingefrorenen, signierten Katalog (`werkzeug/probe-katalog/`), dazu der Weg 0.8.0 → neu und genau ein Eintrag unter den installierten Apps. Befund an der App: Ein offenes Blatt schließt sich beim Neuzeichnen aus dem Hintergrund (Ideenbuch).
 - Nr. 21 von Bill abgenommen (13.10.): Bildvergleich und Barrierefreiheit (axe-core) laufen in `tests.yml`. Die vier kleinen Barrierefreiheits-Befunde der App stehen mit Grund in `werkzeug/barrierefrei-ausnahmen.json`; sie zu beheben berührt die App und kann jetzt kommen.
 - Nr. 22 Impressum und Datenschutz zusammengeführt (13.10.) nach grüner Windows-Probe; das Hersteller-Feld lässt das Update unter Windows sauber (ein Eintrag, gleicher Ort, Daten bleiben). Die Web-Version zeigt das Impressum seit dem Zusammenführen (Vercel baut den Hauptbranch selbst).
-- Rückfragen zu 0.8.0 (Nr. 20): Bereit zählt nur die 20 alten Punkte; Sirenentöne nachgebildet (prüfen); Haushalt-Wörter; doppelte Klammer bei USB (Teil von Nr. 24).
+- Rückfragen zu 0.8.0 (Nr. 20) beantwortet in Nr. 24: Bereit zählt vorerst nur die 20 alten Punkte; Mik hört die Sirenentöne einmal gegen die Hörbeispiele ab; Haushalt-Wörter passen.
 - Große Downloads: Fortschritt und Abbruch nur je 64-MB-Teil (Ideenbuch, offen).
 - `bereich`/`pflicht` in at-basis, wir, lumi-buch, lumi-philosophie, pause erst mit der nächsten Ausgabe.
 - Sandbox-Probe in der App unter Linux offen.
