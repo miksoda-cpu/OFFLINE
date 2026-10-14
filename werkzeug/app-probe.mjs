@@ -247,9 +247,16 @@ async function neu() {
 
 async function module() {
   await starten(opt("app"));
-  // Nr. 28: Ein frisch installiertes Gerät fragt zuerst nach dem Land, mit Absender und zwei Sätzen darunter (Nachtrag 2)
-  const frage = await bis(() => js("const f = document.getElementById('land-frage'); return f ? { laender: [...f.querySelectorAll('input[name=land]')].map((i) => i.value).join(','), text: f.innerText } : null"), "Länderfrage", 30_000).catch(() => null);
-  pruefe("Frisches Gerät: zuerst die Länderfrage", !!frage && frage.laender === "at,de,ch" && ["Von der digitalworld Academy OG, Wien.", "Alles, was du eingibst, bleibt auf deinem Gerät.", "OFFLINE ergänzt Radio und Sirene. Es ersetzt sie nicht."].every((z) => frage.text.includes(z)), frage ? frage.laender : "keine Frage");
+  // Nr. 28: Ein frisch installiertes Gerät (Fall C, --frisch) fragt zuerst nach dem Land, mit Absender und zwei Sätzen darunter
+  // (Nachtrag 2). Nach einem Update (Fall A) hat das Gerät Daten: dann keine Frage.
+  if (process.argv.includes("--frisch")) {
+    const f = await bis(() => js("const f = document.getElementById('land-frage'); return f ? { laender: [...f.querySelectorAll('input[name=land]')].map((i) => i.value).join(','), text: f.innerText } : null"), "Länderfrage", 30_000).catch(() => null);
+    pruefe("Frisches Gerät: zuerst die Länderfrage", !!f && f.laender === "at,de,ch" && ["Von der digitalworld Academy OG, Wien.", "Alles, was du eingibst, bleibt auf deinem Gerät.", "OFFLINE ergänzt Radio und Sirene. Es ersetzt sie nicht."].every((z) => f.text.includes(z)), f ? f.laender : "keine Frage");
+  } else {
+    const ohne = await bis(() => js("return document.querySelector('#main h1') ? !document.getElementById('land-frage') : null"), "Startseite", 30_000).catch(() => null);
+    pruefe("Gerät mit Daten: keine Länderfrage", ohne === true, String(ohne));
+  }
+  const frage = await js("return !!document.getElementById('land-frage')");
   if (frage) { await klick("[data-land-weiter]"); await bis(() => js("return !document.getElementById('land-frage') && JSON.parse(localStorage.getItem('offline:land')) === 'at'"), "Österreich gewählt", 15_000); }
   // 1. Sandbox-Probe in der App: das bösartige Testmodul im echten Modulrahmen
   await lsSetzen("test-ordner", opt("boese"));

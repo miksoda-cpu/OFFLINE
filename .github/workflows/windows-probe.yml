@@ -165,7 +165,7 @@ jobs:
           # C: frische Installation der neuen Version, ohne Vorgänger
           aufraeumen
           installieren "$neu"
-          node werkzeug/app-probe.mjs module --app "$(cygpath -w "$(exe)")" --boese "$(cygpath -w "$PWD/werkzeug/testmodule/boese")" --quelle "$(cygpath -w "$PWD/redaktion/freigegeben")" --aus probe/c-frisch.json || fehler=1
+          node werkzeug/app-probe.mjs module --app "$(cygpath -w "$(exe)")" --boese "$(cygpath -w "$PWD/werkzeug/testmodule/boese")" --quelle "$(cygpath -w "$PWD/redaktion/freigegeben")" --frisch --aus probe/c-frisch.json || fehler=1
           # D und E (Nr. 25): der Weg heutiger Nutzer, 0.8.0 → neu, beide gegen den Live-Katalog; mit und ohne Namen
           aufraeumen
           installieren "$alt08"
