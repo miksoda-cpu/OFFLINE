@@ -22,7 +22,7 @@ Im Impressum steht kein „wird ergänzt“ mehr. Die Quelle sind der Firmenbuch
   - kein Datum im Muster TT.MM.JJJJ.
 - **Gegenprobe:** Gegen das alte Impressum schlägt der neue Test fehl (1 von 5), mit dem neuen besteht er.
 - **Nichts gelockert:** Der Teil, der bisher die Platzhalter verlangte, prüft jetzt die vollständigen Angaben.
-- `tests.yml`: __CI__
+- `tests.yml`: grün, Lauf [38532785184](https://github.com/miksoda-cpu/OFFLINE/actions/runs/38532785184).
 
 ## Bilder
 `bill/rueckmeldung/bilder/2026-10-14-nr-22-nachtrag/`: Impressum 360 px und breit, hell und dunkel. Keine Seite läuft seitlich über.
