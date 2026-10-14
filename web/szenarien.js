@@ -148,14 +148,14 @@ export function karteHtml(k, { haushalt = [], abgehakt = [], verweise = [], zuru
   const eintrag = (x) => (typeof x === "string" ? `<li>${esc(x)}</li>` : `<li><strong>${esc(x.t)}</strong> ${esc(x.text)}</li>`);
   const teil = ([id, name]) => (k[id]?.length ? `<details class="card of-karte sz-teil" id="sz-${id}"><summary><h2>${esc(name)}</h2></summary><ul class="sz-liste">${k[id].map(eintrag).join("")}</ul></details>` : "");
   const zu = zusaetze(k, haushalt);
-  return `<p class="sz-zurueck"><a href="${esc(zurueck)}">‹ ${zurueck === "#vorsorge" ? "Vorsorge" : "Notfall"}</a></p>
+  return `<p class="sz-zurueck"><a class="btn btn-sm of-btn of-btn--klein" href="${esc(zurueck)}">‹ ${zurueck === "#vorsorge" ? "Vorsorge" : "Notfall"}</a></p>
     <div class="page-head of-seitenkopf"><div><h1>${esc(k.titel)}</h1><p class="muted of-klein">${zahl(f)} aus der Checkliste vorbereitet</p></div></div>
     ${k.merksaetze?.length ? `<div class="card of-karte sz-merk"><ul>${k.merksaetze.map((m) => `<li>${esc(m)}</li>`).join("")}</ul></div>` : ""}
     ${TEILE.map(teil).join("")}
     ${zu.length ? `<section class="card of-karte sz-zusatz"><h2>Für dich zusätzlich</h2>${zu.map((z) => `<h3>${esc(z.name)}</h3><ul class="sz-liste">${z.texte.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`).join("")}</section>` : ""}
     ${k.checkliste_spezifisch?.length ? `<section class="card of-karte sz-check"><h2>Checkliste für ${esc(k.titel)}</h2><div class="of-klein">${zahl(f)} erledigt</div>${balken(f, `Checkliste für ${k.titel}`)}
       <ul class="check">${k.checkliste_spezifisch.map((t, i) => `<li><label><input type="checkbox" data-sz-check="${esc(k.id)}" data-sz-punkt="${i}" ${abgehakt.includes(t) ? "checked" : ""}><span>${esc(t)}</span></label></li>`).join("")}</ul></section>` : ""}
-    ${verweise.length ? `<p class="sz-verweise">Mehr dazu: ${verweise.map((v) => `<a href="${esc(v.hash)}"${v.anker ? ` data-anker-ziel="${esc(v.anker)}"` : ""}>${esc(v.name)}</a>`).join(" · ")}</p>` : ""}
+    ${verweise.length ? `<p class="sz-verweise">Mehr dazu: ${verweise.map((v) => `<a class="btn btn-sm of-btn of-btn--klein" href="${esc(v.hash)}"${v.anker ? ` data-anker-ziel="${esc(v.anker)}"` : ""}>${esc(v.name)}</a>`).join(" · ")}</p>` : ""}
     ${k.quellen?.length ? `<details class="sz-quellen"><summary class="muted of-klein">Quellen (Stand ${esc(k.stand ?? "")})</summary><ul class="muted of-klein">${k.quellen.map((q) => `<li>${q.url ? `<a href="${esc(q.url)}" rel="noopener">${esc(q.name)}</a>` : esc(q.name)}${q.abgerufen ? `, abgerufen ${esc(q.abgerufen)}` : ""}</li>`).join("")}</ul></details>` : ""}`;
 }
 

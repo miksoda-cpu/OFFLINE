@@ -34,7 +34,7 @@ test("A1: Eine neuere Österreich-Basis im Katalog wird beim Start ohne Knopfdru
 });
 
 test("Bald: genau Wikipedia, Wikivoyage, Karte und Lumi, je mit Bildern und einem Satz", async () => {
-  assert.deepEqual(BALD.map((b) => b.titel), ["Wikipedia Deutsch", "Wikivoyage Deutsch", "Karte Österreich", "Das Lumi-Update"]);
+  assert.deepEqual(BALD.map((b) => b.titel), ["Wikipedia Deutsch", "Wikivoyage Deutsch", "Karte Österreich", "Das Lumi-Update", "Tresor"], "Tresor seit Nr. 28");
   for (const b of BALD) {
     assert.ok(b.beschreibung.length > 30 && b.beschreibung.split(/[.!?](\s|$)/).filter((x) => x?.trim()).length === 1, `${b.id}: ein Satz`);
     assert.ok(b.folien.length >= 2, `${b.id}: Bilder`);
@@ -63,19 +63,19 @@ test("Bald: nicht ladbar – nicht unter „Neu“, kein Knopf, nicht still; wer
   ] };
   const frisch = abschnitte(k, [], { versionVergleich, bald: BALD, nichtLadbar: NICHT_LADBAR });
   assert.deepEqual(frisch.neu.map((p) => p.id).sort(), ["at-basis", "spiele-1"]);
-  assert.deepEqual(frisch.bald.map((b) => b.id), ["bald-wikipedia", "bald-wikivoyage", "bald-karte", "bald-lumi"], "in Miks Reihenfolge");
+  assert.deepEqual(frisch.bald.map((b) => b.id), ["bald-wikipedia", "bald-wikivoyage", "bald-karte", "bald-lumi", "bald-tresor"], "in Miks Reihenfolge");
   const alt = abschnitte(k, [inst("lumi-buch", "2026.10.05.2"), inst("lumisch", "2026.10.07.1"), inst("lumi-philosophie", "2026.10.06.1"), inst("wir", "2026.10.04.4"), inst("wikivoyage-de", "2026.09.24")], { versionVergleich, bald: BALD, nichtLadbar: NICHT_LADBAR });
   assert.deepEqual(alt.geraet.map((g) => g.eintrag.id).sort(), ["lumi-buch", "lumi-philosophie", "lumisch", "wikivoyage-de", "wir"], "bleibt auf dem Gerät");
-  assert.deepEqual(alt.bald.map((b) => b.id), ["bald-wikipedia", "bald-karte"], "alles schon da: keine Ankündigung");
+  assert.deepEqual(alt.bald.map((b) => b.id), ["bald-wikipedia", "bald-karte", "bald-tresor"], "alles schon da: keine Ankündigung (der Tresor hängt an keinem Paket)");
   assert.deepEqual(abschnitte(k, []).bald.map((p) => p.id).sort(), ["ris-bund", "wiki-de-mini"], "ohne Liste wie bisher");
 
   const app = await lies("./app.js");
-  assert.ok(app.includes("ladenAbschnitte(k, inst, { versionVergleich, bald: BALD, nichtLadbar: NICHT_LADBAR })") && app.includes("bald.map(baldKarte)"));
+  assert.ok(app.includes('ladenAbschnitte(k, inst, { versionVergleich, bald: BALD.filter((b) => b.nurOhne !== "tresor" || !tresorBenutzt()), nichtLadbar: NICHT_LADBAR })') && app.includes("bald.map(baldKarte)"));
   const karte = app.slice(app.indexOf("function baldKarte(b)"), app.indexOf("/** Lokale Quelle"));
   assert.ok(karte.includes("vorschauTitelHtml(`bald:${b.id}`, b)") && !/data-install|schieber\(/.test(karte), "Vorschau, kein Laden");
   assert.ok(app.includes('if (NICHT_LADBAR.has(id) && !installiertesPaket(id)) {'), "auch über einen anderen Knopf nicht");
   assert.ok(app.includes('if (baldEintrag(id)) return `<p class="muted of-klein">Kommt mit einem späteren Update. Noch nicht zum Laden.</p>`;'), "Vorschaufenster ohne „laden“");
-  assert.ok(app.includes('for (const id of [BASISPAKET, ...(wesen.nurVorschau ? [] : ["wir"])]) {'), "Erststart ohne Lumi-Buch, ohne Namen auch ohne Tipps (Nr. 27)");
+  assert.ok(app.includes('for (const id of [BASISPAKET, HEILKUNDE_PAKET, ...(wesen.nurVorschau ? [] : ["wir"])]) {'), "Erststart ohne Lumi-Buch, ohne Namen auch ohne Tipps (Nr. 27), mit Naturheilkunde (Nr. 28)");
   assert.ok(app.includes('if (!PB() && !NICHT_LADBAR.has("lumi-buch") && navigator.onLine)') && app.includes('!speicher.get("lumisch-geholt", false) && !NICHT_LADBAR.has("lumisch") && navigator.onLine'), "nichts still nachladen");
   assert.equal(baldEintrag("bald-karte").titel, "Karte Österreich");
 });

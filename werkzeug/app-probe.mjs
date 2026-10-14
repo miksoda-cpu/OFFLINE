@@ -187,6 +187,9 @@ async function neu() {
   const vorher = JSON.parse(await readFile(opt("vorher"), "utf8")).werte;
   await starten(opt("app"));
   await gehe("#start");
+  // Nr. 28: Wer schon Daten hat, wird nicht nach dem Land gefragt und bleibt bei Österreich
+  const landNeu = await bis(() => js("return document.querySelector('#main h1') ? { frage: !!document.getElementById('land-frage'), land: JSON.parse(localStorage.getItem('offline:land')) } : null"), "Startseite", 30_000).catch(() => null);
+  pruefe("Update: keine Länderfrage, Österreich", !!landNeu && !landNeu.frage && landNeu.land === "at", JSON.stringify(landNeu));
   // Der Sockel wird festgelegt, sobald Paket und Tresor-Stand bekannt sind
   const ersteZahl = await bis(async () => { const z = await bereitZahl(); return z > 0 ? z : null; }, "Bereit-Zahl beim ersten Bild");
   await bis(() => ls("bereit-sockel"), "Sockel aus Version 1 festgelegt", 60_000).catch(() => null);
@@ -244,6 +247,10 @@ async function neu() {
 
 async function module() {
   await starten(opt("app"));
+  // Nr. 28: Ein frisch installiertes Gerät fragt zuerst nach dem Land, mit Absender und zwei Sätzen darunter (Nachtrag 2)
+  const frage = await bis(() => js("const f = document.getElementById('land-frage'); return f ? { laender: [...f.querySelectorAll('input[name=land]')].map((i) => i.value).join(','), text: f.innerText } : null"), "Länderfrage", 30_000).catch(() => null);
+  pruefe("Frisches Gerät: zuerst die Länderfrage", !!frage && frage.laender === "at,de,ch" && ["Von der digitalworld Academy OG, Wien.", "Alles, was du eingibst, bleibt auf deinem Gerät.", "OFFLINE ergänzt Radio und Sirene. Es ersetzt sie nicht."].every((z) => frage.text.includes(z)), frage ? frage.laender : "keine Frage");
+  if (frage) { await klick("[data-land-weiter]"); await bis(() => js("return !document.getElementById('land-frage') && JSON.parse(localStorage.getItem('offline:land')) === 'at'"), "Österreich gewählt", 15_000); }
   // 1. Sandbox-Probe in der App: das bösartige Testmodul im echten Modulrahmen
   await lsSetzen("test-ordner", opt("boese"));
   await lsSetzen("modul-quelle", opt("quelle"));

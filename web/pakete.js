@@ -62,7 +62,7 @@ export function abschnitte(katalog, installiert = [], { versionVergleich = () =>
   const neu = pakete.filter((p) => p.status === "verfuegbar" && !da.has(p.id) && !intern(p) && !nichtLadbar.has(p.id) && p.art !== "tage").sort(sortiere);
   // Nr. 24 (Mik): Mit einer Ankündigungsliste (web/bald.js) steht unter „Bald“ nur sie, je Karte mit Vorschau; eine Karte
   // fällt weg, wenn alles, was sie ankündigt, schon auf dem Gerät liegt. Ohne Liste: was der Katalog als „geplant“ führt.
-  const bald = ankuendigung ? ankuendigung.filter((b) => !(b.ersetzt ?? []).every((id) => da.has(id))) // Reihenfolge der Liste
+  const bald = ankuendigung ? ankuendigung.filter((b) => !((b.ersetzt ?? []).length && b.ersetzt.every((id) => da.has(id)))) // Reihenfolge der Liste
     : pakete.filter((p) => p.status === "geplant" && !intern(p) && !da.has(p.id)).sort(sortiere);
   const geraet = [...da.values()].map((p) => {
     const e = pakete.find((x) => x.id === p.manifest.id && x.status === "verfuegbar") ?? null;

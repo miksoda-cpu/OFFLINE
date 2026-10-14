@@ -12,9 +12,12 @@ test("Vorschau: Titelbild und „Vorschau ansehen“ in der Karte, großes Fenst
   // Karte: Titelbild vor dem Namen, bei Modulen und bei Paketen mit Vorschau
   assert.match(app, /data-modul-karte="\$\{esc\(e\.id\)\}">\n {4}\$\{vorschauTitelHtml\(/);
   assert.match(app, /data-laden-karte="\$\{esc\(p\.id\)\}">\n {4}\$\{p\.vorschau\?\.folien\?\.length \? vorschauTitelHtml\(/);
-  // Fenster: Dialog, Bild oben, Text darunter, „1 von 4“, ×, Esc, Tippen daneben, Pfeiltasten, Wischen, „laden“
-  for (const s of ['role="dialog" aria-modal="true"', '<div class="vorschau-bild">', "<figcaption><h3>", "${i + 1} von ${n}", 'aria-label="Vorschau schließen">×</button>',
-    '<div class="vorschau-hinter" data-vorschau-zu></div>', 'ev.key === "Escape"', 'ev.key === "ArrowRight"', '"pointerup"', "data-vorschau-laden>laden</button>"]) assert.ok(app.includes(s), s);
+  // Fenster: Dialog, Bild oben, Text darunter, ×, Esc, Tippen daneben, „laden“. Seit Nr. 28 (Nachtrag Mik) kein Durchblättern:
+  // alle Bilder untereinander, keine Pfeile, kein „1 von 4“, kein Wischen
+  for (const s of ['role="dialog" aria-modal="true"', '<div class="vorschau-bild">', "<figcaption><h3>", '<div class="vorschau-folien">${folien.map((f, i) =>', 'aria-label="Vorschau schließen">×</button>',
+    '<div class="vorschau-hinter" data-vorschau-zu></div>', 'ev.key === "Escape"', "data-vorschau-laden>laden</button>"]) assert.ok(app.includes(s), s);
+  const vorschauTeil = app.slice(app.indexOf("const vorschauFenster = {"), app.indexOf("function vorschauLaden(key)"));
+  for (const s of ["von ${n}", "data-vorschau-schritt", 'ev.key === "ArrowRight"', '"pointerup"', "vorschauBlaettern"]) assert.ok(!vorschauTeil.includes(s) && !app.includes("vorschauBlaettern"), `nicht mehr: ${s}`);
   // Ein Hauptknopf: nur „laden“ ist primär; Handy: ganzer Bildschirm
   const fenster = app.slice(app.indexOf("function vorschauFensterZeichnen"), app.indexOf("function vorschauOeffnen"));
   assert.equal((fenster.match(/of-btn--primaer/g) ?? []).length, 0);

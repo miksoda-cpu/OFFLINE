@@ -41,6 +41,7 @@ export const VORBEREITUNG = `(() => {
   class D extends E { constructor(...a) { a.length ? super(...a) : super(T); } static now() { return T; } }
   globalThis.Date = D;
   let s = 20261014; Math.random = () => { s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  try { if (localStorage.getItem("offline:land") === null) localStorage.setItem("offline:land", JSON.stringify("at")); } catch {} // Nr. 28: Land schon gewählt
   try { if (localStorage.getItem("offline:wesen") === null) localStorage.setItem("offline:wesen", JSON.stringify({ version: 3, darstellung: "aus" })); } catch {}
   try { speechSynthesis.speak = () => {}; } catch {}
   const stil = () => { const st = document.createElement("style"); st.textContent = "*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important;scroll-behavior:auto!important}"; (document.head || document.documentElement).append(st); };

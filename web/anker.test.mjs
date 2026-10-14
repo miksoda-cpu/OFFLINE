@@ -62,10 +62,9 @@ test("Alter: Empfehlung statt Ja/Nein-Frage – „Empfohlen ab …“ beim Pake
 });
 
 test("Vorschau lesbar: Antippen zeigt das Bild in voller Größe zum Verschieben, noch einmal Antippen passt es ein", () => {
-  assert.ok(app.includes('<button type="button" class="vorschau-zoom" data-vorschau-gross aria-pressed="${gross}"'), "Bild ist ein Knopf");
-  assert.ok(app.includes('if (b.hasAttribute("data-vorschau-gross")) { vorschauFenster.gross = !vorschauFenster.gross; vorschauFensterZeichnen();'), "Umschalten");
-  assert.ok(app.includes("vorschauFenster.i = (vorschauFenster.i + r + n) % n; vorschauFenster.gross = false;"), "Blättern setzt zurück");
-  assert.ok(app.includes('if (ev.target.closest(".vorschau-seite") && !vorschauFenster.gross) x0 = ev.clientX;'), "groß: Wischen verschiebt das Bild statt zu blättern");
+  assert.ok(app.includes('<button type="button" class="vorschau-zoom" data-vorschau-gross="${i}" aria-pressed="${gross}"'), "Bild ist ein Knopf, je Bild (Nr. 28: Bilder untereinander)");
+  assert.ok(app.includes('if (b.hasAttribute("data-vorschau-gross")) { const i = Number(b.dataset.vorschauGross); vorschauFenster.gross = vorschauFenster.gross === i ? null : i; vorschauFensterZeichnen();'), "Umschalten, nur dieses Bild");
+  assert.ok(app.includes("const gross = vorschauFenster.gross === i;") && app.includes("Object.assign(vorschauFenster, { key, id, vorher: ausloeser ?? document.activeElement, gross: null });"), "Öffnen beginnt eingepasst");
   assert.ok(app.includes("Zum Vergrößern aufs Bild tippen."), "Hinweis sichtbar");
   const gross = css.slice(css.indexOf(".vorschau-bild--gross {"));
   assert.ok(/\.vorschau-bild--gross \{[^}]*place-items: normal;[^}]*overflow: auto;[^}]*touch-action: pan-x pan-y;/.test(gross), "links beginnend, in beide Richtungen verschiebbar (zentriert wäre der linke Rand abgeschnitten)");

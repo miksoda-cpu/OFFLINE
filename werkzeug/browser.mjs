@@ -27,7 +27,7 @@ export async function dateiserver(ordner = path.join(WURZEL, "web"), zusatz = {}
     const p = decodeURIComponent(new URL(req.url, "http://x").pathname);
     if (zusatz[p]) { res.writeHead(200, { "Content-Type": zusatz[p].typ }); return res.end(zusatz[p].inhalt); }
     const um = umleiten(p), datei = um ?? path.join(ordner, p.endsWith("/") ? p + "index.html" : p);
-    if (!datei.startsWith(um ? WURZEL : ordner)) { res.writeHead(403); return res.end(); }
+    if (!um && !datei.startsWith(ordner)) { res.writeHead(403); return res.end(); } // umleiten() kommt aus dem Werkzeug selbst
     try {
       if (!(await stat(datei)).isFile()) throw new Error("kein File");
       res.writeHead(200, { "Content-Type": TYPEN[path.extname(datei)] ?? "application/octet-stream", "Cache-Control": "no-store" });

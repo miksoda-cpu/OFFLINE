@@ -23,10 +23,19 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 import { haushaltHtml, grundvorsorgeHtml, kachelnHtml, karteHtml, radioHtml, checksUebertragen, punkteFuer, fortschritt as gvFortschritt, fortschrittsbalken, verweisZiel, exportText as gvExportText } from "./szenarien.js";
 import { BEREICHE, bereichVon, bereichName, pflicht as paketPflicht, paketAn, umschalten as paketUmschalten, abschnitte as ladenAbschnitte, stilleUpdates } from "./pakete.js";
 import { BALD, NICHT_LADBAR, baldEintrag } from "./bald.js";
+import { LAENDER, SPAETER as LAENDER_SPAETER, kommtMit, landBestimmen } from "./laender.js";
+import { PAKET as HEILKUNDE_PAKET, startZustand as heilkundeStart, seiteHtml as heilkundeSeiteHtml, klick as heilkundeKlick } from "./heilkunde.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
 const { speicher, ladeKatalog, katalogAusSpeicher, installiertesPaket: paketRoh, installiere, entferne, verfuegbareUpdates: alleUpdates, inhalt, installierteIds } = client;
+// Nr. 28: Land als erste Frage. Entschieden, bevor diese Version etwas schreibt: Wer schon Daten hat, wird nicht gefragt
+// und bleibt bei Österreich (laender.js).
+const landStart = (() => { let k = []; try { k = Object.keys(localStorage); } catch { /* gesperrt */ } return landBestimmen(speicher.get("land", null), k); })();
+if (landStart.land && speicher.get("land", null) !== landStart.land) speicher.set("land", landStart.land);
+let landFrage = landStart.fragen;
+const land = () => speicher.get("land", null) ?? "at";
+const ausland = () => land() !== "at"; // Deutschland, Schweiz: nur Notrufnummern, der Rest kommt mit dem Paket des Landes
 // An/aus für alle Pakete (0.7.0, Bibliothek als Laden): Ausgeschaltete bleiben installiert, die App liest sie nur nicht.
 // Daten und Lesestand liegen getrennt und bleiben. Pflichtpakete (Österreich-Basis, Tage) sind immer an. Module: Stand im Kern.
 const paketeAus = () => speicher.get("pakete-aus", []);
@@ -51,7 +60,7 @@ async function internFreischalten(schluessel) {
   if (k) { history.replaceState(null, "", `${location.pathname}${location.search}#updates`); await internFreischalten(k); }
   else if (location.hash.startsWith("#kanal=")) history.replaceState(null, "", `${location.pathname}${location.search}#updates`);
 }
-const APP_VERSION = "0.8.0";
+const APP_VERSION = "0.9.0";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -84,6 +93,7 @@ const notizId = () => Date.now().toString(36) + Math.random().toString(36).slice
 
 const state = {
   lumiReiter: "uebersicht", // 0.7.0: Menü der Lumi-Seite
+  heilkunde: heilkundeStart(), // Nr. 28: Naturheilkunde, erste Fassung
   natur: { weg: "start" }, internFeld: null, internMeldung: null, // 0.6.0: Naturheilkunde, interner Kanal
   checks: speicher.get("checks", {}),
   // 0.8.0 (Auftrag Nr. 20): Haushalt (lokal), Merkliste der Grundvorsorge, Häkchen der Szenario-Checklisten
@@ -215,15 +225,34 @@ const I = {
   tresor: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
   updates: '<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
   natur: '<path d="M5 21c0-9 6-15 15-16-1 9-7 15-15 16z"/><path d="M5 21l9-9"/>',
+  heilkunde: '<path d="M5 21c0-9 6-15 15-16-1 9-7 15-15 16z"/><path d="M5 21l9-9"/>',
+  einstellungen: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
   lumi: '<path d="M6 20c0-5 2.7-9 6-9s6 4 6 9"/><circle cx="10" cy="15" r=".8"/><circle cx="14" cy="15" r=".8"/><path d="M9 11 7 4M15 11l2-7"/>',
 };
+// 0.7.1 (Mik): „Künstliche Intelligenz“ erst, wenn es das Modell gibt. Seit 0.7.1 fehlten hier „Tresor“ und „Updates & Abo“:
+// Sie standen hinter diesem Kommentar in derselben Zeile (Nr. 28). Welche Einträge im Menü stehen, sagt imMenue().
 const ROUTEN = [
-  // Nr. 27: die Lumi-Seite nur für eine Lumi mit Namen
-  ["start", "Heute"], ["pause", "Pause"], ...(wesen.nurVorschau ? [] : [["lumi", "Lumi"]]), ["uebersicht", "Bereit"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
-  ["karte", "Karte"], ["notizen", "Notizen"], // 0.7.1 (Mik): „Künstliche Intelligenz“ erst, wenn es das Modell gibt ["tresor", "Tresor"], ["updates", "Updates & Abo"],
+  ["start", "Heute"], ["pause", "Pause"], ["lumi", "Lumi"], ["uebersicht", "Bereit"], ["notfall", "Notfall"], ["vorsorge", "Vorsorge"], ["werkzeuge", "Werkzeuge"], ["bibliothek", "Bibliothek"],
+  ["heilkunde", "Naturheilkunde"], ["karte", "Karte"], ["notizen", "Notizen"], ["tresor", "Tresor"], ["einstellungen", "Einstellungen"], ["updates", "Updates & Abo"],
 ];
 const icon = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
-document.getElementById("nav").innerHTML = ROUTEN.map(([id, name]) => `<a href="#${id}" data-route="${id}">${icon(id)}${name}</a>`).join("");
+/** Tresor als Vorschau (Nr. 28, Nachtrag): Im Menü nur, wer ihn schon angelegt hat (Desktop); alle anderen sehen ihn unter „Bald“. */
+const tresorBenutzt = () => !!desktop && !!state.tresor.status && state.tresor.status !== "kein";
+/** Nr. 27: die Lumi-Seite nur für eine Lumi mit Namen. Nr. 28: der Tresor nur, wer ihn benutzt. */
+function imMenue(id) {
+  if (id === "lumi") return !wesen.nurVorschau;
+  if (id === "tresor") return tresorBenutzt();
+  return true;
+}
+let menueStand = "";
+function menueBauen() {
+  const liste = ROUTEN.filter(([id]) => imMenue(id)), stand = liste.map(([id]) => id).join();
+  if (stand === menueStand) return false;
+  menueStand = stand;
+  document.getElementById("nav").innerHTML = liste.map(([id, name]) => `<a href="#${id}" data-route="${id}">${icon(id)}${name}</a>`).join("");
+  return true;
+}
+menueBauen();
 const TABS = ["start", "pause", "notfall", "vorsorge"]; // seit 0.4.2 Pause statt Bibliothek; die Bibliothek ist unter „Mehr“
 document.getElementById("tabbar").innerHTML = TABS.map((id) => { const n = ROUTEN.find((r) => r[0] === id)[1]; return `<a href="#${id}" data-route="${id}">${icon(id)}${n}</a>`; }).join("")
   + `<button type="button" id="tab-mehr" aria-controls="sidebar" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Mehr</button>`;
@@ -380,7 +409,7 @@ function tagesplanHtml() {
 /** Unter Lumi: wann sie schläft, mit Link auf „Mein Tag“ im Tagesplan. */
 function lumiMeinTagZeile() {
   const p = tagesplan();
-  return `<p class="muted of-klein lumi-mein-tag">Schlafenszeit: ${p.schluss == null ? "gelernt" : zeitText(p.schluss)} bis ${zeitText(p.aufstehen)} · <a href="#uebersicht" data-anker="tagesplan">Mein Tag ändern</a></p>`;
+  return `<p class="muted of-klein lumi-mein-tag">Schlafenszeit: ${p.schluss == null ? "gelernt" : zeitText(p.schluss)} bis ${zeitText(p.aufstehen)} · <a class="btn btn-sm of-btn of-btn--klein" href="#uebersicht" data-anker="tagesplan">Mein Tag ändern</a></p>`;
 }
 /** „Mein Tag“ (0.5.6): drei Knöpfe als schneller Weg, dann Schluss und Aufstehen auf die halbe Stunde. */
 function meinTagHtml(p) {
@@ -489,8 +518,8 @@ const seiten = {
           <div class="bereit-zahl">${b.wert}</div>
           ${fortschrittsbalken(b.wert, 100, `Bereit: ${b.wert} von 100`, "margin:.4rem 0 .8rem")}
           <p class="muted of-klein bereit-satz" style="margin:0 0 .5rem">${esc(bereitSatz(b.wert))}</p>
-          <p style="margin:0 0 .3rem"><a href="${schritt.ziel}">${esc(schritt.text)}</a></p>
-          <p class="of-klein" style="margin:0"><a href="#uebersicht">Alles zur Bereitschaft</a></p>
+          <p style="margin:0 0 .3rem"><a class="btn btn-sm of-btn of-btn--klein" href="${schritt.ziel}">${esc(schritt.text)}</a></p>
+          <p class="of-klein" style="margin:0"><a class="btn btn-sm of-btn of-btn--klein" href="#uebersicht">Alles zur Bereitschaft</a></p>
         </div>
       </div>
       ${testLeiste()}
@@ -510,6 +539,14 @@ const seiten = {
 
   /** Der Raum „Pause“: Vorschlag, alle Formen zum Wählen, Deine Linie und Einstellungen; beim ersten Mal das Einschalten. */
   pause() { return pauseRaumHtml(); },
+  /** Naturheilkunde, erste Fassung (Nr. 28): Inhalte aus dem Paket, Aufbau in heilkunde.js. */
+  heilkunde() {
+    const p = installiertesPaket(HEILKUNDE_PAKET), d = p && texte(p, "inhalt/heilkunde.json");
+    if (!d) return `${kopf("Naturheilkunde", "Kommt mit dem Paket „Naturheilkunde“.")}<div class="card of-karte"><p class="muted of-klein" style="margin:0">${navigator.onLine ? "Das Paket wird geladen …" : "Sobald du online bist, lädt OFFLINE das Paket von selbst."}</p><p class="form-msg of-meldung" id="hk-msg"></p></div>`;
+    return `${kopf("Naturheilkunde", "")}${heilkundeSeiteHtml(d, state.heilkunde, land())}`;
+  },
+  /** Einstellungen (Nr. 28, Nachtrag Mik): Land, Alter (für Pause), Bundesland. */
+  einstellungen() { return einstellungenHtml(); },
   /** Ein laufender Happen (Fokus-Bildschirm). render() baut ihn selbst ein; ohne laufenden Happen geht es in den Raum. */
   happen() { return ""; },
   /** Pause › Deine Linie */
@@ -529,7 +566,7 @@ const seiten = {
   /** Heft „Was Lumi gesagt hat“: gemerkte Sätze, ohne Netz durchsuchbar, einzeln löschbar. */
   heft() {
     return `${kopf(`Was ${esc(wesen.anzeigename())} gesagt hat`, "Die Sätze, die du dir gemerkt hast. Sie bleiben auf diesem Gerät.")}
-      <p style="margin:0 0 1rem"><a href="#lumi">‹ Lumi</a></p>
+      <p style="margin:0 0 1rem"><a class="btn btn-sm of-btn of-btn--klein" href="#lumi">‹ Lumi</a></p>
       ${wesen.heft.length ? `<label for="heft-suche" class="of-klein">Im Heft suchen</label><br><input class="of-input" type="search" id="heft-suche" value="${esc(state.heftSuche ?? "")}" autocomplete="off" style="margin:.3rem 0 1rem;max-width:28rem;width:100%">` : ""}
       <div class="card of-karte" id="heft-liste">${wesen.heftHtml(state.heftSuche ?? "")}</div>`;
   },
@@ -574,17 +611,17 @@ const seiten = {
     const belegt = installierte.reduce((s, x) => s + x.manifest.groesse, 0);
     const k = katalog();
     const updates = k ? verfuegbareUpdates(k).length : 0;
-    const land = laender.find((l) => l.name === state.bundesland);
+    const land = ausland() ? null : laender.find((l) => l.name === state.bundesland); // Nr. 28: Bundesland nur in Österreich
     const b = bereit(); wesen.setScore(b); const schritt = naechsterSchritt(b);
     return `
       <div class="gruss of-gruss"><div><h1>Bereit</h1><p class="muted of-klein">Alles hier funktioniert ohne Internet.</p></div>
-        <select class="of-select" id="bl" aria-label="Dein Bundesland">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>
+        ${ausland() ? "" : `<select class="of-select" id="bl" aria-label="Dein Bundesland">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select>`}</div>
       <div class="card of-karte bereit-kopf" style="margin-bottom:1rem">
         <span class="muted of-klein">Bereit</span>
         <div class="bereit-zahl">${b.wert}</div>
         ${fortschrittsbalken(b.wert, 100, `Bereit: ${b.wert} von 100`, "margin:.4rem 0 .8rem")}
         <p class="muted of-klein" style="margin:0 0 .5rem">${esc(bereitSatz(b.wert))}</p>
-        <p style="margin:0 0 .6rem"><a href="${schritt.ziel}">${esc(schritt.text)}</a></p>
+        <p style="margin:0 0 .6rem"><a class="btn btn-sm of-btn of-btn--klein" href="${schritt.ziel}">${esc(schritt.text)}</a></p>
         ${b.quellen.map((q) => { const st = quelleStand(q); return `<div class="bereit-quelle bereit-quelle--${st}"><span><span class="bq-punkt" aria-hidden="true"></span>${esc(q.name)} <span class="muted of-klein">· ${esc(q.text)}</span><span class="sr-only">, ${QUELLE_STAENDE[st]}</span></span><span class="mono of-mono">${q.punkte}/${q.max}</span><span class="bq-balken" aria-hidden="true"><span style="width:${Math.round((q.roh / q.max) * 100)}%"></span></span></div>`; }).join("")}
         ${hilfeZeile("bereit", "bereit-hilfe")}
       </div>
@@ -613,6 +650,7 @@ const seiten = {
   },
 
   notfall() {
+    if (ausland()) return notfallAuslandHtml();
     const n = D("notrufe"), s = D("sirenen");
     if (!n || !s) return fehlt();
     const welle = { konstant: "M2 22 H298", heulend: "M2 22 " + Array.from({ length: 6 }, (_, i) => `Q${27 + i * 50} ${i % 2 ? 42 : 2} ${52 + i * 50} 22`).join(" ") };
@@ -654,12 +692,13 @@ const seiten = {
       ${haushaltHtml(state.haushalt)}
       ${vorhabenHtml}
       ${grundvorsorgeHtml(g, { checks: state.checks, haushalt: state.haushalt, merk: state.merk, nurMerk: state.nurMerk, zuruecksetzen: state.gvZurueck, faellig })}
-      ${Object.keys(karten).length ? `<h2 style="margin-top:2rem">Szenarien</h2><p class="muted of-klein">Was du für jeden Ernstfall zusätzlich brauchst und wie du richtig reagierst.</p>${kachelnHtml(karten, szReihe(), state.szChecks)}` : ""}
+      ${ausland() ? `<h2 style="margin-top:2rem">Szenarien</h2>${landVorschauHtml()}` : Object.keys(karten).length ? `<h2 style="margin-top:2rem">Szenarien</h2><p class="muted of-klein">Was du für jeden Ernstfall zusätzlich brauchst und wie du richtig reagierst.</p>${kachelnHtml(karten, szReihe(), state.szChecks)}` : ""}
       ${g.quellen?.length ? `<details class="sz-quellen" style="margin-top:1.5rem"><summary class="muted of-klein">Quellen der Grundvorsorge (Stand ${esc(g.stand ?? "")})</summary><ul class="muted of-klein">${g.quellen.map((q) => `<li>${q.url ? `<a href="${esc(q.url)}" rel="noopener">${esc(q.name)}</a>` : esc(q.name)}</li>`).join("")}</ul></details>` : ""}`;
   },
 
   /** Eine Szenario-Karte (0.8.0): Adresse #szenario-<id>; Notfallseiten im Grundaussehen, ohne Skin. */
   szenario() {
+    if (ausland()) return notfallAuslandHtml();
     const karten = szKarten(), k = karten[state.szenario];
     if (!k) return seiten.notfall();
     const verweise = (k.verweise ?? []).map((v) => verweisZiel(v, grund(), karten)).filter(Boolean);
@@ -743,7 +782,7 @@ const seiten = {
     const w = state.werkzeug;
     const laender = texte(P(), "inhalt/bundeslaender.json")?.laender ?? [];
     const land = laender.find((l) => l.name === state.bundesland);
-    const koord = HAUPTSTAEDTE[state.bundesland] ?? HAUPTSTAEDTE.Wien;
+    const koord = ausland() ? LAENDER[speicher.get("land", "at")].capital : HAUPTSTAEDTE[state.bundesland] ?? HAUPTSTAEDTE.Wien; // Nr. 28: Sonne und Mond für die Hauptstadt
     const d = w.datum ? new Date(w.datum + "T12:00:00") : new Date();
     const sz = sonnenzeiten(koord[0], koord[1], d);
     const mond = mondphase(d);
@@ -753,13 +792,13 @@ const seiten = {
     const radio = w.radio[state.bundesland] ?? {};
     const sender = [["oe1", "Ö1"], ["oe2", land?.orf_radio ?? "ORF-Regionalradio"], ["oe3", "Ö3 (Verkehrs- und Krisenfunk)"]];
     const v = w.vorrat; const wasser = v.personen * v.tage * 2, essen = v.personen * v.tage;
-    return `${kopf("Werkzeuge", "Radio, Sonne und Mond, Rechner – alles ohne Netz.", `<div class="switch of-liste__zeile" style="border:0;padding:0"><label class="muted of-klein" for="bl2">Bundesland</label><select class="of-select" id="bl2">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>`)}
+    return `${kopf("Werkzeuge", "Radio, Sonne und Mond, Rechner – alles ohne Netz.", ausland() ? "" : `<div class="switch of-liste__zeile" style="border:0;padding:0"><label class="muted of-klein" for="bl2">Bundesland</label><select class="of-select" id="bl2">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>`)}
       <div class="grid grid-2">
-        <div class="card of-karte"><h3>📻 Radio im Krisenfall</h3>
+        ${ausland() ? `<div class="card of-karte"><h3>📻 Radio im Krisenfall</h3>${landVorschauHtml()}</div>` : `<div class="card of-karte"><h3>📻 Radio im Krisenfall</h3>
           <p class="muted of-klein" style="margin:.3rem 0 .6rem">Fällt Strom und Netz aus, informiert der Österreichische Rundfunk (ORF) über Radio – Ö3 ist der Verkehrs- und Krisenfunk, dazu das Landesstudio. Ein <strong>Batterie- oder Kurbelradio</strong> gehört in jede Vorsorge. Die Frequenz hängt vom Sender in deiner Nähe ab: einmal am Radio suchen und hier eintragen, dann steht sie auch ohne Netz da.</p>
           ${sender.map(([k, name]) => `<div class="switch of-liste__zeile"><span><strong>${esc(name)}</strong></span><span style="display:flex;align-items:center;gap:.3rem"><input class="of-input" type="text" data-radio="${k}" value="${esc(radio[k] ?? "")}" placeholder="z. B. 99,9" inputmode="decimal" style="width:7.5em;text-align:right" autocomplete="off"> <span class="muted of-klein">MHz</span></span></div>`).join("")}
           <p class="muted of-klein" style="margin:.6rem 0 0;font-size:.85rem">Wien: Ö1 92,0 · Radio Wien 89,9 · Ö3 99,9 MHz (Sender Kahlenberg). Digital: DAB+ ist in Ballungsräumen zusätzlich verfügbar, im Blackout aber vom Sendernetz abhängig – UKW bleibt die sicherste Wahl.</p>
-        </div>
+        </div>`}
         <div class="card of-karte"><h3>☀️ Sonne und Mond</h3>
           <div class="switch of-liste__zeile" style="border:0;padding:.2rem 0 .6rem"><label class="muted of-klein" for="wz-datum">Tag</label><input class="of-input" type="date" id="wz-datum" value="${esc(w.datum ?? new Date().toISOString().slice(0, 10))}"></div>
           <div class="grid grid-2" style="gap:.5rem">
@@ -803,7 +842,7 @@ const seiten = {
     const k = katalog();
     if (!k) return `${kopf("Bibliothek", "Der Paketkatalog wurde noch nie geladen.")}<div class="card of-karte"><p class="muted of-klein">Geh einmal online, dann holt OFFLINE den Katalog und merkt ihn sich.</p><button class="btn btn-primary of-btn of-btn--primaer" data-katalog>Katalog laden</button><p class="form-msg of-meldung" id="bib-msg"></p></div>`;
     const inst = installierteIds().map(paketRoh).filter(Boolean);
-    const { neu, bald, geraet } = ladenAbschnitte(k, inst, { versionVergleich, bald: BALD, nichtLadbar: NICHT_LADBAR });
+    const { neu, bald, geraet } = ladenAbschnitte(k, inst, { versionVergleich, bald: BALD.filter((b) => b.nurOhne !== "tresor" || !tresorBenutzt()), nichtLadbar: NICHT_LADBAR });
     const abschnitt = (titel, satz, karten, leer) => `<section class="laden-abschnitt" aria-label="${esc(titel)}"><h2>${esc(titel)}</h2><p class="laden-satz of-klein">${esc(satz)}</p>${karten.length ? `<div class="grid grid-2">${karten.join("")}</div>` : `<p class="muted of-klein">${esc(leer)}</p>`}</section>`;
     return `
       ${kopf("Bibliothek", `Katalog vom ${datum(k.erstellt)} · Signatur geprüft ✓${desktop ? "" : " · Im Browser gehen Textpakete, große Pakete kommen in die Desktop-App."}`)}
@@ -821,6 +860,7 @@ const seiten = {
   karte() {
     const kp = kartenPaket();
     return `${kopf("Karte Österreich", kp ? `Offline aus ${esc(kp.manifest.titel)} ${esc(kp.manifest.version)} – kein Internet nötig.` : desktop ? "Noch kein Kartenpaket installiert – solange online von basemap.at. Kartenpaket: Bibliothek → Karten." : "Im Prototyp live von basemap.at, in der App als Offline-Datei auf deinem Rechner.")}
+      ${!kp && !navigator.onLine ? `<div class="card of-karte karte-offline"><p style="margin:0">Die Karte braucht Internet. Die Offline-Karte (1,2 GB) kommt mit einem Update.</p></div>` : ""}
       <div id="karte" role="region" aria-label="Karte von Österreich"></div>
       <p class="form-msg of-meldung" id="karte-msg"></p>`;
   },
@@ -1423,10 +1463,40 @@ async function pauseEinschalten(alter) {
   if (PP()) pauseStarten({ zurueck: "pause" }); else render();
 }
 
+function einstellungenHtml() {
+  const l = land(), alter = (speicher.get("pause", null) ?? {}).alter ?? null;
+  const laender = D("bundeslaender")?.laender ?? [];
+  return `${kopf("Einstellungen", "Land, Alter und Bundesland. Alles bleibt auf diesem Gerät.")}
+    <section class="card of-karte einst-teil" aria-labelledby="einst-land-titel"><h2 id="einst-land-titel">Land</h2>
+      <p class="muted of-klein">Davon hängen Notrufnummern, Radiosender und Szenarien ab.</p>
+      ${landAuswahlHtml("einst-land", l)}</section>
+    <section class="card of-karte einst-teil" aria-labelledby="einst-alter-titel"><h2 id="einst-alter-titel">Alter</h2>
+      <p class="muted of-klein">Für Pause: Welche Happen passen. Pause gibt es ab 14 Jahren.</p>
+      <div class="land-auswahl" role="radiogroup" aria-labelledby="einst-alter-titel">${Object.entries(LEBENSABSCHNITTE).map(([k, t]) => `<label class="land-opt"><input type="radio" name="einst-alter" value="${k}" ${k === alter ? "checked" : ""}><span>${esc(t)}</span></label>`).join("")}</div></section>
+    <section class="card of-karte einst-teil" aria-labelledby="einst-bl-titel"><h2 id="einst-bl-titel">${esc(LAENDER[l]?.region ?? "Bundesland")}</h2>
+      ${l === "at" && laender.length ? `<label class="muted of-klein" for="bl-einst">Für Radio, Werkzeuge und Bereit</label><br><select class="of-select" id="bl-einst">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select>`
+        : `<p class="muted of-klein">${esc(kommtMit(l))}</p>`}</section>`;
+}
+/** Alter in den Einstellungen: speichert es und schaltet Pause ein (unter 14 aus), ohne gleich einen Happen zu starten. */
+function alterSetzen(alter) {
+  if (!(alter in LEBENSABSCHNITTE)) return;
+  const roh = speicher.get("pause", null) ?? {};
+  speicher.set("pause", { ...roh, alter, an: pauseAngeboten(alter), seit: roh.seit ?? heuteDatum() });
+  speicher.set("pause-alter-gefragt", true);
+  if (pauseAngeboten(alter) && !PP() && navigator.onLine) installiereMitMeldung("pause", "pause-msg").then(() => render());
+}
+
 /** Der Raum „Pause“ (#pause). Ist Pause aus: zwei Sätze und fünf Knöpfe fürs Alter – ein Tipp schaltet ein und startet den ersten Happen. */
+let pauseRaumGefragt = null; const heuteSitzung = Date.now(); // in dieser Sitzung zuerst gefragt: beim Neuzeichnen bleibt die Frage
 function pauseRaumHtml() {
   const e = pauseE(), roh = speicher.get("pause", null) ?? {}, daten = pauseDaten();
   const kopfR = `<div class="page-head of-seitenkopf"><div><h1 class="z-h1">Pause</h1><p class="z-leise">Ein Happen für zwischendurch, dann ist wieder Ruhe.</p></div></div>`;
+  // Nr. 28 (Nachtrag Mik): Die Altersfrage kommt genau einmal beim ersten Öffnen, danach nur noch in den Einstellungen
+  if (!e.an && speicher.get("pause-alter-gefragt", false) && pauseRaumGefragt !== heuteSitzung) return `${kopfR}<div class="pause-raum">
+    <p class="z-text">Pause ist aus. Pause schlägt dir ab und zu einen kurzen Happen vor, 30 Sekunden bis 3 Minuten.</p>
+    <p class="z-leise">Dein Alter wählst du in den Einstellungen. Damit schaltest du Pause ein.</p>
+    <a class="btn of-btn" href="#einstellungen">Zu den Einstellungen</a></div>`;
+  if (!e.an) { speicher.set("pause-alter-gefragt", true); pauseRaumGefragt = heuteSitzung; }
   if (!e.an) return `${kopfR}<div class="pause-raum">
     <p class="z-text">Pause schlägt dir ab und zu einen kurzen Happen vor, 30 Sekunden bis 3 Minuten: eine Sache, ein Gelingen, ein Satz zum Mitnehmen. Keine Serien, keine Pushnachrichten, nichts verlässt das Gerät.</p>
     ${roh.alter === "kind" ? `<p class="of-meldung">Pause gibt es ab 14 Jahren. Für Jüngere kommt später ein Kinder-Modus.</p>` : ""}
@@ -1547,7 +1617,7 @@ function lumiSeiteHtml() {
       ? `<button type="button" class="lumi-kaestchen-feld of-karte" ${x.knopf}><span class="lumi-kaestchen-titel">${esc(x.titel)}</span><span class="lumi-kaestchen-zeile">${esc(x.zeile)}</span></button>`
       : `<a class="lumi-kaestchen-feld of-karte" href="${x.ziel}" ${x.anker ? `data-anker="${x.anker}"` : ""}><span class="lumi-kaestchen-titel">${esc(x.titel)}</span><span class="lumi-kaestchen-zeile">${esc(x.zeile)}</span></a>`).join("")}</div>`
       : `<div class="card of-karte"><p class="muted" style="margin:0">Hier stehen die Pakete der Lumi, sobald sie geladen und an sind.</p></div>`}
-      <p class="lumi-mehr"><a href="#bibliothek">Mehr für die Lumi in der Bibliothek</a></p>`;
+      <p class="lumi-mehr"><a class="btn btn-sm of-btn of-btn--klein" href="#bibliothek">Mehr für die Lumi in der Bibliothek</a></p>`;
   }
   return `<div class="lumi-seite">${kopfTeil}${satzTeil}${menue}<div class="lumi-teil" role="tabpanel">${teil}</div></div>`;
 }
@@ -1709,7 +1779,7 @@ function vorschauTitelHtml(key, e) {
   </div>`;
 }
 
-const vorschauFenster = { key: null, id: null, i: 0, vorher: null, gross: false };
+const vorschauFenster = { key: null, id: null, vorher: null, gross: null };
 function vorschauEintrag(id) { return baldEintrag(id) ?? katalog()?.pakete.find((p) => p.id === id) ?? state.modul.lokal?.pakete.find((p) => p.id === id) ?? paketRoh(id)?.manifest ?? { id }; }
 /** Was unten im Fenster steht: der „laden“-Schieber der Karte (gleiche Wirkung), sonst ihr Stand in Worten. */
 function vorschauFuss(id) {
@@ -1726,24 +1796,23 @@ function vorschauFensterZeichnen() {
   const { key, id } = vorschauFenster;
   if (!el || !key) return;
   const e = vorschauEintrag(id), folien = vorschauFolien(key, e);
-  const n = folien.length, i = Math.min(vorschauFenster.i, Math.max(n - 1, 0)), f = folien[i];
+  // Nr. 28 (Nachtrag Mik): kein Durchblättern – alle Bilder untereinander in normaler Größe, der Text je Bild darunter
   el.querySelector(".vorschau-dialog").innerHTML = `
     <div class="vorschau-kopf"><h2 id="vorschau-name">${esc(e.titel ?? id)}</h2><button type="button" class="vorschau-x" data-vorschau-zu aria-label="Vorschau schließen">×</button></div>
-    ${f ? `<figure class="vorschau-seite" aria-live="polite">
-      ${f.bild_daten ? vorschauBildHtml(f) : `<div class="vorschau-bild">${state.modul.vorschau[key] === undefined ? `<span class="muted of-klein">Bild wird geladen …</span>` : `<span class="muted of-klein">${esc(f.alt ?? "")}</span>`}</div>`}
+    ${folien.length ? `<div class="vorschau-folien">${folien.map((f, i) => `<figure class="vorschau-seite">
+      ${f.bild_daten ? vorschauBildHtml(f, i) : `<div class="vorschau-bild">${state.modul.vorschau[key] === undefined ? `<span class="muted of-klein">Bild wird geladen …</span>` : `<span class="muted of-klein">${esc(f.alt ?? "")}</span>`}</div>`}
       <figcaption><h3>${esc(f.titel)}</h3><p>${esc(f.text)}</p></figcaption>
-    </figure>` : `<p class="muted">Vorschau wird geladen …</p>`}
-    ${n > 1 ? `<div class="vorschau-nav"><button type="button" class="btn of-btn" data-vorschau-schritt="-1" aria-label="Vorherige Seite">‹</button><span class="of-klein">${i + 1} von ${n}</span><button type="button" class="btn of-btn" data-vorschau-schritt="1" aria-label="Nächste Seite">›</button></div>` : ""}
+    </figure>`).join("")}</div>` : `<p class="muted">Vorschau wird geladen …</p>`}
     <div class="vorschau-fuss">${vorschauFuss(id)}</div>`;
 }
 /**
  * Lesbar auf dem Handy (Auftrag Nr. 23, Prüfliste aus dem Anker): Ein Bildschirmfoto in der Vorschau ist eingepasst und
  * damit oft zu klein zum Lesen. Antippen zeigt es in voller Größe (1 Bildpunkt = 1 Pixel), zum Verschieben in beide
- * Richtungen; noch einmal Antippen passt es wieder ein. Blättern setzt zurück.
+ * Richtungen; noch einmal Antippen passt es wieder ein. Seit Nr. 28 je Bild (gross: Nummer des vergrößerten Bildes).
  */
-function vorschauBildHtml(f) {
-  const gross = vorschauFenster.gross;
-  return `<div class="vorschau-bild${gross ? " vorschau-bild--gross" : ""}"><button type="button" class="vorschau-zoom" data-vorschau-gross aria-pressed="${gross}" aria-label="${gross ? "Bild wieder einpassen" : "Bild in voller Größe zeigen"}"><img src="${esc(f.bild_daten)}" alt="${esc(f.alt)}"></button></div>
+function vorschauBildHtml(f, i) {
+  const gross = vorschauFenster.gross === i;
+  return `<div class="vorschau-bild${gross ? " vorschau-bild--gross" : ""}"><button type="button" class="vorschau-zoom" data-vorschau-gross="${i}" aria-pressed="${gross}" aria-label="${gross ? "Bild wieder einpassen" : "Bild in voller Größe zeigen"}"><img src="${esc(f.bild_daten)}" alt="${esc(f.alt)}"></button></div>
       <p class="vorschau-zoom-hinweis">${gross ? "Volle Größe: verschieben zum Lesen, antippen zum Einpassen." : "Zum Vergrößern aufs Bild tippen."}</p>`;
 }
 function vorschauOeffnen(key, id, ausloeser) {
@@ -1754,11 +1823,8 @@ function vorschauOeffnen(key, id, ausloeser) {
     el.innerHTML = `<div class="vorschau-hinter" data-vorschau-zu></div><div class="vorschau-dialog" role="dialog" aria-modal="true" aria-labelledby="vorschau-name"></div>`;
     document.body.append(el);
     el.addEventListener("click", vorschauKlick);
-    let x0 = null;
-    el.addEventListener("pointerdown", (ev) => { if (ev.target.closest(".vorschau-seite") && !vorschauFenster.gross) x0 = ev.clientX; });
-    el.addEventListener("pointerup", (ev) => { if (x0 === null) return; const dx = ev.clientX - x0; x0 = null; if (Math.abs(dx) > 50) vorschauBlaettern(dx < 0 ? 1 : -1); });
   }
-  Object.assign(vorschauFenster, { key, id, i: 0, vorher: ausloeser ?? document.activeElement, gross: false });
+  Object.assign(vorschauFenster, { key, id, vorher: ausloeser ?? document.activeElement, gross: null });
   vorschauFensterZeichnen();
   el.hidden = false; document.body.classList.add("vorschau-offen");
   el.querySelector(".vorschau-x")?.focus();
@@ -1771,19 +1837,11 @@ function vorschauZu() {
   const vorher = vorschauFenster.vorher; vorschauFenster.key = null;
   if (vorher?.isConnected) vorher.focus();
 }
-function vorschauBlaettern(r) {
-  const n = vorschauFolien(vorschauFenster.key, vorschauEintrag(vorschauFenster.id)).length;
-  if (n < 2) return;
-  vorschauFenster.i = (vorschauFenster.i + r + n) % n; vorschauFenster.gross = false;
-  vorschauFensterZeichnen();
-  document.querySelector(`#vorschau-fenster [data-vorschau-schritt="${r}"]`)?.focus();
-}
 function vorschauKlick(ev) {
-  const b = ev.target.closest("[data-vorschau-zu], [data-vorschau-schritt], [data-vorschau-laden], [data-vorschau-gross]");
+  const b = ev.target.closest("[data-vorschau-zu], [data-vorschau-laden], [data-vorschau-gross]");
   if (!b) return;
   if (b.hasAttribute("data-vorschau-zu")) return vorschauZu();
-  if (b.hasAttribute("data-vorschau-gross")) { vorschauFenster.gross = !vorschauFenster.gross; vorschauFensterZeichnen(); document.querySelector("#vorschau-fenster [data-vorschau-gross]")?.focus(); return; }
-  if (b.dataset.vorschauSchritt) return vorschauBlaettern(Number(b.dataset.vorschauSchritt));
+  if (b.hasAttribute("data-vorschau-gross")) { const i = Number(b.dataset.vorschauGross); vorschauFenster.gross = vorschauFenster.gross === i ? null : i; vorschauFensterZeichnen(); document.querySelector(`#vorschau-fenster [data-vorschau-gross="${i}"]`)?.focus(); return; }
   const id = vorschauFenster.id;
   vorschauZu();
   main.querySelector(`[data-laden-karte="${CSS.escape(id)}"] .schieber-laden, [data-modul-karte="${CSS.escape(id)}"] .schieber-laden`)?.click();
@@ -1792,7 +1850,6 @@ document.addEventListener("keydown", (ev) => {
   const el = document.getElementById("vorschau-fenster");
   if (!el || el.hidden) return;
   if (ev.key === "Escape") { ev.preventDefault(); return vorschauZu(); }
-  if (ev.key === "ArrowRight" || ev.key === "ArrowLeft") { ev.preventDefault(); return vorschauBlaettern(ev.key === "ArrowRight" ? 1 : -1); }
   if (ev.key === "Tab") { // Fokus bleibt im Fenster
     const f = [...el.querySelectorAll(".vorschau-dialog button")];
     if (!f.length) return;
@@ -2405,6 +2462,47 @@ function antworte(frage) {
     : "Dazu finde ich im Österreich-Paket nichts. Mit installierter Wikipedia und dem Sprachmodell kann ich in der App mehr beantworten.";
 }
 
+/** Deutschland, Schweiz (Nr. 28): Was erst mit dem Paket des Landes kommt. */
+const landVorschauHtml = () => `<div class="card of-karte land-vorschau"><p style="margin:0">${esc(kommtMit(land()))}</p><p class="muted of-klein" style="margin:.4rem 0 0">Bis dahin zeigt OFFLINE die Notrufnummern deines Landes. Ändern kannst du das Land in den <a href="#einstellungen">Einstellungen</a>.</p></div>`;
+function notfallAuslandHtml() {
+  const l = LAENDER[land()];
+  return `${kopf("Notfall", "Tippe auf eine Nummer, um anzurufen.")}
+    <div class="grid grid-2" id="notrufe">${l.notrufe.map((e) => `
+      <div class="card notruf of-karte"><a class="notruf-nr ${e.nr.length > 4 ? "long" : ""}" href="tel:${e.nr.replace(/\s/g, "")}">${esc(e.nr)}</a>
+        <div><h3>${esc(e.name)}</h3><p>${esc(e.info)}</p></div></div>`).join("")}
+    </div>
+    <p class="muted of-klein" style="margin-top:1rem">${esc(l.hinweis)}</p>
+    <h2 style="margin-top:2rem">Was tun bei …</h2>${landVorschauHtml()}
+    <h2 style="margin-top:2rem">Radio und Sirenen</h2>${landVorschauHtml()}`;
+}
+
+// ---------- Land wählen (Nr. 28; Entwurf Bill im Artefakt „OFFLINE MVP zum Durchblättern“, Nachtrag 2: Absender) ----------
+function landAuswahlHtml(name, gewaehlt) {
+  return `<div class="land-auswahl" role="radiogroup" aria-labelledby="${name}-titel">${Object.entries(LAENDER).map(([id, l]) => `<label class="land-opt"><input type="radio" name="${name}" value="${id}" ${id === gewaehlt ? "checked" : ""}><span>${esc(l.name)}</span></label>`).join("")}</div>
+    <p class="land-spaeter" aria-disabled="true">${esc(LAENDER_SPAETER)}</p>`;
+}
+function landFrageZeigen() {
+  main.innerHTML = `<div class="land-frage" id="land-frage">
+    <h1>Servus.</h1>
+    <p id="land-titel" class="land-frage-text">In welchem Land lebst du?</p>
+    ${landAuswahlHtml("land", "at")}
+    <button type="button" class="btn btn-primary of-btn of-btn--primaer land-weiter" data-land-weiter>Weiter</button>
+    <p class="muted of-klein">Davon hängen Notrufnummern, Radiosender und Szenarien ab. Du kannst es später in den Einstellungen ändern.</p>
+    <div class="land-absender">
+      <a class="btn btn-sm of-btn of-btn--klein" href="impressum.html">Von der digitalworld Academy OG, Wien.</a>
+      <p class="of-klein">Alles, was du eingibst, bleibt auf deinem Gerät.</p>
+      <p class="of-klein">OFFLINE ergänzt Radio und Sirene. Es ersetzt sie nicht.</p>
+    </div>
+  </div>`;
+  document.title = "OFFLINE – Land wählen";
+  sidebar.classList.remove("open"); menu.setAttribute("aria-expanded", "false"); document.getElementById("sheet-hinter").hidden = true;
+  document.querySelectorAll("#nav a, #tabbar a").forEach((a) => a.removeAttribute("aria-current"));
+}
+function landSetzen(id) {
+  if (!(id in LAENDER)) return;
+  speicher.set("land", id); landFrage = false;
+}
+
 // ---------- Rendern & Ereignisse ----------
 const main = document.getElementById("main");
 const sidebar = document.getElementById("sidebar");
@@ -2414,6 +2512,8 @@ function render() {
   let route = location.hash.slice(1) || "start";
   if (route.startsWith("szenario-")) { state.szenario = route.slice(9); route = "szenario"; } // 0.8.0: eine Karte je Szenario
   if (wesen.nurVorschau && (route === "lumi" || route === "heft")) { location.replace("#start"); return; } // Nr. 27: keine Lumi-Seite
+  if (landFrage) { landFrageZeigen(); return; } // Nr. 28: erst das Land
+  if (route === "tresor" && !tresorBenutzt() && (!desktop || state.tresor.status !== null)) { location.replace("#bibliothek"); return; } // Nr. 28: Tresor als Vorschau
   checksAngleichen();
   if (render.seite !== location.hash) blattWeg(); // Nr. 26: Neuzeichnen derselben Seite (Abo-Stand, Tagespakete) lässt ein offenes Blatt stehen
   if (route === "modul") { modulAnsichtZeigen(); return; }
@@ -2431,6 +2531,7 @@ function render() {
     return;
   }
   if (desktop && route === "updates") client.aboStatus().then((st) => { if (st !== desktop.aboStatus) { desktop.aboStatus = st; render(); } }).catch(() => {});
+  if (menueBauen()) neuPunktMenue();
   naturMenue();
   const seite = seiten[route] && (route !== "natur" || naturDaten()) ? route : "start";
   if (seite !== "natur" && state.natur.liest) naturVorlesenStop();
@@ -2466,6 +2567,9 @@ function render() {
 }
 
 main.addEventListener("change", (e) => {
+  // Nr. 28: Einstellungen – Land, Alter (für Pause)
+  if (e.target.name === "einst-land") { landSetzen(e.target.value); return render(); }
+  if (e.target.name === "einst-alter") { alterSetzen(e.target.value); return render(); }
   // „Deine Linie“ (0.7.1): Stufe als Wort selbst stellen
   if (e.target.dataset?.pauseStufe) { const f = pauseDaten()?.formen.find((x) => x.id === e.target.dataset.pauseStufe); if (f) { linieSpeichern(pauseStufeSetzen(pauseL(), f, Number(e.target.value))); render(); } return; }
   const t = e.target;
@@ -2505,7 +2609,7 @@ main.addEventListener("change", (e) => {
   if (t.dataset.wesen) { wesen.einstellen(t.dataset.wesen, t.type === "checkbox" ? t.checked : t.value); if (t.dataset.wesen !== "name") render(); return; }
   if (t.dataset.wesenSorte) { wesen.einstellen(t.dataset.wesenSorte, t.checked); return; }
   if (t.id === "wesen-log-filter") { state.wesenLog.filter = t.value; document.getElementById("wesen-log").innerHTML = wesen.logHtml(state.wesenLog.filter, state.wesenLog.suche); return; }
-  if (t.id === "bl" || t.id === "bl2") { state.bundesland = t.value; speicher.set("bundesland", t.value); render(); }
+  if (t.id === "bl" || t.id === "bl2" || t.id === "bl-einst") { state.bundesland = t.value; speicher.set("bundesland", t.value); render(); }
   if (t.id === "wz-datum") { state.werkzeug.datum = t.value || null; render(); }
   if (t.id === "wz-art") { state.werkzeug.rechner = { ...state.werkzeug.rechner, art: t.value, von: Object.keys(EINHEITEN[t.value].e)[0], nach: Object.keys(EINHEITEN[t.value].e)[1] }; render(); }
   if (t.id === "wz-von") { state.werkzeug.rechner.von = t.value; render(); }
@@ -2560,6 +2664,14 @@ function beiKlick(e) {
   if (b.hasAttribute("data-speicherort-standard")) speicherortSetzen(null);
 }
 main.addEventListener("click", beiKlick);
+main.addEventListener("click", (e) => {
+  if (location.hash === "#heilkunde" && heilkundeKlick(state.heilkunde, e.target)) { render(); window.scrollTo(0, 0); main.scrollTop = 0; }
+});
+main.addEventListener("click", (e) => {
+  if (!e.target.closest("[data-land-weiter]")) return;
+  landSetzen(main.querySelector('input[name="land"]:checked')?.value ?? "at");
+  if (location.hash && location.hash !== "#start") location.hash = "#start"; else render();
+});
 // 0.8.0: Szenarien, Grundvorsorge, Sirenen zum Anhören
 let sireneTon = null;
 main.addEventListener("click", async (e) => {
@@ -2902,7 +3014,7 @@ async function basisStillAktualisieren() {
     if (!navigator.onLine) return;
     try {
       const { katalog: k } = await ladeKatalog();
-      for (const id of [BASISPAKET, ...(wesen.nurVorschau ? [] : ["wir"])]) { // Nr. 24: das Lumi-Buch kommt mit dem Lumi-Update, Nr. 27: die Tipps auch
+      for (const id of [BASISPAKET, HEILKUNDE_PAKET, ...(wesen.nurVorschau ? [] : ["wir"])]) { // Nr. 24: das Lumi-Buch kommt mit dem Lumi-Update, Nr. 27: die Tipps auch
         if (installiertesPaket(id)) continue;
         const e = k.pakete.find((p) => p.id === id && p.status === "verfuegbar");
         if (e && appPasst(e)) { await installiere(k, e); render(); }
@@ -2923,6 +3035,8 @@ async function basisStillAktualisieren() {
   if (pauseE().an && !PP() && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "pause" && p.status === "verfuegbar"); if (e && appPasst(e)) await installiere(k, e); } catch (err) { console.error("Pause", err); } }
   // 0.7.0: Lumisch ist ein eigenes Paket. Wer Pause hat, bekommt es einmal still dazu (sonst fehlten die Lumisch-Happen)
   if (paketRoh("pause") && !paketRoh("lumisch") && !speicher.get("lumisch-geholt", false) && !NICHT_LADBAR.has("lumisch") && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "lumisch" && p.status === "verfuegbar"); if (e && appPasst(e)) { await installiere(k, e); speicher.set("lumisch-geholt", true); pauseDatenMerk = null; render(); } } catch (err) { console.error("Lumisch", err); } }
+  // Nr. 28: Naturheilkunde kommt still dazu, einmal (wer das Paket löscht, bekommt es nicht wieder aufgedrängt)
+  if (!paketRoh(HEILKUNDE_PAKET) && !speicher.get("heilkunde-geholt", false) && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === HEILKUNDE_PAKET && p.status === "verfuegbar"); if (e && appPasst(e)) { await installiere(k, e); speicher.set("heilkunde-geholt", true); if (location.hash === "#heilkunde") render(); } } catch (err) { console.error("Naturheilkunde", err); } }
   pauseBeimOeffnen();
   webVersionStill(); // 0.5.5: Web still nach neuer Version fragen, höchstens einmal am Tag
   internAbgleichen(); // 0.6.0: interner Kanal, nur mit Schlüssel

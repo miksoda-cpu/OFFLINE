@@ -5,7 +5,11 @@
 // kein abgeschnittener Text, keine fremde Adresse. Echte Uhrzeit (mit fester Uhr erscheinen Sprechblase und Tipps nicht).
 //
 //   node werkzeug/rundgang/rundgang.mjs --aus "<Ordner>"            alles (Standard: rundgang-aus/)
-//   Schalter: --breiten 360,1280  --farben hell,dunkel  --profile frisch,langzeit  --nur seite[,seite]
+//   Schalter: --breiten 360,1280  --farben hell,dunkel  --profile frisch,langzeit,deutschland  --nur seite[,seite]
+//   --neu pakete/a,pakete/b   noch nicht veröffentlichte Pakete mit einem Wegwerf-Schlüssel dazunehmen (testkatalog.mjs);
+//                              Standard: pakete/heilkunde-grundstock, wenn der Klartext da ist
+// Nr. 28: Frisches Gerät und „deutschland“ sehen zuerst die Länderfrage (Bild „land-…“) und wählen Österreich bzw. Deutschland;
+// der langjährige Benutzer wird nicht gefragt.
 //   Chrome-Pfad in CHROME (Standard wie beim Bildvergleich). Keine Abhängigkeit außer Node 22 und Chrome.
 //
 // Der langjährige Benutzer beginnt mit der Österreich-Basis 2026.09.29.1 aus dem eingefrorenen Katalog der Windows-Probe
@@ -19,6 +23,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { WURZEL, dateiserver, chromeStarten, warteBis } from "../browser.mjs";
 import { seitenListe } from "../seiten.mjs";
+import { testkatalog } from "./testkatalog.mjs";
 
 const argv = process.argv.slice(2);
 const opt = (n, d = null) => { const i = argv.indexOf(`--${n}`); return i >= 0 ? argv[i + 1] : d; };
@@ -26,6 +31,7 @@ const AUS = path.resolve(opt("aus", path.join(WURZEL, "rundgang-aus")));
 const BREITEN = opt("breiten", "360,1280").split(",").map(Number);
 const FARBEN = opt("farben", "hell,dunkel").split(",");
 const PROFILE = opt("profile", "frisch,langzeit").split(",");
+const NEU = opt("neu", "pakete/heilkunde-grundstock").split(",").filter(Boolean);
 const NUR = opt("nur")?.split(",");
 const EINGEFROREN = path.join(WURZEL, "werkzeug", "probe-katalog");
 const ALT_BASIS = "2026.09.29.1";
@@ -49,6 +55,10 @@ async function seiten() {
     { name: "linie", hash: "linie" }, { name: "neues", hash: "neues" }, { name: "werkzeuge", hash: "werkzeuge" }, { name: "notizen", hash: "notizen" },
     { name: "hilfe", hash: "vorsorge", danach: `document.querySelector('[data-hilfe]')?.click()`, fertig: `document.querySelector('.blatt')`, nurSichtbar: true },
     { name: "seitenleiste", hash: "start", danach: `(() => { const m = document.getElementById("menu"); if (m && !m.hidden) m.click(); })()`, nurSichtbar: true },
+    { name: "einstellungen-neu", hash: "einstellungen" },
+    { name: "heilkunde", hash: "heilkunde" },
+    { name: "heilkunde-pilz", hash: "heilkunde", danach: `(() => { document.querySelector('[data-hk-tab="ogg"]')?.click(); document.querySelector('[data-hk-gr="pilz"]')?.click(); document.querySelector('[data-hk-m="eierschwammerl"]')?.click(); })()`, fertig: `document.querySelector(".hk-verw")` },
+    { name: "heilkunde-gift", hash: "heilkunde", danach: `(() => { document.querySelector('[data-hk-tab="ogg"]')?.click(); document.querySelector('[data-hk-gr="pilz"]')?.click(); document.querySelector('[data-hk-m="knolle"]')?.click(); })()`, fertig: `document.querySelector(".hk-plak--rot")` },
     { name: "bald-vorschau", hash: "bibliothek", danach: `document.querySelector('[data-vorschau-oeffnen^="bald:"]')?.click()`, fertig: `document.querySelector('#vorschau-fenster:not([hidden]) img')`, nurSichtbar: true },
   ];
   return [...mvp, ...dazu].filter((s) => !NUR || NUR.includes(s.name));
@@ -125,10 +135,10 @@ async function langzeitDaten(t) {
   await t.auswerten(`document.querySelector('[data-pause="alter"][data-alter="M1"]')?.click() ?? document.querySelector('[data-pause="alter"]')?.click()`);
 }
 
-async function lauf(chrome, profil, breite, farbe, liste, bericht) {
+async function lauf(chrome, profil, breite, farbe, liste, bericht, kat) {
   let alt = profil === "langzeit";
   const server = await dateiserver(path.join(WURZEL, "web"), {}, (p) => {
-    if (!alt) return null;
+    if (!alt) return kat?.umleiten(p) ?? null;
     if (p === "/katalog/katalog.json" || p === "/katalog/katalog.sig") return path.join(EINGEFROREN, path.basename(p));
     if (p.startsWith(`/pakete/at-basis-${ALT_BASIS}/`)) return path.join(EINGEFROREN, p);
     return null;
@@ -143,6 +153,19 @@ async function lauf(chrome, profil, breite, farbe, liste, bericht) {
     await t.s("Emulation.setLocaleOverride", { locale: "de-AT" });
     await t.s("Page.addScriptToEvaluateOnNewDocument", { source: VORBEREITUNG });
     await t.laden(`${server.url}/app.html#start`);
+    if (profil !== "langzeit") {
+      // Nr. 28: zuerst das Land; Bild der Frage, dann Österreich (frisch) oder Deutschland
+      const frage = await warteBis(t, `document.getElementById("land-frage")`, 30_000).then(() => true, () => false);
+      pruefe("Länderfrage beim frischen Gerät", frage, frage ? "da" : "fehlt");
+      if (frage) {
+        await zeigen(t, { name: "land", hash: "start", nurSichtbar: true });
+        const p = await t.auswerten(PRUEFEN);
+        await writeFile(path.join(ordner, `land-${breite}-${farbe}.png`), await aufnehmen(t, breite, { nurSichtbar: true }));
+        pruefe("land: nichts läuft seitlich über", !p.ueber.length, p.ueber.join(" | "));
+        const wahl = profil === "deutschland" ? "de" : "at";
+        await t.auswerten(`(() => { document.querySelector('input[name="land"][value="${wahl}"]').click(); document.querySelector("[data-land-weiter]").click(); })()`);
+      }
+    }
     await warteBis(t, `localStorage.getItem("offline:paket:at-basis") && document.querySelector("#main h1")`, 60_000);
     if (alt) {
       const vorher = (await ls(t, "paket:at-basis"))?.manifest?.version;
@@ -156,6 +179,8 @@ async function lauf(chrome, profil, breite, farbe, liste, bericht) {
       await warteBis(t, `document.querySelector("#main .gv-bereich, #main [data-gv], #main h1")`, 15_000).catch(() => null);
       await zeigen(t, { name: "vorsorge-nach-update", hash: "vorsorge" });
       await writeFile(path.join(ordner, `vorsorge-nach-update-${breite}-${farbe}.png`), await aufnehmen(t, breite, { nurSichtbar: true }));
+      const landJetzt = await t.auswerten(`({ frage: !!document.getElementById("land-frage"), land: JSON.parse(localStorage.getItem("offline:land")) })`);
+      pruefe("Langjährig: keine Länderfrage, Österreich", !landJetzt.frage && landJetzt.land === "at", JSON.stringify(landJetzt));
       const wesen = await ls(t, "wesen"), checks = await ls(t, "checks");
       pruefe("Daten nach dem Update", wesen?.name === "Fini" && Object.keys(checks ?? {}).length >= 7, `Lumi ${wesen?.name}, ${Object.keys(checks ?? {}).length} Häkchen`);
     }
@@ -176,11 +201,15 @@ async function lauf(chrome, profil, breite, farbe, liste, bericht) {
 async function main() {
   await mkdir(AUS, { recursive: true });
   const liste = await seiten(), chrome = await chromeStarten();
+  const da = [];
+  for (const q of NEU) { try { await readFile(path.join(WURZEL, q, "paket.quelle.json")); await readFile(path.join(WURZEL, q, "inhalt", (await import("node:fs")).readdirSync(path.join(WURZEL, q, "inhalt"))[0])); da.push(q); } catch { console.log(`  (ohne ${q}: kein Klartext)`); } }
+  const kat = da.length ? await testkatalog(da) : null;
+  if (kat) console.log(`Testkatalog mit Wegwerf-Schlüssel: ${kat.ids.join(", ")}`);
   const bericht = { chrome: chrome.version, zeit: new Date().toISOString(), seiten: liste.map((s) => s.name), pruefungen: [] };
   console.log(`${chrome.version} · ${liste.length} Seiten × ${PROFILE.join("/")} × ${BREITEN.join("/")} px × ${FARBEN.join("/")} → ${AUS}`);
   try {
     for (const profil of PROFILE) for (const breite of BREITEN) for (const farbe of FARBEN) {
-      await lauf(chrome, profil, breite, farbe, liste, bericht);
+      await lauf(chrome, profil, breite, farbe, liste, bericht, kat);
       console.log(`  • ${profil} ${breite} px ${farbe} fertig`);
     }
   } finally { await chrome.beenden(); }

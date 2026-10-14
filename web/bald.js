@@ -41,6 +41,16 @@ export const BALD = [
       folie("lumi-2.svg", "Buch, Sprache, Gedanken", "Drei Teile: zum Lesen, zum Lernen und zum Nachdenken.", "Drei Kärtchen: Buch, Sprache, Gedanken"),
     ],
   },
+  {
+    // Nr. 28 (Nachtrag Mik): Für neue Nutzer kein Menüpunkt „Tresor“; wer ihn schon angelegt hat, behält ihn (app.js)
+    id: "bald-tresor", titel: "Tresor", bereich: "ernstfall", nurOhne: "tresor",
+    beschreibung: "Ein verschlüsselter Platz für Notfallmappe, Passwörter und Ausweise, nur auf deinem Gerät.",
+    ersetzt: [],
+    folien: [
+      folie("tresor-1.svg", "Deine Notfallmappe", "Ausweise, Passwörter und wichtige Papiere an einem Ort, verschlüsselt.", "Titelseite: Tresor"),
+      folie("tresor-2.svg", "Nur auf deinem Gerät", "Nichts verlässt das Gerät. Mit einem Wiederherstellungscode, falls du das Passwort vergisst.", "Skizze eines Schlosses mit Notfallmappe, Ausweisen und Passwörtern"),
+    ],
+  },
 ];
 
 /** Katalog-Ids, die in dieser Version nicht geladen werden (weder per Knopf noch still). Was schon da ist, bleibt. */

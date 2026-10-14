@@ -335,8 +335,12 @@ textarea { border-radius: var(--radius-sm) !important; }
 .vorschau-seite figcaption { padding: 14px 2px 4px; }
 .vorschau-seite h3 { font-family: var(--z-serif); font-weight: 400; font-size: 1.25rem; margin: 0 0 .35rem; }
 .vorschau-seite p { font-size: 1rem; line-height: 1.6; margin: 0; }
-.vorschau-nav { display: flex; justify-content: space-between; align-items: center; gap: .5rem; margin: 12px 0 4px; }
-.vorschau-nav .btn { min-width: 44px; min-height: 44px; font-size: 1.3rem; }
+/* Nr. 28 (Nachtrag Mik): kein Durchblättern – die Bilder stehen untereinander in normaler Größe, der Text je Bild darunter */
+.vorschau-folien { display: flex; flex-direction: column; gap: 1.4rem; }
+.vorschau-folien .vorschau-bild:not(.vorschau-bild--gross) { display: block; aspect-ratio: auto; height: auto; max-height: none; }
+.vorschau-folien .vorschau-bild:not(.vorschau-bild--gross) .vorschau-zoom { position: static; display: block; width: 100%; }
+.vorschau-folien .vorschau-bild:not(.vorschau-bild--gross) img { display: block; width: 100%; height: auto; }
+.vorschau-folien .vorschau-bild--gross { max-height: 70vh; }
 .vorschau-fuss { display: flex; justify-content: center; padding-top: 10px; margin-top: 6px; border-top: 1px solid var(--z-hair); }
 .vorschau-fuss p { margin: .4rem 0; }
 body.vorschau-offen { overflow: hidden; }
@@ -373,8 +377,9 @@ body.vorschau-offen { overflow: hidden; }
 }
 
 /* Tagesseite (Startbildschirm): endlicher Tag, keine Feeds (Gesamtkonzept Kap. 1, 6a) */
-.tag-karten { display: grid; gap: .9rem; margin: 1rem 0 .6rem; }
-.tag-karte { margin: 0; }
+.tag-karten { display: grid; grid-template-columns: minmax(0, 1fr); gap: .9rem; margin: 1rem 0 .6rem; }
+/* Nr. 28: lange Wörter, Zahlenreihen und Formeln brechen um, statt die Karte über den Rand zu schieben (Rundgang Bill, 390 px) */
+.tag-karte { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 .tag-art { margin: 0 0 .4rem; font-size: .72rem; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
 .tag-frage { font-size: 1.15rem; line-height: 1.45; margin: 0 0 .9rem; }
 .tag-text { font-size: 1.05rem; line-height: 1.55; margin: 0 0 .9rem; }
@@ -674,7 +679,7 @@ a.buch-zeile { display: block; color: inherit; text-decoration: none; }
 .of-app .upd-gefahr { color: var(--accent); }
 .of-app .upd-gefahr::before { border-color: var(--accent-soft); }
 .neu-punkt { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-left: .4rem; vertical-align: .15em; }
-.hilfe-frage { font-family: var(--z-serif); font-weight: 400; font-size: 1.05rem; margin: 1.1rem 0 .25rem; }
+.hilfe-frage { font-family: var(--font); font-weight: 600; font-size: 1.05rem; margin: 1.1rem 0 .25rem; } /* Nr. 28 (Nachtrag Mik): Textschrift, fett */
 .hilfe-frage:first-child { margin-top: 0; }
 .hilfe-antwort { margin: 0; line-height: 1.6; }
 
@@ -682,7 +687,7 @@ a.buch-zeile { display: block; color: inherit; text-decoration: none; }
 .blatt-hinter { position: fixed; inset: 0; z-index: 1150; background: rgb(20 18 16 / .35); display: flex; align-items: flex-end; justify-content: center; animation: blatt-hinter .18s ease-out; }
 .blatt { background: var(--surface); color: var(--text); width: 100%; max-height: 88vh; border-radius: 18px 18px 0 0; display: flex; flex-direction: column; box-shadow: 0 -8px 30px rgb(0 0 0 / .15); animation: blatt-auf .22s ease-out; }
 .blatt-kopf { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: 10px 8px 6px 18px; border-bottom: 1px solid var(--z-hair); }
-.blatt-kopf h2 { font-family: var(--z-serif); font-weight: 400; font-size: 1.15rem; margin: 0; }
+.blatt-kopf h2 { font-family: var(--font); font-weight: 600; font-size: 1.15rem; margin: 0; }
 .blatt-zu { width: 44px; height: 44px; display: grid; place-items: center; background: none; border: 0; color: var(--muted); cursor: pointer; border-radius: var(--z-radius); }
 .blatt-inhalt { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; touch-action: pan-y; padding: 14px 18px max(24px, env(safe-area-inset-bottom)); }
 body.blatt-offen { overflow: hidden; }
@@ -849,3 +854,74 @@ body.blatt-offen { overflow: hidden; }
 .ueber-impressum dt { color: var(--muted); }
 .ueber-impressum dd { margin: 0; overflow-wrap: anywhere; }
 @media (max-width: 480px) { .ueber-impressum { grid-template-columns: 1fr; gap: 0; } .ueber-impressum dd { margin-bottom: .3rem; } }
+
+/* ---------- Nr. 28: Land wählen, Einstellungen, Vorschau je Land ---------- */
+.land-frage { max-width: 30rem; margin: 1.5rem auto 2rem; display: flex; flex-direction: column; gap: .8rem; }
+.land-frage h1 { margin: 0; }
+.land-frage-text { font-size: 1.15rem; margin: 0; }
+.land-auswahl { display: flex; flex-direction: column; gap: .5rem; }
+.land-opt { display: flex; align-items: center; gap: .7rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .75rem 1rem; min-height: 48px; cursor: pointer; font-size: 1.05rem; }
+.land-opt:has(input:checked) { border: 2px solid var(--ok); padding: calc(.75rem - 1px) calc(1rem - 1px); }
+.land-opt input { width: 1.2rem; height: 1.2rem; accent-color: var(--ok); margin: 0; }
+.land-opt:focus-within { outline: 3px solid var(--accent); outline-offset: 2px; }
+.land-spaeter { color: var(--muted); font-size: .92rem; margin: 0 1rem; }
+.land-weiter { align-self: stretch; min-height: 48px; }
+.land-absender { border-top: 1px solid var(--line); padding-top: .8rem; display: flex; flex-direction: column; gap: .3rem; align-items: flex-start; }
+.land-absender p { margin: 0; color: var(--muted); }
+.einst-teil { margin-bottom: 1rem; }
+.einst-teil h2 { margin: 0 0 .3rem; font-size: 1.2rem; }
+.einst-teil .land-auswahl { margin-top: .6rem; }
+.land-vorschau { border-style: dashed; }
+
+/* ---------- Nr. 28: Naturheilkunde (Aufbau nach Probe v7, Farben im App-Skin) ---------- */
+.heilkunde { --hk-grund: var(--surface); --hk-blatt: #2f7a4a; --hk-samen: #8c6b45; --hk-stein: #7a7f86; --hk-honig: #c98a10; --hk-obst: #c0392b; --hk-gemuese: #d9731a; --hk-pilz: #7b5a3c;
+  --hk-gruen: #1f6b3e; --hk-gruen-soft: #e2efe6; --hk-rot: #b3261e; --hk-rot-soft: #f9e1de; --hk-gelb-soft: #f8ecd2; --hk-gelb: #7a4f00;
+  display: flex; flex-direction: column; gap: .9rem; max-width: 40rem; overflow-wrap: anywhere; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .heilkunde { --hk-blatt: #7ccf9f; --hk-samen: #c9a47a; --hk-stein: #aeb4bb; --hk-honig: #f0b84a; --hk-obst: #ff7b6b; --hk-gemuese: #ffa45c; --hk-pilz: #c9a07a;
+  --hk-gruen: #7ccf9f; --hk-gruen-soft: #1f3a2b; --hk-rot: #ff8a80; --hk-rot-soft: #3d1f1c; --hk-gelb-soft: #3a2f17; --hk-gelb: #f2c063; } }
+:root[data-theme="dark"] .heilkunde { --hk-blatt: #7ccf9f; --hk-samen: #c9a47a; --hk-stein: #aeb4bb; --hk-honig: #f0b84a; --hk-obst: #ff7b6b; --hk-gemuese: #ffa45c; --hk-pilz: #c9a07a;
+  --hk-gruen: #7ccf9f; --hk-gruen-soft: #1f3a2b; --hk-rot: #ff8a80; --hk-rot-soft: #3d1f1c; --hk-gelb-soft: #3a2f17; --hk-gelb: #f2c063; }
+.hk-ic { width: 28px; height: 28px; flex: none; }
+.hk-reiter { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; }
+.hk-reiter button { font: inherit; font-weight: 600; font-size: .95rem; padding: .7rem .5rem; border: 0; background: var(--surface); color: var(--text); cursor: pointer; min-height: 48px; }
+.hk-reiter button[aria-pressed="true"] { background: var(--hk-gruen-soft); color: var(--hk-gruen); }
+.hk-hinweis { margin: 0; color: var(--muted); }
+.hk-kacheln { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .6rem; }
+.hk-kachel { display: flex; flex-direction: column; align-items: flex-start; gap: .25rem; text-align: left; font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .8rem; min-height: 64px; cursor: pointer; }
+.hk-kachel small, .hk-zeile small { color: var(--muted); font-size: .85rem; }
+.hk-chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .3rem; }
+.hk-chip { font: inherit; font-size: .9rem; padding: .45rem .8rem; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer; min-height: 40px; }
+.hk-chip[aria-pressed="true"] { background: var(--hk-gruen-soft); color: var(--hk-gruen); border-color: var(--hk-gruen); }
+.hk-umfang { background: var(--hk-gruen-soft); border-radius: var(--radius-sm); padding: .9rem 1rem; }
+.hk-umfang b { color: var(--hk-gruen); }
+.hk-umfang p { margin: .4rem 0 0; }
+.hk-selbst { border-top: 1px solid var(--line); padding-top: .8rem; display: flex; flex-direction: column; gap: .5rem; }
+.hk-selbst p { margin: 0; }
+.hk-not { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem; background: var(--hk-rot-soft); color: var(--hk-rot); border-radius: 10px; padding: .55rem .8rem; font-weight: 600; }
+.hk-titel { display: flex; align-items: center; gap: .5rem; margin: 0; font-size: 1.4rem; }
+.hk-zurueck { align-self: flex-start; }
+.hk-liste { display: flex; flex-direction: column; gap: .4rem; }
+.hk-gruppe { margin: .6rem 0 0; font-weight: 600; color: var(--muted); font-size: .9rem; }
+.hk-zeile { display: flex; align-items: center; gap: .7rem; text-align: left; font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: .6rem .8rem; cursor: pointer; min-height: 52px; }
+.hk-zeile span { display: flex; flex-direction: column; }
+.hk-plaketten { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+.hk-plak { font-size: .85rem; font-weight: 600; padding: .2rem .65rem; border-radius: 999px; background: var(--hk-gruen-soft); color: var(--hk-gruen); }
+.hk-plak--ue { background: var(--hk-gelb-soft); color: var(--hk-gelb); }
+.hk-plak--rot, .hk-rot { background: var(--hk-rot-soft); color: var(--hk-rot); }
+.hk-rot { background: none; font-weight: 600; }
+.hk-bsp { font-size: .85rem; color: var(--muted); border: 1px dashed var(--line); border-radius: 999px; padding: .15rem .6rem; }
+.hk-fakten { display: grid; grid-template-columns: auto 1fr; gap: .3rem .8rem; margin: 0; }
+.hk-fakten dt { font-weight: 600; color: var(--muted); }
+.hk-fakten dd { margin: 0; }
+.hk-foto { border: 2px dashed var(--line); border-radius: var(--radius-sm); padding: 1rem; color: var(--muted); text-align: center; }
+.hk-block h3 { margin: 0 0 .3rem; font-size: 1.05rem; }
+.hk-schritte { margin: .3rem 0 0; padding-left: 1.3rem; display: flex; flex-direction: column; gap: .3rem; }
+.hk-verw { background: var(--hk-rot-soft); border-radius: var(--radius-sm); padding: .8rem 1rem; }
+.hk-verw b { color: var(--hk-rot); }
+.hk-verw p { margin: .4rem 0 0; }
+.hk-link { font: inherit; font-weight: 600; color: var(--hk-rot); background: none; border: 1px solid var(--hk-rot); border-radius: var(--z-radius); padding: .4rem .7rem; margin-top: .4rem; cursor: pointer; min-height: 40px; }
+.hk-kueche { background: var(--hk-gelb-soft); border-radius: var(--radius-sm); padding: .8rem 1rem; }
+.hk-kueche ul { margin: .3rem 0 0; padding-left: 1.2rem; }
+.hk-wer { color: var(--text); }
+.hk-mehr summary { cursor: pointer; font-weight: 600; }
+.of-app .land-frage .land-weiter { min-height: 48px; font-size: 1rem; padding: .6rem 1rem; }
