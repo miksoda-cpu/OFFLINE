@@ -19,6 +19,8 @@ Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (An
 
 ## Offen bei Code
 - Auftrag in `bill/todo/`: Nr. 24 Wissen-Module und Nachtrag 0.8.0.
+- Nr. 22 Nachtrag erledigt (14.10.): Impressum vollständig nach dem Firmenbuchauszug (Rechtsform, Unternehmensgegenstand Bildungsinstitut, Offenlegung nach § 25 Mediengesetz mit Gesellschaftern und Blattlinie), kein „wird ergänzt“ mehr; Wirtschaftskammer und Gewerbebehörde entfallen.
+- Nr. 26 Hilfe-Blatt und Barrierefreiheit liegt in `bill/todo/` für den Nachtlauf.
 - Nr. 23 erledigt und zusammengeführt (14.10., Rückmeldung und Nachtrag), jeweils nach grüner Windows-Probe: Vorschau-Bild zum Vergrößern antippen, „Empfohlen ab …“ statt Altersfrage, Bereit mit Farbcode je Quelle; Referenzbilder von Bereit und Bibliothek neu gesetzt. Satz am Tagesende nach Miks Wahl (Kandidat a): „Genug für heute. Morgen geht es hier weiter.“ Der Lumi-Tipp in `wir` nennt noch den alten Satz (nächste Ausgabe des Pakets).
 - Nr. 25 erledigt (13.10., Rückmeldung): Windows-Probe grün auf dem Hauptbranch, ohne Lockerung. Die alte App 0.1.8 läuft gegen einen eingefrorenen, signierten Katalog (`werkzeug/probe-katalog/`), dazu der Weg 0.8.0 → neu und genau ein Eintrag unter den installierten Apps. Befund an der App: Ein offenes Blatt schließt sich beim Neuzeichnen aus dem Hintergrund (Ideenbuch).
 - Nr. 21 von Bill abgenommen (13.10.): Bildvergleich und Barrierefreiheit (axe-core) laufen in `tests.yml`. Die vier kleinen Barrierefreiheits-Befunde der App stehen mit Grund in `werkzeug/barrierefrei-ausnahmen.json`; sie zu beheben berührt die App und kann jetzt kommen.
@@ -33,7 +35,6 @@ Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (An
 - **Startreife:** D-U-N-S-Nummer für die digitalworld Academy OG, dann Apple Developer Program und Google Play als Firma, Azure Artifact Signing für Windows; Auftragsverarbeitung mit Hetzner im diwo-Konto. Liste: `bill/rueckmeldung/2026-10-07-startreife.md`.
 - **Anker:** 42 MVP-Bildschirme bewerten; dazu der Bildsatz aus Nr. 21 (88 JPG, `bill/rueckmeldung/bilder/2026-10-anker-mvp/`), erst danach gelten die Referenzbilder als abgenommen.
 - **GitHub:** Wegwerf-Branches `wegwerf-nr21-abstand` und `wegwerf-nr21-alt` löschen (der Nachtlauf darf nicht löschen, HTTP 403).
-- **Impressum:** Unternehmensgegenstand, Wirtschaftskammer, Gewerbebehörde und Offenlegung nach § 25 Mediengesetz fehlen (markiert „wird ergänzt“).
 
 ## Extern wartend
 Anwalt (35 Fragen, Haftung einer Notfall-App), Lizenzanfragen an Institutionen, ärztliche Prüfung der Guides.

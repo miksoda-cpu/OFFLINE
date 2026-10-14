@@ -13,14 +13,24 @@ const ANGABEN = [
   "office@diwo.at",
   "+43 1 890 0195",
 ];
-// Was Bill nicht hat, bleibt sichtbar markiert, bis Mik es liefert; nichts davon wird erfunden.
-const FEHLT = ["Unternehmensgegenstand", "Wirtschaftskammer", "Gewerbebehörde", "§ 25 Mediengesetz"];
+// Nachtrag zu Nr. 22 (13.10.2026, Firmenbuchauszug FN 477728t vom 12.10.2026): keine Platzhalter mehr, nur Angaben aus dem
+// Auszug und dem Nachtrag. Wirtschaftskammer und Gewerbebehörde entfallen (Bildungsinstitut, kein Gewerbe).
+const NACHTRAG = [
+  "Rechtsform: Offene Gesellschaft",
+  "Unternehmensgegenstand: Bildungsinstitut",
+  "Medieninhaber: digitalworld Academy OG, Große Schiffgasse 18/Top 2, 1020 Wien",
+  "Unbeschränkt haftende Gesellschafter: Mag. Sabine Kainz, Daniel Kainz",
+  "Grundlegende Richtung (Blattlinie): Praktisches Wissen für Vorsorge und Alltag in Österreich, das auch ohne Internet funktioniert. Unabhängig, werbefrei, ohne Parteinahme.",
+];
 const ohneTags = (html) => html.replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ");
 
-test("Impressum: Seite mit allen Angaben der OG, E-Mail und Telefon als Text, fehlende Angaben markiert", async () => {
+test("Impressum: Seite mit allen Angaben der OG, E-Mail und Telefon als Text, vollständig ohne Platzhalter", async () => {
   const html = await lies("./impressum.html"), text = ohneTags(html);
   for (const a of ANGABEN) assert.ok(text.includes(a), a);
-  for (const f of FEHLT) { const i = html.lastIndexOf(f); assert.ok(i > 0 && html.slice(i, i + 300).includes('<span class="tag tag-warn">wird ergänzt</span>'), f); }
+  for (const a of NACHTRAG) assert.ok(text.includes(a), a);
+  assert.ok(!/ergänzt/.test(html), "kein „wird ergänzt“ mehr");
+  assert.ok(!/Wirtschaftskammer|Gewerbebehörde/.test(html), "entfällt: kein Gewerbe");
+  assert.ok(!/\d{2}\.\d{2}\.\d{4}/.test(text), "keine Geburtsdaten (kein Datum im Impressum)");
   assert.match(html, /<link rel="stylesheet" href="\/styles\.css">/, "Stil der bestehenden Seiten");
 });
 
