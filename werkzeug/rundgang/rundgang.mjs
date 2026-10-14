@@ -56,9 +56,9 @@ async function seiten() {
     { name: "hilfe", hash: "vorsorge", danach: `document.querySelector('[data-hilfe]')?.click()`, fertig: `document.querySelector('.blatt')`, nurSichtbar: true },
     { name: "seitenleiste", hash: "start", danach: `(() => { const m = document.getElementById("menu"); if (m && !m.hidden) m.click(); })()`, nurSichtbar: true },
     { name: "einstellungen-neu", hash: "einstellungen" },
-    { name: "heilkunde", hash: "heilkunde" },
-    { name: "heilkunde-pilz", hash: "heilkunde", danach: `(() => { document.querySelector('[data-hk-tab="ogg"]')?.click(); document.querySelector('[data-hk-gr="pilz"]')?.click(); document.querySelector('[data-hk-m="eierschwammerl"]')?.click(); })()`, fertig: `document.querySelector(".hk-verw")` },
-    { name: "heilkunde-gift", hash: "heilkunde", danach: `(() => { document.querySelector('[data-hk-tab="ogg"]')?.click(); document.querySelector('[data-hk-gr="pilz"]')?.click(); document.querySelector('[data-hk-m="knolle"]')?.click(); })()`, fertig: `document.querySelector(".hk-plak--rot")` },
+    { name: "heilkunde", hash: "heilkunde", danach: `(() => { while (document.querySelector("[data-hk-zurueck]")) document.querySelector("[data-hk-zurueck]").click(); document.querySelector('[data-hk-tab="bes"]')?.click(); })()` },
+    { name: "heilkunde-pilz", hash: "heilkunde", danach: `(() => { while (document.querySelector("[data-hk-zurueck]")) document.querySelector("[data-hk-zurueck]").click(); document.querySelector('[data-hk-tab="ogg"]')?.click(); document.querySelector('[data-hk-gr="pilz"]')?.click(); document.querySelector('[data-hk-m="eierschwammerl"]')?.click(); })()`, fertig: `document.querySelector(".hk-verw")` },
+    { name: "heilkunde-gift", hash: "heilkunde", danach: `(() => { while (document.querySelector("[data-hk-zurueck]")) document.querySelector("[data-hk-zurueck]").click(); document.querySelector('[data-hk-tab="ogg"]')?.click(); document.querySelector('[data-hk-gr="pilz"]')?.click(); document.querySelector('[data-hk-m="knolle"]')?.click(); })()`, fertig: `document.querySelector(".hk-plak--rot")` },
     { name: "bald-vorschau", hash: "bibliothek", danach: `document.querySelector('[data-vorschau-oeffnen^="bald:"]')?.click()`, fertig: `document.querySelector('#vorschau-fenster:not([hidden]) img')`, nurSichtbar: true },
   ];
   return [...mvp, ...dazu].filter((s) => !NUR || NUR.includes(s.name));

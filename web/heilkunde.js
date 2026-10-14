@@ -22,6 +22,8 @@ const zeichen = (k) => (IC[k] ? `<svg class="hk-ic" viewBox="0 0 32 32" aria-hid
 /** Zustand: { tab: "bes"|"ogg", stapel: [{ b } | { m }], gr } */
 export const startZustand = () => ({ tab: "bes", stapel: [], gr: "obst" });
 
+/** „1 Möglichkeit“, „5 Möglichkeiten“ (in der Probe stand auch bei einer die Mehrzahl). */
+const zahlText = (n, mehrzahl) => `${n} ${esc(n === 1 ? mehrzahl.replace(/en$/, "") : mehrzahl)}`;
 const nach = (d) => Object.fromEntries(d.karten.map((k) => [k.id, k]));
 
 /** Alle Verweise auf Doppelgänger: [{ von, nach }] (für den Test: jeder führt auf eine vorhandene Karte). */
@@ -46,7 +48,7 @@ function zeile(x) { return `<button type="button" class="hk-zeile" data-hk-m="${
 function startBes(d, z, land) {
   const t = d.texte;
   return `${reiter(d, z)}<p class="hk-hinweis">${esc(t.hinweis[land] ?? t.hinweis.at)}</p>
-    <div class="hk-kacheln">${Object.entries(d.beschwerden).map(([k, name]) => `<button type="button" class="hk-kachel" data-hk-b="${esc(k)}"><b>${esc(name)}</b><small>${d.karten.filter((x) => x.bei.includes(k)).length} ${esc(t.moeglichkeiten)}</small></button>`).join("")}</div>
+    <div class="hk-kacheln">${Object.entries(d.beschwerden).map(([k, name]) => `<button type="button" class="hk-kachel" data-hk-b="${esc(k)}"><b>${esc(name)}</b><small>${zahlText(d.karten.filter((x) => x.bei.includes(k)).length, t.moeglichkeiten)}</small></button>`).join("")}</div>
     <div class="hk-umfang"><b>${esc(t.grundstock_titel)}</b>${t.grundstock.map((p) => `<p>${esc(p)}</p>`).join("")}</div>${fuss(d, land)}`;
 }
 function beschwerde(d, k, land) {
