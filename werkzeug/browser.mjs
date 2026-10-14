@@ -18,13 +18,16 @@ const TYPEN = {
   ".md": "text/markdown; charset=utf-8", ".txt": "text/plain; charset=utf-8", ".woff2": "font/woff2", ".pmtiles": "application/octet-stream",
 };
 
-/** Liefert einen Ordner (Standard: web/) auf 127.0.0.1 aus. `zusatz` ordnet Pfade eigenen Inhalten zu (z. B. axe-core). */
-export async function dateiserver(ordner = path.join(WURZEL, "web"), zusatz = {}) {
+/**
+ * Liefert einen Ordner (Standard: web/) auf 127.0.0.1 aus. `zusatz` ordnet Pfade eigenen Inhalten zu (z. B. axe-core).
+ * `umleiten(pfad)` darf einen Pfad auf eine andere Datei legen (Rundgang: alter Katalog), sonst null.
+ */
+export async function dateiserver(ordner = path.join(WURZEL, "web"), zusatz = {}, umleiten = () => null) {
   const server = createServer(async (req, res) => {
     const p = decodeURIComponent(new URL(req.url, "http://x").pathname);
     if (zusatz[p]) { res.writeHead(200, { "Content-Type": zusatz[p].typ }); return res.end(zusatz[p].inhalt); }
-    const datei = path.join(ordner, p.endsWith("/") ? p + "index.html" : p);
-    if (!datei.startsWith(ordner)) { res.writeHead(403); return res.end(); }
+    const um = umleiten(p), datei = um ?? path.join(ordner, p.endsWith("/") ? p + "index.html" : p);
+    if (!datei.startsWith(um ? WURZEL : ordner)) { res.writeHead(403); return res.end(); }
     try {
       if (!(await stat(datei)).isFile()) throw new Error("kein File");
       res.writeHead(200, { "Content-Type": TYPEN[path.extname(datei)] ?? "application/octet-stream", "Cache-Control": "no-store" });

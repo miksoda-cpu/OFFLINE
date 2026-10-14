@@ -139,3 +139,16 @@ test("0.7.2 (Bill): Bindestrich-Wörter werden nicht zerlegt; KI-Zeile in der Bi
   assert.ok(!/Künstliche Intelligenz<\/span> Bilder damit erzeugt/.test(app));
   assert.equal((app.match(/Bilder mit künstlicher Intelligenz \(KI\) erzeugt, Herkunft im Paket/g) ?? []).length, 2, "Modul- und Paketkarte");
 });
+
+test("Nr. 24: Endet eine Klammer mit der Abkürzung, kommt die Erklärung hinein – genau ein Klammerpaar", async () => {
+  const echt = "Wichtige Dokumente in einer Mappe (auch als Kopie auf USB-Stick)";
+  assert.ok((await readFile(url("../pakete/at-basis/inhalt/grundvorsorge.json"), "utf8")).includes(echt), "der Satz aus der Grundvorsorge");
+  const aus = ausschreiben(echt);
+  assert.equal(aus, "Wichtige Dokumente in einer Mappe (auch als Kopie auf USB-Stick; USB: Universal Serial Bus)");
+  assert.equal(aus.split("(").length - 1, 1); assert.equal(aus.split(")").length - 1, 1);
+  assert.equal(ausschreiben("Papiere (laut EMA) mitnehmen"), "Papiere (laut EMA; EMA: Europäische Arzneimittel-Agentur) mitnehmen");
+  // unverändert: Klammer dahinter, keine Klammer, „(EMA)“
+  assert.equal(ausschreiben("Ein USB-Stick (klein) hilft"), "Ein USB-Stick (USB: Universal Serial Bus; klein) hilft");
+  assert.equal(ausschreiben("USB-Stick und Strom"), "USB-Stick (USB: Universal Serial Bus) und Strom");
+  assert.equal(ausschreiben("Meldung (EMA)"), "Meldung (EMA: Europäische Arzneimittel-Agentur)");
+});

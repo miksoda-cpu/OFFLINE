@@ -40,3 +40,13 @@ Tests ohne Browser: `node --test werkzeug/bildvergleich.test.mjs`.
   - oder die alte App im Update-Test eine andere Version wird.
   - Der Ablauf `gueltig_bis` (06.01.2027) zwingt nicht dazu: Ein abgelaufener Katalog gilt nur als „veraltet“, nicht als ungültig.
 - **Zweiter Weg:** Daneben prüft die Probe den Weg heutiger Nutzer, 0.8.0 (Tag `v0.8.0`) → neu, gegen den Live-Katalog.
+
+## Rundgang vor dem Release (`werkzeug/rundgang/`)
+Seit Nr. 24 im Repo; vorher lag der Rundgang im Sitzungsordner und ging verloren. Nur Node 22 und Chrome, kein Playwright.
+
+    node werkzeug/rundgang/rundgang.mjs --aus "../OFFLINE - Home/rundgang/<version>"
+
+- Alle Seiten (die MVP-Seiten aus `seiten.mjs` und Lumi, Heft, Buch, Gedanken, Linie, Was ist neu, Werkzeuge, Notizen, Hilfe-Blatt, Seitenleiste, Vorschau einer „Bald“-Karte), je **frisches Gerät** und **langjähriger Benutzer**, hell und dunkel, 360 px und 1280 px.
+- Der langjährige Benutzer startet mit der Österreich-Basis 2026.09.29.1 aus `probe-katalog/` und Daten wie nach Monaten (Häkchen, Bereit-Bestätigungen, Lumi „Fini“ mit Figur, Heft, Vorhaben, Pause an, Spiel-Log, Haushalt). Dann bekommt er den heutigen Katalog: Die neue Österreich-Basis muss ohne Knopfdruck kommen (Bild `vorsorge-nach-update-…`).
+- Prüft je Seite: kein Fehler im Browser, nichts läuft seitlich über, kein abgeschnittener Text, keine fremde Adresse. Echte Uhrzeit. Bericht in `bericht.json`, Exit 1 bei einem Befund.
+- Schalter: `--breiten 360,1280 --farben hell,dunkel --profile frisch,langzeit --nur seite[,seite]`.

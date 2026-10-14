@@ -105,8 +105,18 @@ const inAdresse = (text, i) => { const vor = text.slice(0, i), anfang = Math.max
  * Internetadressen bleiben unangetastet.
  */
 const ALLE = new RegExp(`(?<![\\p{L}\\p{N}_@.])(?:${MUSTER.map(([k]) => re(k)).join("|")})(?![\\p{L}\\p{N}_@])`, "gu");
-/** Klammer einfügen; folgt dort schon eine Klammer, wird es eine: „(WC: Toilette; Kanister, …)“ (Bill, 07.10.2026). */
-const klammer = (aus, pos, inhalt) => (aus.slice(pos).startsWith(" (") ? `${aus.slice(0, pos)} (${inhalt}; ${aus.slice(pos + 2)}` : `${aus.slice(0, pos)} (${inhalt})${aus.slice(pos)}`);
+/**
+ * Klammer einfügen; folgt dort schon eine Klammer, wird es eine: „(WC: Toilette; Kanister, …)“ (Bill, 07.10.2026).
+ * Endet an der Stelle selbst eine Klammer, kommt die Erklärung mit Strichpunkt hinein statt einer zweiten Klammer:
+ * „(auf USB-Stick; USB: Universal Serial Bus)“ (Nr. 24). kurz: die Abkürzung, wenn inhalt nur die Langform ist.
+ */
+const offeneKlammern = (s) => { let n = 0; for (const z of s) { if (z === "(") n++; else if (z === ")" && n) n--; } return n; };
+const klammer = (aus, pos, inhalt, kurz = null) => {
+  const vor = aus.slice(0, pos), nach = aus.slice(pos);
+  if (nach.startsWith(" (")) return `${vor} (${inhalt}; ${nach.slice(2)}`;
+  if (nach.startsWith(")") && offeneKlammern(vor) && (kurz || inhalt.includes(": "))) return `${vor}; ${kurz ? `${kurz}: ${inhalt}` : inhalt}${nach}`;
+  return `${vor} (${inhalt})${nach}`;
+};
 /** Überschriftszeilen im Markdown (### …) bekommen das ganze Wort statt einer Klammer; im Fließtext zählen sie nicht mit. */
 const UEBERSCHRIFT = /^#{1,6}[ \t].*$/gm, PLATZ = "\u2063";
 
@@ -132,7 +142,7 @@ export function ausschreiben(text, liste = LISTE) {
       const wortEnde = ende + (/^[-/\p{L}\p{N}]*/u.exec(aus.slice(ende))?.[0].length ?? 0);
       aus = klammer(aus, wortEnde, `${k}: ${lang}`);
     } else if (vorne === "(" && hinten === ")") aus = `${aus.slice(0, ende)}: ${lang}${aus.slice(ende)}`; // „(EMA)“ → „(EMA: …)“
-    else aus = klammer(aus, ende, lang); // Abkürzung bleibt im Satz, Langform in Klammern: kein Fallfehler
+    else aus = klammer(aus, ende, lang, k); // Abkürzung bleibt im Satz, Langform in Klammern: kein Fallfehler
   }
   return titel.length ? aus.replace(new RegExp(`${PLATZ}(\\d+)${PLATZ}`, "g"), (_, n) => titel[Number(n)]) : aus;
 }

@@ -21,7 +21,8 @@ import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as
 import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
 import { haushaltHtml, grundvorsorgeHtml, kachelnHtml, karteHtml, radioHtml, checksUebertragen, punkteFuer, fortschritt as gvFortschritt, verweisZiel, exportText as gvExportText } from "./szenarien.js";
-import { BEREICHE, bereichVon, bereichName, pflicht as paketPflicht, paketAn, umschalten as paketUmschalten, abschnitte as ladenAbschnitte } from "./pakete.js";
+import { BEREICHE, bereichVon, bereichName, pflicht as paketPflicht, paketAn, umschalten as paketUmschalten, abschnitte as ladenAbschnitte, stilleUpdates } from "./pakete.js";
+import { BALD, NICHT_LADBAR, baldEintrag } from "./bald.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
 const client = window.__TAURI__ ? await import("./paket-client-tauri.js") : await import("./paket-client.js");
@@ -639,7 +640,7 @@ const seiten = {
 
   vorsorge() {
     const g = grund();
-    if (!g) return P() ? `${kopf("Vorsorge", "Die neue Vorsorge kommt mit dem nächsten Österreich-Paket.")}<div class="card of-karte"><p>Auf diesem Gerät liegt noch die vorige Ausgabe des Österreich-Pakets. Deine Häkchen bleiben und werden übernommen.</p><button class="btn btn-primary of-btn of-btn--primaer" data-install="${BASISPAKET}">Österreich-Paket aktualisieren</button><p class="form-msg of-meldung" id="bib-msg"></p></div>` : fehlt();
+    if (!g) return P() ? `${kopf("Vorsorge", state.basisLaedt ? "Die neue Ausgabe des Österreich-Pakets wird gerade geladen." : "Die neue Vorsorge kommt mit dem Österreich-Paket, sobald du online bist.")}<div class="card of-karte"><p>Auf diesem Gerät liegt noch die vorige Ausgabe des Österreich-Pakets. Die neue kommt von selbst; deine Häkchen bleiben und werden übernommen.</p><p class="muted of-klein">Klappt das nicht, hier von Hand laden:</p><button class="btn btn-primary of-btn of-btn--primaer" data-install="${BASISPAKET}"${state.basisLaedt ? " disabled" : ""}>Österreich-Paket aktualisieren</button><p class="form-msg of-meldung" id="bib-msg"></p></div>` : fehlt();
     const bereitStand = bereit(), vh = vorhaben();
     const faellig = new Map(bereitStand.positionen.filter((x) => x.check && x.stand === "faellig").map((x) => [x.check, x.id]));
     const st = grundStand();
@@ -801,13 +802,13 @@ const seiten = {
     const k = katalog();
     if (!k) return `${kopf("Bibliothek", "Der Paketkatalog wurde noch nie geladen.")}<div class="card of-karte"><p class="muted of-klein">Geh einmal online, dann holt OFFLINE den Katalog und merkt ihn sich.</p><button class="btn btn-primary of-btn of-btn--primaer" data-katalog>Katalog laden</button><p class="form-msg of-meldung" id="bib-msg"></p></div>`;
     const inst = installierteIds().map(paketRoh).filter(Boolean);
-    const { neu, bald, geraet } = ladenAbschnitte(k, inst, { versionVergleich });
+    const { neu, bald, geraet } = ladenAbschnitte(k, inst, { versionVergleich, bald: BALD, nichtLadbar: NICHT_LADBAR });
     const abschnitt = (titel, satz, karten, leer) => `<section class="laden-abschnitt" aria-label="${esc(titel)}"><h2>${esc(titel)}</h2><p class="laden-satz of-klein">${esc(satz)}</p>${karten.length ? `<div class="grid grid-2">${karten.join("")}</div>` : `<p class="muted of-klein">${esc(leer)}</p>`}</section>`;
     return `
       ${kopf("Bibliothek", `Katalog vom ${datum(k.erstellt)} · Signatur geprüft ✓${desktop ? "" : " · Im Browser gehen Textpakete, große Pakete kommen in die Desktop-App."}`)}
       <p class="form-msg of-meldung" id="bib-msg"></p>
       ${abschnitt("Neu", "Verfügbar, noch nicht auf deinem Gerät.", neu.map((p) => (p.art === "modul" || p.art === "skin" ? modulKarte(p, { art: "katalog" }) : ladenKarte(p, null))), "Alles Verfügbare liegt schon auf deinem Gerät.")}
-      ${bald.length ? abschnitt("Bald", "Angekündigt. Kommt, sobald es fertig ist.", bald.map((p) => ladenKarte(p, null)), "") : ""}
+      ${bald.length ? abschnitt("Bald", "Angekündigt. Kommt, sobald es fertig ist.", bald.map(baldKarte), "") : ""}
       ${abschnitt("Auf deinem Gerät", "Aus heißt: nicht sichtbar, Daten und Lesestand bleiben. Löschen nimmt alles weg.", geraet.map((g) => (g.eintrag.art === "modul" || g.eintrag.art === "skin" ? modulKarte(g.eintrag, { art: "katalog" }) : ladenKarte(g.eintrag, g))), "Noch nichts geladen.")}
       ${desktop ? `<div class="card of-karte laden-abschnitt"><h3>Vom Speicherstick oder Ordner einspielen</h3>
         <p class="muted of-klein" style="margin:0 0 .75rem">Ohne Internet: Paketordner vom Stick auswählen. Der Kern prüft Signatur und jede Datei, bevor etwas übernommen wird.</p>
@@ -1176,6 +1177,7 @@ async function installiereMitMeldung(id, ziel) {
   const k = katalog() ?? (await pruefeUpdates({ still: true }));
   const eintrag = k?.pakete.find((p) => p.id === id);
   if (!eintrag) { zeige(ziel, "Paket nicht im Katalog.", "err"); return; }
+  if (NICHT_LADBAR.has(id) && !installiertesPaket(id)) { zeige(ziel, `${esc(eintrag.titel)} kommt mit einem späteren Update.`, ""); return; } // Nr. 24: nur angekündigt
   const alt = installiertesPaket(id);
   zeige(ziel, `Lade ${esc(eintrag.titel)} …`, "");
   state.download = { id, titel: eintrag.titel, status: "laedt", geladen: state.download?.id === id ? state.download.geladen : 0, gesamt: state.download?.id === id ? state.download.gesamt : eintrag.groesse };
@@ -1707,9 +1709,10 @@ function vorschauTitelHtml(key, e) {
 }
 
 const vorschauFenster = { key: null, id: null, i: 0, vorher: null, gross: false };
-function vorschauEintrag(id) { return katalog()?.pakete.find((p) => p.id === id) ?? state.modul.lokal?.pakete.find((p) => p.id === id) ?? paketRoh(id)?.manifest ?? { id }; }
+function vorschauEintrag(id) { return baldEintrag(id) ?? katalog()?.pakete.find((p) => p.id === id) ?? state.modul.lokal?.pakete.find((p) => p.id === id) ?? paketRoh(id)?.manifest ?? { id }; }
 /** Was unten im Fenster steht: der „laden“-Schieber der Karte (gleiche Wirkung), sonst ihr Stand in Worten. */
 function vorschauFuss(id) {
+  if (baldEintrag(id)) return `<p class="muted of-klein">Kommt mit einem späteren Update. Noch nicht zum Laden.</p>`;
   const karte = main.querySelector(`[data-laden-karte="${CSS.escape(id)}"], [data-modul-karte="${CSS.escape(id)}"]`);
   const laden = karte?.querySelector('.schieber-laden[aria-checked="false"]:not([disabled])');
   if (laden) return `<button type="button" class="btn btn-primary of-btn of-btn--primaer" data-vorschau-laden>laden</button>`;
@@ -1865,6 +1868,16 @@ function ladenKarte(p, g) {
     <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(p.groesse)}${g && p.version ? ` · ${esc(p.version)}` : ""}</span><span class="laden-steuerung">${steuerung}</span></div></div>`;
 }
 
+/** Karte unter „Bald“ (Nr. 24): Vorschau mit Bildern und ein Satz, nicht ladbar. */
+function baldKarte(b) {
+  return `<div class="card pkg of-karte of-paket laden-karte" data-laden-karte="${esc(b.id)}">
+    ${vorschauTitelHtml(`bald:${b.id}`, b)}
+    <div class="pkg-head"><h3 style="margin:0">${esc(b.titel)}</h3></div>
+    <span class="laden-bereich">${esc(bereichName(b))}</span>
+    <p>${esc(b.beschreibung)}</p>
+    <div class="pkg-foot"><span class="muted of-klein">Kommt mit einem späteren Update</span><span class="laden-steuerung"><span class="tag tag-warn of-plakette of-plakette--warnung">Bald</span></span></div></div>`;
+}
+
 /** Lokale Quelle: ein Ordner mit signierten, noch nicht veröffentlichten Paketen (Redaktionsablage). */
 function lokaleQuelleHtml() {
   const l = state.modul.lokal;
@@ -1889,6 +1902,7 @@ const vorschauLaeuft = new Set();
 function vorschauLaden(key) {
   if (key in state.modul.vorschau || vorschauLaeuft.has(key)) return;
   const [art, ...rest] = key.split(":"); const wert = rest.join(":");
+  if (art === "bald") { state.modul.vorschau[key] = baldEintrag(wert)?.folien ?? []; sliderErneuern(key); return; } // Bilder liegen in der App (web/bald/)
   if (!desktop && art === "ordner") return;
   vorschauLaeuft.add(key);
   const laden = art === "inst" ? client.vorschauInstalliert(wert) : art === "ordner" ? client.vorschauOrdner(wert) : client.vorschauKatalog(wert);
@@ -2866,6 +2880,19 @@ if (desktop) (async () => {
   if (location.hash === "#bibliothek") render();
 })();
 
+/** Nr. 24, A1: Die Österreich-Basis ist „immer an“; eine neue Ausgabe kommt beim Start mit Netz still, unabhängig vom Abo. */
+async function basisStillAktualisieren() {
+  if (!P() || !navigator.onLine) return;
+  try {
+    const { katalog: k } = await ladeKatalog();
+    for (const e of stilleUpdates(k, [P()], { versionVergleich, appPasst })) {
+      state.basisLaedt = true; if (location.hash === "#vorsorge") render();
+      try { await installiere(k, e); } finally { state.basisLaedt = false; }
+      render();
+    }
+  } catch (err) { console.error("Österreich-Basis", err); }
+}
+
 // Erster Start: Österreich-Paket automatisch holen, wenn noch keins da ist. Danach still nach Updates sehen.
 (async () => {
   await offeneDownloads();
@@ -2873,7 +2900,7 @@ if (desktop) (async () => {
     if (!navigator.onLine) return;
     try {
       const { katalog: k } = await ladeKatalog();
-      for (const id of [BASISPAKET, "wir", "lumi-buch"]) {
+      for (const id of [BASISPAKET, "wir"]) { // Nr. 24: das Lumi-Buch kommt mit dem Lumi-Update
         if (installiertesPaket(id)) continue;
         const e = k.pakete.find((p) => p.id === id && p.status === "verfuegbar");
         if (e && appPasst(e)) { await installiere(k, e); render(); }
@@ -2884,15 +2911,16 @@ if (desktop) (async () => {
     if (katalog() && verfuegbareUpdates(katalog()).length) render();
   }
 })().finally(async () => {
+  await basisStillAktualisieren(); // Nr. 24: neue Ausgabe der Österreich-Basis ohne Knopfdruck
   vorratAuffuellen(); // danach die Vorratskammer der Tagesseite
-  // Lumi-Buch (0.5.0): liegt ganz auf dem Gerät; wer es noch nicht hat (Update von 0.4), bekommt es still dazu
-  if (!PB() && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "lumi-buch" && p.status === "verfuegbar"); if (e && appPasst(e)) await installiere(k, e); } catch (err) { console.error("Lumi-Buch", err); } }
+  // Lumi-Buch (0.5.0): liegt ganz auf dem Gerät; wer es noch nicht hat (Update von 0.4), bekommt es still dazu – seit Nr. 24 nicht mehr
+  if (!PB() && !NICHT_LADBAR.has("lumi-buch") && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "lumi-buch" && p.status === "verfuegbar"); if (e && appPasst(e)) await installiere(k, e); } catch (err) { console.error("Lumi-Buch", err); } }
   // 0.5.1: Tipps ohne Absatznummern (wir vor 2026.10.04.3) einmal still auffrischen, damit „Aus dem Lumi-Buch“ sofort kommt
   if (PW() && !(inhalt(PW(), "inhalt/tipps.json")?.tipps ?? []).some((t) => t.buch) && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "wir" && p.status === "verfuegbar"); if (e && appPasst(e) && versionVergleich(e.version, PW().manifest.version) > 0) { await installiere(k, e); render(); } } catch (err) { console.error("wir", err); } }
   // Pause: ist sie an und das Paket fehlt, still holen; dann der Happen beim Öffnen
   if (pauseE().an && !PP() && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "pause" && p.status === "verfuegbar"); if (e && appPasst(e)) await installiere(k, e); } catch (err) { console.error("Pause", err); } }
   // 0.7.0: Lumisch ist ein eigenes Paket. Wer Pause hat, bekommt es einmal still dazu (sonst fehlten die Lumisch-Happen)
-  if (paketRoh("pause") && !paketRoh("lumisch") && !speicher.get("lumisch-geholt", false) && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "lumisch" && p.status === "verfuegbar"); if (e && appPasst(e)) { await installiere(k, e); speicher.set("lumisch-geholt", true); pauseDatenMerk = null; render(); } } catch (err) { console.error("Lumisch", err); } }
+  if (paketRoh("pause") && !paketRoh("lumisch") && !speicher.get("lumisch-geholt", false) && !NICHT_LADBAR.has("lumisch") && navigator.onLine) { try { const { katalog: k } = await ladeKatalog(); const e = k.pakete.find((p) => p.id === "lumisch" && p.status === "verfuegbar"); if (e && appPasst(e)) { await installiere(k, e); speicher.set("lumisch-geholt", true); pauseDatenMerk = null; render(); } } catch (err) { console.error("Lumisch", err); } }
   pauseBeimOeffnen();
   webVersionStill(); // 0.5.5: Web still nach neuer Version fragen, höchstens einmal am Tag
   internAbgleichen(); // 0.6.0: interner Kanal, nur mit Schlüssel

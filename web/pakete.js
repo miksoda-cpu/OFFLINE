@@ -52,18 +52,37 @@ export function umschalten(aus, p) {
  * - geraet: was auf dem Gerät liegt (mit dem Katalogeintrag, wenn es einen gibt; dann auch, ob ein Update da ist)
  * Reihenfolge je Abschnitt: nach Bereich (Reihenfolge von BEREICHE), dann Titel.
  */
-export function abschnitte(katalog, installiert = [], { versionVergleich = () => 0 } = {}) {
+export function abschnitte(katalog, installiert = [], { versionVergleich = () => 0, bald: ankuendigung = null, nichtLadbar = new Set() } = {}) {
   const pakete = katalog?.pakete ?? [];
   const da = new Map(installiert.filter((p) => p?.manifest).map((p) => [p.manifest.id, p]));
   const reihe = Object.keys(BEREICHE);
   const sortiere = (a, b) => reihe.indexOf(bereichVon(a.eintrag ?? a)) - reihe.indexOf(bereichVon(b.eintrag ?? b)) || String((a.eintrag ?? a).titel).localeCompare(String((b.eintrag ?? b).titel), "de");
   const intern = (p) => p.kanal === "intern" || p.intern === true;
   // Tagespakete stehen nie unter „Neu“: Sie kommen von selbst (0.7.1, Mik)
-  const neu = pakete.filter((p) => p.status === "verfuegbar" && !da.has(p.id) && !intern(p) && p.art !== "tage").sort(sortiere);
-  const bald = pakete.filter((p) => p.status === "geplant" && !intern(p) && !da.has(p.id)).sort(sortiere);
+  const neu = pakete.filter((p) => p.status === "verfuegbar" && !da.has(p.id) && !intern(p) && !nichtLadbar.has(p.id) && p.art !== "tage").sort(sortiere);
+  // Nr. 24 (Mik): Mit einer Ankündigungsliste (web/bald.js) steht unter „Bald“ nur sie, je Karte mit Vorschau; eine Karte
+  // fällt weg, wenn alles, was sie ankündigt, schon auf dem Gerät liegt. Ohne Liste: was der Katalog als „geplant“ führt.
+  const bald = ankuendigung ? ankuendigung.filter((b) => !(b.ersetzt ?? []).every((id) => da.has(id))) // Reihenfolge der Liste
+    : pakete.filter((p) => p.status === "geplant" && !intern(p) && !da.has(p.id)).sort(sortiere);
   const geraet = [...da.values()].map((p) => {
     const e = pakete.find((x) => x.id === p.manifest.id && x.status === "verfuegbar") ?? null;
     return { eintrag: e ? { ...p.manifest, ...e } : p.manifest, paket: p, update: !!e && versionVergleich(e.version, p.manifest.version) > 0 };
   }).sort(sortiere);
   return { neu, bald, geraet };
+}
+
+/**
+ * Nr. 24, A1: Pflichtpakete außer den Tagen (die füllt die Vorratskammer) aktualisieren sich still beim Start mit Netz,
+ * wie die Tage-Pakete. Gibt die Katalogeinträge zurück, die geladen werden sollen: verfügbar, neuer als die Ausgabe auf
+ * dem Gerät und für diese App-Version freigegeben (app_min). Der Knopf „Österreich-Paket aktualisieren“ bleibt nur Notlösung.
+ */
+export function stilleUpdates(katalog, installiert = [], { versionVergleich, appPasst = () => true }) {
+  const aus = [];
+  for (const p of installiert) {
+    const m = p?.manifest;
+    if (!m || !pflicht(m) || m.art === "tage") continue;
+    const e = (katalog?.pakete ?? []).find((x) => x.id === m.id && x.status === "verfuegbar");
+    if (e && versionVergleich(e.version, m.version) > 0 && appPasst(e)) aus.push(e);
+  }
+  return aus;
 }
