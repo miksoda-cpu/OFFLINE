@@ -94,7 +94,9 @@ test("Vorschlag: einmal fragen bei mehr als 45 Minuten Abweichung über zwei Woc
 
 test("Info und Hilfe im Tagesplan, Wort für Wort aus dem Auftrag; Oberfläche mit drei Knöpfen", async () => {
   const t = await readFile(new URL("../bill/erledigt/2026-10-05-tagesende.md", import.meta.url), "utf8").catch(() => readFile(new URL("../bill/todo/2026-10-05-tagesende.md", import.meta.url), "utf8"));
-  const soll = [...t.matchAll(/^\s+- „(.+?)“ – „(.+)“$/gm)].map((m) => [m[1], m[2]].map((x) => x.replace(/‚/g, "„").replace(/‘/g, "“")));
+  const soll = [...t.matchAll(/^\s+- „(.+?)“ – „(.+)“$/gm)].map((m) => [m[1], m[2]].map((x) => x.replace(/‚/g, "„").replace(/‘/g, "“")
+    // Nr. 23 (Anker): der Satz am Tagesende ist ersetzt, sonst Wort für Wort wie im Auftrag
+    .replace("„Das war dein Tag.“", "„Genug für heute.“")));
   assert.equal(soll.length, 2); assert.deepEqual(HILFE.tagesplan, soll);
   const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
   assert.match(app, /data-mein-tag-art=/); assert.match(app, /data-tagesplan="schluss"/); assert.match(app, /data-tagesplan="aufstehen"/);

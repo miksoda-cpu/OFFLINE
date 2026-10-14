@@ -463,7 +463,7 @@ state.tag.datum = heuteDatum();
 
 // ---------- Seiten ----------
 const seiten = {
-  /** Die Tagesseite (Startbildschirm): Bereit und Lumi, die Karten des Tages, der Vorrat. Endlich: „Das war dein Tag.“ */
+  /** Die Tagesseite (Startbildschirm): Bereit und Lumi, die Karten des Tages, der Vorrat. Endlich: SCHLUSS (web/tag.js). */
   start() {
     const p = P();
     if (!p) return fehlt();
