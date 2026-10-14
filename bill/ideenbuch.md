@@ -24,6 +24,18 @@ Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Bl
 
 ## Einträge
 
+### 2026-10-14 · Auftrag Nr. 23 · Vorschau lesbar durch festen Ausschnitt
+- Idee: Im Vorschau-Fenster statt des ganzen Bildschirmfotos nur einen Ausschnitt in Lesegröße zeigen
+- Kill-Kriterium: Ein Ausschnitt verliert bei einem der vorhandenen Bildformate den Teil, um den es geht
+- Ausgang: verworfen vor dem Bauen. Die Vorschauen sind hoch (Pause 450 × 1000, Wichteln 390 × 780) und breit (Spielpaket, Lumisch 800 × 600); ein fester Ausschnitt hätte je nach Format oben, unten oder seitlich abgeschnitten. Übernommen: Antippen zeigt das Bild in voller Größe zum Verschieben
+- Lehre: Eine Lösung für „zu klein“ lässt den Menschen wählen, welchen Teil er lesen will
+
+### 2026-10-14 · Auftrag Nr. 23 · Großes Vorschaubild im zentrierenden Rahmen
+- Idee: In voller Größe bleibt das Bild im vorhandenen Rahmen (`display: grid; place-items: center`), nur mit `display: block` und `overflow: auto` darüber
+- Kill-Kriterium: Ein Teil des Bildes ist nicht erreichbar
+- Ausgang: verworfen nach der ersten lokalen Aufnahme. Chromium zentriert mit `place-items` auch im Block-Layout; das breite Bild ragte links 65 px aus dem Rahmen, dorthin lässt sich nicht scrollen. Übernommen: `place-items: normal` im großen Zustand, der Test in `web/anker.test.mjs` hält es fest
+- Lehre: Eine Aufnahme des neuen Zustands vor dem Push fand den Fehler, den die Textprüfung übersah
+
 ### 2026-10-13 · Auftrag Nr. 25 · Eingefrorener Katalog für die alte App im Update-Test
 - Idee: 0.1.8 läuft gegen einen festen, schon veröffentlichten signierten Stand (Web-Katalog 08.10. 03:39 UTC mit at-basis und wir), lokal ausgeliefert; die Pakete werden wie vom Stick eingespielt, weil die Adresse im Katalog die alten Ausgaben nicht mehr liefert
 - Kill-Kriterium: Der Kern von 0.1.8 lehnt den Stand ab (Signatur, Schlüssel) oder ein bisheriger Vergleich muss dafür fallen
