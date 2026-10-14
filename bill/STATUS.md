@@ -18,6 +18,7 @@ Skin Flechte und die internen Pakete `naturheilkunde`, `naturheilkunde-bilder` l
 Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (Android, iOS), Schließfach. Gesamtkonzept als Projektdokument „OFFLINE-Gesamtkonzept“, nicht in `docs/`.
 
 ## Offen bei Code
+- Nr. 28 mit Nachtrag 1 und 2 (Version 0.9.0) fertig auf Branch `nr-28-version-0-9-0` (14.10., Rückmeldung), CI, Windows-Probe und Rundgang (360/390/1280, frisch, langjährig, Deutschland) grün. **Wartet auf Bills Held-out**, dann: Naturheilkunde offen setzen, zusammenführen, ein Katalog-Lauf nur für `heilkunde-grundstock` (Mik), Tag `v0.9.0`, Web. Nebenbei behoben: „Tresor“ und „Updates & Abo“ fehlten seit 0.7.1 im Menü.
 - Nr. 24 erledigt und zusammengeführt (14.10., Rückmeldung), live in der Web-Version: Österreich-Basis aktualisiert sich still, eine Klammer bei „USB-Stick“, unter „Bald“ Wikipedia, Wikivoyage, Karte und „Das Lumi-Update“ als Vorschau, nicht ladbar (Abschnitt B entfällt fürs MVP). Rundgang liegt in `werkzeug/rundgang/`.
 - Nr. 27 erledigt und zusammengeführt (14.10., Rückmeldung), live in der Web-Version: Lumi im MVP nur als Vorschau. Ohne Namen keine Figur, Lumi-Seite, Einladung und Tipps (`wir` steht mit unter „Das Lumi-Update“); mit Namen alles wie bisher.
 - Nr. 22 Nachtrag erledigt (14.10.): Impressum vollständig nach dem Firmenbuchauszug (Rechtsform, Unternehmensgegenstand Bildungsinstitut, Offenlegung nach § 25 Mediengesetz mit Gesellschaftern und Blattlinie), kein „wird ergänzt“ mehr; Wirtschaftskammer und Gewerbebehörde entfallen.
