@@ -5,8 +5,9 @@
 // damit Zeitzonen und Zeitumstellung keinen Tag verschieben. Tagespakete (art = "tage") tragen Einträge nach Datum oder
 // nach Tagnummer (Tag 1 = der erste Tag, an dem die Tagesseite auf diesem Gerät lief).
 
-/** Der feste Schlusssatz (Kap. 6a). In allen Lagen gleich. */
-export const SCHLUSS = "Das war dein Tag. Bis morgen.";
+/** Der feste Schlusssatz (Kap. 6a). In allen Lagen gleich, ob alles erledigt ist oder die Uhrzeit erreicht. Seit Nr. 23 (Anker,
+ * Mik: „Das war dein Tag – das ist nicht sehr sinnvoll“) Kandidat c: Ruhe, und der Vorrat der Tagesseite (Kap. 2) trägt den nächsten Tag. */
+export const SCHLUSS = "Für heute ist Ruhe. Der nächste Tag liegt schon im Vorrat.";
 export const TIEFEN = [7, 30, 90];
 export const KARTEN = [
   { id: "raetsel", titel: "Tagesrätsel" },
