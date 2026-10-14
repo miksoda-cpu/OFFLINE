@@ -89,7 +89,7 @@ test("Tagesseite: Karten nach Tagesplan, die Lumi oder die Textkarte, Schluss mi
   assert.equal(schlussErreicht({ karten: tk, zustand: { "r-x": "erledigt", k1: "weg", "lumi-app-001": "erledigt" }, jetzt }), "erledigt");
   assert.equal(schlussErreicht({ karten: tk, zustand: {}, jetzt: new Date(2026, 9, 1, 22).getTime() }), "uhrzeit");
   assert.equal(schlussErreicht({ karten: tk, zustand: {}, jetzt: new Date(2026, 9, 1, 22).getTime(), plan: { ...PLAN_STANDARD, schlussUm: null } }), null, "Schluss nur, wenn erledigt");
-  assert.equal(SCHLUSS, "Das war dein Tag. Bis morgen.");
+  assert.equal(SCHLUSS, "Schluss für heute. Was du im Ernstfall brauchst, liegt bereit.");
 });
 
 test("Textkarte des Tages: fest für den Tag, am nächsten Tag meist eine andere", () => {
@@ -236,4 +236,13 @@ test("Kit: antworten ist optional, wenn vorhanden eine nicht leere Liste von Tex
   assert.deepEqual(tageInhaltFehler(tag(undefined), b), []);
   assert.deepEqual(tageInhaltFehler(tag(["3", "drei"]), b), []);
   for (const falsch of [[], "3", [""], [3], ["x".repeat(121)]]) assert.ok(tageInhaltFehler(tag(falsch), b).some((f) => /antworten/.test(f)), JSON.stringify(falsch));
+});
+
+test("Satz am Tagesende (Nr. 23, Prüfliste aus dem Anker: kein Satz ohne Inhalt): kurz, ohne Floskel, auch in der Hilfe", async () => {
+  const { readFile } = await import("node:fs/promises");
+  assert.ok(!/Das war dein Tag/.test(SCHLUSS), "die alte Floskel ist weg");
+  assert.ok(SCHLUSS.length <= 80 && SCHLUSS.split(/(?<=\.)\s/).length <= 2, "kurz: höchstens zwei Sätze");
+  const hilfe = await readFile(new URL("./hilfe.js", import.meta.url), "utf8");
+  assert.ok(hilfe.includes("Zur Schluss-Zeit sagt die App: „" + SCHLUSS.split(/(?<=\.)\s/)[0] + "“"), "die Hilfe nennt denselben Satz");
+  assert.ok(!/Das war dein Tag/.test(hilfe));
 });

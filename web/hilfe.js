@@ -57,7 +57,7 @@ export const HILFE = {
     ["Was sind die Szenarien?", "Zwölf Ernstfälle von Hochwasser bis Blackout. Jede Karte erklärt die Gefahr, was du vorher tun kannst, wie du richtig reagierst und was danach kommt. Dazu kommt eine eigene Checkliste."],
   ],
   tagesplan: [
-    ["Was ist „Mein Tag“?", "Hier stellst du ein, wann dein Tag endet und wann er beginnt. Zur Schluss-Zeit sagt die App: „Das war dein Tag.“ Die Lumi schläft bis zum Aufstehen."],
+    ["Was ist „Mein Tag“?", "Hier stellst du ein, wann dein Tag endet und wann er beginnt. Zur Schluss-Zeit sagt die App: „Schluss für heute.“ Die Lumi schläft bis zum Aufstehen."],
     ["Warum schlägt die App eine Zeit vor?", "Die App merkt sich, wann du abends zuletzt etwas tust. Sie fragt höchstens zweimal. Du entscheidest."],
   ],
   "pause-linie": [
