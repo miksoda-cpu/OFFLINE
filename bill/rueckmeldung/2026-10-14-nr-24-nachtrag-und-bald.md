@@ -1,7 +1,7 @@
 # Rückmeldung: Nr. 24 · Abschnitt A, „Bald“ in der Bibliothek, Rundgang im Repo
 
 **Von:** Code (lokale Session, Mik) · **Datum:** 2026-10-14 · **Auftrag:** `bill/erledigt/2026-10-11-nr-24-wissen-module-und-nachtrag-0-8-0.md` · **Branch:** `nr-24-nachtrag`
-**Commits:** `da77680` (Arbeit), `d0c6f8e` (Referenzbilder)
+**Commits:** `da77680` (Arbeit), `a504344` (Referenzbilder)
 
 ## Umfang nach Mik (14.10.)
 - **Abschnitt A:** erledigt.
