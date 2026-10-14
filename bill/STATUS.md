@@ -19,7 +19,7 @@ Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (An
 
 ## Offen bei Code
 - Nr. 24 erledigt und zusammengeführt (14.10., Rückmeldung), live in der Web-Version: Österreich-Basis aktualisiert sich still, eine Klammer bei „USB-Stick“, unter „Bald“ Wikipedia, Wikivoyage, Karte und „Das Lumi-Update“ als Vorschau, nicht ladbar (Abschnitt B entfällt fürs MVP). Rundgang liegt in `werkzeug/rundgang/`.
-- Nr. 27 erledigt auf Branch `nr-27-lumi-vorschau` (14.10., Rückmeldung), CI und Windows-Probe grün, Zusammenführen wartet auf Miks Wort: Lumi im MVP nur als Vorschau. Ohne Namen keine Figur, Lumi-Seite, Einladung und Tipps (`wir` steht mit unter „Das Lumi-Update“); mit Namen alles wie bisher.
+- Nr. 27 erledigt und zusammengeführt (14.10., Rückmeldung), live in der Web-Version: Lumi im MVP nur als Vorschau. Ohne Namen keine Figur, Lumi-Seite, Einladung und Tipps (`wir` steht mit unter „Das Lumi-Update“); mit Namen alles wie bisher.
 - Nr. 22 Nachtrag erledigt (14.10.): Impressum vollständig nach dem Firmenbuchauszug (Rechtsform, Unternehmensgegenstand Bildungsinstitut, Offenlegung nach § 25 Mediengesetz mit Gesellschaftern und Blattlinie), kein „wird ergänzt“ mehr; Wirtschaftskammer und Gewerbebehörde entfallen.
 - Nr. 26 Hilfe-Blatt und Barrierefreiheit liegt in `bill/todo/` für den Nachtlauf.
 - Nr. 23 erledigt und zusammengeführt (14.10., Rückmeldung und Nachtrag), jeweils nach grüner Windows-Probe: Vorschau-Bild zum Vergrößern antippen, „Empfohlen ab …“ statt Altersfrage, Bereit mit Farbcode je Quelle; Referenzbilder von Bereit und Bibliothek neu gesetzt. Satz am Tagesende nach Miks Wahl (Kandidat a): „Genug für heute. Morgen geht es hier weiter.“ Der Lumi-Tipp in `wir` nennt noch den alten Satz (nächste Ausgabe des Pakets).

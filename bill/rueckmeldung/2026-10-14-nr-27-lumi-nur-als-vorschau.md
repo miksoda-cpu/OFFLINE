@@ -45,4 +45,4 @@ Lokal: 219 Web-Tests, Werkzeug-Tests grün.
 
 ## Hinweis
 - **Langzeitbenutzer im Rundgang ohne Tipps:** Er bekommt seinen Namen erst nach dem ersten Start und hat deshalb kein `wir`. Auf Heute steht darum keine Tipp-Karte. Echte Nutzer mit Namen haben `wir` schon.
-- **Live:** Die Web-Version zeigt die Änderung, sobald der Branch zusammengeführt ist.
+- **Live:** Zusammengeführt am 14.10. nach Miks Wort; die Web-Version zeigt es seitdem (Vercel). Die Desktop-App bekommt es mit der nächsten Version.
