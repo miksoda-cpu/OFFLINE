@@ -20,8 +20,15 @@
 .wesen-stern { border: 0; background: none; cursor: pointer; font-size: 1rem; color: var(--muted); padding: 0 .3rem 0 0; }
 .wesen-stern.an { color: var(--lumi-ton, #a3500f); }
 .bereit-zahl { font-size: 3rem; font-weight: 300; line-height: 1; letter-spacing: -.02em; }
-.bereit-quelle { display: flex; justify-content: space-between; gap: .6rem; padding: .35rem 0; border-top: 1px solid var(--line); font-size: .9rem; }
+.bereit-quelle { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .25rem .6rem; padding: .35rem 0 .45rem; border-top: 1px solid var(--line); font-size: .9rem; }
 .bereit-quelle .mono { color: var(--muted); }
+/* Ampel je Quelle (Nr. 23, „Zustand hat Farbe“): Punkt, Zahl und Balken in der Farbe des Stands, in jeder Breite */
+.bereit-quelle { --bq: var(--muted); }
+.bereit-quelle--wenig { --bq: var(--accent); } .bereit-quelle--halb { --bq: var(--warn); } .bereit-quelle--gut { --bq: var(--ok); }
+.bereit-quelle .bq-punkt { display: inline-block; width: .6rem; height: .6rem; margin-right: .45rem; border-radius: 50%; background: var(--bq); vertical-align: .05em; }
+.bereit-quelle .mono { color: var(--bq); font-weight: 600; }
+.bereit-quelle .bq-balken { flex: 1 0 100%; height: 4px; border-radius: 2px; background: var(--surface-2); overflow: hidden; }
+.bereit-quelle .bq-balken > span { display: block; height: 100%; min-width: 4px; border-radius: 2px; background: var(--bq); }
 .bestaetigung { display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .45rem 0; border-top: 1px solid var(--line); flex-wrap: wrap; }
 .bestaetigung .muted { font-size: .85rem; }
 @media (max-width: 720px) { .wesen-toast { left: 1rem; right: 1rem; max-width: none; } }

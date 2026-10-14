@@ -149,6 +149,17 @@ function hinweis(wert, daten, jetzt) {
   return "Das ist verdächtig gut. Wann war dein letzter Probeabend?";
 }
 
+/**
+ * Ampel je Quelle (Auftrag Nr. 23, Prüfliste aus dem Anker: „Zustand hat Farbe“): unter einem Drittel „wenig“ (rot),
+ * bis zwei Drittel „halb“ (gelb), darüber „gut“ (grün). Die Oberfläche zeigt sie in jeder Breite als Farbe und in Worten
+ * für Vorleseprogramme.
+ */
+export const QUELLE_STAENDE = { wenig: "noch wenig", halb: "zur Hälfte", gut: "gut" };
+export function quelleStand(q) {
+  const a = q?.max ? (q.roh ?? q.punkte ?? 0) / q.max : 0;
+  return a >= 2 / 3 ? "gut" : a >= 1 / 3 ? "halb" : "wenig";
+}
+
 /** Die Stufen, an denen die Lumi ihren Zustand wechselt. Einzige Stelle dafür, wesen.js nutzt sie auch. */
 export function stufe(wert) {
   if (wert < 30) return "liegt";

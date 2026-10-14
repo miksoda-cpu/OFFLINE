@@ -1,6 +1,6 @@
 // OFFLINE – App-Oberfläche (Prototyp). Alle Inhalte kommen aus signierten Paketen, siehe paket-client.js.
 import { versionVergleich } from "./paket-kern.js";
-import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUebertragen, wertV1 as bereitWertV1, POSITIONEN as BEREIT_POSITIONEN } from "./bereit.js";
+import { berechne as bereitBerechnen, naechsterSchritt, uebertragen as bereitUebertragen, wertV1 as bereitWertV1, POSITIONEN as BEREIT_POSITIONEN, quelleStand, QUELLE_STAENDE } from "./bereit.js";
 import { Wesen, SORTEN, TEXTE as LUMI_TEXTE, einladungFaellig, ohneIch, tippPool, tippKnoepfeHtml, ZIELE, FUNKTIONEN } from "./wesen.js";
 import { WERTE as PAUSE_WERTE, LEBENSABSCHNITTE, APPETIT, ART_TEXT, angeboten as pauseAngeboten, einstellungenLaden as pauseEinstellungenLaden, linieLaden as pauseLinieLaden,
   logDazu as pauseLogDazu, happenFaellig, waehle as pauseWaehle, bewerten as pauseBewerten, schwierigkeit as pauseSchwierigkeit, zoneAnpassen, zoneText, zurueckholen as pauseZurueckholen,
@@ -583,7 +583,7 @@ const seiten = {
         <div class="progress of-balken" style="margin:.4rem 0 .8rem"><div style="width:${b.wert}%"></div></div>
         <p class="muted of-klein" style="margin:0 0 .5rem">${esc(bereitSatz(b.wert))}</p>
         <p style="margin:0 0 .6rem"><a href="${schritt.ziel}">${esc(schritt.text)}</a></p>
-        ${b.quellen.map((q) => `<div class="bereit-quelle"><span>${esc(q.name)} <span class="muted of-klein">· ${esc(q.text)}</span></span><span class="mono of-mono">${q.punkte}/${q.max}</span></div>`).join("")}
+        ${b.quellen.map((q) => { const st = quelleStand(q); return `<div class="bereit-quelle bereit-quelle--${st}"><span><span class="bq-punkt" aria-hidden="true"></span>${esc(q.name)} <span class="muted of-klein">· ${esc(q.text)}</span><span class="sr-only">, ${QUELLE_STAENDE[st]}</span></span><span class="mono of-mono">${q.punkte}/${q.max}</span><span class="bq-balken" aria-hidden="true"><span style="width:${Math.round((q.roh / q.max) * 100)}%"></span></span></div>`; }).join("")}
         ${hilfeZeile("bereit", "bereit-hilfe")}
       </div>
       <div class="kacheln">
@@ -1648,18 +1648,11 @@ function naturVorlesen() {
 /** Darf man dieses Modul laden? Heute darf es jeder. Kauf oder Abo (offen) kommen hier davor. */
 const darfLaden = (e) => appPasst(e);
 /**
- * Sperre nach Alter (0.7.2, Startreife): Pakete mit `alter_ab` (z. B. „Was die Lumis denken“, ab 18) fragen beim ersten
- * Laden einmal „Bist du mindestens 18?“. Die Antwort bleibt auf dem Gerät; kein Ausweis, keine Daten. Im Kinder-Modus
- * (kommt) sind sie fest gesperrt. Gibt den Ersatz für den „laden“-Schieber zurück, oder null, wenn geladen werden darf.
+ * Alter (Auftrag Nr. 23, Entscheidung Mik 11.10.2026): Pakete mit `alter_ab` tragen eine Empfehlung, keine Sperre. Eine
+ * Ja/Nein-Frage nach dem Alter kann niemand prüfen, weder Eltern noch wir; deshalb steht „Empfohlen ab …“ beim
+ * Paket, und es lädt ohne Frage. `alter_ab` bleibt im Paketformat (der Kinder-Modus, der noch kommt, kann es nutzen).
  */
-const alterAntwort = (n) => speicher.get("alter-bestaetigt", {})[n];
-function alterSperre(p, ladenAttr) {
-  const n = Number(p.alter_ab);
-  if (!(n >= 18) || alterAntwort(n) === true) return null; // gefragt wird nur ab 18 (Bill); Pause (ab 14) und Wichteln nicht
-  if (alterAntwort(n) === false) return `<span class="tag of-plakette">Ab ${n} Jahren</span>`;
-  if (state.alterFrage === p.id) return `<span class="alter-frage" role="group" aria-label="Altersfrage"><span class="of-klein">Bist du mindestens ${n}?</span> <button type="button" class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-alter-ja="${n}" ${ladenAttr}>Ja, laden</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-alter-nein="${n}">Nein</button></span>`;
-  return schieber({ an: false, art: "laden", text: "laden", attr: `data-alter-frage="${esc(p.id)}" aria-label="${esc(p.titel)} laden"` });
-}
+const alterEmpfehlung = (p) => (Number(p.alter_ab) > 0 ? `<p class="alter-empfehlung of-klein">Empfohlen ab ${Number(p.alter_ab)} Jahren</p>` : "");
 
 async function moduleStandLaden() {
   if (!desktop) return;
@@ -1713,7 +1706,7 @@ function vorschauTitelHtml(key, e) {
   </div>`;
 }
 
-const vorschauFenster = { key: null, id: null, i: 0, vorher: null };
+const vorschauFenster = { key: null, id: null, i: 0, vorher: null, gross: false };
 function vorschauEintrag(id) { return katalog()?.pakete.find((p) => p.id === id) ?? state.modul.lokal?.pakete.find((p) => p.id === id) ?? paketRoh(id)?.manifest ?? { id }; }
 /** Was unten im Fenster steht: der „laden“-Schieber der Karte (gleiche Wirkung), sonst ihr Stand in Worten. */
 function vorschauFuss(id) {
@@ -1733,11 +1726,21 @@ function vorschauFensterZeichnen() {
   el.querySelector(".vorschau-dialog").innerHTML = `
     <div class="vorschau-kopf"><h2 id="vorschau-name">${esc(e.titel ?? id)}</h2><button type="button" class="vorschau-x" data-vorschau-zu aria-label="Vorschau schließen">×</button></div>
     ${f ? `<figure class="vorschau-seite" aria-live="polite">
-      <div class="vorschau-bild">${f.bild_daten ? `<img src="${esc(f.bild_daten)}" alt="${esc(f.alt)}">` : state.modul.vorschau[key] === undefined ? `<span class="muted of-klein">Bild wird geladen …</span>` : `<span class="muted of-klein">${esc(f.alt ?? "")}</span>`}</div>
+      ${f.bild_daten ? vorschauBildHtml(f) : `<div class="vorschau-bild">${state.modul.vorschau[key] === undefined ? `<span class="muted of-klein">Bild wird geladen …</span>` : `<span class="muted of-klein">${esc(f.alt ?? "")}</span>`}</div>`}
       <figcaption><h3>${esc(f.titel)}</h3><p>${esc(f.text)}</p></figcaption>
     </figure>` : `<p class="muted">Vorschau wird geladen …</p>`}
     ${n > 1 ? `<div class="vorschau-nav"><button type="button" class="btn of-btn" data-vorschau-schritt="-1" aria-label="Vorherige Seite">‹</button><span class="of-klein">${i + 1} von ${n}</span><button type="button" class="btn of-btn" data-vorschau-schritt="1" aria-label="Nächste Seite">›</button></div>` : ""}
     <div class="vorschau-fuss">${vorschauFuss(id)}</div>`;
+}
+/**
+ * Lesbar auf dem Handy (Auftrag Nr. 23, Prüfliste aus dem Anker): Ein Bildschirmfoto in der Vorschau ist eingepasst und
+ * damit oft zu klein zum Lesen. Antippen zeigt es in voller Größe (1 Bildpunkt = 1 Pixel), zum Verschieben in beide
+ * Richtungen; noch einmal Antippen passt es wieder ein. Blättern setzt zurück.
+ */
+function vorschauBildHtml(f) {
+  const gross = vorschauFenster.gross;
+  return `<div class="vorschau-bild${gross ? " vorschau-bild--gross" : ""}"><button type="button" class="vorschau-zoom" data-vorschau-gross aria-pressed="${gross}" aria-label="${gross ? "Bild wieder einpassen" : "Bild in voller Größe zeigen"}"><img src="${esc(f.bild_daten)}" alt="${esc(f.alt)}"></button></div>
+      <p class="vorschau-zoom-hinweis">${gross ? "Volle Größe: verschieben zum Lesen, antippen zum Einpassen." : "Zum Vergrößern aufs Bild tippen."}</p>`;
 }
 function vorschauOeffnen(key, id, ausloeser) {
   let el = document.getElementById("vorschau-fenster");
@@ -1748,10 +1751,10 @@ function vorschauOeffnen(key, id, ausloeser) {
     document.body.append(el);
     el.addEventListener("click", vorschauKlick);
     let x0 = null;
-    el.addEventListener("pointerdown", (ev) => { if (ev.target.closest(".vorschau-seite")) x0 = ev.clientX; });
+    el.addEventListener("pointerdown", (ev) => { if (ev.target.closest(".vorschau-seite") && !vorschauFenster.gross) x0 = ev.clientX; });
     el.addEventListener("pointerup", (ev) => { if (x0 === null) return; const dx = ev.clientX - x0; x0 = null; if (Math.abs(dx) > 50) vorschauBlaettern(dx < 0 ? 1 : -1); });
   }
-  Object.assign(vorschauFenster, { key, id, i: 0, vorher: ausloeser ?? document.activeElement });
+  Object.assign(vorschauFenster, { key, id, i: 0, vorher: ausloeser ?? document.activeElement, gross: false });
   vorschauFensterZeichnen();
   el.hidden = false; document.body.classList.add("vorschau-offen");
   el.querySelector(".vorschau-x")?.focus();
@@ -1767,14 +1770,15 @@ function vorschauZu() {
 function vorschauBlaettern(r) {
   const n = vorschauFolien(vorschauFenster.key, vorschauEintrag(vorschauFenster.id)).length;
   if (n < 2) return;
-  vorschauFenster.i = (vorschauFenster.i + r + n) % n;
+  vorschauFenster.i = (vorschauFenster.i + r + n) % n; vorschauFenster.gross = false;
   vorschauFensterZeichnen();
   document.querySelector(`#vorschau-fenster [data-vorschau-schritt="${r}"]`)?.focus();
 }
 function vorschauKlick(ev) {
-  const b = ev.target.closest("[data-vorschau-zu], [data-vorschau-schritt], [data-vorschau-laden]");
+  const b = ev.target.closest("[data-vorschau-zu], [data-vorschau-schritt], [data-vorschau-laden], [data-vorschau-gross]");
   if (!b) return;
   if (b.hasAttribute("data-vorschau-zu")) return vorschauZu();
+  if (b.hasAttribute("data-vorschau-gross")) { vorschauFenster.gross = !vorschauFenster.gross; vorschauFensterZeichnen(); document.querySelector("#vorschau-fenster [data-vorschau-gross]")?.focus(); return; }
   if (b.dataset.vorschauSchritt) return vorschauBlaettern(Number(b.dataset.vorschauSchritt));
   const id = vorschauFenster.id;
   vorschauZu();
@@ -1822,15 +1826,14 @@ function modulKarte(e, quelle) {
       <button type="button" class="btn btn-sm of-btn of-btn--klein" data-modul-loeschen="${esc(e.id)}">Löschen</button>`;
   } else if (e.status && e.status !== "verfuegbar") steuerung = `<span class="tag tag-warn of-plakette of-plakette--warnung">Bald</span>`;
   else if (!darfLaden(e)) steuerung = braucht(e);
-  else if (alterSperre(e, `data-modul-laden="${esc(e.id)}"${quelle.art === "ordner" ? ` data-pfad="${esc(quelle.pfad)}"` : ""}`)) steuerung = alterSperre(e, `data-modul-laden="${esc(e.id)}"${quelle.art === "ordner" ? ` data-pfad="${esc(quelle.pfad)}"` : ""}`);
   else steuerung = schieber({ an: false, art: "laden", text: "laden", attr: `data-modul-laden="${esc(e.id)}" ${quelle.art === "ordner" ? `data-pfad="${esc(quelle.pfad)}"` : ""} aria-label="${esc(e.titel)} laden"` });
   return `<div class="card pkg modul-karte of-karte of-paket" data-modul-karte="${esc(e.id)}">
     ${vorschauTitelHtml(sliderSchluessel(e.id, quelle), e)}
     <div class="pkg-head"><h3 style="margin:0">${esc(e.titel)}</h3><span>${quelle.art === "ordner" ? '<span class="tag tag-warn of-plakette of-plakette--warnung">lokal, nicht veröffentlicht</span>' : ""}</span></div>
     <span class="laden-bereich">${esc(bereichName(inst?.manifest ?? e))} · ${skin ? "Skin" : "Modul"}</span>
-    <p>${esc(e.beschreibung)}</p>
+    <p>${esc(e.beschreibung)}</p>${alterEmpfehlung(inst?.manifest ?? e)}
     ${(inst?.manifest.ki_generiert ?? e.ki_generiert) ? `<p class="muted of-klein" style="margin:-.3rem 0 .5rem">Bilder mit künstlicher Intelligenz (KI) erzeugt, Herkunft im Paket</p>` : ""}
-    <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(e.groesse)}${e.version ? ` · ${esc(e.version)}` : ""}${e.alter_ab ? ` · ab ${e.alter_ab} Jahren` : ""}</span><span class="modul-steuerung">${steuerung}</span></div>
+    <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(e.groesse)}${e.version ? ` · ${esc(e.version)}` : ""}</span><span class="modul-steuerung">${steuerung}</span></div>
     ${state.modul.loeschen === e.id ? loeschDialog(e.id) : ""}
   </div>`;
 }
@@ -1852,15 +1855,14 @@ function ladenKarte(p, g) {
   else if (p.pro) steuerung = `<button class="btn btn-sm of-btn of-btn--klein" disabled title="Nur mit Pro">Nur mit Pro</button>`;
   else if (!desktop && p.art !== "inhalt" && p.art !== "tage") steuerung = `<span class="tag of-plakette">Nur in der Desktop-App</span>`;
   else if (!appPasst(p)) steuerung = braucht(p);
-  else if (alterSperre(p, `data-install="${esc(p.id)}"`)) steuerung = alterSperre(p, `data-install="${esc(p.id)}"`);
   else steuerung = schieber({ an: false, art: "laden", text: "laden", attr: `data-install="${esc(p.id)}" aria-label="${esc(p.titel)} laden"` });
   return `<div class="card pkg of-karte of-paket laden-karte" data-laden-karte="${esc(p.id)}">
     ${p.vorschau?.folien?.length ? vorschauTitelHtml(sliderSchluessel(p.id, { art: "katalog" }), p) : ""}
     <div class="pkg-head"><h3 style="margin:0">${esc(p.titel)}</h3><span>${p.pro ? '<span class="tag tag-pro of-plakette of-plakette--pro">Pro</span>' : ""}</span></div>
     <span class="laden-bereich">${esc(bereichName(p))}</span>
-    <p>${esc(p.beschreibung)}</p>${p.hinweis ? `<p class="muted of-klein pkg-hinweis">${esc(p.hinweis)}</p>` : ""}
+    <p>${esc(p.beschreibung)}</p>${p.hinweis ? `<p class="muted of-klein pkg-hinweis">${esc(p.hinweis)}</p>` : ""}${alterEmpfehlung(p)}
     ${p.ki_generiert ? `<p class="muted of-klein" style="margin:-.3rem 0 .5rem">Bilder mit künstlicher Intelligenz (KI) erzeugt, Herkunft im Paket</p>` : ""}
-    <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(p.groesse)}${g && p.version ? ` · ${esc(p.version)}` : ""}${p.alter_ab ? ` · ab ${p.alter_ab} Jahren` : ""}</span><span class="laden-steuerung">${steuerung}</span></div></div>`;
+    <div class="pkg-foot"><span class="muted mono of-klein of-mono" style="font-size:.85rem">${groesse(p.groesse)}${g && p.version ? ` · ${esc(p.version)}` : ""}</span><span class="laden-steuerung">${steuerung}</span></div></div>`;
 }
 
 /** Lokale Quelle: ein Ordner mit signierten, noch nicht veröffentlichten Paketen (Redaktionsablage). */
@@ -2508,8 +2510,6 @@ function beiKlick(e) {
   if (b.dataset.testTage !== undefined) { speicher.set("test-tage", Number(b.dataset.testTage)); state.tag = { offen: {}, nochmal: false, datum: heuteDatum(), liest: false, lesen: null, schlussGezeigt: null }; vorratAuffuellen(); return render(); }
   if (b.dataset.tag) return tagAktion(b);
   if (b.hasAttribute("data-wesen-gelernt-zurueck")) { wesen.gelernt = { intervall: 90, gelesen: 0, weitergewischt: 0 }; wesen.speichern(); return render(); }
-  if (b.dataset.alterFrage) { state.alterFrage = b.dataset.alterFrage; render(); main.querySelector("[data-alter-ja]")?.focus(); return; }
-  if (b.dataset.alterJa || b.dataset.alterNein) { speicher.set("alter-bestaetigt", { ...speicher.get("alter-bestaetigt", {}), [b.dataset.alterJa ?? b.dataset.alterNein]: !!b.dataset.alterJa }); state.alterFrage = null; if (b.dataset.alterNein) return render(); }
   if (b.dataset.install) installiereMitMeldung(b.dataset.install, "bib-msg");
   if ([...b.attributes].some((a) => a.name.startsWith("data-modul"))) return modulAktion(b);
   if (b.dataset.vorschauOeffnen) return vorschauOeffnen(b.dataset.vorschauOeffnen, b.closest("[data-vorschau-id]")?.dataset.vorschauId, b);

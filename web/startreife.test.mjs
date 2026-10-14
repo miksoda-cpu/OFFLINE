@@ -39,11 +39,11 @@ test("Lumisch ohne Figur nur, wenn das Paket selbst geladen (oder eingeschaltet)
   assert.ok(still.includes("lumisch-geholt") && !still.includes("lumisch-selbst"), "automatisch geholt ist keine Entscheidung");
 });
 
-test("Sperre nach Alter: einmalige Frage beim ersten Laden eines Pakets ab 18, Antwort gemerkt, keine Daten", () => {
-  assert.ok(app.includes('Bist du mindestens ${n}?') && app.includes('speicher.get("alter-bestaetigt", {})'));
-  assert.ok(app.includes("alterSperre(p, `data-install=") && app.includes("alterSperre(e, `data-modul-laden="), "Pakete und Module");
-  assert.ok(app.includes("if (!(n >= 18) || alterAntwort(n) === true) return null;"), "nur ab 18, nicht bei Pause (ab 14)");
-  assert.ok(app.includes('if (alterAntwort(n) === false) return `<span class="tag of-plakette">Ab ${n} Jahren</span>`;'));
+test("Alter (seit Nr. 23, Entscheidung Mik 11.10.2026): Empfehlung statt Sperre, keine Frage, keine gespeicherte Antwort", () => {
+  // Vorher: einmalige Frage „Bist du mindestens 18?“ beim ersten Laden. Mik: „Wer soll das überprüfen? … Eher als Empfehlung“.
+  assert.ok(!app.includes("Bist du mindestens") && !app.includes('speicher.get("alter-bestaetigt", {})'));
+  assert.ok(!app.includes("alterSperre("), "Pakete und Module laden ohne Frage");
+  assert.ok(app.includes("Empfohlen ab ${Number(p.alter_ab)} Jahren"));
 });
 
 test("Startreife: ehrliche Beschreibung, kein Lizenzschlüssel, kein Kamera-Hinweis, nichts Versprochenes ohne Funktion", async () => {
