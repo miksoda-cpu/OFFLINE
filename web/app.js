@@ -25,6 +25,8 @@ import { BEREICHE, bereichVon, bereichName, pflicht as paketPflicht, paketAn, um
 import { BALD, NICHT_LADBAR, baldEintrag } from "./bald.js";
 import { LAENDER, SPAETER as LAENDER_SPAETER, kommtMit, landBestimmen, NOTFALL_KURZ, fuerLand, fuerLandTief } from "./laender.js";
 import { FRAGEN as NETZ_FRAGEN, NACHBAR_SATZ, rat as netzRat, STUFEN as NETZ_STUFEN, stufeFuer, dauerText as netzDauer, seite as netzSeite, zuletztText } from "./netz.js";
+import { indexBauen as suchIndexBauen, suchen as suchenIm, begriffe as suchBegriffe, hervorheben, zeile as suchZeile } from "./suche.js";
+import { TEILE as SZ_TEILE } from "./szenarien.js";
 import { PAKET as HEILKUNDE_PAKET, startZustand as heilkundeStart, seiteHtml as heilkundeSeiteHtml, klick as heilkundeKlick } from "./heilkunde.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
@@ -2532,6 +2534,109 @@ function netzSeiteHtml(id) {
     ${t.schluss.map(([b, x]) => `<p class="netz-schluss"><strong>${esc(b)}</strong> ${esc(x)}</p>`).join("")}
     <p><a class="btn btn-primary of-btn of-btn--primaer" href="${t.weiter.ziel}">${esc(t.weiter.text)}</a> <a class="btn of-btn" href="#start">‹ Heute</a></p></div>`;
 }
+
+// ---------- Suche über alle Texte (Nr. 30; Logik in suche.js) ----------
+// Nur was für das gewählte Land angezeigt wird (Deutschland findet keine 144), nie der Tresor, nichts verlässt das Gerät.
+// Der Index wird beim ersten Öffnen oder nach einer Änderung (Paket, Land, Haushalt, Notizen) neu gebaut, sonst gemerkt.
+const HILFE_ROUTE = { updates: "updates", tresor: "tresor", bibliothek: "bibliothek", bereit: "uebersicht", vorsorge: "vorsorge", tagesplan: "uebersicht", "pause-linie": "linie", lumi: "lumi", werkzeuge: "werkzeuge", "lumi-buch": "buch" };
+let suchMerk = null;
+function suchIndex() {
+  const l = landId(), hkP = installiertesPaket(HEILKUNDE_PAKET);
+  const schluessel = [l, P()?.manifest.version, hkP?.manifest.version, state.haushalt.join(), state.notizbuch.map((n) => `${n.id}${n.geaendert}`).join(), wesen.nurVorschau, tresorBenutzt()].join("|");
+  if (suchMerk?.schluessel === schluessel) return suchMerk.index;
+  const e = [], dazu = (rang, bereich, titel, text, ziel) => e.push({ rang, bereich, titel: titel ?? "", text: text ?? "", ziel });
+  // 0 Notfall und die Seiten ohne Internet
+  if (l === "at") {
+    for (const x of D("notrufe")?.eintraege ?? []) dazu(0, "Notfall", `${x.nr} · ${x.name}`, x.info, { hash: "#notfall", anker: "notrufe" });
+    for (const x of D("sirenen")?.signale ?? []) dazu(0, "Notfall · Sirenensignale", x.name, `${x.bedeutung}. ${x.dauer}. ${x.tun}`, { hash: "#notfall" });
+  } else for (const x of LAENDER[l].notrufe) dazu(0, "Notfall", `${x.nr} · ${x.name}`, x.info, { hash: "#notfall", anker: "notrufe" });
+  for (const id of ["ich", "andere"]) {
+    const t = netzSeite(id, l);
+    dazu(0, "Ohne Internet", t.titel, [t.einleitung, ...t.schritte.flat(), ...(t.wasJetzt ?? []).flat(), ...t.schluss.flat()].join(" "), { hash: `#netz-${id}` });
+  }
+  // 1 Szenarien (nur Österreich; Deutschland und Schweiz bekommen sie mit dem Länderpaket)
+  if (l === "at") for (const [id, k] of Object.entries(szKarten())) {
+    dazu(1, `Szenario ${k.titel}`, k.titel, (k.merksaetze ?? []).join(" "), { hash: `#szenario-${id}` });
+    for (const [teil, name] of SZ_TEILE) for (const x of k[teil] ?? []) dazu(1, `Szenario ${k.titel} · ${name}`, typeof x === "string" ? "" : x.t, typeof x === "string" ? x : x.text, { hash: `#szenario-${id}`, anker: `sz-${teil}` });
+    for (const x of k.checkliste_spezifisch ?? []) dazu(1, `Szenario ${k.titel} · Checkliste`, "", typeof x === "string" ? x : x.text ?? "", { hash: `#szenario-${id}` });
+  }
+  // 2 Vorsorge: Haushalt und die Punkte der Grundvorsorge, die für den Haushalt angezeigt werden
+  const g = grund();
+  if (g) {
+    dazu(2, "Vorsorge", "Haushalt und Wohnsituation", "Wer lebt bei dir: Kinder, Ältere Menschen, Jemand braucht Pflege, Jemand mit Behinderung, Haustiere. Wie wohnst du: Eigenes Haus, Mietwohnung, Keller.", { hash: "#vorsorge", anker: "haushalt" });
+    for (const b of g.bereiche) {
+      dazu(2, "Vorsorge", b.titel, b.satz, { hash: "#vorsorge", anker: `gv-${b.id}` });
+      for (const p of punkteFuer(b, state.haushalt)) dazu(2, `Vorsorge · ${b.titel}`, p.text, p.detail, { hash: "#vorsorge", anker: `gvp-${p.id}` });
+    }
+  }
+  // 3 Naturheilkunde
+  const hk = hkP && texte(hkP, "inhalt/heilkunde.json");
+  if (hk) {
+    for (const [k, name] of Object.entries(hk.beschwerden)) dazu(3, "Naturheilkunde · Was plagt dich?", name, hk.karten.filter((x) => x.bei.includes(k)).map((x) => x.n).join(", "), { hash: "#heilkunde", heilkunde: { b: k } });
+    for (const x of hk.karten) {
+      const verw = [].concat(x.verw ?? []).map((v) => (typeof v === "string" ? v : v.t));
+      dazu(3, `Naturheilkunde · ${x.gr ? hk.gruppen[x.gr] : "Aus dem Vorrat"}`, x.n, [x.plak, x.wo, x.anbau, x.roh, ...(x.erkennen ?? []), ...verw, ...(x.s ?? []), x.folgen, ...(x.kueche ?? []), x.wer, ...(x.mehr ?? [])].filter(Boolean).join(" "), { hash: "#heilkunde", heilkunde: { m: x.id } });
+    }
+  }
+  // 4 Werkzeuge
+  dazu(4, "Werkzeuge", "Radio im Krisenfall", l === "at" ? "Fällt Strom und Netz aus, informiert der Österreichische Rundfunk (ORF) über Radio – Ö3 ist der Verkehrs- und Krisenfunk, dazu das Landesstudio. Ein Batterie- oder Kurbelradio gehört in jede Vorsorge." : kommtMit(l), { hash: "#werkzeuge" });
+  dazu(4, "Werkzeuge", "Sonne und Mond", "Dämmerung, Sonnenaufgang, Sonnenuntergang, Dunkel ab, Mondphase für einen Tag.", { hash: "#werkzeuge" });
+  dazu(4, "Werkzeuge", "Einheiten umrechnen", "Länge, Gewicht, Volumen, Temperatur umrechnen, dazu Kochmaße.", { hash: "#werkzeuge" });
+  dazu(4, "Werkzeuge", "Vorratsrechner", "Wasser und Mahlzeiten für Personen und Tage berechnen: 2 Liter Wasser pro Person und Tag, haltbare Lebensmittel.", { hash: "#werkzeuge" });
+  // 5 Info und Hilfe (nur Seiten, die es für diesen Nutzer gibt)
+  for (const [seite, liste] of Object.entries(HILFE)) {
+    const route = HILFE_ROUTE[seite];
+    if (!route || ((route === "lumi" || route === "buch") && wesen.nurVorschau) || (route === "tresor" && !tresorBenutzt())) continue;
+    liste.forEach(([f, a], i) => dazu(5, "Info und Hilfe", f, a, { hash: `#${route}`, hilfe: { seite, i } }));
+  }
+  // 6 Notizen des Nutzers (der Tresor nie)
+  for (const n of state.notizbuch) dazu(6, "Notizen", n.titel || "Notiz", n.text, { hash: "#notizen", notiz: n.id });
+  suchMerk = { schluessel, index: suchIndexBauen(e) };
+  return suchMerk.index;
+}
+let suchTreffer = [];
+function sucheOeffnen() {
+  let el = document.getElementById("suche");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "suche"; el.className = "suche"; el.hidden = true;
+    el.innerHTML = `<div class="suche-dialog" role="dialog" aria-modal="true" aria-label="Suche">
+      <div class="suche-kopf"><label class="sr-only" for="suche-feld">Suchen</label><input class="of-input" type="search" id="suche-feld" placeholder="Suchen …" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+        <button type="button" class="btn of-btn" data-suche-zu>Schließen</button></div>
+      <div class="suche-treffer" id="suche-treffer" aria-live="polite"></div></div>`;
+    document.body.append(el);
+    el.querySelector("#suche-feld").addEventListener("input", sucheZeigen);
+    el.addEventListener("click", sucheKlick);
+  }
+  el.hidden = false; document.body.classList.add("suche-offen");
+  sucheZeigen();
+  el.querySelector("#suche-feld").focus();
+}
+function sucheZu() {
+  const el = document.getElementById("suche"); if (!el || el.hidden) return;
+  el.hidden = true; document.body.classList.remove("suche-offen");
+}
+function sucheZeigen() {
+  const q = document.getElementById("suche-feld").value, liste = document.getElementById("suche-treffer");
+  if (!suchBegriffe(q).length) { suchTreffer = []; liste.innerHTML = `<p class="muted of-klein suche-hinweis">Ein Wort eingeben, ab zwei Buchstaben. Gesucht wird nur auf diesem Gerät.</p>`; return; }
+  suchTreffer = suchenIm(suchIndex(), q);
+  liste.innerHTML = suchTreffer.length
+    ? `<p class="muted of-klein suche-zahl">${suchTreffer.length === 1 ? "1 Treffer" : `${suchTreffer.length >= 60 ? "Mehr als 60" : suchTreffer.length} Treffer`}</p><ul class="suche-liste">${suchTreffer.map((t, i) => `<li><button type="button" class="suche-eintrag" data-suche-nr="${i}"><span class="suche-bereich">${esc(t.bereich)}</span>${t.titel ? `<span class="suche-titel">${hervorheben(t.titel, q)}</span>` : ""}${t.text ? `<span class="suche-zeile">${suchZeile(t.text, q)}</span>` : ""}</button></li>`).join("")}</ul>`
+    : `<div class="suche-leer"><p>Nichts gefunden. Versuch ein anderes Wort.</p><p class="suche-knoepfe"><a class="btn of-btn" href="#notfall" data-suche-weg>Notfall</a> <a class="btn of-btn" href="#vorsorge" data-suche-weg>Vorsorge</a> <a class="btn of-btn" href="#heilkunde" data-suche-weg>Naturheilkunde</a></p></div>`;
+}
+function sucheKlick(ev) {
+  if (ev.target.closest("[data-suche-zu], [data-suche-weg]")) return sucheZu();
+  const b = ev.target.closest("[data-suche-nr]"); if (!b) return;
+  const z = suchTreffer[Number(b.dataset.sucheNr)]?.ziel; if (!z) return;
+  sucheZu();
+  if (z.heilkunde) state.heilkunde = { ...heilkundeStart(), stapel: [z.heilkunde] };
+  if (z.notiz) state.notizAktiv = z.notiz;
+  if (z.anker) state.anker = z.anker;
+  if (location.hash === z.hash) render(); else location.hash = z.hash;
+  if (z.hilfe) setTimeout(() => { hilfeZeigen(z.hilfe.seite); const h = document.querySelectorAll(".blatt .hilfe-frage")[z.hilfe.i]; h?.scrollIntoView({ block: "start" }); }, 120);
+}
+document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && !document.getElementById("suche")?.hidden) sucheZu(); });
+document.addEventListener("click", (ev) => { if (ev.target.closest("[data-suche-auf]")) sucheOeffnen(); });
 
 // ---------- Land wählen (Nr. 28; Entwurf Bill im Artefakt „OFFLINE MVP zum Durchblättern“, Nachtrag 2: Absender) ----------
 function landAuswahlHtml(name, gewaehlt) {

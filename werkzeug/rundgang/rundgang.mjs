@@ -59,6 +59,9 @@ async function seiten() {
     // Nr. 29: Heute ohne Netz, vier Fragen beantwortet (Nachbarn auch ohne Netz), und die zwei Offline-Seiten
     { name: "heute-offline", hash: "start", offline: true, danach: `(() => { for (const [f, w] of [["flugmodus", "ja"], ["rechnung", "ja"], ["funkloch", "nein"], ["nachbarn", "ja"]]) document.querySelector('[data-netz-frage="' + f + '"][data-wert="' + w + '"]')?.click(); })()`, fertig: `document.querySelector(".netz-rat")` },
     { name: "netz-ich", hash: "netz-ich" }, { name: "netz-andere", hash: "netz-andere" },
+    // Nr. 30: Suche leer, mit Treffern („Wasser“), ohne Treffer
+    ...[["suche-leer", ""], ["suche-wasser", "Wasser"], ["suche-nichts", "Xylofonzauber"]].map(([name, q]) => ({ name, hash: "start", nurSichtbar: true,
+      danach: `(() => { document.querySelector("[data-suche-auf]:not([hidden])")?.click(); [...document.querySelectorAll("[data-suche-auf]")].find((b) => b.offsetParent)?.click(); const f = document.getElementById("suche-feld"); f.value = ${JSON.stringify(q)}; f.dispatchEvent(new Event("input")); })()`, fertig: `document.querySelector("#suche:not([hidden])")` })),
     { name: "heilkunde", hash: "heilkunde", danach: `(() => { while (document.querySelector("[data-hk-zurueck]")) document.querySelector("[data-hk-zurueck]").click(); document.querySelector('[data-hk-tab="bes"]')?.click(); })()` },
     { name: "heilkunde-pilz", hash: "heilkunde", danach: `(() => { while (document.querySelector("[data-hk-zurueck]")) document.querySelector("[data-hk-zurueck]").click(); document.querySelector('[data-hk-tab="ogg"]')?.click(); document.querySelector('[data-hk-gr="pilz"]')?.click(); document.querySelector('[data-hk-m="eierschwammerl"]')?.click(); })()`, fertig: `document.querySelector(".hk-verw")` },
     { name: "heilkunde-gift", hash: "heilkunde", danach: `(() => { while (document.querySelector("[data-hk-zurueck]")) document.querySelector("[data-hk-zurueck]").click(); document.querySelector('[data-hk-tab="ogg"]')?.click(); document.querySelector('[data-hk-gr="pilz"]')?.click(); document.querySelector('[data-hk-m="knolle"]')?.click(); })()`, fertig: `document.querySelector(".hk-plak--rot")` },
@@ -68,7 +71,7 @@ async function seiten() {
 }
 
 async function zeigen(t, seite) {
-  await t.auswerten(`(async () => { document.getElementById("vorschau-fenster")?.setAttribute("hidden", ""); document.body.classList.remove("vorschau-offen", "nav-offen"); document.querySelector(".blatt-hinter, .blatt")?.remove(); location.hash = "#__"; await new Promise((r) => setTimeout(r, 30)); location.hash = ${JSON.stringify("#" + seite.hash)}; })()`);
+  await t.auswerten(`(async () => { document.getElementById("vorschau-fenster")?.setAttribute("hidden", ""); document.getElementById("suche")?.setAttribute("hidden", ""); document.body.classList.remove("suche-offen"); document.body.classList.remove("vorschau-offen", "nav-offen"); document.querySelector(".blatt-hinter, .blatt")?.remove(); location.hash = "#__"; await new Promise((r) => setTimeout(r, 30)); location.hash = ${JSON.stringify("#" + seite.hash)}; })()`);
   await warteBis(t, `document.querySelector("#main") && document.querySelector("#main").children.length`);
   if (seite.danach) { await new Promise((r) => setTimeout(r, 300)); await t.auswerten(seite.danach); }
   if (seite.fertig) await warteBis(t, seite.fertig, 10_000).catch(() => null);
@@ -86,7 +89,7 @@ async function zeigen(t, seite) {
 const PRUEFEN = `(() => {
   const b = document.documentElement.clientWidth, aus = { fehler: window.__fehler.splice(0), ueber: [], abgeschnitten: [], titel: document.querySelector("main h1, #main h1")?.textContent ?? "" };
   if (document.documentElement.scrollWidth > b + 1) aus.ueber.push("Seite " + document.documentElement.scrollWidth + " > " + b);
-  for (const el of document.querySelectorAll("#main *, #sidebar *, .vorschau-dialog *, .blatt *")) {
+  for (const el of document.querySelectorAll("#main *, #sidebar *, .vorschau-dialog *, .blatt *, #suche:not([hidden]) *")) {
     const r = el.getBoundingClientRect(); if (!r.width || !r.height) continue;
     const st = getComputedStyle(el); if (st.visibility === "hidden" || el.closest("[hidden], .leaflet-container, pre, .vorschau-bild--gross, .sr-only, .visually-hidden")) continue;
     // In einem Behälter, der selbst rollt oder abschneidet (Reiter, Tabellen), ist rechts außen gewollt
