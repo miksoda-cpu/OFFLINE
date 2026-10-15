@@ -9,6 +9,7 @@ async function sitzung(fn) {
   const server = await dateiserver(), chrome = await chromeStarten(), t = await chrome.tab();
   try {
     await t.s("Emulation.setDeviceMetricsOverride", { width: 360, height: 640, deviceScaleFactor: 1, mobile: true });
+    await t.s("Page.addScriptToEvaluateOnNewDocument", { source: `try { if (localStorage.getItem("offline:land") === null) localStorage.setItem("offline:land", JSON.stringify("at")); } catch {}` }); // Nr. 28: Land schon gewählt
     await t.laden(`${server.url}/app.html#vorsorge`);
     await warteBis(t, `localStorage.getItem("offline:paket:at-basis") && document.querySelector("#main [data-hilfe]")`, 60_000);
     return await fn(t);
