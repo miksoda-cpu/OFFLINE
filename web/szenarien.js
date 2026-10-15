@@ -88,7 +88,9 @@ export function exportText(grund, checks = {}, haushalt = [], merk = []) {
   return zeilen.join("\n").trim() + "\n";
 }
 
-const balken = (f) => `<div class="progress of-balken" role="progressbar" aria-valuemin="0" aria-valuemax="${f.gesamt}" aria-valuenow="${f.erledigt}"><div style="width:${f.gesamt ? (100 * f.erledigt) / f.gesamt : 0}%"></div></div>`;
+/** Fortschrittsbalken mit Namen (Nr. 26): Ein Screenreader sagt, wovon er den Stand zeigt, nicht nur Zahlen. */
+export const fortschrittsbalken = (jetzt, max, name, stil = "") => `<div class="progress of-balken" role="progressbar" aria-label="${esc(name)}" aria-valuemin="0" aria-valuemax="${max}" aria-valuenow="${Math.min(jetzt, max)}"${stil ? ` style="${stil}"` : ""}><div style="width:${max ? Math.min(100, (100 * jetzt) / max) : 0}%"></div></div>`;
+const balken = (f, name, wort = "erledigt") => fortschrittsbalken(f.erledigt, f.gesamt, `${name}: ${f.erledigt} von ${f.gesamt} ${wort}`);
 const zahl = (f) => `${f.erledigt} von ${f.gesamt}`;
 
 /** Haushalt einstellen (Vorsorge, oben). */
@@ -113,7 +115,7 @@ export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = []
     if (nurMerk && !sicht.length) return "";
     return `<section class="card of-karte gv-bereich" id="gv-${esc(b.id)}" aria-labelledby="gv-t-${esc(b.id)}">
       <h3 id="gv-t-${esc(b.id)}">${esc(b.titel)}</h3><p class="muted of-klein">${esc(b.satz)}</p>
-      <div class="gv-stand of-klein">${zahl(f)} erledigt</div>${balken(f)}
+      <div class="gv-stand of-klein">${zahl(f)} erledigt</div>${balken(f, b.titel)}
       <ul class="check gv-liste">${sicht.map(punkt).join("")}</ul></section>`;
   }).join("");
   return `<section id="grundvorsorge" class="gv" aria-labelledby="gv-titel">
@@ -136,7 +138,7 @@ export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = []
 export function kachelnHtml(karten, reihenfolge, szChecks = {}) {
   return `<div class="sz-kacheln">${reihenfolge.filter((id) => karten[id]).map((id) => {
     const k = karten[id], f = szenarioFortschritt(k, szChecks[id]);
-    return `<a class="card of-karte sz-kachel" href="#szenario-${esc(id)}"><strong>${esc(k.titel)}</strong><span class="muted of-klein">${zahl(f)} vorbereitet</span>${balken(f)}</a>`;
+    return `<a class="card of-karte sz-kachel" href="#szenario-${esc(id)}"><strong>${esc(k.titel)}</strong><span class="muted of-klein">${zahl(f)} vorbereitet</span>${balken(f, k.titel, "vorbereitet")}</a>`;
   }).join("")}</div>`;
 }
 
@@ -151,7 +153,7 @@ export function karteHtml(k, { haushalt = [], abgehakt = [], verweise = [], zuru
     ${k.merksaetze?.length ? `<div class="card of-karte sz-merk"><ul>${k.merksaetze.map((m) => `<li>${esc(m)}</li>`).join("")}</ul></div>` : ""}
     ${TEILE.map(teil).join("")}
     ${zu.length ? `<section class="card of-karte sz-zusatz"><h2>Für dich zusätzlich</h2>${zu.map((z) => `<h3>${esc(z.name)}</h3><ul class="sz-liste">${z.texte.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`).join("")}</section>` : ""}
-    ${k.checkliste_spezifisch?.length ? `<section class="card of-karte sz-check"><h2>Checkliste für ${esc(k.titel)}</h2><div class="of-klein">${zahl(f)} erledigt</div>${balken(f)}
+    ${k.checkliste_spezifisch?.length ? `<section class="card of-karte sz-check"><h2>Checkliste für ${esc(k.titel)}</h2><div class="of-klein">${zahl(f)} erledigt</div>${balken(f, `Checkliste für ${k.titel}`)}
       <ul class="check">${k.checkliste_spezifisch.map((t, i) => `<li><label><input type="checkbox" data-sz-check="${esc(k.id)}" data-sz-punkt="${i}" ${abgehakt.includes(t) ? "checked" : ""}><span>${esc(t)}</span></label></li>`).join("")}</ul></section>` : ""}
     ${verweise.length ? `<p class="sz-verweise">Mehr dazu: ${verweise.map((v) => `<a href="${esc(v.hash)}"${v.anker ? ` data-anker-ziel="${esc(v.anker)}"` : ""}>${esc(v.name)}</a>`).join(" · ")}</p>` : ""}
     ${k.quellen?.length ? `<details class="sz-quellen"><summary class="muted of-klein">Quellen (Stand ${esc(k.stand ?? "")})</summary><ul class="muted of-klein">${k.quellen.map((q) => `<li>${q.url ? `<a href="${esc(q.url)}" rel="noopener">${esc(q.name)}</a>` : esc(q.name)}${q.abgerufen ? `, abgerufen ${esc(q.abgerufen)}` : ""}</li>`).join("")}</ul></details>` : ""}`;

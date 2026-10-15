@@ -11,7 +11,7 @@ export function blattOeffnen(titel, html, { beimSchliessen } = {}) {
   r.className = "blatt-hinter";
   r.innerHTML = `<div class="blatt" role="dialog" aria-modal="true" aria-labelledby="blatt-titel">
     <div class="blatt-kopf"><h2 id="blatt-titel">${esc(titel)}</h2><button type="button" class="blatt-zu" aria-label="Schließen"><svg class="z-x" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></button></div>
-    <div class="blatt-inhalt">${html}</div></div>`;
+    <div class="blatt-inhalt" tabindex="0">${html}</div></div>`;
   document.body.appendChild(r);
   document.body.classList.add("blatt-offen");
   const taste = (e) => { if (e.key === "Escape") zu(); };

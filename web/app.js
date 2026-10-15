@@ -20,7 +20,7 @@ import { hoerenZeigen, sprechen as lumischSprechen } from "./stimme.js";
 import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE, LUECKE_WARTET as BUCH_LUECKE_WARTET, wartendeAbsaetze as buchWartend, mitSchluss as buchMitSchluss } from "./buch.js";
 import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
-import { haushaltHtml, grundvorsorgeHtml, kachelnHtml, karteHtml, radioHtml, checksUebertragen, punkteFuer, fortschritt as gvFortschritt, verweisZiel, exportText as gvExportText } from "./szenarien.js";
+import { haushaltHtml, grundvorsorgeHtml, kachelnHtml, karteHtml, radioHtml, checksUebertragen, punkteFuer, fortschritt as gvFortschritt, fortschrittsbalken, verweisZiel, exportText as gvExportText } from "./szenarien.js";
 import { BEREICHE, bereichVon, bereichName, pflicht as paketPflicht, paketAn, umschalten as paketUmschalten, abschnitte as ladenAbschnitte, stilleUpdates } from "./pakete.js";
 import { BALD, NICHT_LADBAR, baldEintrag } from "./bald.js";
 
@@ -487,7 +487,7 @@ const seiten = {
         <div class="bereit-kopf">
           <span class="muted of-klein">Bereit</span>
           <div class="bereit-zahl">${b.wert}</div>
-          <div class="progress of-balken" style="margin:.4rem 0 .8rem"><div style="width:${b.wert}%"></div></div>
+          ${fortschrittsbalken(b.wert, 100, `Bereit: ${b.wert} von 100`, "margin:.4rem 0 .8rem")}
           <p class="muted of-klein bereit-satz" style="margin:0 0 .5rem">${esc(bereitSatz(b.wert))}</p>
           <p style="margin:0 0 .3rem"><a href="${schritt.ziel}">${esc(schritt.text)}</a></p>
           <p class="of-klein" style="margin:0"><a href="#uebersicht">Alles zur Bereitschaft</a></p>
@@ -582,7 +582,7 @@ const seiten = {
       <div class="card of-karte bereit-kopf" style="margin-bottom:1rem">
         <span class="muted of-klein">Bereit</span>
         <div class="bereit-zahl">${b.wert}</div>
-        <div class="progress of-balken" style="margin:.4rem 0 .8rem"><div style="width:${b.wert}%"></div></div>
+        ${fortschrittsbalken(b.wert, 100, `Bereit: ${b.wert} von 100`, "margin:.4rem 0 .8rem")}
         <p class="muted of-klein" style="margin:0 0 .5rem">${esc(bereitSatz(b.wert))}</p>
         <p style="margin:0 0 .6rem"><a href="${schritt.ziel}">${esc(schritt.text)}</a></p>
         ${b.quellen.map((q) => { const st = quelleStand(q); return `<div class="bereit-quelle bereit-quelle--${st}"><span><span class="bq-punkt" aria-hidden="true"></span>${esc(q.name)} <span class="muted of-klein">· ${esc(q.text)}</span><span class="sr-only">, ${QUELLE_STAENDE[st]}</span></span><span class="mono of-mono">${q.punkte}/${q.max}</span><span class="bq-balken" aria-hidden="true"><span style="width:${Math.round((q.roh / q.max) * 100)}%"></span></span></div>`; }).join("")}
@@ -605,7 +605,7 @@ const seiten = {
       ${land ? `<div class="card of-karte" style="margin-top:0"><strong>${esc(land.name)}</strong> <span class="muted of-klein">· Landeshauptstadt ${esc(land.hauptstadt)} · im Krisenfall informiert <strong>${esc(land.orf_radio)}</strong></span></div>` : ""}
       <h2 style="margin-top:2rem">Installiert</h2>
       <div class="card of-karte">
-        <div class="storage"><strong>${groesse(belegt)}</strong><div class="progress of-balken"><div style="width:${Math.min(100, (belegt / 64e9) * 100)}%"></div></div><span class="muted of-klein">${desktop ? esc(desktop.datenordner) : "von 64 GB auf „OFFLINE-Stick“"}</span></div>
+        <div class="storage"><strong>${groesse(belegt)}</strong>${fortschrittsbalken(Math.min(100, (belegt / 64e9) * 100), 100, `Belegter Speicher: ${groesse(belegt)} von 64 GB`)}<span class="muted of-klein">${desktop ? esc(desktop.datenordner) : "von 64 GB auf „OFFLINE-Stick“"}</span></div>
         <ul class="changelog" style="margin-top:.75rem">${installierte.map((x) =>
           `<li><span class="tag of-plakette">${esc(ARTEN[x.manifest.art] ?? x.manifest.art)}</span><span>${esc(x.manifest.titel)} <span class="muted of-klein">· ${esc(x.manifest.version)} · ${groesse(x.manifest.groesse)} · Signatur geprüft ✓</span></span></li>`).join("")}</ul>
         <a class="btn btn-sm of-btn of-btn--klein" href="#bibliothek" style="margin-top:.75rem">Pakete verwalten</a>
@@ -650,7 +650,7 @@ const seiten = {
       <ul class="check">${vh.map((v) => `<li><label><input type="checkbox" data-vorhaben="${esc(v.id)}" ${v.erledigt ? "checked" : ""}><span>${esc(v.text)}</span></label> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-vorhaben-weg="${esc(v.id)}" aria-label="Vorhaben löschen">Löschen</button></li>`).join("")}</ul></div>` : "";
     const karten = szKarten();
     return `
-      ${kopf("Vorsorge", "Grundvorsorge, Szenarien und dein Haushalt.", `<div style="min-width:220px"><div class="muted of-klein" style="font-size:.9rem;margin-bottom:.3rem">${st.erledigt} von ${st.gesamt} erledigt</div><div class="progress of-balken"><div style="width:${st.gesamt ? (st.erledigt / st.gesamt) * 100 : 0}%"></div></div></div>`)}
+      ${kopf("Vorsorge", "Grundvorsorge, Szenarien und dein Haushalt.", `<div style="min-width:220px"><div class="muted of-klein" style="font-size:.9rem;margin-bottom:.3rem">${st.erledigt} von ${st.gesamt} erledigt</div>${fortschrittsbalken(st.erledigt, st.gesamt, `Vorsorge: ${st.erledigt} von ${st.gesamt} erledigt`)}</div>`)}
       ${haushaltHtml(state.haushalt)}
       ${vorhabenHtml}
       ${grundvorsorgeHtml(g, { checks: state.checks, haushalt: state.haushalt, merk: state.merk, nurMerk: state.nurMerk, zuruecksetzen: state.gvZurueck, faellig })}
@@ -880,7 +880,7 @@ const seiten = {
           : k ? `${updates.length ? `${updates.length} Update${updates.length > 1 ? "s" : ""} verfügbar.` : "Alles aktuell."} Katalog vom ${datum(k.erstellt)}.` : "Noch kein Katalog geladen."}</p>
         <button class="btn btn-primary of-btn of-btn--primaer" id="jetzt">Jetzt prüfen</button>
         ${state.fortschritt ? `<div style="margin-top:.8rem"><span class="muted of-klein">Lädt ${esc(state.fortschritt.pfad)} · ${groesse(state.fortschritt.geladen)} / ${groesse(state.fortschritt.gesamt)}</span>
-          <div class="progress of-balken" style="margin:.5rem 0"><div style="width:${state.fortschritt.gesamt ? Math.min(100, (100 * state.fortschritt.geladen) / state.fortschritt.gesamt) : 0}%"></div></div>
+          ${fortschrittsbalken(state.fortschritt.gesamt ? Math.min(100, (100 * state.fortschritt.geladen) / state.fortschritt.gesamt) : 0, 100, `Download ${state.fortschritt.pfad}`, "margin:.5rem 0")}
           ${desktop ? '<button class="btn btn-sm of-btn of-btn--klein" data-abbrechen>Abbrechen – wird später fortgesetzt</button>' : ""}</div>` : ""}
         ${updates.map((u) => `<div class="upd-zeile"><span><strong>${esc(u.eintrag.titel)}</strong> <span class="muted of-klein">${esc(u.installiert)} → ${esc(u.eintrag.version)}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-install="${u.eintrag.id}">Aktualisieren</button></div>`).join("")}
         ${appUpdateZeile()}
@@ -942,7 +942,7 @@ function appUpdateZeile() {
     case "gefunden": inhalt = `<span class="tag tag-warn of-plakette of-plakette--warnung">Neue Version ${esc(u.info.version)}</span> <span class="muted of-klein">Du hast ${esc(u.info.aktuell)}.${u.info.hinweise ? " " + esc(u.info.hinweise) : ""}</span>
       <div style="margin-top:.6rem"><button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-app-update-installieren>Version ${esc(u.info.version)} laden und installieren</button></div>`; break;
     case "laedt": inhalt = `<span class="muted of-klein">Lade Version ${esc(u.info.version)} … ${u.fortschritt?.gesamt ? `${groesse(u.fortschritt.geladen)} / ${groesse(u.fortschritt.gesamt)}` : ""}</span>
-      <div class="progress of-balken" style="margin:.5rem 0"><div style="width:${u.fortschritt?.gesamt ? Math.min(100, (100 * u.fortschritt.geladen) / u.fortschritt.gesamt) : 0}%"></div></div>`; break;
+      ${fortschrittsbalken(u.fortschritt?.gesamt ? Math.min(100, (100 * u.fortschritt.geladen) / u.fortschritt.gesamt) : 0, 100, `Download Version ${u.info.version}`, "margin:.5rem 0")}`; break;
     case "fertig": inhalt = `<span class="tag tag-ok of-plakette of-plakette--offline">Installiert</span> <span class="muted of-klein">Version ${esc(u.info.version)} ist bereit. Signatur geprüft.</span>
       <div style="margin-top:.6rem"><button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-app-neustart>Jetzt neu starten</button></div>`; break;
     case "fehler": inhalt = `<span class="tag tag-pro of-plakette of-plakette--pro">Fehler</span> <span class="muted of-klein">${esc(u.text)}</span>`; break;
@@ -1166,7 +1166,7 @@ function downloadLeiste() {
   el.hidden = false;
   el.innerHTML = `<span class="dl-titel" title="${esc(d.titel)}">${esc(d.titel)}</span>
     <div class="dl-zeile"><span class="tag of-plakette ${tag}">${STATUS_TEXT[d.status]}</span><span class="mono of-mono">${d.gesamt ? `${groesse(d.geladen)} / ${groesse(d.gesamt)}` : groesse(d.geladen)}</span></div>
-    ${d.status === "laedt" || d.status === "unterbrochen" ? `<div class="progress of-balken"><div style="width:${p}%"></div></div>` : ""}
+    ${d.status === "laedt" || d.status === "unterbrochen" ? `${fortschrittsbalken(p, 100, `Download ${d.titel}`)}` : ""}
     ${d.status === "kaputt" && d.text ? `<div class="muted of-klein" style="margin-top:.3rem">${esc(d.text)}</div>` : ""}
     ${d.status === "unterbrochen" ? `<button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-install="${esc(d.id)}">Fortsetzen</button>` : ""}
     ${d.status === "kaputt" ? `<button class="btn btn-sm of-btn of-btn--klein" data-install="${esc(d.id)}">Erneut versuchen</button>` : ""}
@@ -2415,7 +2415,7 @@ function render() {
   if (route.startsWith("szenario-")) { state.szenario = route.slice(9); route = "szenario"; } // 0.8.0: eine Karte je Szenario
   if (wesen.nurVorschau && (route === "lumi" || route === "heft")) { location.replace("#start"); return; } // Nr. 27: keine Lumi-Seite
   checksAngleichen();
-  blattWeg();
+  if (render.seite !== location.hash) blattWeg(); // Nr. 26: Neuzeichnen derselben Seite (Abo-Stand, Tagespakete) lässt ein offenes Blatt stehen
   if (route === "modul") { modulAnsichtZeigen(); return; }
   modulAnsichtVerbergen();
   if (route !== "happen" && pauseFokus) { pauseFokus.ctrl?.abbrechen(); pauseFokus = null; pauseModulZu(); } // Happen verlassen (Zurück, Navigation): zählt als abgebrochen

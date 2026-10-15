@@ -1,25 +1,4 @@
 {
-  "erklaerung": "Ausnahmen für werkzeug/barrierefrei.mjs: Befunde der Stufen serious/critical, die nicht sofort behebbar sind. Jeder Eintrag: regel (axe-Kennung), optional seite und ziel, und ein grund. Leer ist besser. Stand 13.10.2026 (Auftrag Nr. 21): Alle vier sind klein, jede Korrektur ändert aber die App, und App-Änderungen werden erst zusammengeführt, wenn die Windows-Probe grün ist (seit dem Katalog vom 08.10.2026 rot, aus einem anderen Grund).",
-  "ausnahmen": [
-    {
-      "regel": "aria-progressbar-name",
-      "grund": "Fortschrittsbalken ohne Namen (web/szenarien.js, balken(); Grundvorsorge, Szenario-Kacheln und -Karten, Notfall). Ein Screenreader liest nur Zahlen ohne Bezug. Korrektur: aria-label je Balken; App-Änderung, wartet auf grüne Windows-Probe."
-    },
-    {
-      "regel": "color-contrast",
-      "seite": "karte",
-      "grund": "Quellenzeile von Leaflet (Links auf leafletjs.com und basemap.at) im dunklen Aussehen zu wenig Kontrast, weil Leaflets eigenes CSS die Farbe setzt. Nur im Web-Prototyp (Karte live von basemap.at). Korrektur im App-CSS, wartet auf grüne Windows-Probe."
-    },
-    {
-      "regel": "link-in-text-block",
-      "seite": "karte",
-      "grund": "Dieselbe Quellenzeile von Leaflet: Links nur durch Farbe vom Text unterschieden. Korrektur (Unterstreichung) im App-CSS, wartet auf grüne Windows-Probe."
-    },
-    {
-      "regel": "scrollable-region-focusable",
-      "seite": "hilfe",
-      "ziel": ".blatt-inhalt",
-      "grund": "Der scrollbare Inhalt des Hilfe-Blatts ist mit der Tastatur nicht erreichbar (kein tabindex). Korrektur: tabindex=\"0\" in web/blatt.js; App-Änderung, wartet auf grüne Windows-Probe."
-    }
-  ]
+  "erklaerung": "Ausnahmen für werkzeug/barrierefrei.mjs: Befunde der Stufen serious/critical, die nicht sofort behebbar sind. Jeder Eintrag: regel (axe-Kennung), optional seite und ziel, und ein grund. Leer ist besser. Stand 15.10.2026 (Auftrag Nr. 26): leer, die vier Befunde aus Nr. 21 sind in der App behoben.",
+  "ausnahmen": []
 }

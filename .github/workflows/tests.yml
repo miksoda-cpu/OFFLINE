@@ -70,6 +70,9 @@ jobs:
       - name: Lumi im MVP nur als Vorschau (Nr. 27)
         run: node --test werkzeug/lumi-vorschau.test.mjs
         env: { CHROME: google-chrome }
+      - name: Blatt bleibt beim Neuzeichnen offen (Nr. 26)
+        run: node --test werkzeug/blatt.test.mjs
+        env: { CHROME: google-chrome }
       - name: Bildvergleich
         run: node werkzeug/bildvergleich.mjs --chrome --aus bildvergleich-aus --anker bildvergleich-aus/anker
         env: { CHROME: google-chrome }
