@@ -1,7 +1,7 @@
 {
   "format": 1,
-  "erstellt": "2026-10-08T15:45:11Z",
-  "gueltig_bis": "2027-01-06T15:45:11Z",
+  "erstellt": "2026-10-15T15:04:37Z",
+  "gueltig_bis": "2027-01-13T15:04:37Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
@@ -22,6 +22,25 @@
       "aenderungen": "Zwölf Szenarien von Hochwasser bis Blackout, je mit Vorsorge, richtigem Verhalten und eigener Checkliste. Die Grundvorsorge hat jetzt sechs Bereiche mit 74 Punkten, passend zu deinem Haushalt. Dazu Radio je Bundesland und die Sirenen zum Anhören.",
       "pfad": "at-basis-2026.10.08/",
       "sha256_manifest": "f62a3169554fc920badfeeebd500507a97dfa893dab9743a7399e323df05590d",
+      "status": "verfuegbar"
+    },
+    {
+      "id": "heilkunde-grundstock",
+      "version": "2026.10.15",
+      "titel": "Naturheilkunde · Gratis-Grundstock",
+      "beschreibung": "Was plagt dich? Hausmittel aus Küche, Garten und Wald, dazu Obst, Gemüse, Kräuter und Pilze mit allen Warnungen vor giftigen Doppelgängern. Erste Fassung.",
+      "art": "inhalt",
+      "pro": false,
+      "preis": "gratis",
+      "pruefstatus": "redaktion",
+      "alter_ab": 0,
+      "bereich": "wissen",
+      "groesse": 25937,
+      "app_min": "0.9.0",
+      "erstellt": "2026-10-15T15:02:09Z",
+      "aenderungen": "Neu: Naturheilkunde in einer ersten Fassung. Hausmittel nach Beschwerde, Obst, Gemüse, Kräuter und Pilze, mit Warnungen vor giftigen Doppelgängern.",
+      "pfad": "heilkunde-grundstock-2026.10.15/",
+      "sha256_manifest": "7cce2a677b65bdd1cd5728bb5313abb74f7c3d1f55b41c6384ab233a98f41748",
       "status": "verfuegbar"
     },
     {

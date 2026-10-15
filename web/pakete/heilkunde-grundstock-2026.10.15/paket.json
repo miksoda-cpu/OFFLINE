@@ -1,0 +1,35 @@
+{
+  "format": 1,
+  "id": "heilkunde-grundstock",
+  "version": "2026.10.15",
+  "titel": "Naturheilkunde · Gratis-Grundstock",
+  "beschreibung": "Was plagt dich? Hausmittel aus Küche, Garten und Wald, dazu Obst, Gemüse, Kräuter und Pilze mit allen Warnungen vor giftigen Doppelgängern. Erste Fassung.",
+  "art": "inhalt",
+  "sprache": "de-AT",
+  "lizenz": "CC BY-SA 4.0",
+  "herausgeber": "The Digioneer / digitalworld Academy",
+  "pro": false,
+  "preis": "gratis",
+  "pruefstatus": "redaktion",
+  "alter_ab": 0,
+  "abnahme": "Redaktion (Code), 14.10.2026: Texte wortgleich aus der Probe v7 (werkzeug/heilkunde-aus-probe.mjs, Test web/heilkunde.test.mjs)",
+  "bereich": "wissen",
+  "app_min": "0.9.0",
+  "erstellt": "2026-10-15T15:02:09Z",
+  "aenderungen": "Neu: Naturheilkunde in einer ersten Fassung. Hausmittel nach Beschwerde, Obst, Gemüse, Kräuter und Pilze, mit Warnungen vor giftigen Doppelgängern.",
+  "quellen": [
+    {
+      "id": "redaktion",
+      "name": "Naturheilkunde-Probe v7 der Redaktion (Bill, 14.10.2026, von Mik freigegeben), Texte wortgleich; Karten mit „Beispiel“ sind noch nicht geprüft",
+      "url": ""
+    }
+  ],
+  "dateien": [
+    {
+      "pfad": "inhalt/heilkunde.json",
+      "sha256": "3e25a21bd8ea520f47b4ef95a4783f471ff30ecb73b95f65a220bdaaa720bdd1",
+      "groesse": 25937
+    }
+  ],
+  "groesse": 25937
+}
