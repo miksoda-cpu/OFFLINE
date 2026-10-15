@@ -984,3 +984,4 @@ body.suche-offen { overflow: hidden; }
 .suche-leer p { margin: .4rem 0; }
 .suche-knoepfe { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .8rem !important; }
 @media (max-width: 820px) { .seiten-kopf .suche-knopf { display: none; } }
+.topbar .suche-knopf { margin: -11px -10px -11px 0; } /* Tippfläche 44 px, die Kopfzeile bleibt so hoch wie vorher */
