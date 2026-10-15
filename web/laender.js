@@ -7,6 +7,8 @@
 //                110 Polizeiliche Kriminalprävention (polizei-beratung.de), 116 117 Kassenärztliche Bundesvereinigung (116117.de)
 //   Schweiz:     ch.ch, „Notfallnummern“ (112, 117, 118, 144, 145)
 
+import { ausschreiben } from "./abkuerzungen.js";
+
 export const LAENDER = {
   at: { name: "Österreich", paket: "Österreich-Paket" },
   de: {
@@ -47,4 +49,33 @@ export function landBestimmen(gespeichert, schluessel = []) {
   if (gespeichert in LAENDER) return { land: gespeichert, fragen: false };
   const daten = schluessel.some((k) => k.startsWith("offline:") && k !== "offline:land");
   return daten ? { land: "at", fragen: false } : { land: null, fragen: true };
+}
+
+/** Kurzzeile der Kachel „Notfall“ auf Bereit (Nachbesserung Nr. 28): die Nummern des Landes, „Sirenen“ nur in Österreich. */
+export const NOTFALL_KURZ = { at: "112 · 122 · 133 · 144, Sirenen", de: "112 · 110 · 116 117", ch: "112 · 117 · 118 · 144 · 145" };
+
+/**
+ * Sätze aus dem Österreich-Paket und aus Bereit, die in Deutschland und der Schweiz neutral stehen (Nachbesserung Nr. 28,
+ * Wortlaut von Bill). Das Paket bleibt unverändert, an seinen Kennungen hängen die Häkchen; ersetzt wird nur beim Anzeigen.
+ * null: Satz entfällt.
+ */
+const NEUTRAL_ROH = [
+  ["Radio mit Batterie oder Kurbel – im Krisenfall informiert der ORF", "Radio mit Batterie oder Kurbel – im Krisenfall informiert dein öffentlich-rechtlicher Sender"],
+  ["Radio getestet und den Sender des Österreichischen Rundfunks (ORF) gefunden", "Radio getestet und einen Sender für Krisenfälle gefunden"],
+  ["Ö3 oder Radio Wien einstellen, Frequenz unter Werkzeuge eintragen.", null],
+  // Grundvorsorge „Notruf ohne Sprechen“: die österreichische Nummer (0800 133 133) und DEC112 gelten dort nicht
+  ["Polizei per SMS oder Fax: 0800 133 133. Daneben gibt es den offiziellen Notruf-Chat DEC112. Stift und Papier helfen mit Einsatzkräften.",
+    "Wie du ohne Sprechen einen Notruf absetzt, kommt mit dem Paket deines Landes. Stift und Papier helfen mit Einsatzkräften."],
+];
+// Die App schreibt Abkürzungen beim Laden aus (Textregel); beide Fassungen werden erkannt
+const NEUTRAL = new Map(NEUTRAL_ROH.flatMap(([a, b]) => [[a, b], [ausschreiben(a), b && ausschreiben(b)]]));
+/** Ein Text, wie er im Land erscheint. */
+export const fuerLand = (text, land) => (land === "at" || typeof text !== "string" || !NEUTRAL.has(text) ? text : NEUTRAL.get(text));
+/** Alle Texte eines Objekts (z. B. die Grundvorsorge), Kennungen und Aufbau bleiben. */
+export function fuerLandTief(o, land) {
+  if (land === "at" || o == null) return o;
+  if (typeof o === "string") return fuerLand(o, land);
+  if (Array.isArray(o)) return o.map((x) => fuerLandTief(x, land));
+  if (typeof o === "object") return Object.fromEntries(Object.entries(o).map(([k, v]) => [k, fuerLandTief(v, land)]));
+  return o;
 }

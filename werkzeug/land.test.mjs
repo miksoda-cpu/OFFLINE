@@ -56,3 +56,31 @@ test("Deutschland: Notfall mit 112, 110, 116 117, keine 133 und keine 144; Szena
     assert.ok(!/Ö3|Ö1|Heulton|Zivilschutz/.test(n.text), "keine österreichischen Sender oder Sirenen");
   });
 });
+
+// Nr. 28, Nachbesserung (Bill, 15.10.): Auch Bereit und Vorsorge zeigen bei Deutschland und Schweiz nichts Österreichisches
+const OESTERREICH = /\b(122|133|141)\b|Ö1|Ö3|ORF|Österreichischen Rundfunk|Radio Wien|Heulton/;
+for (const [land, nummern] of [["de", "112 · 110 · 116 117"], ["ch", "112 · 117 · 118 · 144 · 145"]]) {
+  test(`${land === "de" ? "Deutschland" : "Schweiz"}: Bereit und Vorsorge ohne österreichische Nummern und Sender; Notfall-Kachel mit den eigenen Nummern`, async () => {
+    await sitzung(null, async (t) => {
+      await warteBis(t, `document.getElementById("land-frage")`, 30_000);
+      await t.auswerten(`(() => { document.querySelector('input[name="land"][value="${land}"]').click(); document.querySelector("[data-land-weiter]").click(); })()`);
+      await warteBis(t, `!document.getElementById("land-frage") && localStorage.getItem("offline:paket:at-basis")`, 60_000);
+      for (const seite of ["uebersicht", "vorsorge"]) {
+        await t.auswerten(`location.hash = "#${seite}"`);
+        await warteBis(t, `document.title.includes(${JSON.stringify(seite === "uebersicht" ? "Bereit" : "Vorsorge")}) && document.querySelector("#main h1")`);
+        await t.auswerten(`(() => { for (const d of document.querySelectorAll("#main details")) d.open = true; })()`); // auch Aufgeklapptes
+        const text = await t.auswerten(`document.getElementById("main").innerText`);
+        const treffer = text.split("\n").filter((z) => OESTERREICH.test(z));
+        assert.deepEqual(treffer, [], `${seite}: ${treffer.join(" | ")}`);
+        if (seite === "uebersicht") {
+          const kachel = await t.auswerten(`document.querySelector('#main a.kachel[href="#notfall"]')?.innerText ?? ""`);
+          assert.ok(kachel.includes(nummern) && !kachel.includes("Sirenen"), kachel);
+        }
+      }
+      if (land === "de") {
+        const v = await t.auswerten(`document.getElementById("main").innerText`);
+        assert.ok(v.includes("Radio mit Batterie oder Kurbel – im Krisenfall informiert dein öffentlich-rechtlicher Sender"), "Vorsorge: Radio neutral");
+      }
+    });
+  });
+}

@@ -23,7 +23,7 @@ import { ModulRahmen, druckTeil } from "./modul-host.js";
 import { haushaltHtml, grundvorsorgeHtml, kachelnHtml, karteHtml, radioHtml, checksUebertragen, punkteFuer, fortschritt as gvFortschritt, fortschrittsbalken, verweisZiel, exportText as gvExportText } from "./szenarien.js";
 import { BEREICHE, bereichVon, bereichName, pflicht as paketPflicht, paketAn, umschalten as paketUmschalten, abschnitte as ladenAbschnitte, stilleUpdates } from "./pakete.js";
 import { BALD, NICHT_LADBAR, baldEintrag } from "./bald.js";
-import { LAENDER, SPAETER as LAENDER_SPAETER, kommtMit, landBestimmen } from "./laender.js";
+import { LAENDER, SPAETER as LAENDER_SPAETER, kommtMit, landBestimmen, NOTFALL_KURZ, fuerLand, fuerLandTief } from "./laender.js";
 import { PAKET as HEILKUNDE_PAKET, startZustand as heilkundeStart, seiteHtml as heilkundeSeiteHtml, klick as heilkundeKlick } from "./heilkunde.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
@@ -35,6 +35,7 @@ const landStart = (() => { let k = []; try { k = Object.keys(localStorage); } ca
 if (landStart.land && speicher.get("land", null) !== landStart.land) speicher.set("land", landStart.land);
 let landFrage = landStart.fragen;
 const land = () => speicher.get("land", null) ?? "at";
+const landId = land; // gleiche Funktion, für Seiten mit einer eigenen Variable „land“ (Bundesland)
 const ausland = () => land() !== "at"; // Deutschland, Schweiz: nur Notrufnummern, der Rest kommt mit dem Paket des Landes
 // An/aus für alle Pakete (0.7.0, Bibliothek als Laden): Ausgeschaltete bleiben installiert, die App liest sie nur nicht.
 // Daten und Lesestand liegen getrennt und bleiben. Pflichtpakete (Österreich-Basis, Tage) sind immer an. Module: Stand im Kern.
@@ -164,7 +165,12 @@ const wesen = new Wesen({ speicher, nurVorschau: true, meinTag: () => meinTagJet
 if (speicher.get("bereit-v2", null) === null && (Object.values(state.checks).some(Boolean) || Object.keys(speicher.get("bestaetigungen", {})).length)) speicher.set("bereit-sockel-offen", true);
 state.bestaetigt = speicher.get("bereit-v2", null) ?? bereitUebertragen({ checks: state.checks, bestaetigungenV1: speicher.get("bestaetigungen", {}) });
 speicher.set("bereit-v2", state.bestaetigt);
+/** Bereit mit den Texten des Landes (Nachbesserung Nr. 28: Radio-Punkt in Deutschland und der Schweiz neutral). */
 function bereit() {
+  const b = bereitRoh(), l = landId();
+  return l === "at" ? b : { ...b, positionen: b.positionen.map((x) => ({ ...x, titel: fuerLand(x.titel, l), hinweis: fuerLand(x.hinweis, l) ?? undefined })) };
+}
+function bereitRoh() {
   const arten = installierteIds().map(paketRoh).filter(Boolean).map((x) => x.manifest.art); // auch ausgeschaltete liegen am Gerät
   const notfallmappe = desktop ? state.tresor.status !== null && state.tresor.status !== "kein" : undefined; // ohne Tresor zählt sie nicht
   return bereitBerechnen({ checks: state.checks, bestaetigt: state.bestaetigt, geraet: { paketErstellt: P()?.manifest.erstellt ?? null, arten, notfallmappe }, sockel: sockelFestlegen(arten) }, testJetzt());
@@ -192,7 +198,8 @@ function bestaetigen(id, ja = true) {
 }
 const D = (name) => texte(P(), `inhalt/${name}.json`);
 // 0.8.0: zwölf Szenarien und Grundvorsorge aus dem Österreich-Paket
-const grund = () => D("grundvorsorge");
+let grundMerk = null;
+const grund = () => { const g = D("grundvorsorge"), l = landId(); if (grundMerk?.g !== g || grundMerk.l !== l) grundMerk = { g, l, d: fuerLandTief(g, l) }; return grundMerk.d; }; // Nr. 28: Texte je Land
 const szReihe = () => D("szenarien")?.reihenfolge ?? [];
 const szKarten = () => Object.fromEntries(szReihe().map((id) => [id, D(`szenarien/${id}`)]).filter(([, k]) => k));
 /** Erledigt und gesamt der Grundvorsorge, nur Punkte, die zum Haushalt passen (für Bereit und die Kacheln). */
@@ -626,7 +633,7 @@ const seiten = {
         ${hilfeZeile("bereit", "bereit-hilfe")}
       </div>
       <div class="kacheln">
-        ${kachel("notfall", "rose", "Notfall", "112 · 122 · 133 · 144, Sirenen")}
+        ${kachel("notfall", "rose", "Notfall", NOTFALL_KURZ[landId()] ?? NOTFALL_KURZ.at)}
         ${kachel("vorsorge", "moos", "Vorsorge", `${erledigt} von ${gesamt} erledigt`)}
         ${kachel("bibliothek", "eisblau", "Bibliothek", `${installierte.length} Paket${installierte.length === 1 ? "" : "e"} am Gerät`)}
         ${kachel("werkzeuge", "flieder", "Werkzeuge", "Radio, Sonne, Vorrat")}
