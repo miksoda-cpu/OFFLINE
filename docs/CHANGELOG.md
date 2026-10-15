@@ -1,5 +1,16 @@
 # Änderungen
 
+## 0.9.0 · 15.10.2026 · Das MVP: Land wählen, Naturheilkunde erste Fassung, Lumi und Wissen als Vorschau
+
+- **Land wählen** (Auftrag Nr. 28, Nachtrag 2): erste Frage nach der Installation (Österreich, Deutschland, Schweiz; Liechtenstein, Südtirol und weitere grau), darunter Absender (Knopf zum Impressum) und zwei Sätze. Wer vor 0.9.0 Daten hatte, bleibt ohne Frage bei Österreich (`web/laender.js`, `landBestimmen`). Deutschland und Schweiz: eigene Notrufnummern auf Notfall und in der Kachel auf Bereit; Szenarien, Radio, Sirenen und Bundesland/Kanton als „Kommt mit dem Paket …“; drei Sätze aus Österreich-Paket und Bereit beim Anzeigen neutral (`fuerLand`), das Paket bleibt unverändert.
+- **Naturheilkunde, erste Fassung:** Seite `#heilkunde` nach Aufbau der Probe v7 (`web/heilkunde.js`), Inhalte wortgleich im neuen Paket `heilkunde-grundstock` (`app_min` 0.9.0, still beim Start geladen), Notrufzeile je Land.
+- **Menü** wird je Nutzer gebaut (`menueBauen`): neu „Einstellungen“ (Land, Alter, Bundesland), „Naturheilkunde“; „Updates & Abo“ und „Tresor“ fehlten seit 0.7.1 (hinter einem Kommentar); der Tresor nur, wer ihn angelegt hat, sonst unter „Bald“. Pause fragt das Alter nur beim ersten Öffnen.
+- **Lumi nur als Vorschau** (Nr. 27): ohne Namen keine Figur, Lumi-Seite, Einladung und Tipps (`Wesen` mit `nurVorschau`, gespeicherte Darstellung bleibt); `wir` kommt nicht mehr beim Erststart.
+- **Bibliothek „Bald“** (Nr. 24): Wikipedia, Wikivoyage, Karte, „Das Lumi-Update“ und Tresor als Vorschau mit Bildern (`web/bald.js`, `web/bald/`), nicht ladbar, auch nicht still. Vorschau-Fenster ohne Durchblättern: Bilder untereinander.
+- **Österreich-Basis** aktualisiert sich beim Start mit Netz still (`stilleUpdates`); Abkürzungen am Ende einer Klammer ohne zweite Klammer („USB-Stick; USB: …“).
+- **Heute:** Tageskarten brechen lange Wörter um (Raster `minmax(0, 1fr)`), kein seitliches Überlaufen bei 360 bis 430 px. Knöpfe statt Links für Handlungen, Hilfe-Blatt in der Textschrift. Karte ohne Netz mit Hinweis auf die Offline-Karte.
+- **Prüfungen:** `werkzeug/land.test.mjs`, `werkzeug/heute-breite.test.mjs`, `werkzeug/lumi-vorschau.test.mjs`, `web/heilkunde.test.mjs`, `web/bibliothek-bald.test.mjs`; Windows-Probe kennt die Länderfrage (frisch ja, nach Update nein); Rundgang im Repo (`werkzeug/rundgang/`, mit Testkatalog und Wegwerf-Schlüssel für Unveröffentlichtes). Service Worker `offline-v37`.
+
 ## 0.8.0 · 08.10.2026 · Zwölf Szenarien, Grundvorsorge in sechs Bereichen, Radio und Sirenen zum Anhören
 
 - **Inhalte** (Auftrag Nr. 20, unverändert übernommen) im Österreich-Paket `at-basis`, neue Ausgabe mit `app_min` 0.8.0: `inhalt/szenarien/<id>.json` (zwölf Karten, Reihenfolge in `inhalt/szenarien.json`), `inhalt/grundvorsorge.json` (sechs Bereiche, 74 Punkte mit `fuer`), `inhalt/radio.json` (Ö3, Ö1, Regionalradio je Bundesland). `blackout.json` und `vorsorge.json` sind ersetzt; die alte Checkliste liegt als `inhalt/alt/vorsorge-0.7.json` nur für den Abgleich der Häkchen.
