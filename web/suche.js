@@ -27,10 +27,11 @@ export function suchen(index, q, { max = 60 } = {}) {
   const aus = [];
   for (const e of index) {
     if (!b.every((x) => e.w.some((w) => w.startsWith(x)))) continue;
-    const imTitel = b.every((x) => woerter(e.titel).some((w) => w.startsWith(x)));
-    aus.push({ e, imTitel });
+    // Innerhalb eines Rangs (Bill, 15.10.): zuerst Überschriften, die mit dem Suchwort beginnen, dann die, in denen es steht, dann der Rest
+    const tw = woerter(e.titel), stufe = tw.length && tw[0].startsWith(b[0]) ? 0 : b.every((x) => tw.some((w) => w.startsWith(x))) ? 1 : 2;
+    aus.push({ e, stufe });
   }
-  aus.sort((a, c) => a.e.rang - c.e.rang || Number(c.imTitel) - Number(a.imTitel) || a.e.nr - c.e.nr);
+  aus.sort((a, c) => a.e.rang - c.e.rang || a.stufe - c.stufe || a.e.nr - c.e.nr);
   return aus.slice(0, max).map((x) => x.e);
 }
 

@@ -30,3 +30,13 @@ test("Antwortzeit: 3000 Einträge unter 150 ms", () => {
   const t0 = performance.now(); const r = suchen(gross, "wasser kurbel"); const ms = performance.now() - t0;
   assert.equal(r.length, 60); assert.ok(ms < 150, `${ms.toFixed(1)} ms`);
 });
+
+test("Reihenfolge im Rang (Bill, 15.10.): Überschrift beginnt mit dem Wort, dann enthält es, dann der Rest; Ränge bleiben", () => {
+  const i = indexBauen([
+    { rang: 1, bereich: "Szenario Hochwasser", titel: "Auto raus, bevor das Wasser kommt", text: "", ziel: {} },
+    { rang: 1, bereich: "Szenario Hochwasser", titel: "Strom abschalten", text: "Wasser im Keller.", ziel: {} },
+    { rang: 1, bereich: "Szenario Blackout", titel: "Wasser für zwei Wochen", text: "", ziel: {} },
+    { rang: 0, bereich: "Notfall", titel: "133 · Polizei", text: "Bei Wasser in der Wohnung.", ziel: {} },
+  ]);
+  assert.deepEqual(suchen(i, "wasser").map((e) => e.titel), ["133 · Polizei", "Wasser für zwei Wochen", "Auto raus, bevor das Wasser kommt", "Strom abschalten"]);
+});

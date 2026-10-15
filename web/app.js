@@ -2606,6 +2606,13 @@ function sucheOeffnen() {
       <div class="suche-treffer" id="suche-treffer" aria-live="polite"></div></div>`;
     document.body.append(el);
     el.querySelector("#suche-feld").addEventListener("input", sucheZeigen);
+    // Tastatur (Bill, 15.10.): Pfeil runter/hoch durch die Treffer, Enter im Feld öffnet den ersten, Esc schließt
+    el.addEventListener("keydown", (ev) => {
+      const feld = document.getElementById("suche-feld"), liste = [...el.querySelectorAll(".suche-eintrag")], i = liste.indexOf(document.activeElement);
+      if (ev.key === "Enter" && document.activeElement === feld) { ev.preventDefault(); liste[0]?.click(); return; }
+      if (ev.key === "ArrowDown" && liste.length) { ev.preventDefault(); liste[Math.min(i + 1, liste.length - 1)].focus(); return; }
+      if (ev.key === "ArrowUp" && (i >= 0 || document.activeElement === feld)) { ev.preventDefault(); (i > 0 ? liste[i - 1] : feld).focus(); }
+    });
     el.addEventListener("click", sucheKlick);
   }
   el.hidden = false; document.body.classList.add("suche-offen");

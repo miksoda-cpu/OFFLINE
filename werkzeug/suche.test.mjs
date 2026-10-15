@@ -70,3 +70,19 @@ test("(d) Eigene Notiz „Schlüssel bei Oma“ wird gefunden; die Suche geht oh
     await warteBis(t, `location.hash === "#notizen"`, 10_000);
   }, `localStorage.setItem("offline:notizbuch", JSON.stringify([{ id: "n1", titel: "Schlüssel bei Oma", text: "Ersatzschlüssel liegt bei Oma in der Lade.", geaendert: new Date().toISOString() }]));`);
 });
+
+test("Tastatur (Bill, 15.10.): Pfeil runter/hoch durch die Treffer, Enter im Feld öffnet den ersten, Esc schließt; „Wasser für zwei Wochen“ vor „Auto raus …“", async () => {
+  await sitzung("at", async (t) => {
+    const r = await suche(t, "Wasser"), szen = r.treffer.filter((x) => x.bereich.startsWith("Szenario")).map((x) => x.titel);
+    assert.ok(szen.indexOf("Wasser für zwei Wochen") >= 0 && szen.indexOf("Wasser für zwei Wochen") < szen.indexOf("Auto raus, bevor das Wasser kommt"), szen.slice(0, 6).join(" | "));
+    const taste = (key) => t.s("Input.dispatchKeyEvent", { type: "keyDown", key, code: key, windowsVirtualKeyCode: { ArrowDown: 40, ArrowUp: 38, Enter: 13, Escape: 27 }[key] }).then(() => t.s("Input.dispatchKeyEvent", { type: "keyUp", key, code: key }));
+    await t.auswerten(`document.getElementById("suche-feld").focus()`);
+    await taste("ArrowDown"); assert.equal(await t.auswerten(`[...document.querySelectorAll(".suche-eintrag")].indexOf(document.activeElement)`), 0);
+    await taste("ArrowDown"); assert.equal(await t.auswerten(`[...document.querySelectorAll(".suche-eintrag")].indexOf(document.activeElement)`), 1);
+    await taste("ArrowUp"); await taste("ArrowUp"); assert.equal(await t.auswerten(`document.activeElement.id`), "suche-feld");
+    const erster = await t.auswerten(`document.querySelector(".suche-eintrag .suche-bereich").textContent`);
+    await taste("Enter"); await warteBis(t, `document.getElementById("suche").hidden`, 5000);
+    assert.ok(erster.startsWith("Notfall") || erster.startsWith("Szenario") || erster.startsWith("Ohne Internet"), erster);
+    await suche(t, "Wasser"); await taste("Escape"); assert.equal(await t.auswerten(`document.getElementById("suche").hidden`), true);
+  });
+});
