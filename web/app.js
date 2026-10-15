@@ -24,7 +24,7 @@ import { haushaltHtml, grundvorsorgeHtml, kachelnHtml, karteHtml, radioHtml, che
 import { BEREICHE, bereichVon, bereichName, pflicht as paketPflicht, paketAn, umschalten as paketUmschalten, abschnitte as ladenAbschnitte, stilleUpdates } from "./pakete.js";
 import { BALD, NICHT_LADBAR, baldEintrag } from "./bald.js";
 import { LAENDER, SPAETER as LAENDER_SPAETER, kommtMit, landBestimmen, NOTFALL_KURZ, fuerLand, fuerLandTief } from "./laender.js";
-import { FRAGEN as NETZ_FRAGEN, NACHBAR_SATZ, rat as netzRat, STUFEN as NETZ_STUFEN, stufeFuer, dauerText as netzDauer, seite as netzSeite } from "./netz.js";
+import { FRAGEN as NETZ_FRAGEN, NACHBAR_SATZ, rat as netzRat, STUFEN as NETZ_STUFEN, stufeFuer, dauerText as netzDauer, seite as netzSeite, zuletztText } from "./netz.js";
 import { PAKET as HEILKUNDE_PAKET, startZustand as heilkundeStart, seiteHtml as heilkundeSeiteHtml, klick as heilkundeKlick } from "./heilkunde.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
@@ -2502,13 +2502,16 @@ function notfallAuslandHtml() {
 
 // ---------- Heute neu (Nr. 29, Entwurf C): Status, Fragen ohne Netz, Stufen nach Dauer (Logik und Texte in netz.js) ----------
 // Die App merkt sich am Gerät, wann sie zuletzt Internet hatte, und zählt von dort. Keine Anfrage dafür: navigator.onLine.
-function zuletztOnlineMerken() { if (navigator.onLine) speicher.set("zuletzt-online", new Date().toISOString()); }
-const offlineSeit = () => { const z = speicher.get("zuletzt-online", null); return z ? Date.now() - new Date(z).getTime() : null; };
-const uhrzeit = (iso) => new Date(iso).toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit" });
+// Nachbesserung (Bill, 15.10.): „Offline seit“ zählt ab dem Moment, in dem die App das Offline bemerkt hat (offline-bemerkt), nicht
+// ab der letzten Verbindung – sonst wäre nach einer Nacht mit geschlossener App „Offline seit 13 Stunden“ zu lesen.
+function zuletztOnlineMerken() { if (navigator.onLine) { speicher.set("zuletzt-online", new Date().toISOString()); speicher.del("offline-bemerkt"); } }
+function offlineBemerken() { if (!navigator.onLine && !speicher.get("offline-bemerkt", null)) speicher.set("offline-bemerkt", new Date().toISOString()); }
+const offlineSeit = () => { const z = speicher.get("offline-bemerkt", null); return z ? Date.now() - new Date(z).getTime() : null; };
 function heuteStatusHtml() {
   if (navigator.onLine) return `<div class="heute-status heute-status--on" role="status"><b>Online</b><span>Alles gut.</span></div>`;
+  offlineBemerken(); // Start ohne Netz: ab jetzt zählen, wenn noch nichts gemerkt ist
   const ms = offlineSeit(), z = speicher.get("zuletzt-online", null);
-  return `<div class="heute-status heute-status--off" role="status"><b>${ms == null ? "Offline" : `Offline seit ${esc(netzDauer(ms))}`}</b><span>${z ? `Zuletzt Internet um ${esc(uhrzeit(z))}. ` : ""}Finden wir heraus, warum.</span></div>`;
+  return `<div class="heute-status heute-status--off" role="status"><b>${ms == null ? "Offline" : `Offline seit ${esc(netzDauer(ms))}`}</b><span>${z ? `Zuletzt Internet ${esc(zuletztText(z))}. ` : ""}Finden wir heraus, warum.</span></div>`;
 }
 function heuteOfflineHtml() {
   const a = speicher.get("netz-antworten", {}), r = netzRat(a, landId()), jetzt = stufeFuer(offlineSeit());
@@ -2986,6 +2989,7 @@ sheetHinter.addEventListener("click", () => blattSetzen(false));
 function netz(e) {
   const on = navigator.onLine;
   if (on) { zuletztOnlineMerken(); if (e?.type === "online") speicher.del("netz-antworten"); } // Nr. 29: neue Verbindung, neue Fragen
+  else offlineBemerken();
   if (e && (location.hash || "#start") === "#start") render();
   document.getElementById("net-dot").className = "dot " + (on ? "on" : "off");
   // 0.7.1 (Mik): ein klarer Satz, nicht abgeschnitten

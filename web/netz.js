@@ -38,13 +38,14 @@ export const STUFEN = [
 /** Welche Stufe gilt nach ms ohne Internet? (unbekannt: die erste) */
 export const stufeFuer = (ms) => (ms == null || ms < 0 ? 0 : STUFEN.findIndex((s) => ms < s.bis));
 
-/** „2 Minuten“, „1 Stunde“, „3 Tagen“ – für „Offline seit …“. */
+/** „2 Minuten“, „1 Stunde 10 Minuten“, „2 Stunden“, „3 Tagen“ – für „Offline seit …“ (unter 24 Stunden mit Minuten). */
 export function dauerText(ms) {
   const min = Math.max(0, Math.floor(ms / 60e3));
+  const mz = (n) => (n === 1 ? "1 Minute" : `${n} Minuten`);
   if (min < 1) return "weniger als einer Minute";
-  if (min < 60) return min === 1 ? "1 Minute" : `${min} Minuten`;
-  const h = Math.floor(min / 60);
-  if (h < 24) return h === 1 ? "1 Stunde" : `${h} Stunden`;
+  if (min < 60) return mz(min);
+  const h = Math.floor(min / 60), rest = min % 60;
+  if (h < 24) return `${h === 1 ? "1 Stunde" : `${h} Stunden`}${rest ? ` ${mz(rest)}` : ""}`;
   const t = Math.floor(h / 24);
   return t === 1 ? "1 Tag" : `${t} Tagen`;
 }
@@ -70,6 +71,9 @@ export function seite(id, land = "at") {
       ["Frag in der Nähe.", "Klopf bei Nachbarn an oder frag jemanden auf der Straße, ob deren Handy oder Internet geht. Die App fragt dich das nur. Sie misst nichts und sucht keine Geräte in der Nähe."],
       ["Schau, ob Strom da ist.", "Geht das Licht? Leuchten die Straßenlaternen und die Ampeln? Ist auch der Strom weg, kann es ein größerer Ausfall sein."],
       ["Schalte das Radio ein.", `Ein Radio mit Batterie oder Kurbel, oder das Autoradio. Bei größeren Ausfällen ${land === "at" ? "informieren Ö3 oder dein ORF-Landesstudio" : "informiert dein Radiosender für Krisenfälle"}.`],
+      // Nachbesserung Bill (15.10.): zwei Schritte dazu; die Anbieter nur in Österreich und ohne Link
+      ["Ruf jemanden an oder schick eine SMS.", "Telefonieren und SMS gehen oft noch, wenn das Internet weg ist. Frag eine Freundin oder einen Freund in einem anderen Ort, ob dort das Netz geht und ob in den Nachrichten von einem Ausfall die Rede ist."],
+      ["Schau auf der Störungsseite deines Anbieters nach.", `Hast du auf einem anderen Weg noch Internet, etwa mobile Daten statt WLAN oder umgekehrt, dann öffne die Seite oder die App deines Anbieters${land === "at" ? " (zum Beispiel A1, Magenta oder Drei)" : ""}. Die Anbieter melden größere Ausfälle dort. Auch Nachrichtenseiten berichten meist schnell.`],
     ],
     wasJetzt: [
       ["Nur bei dir weg:", "Nimm Kontakt mit deinem Anbieter auf, sobald du wieder Netz hast, oder frag Nachbarn, ob du kurz ihr WLAN nutzen darfst."],
@@ -79,4 +83,13 @@ export function seite(id, land = "at") {
     schluss: [["Im Notfall:", "Notrufe gehen oft auch dann noch, wenn sonst nichts geht. Probier 112."]],
     weiter: { ziel: "#szenario-blackout", text: "Blackout-Karte" },
   };
+}
+
+/** „um 18:46“, „gestern um 18:46“, sonst „am 13.10. um 18:46“ (Nachbesserung Bill, 15.10.). jetzt: Vergleichszeitpunkt. */
+export function zuletztText(iso, jetzt = Date.now()) {
+  const d = new Date(iso), h = new Date(jetzt), uhr = d.toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit" });
+  const tag = (x) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime(), diff = Math.round((tag(h) - tag(d)) / 86400e3);
+  if (diff === 0) return `um ${uhr}`;
+  if (diff === 1) return `gestern um ${uhr}`;
+  return `am ${String(d.getDate()).padStart(2, "0")}.${String(d.getMonth() + 1).padStart(2, "0")}. um ${uhr}`;
 }

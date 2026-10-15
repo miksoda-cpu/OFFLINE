@@ -25,8 +25,10 @@ test("(a) Offline: „Offline seit …“, vier Fragen mit Ja/Nein, der Satz zur
     const zuletzt = await t.auswerten(`JSON.parse(localStorage.getItem("offline:zuletzt-online"))`);
     assert.ok(zuletzt, "Zeitpunkt der letzten Verbindung gemerkt");
     await offline(t, true); await ruhig(t);
-    // Neustart ohne Netz: der Zeitpunkt bleibt, die Seite zählt von dort
-    await t.auswerten(`localStorage.setItem("offline:zuletzt-online", JSON.stringify(new Date(Date.now() - 2 * 60e3 - 5e3).toISOString()))`);
+    // Neustart ohne Netz: der Zeitpunkt, an dem die App das Offline bemerkt hat, bleibt; die Seite zählt von dort (Nachbesserung)
+    assert.ok(await t.auswerten(`!!JSON.parse(localStorage.getItem("offline:offline-bemerkt"))`), "Offline bemerkt und gemerkt");
+    await t.auswerten(`localStorage.setItem("offline:offline-bemerkt", JSON.stringify(new Date(Date.now() - 2 * 60e3 - 5e3).toISOString()))`);
+    await ruhig(t, 1500); // Chrome gibt den Gerätespeicher verzögert an den neuen Seitenprozess weiter
     await t.laden(`${url}/app.html?neu#start`); await warteBis(t, `document.querySelector(".heute-status--off")`, 20_000);
     const o = await t.auswerten(`(() => { const s = ${sichtbar};
       return { status: document.querySelector(".heute-status--off").innerText, fragen: [...document.querySelectorAll(".netz-frage")].map((f) => f.querySelector("span").textContent + ":" + f.querySelectorAll("button").length),
@@ -63,5 +65,19 @@ test("(c) Kein Tagesrätsel auf Heute; es steht oben auf „Spiele“", async ()
     await t.auswerten(`location.hash = "#pause"`); await warteBis(t, `document.querySelector("#main .spiele-raetsel")`, 20_000);
     const r = await t.auswerten(`(() => { const s = document.querySelector("#main .spiele-raetsel"), h = document.querySelector("#main .page-head"); return { art: s.querySelector(".tag-art")?.textContent ?? "", direktNachKopf: h?.nextElementSibling === s }; })()`);
     assert.ok(r.art.includes("Tagesrätsel") && r.direktNachKopf, JSON.stringify(r));
+  });
+});
+
+test("Nachbesserung: gestern online, App zu, heute ohne Netz gestartet – zählt ab jetzt, „Zuletzt Internet gestern um …“", async () => {
+  await sitzung(async (t, url) => {
+    await offline(t, true);
+    await t.auswerten(`(() => { localStorage.setItem("offline:zuletzt-online", JSON.stringify(new Date(Date.now() - 86400e3).toISOString())); localStorage.removeItem("offline:offline-bemerkt"); })()`);
+    await ruhig(t, 1500);
+    await t.laden(`${url}/app.html?morgen#start`); await warteBis(t, `document.querySelector(".heute-status--off")`, 20_000);
+    const o = await t.auswerten(`({ status: document.querySelector(".heute-status--off").innerText, jetzt: document.querySelector(".netz-stufe--jetzt")?.innerText ?? "" })`);
+    assert.match(o.status, /^Offline seit weniger als einer Minute/); assert.match(o.status, /Zuletzt Internet gestern um \d\d:\d\d/);
+    assert.ok(o.jetzt.startsWith("Erste Minuten"), o.jetzt);
+    await offline(t, false); await ruhig(t);
+    assert.equal(await t.auswerten(`localStorage.getItem("offline:offline-bemerkt")`), null, "wieder online: gelöscht");
   });
 });
