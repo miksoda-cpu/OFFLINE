@@ -6,8 +6,8 @@ Neu geschrieben bei der Faltung am 12.10.2026 (Code, Nachtlauf). Der vorige Stan
 Bill schreibt Aufträge nach `bill/todo/`, Code meldet nach `bill/rueckmeldung/`, Erledigtes liegt in `bill/erledigt/`. Nur Code ändert die App, Prioritäten setzt Mik. Festlegungen: `bill/README.md`.
 
 ## App
-- **Veröffentlicht:** Desktop 0.8.0 (08.10.2026, Tag `v0.8.0`) und Web-Version. MVP-Inhalt: zwölf Szenarien, Grundvorsorge (74 Punkte, sechs Bereiche), Radio je Bundesland, Sirenen, Notrufe, Offline-Karte, Bibliothek mit Wikivoyage, Tresor, Bereit, Spiele (`spiele-1`, nur Desktop).
-- **Katalog:** at-basis 2026.10.08, spiele-1 2026.10.07.1, Wichteln, wikivoyage-de; Lumi-Pakete liegen dort, gehören nicht zum MVP.
+- **Veröffentlicht:** Desktop 0.9.0 (15.10.2026, Tag `v0.9.0`) und Web-Version. MVP-Inhalt: Land wählen (Österreich voll; Deutschland, Schweiz mit Notrufnummern), zwölf Szenarien, Grundvorsorge (74 Punkte, sechs Bereiche), Radio je Bundesland, Sirenen, Notrufe, Naturheilkunde (erste Fassung), Karte (online), Bereit, Einstellungen, Spiele (`spiele-1`, nur Desktop). Unter „Bald“: Wikipedia, Wikivoyage, Offline-Karte, Lumi-Update, Tresor.
+- **Katalog** (15.10.2026): at-basis 2026.10.08, heilkunde-grundstock 2026.10.15, spiele-1 2026.10.07.1, Wichteln, wikivoyage-de (ab 0.9.0 nicht mehr ladbar); Lumi-Pakete liegen dort, ab 0.9.0 nur für Nutzer, die sie schon haben.
 - **Läuft:** Rust-Kern, Signatur, Delta-Updates, kiwix-serve, Store-Build ohne Updater und internen Kanal.
 - **Vorrat Tagespakete:** bis 31.01.2027. Februar 2027 spätestens 01.01.2027; die 45-Tage-Grenze fällt am 17.12.2026.
 
@@ -18,7 +18,7 @@ Skin Flechte und die internen Pakete `naturheilkunde`, `naturheilkunde-bilder` l
 Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (Android, iOS), Schließfach. Gesamtkonzept als Projektdokument „OFFLINE-Gesamtkonzept“, nicht in `docs/`.
 
 ## Offen bei Code
-- Nr. 28 mit Nachtrag 1 und 2 (Version 0.9.0) fertig auf Branch `nr-28-version-0-9-0` (14.10., Rückmeldung), CI, Windows-Probe und Rundgang (360/390/1280, frisch, langjährig, Deutschland) grün. **Wartet auf Bills Held-out**, dann: Naturheilkunde offen setzen, zusammenführen, ein Katalog-Lauf nur für `heilkunde-grundstock` (Mik), Tag `v0.9.0`, Web. Nebenbei behoben: „Tresor“ und „Updates & Abo“ fehlten seit 0.7.1 im Menü.
+- Nr. 28 mit Nachtrag 1 und 2 und Nachbesserung erledigt: **0.9.0 veröffentlicht (15.10.2026, Tag `v0.9.0`)**. Land wählen (DACH), Naturheilkunde erste Fassung (`heilkunde-grundstock` 2026.10.15 im Katalog), Einstellungen, Tresor/Lumi/Wikipedia/Wikivoyage/Karte unter „Bald“; Deutschland und Schweiz ohne österreichische Nummern und Sender. Nebenbei: „Tresor“ und „Updates & Abo“ fehlten seit 0.7.1 im Menü.
 - Nr. 24 erledigt und zusammengeführt (14.10., Rückmeldung), live in der Web-Version: Österreich-Basis aktualisiert sich still, eine Klammer bei „USB-Stick“, unter „Bald“ Wikipedia, Wikivoyage, Karte und „Das Lumi-Update“ als Vorschau, nicht ladbar (Abschnitt B entfällt fürs MVP). Rundgang liegt in `werkzeug/rundgang/`.
 - Nr. 27 erledigt und zusammengeführt (14.10., Rückmeldung), live in der Web-Version: Lumi im MVP nur als Vorschau. Ohne Namen keine Figur, Lumi-Seite, Einladung und Tipps (`wir` steht mit unter „Das Lumi-Update“); mit Namen alles wie bisher.
 - Nr. 22 Nachtrag erledigt (14.10.): Impressum vollständig nach dem Firmenbuchauszug (Rechtsform, Unternehmensgegenstand Bildungsinstitut, Offenlegung nach § 25 Mediengesetz mit Gesellschaftern und Blattlinie), kein „wird ergänzt“ mehr; Wirtschaftskammer und Gewerbebehörde entfallen.
