@@ -3,7 +3,7 @@
   "versionen": [
     {
       "version": "0.9.0",
-      "datum": "2026-10-14",
+      "datum": "2026-10-15",
       "punkte": [
         "Beim ersten Start fragt OFFLINE, in welchem Land du lebst: Österreich, Deutschland oder Schweiz. In Deutschland und der Schweiz siehst du schon die Notrufnummern deines Landes, der Rest kommt mit dem Paket des Landes.",
         "Neu: Naturheilkunde in einer ersten Fassung. Hausmittel nach Beschwerde, dazu Obst, Gemüse, Kräuter und Pilze mit Warnungen vor giftigen Doppelgängern.",

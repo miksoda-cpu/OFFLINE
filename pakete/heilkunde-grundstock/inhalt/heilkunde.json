@@ -1,0 +1,760 @@
+{
+  "version": 1,
+  "quelle": "Probe v7 (Bill, 14.10.2026)",
+  "beschwerden": {
+    "husten": "Husten",
+    "hals": "Halsweh",
+    "erk": "Erkältung",
+    "bauch": "Bauch, Blähungen",
+    "durchfall": "Durchfall",
+    "reise": "Übelkeit unterwegs",
+    "gelenke": "Gelenke",
+    "regel": "Regelkrämpfe",
+    "essen": "Essen finden"
+  },
+  "gruppen": {
+    "obst": "Obst",
+    "gemuese": "Gemüse",
+    "gewuerz": "Gewürze",
+    "wild": "Wildkräuter",
+    "pilz": "Pilze"
+  },
+  "karten": [
+    {
+      "id": "thymian",
+      "n": "Thymian",
+      "form": "blatt",
+      "gr": "gewuerz",
+      "bei": [
+        "husten",
+        "erk"
+      ],
+      "plak": "traditionell",
+      "wo": "Garten, Balkon, trockene Hänge",
+      "anbau": "ja, im Topf",
+      "roh": "frisch und getrocknet",
+      "s": [
+        "1 bis 2 g getrocknetes Kraut in eine Tasse.",
+        "Mit 150 ml kochendem Wasser übergießen.",
+        "3- bis 4-mal am Tag."
+      ],
+      "wer": "Nicht bei Allergie gegen Lippenblütler. Ab 12 Jahren.",
+      "mehr": [
+        "Schwangerschaft und Stillzeit: nicht empfohlen.",
+        "Husten länger als eine Woche: Arzt."
+      ]
+    },
+    {
+      "id": "fenchel",
+      "n": "Fenchelsamen",
+      "form": "samen",
+      "gr": "gewuerz",
+      "bei": [
+        "bauch",
+        "husten",
+        "regel"
+      ],
+      "plak": "traditionell",
+      "wo": "Garten, Gewürzregal",
+      "anbau": "ja, Garten",
+      "roh": "roh und gekocht (Knolle als Gemüse)",
+      "s": [
+        "1,5 g Samen kurz anstoßen.",
+        "Mit 250 ml kochendem Wasser übergießen, 15 Minuten ziehen.",
+        "3-mal am Tag, höchstens zwei Wochen."
+      ],
+      "wer": "Nicht bei Allergie gegen Sellerie, Anis, Kümmel. Nicht unter 4 Jahren.",
+      "mehr": [
+        "Kinder 4 bis 12: 1 g auf 100 ml.",
+        "Regelkrämpfe ab 12 Jahren."
+      ]
+    },
+    {
+      "id": "anis",
+      "n": "Anis",
+      "form": "samen",
+      "gr": "gewuerz",
+      "bei": [
+        "bauch",
+        "husten"
+      ],
+      "plak": "traditionell",
+      "wo": "Gewürzregal",
+      "anbau": "ja, warmer Garten",
+      "roh": "als Gewürz",
+      "s": [
+        "1 bis 3,5 g Samen frisch zerstoßen.",
+        "Mit 150 ml kochendem Wasser übergießen.",
+        "3-mal am Tag, höchstens zwei Wochen."
+      ],
+      "wer": "Nicht bei Allergie gegen Doldenblütler. Ab 12 Jahren.",
+      "mehr": []
+    },
+    {
+      "id": "kuemmel",
+      "n": "Kümmel",
+      "form": "samen",
+      "gr": "gewuerz",
+      "bei": [
+        "bauch"
+      ],
+      "plak": "traditionell",
+      "wo": "Wiesen, Gewürzregal",
+      "anbau": "ja, Garten",
+      "roh": "als Gewürz, auch im Brot",
+      "s": [
+        "0,5 bis 2 g Kümmel in eine Tasse.",
+        "Mit 150 ml kochendem Wasser übergießen.",
+        "1- bis 3-mal am Tag."
+      ],
+      "wer": "Nicht bei Leber- oder Gallenleiden. Ab 12 Jahren.",
+      "mehr": []
+    },
+    {
+      "id": "minze",
+      "n": "Pfefferminze",
+      "form": "blatt",
+      "gr": "gewuerz",
+      "bei": [
+        "bauch"
+      ],
+      "plak": "traditionell",
+      "wo": "Garten, feuchte Stellen",
+      "anbau": "ja, wuchert",
+      "roh": "frisch und getrocknet",
+      "s": [
+        "1,5 bis 3 g Blätter in eine Tasse.",
+        "Mit 100 bis 150 ml kochendem Wasser übergießen.",
+        "3-mal am Tag."
+      ],
+      "wer": "Nicht bei Sodbrennen. Nicht unter 4 Jahren.",
+      "mehr": []
+    },
+    {
+      "id": "ingwer",
+      "n": "Ingwer",
+      "form": "stoessel",
+      "gr": "gewuerz",
+      "bei": [
+        "reise",
+        "bauch",
+        "erk"
+      ],
+      "plak": "belegt",
+      "wo": "Supermarkt, Gewürzregal",
+      "anbau": "im Topf möglich, braucht Wärme",
+      "roh": "roh und gekocht",
+      "s": [
+        "Erwachsene: 1 bis 2 g Ingwerpulver.",
+        "Eine Stunde vor der Reise."
+      ],
+      "wer": "In der Schwangerschaft besser meiden.",
+      "mehr": [
+        "Tee: ein daumengroßes Stück 10 bis 15 Minuten ziehen lassen."
+      ]
+    },
+    {
+      "id": "honig",
+      "n": "Honig",
+      "form": "honig",
+      "gr": null,
+      "bei": [
+        "husten",
+        "hals"
+      ],
+      "plak": "traditionell",
+      "wo": "Imker, Vorratsschrank",
+      "anbau": "nein, Imkerei",
+      "roh": "roh, hält fast unbegrenzt",
+      "s": [
+        "Einen Löffel pur oder in warmen Tee rühren."
+      ],
+      "wer": "Nie an Babys unter einem Jahr.",
+      "mehr": [
+        "Bei Kindern ab 12 Monaten wirkte Honig in Studien ähnlich wie ein üblicher Hustenstiller."
+      ]
+    },
+    {
+      "id": "kartoffel",
+      "n": "Kartoffel",
+      "form": "gemuese",
+      "gr": "gemuese",
+      "bei": [
+        "hals",
+        "essen"
+      ],
+      "plak": "überliefert",
+      "wo": "Acker, Keller",
+      "anbau": "ja, sehr ertragreich",
+      "roh": "nur gekocht",
+      "s": [
+        "Wickel: 1 bis 2 Kartoffeln mit Schale kochen.",
+        "Heiß in ein Tuch, zerdrücken, am Arm prüfen.",
+        "Um den Hals legen, bis abgekühlt."
+      ],
+      "wer": "Grüne Stellen und Keime großzügig wegschneiden. Verbrühungsgefahr beim Wickel.",
+      "mehr": []
+    },
+    {
+      "id": "kohl",
+      "n": "Kohl",
+      "form": "gemuese",
+      "gr": "gemuese",
+      "bei": [
+        "gelenke",
+        "essen"
+      ],
+      "plak": "überliefert",
+      "wo": "Garten, Acker",
+      "anbau": "ja, auch im Winter",
+      "roh": "roh und gekocht, als Sauerkraut lange haltbar",
+      "s": [
+        "Wickel: Blätter weich klopfen.",
+        "Auf das Gelenk legen, eine bis mehrere Stunden."
+      ],
+      "wer": "Nicht auf offene Haut.",
+      "mehr": []
+    },
+    {
+      "id": "zwiebel",
+      "n": "Zwiebel",
+      "form": "gemuese",
+      "gr": "gemuese",
+      "bei": [
+        "husten",
+        "hals",
+        "essen"
+      ],
+      "plak": "überliefert",
+      "wo": "Garten, Keller",
+      "anbau": "ja, einfach",
+      "roh": "roh und gekocht",
+      "s": [
+        "Zwiebelsaft: eine große Zwiebel klein schneiden, mit Zucker bedecken.",
+        "Einen halben Tag kühl stehen lassen, den Saft löffelweise nehmen."
+      ],
+      "wer": "Für Kinder von 2 bis 6 Jahren: höchstens 4 Teelöffel am Tag.",
+      "mehr": []
+    },
+    {
+      "id": "knoblauch",
+      "n": "Knoblauch",
+      "form": "gemuese",
+      "gr": "gemuese",
+      "bei": [
+        "erk",
+        "essen"
+      ],
+      "plak": "traditionell",
+      "wo": "Garten",
+      "anbau": "ja, im Herbst stecken",
+      "roh": "roh und gekocht",
+      "s": [
+        "Frisch zum Essen geben."
+      ],
+      "wer": "Nicht mit Blutverdünnern oder HIV-Mitteln. Eine Woche vor einer Operation weglassen.",
+      "mehr": []
+    },
+    {
+      "id": "karotte",
+      "n": "Karotte",
+      "form": "gemuese",
+      "gr": "gemuese",
+      "bei": [
+        "durchfall",
+        "essen"
+      ],
+      "plak": "überliefert",
+      "wo": "Garten, Keller",
+      "anbau": "ja",
+      "roh": "roh und gekocht",
+      "s": [
+        "Moro-Suppe: 500 g Karotten in 1 l Wasser 1,5 Stunden kochen.",
+        "Pürieren, etwas Salz, auf 1 l auffüllen.",
+        "In kleinen Mengen essen."
+      ],
+      "wer": "Babys mit Durchfall: zuerst zum Arzt.",
+      "mehr": []
+    },
+    {
+      "id": "holunder",
+      "n": "Holunder",
+      "form": "obst",
+      "gr": "obst",
+      "bei": [
+        "erk",
+        "essen"
+      ],
+      "plak": "traditionell",
+      "bsp": true,
+      "wo": "Waldrand, Hecken, fast überall",
+      "anbau": "ja, Strauch",
+      "roh": "Beeren nur gekocht",
+      "s": [
+        "Blüten als Tee bei beginnender Erkältung.",
+        "Beeren zu Saft oder Mus kochen."
+      ],
+      "wer": "Rohe Beeren machen Übelkeit und Erbrechen.",
+      "mehr": []
+    },
+    {
+      "id": "hagebutte",
+      "n": "Hagebutte",
+      "form": "obst",
+      "gr": "obst",
+      "bei": [
+        "erk",
+        "essen"
+      ],
+      "plak": "überliefert",
+      "bsp": true,
+      "wo": "Hecken, Wegränder, Wildrosen",
+      "anbau": "ja, Rosen",
+      "roh": "roh, ohne Kerne und Härchen",
+      "s": [
+        "Früchte halbieren, Kerne und Härchen entfernen.",
+        "Roh essen, als Tee trocknen oder zu Mus kochen."
+      ],
+      "wer": "Die Härchen reizen Haut und Darm.",
+      "mehr": []
+    },
+    {
+      "id": "apfel",
+      "n": "Apfel",
+      "form": "obst",
+      "gr": "obst",
+      "bei": [
+        "durchfall",
+        "essen"
+      ],
+      "plak": "überliefert",
+      "bsp": true,
+      "wo": "Garten, Streuobstwiese, Keller",
+      "anbau": "ja, Baum",
+      "roh": "roh und gekocht, lagert Monate",
+      "s": [
+        "Bei Durchfall: Apfel mit Schale fein reiben, etwas braun werden lassen, löffelweise essen."
+      ],
+      "wer": "Nichts Besonderes.",
+      "mehr": []
+    },
+    {
+      "id": "eierschwammerl",
+      "n": "Eierschwammerl (Pfifferling)",
+      "form": "pilz",
+      "gr": "pilz",
+      "bei": [
+        "essen"
+      ],
+      "plak": "überliefert",
+      "bsp": true,
+      "foto": true,
+      "wo": "Nadel- und Mischwald, gern unter Fichten und Buchen, oft im Moos. Juli bis Oktober, besonders nach warmem Regen.",
+      "anbau": "nein, wächst nur im Wald",
+      "roh": "nur gekocht",
+      "erkennen": [
+        "Farbe: dottergelb bis eigelb, durch und durch gleich.",
+        "Unterseite: keine dünnen Blättchen wie die Seiten eines Buches. Stattdessen niedrige, weiche Falten, die sich gabeln und ohne Kante in den Stiel übergehen. Mit dem Finger kannst du sie kaum einzeln anheben.",
+        "Fleisch: innen weiß bis blassgelb, faserig. Längs auseinandergezogen reißt es wie gekochtes Hühnerfleisch.",
+        "Geruch: leicht fruchtig, ein bisschen nach Marille."
+      ],
+      "verw": [
+        {
+          "l": "falscherpf",
+          "t": "Falscher Pfifferling: kräftiger orange, unten echte dünne Blättchen, die sich leicht abbiegen lassen, Fleisch weich statt faserig. Nicht tödlich, macht aber Bauchweh. Wächst oft auf morschem Holz oder in Nadelstreu."
+        },
+        {
+          "l": "raukopf",
+          "t": "Orangefuchsiger Raukopf: rostorange bis fuchsbraun, unten echte Blättchen wie Buchseiten, die mit der Zeit rostbraun werden. Tödlich giftig. Das Gift merkst du erst nach Tagen, dann sind die Nieren schon geschädigt."
+        },
+        "Die Regel: Hat der Pilz unten echte Blättchen, ist es kein Eierschwammerl. Dann liegen lassen."
+      ],
+      "s": [
+        "Nicht waschen. Erde und Nadeln mit einem Pinsel oder Messer abputzen, zähe Stielenden abschneiden.",
+        "Große Stücke längs reißen, kleine ganz lassen.",
+        "Ohne Fett in eine heiße Pfanne geben, bis das Wasser verdampft ist.",
+        "Dann erst Butter oder Öl, Zwiebel, Salz, Pfeffer. Insgesamt mindestens 15 Minuten garen."
+      ],
+      "kueche": [
+        "Klassisch: Eierschwammerl mit Rahmsauce und Semmel- oder Serviettenknödel.",
+        "Eierschwammerl mit Eierspeis: angebratene Schwammerl, Eier drüber, Schnittlauch.",
+        "Eierschwammerlgulasch: mit Zwiebel und Paprikapulver, mit etwas Mehl gebunden, dazu Brot oder Erdäpfel.",
+        "Passt gut zu: Zwiebel, Petersilie, Schnittlauch, Speck, Rahm, Erdäpfeln, Knödeln.",
+        "Aufheben: frisch höchstens ein bis zwei Tage kühl. Zum Einfrieren erst andünsten. Getrocknet werden sie zäh."
+      ],
+      "wer": "Im Zweifel nicht essen. Kleine Kinder und Menschen mit empfindlichem Magen nur kleine Mengen, gut gegart.",
+      "mehr": []
+    },
+    {
+      "id": "steinpilz",
+      "n": "Steinpilz",
+      "form": "pilz",
+      "gr": "pilz",
+      "bei": [
+        "essen"
+      ],
+      "plak": "überliefert",
+      "bsp": true,
+      "wo": "Fichten- und Buchenwald, Sommer bis Herbst",
+      "anbau": "nein",
+      "roh": "gekocht, lässt sich trocknen",
+      "s": [
+        "Unter dem Hut ist ein weißer bis gelblicher Schwamm, keine Lamellen.",
+        "Gut durchgaren oder in Scheiben trocknen."
+      ],
+      "verw": [
+        {
+          "l": "gallenr",
+          "t": "Gallenröhrling: sieht ähnlich aus, schmeckt extrem bitter, verdirbt das ganze Gericht. Kostprobe: ein winziges Stück an die Zungenspitze, nicht schlucken, ausspucken."
+        }
+      ],
+      "wer": "Alte, weiche Stücke weglassen.",
+      "mehr": []
+    },
+    {
+      "id": "parasol",
+      "n": "Parasol",
+      "form": "pilz",
+      "gr": "pilz",
+      "bei": [
+        "essen"
+      ],
+      "plak": "überliefert",
+      "bsp": true,
+      "wo": "Waldränder, Wiesen, Spätsommer",
+      "anbau": "nein",
+      "roh": "nur gekocht, Hut paniert",
+      "s": [
+        "Nur große Stücke mit Hut über 10 cm nehmen.",
+        "Stiel genattert, Ring lässt sich verschieben.",
+        "Hut braten, Stiel ist zäh."
+      ],
+      "verw": [
+        "Kleine Schirmlinge sind giftig, manche tödlich. Darum nichts mit einem Hut unter 10 cm nehmen.",
+        {
+          "l": "knolle",
+          "t": "Knollenblätterpilz: Junge Parasole sind noch geschlossen und sehen aus wie ein Ei auf einem Stiel. In diesem Zustand kann man sie mit jungen Knollenblätterpilzen verwechseln. Geschlossene Pilze stehen lassen."
+        }
+      ],
+      "wer": "Im Zweifel nicht essen.",
+      "mehr": []
+    },
+    {
+      "id": "champignon",
+      "n": "Wiesenchampignon",
+      "form": "pilz",
+      "gr": "pilz",
+      "bei": [
+        "essen"
+      ],
+      "plak": "überliefert",
+      "bsp": true,
+      "wo": "Weiden und Wiesen, Sommer bis Herbst",
+      "anbau": "Zuchtchampignons ja",
+      "roh": "gekocht",
+      "s": [
+        "Lamellen rosa, später schokoladebraun.",
+        "Stiel ohne Knolle am Grund."
+      ],
+      "verw": [
+        {
+          "l": "knolle",
+          "t": "Knollenblätterpilz, tödlich giftig: Die Blättchen unter dem Hut bleiben immer weiß, auch bei alten Pilzen. Unten am Stiel sitzt eine dicke Knolle, die in einer häutigen Hülle steckt wie in einem Eierbecher. Diese Knolle steckt oft in der Erde. Darum den Pilz nie abschneiden, sondern vorsichtig ganz herausdrehen und den Fuß ansehen."
+        }
+      ],
+      "wer": "Weiße Lamellen: niemals essen.",
+      "mehr": []
+    },
+    {
+      "id": "falscherpf",
+      "n": "Falscher Pfifferling",
+      "form": "pilz",
+      "gr": "pilz",
+      "gift": "unbekömmlich",
+      "bei": [],
+      "plak": "nicht essen",
+      "bsp": true,
+      "foto": true,
+      "wo": "auf morschem Nadelholz, in Nadelstreu und auf Moos, August bis November",
+      "anbau": "nein",
+      "roh": "nicht essen",
+      "erkennen": [
+        "Farbe: kräftig orange, oft dunkler als ein Eierschwammerl.",
+        "Unterseite: echte, dünne Blättchen, dicht an dicht. Sie lassen sich mit dem Fingernagel leicht abbiegen.",
+        "Fleisch: weich und schwammig, reißt nicht faserig.",
+        "Hut: oft mit eingerolltem Rand, in der Mitte leicht vertieft."
+      ],
+      "folgen": "Bauchweh, Übelkeit, Durchfall. Nicht tödlich, aber du verlierst Wasser und Kraft, und das kannst du dir in einer Notlage nicht leisten.",
+      "s": [
+        "Liegen lassen.",
+        "Hast du schon davon gegessen: viel trinken, ausruhen. Werden Durchfall oder Erbrechen stark, Hilfe holen."
+      ],
+      "wer": "Niemand.",
+      "mehr": []
+    },
+    {
+      "id": "raukopf",
+      "n": "Orangefuchsiger Raukopf",
+      "form": "pilz",
+      "gr": "pilz",
+      "gift": "tödlich",
+      "bei": [],
+      "plak": "tödlich giftig",
+      "bsp": true,
+      "foto": true,
+      "wo": "Laub- und Mischwald, gern unter Eichen und Buchen, Spätsommer und Herbst",
+      "anbau": "nein",
+      "roh": "nicht essen",
+      "erkennen": [
+        "Farbe: rostorange bis fuchsbraun, der Hut fühlt sich trocken und fein filzig an.",
+        "Unterseite: echte Blättchen wie die Seiten eines Buches. Sie werden mit der Zeit rostbraun.",
+        "Stiel: gelblich bis orange, ohne Ring, oft mit feinen Fasern.",
+        "Geruch: leicht nach Rettich."
+      ],
+      "folgen": "Das Gift greift die Nieren an. Zuerst merkst du nichts. Erst nach zwei Tagen bis drei Wochen kommen großer Durst, Kopfweh, Übelkeit, Schmerzen in den Flanken. Dann sind die Nieren oft schon schwer geschädigt. Ohne Blutwäsche im Spital endet das tödlich.",
+      "s": [
+        "Niemals essen.",
+        "Hast du einen orangen Pilz mit Blättchen gegessen und bist dir nicht sicher: sofort Vergiftungsinformation oder Rettung, auch wenn es dir gut geht.",
+        "Reste des Pilzes aufheben und mitnehmen."
+      ],
+      "wer": "Niemand.",
+      "mehr": []
+    },
+    {
+      "id": "knolle",
+      "n": "Grüner Knollenblätterpilz",
+      "form": "pilz",
+      "gr": "pilz",
+      "gift": "tödlich",
+      "bei": [],
+      "plak": "tödlich giftig",
+      "bsp": true,
+      "foto": true,
+      "wo": "Laubwald, vor allem unter Eichen und Buchen, Juli bis Oktober. Es gibt auch eine ganz weiße Form.",
+      "anbau": "nein",
+      "roh": "nicht essen",
+      "erkennen": [
+        "Hut: olivgrün, gelbgrün, manchmal fast weiß. Glatt, bei Feuchtigkeit leicht glänzend.",
+        "Unterseite: Blättchen, die immer weiß bleiben. Beim Champignon werden sie rosa und dann braun.",
+        "Stiel: weiß, mit einem hängenden Ring wie ein Rockzipfel.",
+        "Fuß: eine dicke Knolle, die in einer häutigen Hülle steckt wie in einem Eierbecher. Oft in der Erde versteckt."
+      ],
+      "folgen": "Der giftigste Pilz in Mitteleuropa. Schon ein einziger Pilz kann einen Erwachsenen töten. Nach 6 bis 24 Stunden kommen heftiges Erbrechen und Durchfall. Dann geht es scheinbar besser. In Wahrheit stirbt in dieser Zeit die Leber.",
+      "s": [
+        "Niemals essen. Auch nicht anfassen und danach Essen angreifen, ohne Hände zu waschen.",
+        "Verdacht auf Knollenblätterpilz: sofort Rettung oder Vergiftungsinformation. Nicht abwarten, bis es schlechter wird.",
+        "Reste, Putzabfälle oder Erbrochenes aufheben, das hilft beim Bestimmen."
+      ],
+      "wer": "Niemand.",
+      "mehr": []
+    },
+    {
+      "id": "gallenr",
+      "n": "Gallenröhrling",
+      "form": "pilz",
+      "gr": "pilz",
+      "gift": "unbekömmlich",
+      "bei": [],
+      "plak": "nicht essen",
+      "bsp": true,
+      "foto": true,
+      "wo": "Nadelwald, gern auf saurem Boden und an alten Stümpfen, Sommer bis Herbst",
+      "anbau": "nein",
+      "roh": "nicht essen",
+      "erkennen": [
+        "Sieht aus wie ein Steinpilz: brauner Hut, dicker Stiel, unten ein Schwamm.",
+        "Aber: Der Schwamm wird mit der Zeit rosa, beim Steinpilz bleibt er weiß bis olivgelb.",
+        "Stiel: mit einem groben, dunklen Netz überzogen. Beim Steinpilz ist das Netz fein und hell.",
+        "Geschmack: extrem bitter. Ein einziger Pilz macht ein ganzes Gericht ungenießbar."
+      ],
+      "folgen": "Nicht giftig, aber so bitter, dass niemand es essen kann. Du verlierst das ganze Essen.",
+      "s": [
+        "Bei Zweifel: ein winziges Stück an die Zungenspitze, nicht schlucken, ausspucken. Bitter heißt: liegen lassen."
+      ],
+      "wer": "Niemand.",
+      "mehr": []
+    },
+    {
+      "id": "baerlauch",
+      "n": "Bärlauch",
+      "form": "blatt",
+      "gr": "wild",
+      "bei": [
+        "essen",
+        "erk"
+      ],
+      "plak": "überliefert",
+      "bsp": true,
+      "foto": true,
+      "wo": "feuchte Laubwälder und Auwälder, oft in großen Teppichen. März bis Mai, vor der Blüte.",
+      "anbau": "ja, im schattigen Garten",
+      "roh": "roh und gekocht",
+      "erkennen": [
+        "Jedes Blatt wächst einzeln auf einem eigenen dünnen Stiel aus dem Boden.",
+        "Die Unterseite des Blattes ist matt, die Oberseite glänzt.",
+        "Zerriebenes Blatt riecht stark nach Knoblauch. Aber Achtung: Der Geruch bleibt an den Fingern. Riech nach jedem Blatt an einem frischen Blatt, nicht an deiner Hand."
+      ],
+      "verw": [
+        {
+          "l": "maigl",
+          "t": "Maiglöckchen: giftig. Zwei Blätter wachsen zusammen aus einem Stängel und umfassen einander. Kein Knoblauchgeruch."
+        },
+        {
+          "l": "herbstz",
+          "t": "Herbstzeitlose: tödlich giftig. Die Blätter wachsen ohne Stiel als Büschel direkt aus dem Boden, sind dicker und fester. Kein Knoblauchgeruch."
+        },
+        "Die Regel: Jedes Blatt einzeln pflücken und einzeln prüfen. Nie büschelweise ausreißen."
+      ],
+      "s": [
+        "Junge Blätter vor der Blüte pflücken, Blatt für Blatt.",
+        "Waschen, fein schneiden."
+      ],
+      "kueche": [
+        "Bärlauchbutter: fein gehackt mit weicher Butter und etwas Salz, aufs Brot.",
+        "Bärlauchpesto: mit Öl, Salz und Nüssen oder Kernen mixen, hält im Glas mit Öl bedeckt einige Wochen kühl.",
+        "In Suppe, Eierspeis, Erdäpfelsalat, Knödelteig.",
+        "Gekocht verliert er schnell an Geschmack: erst am Ende dazugeben."
+      ],
+      "wer": "Wer unsicher ist, ob er Bärlauch von Maiglöckchen unterscheiden kann: nicht sammeln.",
+      "mehr": []
+    },
+    {
+      "id": "maigl",
+      "n": "Maiglöckchen",
+      "form": "blatt",
+      "gr": "wild",
+      "gift": "giftig",
+      "bei": [],
+      "plak": "giftig",
+      "bsp": true,
+      "foto": true,
+      "wo": "lichte Laubwälder, oft neben Bärlauch",
+      "anbau": "Zierpflanze im Garten",
+      "roh": "nicht essen",
+      "erkennen": [
+        "Meist zwei Blätter, die gemeinsam aus einem Stängel kommen und sich unten umfassen.",
+        "Blätter beidseitig glänzend.",
+        "Ab Mai weiße kleine Glocken, die stark duften.",
+        "Kein Knoblauchgeruch."
+      ],
+      "folgen": "Das Gift wirkt aufs Herz: Übelkeit, Erbrechen, Herzrhythmusstörungen. In größeren Mengen gefährlich.",
+      "s": [
+        "Nicht essen.",
+        "Gegessen: Vergiftungsinformation oder Rettung."
+      ],
+      "wer": "Niemand.",
+      "mehr": []
+    },
+    {
+      "id": "herbstz",
+      "n": "Herbstzeitlose",
+      "form": "blatt",
+      "gr": "wild",
+      "gift": "tödlich",
+      "bei": [],
+      "plak": "tödlich giftig",
+      "bsp": true,
+      "foto": true,
+      "wo": "feuchte Wiesen, im Frühling nur Blätter, im Herbst lila Blüten ohne Blätter",
+      "anbau": "nein",
+      "roh": "nicht essen",
+      "erkennen": [
+        "Blätter ohne Stiel, als Büschel direkt aus dem Boden.",
+        "Dicker, fester und breiter als Bärlauch.",
+        "Im Frühling sieht man oft schon die Samenkapsel in der Mitte.",
+        "Kein Knoblauchgeruch."
+      ],
+      "folgen": "Tödlich giftig. Stunden nach dem Essen brennender Mund, Erbrechen, schwerer Durchfall, dann Versagen mehrerer Organe. Schon wenige Blätter können reichen.",
+      "s": [
+        "Niemals essen.",
+        "Verdacht: sofort Rettung oder Vergiftungsinformation."
+      ],
+      "wer": "Niemand.",
+      "mehr": []
+    },
+    {
+      "id": "brennnessel",
+      "n": "Brennnessel",
+      "form": "blatt",
+      "gr": "wild",
+      "bei": [
+        "essen"
+      ],
+      "plak": "überliefert",
+      "bsp": true,
+      "foto": true,
+      "wo": "fast überall: Wegränder, Gärten, Waldränder, auf nährstoffreichem Boden",
+      "anbau": "wächst von selbst",
+      "roh": "gekocht, oder roh nach dem Entschärfen",
+      "erkennen": [
+        "Gezähnte, spitze Blätter, gegenständig am vierkantigen Stängel.",
+        "Brennhaare auf Blättern und Stängel: Berührung brennt."
+      ],
+      "s": [
+        "Mit Handschuhen die oberen jungen Triebe pflücken.",
+        "Kurz in kochendes Wasser oder mit einem Nudelholz walzen: dann brennen sie nicht mehr."
+      ],
+      "kueche": [
+        "Wie Spinat: blanchieren, hacken, mit Zwiebel und etwas Fett dünsten.",
+        "In Suppe, Knödel, Eierspeis.",
+        "Getrocknet als Tee.",
+        "Die Samen im Spätsommer sind nahrhaft: übers Essen streuen."
+      ],
+      "wer": "Wer Wasser im Körper nicht ausscheiden darf (Herz- oder Nierenschwäche): nicht als Tee in großen Mengen.",
+      "mehr": []
+    }
+  ],
+  "texte": {
+    "reiter": [
+      "Was plagt dich?",
+      "Obst · Gemüse · Kräuter · Pilze"
+    ],
+    "hinweis": {
+      "at": "Bei Fieber, Atemnot oder starken Schmerzen: Arzt oder 144.",
+      "ch": "Bei Fieber, Atemnot oder starken Schmerzen: Arzt oder 144.",
+      "de": "Bei Fieber, Atemnot oder starken Schmerzen: Arzt oder 112."
+    },
+    "essen_hinweis": "Wenn der Supermarkt leer ist: was wächst, was du anbauen kannst, was satt macht.",
+    "grundstock_titel": "Gratis-Grundstock",
+    "grundstock": [
+      "Was heute gratis ist, bleibt gratis.",
+      "Darin: 40 Karten zu den häufigsten Beschwerden und alle Warnungen vor giftigen Doppelgängern. Die Warnungen bleiben immer gratis.",
+      "Mehr kommt mit späteren Updates, als Paket zum Kaufen oder im Abo. Jede Karte wird aus Fachquellen recherchiert und geprüft, damit jede Zeile stimmt. Das braucht viel Zeit."
+    ],
+    "selbst": "Wenn kein Telefon geht und kein Arzt erreichbar ist, musst du dir selbst helfen. Bleib dabei wachsam und konzentriert. Wäge immer ab, ob der Nutzen das Risiko wert ist.",
+    "notruf": {
+      "at": [
+        "Vergiftung: 01 406 43 43",
+        "Rettung: 144"
+      ],
+      "ch": [
+        "Vergiftung: 145",
+        "Rettung: 144"
+      ],
+      "de": [
+        "Rettung: 112"
+      ]
+    },
+    "moeglichkeiten": "Möglichkeiten",
+    "aus_dem_vorrat": "Aus dem Vorrat",
+    "zum_essen": "zum Essen",
+    "beispiel": "Beispiel, noch nicht geprüft",
+    "hilft_bei": "Hilft bei",
+    "fakten": [
+      "Wo",
+      "Anbauen",
+      "Essen"
+    ],
+    "foto": "Hier kommen Fotos: der Pilz von oben, die Unterseite, der Schnitt. Freie Bilder aus Wikimedia Commons.",
+    "erkennen": "So erkennst du ihn",
+    "verwechslung": "Verwechslung:",
+    "mit_fotos": "mit Fotos ansehen ›",
+    "was_tun": "Was tun",
+    "so_gehts": "So geht's",
+    "folgen": "Was passiert, wenn man es isst:",
+    "kueche": "In der Küche",
+    "wer_nicht": "Wer nicht:",
+    "mehr": "Mehr dazu",
+    "zurueck": "‹ Zurück"
+  }
+}
