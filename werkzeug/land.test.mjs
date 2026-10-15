@@ -28,7 +28,7 @@ test("Frisches Gerät: zuerst die Länderfrage mit drei Ländern, „kommen spä
     })()`);
     assert.deepEqual(f.laender, ["at*", "de", "ch"]);
     assert.equal(f.spaeter, "Liechtenstein, Italien (Südtirol) und weitere – kommen später"); assert.equal(f.spaeterWaehlbar, false);
-    assert.deepEqual(f.zeilen, ZEILEN, "drei Zeilen unter dem Weiter-Knopf, sichtbar"); assert.equal(f.absender, "impressum.html", "Absender führt zum Impressum");
+    assert.deepEqual(f.zeilen, ZEILEN, "drei Zeilen unter dem Weiter-Knopf, sichtbar"); assert.equal(f.absender, "#einstellungen", "Absender führt zu „Über OFFLINE“ (seit Nr. 31; von dort zum Impressum)");
     // Andere Seiten führen nicht an der Frage vorbei
     await t.auswerten(`location.hash = "#notfall"`); await t.auswerten(`new Promise((r) => setTimeout(r, 300))`);
     assert.ok(await t.auswerten(`!!document.getElementById("land-frage")`), "Frage bleibt, bis gewählt ist");

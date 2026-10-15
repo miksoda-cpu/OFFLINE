@@ -1483,10 +1483,22 @@ async function pauseEinschalten(alter) {
   if (PP()) pauseStarten({ zurueck: "pause" }); else render();
 }
 
+/** Nr. 31: im Browser den belegten Speicher (App und Pakete zusammen) laut Browser nachtragen; ohne Netz, ohne Anfrage. */
+function speicherNachtragen() {
+  const el = document.getElementById("speicher-browser");
+  if (!el || desktop || !navigator.storage?.estimate) return;
+  navigator.storage.estimate().then((e) => { if (e?.usage && el.isConnected) el.textContent = `, App und Pakete im Browser zusammen ${groesse(e.usage)}`; }).catch(() => {});
+}
 function einstellungenHtml() {
   const l = land(), alter = (speicher.get("pause", null) ?? {}).alter ?? null;
   const laender = D("bundeslaender")?.laender ?? [];
+  const pakete = installierteIds().map(paketRoh).filter(Boolean).reduce((s, x) => s + (x.manifest.groesse ?? 0), 0);
   return `${kopf("Einstellungen", "Land, Alter und Bundesland. Alles bleibt auf diesem Gerät.")}
+    <section class="card of-karte einst-teil ueber-offline" id="ueber-offline" aria-labelledby="ueber-offline-titel"><h2 id="ueber-offline-titel">Über OFFLINE</h2>
+      <p>OFFLINE kommt von der digitalworld Academy OG in Wien, einem kleinen Bildungsinstitut. Entwicklung und Server bezahlen wir selbst. Später gibt es eine Pro-Stufe mit zusätzlichen Inhalten. Was heute gratis ist, bleibt gratis. Keine Werbung, kein Konto, keine Daten über dich auf unseren Servern.</p>
+      <p class="muted of-klein">Die App spielt von selbst keine Töne. Sirenen hörst du nur, wenn du auf ‚Anhören‘ tippst.</p>
+      <p class="of-klein" id="speicher-bedarf">Auf diesem Gerät: Pakete ${groesse(pakete)}<span id="speicher-browser"></span>.</p>
+      <p class="ueber-knoepfe"><a class="btn of-btn" href="impressum.html">Impressum</a>${landFrage ? ` <a class="btn of-btn" href="#start">‹ Zurück zur Länderfrage</a>` : ""}</p></section>
     <section class="card of-karte einst-teil" aria-labelledby="einst-land-titel"><h2 id="einst-land-titel">Land</h2>
       <p class="muted of-klein">Davon hängen Notrufnummern, Radiosender und Szenarien ab.</p>
       ${landAuswahlHtml("einst-land", l)}</section>
@@ -2658,7 +2670,7 @@ function landFrageZeigen() {
     <button type="button" class="btn btn-primary of-btn of-btn--primaer land-weiter" data-land-weiter>Weiter</button>
     <p class="muted of-klein">Davon hängen Notrufnummern, Radiosender und Szenarien ab. Du kannst es später in den Einstellungen ändern.</p>
     <div class="land-absender">
-      <a class="btn btn-sm of-btn of-btn--klein" href="impressum.html">Von der digitalworld Academy OG, Wien.</a>
+      <a class="btn btn-sm of-btn of-btn--klein" href="#einstellungen" data-anker="ueber-offline">Von der digitalworld Academy OG, Wien.</a>
       <p class="of-klein">Alles, was du eingibst, bleibt auf deinem Gerät.</p>
       <p class="of-klein">OFFLINE ergänzt Radio und Sirene. Es ersetzt sie nicht.</p>
     </div>
@@ -2681,7 +2693,7 @@ function render() {
   let route = location.hash.slice(1) || "start";
   if (route.startsWith("szenario-")) { state.szenario = route.slice(9); route = "szenario"; } // 0.8.0: eine Karte je Szenario
   if (wesen.nurVorschau && (route === "lumi" || route === "heft")) { location.replace("#start"); return; } // Nr. 27: keine Lumi-Seite
-  if (landFrage) { landFrageZeigen(); return; } // Nr. 28: erst das Land
+  if (landFrage && route !== "einstellungen") { landFrageZeigen(); return; } // Nr. 28: erst das Land; Nr. 31: „Über OFFLINE“ ist vorher erreichbar
   if (route === "tresor" && !tresorBenutzt() && (!desktop || state.tresor.status !== null)) { location.replace("#bibliothek"); return; } // Nr. 28: Tresor als Vorschau
   checksAngleichen();
   if (render.seite !== location.hash) blattWeg(); // Nr. 26: Neuzeichnen derselben Seite (Abo-Stand, Tagespakete) lässt ein offenes Blatt stehen
@@ -2712,6 +2724,7 @@ function render() {
   if (seite === "start") wesen.einbauen({ tippen: () => { location.hash = "#lumi"; } }); else if (seite === "lumi") wesen.einbauen(); else wesen.setScore(bereit());
   wesen.ansicht(seite);
   if (seite === "start") { tagesSatzZeigen(); pauseKarteWischen(); }
+  if (seite === "einstellungen") speicherNachtragen();
   if (seite !== "gedanke" && state.gedankenLiest) gedankenVorlesenStop();
   if (seite === "gedanken" || seite === "gedanke") gedankenNachZeichnen();
   const aktiv = seite === "netz-ich" || seite === "netz-andere" ? "start" : seite === "lesen" || seite === "gedanken" || seite === "gedanke" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" || seite === "buch" || seite === "absatz" ? "lumi" : seite === "linie" ? "pause" : seite === "szenario" ? state.szenarioVon.slice(1) : seite;
