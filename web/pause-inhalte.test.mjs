@@ -108,7 +108,8 @@ test("Miks Fehler aus 0.7.0 und der Rundgang: Vorrat, Bereit, Rätsel, Heft, Lum
   assert.ok(pakete.includes('&& p.art !== "tage").sort(sortiere)'));
   // Bereit: eine Zahl, ein Satz, kein „unterwegs“, nichts über die Vorversion
   assert.ok(!/"unterwegs"|Aus der Vorversion übernommen/.test(app));
-  assert.equal((app.match(/bereitSatz\(b\.wert\)/g) ?? []).length, 2, "Heute und Übersicht");
+  assert.equal((app.match(/bereitSatz\(b\.wert\)/g) ?? []).length, 1, "Übersicht; Heute zeigt seit Nr. 29 (Entwurf C) die Zahl im Kreis und den einen Punkt");
+  assert.ok(app.includes('<div class="bereit-kreis" role="img" aria-label="Bereit: ${b.wert} von 100"') && app.includes('${punkt.dinge ? "Ein Punkt auf der Checkliste bringt am meisten:" : "Als Nächstes:"}</p>'), "Heute: eine Zahl, ein Satz");
   // Tagesrätsel erledigt: Rätsel, Lösung und was „Zurückholen“ tut
   assert.ok(app.includes("Lösung: ${esc(k.loesung)}") && app.includes("„Zurückholen“ legt das Rätsel wieder offen hin"));
   // Heft: Suchfeld mit Rahmen, Zahl in Worten, „Aus dem Heft nehmen“ erklärt

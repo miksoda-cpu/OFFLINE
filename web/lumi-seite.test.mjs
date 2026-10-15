@@ -84,7 +84,7 @@ test("Lumisch: eigenes Paket im Bereich Lumi, wortgleich mit dem Stand in pause.
 test("App: Lumi-Seite unter „Mehr“ (kein Tab), Kästchen, Menü, Heute mit kleiner Figur, Übersicht ohne Lumi-Abschnitt", async () => {
   const app = await lies("./app.js"), wesen = await lies("./wesen.js"), sw = await lies("./sw.js");
   assert.match(app, /\["lumi", "Lumi"\]/);
-  assert.match(app, /const TABS = \["start", "pause", "notfall", "vorsorge"\];/, "Vorsorge bleibt Tab, Lumi kein Tab");
+  assert.match(app, /const TABS = \["start", "notfall", "vorsorge", "pause"\];/, "Vorsorge bleibt Tab, Lumi kein Tab (seit Nr. 29: Heute · Notfall · Vorsorge · Spiele)");
   assert.match(app, /\n  lumi\(\) \{ return lumiSeiteHtml\(\); \},/);
   assert.ok(app.includes('[["uebersicht", "Übersicht"], ["gesagt", "Alles Gesagte"], ["gelernt", "Gelernt"], ["einstellungen", "Einstellungen"], ["hilfe", "Hilfe"]]'));
   for (const t of ['titel: "Tipps"', 'titel: "Das Lumi-Buch"', 'titel: "Was die Lumis denken"', 'titel: "Lumisch"', 'titel: "Heft"', 'titel: "Vorhaben", zeile: `${offen} offen`, ziel: "#vorsorge"']) assert.ok(app.includes(t), t);

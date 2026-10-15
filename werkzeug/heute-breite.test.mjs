@@ -10,7 +10,7 @@ const LANG = "Ein Rätsel mit Donaudampfschifffahrtsgesellschaftskapitänsmütze
 
 const UEBER = (b) => `[...document.querySelectorAll("#main *")].filter((e) => { const r = e.getBoundingClientRect(); return r.width && r.right > ${b} + 1; }).slice(0, 5).map((e) => (e.className || e.tagName) + " " + Math.round(e.getBoundingClientRect().right))`;
 
-test("Heute läuft bei 360, 390 und 430 px nicht seitlich über, auch mit einem langen Rätseltext", async () => {
+test("Heute und Spiele laufen bei 360, 390 und 430 px nicht seitlich über, auch mit einem langen Rätseltext", async () => {
   const server = await dateiserver(), chrome = await chromeStarten();
   try {
     for (const b of [360, 390, 430]) {
@@ -18,11 +18,15 @@ test("Heute läuft bei 360, 390 und 430 px nicht seitlich über, auch mit einem 
       await t.s("Emulation.setDeviceMetricsOverride", { width: b, height: 844, deviceScaleFactor: 1, mobile: true });
       await t.s("Page.addScriptToEvaluateOnNewDocument", { source: `try { localStorage.setItem("offline:land", JSON.stringify("at")); } catch {}` });
       await t.laden(`${server.url}/app.html#start`);
-      await warteBis(t, `localStorage.getItem("offline:paket:at-basis") && document.querySelector(".tag-karte .tag-frage")`, 60_000);
+      await warteBis(t, `localStorage.getItem("offline:paket:at-basis") && document.querySelector(".tag-karte")`, 60_000);
       assert.deepEqual(await t.auswerten(UEBER(b)), [], `${b} px, wie geliefert`);
       assert.equal(await t.auswerten(`document.documentElement.scrollWidth`), b, `${b} px: Seite`);
+      // Seit Nr. 29 steht das Tagesrätsel oben auf „Spiele“: dort derselbe lange Rätseltext
+      await t.auswerten(`location.hash = "#pause"`);
+      await warteBis(t, `document.querySelector(".spiele-raetsel .tag-karte .tag-frage")`, 30_000);
+      assert.deepEqual(await t.auswerten(UEBER(b)), [], `${b} px, Spiele wie geliefert`);
       // langer Rätseltext in die Karte des Tages, Antwortfeld und Knöpfe bleiben
-      await t.auswerten(`(() => { const p = document.querySelector(".tag-karte .tag-frage"); p.textContent = ${JSON.stringify(LANG)}; })()`);
+      await t.auswerten(`(() => { const p = document.querySelector(".spiele-raetsel .tag-karte .tag-frage"); p.textContent = ${JSON.stringify(LANG)}; })()`);
       await t.auswerten(`new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))`);
       assert.deepEqual(await t.auswerten(UEBER(b)), [], `${b} px, langer Rätseltext`);
       assert.equal(await t.auswerten(`document.documentElement.scrollWidth`), b, `${b} px: Seite mit langem Rätseltext`);

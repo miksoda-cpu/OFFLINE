@@ -24,6 +24,7 @@ import { haushaltHtml, grundvorsorgeHtml, kachelnHtml, karteHtml, radioHtml, che
 import { BEREICHE, bereichVon, bereichName, pflicht as paketPflicht, paketAn, umschalten as paketUmschalten, abschnitte as ladenAbschnitte, stilleUpdates } from "./pakete.js";
 import { BALD, NICHT_LADBAR, baldEintrag } from "./bald.js";
 import { LAENDER, SPAETER as LAENDER_SPAETER, kommtMit, landBestimmen, NOTFALL_KURZ, fuerLand, fuerLandTief } from "./laender.js";
+import { FRAGEN as NETZ_FRAGEN, NACHBAR_SATZ, rat as netzRat, STUFEN as NETZ_STUFEN, stufeFuer, dauerText as netzDauer, seite as netzSeite } from "./netz.js";
 import { PAKET as HEILKUNDE_PAKET, startZustand as heilkundeStart, seiteHtml as heilkundeSeiteHtml, klick as heilkundeKlick } from "./heilkunde.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
@@ -260,9 +261,10 @@ function menueBauen() {
   return true;
 }
 menueBauen();
-const TABS = ["start", "pause", "notfall", "vorsorge"]; // seit 0.4.2 Pause statt Bibliothek; die Bibliothek ist unter „Mehr“
-document.getElementById("tabbar").innerHTML = TABS.map((id) => { const n = ROUTEN.find((r) => r[0] === id)[1]; return `<a href="#${id}" data-route="${id}">${icon(id)}${n}</a>`; }).join("")
-  + `<button type="button" id="tab-mehr" aria-controls="sidebar" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Mehr</button>`;
+const TABS = ["start", "notfall", "vorsorge", "pause"]; // Nr. 29 (Entwurf C): Heute · Notfall · Vorsorge · Spiele · Menü; Pause heißt in der Leiste „Spiele“
+const TAB_NAME = { pause: "Spiele" };
+document.getElementById("tabbar").innerHTML = TABS.map((id) => { const n = TAB_NAME[id] ?? ROUTEN.find((r) => r[0] === id)[1]; return `<a href="#${id}" data-route="${id}">${icon(id)}${n}</a>`; }).join("")
+  + `<button type="button" id="tab-mehr" aria-controls="sidebar" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menü</button>`;
 if (desktop) document.getElementById("proto-banner")?.remove();
 // Naturheilkunde (0.6.0): im Menü nur, wenn das Paket auf diesem Gerät liegt – sonst gibt es den Bereich nicht, auch nicht leer.
 const naturPaket = () => installiertesPaket("naturheilkunde");
@@ -506,29 +508,34 @@ const seiten = {
     const p = P();
     if (!p) return fehlt();
     const b = bereit(); wesen.setScore(b); const schritt = naechsterSchritt(b);
+    // Nr. 29 (Entwurf C): statt „Ein Punkt auf der Checkliste …“ der Punkt selbst, der am meisten bringt
+    const offenDing = schritt.text === "Ein Punkt auf der Checkliste bringt am meisten." ? b.positionen.filter((x) => x.quelle === "dinge" && x.check && x.stand !== "gut").sort((x, y) => (y.gewicht ?? 1) - (x.gewicht ?? 1))[0] : null;
+    const punkt = offenDing ? { text: offenDing.titel, ziel: "#vorsorge", dinge: true } : { ...schritt, dinge: false };
     const plan = tagesplan(), d = heuteDatum();
     tagLernenPruefen();
-    const karten = heutigeKarten(), zustand = tagZustand(d);
+    const karten = heutigeKarten().filter((k) => k.art !== "raetsel"), zustand = tagZustand(d); // Nr. 29: das Tagesrätsel steht auf „Spiele“
     const schluss = state.tag.nochmal ? null : schlussErreicht({ karten, zustand, jetzt: testJetzt(), plan });
     state.tag.schlussGezeigt = schluss;
     const pakete = tagesPakete(), vorrat = vorratTage(pakete, d, tagStart());
     const g = speicher.get("tag-gelernt", {});
     const datumText = new Date(testJetzt()).toLocaleDateString("de-AT", { weekday: "long", day: "numeric", month: "long" });
     return `
+      <div class="heute-stapel">
       <div class="gruss of-gruss"><div><h1>Servus.</h1><p class="muted of-klein">${esc(datumText)}</p></div></div>
+      ${heuteStatusHtml()}
+      ${navigator.onLine ? `<div class="buehne-kopf" id="wesen-karte">
+        ${wesen.mitFigur() && !plan.sparmodus ? wesen.buehneHtml({ klein: true }) : ""}
+        <div class="card of-karte bereit-kreis-karte">
+          <div class="bereit-kreis-reihe">
+            <div class="bereit-kreis" role="img" aria-label="Bereit: ${b.wert} von 100" style="--wert:${b.wert}"><span class="bereit-zahl">${b.wert}</span></div>
+            <div><strong>Bereit</strong><p class="muted of-klein bereit-satz" style="margin:.2rem 0 0">${punkt.dinge ? "Ein Punkt auf der Checkliste bringt am meisten:" : "Als Nächstes:"}</p></div>
+          </div>
+          <a class="btn btn-primary of-btn of-btn--primaer bereit-schritt" href="${punkt.ziel}">${esc(punkt.text)}</a>
+          <a class="btn of-btn" href="#uebersicht">Alles zur Bereitschaft</a>
+        </div>
+      </div>` : heuteOfflineHtml()}
       ${meinTagVorschlagHtml()}
       ${pauseKarteHtml()}
-      <div class="buehne-kopf" id="wesen-karte">
-        ${wesen.mitFigur() && !plan.sparmodus ? wesen.buehneHtml({ klein: true }) : ""}
-        <div class="bereit-kopf">
-          <span class="muted of-klein">Bereit</span>
-          <div class="bereit-zahl">${b.wert}</div>
-          ${fortschrittsbalken(b.wert, 100, `Bereit: ${b.wert} von 100`, "margin:.4rem 0 .8rem")}
-          <p class="muted of-klein bereit-satz" style="margin:0 0 .5rem">${esc(bereitSatz(b.wert))}</p>
-          <p style="margin:0 0 .3rem"><a class="btn btn-sm of-btn of-btn--klein" href="${schritt.ziel}">${esc(schritt.text)}</a></p>
-          <p class="of-klein" style="margin:0"><a class="btn btn-sm of-btn of-btn--klein" href="#uebersicht">Alles zur Bereitschaft</a></p>
-        </div>
-      </div>
       ${testLeiste()}
       ${einladungFaellig(wesen.start, wesen.e, testJetzt()) ? `<div class="card lumi-einladung of-karte" role="group" aria-label="Einladung"><div class="lumi-zwei-lichter" aria-hidden="true"><span></span><span></span></div>
         <div><strong>${esc(LUMI_TEXTE.einladungTitel)}</strong><p style="margin:.3rem 0 .7rem">${esc(LUMI_TEXTE.einladungFrage)}</p>
@@ -541,7 +548,8 @@ const seiten = {
           : karten.length ? karten.map((k) => tagKarteHtml(k, zustand[k.id])).join("")
           : `<div class="card of-karte tag-leer"><p style="margin:0">${pakete.length ? "Für heute liegt nichts in der Vorratskammer." : "Die Vorratskammer ist noch leer."} ${navigator.onLine ? "OFFLINE holt die nächsten Tage, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."} Alles andere funktioniert weiter.</p></div>`}
       </section>
-      <p class="tag-vorrat muted of-klein">${vorrat ? `Vorrat: noch ${vorrat} ${vorrat === 1 ? "Tag" : "Tage"}${!navigator.onLine ? " · ohne Netz geht es weiter" : ""}` : `Vorrat: leer. ${navigator.onLine ? "Die nächsten Tage kommen, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."}`}</p>`;
+      <p class="tag-vorrat muted of-klein">${vorrat ? `Vorrat: noch ${vorrat} ${vorrat === 1 ? "Tag" : "Tage"}${!navigator.onLine ? " · ohne Netz geht es weiter" : ""}` : `Vorrat: leer. ${navigator.onLine ? "Die nächsten Tage kommen, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."}`}</p>
+      </div>`;
   },
 
   /** Der Raum „Pause“: Vorschlag, alle Formen zum Wählen, Deine Linie und Einstellungen; beim ersten Mal das Einschalten. */
@@ -552,6 +560,9 @@ const seiten = {
     if (!d) return `${kopf("Naturheilkunde", "Kommt mit dem Paket „Naturheilkunde“.")}<div class="card of-karte"><p class="muted of-klein" style="margin:0">${navigator.onLine ? "Das Paket wird geladen …" : "Sobald du online bist, lädt OFFLINE das Paket von selbst."}</p><p class="form-msg of-meldung" id="hk-msg"></p></div>`;
     return `${kopf("Naturheilkunde", "")}${heilkundeSeiteHtml(d, state.heilkunde, land())}`;
   },
+  /** Nr. 29: die zwei Offline-Seiten (Wortlaut Bill) */
+  "netz-ich"() { return netzSeiteHtml("ich"); },
+  "netz-andere"() { return netzSeiteHtml("andere"); },
   /** Einstellungen (Nr. 28, Nachtrag Mik): Land, Alter (für Pause), Bundesland. */
   einstellungen() { return einstellungenHtml(); },
   /** Ein laufender Happen (Fokus-Bildschirm). render() baut ihn selbst ein; ohne laufenden Happen geht es in den Raum. */
@@ -1493,11 +1504,17 @@ function alterSetzen(alter) {
   if (pauseAngeboten(alter) && !PP() && navigator.onLine) installiereMitMeldung("pause", "pause-msg").then(() => render());
 }
 
+/** Nr. 29: Das Tagesrätsel steht oben auf „Spiele“ (bisher Heute); dieselbe Karte, derselbe Stand. */
+function raetselSpieleHtml() {
+  if (!P()) return "";
+  const d = heuteDatum(), zustand = tagZustand(d), r = heutigeKarten().filter((k) => k.art === "raetsel");
+  return r.length ? `<section class="tag-karten spiele-raetsel" aria-label="Tagesrätsel">${r.map((k) => tagKarteHtml(k, zustand[k.id])).join("")}</section>` : "";
+}
 /** Der Raum „Pause“ (#pause). Ist Pause aus: zwei Sätze und fünf Knöpfe fürs Alter – ein Tipp schaltet ein und startet den ersten Happen. */
 let pauseRaumGefragt = null; const heuteSitzung = Date.now(); // in dieser Sitzung zuerst gefragt: beim Neuzeichnen bleibt die Frage
 function pauseRaumHtml() {
   const e = pauseE(), roh = speicher.get("pause", null) ?? {}, daten = pauseDaten();
-  const kopfR = `<div class="page-head of-seitenkopf"><div><h1 class="z-h1">Pause</h1><p class="z-leise">Ein Happen für zwischendurch, dann ist wieder Ruhe.</p></div></div>`;
+  const kopfR = `<div class="page-head of-seitenkopf"><div><h1 class="z-h1">Pause</h1><p class="z-leise">Ein Happen für zwischendurch, dann ist wieder Ruhe.</p></div></div>${raetselSpieleHtml()}`;
   // Nr. 28 (Nachtrag Mik): Die Altersfrage kommt genau einmal beim ersten Öffnen, danach nur noch in den Einstellungen
   if (!e.an && speicher.get("pause-alter-gefragt", false) && pauseRaumGefragt !== heuteSitzung) return `${kopfR}<div class="pause-raum">
     <p class="z-text">Pause ist aus. Pause schlägt dir ab und zu einen kurzen Happen vor, 30 Sekunden bis 3 Minuten.</p>
@@ -2483,6 +2500,36 @@ function notfallAuslandHtml() {
     <h2 style="margin-top:2rem">Radio und Sirenen</h2>${landVorschauHtml()}`;
 }
 
+// ---------- Heute neu (Nr. 29, Entwurf C): Status, Fragen ohne Netz, Stufen nach Dauer (Logik und Texte in netz.js) ----------
+// Die App merkt sich am Gerät, wann sie zuletzt Internet hatte, und zählt von dort. Keine Anfrage dafür: navigator.onLine.
+function zuletztOnlineMerken() { if (navigator.onLine) speicher.set("zuletzt-online", new Date().toISOString()); }
+const offlineSeit = () => { const z = speicher.get("zuletzt-online", null); return z ? Date.now() - new Date(z).getTime() : null; };
+const uhrzeit = (iso) => new Date(iso).toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit" });
+function heuteStatusHtml() {
+  if (navigator.onLine) return `<div class="heute-status heute-status--on" role="status"><b>Online</b><span>Alles gut.</span></div>`;
+  const ms = offlineSeit(), z = speicher.get("zuletzt-online", null);
+  return `<div class="heute-status heute-status--off" role="status"><b>${ms == null ? "Offline" : `Offline seit ${esc(netzDauer(ms))}`}</b><span>${z ? `Zuletzt Internet um ${esc(uhrzeit(z))}. ` : ""}Finden wir heraus, warum.</span></div>`;
+}
+function heuteOfflineHtml() {
+  const a = speicher.get("netz-antworten", {}), r = netzRat(a, landId()), jetzt = stufeFuer(offlineSeit());
+  return `<div class="card of-karte netz-fragen" role="group" aria-label="Warum kein Internet?">
+      ${NETZ_FRAGEN.map((f) => `<div class="netz-frage"><span id="nf-${f.id}">${esc(f.text)}</span><span class="netz-jn" role="group" aria-labelledby="nf-${f.id}">${["ja", "nein"].map((w) => `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-netz-frage="${f.id}" data-wert="${w}" aria-pressed="${a[f.id] === w}">${w === "ja" ? "Ja" : "Nein"}</button>`).join("")}</span></div>`).join("")}
+      <p class="muted of-klein netz-nachbar">${esc(NACHBAR_SATZ)}</p>
+    </div>
+    ${r ? `<div class="card of-karte netz-rat${r.gross ? " netz-rat--gross" : ""}"><strong>${esc(r.titel)}</strong><p class="of-klein" style="margin:.3rem 0 .7rem">${esc(r.text)}</p><a class="btn btn-primary of-btn of-btn--primaer" href="${r.ziel}">${esc(r.knopf)}</a></div>` : ""}
+    <nav class="netz-stufen" aria-label="Wie lange schon ohne Internet?"><p class="muted of-klein" style="margin:0">Wie lange schon ohne Internet?</p>
+      ${NETZ_STUFEN.map((st, i) => `<a class="netz-stufe${i === jetzt ? " netz-stufe--jetzt" : ""}" href="${st.ziel}"${st.anker ? ` data-anker-ziel="sz-${st.anker}"` : ""}${i === jetzt ? ' aria-current="step"' : ""}><span>${esc(st.titel)}<small>${esc(st.text)}</small></span><span aria-hidden="true">›</span></a>`).join("")}
+    </nav>`;
+}
+function netzSeiteHtml(id) {
+  const t = netzSeite(id, landId()), liste = (z) => z.map(([b, x]) => `<li><strong>${esc(b)}</strong> ${esc(x)}</li>`).join("");
+  return `<div class="netz-seite">${kopf(esc(t.titel), esc(t.einleitung))}
+    <div class="card of-karte"><ol class="netz-schritte">${liste(t.schritte)}</ol></div>
+    ${t.wasJetzt ? `<div class="card of-karte"><h2 style="margin-top:0">Was jetzt?</h2><ul class="netz-schritte">${liste(t.wasJetzt)}</ul></div>` : ""}
+    ${t.schluss.map(([b, x]) => `<p class="netz-schluss"><strong>${esc(b)}</strong> ${esc(x)}</p>`).join("")}
+    <p><a class="btn btn-primary of-btn of-btn--primaer" href="${t.weiter.ziel}">${esc(t.weiter.text)}</a> <a class="btn of-btn" href="#start">‹ Heute</a></p></div>`;
+}
+
 // ---------- Land wählen (Nr. 28; Entwurf Bill im Artefakt „OFFLINE MVP zum Durchblättern“, Nachtrag 2: Absender) ----------
 function landAuswahlHtml(name, gewaehlt) {
   return `<div class="land-auswahl" role="radiogroup" aria-labelledby="${name}-titel">${Object.entries(LAENDER).map(([id, l]) => `<label class="land-opt"><input type="radio" name="${name}" value="${id}" ${id === gewaehlt ? "checked" : ""}><span>${esc(l.name)}</span></label>`).join("")}</div>
@@ -2552,7 +2599,7 @@ function render() {
   if (seite === "start") { tagesSatzZeigen(); pauseKarteWischen(); }
   if (seite !== "gedanke" && state.gedankenLiest) gedankenVorlesenStop();
   if (seite === "gedanken" || seite === "gedanke") gedankenNachZeichnen();
-  const aktiv = seite === "lesen" || seite === "gedanken" || seite === "gedanke" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" || seite === "buch" || seite === "absatz" ? "lumi" : seite === "linie" ? "pause" : seite === "szenario" ? state.szenarioVon.slice(1) : seite;
+  const aktiv = seite === "netz-ich" || seite === "netz-andere" ? "start" : seite === "lesen" || seite === "gedanken" || seite === "gedanke" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" || seite === "buch" || seite === "absatz" ? "lumi" : seite === "linie" ? "pause" : seite === "szenario" ? state.szenarioVon.slice(1) : seite;
   if (seite !== "kapitel" && state.tag.liest) vorlesenStop();
   if (seite !== "buch" && state.buchLiest) { try { speechSynthesis.cancel(); } catch { /* egal */ } state.buchLiest = false; }
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
@@ -2560,7 +2607,7 @@ function render() {
   if ((seite === "kapitel" || seite === "neues" || seite === "heft" || seite === "linie" || seite === "pause" || seite === "buch" || seite === "absatz" || seite === "gedanken" || seite === "gedanke") && state.tag.seiteVorher !== seite) { window.scrollTo(0, 0); main.scrollTop = 0; } // beginnt oben
   state.tag.seiteVorher = seite;
   if (seite === "natur") { naturBilderLaden(); document.title = "OFFLINE – Naturheilkunde"; document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === "natur" ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"))); }
-  else document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : seite === "heft" ? `Was ${wesen.anzeigename()} gesagt hat` : seite === "linie" ? "Deine Linie" : seite === "buch" || seite === "absatz" ? "Das Lumi-Buch" : seite === "gedanken" || seite === "gedanke" ? "Was die Lumis denken" : state.lesen?.titel ?? "Lesen")}`;
+  else document.title = `OFFLINE – ${ROUTEN.find((r) => r[0] === seite)?.[1] ?? (seite === "netz-ich" ? "Liegt es an mir?" : seite === "netz-andere" ? "Haben andere auch kein Netz?" : seite === "kapitel" ? "Roman der Woche" : seite === "neues" ? "Was ist neu" : seite === "heft" ? `Was ${wesen.anzeigename()} gesagt hat` : seite === "linie" ? "Deine Linie" : seite === "buch" || seite === "absatz" ? "Das Lumi-Buch" : seite === "gedanken" || seite === "gedanke" ? "Was die Lumis denken" : state.lesen?.titel ?? "Lesen")}`;
   if (seite === "szenario") document.title = `OFFLINE – ${szKarten()[state.szenario]?.titel ?? "Notfall"}`;
   if (state.anker) { const ziel = document.getElementById(state.anker); state.anker = null; if (ziel) { if (ziel.tagName === "DETAILS") ziel.open = true; ziel.scrollIntoView({ block: "start" }); } }
   if (seite === "karte") karteStarten();
@@ -2671,6 +2718,11 @@ function beiKlick(e) {
   if (b.hasAttribute("data-speicherort-standard")) speicherortSetzen(null);
 }
 main.addEventListener("click", beiKlick);
+main.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-netz-frage]"); if (!b) return;
+  const a = speicher.get("netz-antworten", {}); a[b.dataset.netzFrage] = a[b.dataset.netzFrage] === b.dataset.wert ? undefined : b.dataset.wert;
+  speicher.set("netz-antworten", a); render(); // bleibt am Gerät
+});
 main.addEventListener("click", (e) => {
   if (location.hash === "#heilkunde" && heilkundeKlick(state.heilkunde, e.target)) { render(); window.scrollTo(0, 0); main.scrollTop = 0; }
 });
@@ -2931,8 +2983,10 @@ menu.addEventListener("click", () => blattSetzen(!sidebar.classList.contains("op
 tabMehr.addEventListener("click", () => blattSetzen(!sidebar.classList.contains("open")));
 sheetHinter.addEventListener("click", () => blattSetzen(false));
 
-function netz() {
+function netz(e) {
   const on = navigator.onLine;
+  if (on) { zuletztOnlineMerken(); if (e?.type === "online") speicher.del("netz-antworten"); } // Nr. 29: neue Verbindung, neue Fragen
+  if (e && (location.hash || "#start") === "#start") render();
   document.getElementById("net-dot").className = "dot " + (on ? "on" : "off");
   // 0.7.1 (Mik): ein klarer Satz, nicht abgeschnitten
   document.getElementById("net-text").textContent = on ? (state.abo?.aktiv ? "Online. Neue Inhalte kommen von selbst." : "Online.") : "Offline. Alles auf dem Gerät geht weiter.";
@@ -2977,6 +3031,7 @@ addEventListener("hashchange", () => {
   render();
 });
 netz();
+setInterval(() => { if (navigator.onLine) zuletztOnlineMerken(); else if ((location.hash || "#start") === "#start" && !document.querySelector(".blatt")) render(); }, 60e3); // Nr. 29: Dauer ohne Netz mitzählen
 appAngaben();
 render();
 

@@ -925,3 +925,39 @@ body.blatt-offen { overflow: hidden; }
 .hk-wer { color: var(--text); }
 .hk-mehr summary { cursor: pointer; font-weight: 600; }
 .of-app .land-frage .land-weiter { min-height: 48px; font-size: 1rem; padding: .6rem 1rem; }
+
+/* ---------- Nr. 29: Heute neu (Entwurf C) ---------- */
+.heute-stapel { display: flex; flex-direction: column; gap: 22px; }
+.heute-stapel > * { margin-top: 0; margin-bottom: 0; }
+.heute-stapel .tag-karten { margin: 0; gap: 22px; }
+.heute-status { border-radius: var(--radius-sm); padding: .9rem 1rem; display: flex; flex-direction: column; gap: .2rem; }
+.heute-status b { font-size: 1.3rem; font-weight: 600; }
+.heute-status span { color: var(--text); font-size: .95rem; }
+.heute-status--on { background: var(--ok-soft); color: var(--ok); }
+.heute-status--off { background: var(--accent-soft); color: var(--accent); }
+.bereit-kreis-karte { display: flex; flex-direction: column; gap: .7rem; margin: 0; }
+.bereit-kreis-reihe { display: flex; gap: 1rem; align-items: center; }
+.bereit-kreis { --wert: 0; width: 84px; height: 84px; flex: none; border-radius: 50%; display: grid; place-items: center;
+  background: conic-gradient(var(--ok) calc(var(--wert) * 1%), var(--line) 0); }
+.bereit-kreis .bereit-zahl { width: 68px; height: 68px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; font-size: 1.7rem; line-height: 1; margin: 0; }
+.bereit-kreis-karte .btn { text-align: center; justify-content: center; min-height: 44px; }
+.netz-fragen { margin: 0; display: flex; flex-direction: column; }
+.netz-frage { display: flex; justify-content: space-between; align-items: center; gap: .6rem; padding: .55rem 0; border-bottom: 1px solid var(--line); }
+.netz-jn { display: flex; gap: .3rem; flex: none; }
+.netz-jn .btn { min-width: 52px; min-height: 40px; }
+.netz-jn .btn[aria-pressed="true"] { background: var(--text); color: var(--surface); border-color: var(--text); }
+.netz-nachbar { margin: .6rem 0 0; }
+.netz-rat { margin: 0; border: 2px solid var(--line); }
+.netz-rat--gross { border-color: var(--accent); }
+.netz-stufen { display: flex; flex-direction: column; gap: .4rem; }
+.netz-stufe { display: flex; justify-content: space-between; align-items: center; gap: .6rem; padding: .65rem .9rem; border-radius: var(--radius-sm); background: var(--surface); border: 1px solid var(--line); color: var(--text); text-decoration: none; font-weight: 600; min-height: 48px; }
+.netz-stufe small { display: block; font-weight: 400; color: var(--muted); }
+.netz-stufe--jetzt { border: 2px solid var(--accent); background: var(--accent-soft); }
+.netz-schritte { display: flex; flex-direction: column; gap: .6rem; margin: 0; padding-left: 1.3rem; }
+.netz-schluss { margin: 1rem 0; }
+.spiele-raetsel { margin: 0 0 1.2rem; }
+.bereit-kreis-reihe > div:last-child { text-align: left; }
+.of-app .bereit-kreis-karte .btn, .of-app .netz-rat .btn { font-size: 1rem; min-height: 44px; padding: .6rem 1rem; display: flex; align-items: center; justify-content: center; }
+.of-app .netz-rat .btn { display: inline-flex; }
+.of-app #main .bereit-kreis-karte .btn, .of-app #main .netz-rat .btn { font-size: 1rem; min-height: 44px; padding: .6rem 1rem; }
+.of-app #main .netz-rat--gross { border: 2px solid var(--accent); }

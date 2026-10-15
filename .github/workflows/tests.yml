@@ -68,7 +68,7 @@ jobs:
       - uses: actions/setup-node@v5
         with: { node-version: 22 }
       - name: Lumi im MVP nur als Vorschau (Nr. 27), Länderfrage und Heute ohne Überlauf (Nr. 28)
-        run: node --test werkzeug/lumi-vorschau.test.mjs werkzeug/land.test.mjs werkzeug/heute-breite.test.mjs
+        run: node --test werkzeug/lumi-vorschau.test.mjs werkzeug/land.test.mjs werkzeug/heute-breite.test.mjs werkzeug/heute-neu.test.mjs
         env: { CHROME: google-chrome }
       - name: Blatt bleibt beim Neuzeichnen offen (Nr. 26)
         run: node --test werkzeug/blatt.test.mjs

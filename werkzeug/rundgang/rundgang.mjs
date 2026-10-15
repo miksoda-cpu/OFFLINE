@@ -56,6 +56,9 @@ async function seiten() {
     { name: "hilfe", hash: "vorsorge", danach: `document.querySelector('[data-hilfe]')?.click()`, fertig: `document.querySelector('.blatt')`, nurSichtbar: true },
     { name: "seitenleiste", hash: "start", danach: `(() => { const m = document.getElementById("menu"); if (m && !m.hidden) m.click(); })()`, nurSichtbar: true },
     { name: "einstellungen-neu", hash: "einstellungen" },
+    // Nr. 29: Heute ohne Netz, vier Fragen beantwortet (Nachbarn auch ohne Netz), und die zwei Offline-Seiten
+    { name: "heute-offline", hash: "start", offline: true, danach: `(() => { for (const [f, w] of [["flugmodus", "ja"], ["rechnung", "ja"], ["funkloch", "nein"], ["nachbarn", "ja"]]) document.querySelector('[data-netz-frage="' + f + '"][data-wert="' + w + '"]')?.click(); })()`, fertig: `document.querySelector(".netz-rat")` },
+    { name: "netz-ich", hash: "netz-ich" }, { name: "netz-andere", hash: "netz-andere" },
     { name: "heilkunde", hash: "heilkunde", danach: `(() => { while (document.querySelector("[data-hk-zurueck]")) document.querySelector("[data-hk-zurueck]").click(); document.querySelector('[data-hk-tab="bes"]')?.click(); })()` },
     { name: "heilkunde-pilz", hash: "heilkunde", danach: `(() => { while (document.querySelector("[data-hk-zurueck]")) document.querySelector("[data-hk-zurueck]").click(); document.querySelector('[data-hk-tab="ogg"]')?.click(); document.querySelector('[data-hk-gr="pilz"]')?.click(); document.querySelector('[data-hk-m="eierschwammerl"]')?.click(); })()`, fertig: `document.querySelector(".hk-verw")` },
     { name: "heilkunde-gift", hash: "heilkunde", danach: `(() => { while (document.querySelector("[data-hk-zurueck]")) document.querySelector("[data-hk-zurueck]").click(); document.querySelector('[data-hk-tab="ogg"]')?.click(); document.querySelector('[data-hk-gr="pilz"]')?.click(); document.querySelector('[data-hk-m="knolle"]')?.click(); })()`, fertig: `document.querySelector(".hk-plak--rot")` },
@@ -186,12 +189,14 @@ async function lauf(chrome, profil, breite, farbe, liste, bericht, kat) {
     }
     for (const seite of liste) {
       try {
+        if (seite.offline) { await t.s("Network.emulateNetworkConditions", { offline: true, latency: 0, downloadThroughput: -1, uploadThroughput: -1 }); await new Promise((r) => setTimeout(r, 300)); }
         await zeigen(t, seite);
         const p = await t.auswerten(PRUEFEN);
         await writeFile(path.join(ordner, `${seite.name}-${breite}-${farbe}.png`), await aufnehmen(t, breite, seite));
         pruefe(`${seite.name}: keine Fehler`, !p.fehler.length, p.fehler.join(" | "));
         pruefe(`${seite.name}: nichts läuft seitlich über`, !p.ueber.length, p.ueber.join(" | "));
         pruefe(`${seite.name}: kein abgeschnittener Text`, !p.abgeschnitten.length, p.abgeschnitten.join(" | "));
+        if (seite.offline) { await t.s("Network.emulateNetworkConditions", { offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1 }); await new Promise((r) => setTimeout(r, 300)); }
       } catch (e) { pruefe(`${seite.name}: Seite geht auf`, false, String(e.message ?? e)); }
     }
     pruefe("keine fremde Adresse", !t.fremd.length, [...new Set(t.fremd.map((u) => new URL(u).host))].join(", "));
