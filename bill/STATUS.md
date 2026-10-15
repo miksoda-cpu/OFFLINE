@@ -18,6 +18,7 @@ Skin Flechte und die internen Pakete `naturheilkunde`, `naturheilkunde-bilder` l
 Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (Android, iOS), Schließfach. Gesamtkonzept als Projektdokument „OFFLINE-Gesamtkonzept“, nicht in `docs/`.
 
 ## Offen bei Code
+- Nr. 29 Heute neu (Entwurf C) fertig auf Branch `nr-29-heute-neu` (15.10., Rückmeldung), CI, Windows-Probe und Rundgang grün; wartet auf Bills Abnahme, Zusammenführen (Web live) und 0.9.1 nach Miks Wort. Danach Nr. 30 Suche, Nr. 31 Über OFFLINE.
 - Nr. 28 mit Nachtrag 1 und 2 und Nachbesserung erledigt: **0.9.0 veröffentlicht (15.10.2026, Tag `v0.9.0`)**. Land wählen (DACH), Naturheilkunde erste Fassung (`heilkunde-grundstock` 2026.10.15 im Katalog), Einstellungen, Tresor/Lumi/Wikipedia/Wikivoyage/Karte unter „Bald“; Deutschland und Schweiz ohne österreichische Nummern und Sender. Nebenbei: „Tresor“ und „Updates & Abo“ fehlten seit 0.7.1 im Menü.
 - Nr. 24 erledigt und zusammengeführt (14.10., Rückmeldung), live in der Web-Version: Österreich-Basis aktualisiert sich still, eine Klammer bei „USB-Stick“, unter „Bald“ Wikipedia, Wikivoyage, Karte und „Das Lumi-Update“ als Vorschau, nicht ladbar (Abschnitt B entfällt fürs MVP). Rundgang liegt in `werkzeug/rundgang/`.
 - Nr. 27 erledigt und zusammengeführt (14.10., Rückmeldung), live in der Web-Version: Lumi im MVP nur als Vorschau. Ohne Namen keine Figur, Lumi-Seite, Einladung und Tipps (`wir` steht mit unter „Das Lumi-Update“); mit Namen alles wie bisher.
