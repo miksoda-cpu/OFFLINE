@@ -64,7 +64,7 @@ async function internFreischalten(schluessel) {
   if (k) { history.replaceState(null, "", `${location.pathname}${location.search}#updates`); await internFreischalten(k); }
   else if (location.hash.startsWith("#kanal=")) history.replaceState(null, "", `${location.pathname}${location.search}#updates`);
 }
-const APP_VERSION = "0.9.0";
+const APP_VERSION = "0.9.1";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -380,7 +380,7 @@ function tagKarteHtml(k, status) {
   // 0.7.1 (Mik): erledigt zeigt das Rätsel mit Lösung klein; ein Satz sagt, was „Zurückholen“ tut
   if (status) return `<div class="card of-karte tag-karte tag-karte--fertig" data-tag-karte="${esc(k.id)}"><div><span class="tag-art">${titel}</span> ${status === "erledigt" ? `<span class="tag tag-ok of-plakette of-plakette--offline">erledigt</span>` : `<span class="muted of-klein">weggelegt</span>`}
       ${k.art === "raetsel" && status === "erledigt" ? `<p class="of-klein tag-fertig-raetsel" style="margin:.4rem 0 0">${esc(k.frage)}</p><p class="muted of-klein" style="margin:.2rem 0 0">Lösung: ${esc(k.loesung)}</p>` : ""}
-      <p class="muted of-klein" style="margin:.4rem 0 0">${k.art === "raetsel" && status === "erledigt" ? "„Zurückholen“ legt das Rätsel wieder offen hin, dann kannst du es noch einmal lösen." : "„Zurückholen“ legt die Karte wieder auf die Tagesseite."}</p></div>
+      <p class="muted of-klein" style="margin:.4rem 0 0">${k.art === "raetsel" && status === "erledigt" ? "„Zurückholen“ legt das Rätsel wieder offen hin, dann kannst du es noch einmal lösen." : k.art === "kapitel" ? "„Zurückholen“ legt den Roman wieder hin." : "„Zurückholen“ legt die Karte wieder auf die Tagesseite."}</p></div>
     <button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="zurueck" data-tag-id="${esc(k.id)}">Zurückholen</button></div>`;
   const o = state.tag.offen[k.id] ?? {};
   const weg = `<button type="button" class="btn of-btn" data-tag="weg" data-tag-id="${esc(k.id)}">Weglegen</button>`;
@@ -466,7 +466,7 @@ function tagAktion(b) {
   const a = b.dataset.tag, id = b.dataset.tagId;
   const karte = () => heutigeKarten().find((k) => k.id === id) ?? kartenFuer(tagesPakete(), heuteDatum(), tagStart()).find((k) => k.id === id);
   if (a === "hinweis" || a === "loesung") { state.tag.offen[id] = { ...(state.tag.offen[id] ?? {}), [a]: true }; return render(); }
-  if (a === "erledigt" || a === "weg" || a === "gelesen") { const k = karte(); if (k) tagSetzen(k, a === "weg" ? "weg" : "erledigt"); vorlesenStop(); if (a === "gelesen") { location.hash = "#start"; return; } return render(); }
+  if (a === "erledigt" || a === "weg" || a === "gelesen") { const k = karte(); if (k) tagSetzen(k, a === "weg" ? "weg" : "erledigt"); vorlesenStop(); if (a === "gelesen") { location.hash = "#pause"; return; } return render(); }
   if (a === "zurueck") { const k = karte(); if (k) tagSetzen(k, null); state.tag.nochmal = false; return render(); }
   if (a === "nochmal") { state.tag.nochmal = true; return render(); }
   if (a === "vorlesen") {
@@ -515,7 +515,7 @@ const seiten = {
     const punkt = offenDing ? { text: offenDing.titel, ziel: "#vorsorge", dinge: true } : { ...schritt, dinge: false };
     const plan = tagesplan(), d = heuteDatum();
     tagLernenPruefen();
-    const karten = heutigeKarten().filter((k) => k.art !== "raetsel"), zustand = tagZustand(d); // Nr. 29: das Tagesrätsel steht auf „Spiele“
+    const alle = heutigeKarten(), karten = alle.filter((k) => k.art !== "raetsel" && k.art !== "kapitel"), zustand = tagZustand(d); // Nr. 29: das Tagesrätsel steht auf „Spiele“, Nr. 32 (Mik, 16.10.): der Roman der Woche auch
     const schluss = state.tag.nochmal ? null : schlussErreicht({ karten, zustand, jetzt: testJetzt(), plan });
     state.tag.schlussGezeigt = schluss;
     const pakete = tagesPakete(), vorrat = vorratTage(pakete, d, tagStart());
@@ -545,11 +545,11 @@ const seiten = {
         <p class="lumi-einladung-klein">${esc(LUMI_TEXTE.einladungHinweis)} ${esc(LUMI_TEXTE.ki)}</p></div></div>` : ""}
       ${g.hinweis ? `<div class="card of-karte tag-gelernt" role="status"><p style="margin:0 0 .6rem">${esc(g.hinweis.text)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="lern-zurueck">Rückgängig</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="lern-ok">In Ordnung</button></div>` : ""}
       ${(() => { if (!pauseE().an || !pauseDaten()) return ""; const t = rueckspiegel(spielLog(), pauseL(), speicher.get("pause", null), testJetzt(), pauseDaten().formen, { mitLumi: lumiInPause(), mitLumisch: lumischInPause() }); return t ? `<div class="card of-karte pause-rueckspiegel" role="status"><p class="muted of-klein" style="margin:0 0 .3rem">⏸ Pause · Rückspiegel</p><p style="margin:0 0 .6rem">${esc(t)}</p><button type="button" class="btn btn-sm of-btn of-btn--klein" data-pause="rueckspiegel-ok">Schön</button></div>` : ""; })()}
-      <section class="tag-karten" aria-label="Heute">
+      ${!karten.length && alle.length ? "" : `<section class="tag-karten" aria-label="Heute">
         ${schluss ? `${karten.filter((k) => k.art === "raetsel" && zustand[k.id] === "erledigt" && state.tag.offen[k.id]?.richtig).map((k) => tagKarteHtml(k, "erledigt")).join("")}<div class="card of-karte tag-schluss" role="status"><p class="tag-schluss-satz">${esc(SCHLUSS)}</p>${karten.length ? `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="nochmal">Heute noch einmal ansehen</button>` : ""}</div>`
           : karten.length ? karten.map((k) => tagKarteHtml(k, zustand[k.id])).join("")
           : `<div class="card of-karte tag-leer"><p style="margin:0">${pakete.length ? "Für heute liegt nichts in der Vorratskammer." : "Die Vorratskammer ist noch leer."} ${navigator.onLine ? "OFFLINE holt die nächsten Tage, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."} Alles andere funktioniert weiter.</p></div>`}
-      </section>
+      </section>`}
       <p class="tag-vorrat muted of-klein">${vorrat ? `Vorrat: noch ${vorrat} ${vorrat === 1 ? "Tag" : "Tage"}${!navigator.onLine ? " · ohne Netz geht es weiter" : ""}` : `Vorrat: leer. ${navigator.onLine ? "Die nächsten Tage kommen, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."}`}</p>
       </div>`;
   },
@@ -610,14 +610,14 @@ const seiten = {
   /** Das Kapitel des Tages zum Lesen, mit Vorlesen. */
   kapitel() {
     const k = heutigeKarten().find((x) => x.art === "kapitel") ?? (state.tag.lesen && kartenFuer(tagesPakete(), heuteDatum(), tagStart()).find((x) => x.id === state.tag.lesen));
-    if (!k) return `${kopf("Roman der Woche", "Heute ist kein Kapitel da.")}<a class="btn of-btn" href="#start">Zur Tagesseite</a>`;
+    if (!k) return `${kopf("Roman der Woche", "Heute ist kein Kapitel da.")}<a class="btn of-btn" href="#pause">Zu den Spielen</a>`;
     const status = tagZustand(heuteDatum())[k.id];
-    return `<div class="kapitel-kopf"><a class="btn btn-sm of-btn of-btn--klein" href="#start">‹ Heute</a><button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="vorlesen" data-tag-id="${esc(k.id)}">${state.tag.liest ? "Anhalten" : "Vorlesen"}</button></div>
+    return `<div class="kapitel-kopf"><a class="btn btn-sm of-btn of-btn--klein" href="#pause">‹ Spiele</a><button type="button" class="btn btn-sm of-btn of-btn--klein" data-tag="vorlesen" data-tag-id="${esc(k.id)}">${state.tag.liest ? "Anhalten" : "Vorlesen"}</button></div>
       <article class="kapitel-text" lang="de">
         <p class="tag-art">Roman der Woche · Teil ${k.teil} von ${k.teile}</p>
         <h1>${esc(k.werk)}</h1><p class="muted">${esc(k.autor)}</p>
         ${k.absaetze.map((a) => a.startsWith("## ") ? `<h2>${esc(a.slice(3))}</h2>` : a.includes("\n") ? `<p class="vers">${esc(a).replace(/\n/g, "<br>")}</p>` : `<p>${esc(a)}</p>`).join("")}
-        <div class="tag-knoepfe">${status === "erledigt" ? `<span class="tag tag-ok of-plakette of-plakette--offline">Gelesen</span>` : `<button type="button" class="btn btn-primary of-btn of-btn--primaer" data-tag="gelesen" data-tag-id="${esc(k.id)}">Gelesen</button>`} <a class="btn of-btn" href="#start">Zur Tagesseite</a></div>
+        <div class="tag-knoepfe">${status === "erledigt" ? `<span class="tag tag-ok of-plakette of-plakette--offline">Gelesen</span>` : `<button type="button" class="btn btn-primary of-btn of-btn--primaer" data-tag="gelesen" data-tag-id="${esc(k.id)}">Gelesen</button>`} <a class="btn of-btn" href="#pause">Zu den Spielen</a></div>
         <p class="muted of-klein kapitel-quelle">Vorlage: ${esc(k.quelle.vorlage)}. Text von Wikisource (${esc(k.quelle.url)}). Gemeinfrei.</p>
       </article>`;
   },
@@ -1518,11 +1518,12 @@ function alterSetzen(alter) {
   if (pauseAngeboten(alter) && !PP() && navigator.onLine) installiereMitMeldung("pause", "pause-msg").then(() => render());
 }
 
-/** Nr. 29: Das Tagesrätsel steht oben auf „Spiele“ (bisher Heute); dieselbe Karte, derselbe Stand. */
+/** Nr. 29: Das Tagesrätsel steht oben auf „Spiele“ (bisher Heute); dieselbe Karte, derselbe Stand. Nr. 32 (Mik, 16.10.): direkt
+ *  darunter der Roman der Woche, ebenfalls mit Stand, Lesen und Weglegen wie bisher auf Heute. */
 function raetselSpieleHtml() {
   if (!P()) return "";
-  const d = heuteDatum(), zustand = tagZustand(d), r = heutigeKarten().filter((k) => k.art === "raetsel");
-  return r.length ? `<section class="tag-karten spiele-raetsel" aria-label="Tagesrätsel">${r.map((k) => tagKarteHtml(k, zustand[k.id])).join("")}</section>` : "";
+  const d = heuteDatum(), zustand = tagZustand(d), k = heutigeKarten(), r = k.filter((x) => x.art === "raetsel"), roman = k.filter((x) => x.art === "kapitel");
+  return `${r.length ? `<section class="tag-karten spiele-raetsel" aria-label="Tagesrätsel">${r.map((x) => tagKarteHtml(x, zustand[x.id])).join("")}</section>` : ""}${roman.length ? `<section class="tag-karten spiele-roman" aria-label="Roman der Woche">${roman.map((x) => tagKarteHtml(x, zustand[x.id])).join("")}</section>` : ""}`;
 }
 /** Der Raum „Pause“ (#pause). Ist Pause aus: zwei Sätze und fünf Knöpfe fürs Alter – ein Tipp schaltet ein und startet den ersten Happen. */
 let pauseRaumGefragt = null; const heuteSitzung = Date.now(); // in dieser Sitzung zuerst gefragt: beim Neuzeichnen bleibt die Frage
@@ -2727,7 +2728,7 @@ function render() {
   if (seite === "einstellungen") speicherNachtragen();
   if (seite !== "gedanke" && state.gedankenLiest) gedankenVorlesenStop();
   if (seite === "gedanken" || seite === "gedanke") gedankenNachZeichnen();
-  const aktiv = seite === "netz-ich" || seite === "netz-andere" ? "start" : seite === "lesen" || seite === "gedanken" || seite === "gedanke" ? "bibliothek" : seite === "kapitel" ? "start" : seite === "neues" ? "updates" : seite === "heft" || seite === "buch" || seite === "absatz" ? "lumi" : seite === "linie" ? "pause" : seite === "szenario" ? state.szenarioVon.slice(1) : seite;
+  const aktiv = seite === "netz-ich" || seite === "netz-andere" ? "start" : seite === "lesen" || seite === "gedanken" || seite === "gedanke" ? "bibliothek" : seite === "kapitel" ? "pause" : seite === "neues" ? "updates" : seite === "heft" || seite === "buch" || seite === "absatz" ? "lumi" : seite === "linie" ? "pause" : seite === "szenario" ? state.szenarioVon.slice(1) : seite;
   if (seite !== "kapitel" && state.tag.liest) vorlesenStop();
   if (seite !== "buch" && state.buchLiest) { try { speechSynthesis.cancel(); } catch { /* egal */ } state.buchLiest = false; }
   document.querySelectorAll("#nav a").forEach((a) => (a.dataset.route === aktiv ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));

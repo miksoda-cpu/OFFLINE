@@ -2,6 +2,16 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.9.1",
+      "datum": "2026-10-16",
+      "punkte": [
+        "Neue Startseite: Oben siehst du, ob du online oder offline bist. Ohne Netz stellt dir OFFLINE vier kurze Fragen, gibt einen Rat und zeigt, was je nach Dauer hilft.",
+        "Neu: Suche über alle Texte der App, auch ohne Internet. Die Lupe steht oben rechts. Im Tresor wird nie gesucht.",
+        "Neu in den Einstellungen: „Über OFFLINE“ – wer hinter der App steht und wer sie bezahlt.",
+        "Der Roman der Woche steht jetzt bei den Spielen."
+      ]
+    },
+    {
       "version": "0.9.0",
       "datum": "2026-10-15",
       "punkte": [

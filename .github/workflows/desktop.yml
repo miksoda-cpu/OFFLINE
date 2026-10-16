@@ -13,6 +13,10 @@ on:
         description: "Nach dem Bauen als App-Update veröffentlichen (Installer nach Hetzner, latest.json schreiben)"
         type: boolean
         default: false
+      store:
+        description: "Store-Build: ohne eigenen Updater und ohne internen Kanal (tauri.store.conf.json); wird nie veröffentlicht"
+        type: boolean
+        default: false
 
 # Bei Tags v* legt tauri-action einen Release-Entwurf an, dafür braucht das Token Schreibrecht auf den Inhalt.
 permissions:
@@ -102,7 +106,10 @@ jobs:
           SCHLUESSEL: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
         run: |
           # Ohne Signaturschlüssel baut Tauri keine Updater-Dateien (sonst bricht der Build ab) – Installer entstehen trotzdem
-          if [ -n "$SCHLUESSEL" ]; then
+          # Store-Build (Knopfdruck mit „store“): eigene Konfiguration ohne Updater-Dateien, Feature „store“, kein Signaturschlüssel nötig
+          if [ "${{ inputs.store }}" = "true" ]; then
+            echo "aktiv=nein" >> "$GITHUB_OUTPUT"; echo "args=${{ matrix.args }} --config src-tauri/tauri.store.conf.json --features store -- --no-default-features" >> "$GITHUB_OUTPUT"
+          elif [ -n "$SCHLUESSEL" ]; then
             echo "aktiv=ja" >> "$GITHUB_OUTPUT"; echo "args=${{ matrix.args }}" >> "$GITHUB_OUTPUT"
           else
             echo "::warning::Secret TAURI_SIGNING_PRIVATE_KEY fehlt – App-Update-Dateien werden nicht erzeugt"
@@ -184,7 +191,7 @@ jobs:
   # Die Version kommt aus app/src-tauri/tauri.conf.json.
   veroeffentlichen:
     name: Veröffentlichen (App-Update)
-    if: startsWith(github.ref, 'refs/tags/v') || inputs.veroeffentlichen == true
+    if: startsWith(github.ref, 'refs/tags/v') || (inputs.veroeffentlichen == true && inputs.store != true)
     needs: bauen
     runs-on: ubuntu-latest
     steps:

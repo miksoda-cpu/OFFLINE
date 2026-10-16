@@ -24,6 +24,30 @@ Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Bl
 
 ## Einträge
 
+### 2026-10-15 · Release 0.9.0 · Referenzbilder erst nach dem Katalog- oder Web-Lauf neu setzen
+- Idee: Ein Auftrag, der den Katalog oder `web.yml` ändert, wird zusammengeführt und veröffentlicht; die Referenzbilder bleiben, wie sie sind
+- Kill-Kriterium: Der Bildvergleich ist auf dem Hauptbranch rot, obwohl jede Änderung gewollt ist
+- Ausgang: verworfen, eingetreten mit 0.9.0: Nach `web.yml` lud die Web-Version die Naturheilkunde von selbst, 16 Bilder wichen ab
+- Lehre: Ändert ein Auftrag den Katalog oder `web.yml`, werden die Referenzbilder im selben Schritt neu gesetzt
+
+### 2026-10-15 · Auftrag Nr. 29 · Ergänzte Fassung außerhalb des Auftragsordners
+- Idee: Bill legt eine ergänzte Fassung eines Auftrags an einen anderen Ort als „OFFLINE - Home/auftraege/“
+- Kill-Kriterium: Code baut eine ältere Fassung, weil die neue nie ankam
+- Ausgang: verworfen, eingetreten bei Nr. 29: Schritte 4 und 5 der Seite „Haben andere auch kein Netz?“ fehlten bis zur Nachbesserung
+- Lehre: Code baut nur, was im Auftragsordner oder im Postfach steht. Bill legt Ergänzungen immer dort ab
+
+### 2026-10-15 · Auftrag Nr. 30 · Gerätespeicher setzen und sofort neu laden (Browser-Test)
+- Idee: Ein Test schreibt einen Wert in den Gerätespeicher der alten Seite und lädt gleich danach neu
+- Kill-Kriterium: Der Wert kommt in der neuen Seite nicht an, der Test wackelt in der CI
+- Ausgang: verworfen, eingetreten in Lauf 38782989487 (vorher zweimal grün)
+- Lehre: Werte für die neue Seite setzt der Test im neuen Dokument selbst, bevor die App startet (`Page.addScriptToEvaluateOnNewDocument` mit Bedingung auf die Adresse)
+
+### 2026-10-15 · Auftrag Nr. 30 · Neuer Knopf in der Kopfzeile in voller Tippgröße
+- Idee: Die Lupe als 44-px-Knopf in die Kopfzeile setzen
+- Kill-Kriterium: Die Kopfzeile wird höher und alle Seiten verrutschen im Bildvergleich
+- Ausgang: verworfen, die Kopfzeile wurde bei 360 px 57 px höher; jetzt sitzt der Knopf mit negativem Rand, die Tippfläche bleibt 44 px
+- Lehre: Neue Knöpfe in festen Leisten mit negativem Rand einsetzen und vor dem Bildvergleich die Höhe der Leiste messen
+
 ### 2026-10-14 · Auftrag Nr. 24 · Lumi nur angekündigt, nicht ladbar (Mik)
 - Idee: Für den Start im App Store steht die Lumi nur als „Das Lumi-Update“ unter „Bald“; die Lumi-Pakete werden weder per Knopf noch still geladen, wer sie hat, behält sie
 - Kill-Kriterium: Eine Seite der App setzt ein Lumi-Paket voraus und zeigt ohne es einen Fehler oder eine leere Seite

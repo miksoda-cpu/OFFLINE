@@ -18,7 +18,9 @@ test("Heute und Spiele laufen bei 360, 390 und 430 px nicht seitlich über, auch
       await t.s("Emulation.setDeviceMetricsOverride", { width: b, height: 844, deviceScaleFactor: 1, mobile: true });
       await t.s("Page.addScriptToEvaluateOnNewDocument", { source: `try { localStorage.setItem("offline:land", JSON.stringify("at")); } catch {}` });
       await t.laden(`${server.url}/app.html#start`);
-      await warteBis(t, `localStorage.getItem("offline:paket:at-basis") && document.querySelector(".tag-karte")`, 60_000);
+      // Seit Nr. 32 stehen Rätsel und Roman auf „Spiele“; Heute kann ohne Tageskarte sein. Gewartet wird auf das geladene Tagespaket.
+      await warteBis(t, `localStorage.getItem("offline:paket:at-basis") && Object.keys(localStorage).some((k) => k.startsWith("offline:paket:tage-")) && document.querySelector("#main .heute-stapel")`, 60_000);
+      await t.auswerten(`new Promise((r) => setTimeout(r, 800))`);
       assert.deepEqual(await t.auswerten(UEBER(b)), [], `${b} px, wie geliefert`);
       assert.equal(await t.auswerten(`document.documentElement.scrollWidth`), b, `${b} px: Seite`);
       // Seit Nr. 29 steht das Tagesrätsel oben auf „Spiele“: dort derselbe lange Rätseltext

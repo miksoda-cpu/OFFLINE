@@ -1,5 +1,12 @@
 # Änderungen
 
+## 0.9.1 · 16.10.2026 · Neue Startseite, Suche, „Über OFFLINE“, Roman bei den Spielen
+
+- **Neue Startseite** (Auftrag Nr. 29): Oben steht, ob du online oder offline bist. Ohne Netz stellt die App vier Fragen (Flugmodus, Rechnung, Funkloch, Nachbarn), gibt aus den Antworten einen Rat und zeigt Hilfe nach Dauer: erste Minuten, bis eine Stunde, einige Stunden, ab einem Tag, mehrere Tage. Die Antworten bleiben am Gerät. Die Leiste unten heißt jetzt Heute · Notfall · Vorsorge · Spiele · Menü, das Tagesrätsel steht auf „Spiele“ (`web/netz.js`).
+- **Suche über alle Texte** (Auftrag Nr. 30): Lupe oben rechts, auch ohne Internet. Gesucht wird in Notfall, Szenarien, Vorsorge, Naturheilkunde, Werkzeugen, Hilfe und Notizen, je nach Land; nie im Tresor. Ein Treffer öffnet die Stelle (`web/suche.js`).
+- **„Über OFFLINE“** (Auftrag Nr. 31) ganz oben in den Einstellungen: wer hinter der App steht, wer sie bezahlt, dass sie von selbst keine Töne spielt, wie viel Speicher sie belegt, und der Weg zum Impressum. Der Absender auf der Länderfrage führt dorthin.
+- **Roman der Woche bei den Spielen** (Nachtrag zu Nr. 32, Mik): Die Karte steht nicht mehr auf Heute, sondern auf „Spiele“ direkt unter dem Tagesrätsel, mit Stand, Lesen und Weglegen wie bisher. Service Worker `offline-v40`.
+
 ## 0.9.0 · 15.10.2026 · Das MVP: Land wählen, Naturheilkunde erste Fassung, Lumi und Wissen als Vorschau
 
 - **Land wählen** (Auftrag Nr. 28, Nachtrag 2): erste Frage nach der Installation (Österreich, Deutschland, Schweiz; Liechtenstein, Südtirol und weitere grau), darunter Absender (Knopf zum Impressum) und zwei Sätze. Wer vor 0.9.0 Daten hatte, bleibt ohne Frage bei Österreich (`web/laender.js`, `landBestimmen`). Deutschland und Schweiz: eigene Notrufnummern auf Notfall und in der Kachel auf Bereit; Szenarien, Radio, Sirenen und Bundesland/Kanton als „Kommt mit dem Paket …“; drei Sätze aus Österreich-Paket und Bereit beim Anzeigen neutral (`fuerLand`), das Paket bleibt unverändert.

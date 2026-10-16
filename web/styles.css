@@ -955,7 +955,7 @@ body.blatt-offen { overflow: hidden; }
 .netz-stufe--jetzt { border: 2px solid var(--accent); background: var(--accent-soft); }
 .netz-schritte { display: flex; flex-direction: column; gap: .6rem; margin: 0; padding-left: 1.3rem; }
 .netz-schluss { margin: 1rem 0; }
-.spiele-raetsel { margin: 0 0 1.2rem; }
+.spiele-raetsel, .spiele-roman { margin: 0 0 1.2rem; }
 .bereit-kreis-reihe > div:last-child { text-align: left; }
 .of-app .bereit-kreis-karte .btn, .of-app .netz-rat .btn { font-size: 1rem; min-height: 44px; padding: .6rem 1rem; display: flex; align-items: center; justify-content: center; }
 .of-app .netz-rat .btn { display: inline-flex; }
