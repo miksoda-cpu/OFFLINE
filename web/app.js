@@ -233,7 +233,7 @@ function polsterHtml() {
       ${zahl("liter", "Wasser", r.liter, 5, 0, 5000, "Liter")}
       ${zahl("essen", "Essen für", r.essen, 1, 0, 365, "Tage")}
       <fieldset class="polster-feld polster-licht"><legend>Taschenlampe mit Batterien oder Powerbank</legend>
-        ${[[true, "Ja"], [false, "Nein"]].map(([w, t]) => `<button type="button" class="btn of-btn" data-polster-licht="${w}" aria-pressed="${r.licht === w}">${t}</button>`).join(" ")}</fieldset>
+        ${[[true, "Ja"], [false, "Nein"]].map(([w, t]) => `<button type="button" class="btn of-btn${r.licht === w ? " polster-gewaehlt" : ""}" data-polster-licht="${w}" aria-pressed="${r.licht === w}">${t}</button>`).join(" ")}</fieldset>
     </div>
     <div class="polster-ergebnis" role="status">
       <p class="polster-tage">${r.tage > 0 ? `Euer Polster: ${tageText(r.tage)}` : "Euer Polster wächst mit jedem Vorrat."}</p>

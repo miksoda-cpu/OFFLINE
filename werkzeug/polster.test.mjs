@@ -62,6 +62,10 @@ test("(b) 2 Personen, 40 Liter, Essen 14 Tage → „Euer Polster: 10 Tage“ mi
     await t.auswerten(`document.querySelector('[data-polster-licht="false"]').click()`); await ruhig(t);
     const e2 = await t.auswerten(`document.querySelector("#polster .polster-ergebnis").innerText`);
     assert.ok(e2.includes("Denk auch an Licht: Taschenlampe und Batterien.") && /^Euer Polster: 10 Tage/.test(e2), e2);
+    // Gewählte Taste deutlich gefüllt (Bill, 16.10.): Hintergrund in der Akzentfarbe, die andere nicht; aria-pressed bleibt
+    const knopf = await t.auswerten(`(() => { const f = (w) => { const b = document.querySelector('[data-polster-licht="' + w + '"]'); return { pressed: b.getAttribute("aria-pressed"), bg: getComputedStyle(b).backgroundColor }; }; return { nein: f("false"), ja: f("true"), akzent: getComputedStyle(document.querySelector('[data-polster-licht="false"]')).borderColor }; })()`);
+    assert.equal(knopf.nein.pressed, "true"); assert.equal(knopf.ja.pressed, "false");
+    assert.equal(knopf.nein.bg, knopf.akzent, "gewählt: gefüllt"); assert.notEqual(knopf.ja.bg, knopf.nein.bg, "nicht gewählt: nicht gefüllt");
     // Plus/Minus: +5 Liter → 11 Tage (45 ÷ 4)
     await t.auswerten(`document.querySelector('[data-polster-schritt="liter"][data-polster-um="5"]').click()`); await ruhig(t);
     assert.match(await t.auswerten(`document.querySelector("#polster .polster-tage").textContent`), /^Euer Polster: 11 Tage$/);
