@@ -6,7 +6,7 @@ Neu geschrieben bei der Faltung am 12.10.2026 (Code, Nachtlauf). Der vorige Stan
 Bill schreibt Aufträge nach `bill/todo/`, Code meldet nach `bill/rueckmeldung/`, Erledigtes liegt in `bill/erledigt/`. Nur Code ändert die App, Prioritäten setzt Mik. Festlegungen: `bill/README.md`.
 
 ## App
-- **Veröffentlicht:** Desktop 0.9.0 (15.10.2026, Tag `v0.9.0`) und Web-Version. MVP-Inhalt: Land wählen (Österreich voll; Deutschland, Schweiz mit Notrufnummern), zwölf Szenarien, Grundvorsorge (74 Punkte, sechs Bereiche), Radio je Bundesland, Sirenen, Notrufe, Naturheilkunde (erste Fassung), Karte (online), Bereit, Einstellungen, Spiele (`spiele-1`, nur Desktop). Unter „Bald“: Wikipedia, Wikivoyage, Offline-Karte, Lumi-Update, Tresor.
+- **Veröffentlicht:** Desktop 0.9.1 (16.10.2026, Tag `v0.9.1`) und Web-Version. 0.9.1: neue Startseite (online/offline, vier Fragen, Hilfe nach Dauer), Suche, „Über OFFLINE“, Roman der Woche auf „Spiele“. MVP-Inhalt: Land wählen (Österreich voll; Deutschland, Schweiz mit Notrufnummern), zwölf Szenarien, Grundvorsorge (74 Punkte, sechs Bereiche), Radio je Bundesland, Sirenen, Notrufe, Naturheilkunde (erste Fassung), Karte (online), Bereit, Einstellungen, Spiele (`spiele-1`, nur Desktop). Unter „Bald“: Wikipedia, Wikivoyage, Offline-Karte, Lumi-Update, Tresor.
 - **Katalog** (15.10.2026): at-basis 2026.10.08, heilkunde-grundstock 2026.10.15, spiele-1 2026.10.07.1, Wichteln, wikivoyage-de (ab 0.9.0 nicht mehr ladbar); Lumi-Pakete liegen dort, ab 0.9.0 nur für Nutzer, die sie schon haben.
 - **Läuft:** Rust-Kern, Signatur, Delta-Updates, kiwix-serve, Store-Build ohne Updater und internen Kanal.
 - **Vorrat Tagespakete:** bis 31.01.2027. Februar 2027 spätestens 01.01.2027; die 45-Tage-Grenze fällt am 17.12.2026.
@@ -18,9 +18,11 @@ Skin Flechte und die internen Pakete `naturheilkunde`, `naturheilkunde-bilder` l
 Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (Android, iOS), Schließfach. Gesamtkonzept als Projektdokument „OFFLINE-Gesamtkonzept“, nicht in `docs/`.
 
 ## Offen bei Code
-- Nr. 29 Heute neu (Entwurf C) mit Nachbesserung: **abgenommen 15.10.** (Bill, live geprüft), zusammengeführt `eaf4204`, Web live (`offline-v38`); Desktop erst mit 0.9.1 nach Miks Wort.
-- Nr. 30 Suche mit Nachbesserung: **abgenommen 15.10.** (Bill, live ohne Netz geprüft), zusammengeführt `52edfb1`, Web live (`offline-v39`); Desktop erst mit 0.9.1 nach Miks Wort.
-- Nr. 31 Über OFFLINE: **abgenommen 15.10.** (Bill, verdeckt geprüft), zusammengeführt, Web live. Desktop bekommt Nr. 29–31 erst mit 0.9.1 (Miks Entscheidung offen).
+- Nr. 34 Euer Polster: begonnen 16.10. auf `nr-34-polster`, kommt in 0.9.2 (Tag erst nach Miks Wort).
+- Nr. 32 (0.9.1 mit Nachtrag Roman auf Spiele) und Nr. 33 (Ideenbuch): **abgenommen 16.10.** (Bill, verdeckt geprüft), zusammengeführt, **0.9.1 veröffentlicht (16.10.2026, Tag `v0.9.1`)**, ohne Katalog-Lauf. Desktop hat damit Nr. 29–31.
+- Nr. 29 Heute neu (Entwurf C) mit Nachbesserung: **abgenommen 15.10.** (Bill, live geprüft), zusammengeführt `eaf4204`, Web live (`offline-v38`); Desktop seit 0.9.1.
+- Nr. 30 Suche mit Nachbesserung: **abgenommen 15.10.** (Bill, live ohne Netz geprüft), zusammengeführt `52edfb1`, Web live (`offline-v39`); Desktop seit 0.9.1.
+- Nr. 31 Über OFFLINE: **abgenommen 15.10.** (Bill, verdeckt geprüft), zusammengeführt, Web live. Desktop seit 0.9.1.
 - Nr. 28 mit Nachtrag 1 und 2 und Nachbesserung erledigt: **0.9.0 veröffentlicht (15.10.2026, Tag `v0.9.0`)**. Land wählen (DACH), Naturheilkunde erste Fassung (`heilkunde-grundstock` 2026.10.15 im Katalog), Einstellungen, Tresor/Lumi/Wikipedia/Wikivoyage/Karte unter „Bald“; Deutschland und Schweiz ohne österreichische Nummern und Sender. Nebenbei: „Tresor“ und „Updates & Abo“ fehlten seit 0.7.1 im Menü.
 - Nr. 24 erledigt und zusammengeführt (14.10., Rückmeldung), live in der Web-Version: Österreich-Basis aktualisiert sich still, eine Klammer bei „USB-Stick“, unter „Bald“ Wikipedia, Wikivoyage, Karte und „Das Lumi-Update“ als Vorschau, nicht ladbar (Abschnitt B entfällt fürs MVP). Rundgang liegt in `werkzeug/rundgang/`.
 - Nr. 27 erledigt und zusammengeführt (14.10., Rückmeldung), live in der Web-Version: Lumi im MVP nur als Vorschau. Ohne Namen keine Figur, Lumi-Seite, Einladung und Tipps (`wir` steht mit unter „Das Lumi-Update“); mit Namen alles wie bisher.
