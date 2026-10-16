@@ -24,6 +24,12 @@ Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Bl
 
 ## Einträge
 
+### 2026-10-16 · Auftrag Nr. 37 · Unveröffentlichter Klartext nur über die .gitignore des eigenen Branches geschützt
+- Idee: Die Klartext-Datei der Akku-Karten (Nr. 36) liegt lokal neben der verschlüsselten Fassung; die Zeile im Block „Klartext-Wache“ steht nur auf dem Branch des Auftrags
+- Kill-Kriterium: Auf einem anderen Branch nimmt `git add -A` die Datei mit, und die Wache sieht sie nicht, weil dort die Zeile fehlt
+- Ausgang: verworfen, eingetreten mit `0759dc6` (Nr. 37), auf dem Hauptbranch und öffentlich; entfernt mit `827d76e`, die Historie bleibt (Entscheidung bei Mik)
+- Lehre: Neue Klartext-Pfade sofort auch in `.git/info/exclude` eintragen (gilt für alle Branches) und die `.gitignore`-Zeile zuerst auf den Hauptbranch bringen. Vor jedem Commit `git status` lesen statt blind `git add -A`
+
 ### 2026-10-15 · Release 0.9.0 · Referenzbilder erst nach dem Katalog- oder Web-Lauf neu setzen
 - Idee: Ein Auftrag, der den Katalog oder `web.yml` ändert, wird zusammengeführt und veröffentlicht; die Referenzbilder bleiben, wie sie sind
 - Kill-Kriterium: Der Bildvergleich ist auf dem Hauptbranch rot, obwohl jede Änderung gewollt ist
