@@ -18,7 +18,7 @@ Skin Flechte und die internen Pakete `naturheilkunde`, `naturheilkunde-bilder` l
 Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (Android, iOS), Schließfach. Gesamtkonzept als Projektdokument „OFFLINE-Gesamtkonzept“, nicht in `docs/`.
 
 ## Offen bei Code
-- Nr. 34 Euer Polster: begonnen 16.10. auf `nr-34-polster`, kommt in 0.9.2 (Tag erst nach Miks Wort).
+- Nr. 34 Euer Polster: **abgenommen 16.10.** (Bill, verdeckt geprüft), mit Nachbesserung (gewählte Licht-Taste gefüllt), zusammengeführt, Web live (`offline-v41`). Desktop erst mit 0.9.2 nach Miks Wort.
 - Nr. 32 (0.9.1 mit Nachtrag Roman auf Spiele) und Nr. 33 (Ideenbuch): **abgenommen 16.10.** (Bill, verdeckt geprüft), zusammengeführt, **0.9.1 veröffentlicht (16.10.2026, Tag `v0.9.1`)**, ohne Katalog-Lauf. Desktop hat damit Nr. 29–31.
 - Nr. 29 Heute neu (Entwurf C) mit Nachbesserung: **abgenommen 15.10.** (Bill, live geprüft), zusammengeführt `eaf4204`, Web live (`offline-v38`); Desktop seit 0.9.1.
 - Nr. 30 Suche mit Nachbesserung: **abgenommen 15.10.** (Bill, live ohne Netz geprüft), zusammengeführt `52edfb1`, Web live (`offline-v39`); Desktop seit 0.9.1.
