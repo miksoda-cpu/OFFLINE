@@ -209,7 +209,8 @@ async function neu() {
   // „Was ist neu“: kommt mit der App (ohne Netz), Eintrag der eigenen Version oben
   const version = bericht.werte.app?.version;
   await gehe("#neues");
-  const neues = await bis(() => js("return [...document.querySelectorAll('.neues-version h2')].map((h) => h.textContent)"), "Was ist neu", 15_000).catch(() => []);
+  // Warten, bis Einträge da sind: eine leere Liste („Einen Moment …“, die Datei lädt noch) galt als fertig (16.10.2026, Fall D zweimal rot)
+  const neues = await bis(async () => { const l = await js("return [...document.querySelectorAll('.neues-version h2')].map((h) => h.textContent)"); return l?.length ? l : null; }, "Was ist neu", 15_000).catch(() => []);
   pruefe("Was ist neu", neues[0] === `Version ${version}`, neues.slice(0, 2).join(" · ") || "keine Einträge");
   // Pause hat einen eigenen Raum (0.4.2): in der Navigation unter Heute; ist Pause aus, fünf Knöpfe fürs Alter, kein Fenster
   await gehe("#pause");
