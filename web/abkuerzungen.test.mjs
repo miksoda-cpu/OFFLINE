@@ -152,3 +152,21 @@ test("Nr. 24: Endet eine Klammer mit der Abkürzung, kommt die Erklärung hinein
   assert.equal(ausschreiben("USB-Stick und Strom"), "USB-Stick (USB: Universal Serial Bus) und Strom");
   assert.equal(ausschreiben("Meldung (EMA)"), "Meldung (EMA: Europäische Arzneimittel-Agentur)");
 });
+
+// Nr. 36 (Bill, 16.10.2026): Eine Karte (Titel und Punkte { t, text }) ist ein Block; jede Abkürzung wird darin nur einmal
+// erklärt, beim ersten Vorkommen. Alles andere bleibt wie bisher: jede Zeichenkette ein Text für sich.
+test("Karte als Block: Abkürzung nur beim ersten Vorkommen in der Karte erklärt; außerhalb von Karten unverändert", async () => {
+  const { texteAusschreiben } = await import("./abkuerzungen.js");
+  const karte = { id: "k", titel: "Beispiel", punkte: [{ t: "SMS schicken.", text: "Eine SMS geht oft durch." }, { t: "Laden:", text: "Mit USB-Kabel oder USB-Adapter." }, { t: "Noch einmal:", text: "SMS und USB." }] };
+  const aus = texteAusschreiben({ karten: [karte] }).karten[0];
+  const alles = aus.punkte.flatMap((p) => [p.t, p.text]).join(" | ");
+  assert.equal((alles.match(/Kurznachricht/g) ?? []).length, 1, alles);
+  assert.equal((alles.match(/Universal Serial Bus/g) ?? []).length, 1, alles);
+  assert.equal(aus.punkte[0].t, "SMS (Kurznachricht) schicken."); assert.equal(aus.punkte[0].text, "Eine SMS geht oft durch.");
+  // Ohne Karte: jeder Text für sich, wie bisher
+  const lose = texteAusschreiben({ a: "Eine SMS.", b: "Noch eine SMS." });
+  assert.deepEqual(lose, { a: "Eine SMS (Kurznachricht).", b: "Noch eine SMS (Kurznachricht)." });
+  // Grundvorsorge-Punkte ({ id, text }) sind keine Karte
+  const gv = texteAusschreiben({ punkte: [{ id: "a", text: "Eine SMS." }, { id: "b", text: "Noch eine SMS." }] });
+  assert.equal(gv.punkte[1].text, "Noch eine SMS (Kurznachricht).");
+});

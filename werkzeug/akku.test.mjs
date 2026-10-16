@@ -42,6 +42,8 @@ test("Blackout › Richtig reagieren: die Karte mit ihren nummerierten Punkten; 
     const k = await t.auswerten(`(() => { const c = document.querySelector("#sz-reagieren #karte-${SZ.id}"); return c ? { titel: c.querySelector("h3").textContent, ol: !!c.querySelector("ol"), punkte: [...c.querySelectorAll("li strong")].map((s) => s.textContent) } : null; })()`);
     assert.deepEqual({ ...k, punkte: k.punkte.map(ohneKlammer) }, { titel: SZ.titel, ol: true, punkte: SZ.punkte.map((x) => x.t) });
     assert.equal(SZ.punkte.length, 6, "sechs Punkte wie im Auftrag");
+    // Abkürzungen je Karte nur einmal erklärt (Bill, 16.10.): jede Langform höchstens einmal in der Karte
+    assert.deepEqual(await t.auswerten(`(() => { const x = document.querySelector("#karte-${SZ.id}").textContent; return ["Kurznachricht", "drahtloses lokales Netzwerk"].map((w) => x.split(w).length - 1); })()`), [1, 1]);
     assert.equal(await t.auswerten(`document.getElementById("main").innerText.includes("zwei- bis dreimal")`), false, "der Satz mit der unbelegten Zahl fehlt");
     const treffer = await suche(t, "Akku");
     assert.ok(treffer.some((x) => x.includes(SZ.titel)), `Karte nicht gefunden (${treffer.length} Treffer)`);
@@ -57,6 +59,7 @@ test("Vorsorge › Licht, Strom & Information: die Karte mit ihren Punkten; Such
     const k = await t.auswerten(`(() => { const c = document.querySelector("#gv-licht-strom-info #karte-${GV.id}"); return c ? { titel: c.querySelector("h3").textContent, ul: !!c.querySelector("ul"), punkte: [...c.querySelectorAll("li strong")].map((s) => s.textContent) } : null; })()`);
     assert.deepEqual({ ...k, punkte: k.punkte.map(ohneKlammer) }, { titel: GV.titel, ul: true, punkte: GV.punkte.map((x) => x.t) });
     assert.equal(GV.punkte.length, 4, "vier Punkte wie im Auftrag");
+    assert.deepEqual(await t.auswerten(`(() => { const x = document.querySelector("#karte-${GV.id}").textContent; return ["Universal Serial Bus", "Kurznachricht"].map((w) => x.split(w).length - 1); })()`), [1, 1]);
     for (const wort of ["Powerbank", "laden"]) {
       const treffer = await suche(t, wort);
       assert.ok(treffer.some((x) => x.includes(GV.titel)), `${wort}: Karte nicht gefunden (${treffer.length} Treffer)`);

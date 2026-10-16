@@ -120,7 +120,8 @@ const klammer = (aus, pos, inhalt, kurz = null) => {
 /** Überschriftszeilen im Markdown (### …) bekommen das ganze Wort statt einer Klammer; im Fließtext zählen sie nicht mit. */
 const UEBERSCHRIFT = /^#{1,6}[ \t].*$/gm, PLATZ = "\u2063";
 
-export function ausschreiben(text, liste = LISTE) {
+/** erklaert: Abkürzungen, die im selben Block schon erklärt sind (Nr. 36); sie bleiben hier ohne Klammer, neue kommen dazu. */
+export function ausschreiben(text, liste = LISTE, erklaert = null) {
   if (typeof text !== "string" || text.length < 2) return text;
   if (!ALLE.test(text)) { ALLE.lastIndex = 0; return text; }
   ALLE.lastIndex = 0;
@@ -130,11 +131,13 @@ export function ausschreiben(text, liste = LISTE) {
   for (const [k, muster] of MUSTER) {
     if (!da.has(k)) continue;
     const lang = liste[k]; if (!lang) continue;
-    if (aus.includes(`${k} (${lang}`) || aus.includes(`${lang} (${k}`) || aus.includes(`(${k}: ${lang}`) || aus.includes(`${k}: ${lang}`)) continue; // schon erklärt
+    if (erklaert?.has(k)) continue; // im selben Block schon erklärt
+    if (aus.includes(`${k} (${lang}`) || aus.includes(`${lang} (${k}`) || aus.includes(`(${k}: ${lang}`) || aus.includes(`${k}: ${lang}`)) { erklaert?.add(k); continue; } // schon erklärt
     muster.lastIndex = 0;
     let m;
     while ((m = muster.exec(aus)) && inAdresse(aus, m.index)) { /* weiter suchen */ }
     if (!m) continue;
+    erklaert?.add(k);
     const davor = aus.slice(0, m.index), wo = davor.search(new RegExp(`${re(lang)}(?![\\p{L}])`, "u")); // ganze Langform, nicht „Studie“ in „Studien“
     if (wo >= 0) { if (!aus.slice(wo + lang.length).startsWith(` (${k}`)) aus = klammer(aus, wo + lang.length, k); continue; } // Langform steht schon davor
     const i = m.index, ende = i + k.length, vorne = aus[i - 1], hinten = aus[ende];
@@ -168,10 +171,18 @@ export function ausschreibenTitel(text, liste = LISTE) {
 
 /** Felder, die als Überschrift, Knopf oder Auswahl erscheinen: ganzes Wort statt Klammer. */
 const TITELFELDER = /^(titel|name|merkmal|beschwerde|ueberschrift|kapitel_titel|gruppe)$/;
-/** Alle Texte in Paketdaten ausschreiben (jede Zeichenkette ist ein Text für sich). Schlüssel und Kennungen bleiben. */
-export function texteAusschreiben(daten, liste = LISTE, feld = "") {
-  if (typeof daten === "string") return TITELFELDER.test(feld) ? ausschreibenTitel(daten, liste) : ausschreiben(daten, liste);
-  if (Array.isArray(daten)) return daten.map((x) => texteAusschreiben(x, liste, feld));
-  if (daten && typeof daten === "object") return Object.fromEntries(Object.entries(daten).map(([k, v]) => [k, /^(id|ids|pfad|bild|url|buch|wort|lumisch|umschrift|ipa)$/.test(k) ? v : texteAusschreiben(v, liste, k)]));
+/**
+ * Eine Karte ist ein Block (Nr. 36, Bill 16.10.2026): Titel und Punkte { t, text } stehen zusammen auf dem Bildschirm, darin wird
+ * jede Abkürzung nur beim ersten Vorkommen erklärt („SMS (Kurznachricht) statt Anruf. Eine SMS braucht …“).
+ */
+const istKarte = (o) => Array.isArray(o.punkte) && o.punkte.length > 0 && o.punkte.every((x) => x && typeof x.t === "string");
+/** Alle Texte in Paketdaten ausschreiben (jede Zeichenkette ist ein Text für sich, eine Karte ein Block). Schlüssel und Kennungen bleiben. */
+export function texteAusschreiben(daten, liste = LISTE, feld = "", erklaert = null) {
+  if (typeof daten === "string") return TITELFELDER.test(feld) ? ausschreibenTitel(daten, liste) : ausschreiben(daten, liste, erklaert);
+  if (Array.isArray(daten)) return daten.map((x) => texteAusschreiben(x, liste, feld, erklaert));
+  if (daten && typeof daten === "object") {
+    const block = erklaert ?? (istKarte(daten) ? new Set() : null);
+    return Object.fromEntries(Object.entries(daten).map(([k, v]) => [k, /^(id|ids|pfad|bild|url|buch|wort|lumisch|umschrift|ipa)$/.test(k) ? v : texteAusschreiben(v, liste, k, block)]));
+  }
   return daten;
 }
