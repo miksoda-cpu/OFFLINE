@@ -23,6 +23,7 @@ Anlass: Vercel liefert jeden Push auf den Hauptbranch `claude/optimistic-hypatia
 
    Dann wird der Branch per fast-forward auf den Hauptbranch geführt. Erst danach folgen ein Tag, ein Release, ein Katalog- oder ein Web-Lauf, und die nur mit Miks Freigabe.
    **Vor jedem Tag:** Die neue Version bekommt ihren Eintrag in `web/neues.json` („Was ist neu“, drei bis sechs Punkte für Nutzer, neueste oben). Der Test `web/neues.test.mjs` schlägt fehl, wenn er fehlt oder die Versionsangaben nicht übereinstimmen. Seit 0.5.5 trägt auch `web/version.json` die neue Nummer (danach fragt „Nach neuer Version suchen“ im Web); `web/neuigkeiten.test.mjs` prüft das.
+   **Rundgang vor jedem Release** (seit Nr. 37): `node werkzeug/rundgang/rundgang.mjs --profile frisch,langzeit,deutschland,schweiz,offline --breiten 360,390,1280` ohne Befund, Bilder in „OFFLINE - Home/rundgang/<version>/“.
 3. **Jeder Workflow, der auf den Hauptbranch schreibt, testet vorher selbst.** Er lässt die Tests laufen, die von dem abhängen, was er schreibt, bevor er committet (Beispiel: „Web-Version“ prüft Werkzeug, Web und Kern). Fällt ein Test durch, schreibt er nichts.
 4. Findet ein Test oder die Probe etwas, wird nichts veröffentlicht. Code meldet es in der Rückmeldung, behebt es auf dem Branch und prüft neu.
 

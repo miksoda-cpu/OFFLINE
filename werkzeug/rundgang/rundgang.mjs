@@ -5,11 +5,17 @@
 // kein abgeschnittener Text, keine fremde Adresse. Echte Uhrzeit (mit fester Uhr erscheinen Sprechblase und Tipps nicht).
 //
 //   node werkzeug/rundgang/rundgang.mjs --aus "<Ordner>"            alles (Standard: rundgang-aus/)
-//   Schalter: --breiten 360,1280  --farben hell,dunkel  --profile frisch,langzeit,deutschland  --nur seite[,seite]
+//   Schalter: --breiten 360,1280  --farben hell,dunkel  --profile frisch,langzeit,deutschland,schweiz,offline  --nur seite[,seite]
 //   --neu pakete/a,pakete/b   noch nicht veröffentlichte Pakete mit einem Wegwerf-Schlüssel dazunehmen (testkatalog.mjs);
 //                              Standard: pakete/heilkunde-grundstock, wenn der Klartext da ist
 // Nr. 28: Frisches Gerät und „deutschland“ sehen zuerst die Länderfrage (Bild „land-…“) und wählen Österreich bzw. Deutschland;
 // der langjährige Benutzer wird nicht gefragt.
+// Nr. 37: „schweiz“ wählt die Schweiz und prüft zusätzlich Heute, Notfall, Szenario Blackout und die Suche „Notruf“ auf
+// österreichische Nummern (werkzeug/rundgang/pruefungen.mjs); Notfall zeigt die Schweizer Nummern aus web/laender.js.
+// „offline“ ist der langjährige Benutzer: nach dem vollständigen Laden Netz aus, dann jede Seite. Geprüft wird zusätzlich: jede
+// Seite rendert, keine Meldung „lässt sich nicht lesen“, Heute zeigt „Offline seit …“, die Suche liefert Treffer; Anfragen an
+// fremde Adressen zählt wie immer „keine fremde Adresse“.
+// Release-Prüfung: alle fünf Profile (bill/README.md).
 //   Chrome-Pfad in CHROME (Standard wie beim Bildvergleich). Keine Abhängigkeit außer Node 22 und Chrome.
 //
 // Der langjährige Benutzer beginnt mit der Österreich-Basis 2026.09.29.1 aus dem eingefrorenen Katalog der Windows-Probe
@@ -24,6 +30,8 @@ import path from "node:path";
 import { WURZEL, dateiserver, chromeStarten, warteBis } from "../browser.mjs";
 import { seitenListe } from "../seiten.mjs";
 import { testkatalog } from "./testkatalog.mjs";
+import { AT_NUMMERN_PRUEFEN, NOTRUFE_LESEN, OFFLINE_SEITE_PRUEFEN } from "./pruefungen.mjs";
+import { LAENDER } from "../../web/laender.js";
 
 const argv = process.argv.slice(2);
 const opt = (n, d = null) => { const i = argv.indexOf(`--${n}`); return i >= 0 ? argv[i + 1] : d; };
@@ -141,8 +149,24 @@ async function langzeitDaten(t) {
   await t.auswerten(`document.querySelector('[data-pause="alter"][data-alter="M1"]')?.click() ?? document.querySelector('[data-pause="alter"]')?.click()`);
 }
 
+/** Nr. 37, Profil „schweiz“: keine österreichische Nummer auf Heute, Notfall, Szenario Blackout und in der Suche „Notruf“. */
+async function schweizPruefen(t, pruefe) {
+  const land = await t.auswerten(`JSON.parse(localStorage.getItem("offline:land"))`);
+  pruefe("schweiz: Land gewählt", land === "ch", String(land));
+  for (const [name, hash] of [["heute", "start"], ["notfall", "notfall"], ["szenario-blackout", "szenario-blackout"]]) {
+    await zeigen(t, { name, hash });
+    const funde = await t.auswerten(AT_NUMMERN_PRUEFEN);
+    pruefe(`schweiz ${name}: keine österreichische Nummer`, !funde.length, funde.join(", ") || "keine");
+    if (name === "notfall") { const nr = await t.auswerten(NOTRUFE_LESEN), soll = LAENDER.ch.notrufe.map((x) => x.nr); pruefe("schweiz notfall: Schweizer Nummern", JSON.stringify(nr) === JSON.stringify(soll), nr.join(", ")); }
+  }
+  await zeigen(t, { name: "suche-notruf", hash: "start", nurSichtbar: true, fertig: `document.querySelector("#suche:not([hidden])")`,
+    danach: `(() => { [...document.querySelectorAll("[data-suche-auf]")].find((b) => b.offsetParent)?.click(); const f = document.getElementById("suche-feld"); f.value = "Notruf"; f.dispatchEvent(new Event("input")); })()` });
+  const funde = await t.auswerten(AT_NUMMERN_PRUEFEN), treffer = await t.auswerten(`document.querySelectorAll("#suche-treffer .suche-eintrag").length`);
+  pruefe("schweiz suche „Notruf“: Treffer, keine österreichische Nummer", treffer > 0 && !funde.length, `${treffer} Treffer; ${funde.join(", ") || "keine AT-Nummer"}`);
+}
+
 async function lauf(chrome, profil, breite, farbe, liste, bericht, kat) {
-  let alt = profil === "langzeit";
+  let alt = profil === "langzeit" || profil === "offline"; // offline: der langjährige Benutzer, danach ohne Netz
   const server = await dateiserver(path.join(WURZEL, "web"), {}, (p) => {
     if (!alt) return kat?.umleiten(p) ?? null;
     if (p === "/katalog/katalog.json" || p === "/katalog/katalog.sig") return path.join(EINGEFROREN, path.basename(p));
@@ -159,7 +183,7 @@ async function lauf(chrome, profil, breite, farbe, liste, bericht, kat) {
     await t.s("Emulation.setLocaleOverride", { locale: "de-AT" });
     await t.s("Page.addScriptToEvaluateOnNewDocument", { source: VORBEREITUNG });
     await t.laden(`${server.url}/app.html#start`);
-    if (profil !== "langzeit") {
+    if (!alt) {
       // Nr. 28: zuerst das Land; Bild der Frage, dann Österreich (frisch) oder Deutschland
       const frage = await warteBis(t, `document.getElementById("land-frage")`, 30_000).then(() => true, () => false);
       pruefe("Länderfrage beim frischen Gerät", frage, frage ? "da" : "fehlt");
@@ -168,7 +192,7 @@ async function lauf(chrome, profil, breite, farbe, liste, bericht, kat) {
         const p = await t.auswerten(PRUEFEN);
         await writeFile(path.join(ordner, `land-${breite}-${farbe}.png`), await aufnehmen(t, breite, { nurSichtbar: true }));
         pruefe("land: nichts läuft seitlich über", !p.ueber.length, p.ueber.join(" | "));
-        const wahl = profil === "deutschland" ? "de" : "at";
+        const wahl = { deutschland: "de", schweiz: "ch" }[profil] ?? "at";
         await t.auswerten(`(() => { document.querySelector('input[name="land"][value="${wahl}"]').click(); document.querySelector("[data-land-weiter]").click(); })()`);
       }
     }
@@ -190,18 +214,33 @@ async function lauf(chrome, profil, breite, farbe, liste, bericht, kat) {
       const wesen = await ls(t, "wesen"), checks = await ls(t, "checks");
       pruefe("Daten nach dem Update", wesen?.name === "Fini" && Object.keys(checks ?? {}).length >= 7, `Lumi ${wesen?.name}, ${Object.keys(checks ?? {}).length} Häkchen`);
     }
+    if (profil === "offline") {
+      // Erst alles fertig laden (Österreich-Basis, Tagespaket, Naturheilkunde), dann Netz aus
+      const fertig = await warteBis(t, `["at-basis", "heilkunde-grundstock"].every((id) => localStorage.getItem("offline:paket:" + id)) && Object.keys(localStorage).some((k) => k.startsWith("offline:paket:tage-"))`, 60_000).then(() => true, () => false);
+      pruefe("offline: vor dem Abschalten vollständig geladen", fertig, fertig ? "Österreich-Basis, Naturheilkunde, Tagespaket" : "nicht alles geladen");
+      await new Promise((r) => setTimeout(r, 1500));
+      await t.s("Network.emulateNetworkConditions", { offline: true, latency: 0, downloadThroughput: -1, uploadThroughput: -1 });
+      await new Promise((r) => setTimeout(r, 500));
+    }
     for (const seite of liste) {
       try {
         if (seite.offline) { await t.s("Network.emulateNetworkConditions", { offline: true, latency: 0, downloadThroughput: -1, uploadThroughput: -1 }); await new Promise((r) => setTimeout(r, 300)); }
         await zeigen(t, seite);
         const p = await t.auswerten(PRUEFEN);
+        if (profil === "offline") {
+          const o = await t.auswerten(OFFLINE_SEITE_PRUEFEN);
+          pruefe(`${seite.name}: rendert ohne Netz`, !o.leer && !o.unlesbar, o.leer ? "leer" : o.unlesbar ? `„lässt sich nicht lesen“: ${o.text}` : "ja");
+          if (seite.name === "heute") { const st = await t.auswerten(`document.querySelector(".heute-status--off")?.innerText ?? ""`); pruefe("heute: „Offline seit …“", /^Offline seit/.test(st), st || "kein Offline-Status"); }
+          if (seite.name === "suche-wasser") { const n = await t.auswerten(`document.querySelectorAll("#suche-treffer .suche-eintrag").length`); pruefe("suche-wasser: Treffer ohne Netz", n > 0, `${n} Treffer`); }
+        }
         await writeFile(path.join(ordner, `${seite.name}-${breite}-${farbe}.png`), await aufnehmen(t, breite, seite));
         pruefe(`${seite.name}: keine Fehler`, !p.fehler.length, p.fehler.join(" | "));
         pruefe(`${seite.name}: nichts läuft seitlich über`, !p.ueber.length, p.ueber.join(" | "));
         pruefe(`${seite.name}: kein abgeschnittener Text`, !p.abgeschnitten.length, p.abgeschnitten.join(" | "));
-        if (seite.offline) { await t.s("Network.emulateNetworkConditions", { offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1 }); await new Promise((r) => setTimeout(r, 300)); }
+        if (seite.offline && profil !== "offline") { await t.s("Network.emulateNetworkConditions", { offline: false, latency: 0, downloadThroughput: -1, uploadThroughput: -1 }); await new Promise((r) => setTimeout(r, 300)); }
       } catch (e) { pruefe(`${seite.name}: Seite geht auf`, false, String(e.message ?? e)); }
     }
+    if (profil === "schweiz") await schweizPruefen(t, pruefe);
     pruefe("keine fremde Adresse", !t.fremd.length, [...new Set(t.fremd.map((u) => new URL(u).host))].join(", "));
   } finally { await t.schliessen(); server.schliessen(); }
 }

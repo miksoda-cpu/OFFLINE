@@ -74,8 +74,8 @@ jobs:
       - name: Roman der Woche auf Spiele, Update von der vorigen Version (Nr. 32), Euer Polster (Nr. 34)
         run: node --test werkzeug/roman-spiele.test.mjs werkzeug/polster.test.mjs
         env: { CHROME: google-chrome }
-      - name: Blatt bleibt beim Neuzeichnen offen (Nr. 26)
-        run: node --test werkzeug/blatt.test.mjs
+      - name: Blatt bleibt beim Neuzeichnen offen (Nr. 26), Rundgang-Prüfung Schweiz (Nr. 37)
+        run: node --test werkzeug/blatt.test.mjs werkzeug/rundgang-schweiz.test.mjs
         env: { CHROME: google-chrome }
       - name: Bildvergleich
         run: node werkzeug/bildvergleich.mjs --chrome --aus bildvergleich-aus --anker bildvergleich-aus/anker
