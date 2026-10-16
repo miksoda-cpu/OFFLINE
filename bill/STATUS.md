@@ -6,7 +6,7 @@ Neu geschrieben bei der Faltung am 12.10.2026 (Code, Nachtlauf). Der vorige Stan
 Bill schreibt Aufträge nach `bill/todo/`, Code meldet nach `bill/rueckmeldung/`, Erledigtes liegt in `bill/erledigt/`. Nur Code ändert die App, Prioritäten setzt Mik. Festlegungen: `bill/README.md`.
 
 ## App
-- **Veröffentlicht:** Desktop 0.9.1 (16.10.2026, Tag `v0.9.1`) und Web-Version. 0.9.1: neue Startseite (online/offline, vier Fragen, Hilfe nach Dauer), Suche, „Über OFFLINE“, Roman der Woche auf „Spiele“. MVP-Inhalt: Land wählen (Österreich voll; Deutschland, Schweiz mit Notrufnummern), zwölf Szenarien, Grundvorsorge (74 Punkte, sechs Bereiche), Radio je Bundesland, Sirenen, Notrufe, Naturheilkunde (erste Fassung), Karte (online), Bereit, Einstellungen, Spiele (`spiele-1`, nur Desktop). Unter „Bald“: Wikipedia, Wikivoyage, Offline-Karte, Lumi-Update, Tresor.
+- **Veröffentlicht:** Desktop 0.9.2 (16.10.2026, Tag `v0.9.2`, Euer Polster) und Web-Version; zuvor 0.9.1 (16.10.). 0.9.1: neue Startseite (online/offline, vier Fragen, Hilfe nach Dauer), Suche, „Über OFFLINE“, Roman der Woche auf „Spiele“. MVP-Inhalt: Land wählen (Österreich voll; Deutschland, Schweiz mit Notrufnummern), zwölf Szenarien, Grundvorsorge (74 Punkte, sechs Bereiche), Radio je Bundesland, Sirenen, Notrufe, Naturheilkunde (erste Fassung), Karte (online), Bereit, Einstellungen, Spiele (`spiele-1`, nur Desktop). Unter „Bald“: Wikipedia, Wikivoyage, Offline-Karte, Lumi-Update, Tresor.
 - **Katalog** (15.10.2026): at-basis 2026.10.08, heilkunde-grundstock 2026.10.15, spiele-1 2026.10.07.1, Wichteln, wikivoyage-de (ab 0.9.0 nicht mehr ladbar); Lumi-Pakete liegen dort, ab 0.9.0 nur für Nutzer, die sie schon haben.
 - **Läuft:** Rust-Kern, Signatur, Delta-Updates, kiwix-serve, Store-Build ohne Updater und internen Kanal.
 - **Vorrat Tagespakete:** bis 31.01.2027. Februar 2027 spätestens 01.01.2027; die 45-Tage-Grenze fällt am 17.12.2026.
@@ -19,7 +19,8 @@ Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (An
 
 ## Offen bei Code
 - Nr. 37 Rundgang Schweiz und ohne Netz: erledigt 16.10., zusammengeführt (Werkzeug, App unverändert), 4200 Prüfungen ohne Befund.
-- Nr. 35 (0.9.2) und Nr. 36 (Akku-Karten, Entwurf) warten auf Miks Wort; beide vor dem Zusammenführen auf den Hauptbranch nachziehen.
+- Nr. 35: **0.9.2 veröffentlicht (16.10.2026, Tag `v0.9.2`)**, Mik freigegeben. Nr. 36 Akku-Karten: freigegeben und zusammengeführt, at-basis 2026.10.16 im Katalog (Katalog-Lauf nur dieses Paket), Web live; Desktop zeigt die Karten erst mit der nächsten App-Version (Darstellung ist App-Code). Vorrat bis 31.01.2027.
+- Klartext-Vorfall 0759dc6 (16.10.): Datei entfernt, Wache geschärft (78fcd71), Historie bleibt (Mik/Bill).
 - Nr. 34 Euer Polster: **abgenommen 16.10.** (Bill, verdeckt geprüft), mit Nachbesserung (gewählte Licht-Taste gefüllt), zusammengeführt, Web live (`offline-v41`). Desktop erst mit 0.9.2 nach Miks Wort.
 - Nr. 32 (0.9.1 mit Nachtrag Roman auf Spiele) und Nr. 33 (Ideenbuch): **abgenommen 16.10.** (Bill, verdeckt geprüft), zusammengeführt, **0.9.1 veröffentlicht (16.10.2026, Tag `v0.9.1`)**, ohne Katalog-Lauf. Desktop hat damit Nr. 29–31.
 - Nr. 29 Heute neu (Entwurf C) mit Nachbesserung: **abgenommen 15.10.** (Bill, live geprüft), zusammengeführt `eaf4204`, Web live (`offline-v38`); Desktop seit 0.9.1.
