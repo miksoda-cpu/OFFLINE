@@ -4,7 +4,9 @@
 // verschlüsselt darin. Die Wache bricht ab, wenn
 //   1. eine geschützte Datei vorgemerkt ist (auch mit `git add -f`). Geschützt ist
 //      - was im Block „Klartext-Wache“ der .gitignore steht, und jeder Schlüssel (*.key),
-//      - der Klartext zu jeder Datei, die verschlüsselt im Repo liegt (…/verschluesselt/x → …/x),
+//      - der Klartext zu jeder Datei, die verschlüsselt im Repo liegt (…/verschluesselt/x → …/x) – im aktuellen Stand, in jedem
+//        Branch, der noch nicht darin enthalten ist, und auf der Platte (seit 16.10.2026, Fall 0759dc6: die verschlüsselte Fassung
+//        lag nur auf einem anderen Branch, der Klartext kam über `git add -A` hinein),
 //      - jedes Paket mit "freigegeben": false oder "kanal": "intern" in paket.quelle.json, außer paket.quelle.json, Code (*.mjs),
 //        verschluesselt/ und den Dateien, die das Paket unter "offen" nennt,
 //   2. eine Datei in einem Ordner `verschluesselt/` nicht nach Chiffrat aussieht,
@@ -134,7 +136,8 @@ export function pruefe(dateien, regeln, f = new Set(), erlaubt = {}) {
 }
 
 // ---------- Anbindung an git ----------
-const git = (...a) => execFileSync("git", a, { cwd: WURZEL, maxBuffer: 1 << 30, stdio: ["pipe", "pipe", "ignore"] });
+const gitIn = (cwd, ...a) => execFileSync("git", a, { cwd, maxBuffer: 1 << 30, stdio: ["pipe", "pipe", "ignore"] });
+const git = (...a) => gitIn(WURZEL, ...a);
 const zeilen = (b) => b.toString("utf8").split("\n").filter(Boolean);
 const TEXT = /\.(json|md|txt|csv|html?|py)$/i;
 function dateienUnter(rel) {
@@ -143,14 +146,33 @@ function dateienUnter(rel) {
   if (!statSync(abs).isDirectory()) return [rel];
   return readdirSync(abs).filter((e) => e !== ".roh").flatMap((e) => dateienUnter(path.posix.join(rel, e)));
 }
-/** Schutzregeln aus dem Repo: .gitignore-Block, Spiegel der verschlüsselten Dateien (Index), Pakete mit Kennzeichnung. */
-export function regelnAusRepo() {
-  const muster = geschuetzteMuster(readFileSync(path.join(WURZEL, ".gitignore"), "utf8"));
-  const index = zeilen(git("ls-files", "-z").toString("utf8").replace(/\0/g, "\n"));
-  const spiegel = new Set(index.filter((p) => p.split("/").includes("verschluesselt")).map(klartextZu));
+/** Verschlüsselte Dateien außerhalb des Index: in jedem Branch (lokal und fern), der noch nicht im aktuellen Stand enthalten ist –
+ *  was schon darin steckt, ist überholt, etwa durch die Freigabe eines Pakets –, und alles unter einem Ordner verschluesselt/ auf
+ *  der Platte. Die ganze Historie zählt bewusst nicht: Sonst bliebe freigegebener Inhalt für immer gesperrt. */
+export function verschluesseltAnderswo(wurzel = WURZEL) {
+  const aus = new Set();
+  let refs = [];
+  try { refs = zeilen(gitIn(wurzel, "for-each-ref", "--format=%(refname)", "--no-merged", "HEAD", "refs/heads", "refs/remotes")); } catch { /* ohne git */ }
+  for (const ref of refs) for (const p of zeilen(gitIn(wurzel, "ls-tree", "-r", "--name-only", ref))) if (p.split("/").includes("verschluesselt")) aus.add(p);
+  const platte = (rel) => {
+    const abs = path.join(wurzel, rel);
+    for (const e of readdirSync(abs, { withFileTypes: true })) {
+      if ([".git", "node_modules", "target", ".roh"].includes(e.name)) continue;
+      const r = rel ? path.posix.join(rel, e.name) : e.name;
+      if (e.isDirectory()) platte(r); else if (r.split("/").includes("verschluesselt")) aus.add(r);
+    }
+  };
+  for (const start of ["pakete", "bill"]) if (existsSync(path.join(wurzel, start))) platte(start);
+  return aus;
+}
+/** Schutzregeln aus dem Repo: .gitignore-Block, Spiegel der verschlüsselten Dateien (Index, andere Branches, Platte), Pakete mit Kennzeichnung. */
+export function regelnAusRepo(wurzel = WURZEL) {
+  const muster = geschuetzteMuster(readFileSync(path.join(wurzel, ".gitignore"), "utf8"));
+  const index = zeilen(gitIn(wurzel, "ls-files", "-z").toString("utf8").replace(/\0/g, "\n"));
+  const spiegel = new Set([...index.filter((p) => p.split("/").includes("verschluesselt")), ...verschluesseltAnderswo(wurzel)].map(klartextZu));
   const pakete = [];
-  for (const id of readdirSync(path.join(WURZEL, "pakete"))) {
-    const q = path.join(WURZEL, "pakete", id, "paket.quelle.json");
+  for (const id of existsSync(path.join(wurzel, "pakete")) ? readdirSync(path.join(wurzel, "pakete")) : []) {
+    const q = path.join(wurzel, "pakete", id, "paket.quelle.json");
     if (!existsSync(q)) continue;
     const j = JSON.parse(readFileSync(q, "utf8"));
     if (nichtFreigegeben(j)) pakete.push({ wurzel: `pakete/${id}/`, offen: j.offen ?? [] });

@@ -5,6 +5,7 @@ import { readFile, stat } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { randomBytes } from "node:crypto";
+import path from "node:path";
 import { geschuetzteMuster, trifft, siehtNachChiffratAus, fingerabdruecke, fundeImText, pruefe, erlaubtFuer, klartextZu, nichtFreigegeben, imGeschuetztenPaket, schutzGrund, freigegebeneAbziehen, regelnAusRepo } from "./klartext-wache.mjs";
 import { verschluesseln } from "./intern.mjs";
 
@@ -95,4 +96,32 @@ test("Das ganze Repo ist sauber, und die Hooks sind da", async () => {
     assert.match(t, /klartext-wache\.mjs" (vorgemerkt|push)/);
     if (process.platform !== "win32") assert.ok((await stat(new URL(`../.githooks/${h}`, import.meta.url))).mode & 0o100, `${h} ausführbar`);
   }
+});
+
+// Fall 0759dc6 (16.10.2026): Die verschlüsselte Fassung liegt nur auf einem anderen Branch, im aktuellen fehlt die .gitignore-Zeile;
+// der Klartext daneben muss trotzdem geschützt sein. Ist der andere Branch schon im aktuellen Stand enthalten (z. B. nach der
+// Freigabe), zählt er nicht mehr.
+test("Klartext neben einer verschlüsselten Fassung auf einem anderen Branch ist geschützt, auch ohne .gitignore-Zeile", async () => {
+  const { mkdtempSync, mkdirSync, writeFileSync, rmSync } = await import("node:fs");
+  const os = await import("node:os"), { execFileSync } = await import("node:child_process");
+  const ort = mkdtempSync(path.join(os.tmpdir(), "wache-fall-")), g = (...a) => execFileSync("git", ["-c", "user.name=t", "-c", "user.email=t@t", "-c", "commit.gpgsign=false", ...a], { cwd: ort, stdio: "pipe" });
+  try {
+    g("init", "-q", "-b", "haupt");
+    writeFileSync(path.join(ort, ".gitignore"), "# Klartext-Wache: Block\nirgendwas/\n\n");
+    g("add", "."); g("commit", "-q", "-m", "start");
+    g("checkout", "-q", "-b", "karten");
+    mkdirSync(path.join(ort, "pakete/x/verschluesselt/inhalt"), { recursive: true });
+    writeFileSync(path.join(ort, "pakete/x/verschluesselt/inhalt/k.json"), Buffer.from([1, 2, 3, 250, 251, 252]));
+    g("add", "."); g("commit", "-q", "-m", "verschlüsselt");
+    g("checkout", "-q", "haupt"); // die verschlüsselte Datei verschwindet von der Platte
+    mkdirSync(path.join(ort, "pakete/x/inhalt"), { recursive: true });
+    writeFileSync(path.join(ort, "pakete/x/inhalt/k.json"), '{"text":"unveröffentlicht"}');
+    const r = regelnAusRepo(ort);
+    assert.ok(schutzGrund("pakete/x/inhalt/k.json", r), "Klartext geschützt, obwohl die .gitignore-Zeile fehlt");
+    assert.ok(pruefe([{ pfad: "pakete/x/inhalt/k.json", inhalt: Buffer.from("x") }], r).length, "Commit wird abgelehnt");
+    // Branch im aktuellen Stand enthalten (Freigabe): kein Schutz mehr aus diesem Branch
+    g("merge", "-q", "--ff-only", "karten"); g("rm", "-q", "-r", "pakete/x/verschluesselt"); g("commit", "-q", "-m", "freigegeben");
+    rmSync(path.join(ort, "pakete/x/verschluesselt"), { recursive: true, force: true });
+    assert.equal(schutzGrund("pakete/x/inhalt/k.json", regelnAusRepo(ort)), null, "nach der Freigabe offen");
+  } finally { rmSync(ort, { recursive: true, force: true }); }
 });
