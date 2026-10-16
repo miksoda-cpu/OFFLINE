@@ -10,8 +10,10 @@ import path from "node:path";
 import { schluesselErzeugen, paketBauen, katalogBauen } from "../paket-lib.mjs";
 import { WURZEL } from "../browser.mjs";
 
-/** neu: Paket-Quellordner (relativ zu WURZEL). Gibt umleiten(pfad) für dateiserver() zurück. */
-export async function testkatalog(alle) {
+/** neu: Paket-Quellordner (relativ zu WURZEL). Gibt umleiten(pfad) für dateiserver() zurück.
+ *  neueAusgabe: Quellordner veröffentlichter Pakete, die trotzdem neu gebaut werden (eine neue Ausgabe mit Unveröffentlichtem,
+ *  z. B. at-basis mit den Karten aus Nr. 36); die alte Ausgabe aus web/pakete/ fällt dann aus dem Testkatalog. */
+export async function testkatalog(alle, { neueAusgabe = [] } = {}) {
   let neu;
   const ordner = await mkdtemp(path.join(os.tmpdir(), "offline-rundgang-katalog-"));
   const sch = schluesselErzeugen("Rundgang, Wegwerf-Schlüssel (nur lokal)");
@@ -20,10 +22,12 @@ export async function testkatalog(alle) {
   await mkdir(path.join(ordner, "pakete"), { recursive: true });
   const gebaut = [], veroeffentlicht = new Set((await readdir(path.join(WURZEL, "web", "pakete"))).map((n) => n.replace(/-\d{4}\.\d\d\.\d\d(\.\d+)?$/, "")));
   neu = [];
+  const ersetzt = new Set();
   for (const q of alle) { const id = JSON.parse(await readFile(path.join(WURZEL, q, "paket.quelle.json"), "utf8")).id; if (!veroeffentlicht.has(id)) neu.push(q); }
+  for (const q of neueAusgabe) { neu.push(q); ersetzt.add(JSON.parse(await readFile(path.join(WURZEL, q, "paket.quelle.json"), "utf8")).id); }
   if (!neu.length) return null; // alles schon in der Web-Kopie: kein Testkatalog nötig
   for (const q of neu) gebaut.push((await paketBauen(path.join(WURZEL, q), path.join(ordner, "pakete"), sch.privatPem)).ziel);
-  const web = (await readdir(path.join(WURZEL, "web", "pakete"))).map((n) => path.join(WURZEL, "web", "pakete", n));
+  const web = (await readdir(path.join(WURZEL, "web", "pakete"))).filter((n) => !ersetzt.has(n.replace(/-\d{4}\.\d\d\.\d\d(\.\d+)?$/, ""))).map((n) => path.join(WURZEL, "web", "pakete", n));
   const { bytes, sig } = await katalogBauen([...web, ...gebaut], { basis: "http://127.0.0.1/pakete/", bekannte: liste.schluessel, privat: sch.privatPem });
   await mkdir(path.join(ordner, "katalog"), { recursive: true });
   await writeFile(path.join(ordner, "katalog", "katalog.json"), bytes);

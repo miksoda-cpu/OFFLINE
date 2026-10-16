@@ -205,6 +205,8 @@ const D = (name) => texte(P(), `inhalt/${name}.json`);
 let grundMerk = null;
 const grund = () => { const g = D("grundvorsorge"), l = landId(); if (grundMerk?.g !== g || grundMerk.l !== l) grundMerk = { g, l, d: fuerLandTief(g, l) }; return grundMerk.d; }; // Nr. 28: Texte je Land
 const szReihe = () => D("szenarien")?.reihenfolge ?? [];
+/** Karten aus inhalt/karten.json des Österreich-Pakets (Nr. 36), ab der Ausgabe, die sie mitbringt; ältere Ausgaben haben keine. */
+const infoKarten = () => D("karten")?.karten ?? [];
 const szKarten = () => Object.fromEntries(szReihe().map((id) => [id, D(`szenarien/${id}`)]).filter(([, k]) => k));
 /** Erledigt und gesamt der Grundvorsorge, nur Punkte, die zum Haushalt passen (für Bereit und die Kacheln). */
 function grundStand() {
@@ -756,7 +758,7 @@ const seiten = {
       ${polsterHtml()}
       ${haushaltHtml(state.haushalt)}
       ${vorhabenHtml}
-      ${grundvorsorgeHtml(g, { checks: state.checks, haushalt: state.haushalt, merk: state.merk, nurMerk: state.nurMerk, zuruecksetzen: state.gvZurueck, faellig })}
+      ${grundvorsorgeHtml(g, { checks: state.checks, haushalt: state.haushalt, merk: state.merk, nurMerk: state.nurMerk, zuruecksetzen: state.gvZurueck, faellig, karten: infoKarten().filter((c) => c.ort?.bereich) })}
       ${ausland() ? `<h2 style="margin-top:2rem">Szenarien</h2>${landVorschauHtml()}` : Object.keys(karten).length ? `<h2 style="margin-top:2rem">Szenarien</h2><p class="muted of-klein">Was du für jeden Ernstfall zusätzlich brauchst und wie du richtig reagierst.</p>${kachelnHtml(karten, szReihe(), state.szChecks)}` : ""}
       ${g.quellen?.length ? `<details class="sz-quellen" style="margin-top:1.5rem"><summary class="muted of-klein">Quellen der Grundvorsorge (Stand ${esc(g.stand ?? "")})</summary><ul class="muted of-klein">${g.quellen.map((q) => `<li>${q.url ? `<a href="${esc(q.url)}" rel="noopener">${esc(q.name)}</a>` : esc(q.name)}</li>`).join("")}</ul></details>` : ""}`;
   },
@@ -767,7 +769,7 @@ const seiten = {
     const karten = szKarten(), k = karten[state.szenario];
     if (!k) return seiten.notfall();
     const verweise = (k.verweise ?? []).map((v) => verweisZiel(v, grund(), karten)).filter(Boolean);
-    return karteHtml(k, { haushalt: state.haushalt, abgehakt: state.szChecks[k.id] ?? [], verweise, zurueck: state.szenarioVon });
+    return karteHtml(k, { haushalt: state.haushalt, abgehakt: state.szChecks[k.id] ?? [], verweise, zurueck: state.szenarioVon, karten: infoKarten().filter((c) => c.ort?.szenario === k.id) });
   },
 
   tresor() {
@@ -2617,6 +2619,7 @@ function suchIndex() {
   if (l === "at") for (const [id, k] of Object.entries(szKarten())) {
     dazu(1, `Szenario ${k.titel}`, k.titel, (k.merksaetze ?? []).join(" "), { hash: `#szenario-${id}` });
     for (const [teil, name] of SZ_TEILE) for (const x of k[teil] ?? []) dazu(1, `Szenario ${k.titel} · ${name}`, typeof x === "string" ? "" : x.t, typeof x === "string" ? x : x.text, { hash: `#szenario-${id}`, anker: `sz-${teil}` });
+    for (const c of infoKarten().filter((c) => c.ort?.szenario === id)) dazu(1, `Szenario ${k.titel} · ${SZ_TEILE.find(([t]) => t === c.ort.teil)?.[1] ?? ""}`, c.titel, (c.punkte ?? []).map((x) => `${x.t} ${x.text}`).join(" "), { hash: `#szenario-${id}`, anker: `sz-${c.ort.teil}` });
     for (const x of k.checkliste_spezifisch ?? []) dazu(1, `Szenario ${k.titel} · Checkliste`, "", typeof x === "string" ? x : x.text ?? "", { hash: `#szenario-${id}` });
   }
   // 2 Vorsorge: Haushalt und die Punkte der Grundvorsorge, die für den Haushalt angezeigt werden
@@ -2626,6 +2629,7 @@ function suchIndex() {
     dazu(2, "Vorsorge", "Haushalt und Wohnsituation", "Wer lebt bei dir: Kinder, Ältere Menschen, Jemand braucht Pflege, Jemand mit Behinderung, Haustiere. Wie wohnst du: Eigenes Haus, Mietwohnung, Keller.", { hash: "#vorsorge", anker: "haushalt" });
     for (const b of g.bereiche) {
       dazu(2, "Vorsorge", b.titel, b.satz, { hash: "#vorsorge", anker: `gv-${b.id}` });
+      for (const c of infoKarten().filter((c) => c.ort?.bereich === b.id)) dazu(2, `Vorsorge · ${b.titel}`, c.titel, (c.punkte ?? []).map((x) => `${x.t} ${x.text}`).join(" "), { hash: "#vorsorge", anker: `karte-${c.id}` });
       for (const p of punkteFuer(b, state.haushalt)) dazu(2, `Vorsorge · ${b.titel}`, p.text, p.detail, { hash: "#vorsorge", anker: `gvp-${p.id}` });
     }
   }

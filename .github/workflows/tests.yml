@@ -74,6 +74,16 @@ jobs:
       - name: Roman der Woche auf Spiele, Update von der vorigen Version (Nr. 32), Euer Polster (Nr. 34)
         run: node --test werkzeug/roman-spiele.test.mjs werkzeug/polster.test.mjs
         env: { CHROME: google-chrome }
+      - name: Unveröffentlichtes entschlüsseln (nur für die Tests)
+        env:
+          OFFLINE_INTERN_SCHLUESSEL: ${{ secrets.OFFLINE_INTERN_SCHLUESSEL }}
+        run: |
+          set -euo pipefail
+          [ -n "$OFFLINE_INTERN_SCHLUESSEL" ] || { echo "Kein Kanal-Schlüssel: Inhaltstests werden übersprungen"; exit 0; }
+          find . -type d -name verschluesselt -not -path "./node_modules/*" | while read -r v; do node werkzeug/intern.mjs entschluesseln "$v" "$(dirname "$v")" > /dev/null; done
+      - name: Karten zu Akku und Strom (Nr. 36, unveröffentlicht; ohne Kanal-Schlüssel übersprungen)
+        run: node --test werkzeug/akku.test.mjs
+        env: { CHROME: google-chrome }
       - name: Blatt bleibt beim Neuzeichnen offen (Nr. 26), Rundgang-Prüfung Schweiz (Nr. 37)
         run: node --test werkzeug/blatt.test.mjs werkzeug/rundgang-schweiz.test.mjs
         env: { CHROME: google-chrome }

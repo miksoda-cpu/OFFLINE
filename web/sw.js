@@ -1,5 +1,5 @@
 // OFFLINE Service Worker: App-Hülle vorab speichern, Kartenkacheln beim Ansehen merken.
-const VERSION = "offline-v42";
+const VERSION = "offline-v43";
 const HUELLE = [
   "/", "/index.html", "/app.html", "/app.js", "/styles.css", "/icon.svg",
   "/manifest.webmanifest", "/anmeldung.js", "/datenschutz.html", "/impressum.html", "/paket-kern.js", "/paket-client.js", "/bereit.js", "/wesen.js", "/wesen.css", "/modul-host.js", "/tag.js", "/pause.js", "/pause-werte.js", "/pause-happen.js", "/buch.js", "/neuigkeiten.js", "/hilfe.js", "/blatt.js", "/meintag.js", "/stimme.js", "/intern.js", "/natur.js", "/gedanken.js", "/abkuerzungen.js", "/pakete.js", "/szenarien.js", "/bald.js", "/bald/wikipedia-1.svg", "/bald/wikipedia-2.svg", "/bald/wikivoyage-1.svg", "/bald/wikivoyage-2.svg", "/bald/karte-1.svg", "/bald/karte-2.svg", "/bald/lumi-1.svg", "/bald/lumi-2.svg", "/bald/tresor-1.svg", "/bald/tresor-2.svg", "/laender.js", "/netz.js", "/suche.js", "/heilkunde.js", "/polster.js", "/neues.json", "/schluessel/oeffentlich.json",

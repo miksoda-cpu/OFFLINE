@@ -105,7 +105,7 @@ export function haushaltHtml(haushalt = []) {
 }
 
 /** Grundvorsorge in sechs Bereichen, mit Fortschritt je Bereich, Lesezeichen (Merkliste), Export und Zurücksetzen. */
-export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = [], nurMerk = false, zuruecksetzen = false, faellig = new Map() } = {}) {
+export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = [], nurMerk = false, zuruecksetzen = false, faellig = new Map(), karten = [] } = {}) {
   const alle = grund.bereiche.flatMap((b) => punkteFuer(b, haushalt)), gesamt = fortschritt(alle, checks);
   const punkt = (p) => `<li class="gv-punkt" id="gvp-${esc(p.id)}"><label><input type="checkbox" data-check="${esc(p.id)}" ${checks[p.id] ? "checked" : ""}><span>${esc(p.text)}${faellig.has(p.id) ? ` <span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span>` : ""}</span></label>${faellig.has(p.id) ? ` <button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-bestaetigen="${esc(faellig.get(p.id))}">Erneuert</button>` : ""}
       <button type="button" class="gv-merk" data-merk="${esc(p.id)}" aria-pressed="${merk.includes(p.id)}" aria-label="${merk.includes(p.id) ? "Von der Merkliste nehmen" : "Auf die Merkliste"}: ${esc(p.text)}">${merk.includes(p.id) ? "★" : "☆"}</button>
@@ -116,7 +116,7 @@ export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = []
     return `<section class="card of-karte gv-bereich" id="gv-${esc(b.id)}" aria-labelledby="gv-t-${esc(b.id)}">
       <h3 id="gv-t-${esc(b.id)}">${esc(b.titel)}</h3><p class="muted of-klein">${esc(b.satz)}</p>
       <div class="gv-stand of-klein">${zahl(f)} erledigt</div>${balken(f, b.titel)}
-      <ul class="check gv-liste">${sicht.map(punkt).join("")}</ul></section>`;
+      <ul class="check gv-liste">${sicht.map(punkt).join("")}</ul>${nurMerk ? "" : karten.filter((c) => c.ort?.bereich === b.id).map(infoKarteHtml).join("")}</section>`;
   }).join("");
   return `<section id="grundvorsorge" class="gv" aria-labelledby="gv-titel">
     <div class="gv-kopf"><h2 id="gv-titel">Grundvorsorge</h2><span class="muted of-klein">${zahl(gesamt)} erledigt</span></div>
@@ -143,10 +143,17 @@ export function kachelnHtml(karten, reihenfolge, szChecks = {}) {
 }
 
 /** Eine Szenario-Karte: Merksätze, fünf aufklappbare Teile, Für dich zusätzlich, eigene Checkliste, Verweise, Quellen. */
-export function karteHtml(k, { haushalt = [], abgehakt = [], verweise = [], zurueck = "#notfall" } = {}) {
+/** Eine Karte aus inhalt/karten.json des Österreich-Pakets (Nr. 36): Titel und Punkte, nummeriert oder nicht. */
+export function infoKarteHtml(c) {
+  const tag = c.nummeriert ? "ol" : "ul";
+  return `<section class="sz-infokarte" id="karte-${esc(c.id)}" aria-labelledby="karte-t-${esc(c.id)}"><h3 id="karte-t-${esc(c.id)}">${esc(c.titel)}</h3>
+    <${tag} class="sz-infokarte-liste">${(c.punkte ?? []).map((x) => `<li><strong>${esc(x.t)}</strong> ${esc(x.text)}</li>`).join("")}</${tag}></section>`;
+}
+
+export function karteHtml(k, { haushalt = [], abgehakt = [], verweise = [], zurueck = "#notfall", karten = [] } = {}) {
   const f = szenarioFortschritt(k, abgehakt);
   const eintrag = (x) => (typeof x === "string" ? `<li>${esc(x)}</li>` : `<li><strong>${esc(x.t)}</strong> ${esc(x.text)}</li>`);
-  const teil = ([id, name]) => (k[id]?.length ? `<details class="card of-karte sz-teil" id="sz-${id}"><summary><h2>${esc(name)}</h2></summary><ul class="sz-liste">${k[id].map(eintrag).join("")}</ul></details>` : "");
+  const teil = ([id, name]) => (k[id]?.length ? `<details class="card of-karte sz-teil" id="sz-${id}"><summary><h2>${esc(name)}</h2></summary><ul class="sz-liste">${k[id].map(eintrag).join("")}</ul>${karten.filter((c) => c.ort?.teil === id).map(infoKarteHtml).join("")}</details>` : "");
   const zu = zusaetze(k, haushalt);
   return `<p class="sz-zurueck"><a class="btn btn-sm of-btn of-btn--klein" href="${esc(zurueck)}">‹ ${zurueck === "#vorsorge" ? "Vorsorge" : "Notfall"}</a></p>
     <div class="page-head of-seitenkopf"><div><h1>${esc(k.titel)}</h1><p class="muted of-klein">${zahl(f)} aus der Checkliste vorbereitet</p></div></div>

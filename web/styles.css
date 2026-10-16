@@ -1005,3 +1005,8 @@ a.heute-polster:hover .heute-polster-titel, a.heute-polster:focus-visible .heute
 .of-app .polster-licht .btn.polster-gewaehlt::before { display: none; }
 .polster-ergebnis { margin-top: 1rem; padding-top: .8rem; border-top: 1px solid var(--line, rgba(127,127,127,.25)); }
 .polster-tage { font-size: 1.25rem; font-weight: 600; margin: 0; }
+
+/* Nr. 36: Karten zu Akku und Strom (im Szenario-Teil und im Bereich der Grundvorsorge) */
+.sz-infokarte { margin: 1rem 0 .2rem; padding: .9rem 1rem; border: 1px solid var(--line, rgba(127,127,127,.25)); border-radius: 12px; }
+.sz-infokarte h3 { margin: 0 0 .5rem; }
+.sz-infokarte-liste { margin: 0; padding-left: 1.3rem; display: grid; gap: .45rem; }
