@@ -27,6 +27,7 @@ import { LAENDER, SPAETER as LAENDER_SPAETER, kommtMit, landBestimmen, NOTFALL_K
 import { FRAGEN as NETZ_FRAGEN, NACHBAR_SATZ, rat as netzRat, STUFEN as NETZ_STUFEN, stufeFuer, dauerText as netzDauer, seite as netzSeite, zuletztText } from "./netz.js";
 import { indexBauen as suchIndexBauen, suchen as suchenIm, begriffe as suchBegriffe, hervorheben, zeile as suchZeile } from "./suche.js";
 import { TEILE as SZ_TEILE } from "./szenarien.js";
+import { polsterRechnen, polsterAngaben, polsterSatz, polsterPunkte, heuteZeile as polsterHeute, tageText, LICHT_SATZ, ZIEL as POLSTER_ZIEL } from "./polster.js";
 import { PAKET as HEILKUNDE_PAKET, startZustand as heilkundeStart, seiteHtml as heilkundeSeiteHtml, klick as heilkundeKlick } from "./heilkunde.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
@@ -101,7 +102,7 @@ const state = {
   natur: { weg: "start" }, internFeld: null, internMeldung: null, // 0.6.0: Naturheilkunde, interner Kanal
   checks: speicher.get("checks", {}),
   // 0.8.0 (Auftrag Nr. 20): Haushalt (lokal), Merkliste der Grundvorsorge, Häkchen der Szenario-Checklisten
-  haushalt: speicher.get("haushalt", []), merk: speicher.get("merkliste", []), nurMerk: false, gvZurueck: false, szChecks: speicher.get("szenario-checks", {}), szenarioVon: "#notfall", anker: null,
+  haushalt: speicher.get("haushalt", []), polster: polsterAngaben(speicher.get("polster", {})), merk: speicher.get("merkliste", []), nurMerk: false, gvZurueck: false, szChecks: speicher.get("szenario-checks", {}), szenarioVon: "#notfall", anker: null,
   bestaetigt: null, // Bereit Version 2: positionId → ISO-Datum der letzten Bestätigung (siehe bereit.js), unten geladen
   wesenLog: { filter: "", suche: "" },
   abo: speicher.get("abo", { intervall: "woechentlich", nurWlan: true, fenster: true, von: "02:00", bis: "05:00", aktiv: true }),
@@ -210,6 +211,49 @@ function grundStand() {
   const g = grund();
   if (!g) return { erledigt: 0, gesamt: 0 };
   return gvFortschritt(g.bereiche.flatMap((b) => punkteFuer(b, state.haushalt)), state.checks);
+}
+/** Nr. 34 „Euer Polster“ (Wortlaut Mik, 16.10.2026): Zeile auf Heute, an der Stelle der bisherigen Vorrat-Zeile. */
+function polsterHeuteHtml() {
+  const z = polsterHeute(polsterRechnen(state.polster));
+  return z.knopf ? `<div class="heute-polster heute-polster--leer"><p class="heute-polster-titel">${esc(z.titel)}</p><a class="btn of-btn" href="#vorsorge" data-anker-ziel="polster">${esc(z.knopf)}</a></div>`
+    : `<a class="heute-polster" href="#vorsorge" data-anker-ziel="polster"><span class="heute-polster-titel">${esc(z.titel)}</span><span class="muted of-klein">${esc(z.klein)}</span></a>`;
+}
+/** Vorsorge › Polster: Personen, Wasser, Essen, Licht; nur am Gerät. */
+function polsterHtml() {
+  const r = polsterRechnen(state.polster);
+  const zahl = (feld, titel, wert, schritt, min, max, einheit) => `<div class="polster-feld"><label for="polster-${feld}">${titel}</label>
+      <div class="polster-zahl"><button type="button" class="btn of-btn polster-schritt" data-polster-schritt="${feld}" data-polster-um="${-schritt}" aria-label="${titel}: weniger">−</button>
+      <input class="of-input" id="polster-${feld}" data-polster-feld="${feld}" type="number" inputmode="numeric" min="${min}" max="${max}" step="1" value="${wert}">
+      <button type="button" class="btn of-btn polster-schritt" data-polster-schritt="${feld}" data-polster-um="${schritt}" aria-label="${titel}: mehr">+</button>${einheit ? `<span class="muted of-klein">${einheit}</span>` : ""}</div></div>`;
+  return `<section class="card of-karte polster" id="polster" aria-labelledby="polster-titel" style="margin-bottom:1rem">
+    <h2 id="polster-titel" style="margin-top:0">Polster</h2>
+    <p class="muted of-klein" style="margin:0 0 .8rem">Wie lange euer Haushalt mit Wasser und Essen auskommt. Ziel ${POLSTER_ZIEL} Tage. Bleibt auf diesem Gerät.</p>
+    <div class="polster-felder">
+      ${zahl("personen", "Personen im Haushalt", r.personen, 1, 1, 20, "")}
+      ${zahl("liter", "Wasser", r.liter, 5, 0, 5000, "Liter")}
+      ${zahl("essen", "Essen für", r.essen, 1, 0, 365, "Tage")}
+      <fieldset class="polster-feld polster-licht"><legend>Taschenlampe mit Batterien oder Powerbank</legend>
+        ${[[true, "Ja"], [false, "Nein"]].map(([w, t]) => `<button type="button" class="btn of-btn" data-polster-licht="${w}" aria-pressed="${r.licht === w}">${t}</button>`).join(" ")}</fieldset>
+    </div>
+    <div class="polster-ergebnis" role="status">
+      <p class="polster-tage">${r.tage > 0 ? `Euer Polster: ${tageText(r.tage)}` : "Euer Polster wächst mit jedem Vorrat."}</p>
+      <p class="muted of-klein" style="margin:.2rem 0 0">Wasser reicht für ${tageText(r.wasserTage)} (${r.personen === 1 ? "2 Liter am Tag" : `2 Liter je Person und Tag`}), Essen für ${tageText(r.essenTage)}.</p>
+      ${r.liter || r.essen ? `<p style="margin:.5rem 0 0">${esc(polsterSatz(r))}</p>` : ""}
+      ${r.licht === false ? `<p style="margin:.5rem 0 0">${esc(LICHT_SATZ)}</p>` : ""}
+    </div></section>`;
+}
+/** Angaben speichern und mit Bereit abgleichen: Was das Polster erfüllt, gilt dort als erledigt. Von Hand gesetzte Häkchen bleiben
+ *  immer; zurückgenommen wird nur, was das Polster selbst gesetzt hat (gemerkt in „polster-auto“). */
+function polsterSetzen(neu) {
+  state.polster = polsterAngaben({ ...state.polster, ...neu }); speicher.set("polster", state.polster);
+  const auto = speicher.get("polster-auto", {}), jetzt = new Date(testJetzt()).toISOString();
+  for (const [check, erfuellt] of Object.entries(polsterPunkte(polsterRechnen(state.polster)))) {
+    const pos = BEREIT_POSITIONEN.find((p) => p.check === check);
+    if (erfuellt && !state.checks[check]) { state.checks[check] = true; auto[check] = true; if (pos) state.bestaetigt[pos.id] = jetzt; }
+    else if (!erfuellt && auto[check]) { state.checks[check] = false; delete auto[check]; if (pos) delete state.bestaetigt[pos.id]; }
+  }
+  speicher.set("checks", state.checks); speicher.set("bereit-v2", state.bestaetigt); speicher.set("polster-auto", auto);
+  render();
 }
 /** Häkchen der alten Checkliste (bis 0.7) auf die Grundvorsorge übertragen, sobald beide Listen da sind (Abgleich über den Text). */
 function checksAngleichen() {
@@ -518,7 +562,7 @@ const seiten = {
     const alle = heutigeKarten(), karten = alle.filter((k) => k.art !== "raetsel" && k.art !== "kapitel"), zustand = tagZustand(d); // Nr. 29: das Tagesrätsel steht auf „Spiele“, Nr. 32 (Mik, 16.10.): der Roman der Woche auch
     const schluss = state.tag.nochmal ? null : schlussErreicht({ karten, zustand, jetzt: testJetzt(), plan });
     state.tag.schlussGezeigt = schluss;
-    const pakete = tagesPakete(), vorrat = vorratTage(pakete, d, tagStart());
+    const pakete = tagesPakete();
     const g = speicher.get("tag-gelernt", {});
     const datumText = new Date(testJetzt()).toLocaleDateString("de-AT", { weekday: "long", day: "numeric", month: "long" });
     return `
@@ -550,7 +594,7 @@ const seiten = {
           : karten.length ? karten.map((k) => tagKarteHtml(k, zustand[k.id])).join("")
           : `<div class="card of-karte tag-leer"><p style="margin:0">${pakete.length ? "Für heute liegt nichts in der Vorratskammer." : "Die Vorratskammer ist noch leer."} ${navigator.onLine ? "OFFLINE holt die nächsten Tage, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."} Alles andere funktioniert weiter.</p></div>`}
       </section>`}
-      <p class="tag-vorrat muted of-klein">${vorrat ? `Vorrat: noch ${vorrat} ${vorrat === 1 ? "Tag" : "Tage"}${!navigator.onLine ? " · ohne Netz geht es weiter" : ""}` : `Vorrat: leer. ${navigator.onLine ? "Die nächsten Tage kommen, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."}`}</p>
+      ${polsterHeuteHtml()}
       </div>`;
   },
 
@@ -709,6 +753,7 @@ const seiten = {
     const karten = szKarten();
     return `
       ${kopf("Vorsorge", "Grundvorsorge, Szenarien und dein Haushalt.", `<div style="min-width:220px"><div class="muted of-klein" style="font-size:.9rem;margin-bottom:.3rem">${st.erledigt} von ${st.gesamt} erledigt</div>${fortschrittsbalken(st.erledigt, st.gesamt, `Vorsorge: ${st.erledigt} von ${st.gesamt} erledigt`)}</div>`)}
+      ${polsterHtml()}
       ${haushaltHtml(state.haushalt)}
       ${vorhabenHtml}
       ${grundvorsorgeHtml(g, { checks: state.checks, haushalt: state.haushalt, merk: state.merk, nurMerk: state.nurMerk, zuruecksetzen: state.gvZurueck, faellig })}
@@ -938,6 +983,7 @@ const seiten = {
       <section class="card of-karte upd-stand" aria-label="Stand">
         <p class="upd-satz">${m ? `<span class="tag of-plakette ${m.art === "ok" ? "tag-ok of-plakette--offline" : m.art === "warn" ? "tag-warn of-plakette--warnung" : "tag-pro"}">${esc(m.titel)}</span> ${m.text}`
           : k ? `${updates.length ? `${updates.length} Update${updates.length > 1 ? "s" : ""} verfügbar.` : "Alles aktuell."} Katalog vom ${datum(k.erstellt)}.` : "Noch kein Katalog geladen."}</p>
+        <p class="muted of-klein upd-inhalte">${(() => { const v = vorratTage(tagesPakete(), heuteDatum(), tagStart()); return v ? `Neue Inhalte für ${tageText(v)}` : `Neue Inhalte: noch keine auf dem Gerät. ${navigator.onLine ? "Die nächsten Tage kommen, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."}`; })()}</p>
         <button class="btn btn-primary of-btn of-btn--primaer" id="jetzt">Jetzt prüfen</button>
         ${state.fortschritt ? `<div style="margin-top:.8rem"><span class="muted of-klein">Lädt ${esc(state.fortschritt.pfad)} · ${groesse(state.fortschritt.geladen)} / ${groesse(state.fortschritt.gesamt)}</span>
           ${fortschrittsbalken(state.fortschritt.gesamt ? Math.min(100, (100 * state.fortschritt.geladen) / state.fortschritt.gesamt) : 0, 100, `Download ${state.fortschritt.pfad}`, "margin:.5rem 0")}
@@ -2576,6 +2622,7 @@ function suchIndex() {
   // 2 Vorsorge: Haushalt und die Punkte der Grundvorsorge, die für den Haushalt angezeigt werden
   const g = grund();
   if (g) {
+    dazu(2, "Vorsorge", "Euer Polster", `Wie lange euer Haushalt mit Wasser, Essen und Licht auskommt: Personen, Wasser in Litern, Essen für wie viele Tage, Taschenlampe. Ziel ${POLSTER_ZIEL} Tage.`, { hash: "#vorsorge", anker: "polster" });
     dazu(2, "Vorsorge", "Haushalt und Wohnsituation", "Wer lebt bei dir: Kinder, Ältere Menschen, Jemand braucht Pflege, Jemand mit Behinderung, Haustiere. Wie wohnst du: Eigenes Haus, Mietwohnung, Keller.", { hash: "#vorsorge", anker: "haushalt" });
     for (const b of g.bereiche) {
       dazu(2, "Vorsorge", b.titel, b.satz, { hash: "#vorsorge", anker: `gv-${b.id}` });
@@ -2764,6 +2811,7 @@ main.addEventListener("change", (e) => {
   }
   if (t.dataset.check) { // Grundvorsorge (0.8.0: Punkte über ihre id); zählt ein Punkt für Bereit, gilt die Bestätigung seiner Position
     state.checks[t.dataset.check] = t.checked; speicher.set("checks", state.checks);
+    const auto = speicher.get("polster-auto", {}); if (auto[t.dataset.check]) { delete auto[t.dataset.check]; speicher.set("polster-auto", auto); } // von Hand: gehört dir
     const pos = BEREIT_POSITIONEN.find((p) => p.check === t.dataset.check);
     return pos ? bestaetigen(pos.id, t.checked) : render();
   }
@@ -2797,6 +2845,7 @@ main.addEventListener("change", (e) => {
   if (t.id === "wz-art") { state.werkzeug.rechner = { ...state.werkzeug.rechner, art: t.value, von: Object.keys(EINHEITEN[t.value].e)[0], nach: Object.keys(EINHEITEN[t.value].e)[1] }; render(); }
   if (t.id === "wz-von") { state.werkzeug.rechner.von = t.value; render(); }
   if (t.id === "wz-nach") { state.werkzeug.rechner.nach = t.value; render(); }
+  if (t.dataset.polsterFeld) { polsterSetzen({ [t.dataset.polsterFeld]: t.value }); document.getElementById(t.id)?.focus(); return; }
   if (t.id === "wz-personen" || t.id === "wz-tage") { state.werkzeug.vorrat[t.id === "wz-personen" ? "personen" : "tage"] = Math.max(1, +t.value || 1); render(); }
 });
 
@@ -2909,6 +2958,14 @@ main.addEventListener("click", async (e) => {
   }
 });
 main.addEventListener("click", (e) => { const l = e.target.closest("[data-tag-lesen]"); if (l) state.tag.lesen = l.dataset.tagLesen; });
+// Nr. 34: Polster mit Plus/Minus und Ja/Nein; der Knopf behält danach den Fokus
+main.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-polster-schritt], [data-polster-licht]");
+  if (!b) return;
+  if (b.dataset.polsterLicht) { const w = b.dataset.polsterLicht === "true"; polsterSetzen({ licht: state.polster.licht === w ? null : w }); document.querySelector(`[data-polster-licht="${w}"]`)?.focus(); return; }
+  const f = b.dataset.polsterSchritt, um = Number(b.dataset.polsterUm);
+  polsterSetzen({ [f]: state.polster[f] + um }); document.querySelector(`[data-polster-schritt="${f}"][data-polster-um="${um}"]`)?.focus();
+});
 // Lumi: Startablauf (Einladung, Einschalten, Namensgabe, Ausschalten mit Rückfrage), siehe wesen.js
 function lumiAktion(a) {
   if (a === "einladung-ja") wesen.einladung(true);
