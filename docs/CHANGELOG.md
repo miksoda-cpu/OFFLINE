@@ -1,5 +1,10 @@
 # Änderungen
 
+## 0.9.2 · 16.10.2026 · Euer Polster
+
+- **Euer Polster** (Auftrag Nr. 34): Auf der Startseite seht ihr, wie viele Tage Wasser und Essen reichen. Eintragen unter Vorsorge (Personen, Wasser, Essen, Licht); ab 14 Tagen sind die passenden Punkte in Bereit erledigt, Häkchen von Hand bleiben (`web/polster.js`).
+- **Neue Inhalte:** Die Zahl der Tage mit neuen Inhalten steht jetzt unter Updates & Abo. Service Worker `offline-v42`.
+
 ## 0.9.1 · 16.10.2026 · Neue Startseite, Suche, „Über OFFLINE“, Roman bei den Spielen
 
 - **Neue Startseite** (Auftrag Nr. 29): Oben steht, ob du online oder offline bist. Ohne Netz stellt die App vier Fragen (Flugmodus, Rechnung, Funkloch, Nachbarn), gibt aus den Antworten einen Rat und zeigt Hilfe nach Dauer: erste Minuten, bis eine Stunde, einige Stunden, ab einem Tag, mehrere Tage. Die Antworten bleiben am Gerät. Die Leiste unten heißt jetzt Heute · Notfall · Vorsorge · Spiele · Menü, das Tagesrätsel steht auf „Spiele“ (`web/netz.js`).

@@ -72,7 +72,10 @@ test("Update von der letzten veröffentlichten Version: Land, Haushalt, Häkchen
     assert.equal(await t.auswerten(`fetch("/version.json").then((r) => r.json()).then((j) => j.version)`), v, "alte Fassung läuft");
     await t.auswerten(`(() => { document.querySelector('input[name="land"][value="at"]').click(); document.querySelector("[data-land-weiter]").click(); })()`);
     await startBereit(t);
-    await warteBis(t, `document.querySelector('#main [data-tag="weg"][data-tag-id="${kapitelId}"]')`, 20_000); // 0.9.0: Roman auf Heute
+    // Den Roman dort weglegen, wo die alte Fassung ihn zeigt: bis 0.9.0 auf Heute, seit 0.9.1 auf Spiele
+    await ruhig(t, 800);
+    if (!(await t.auswerten(`!!document.querySelector('#main [data-tag="weg"][data-tag-id="${kapitelId}"]')`))) await t.auswerten(`location.hash = "#pause"`);
+    await warteBis(t, `document.querySelector('#main [data-tag="weg"][data-tag-id="${kapitelId}"]')`, 20_000);
     await t.auswerten(`document.querySelector('#main [data-tag="weg"][data-tag-id="${kapitelId}"]').click()`); await ruhig(t);
     await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelector('[data-haushalt="kinder"]') && document.querySelector("[data-check]")`, 20_000);
     await t.auswerten(`document.querySelector('[data-haushalt="kinder"]').click()`); await ruhig(t);

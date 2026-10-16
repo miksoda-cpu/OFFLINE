@@ -110,7 +110,7 @@ test("(d) „Neue Inhalte für … Tage“ steht unter Updates & Abo, nicht auf 
   });
 });
 
-test("Update von der zuletzt veröffentlichten Version: alle Häkchen bleiben, auch mit Polster", async () => {
+test("Update von der zuletzt veröffentlichten Version: Häkchen und Notizen bleiben, Polster-Angaben überleben den Neustart", async () => {
   const tags = execFileSync("git", ["tag", "--list", "v*", "--sort=-v:refname"], { cwd: WURZEL, encoding: "utf8" }).split("\n").filter((x) => /^v\d+\.\d+\.\d+$/.test(x));
   assert.ok(tags.length, "Tag der veröffentlichten Version (CI: fetch-depth 0)");
   const alt = mkdtempSync(path.join(os.tmpdir(), "offline-alt-"));
@@ -120,14 +120,22 @@ test("Update von der zuletzt veröffentlichten Version: alle Häkchen bleiben, a
     await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelectorAll("[data-check]").length > 3`, 20_000);
     const ids = await t.auswerten(`(() => { const a = [...document.querySelectorAll("[data-check]")].map((c) => c.dataset.check); return ["trinkwasser", "radio", ...a.slice(-2)]; })()`);
     for (const id of ids) { await t.auswerten(`document.querySelector('[data-check="${id}"]').click()`); await ruhig(t, 250); } // jeder Klick zeichnet neu
-    const vorher = await t.auswerten(`({ checks: localStorage.getItem("offline:checks"), v2: localStorage.getItem("offline:bereit-v2") })`);
+    await t.auswerten(`(() => { const n = JSON.parse(localStorage.getItem("offline:notizbuch") ?? "[]"); n.push({ id: "u1", titel: "Treffpunkt", text: "Bei der Kirche um 18 Uhr.", geaendert: new Date().toISOString() }); localStorage.setItem("offline:notizbuch", JSON.stringify(n)); })()`);
+    const vorher = await t.auswerten(`({ checks: localStorage.getItem("offline:checks"), v2: localStorage.getItem("offline:bereit-v2"), notizen: localStorage.getItem("offline:notizbuch") })`);
     assert.equal(Object.values(JSON.parse(vorher.checks)).filter(Boolean).length, 4);
     fassung.alt = false;
     await t.laden(`${url}/app.html?neu#start`); await warteBis(t, `document.querySelector("#main .heute-polster")`, 30_000); await ruhig(t, 600);
-    assert.deepEqual(await t.auswerten(`({ checks: localStorage.getItem("offline:checks"), v2: localStorage.getItem("offline:bereit-v2") })`), vorher, "Häkchen und Bestätigungen unverändert");
+    assert.deepEqual(await t.auswerten(`({ checks: localStorage.getItem("offline:checks"), v2: localStorage.getItem("offline:bereit-v2"), notizen: localStorage.getItem("offline:notizbuch") })`), vorher, "Häkchen, Bestätigungen und Notizen unverändert");
     // Mit Polster unter dem Ziel: kein Häkchen geht verloren (Trinkwasser war von Hand gesetzt)
     await eintragen(t, { personen: 2, liter: 10, essen: 2 });
     const nach = JSON.parse(await t.auswerten(`localStorage.getItem("offline:checks")`));
     for (const [k, v] of Object.entries(JSON.parse(vorher.checks))) if (v) assert.equal(nach[k], true, k);
+    // Neustart der neuen Fassung: Polster-Angaben, Notiz und Häkchen bleiben, Heute zeigt das Polster
+    await t.laden(`${url}/app.html?nochmal#start`); await warteBis(t, `document.querySelector("#main .heute-polster")`, 30_000);
+    assert.deepEqual(await t.auswerten(`JSON.parse(localStorage.getItem("offline:polster"))`), { personen: 2, liter: 10, essen: 2, licht: null });
+    assert.equal((await zeile(t)).text, "Euer Polster: 2 Tage Wasser, Essen, Licht · Ziel 14 Tage");
+    assert.equal(await t.auswerten(`localStorage.getItem("offline:notizbuch")`), vorher.notizen);
+    await t.auswerten(`location.hash = "#notizen"`); await ruhig(t);
+    assert.ok(await t.auswerten(`document.getElementById("main").innerText.includes("Treffpunkt")`), "Notiz da");
   }, { alt });
 });
