@@ -1,12 +1,12 @@
 {
   "format": 1,
-  "erstellt": "2026-10-15T15:04:37Z",
-  "gueltig_bis": "2027-01-13T15:04:37Z",
+  "erstellt": "2026-10-16T20:41:17Z",
+  "gueltig_bis": "2027-01-14T20:41:17Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
       "id": "at-basis",
-      "version": "2026.10.08",
+      "version": "2026.10.16",
       "titel": "Österreich-Paket · Grundversion",
       "beschreibung": "Notrufe, Sirenensignale zum Anhören, zwölf Szenarien von Hochwasser bis Blackout, Grundvorsorge in sechs Bereichen, Radio je Bundesland und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
       "art": "inhalt",
@@ -16,12 +16,12 @@
       "alter_ab": 0,
       "bereich": "ernstfall",
       "pflicht": true,
-      "groesse": 290181,
+      "groesse": 292654,
       "app_min": "0.8.0",
-      "erstellt": "2026-10-08T15:28:55Z",
-      "aenderungen": "Zwölf Szenarien von Hochwasser bis Blackout, je mit Vorsorge, richtigem Verhalten und eigener Checkliste. Die Grundvorsorge hat jetzt sechs Bereiche mit 74 Punkten, passend zu deinem Haushalt. Dazu Radio je Bundesland und die Sirenen zum Anhören.",
-      "pfad": "at-basis-2026.10.08/",
-      "sha256_manifest": "f62a3169554fc920badfeeebd500507a97dfa893dab9743a7399e323df05590d",
+      "erstellt": "2026-10-16T20:39:06Z",
+      "aenderungen": "Zwei neue Karten zu Akku und Strom: wie das Handy lange durchhält (im Szenario Blackout) und wie du ohne Steckdose lädst (in der Vorsorge unter Licht, Strom & Information).",
+      "pfad": "at-basis-2026.10.16/",
+      "sha256_manifest": "640fc4e58c2bde1c23e844395a373885e3fe82bf890476d30a2bb9a2f4173cb3",
       "status": "verfuegbar"
     },
     {

@@ -1,7 +1,7 @@
 {
   "format": 1,
   "id": "at-basis",
-  "version": "2026.10.08",
+  "version": "2026.10.16",
   "titel": "Österreich-Paket · Grundversion",
   "beschreibung": "Notrufe, Sirenensignale zum Anhören, zwölf Szenarien von Hochwasser bis Blackout, Grundvorsorge in sechs Bereichen, Radio je Bundesland und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
   "art": "inhalt",
@@ -15,8 +15,8 @@
   "bereich": "ernstfall",
   "pflicht": true,
   "app_min": "0.8.0",
-  "erstellt": "2026-10-08T15:28:55Z",
-  "aenderungen": "Zwölf Szenarien von Hochwasser bis Blackout, je mit Vorsorge, richtigem Verhalten und eigener Checkliste. Die Grundvorsorge hat jetzt sechs Bereiche mit 74 Punkten, passend zu deinem Haushalt. Dazu Radio je Bundesland und die Sirenen zum Anhören.",
+  "erstellt": "2026-10-16T20:39:06Z",
+  "aenderungen": "Zwei neue Karten zu Akku und Strom: wie das Handy lange durchhält (im Szenario Blackout) und wie du ohne Steckdose lädst (in der Vorsorge unter Licht, Strom & Information).",
   "quellen": [
     {
       "name": "Österreichischer Zivilschutzverband",
@@ -46,6 +46,11 @@
       "pfad": "inhalt/grundvorsorge.json",
       "sha256": "c9e91881616f4d17a1074a6b9ee02df779002554617ee60bd06ad770d0ecd577",
       "groesse": 27026
+    },
+    {
+      "pfad": "inhalt/karten.json",
+      "sha256": "7a55f4e1f09e7b873e1d42477aef2a30aac352d0aefdaebd8493f3a84b43dddf",
+      "groesse": 2473
     },
     {
       "pfad": "inhalt/notrufe.json",
@@ -148,5 +153,5 @@
       "groesse": 225
     }
   ],
-  "groesse": 290181
+  "groesse": 292654
 }
