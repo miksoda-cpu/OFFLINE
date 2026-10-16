@@ -997,7 +997,9 @@ a.heute-polster:hover .heute-polster-titel, a.heute-polster:focus-visible .heute
 .polster-zahl { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
 .polster-zahl .of-input { width: 5.5em; text-align: center; }
 .polster-schritt { min-width: 44px; min-height: 44px; padding: 0; font-size: 1.2rem; }
-.polster-licht .btn { min-height: 44px; }
+.polster-licht { display: flex; flex-wrap: wrap; gap: .5rem; }
+.polster-licht legend { width: 100%; margin-bottom: .3rem; }
+.polster-licht .btn { min-height: 44px; min-width: 5.5em; }
 .polster-licht .btn[aria-pressed="true"] { border-color: currentColor; font-weight: 600; }
 .polster-ergebnis { margin-top: 1rem; padding-top: .8rem; border-top: 1px solid var(--line, rgba(127,127,127,.25)); }
 .polster-tage { font-size: 1.25rem; font-weight: 600; margin: 0; }
