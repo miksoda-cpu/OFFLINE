@@ -220,11 +220,9 @@ function haushaltLaden() {
   speicher.set("haushalt", state.haushalt);
 }
 haushaltLaden();
-/** Nr. 42: Welcher Entwurf der Vorratsliste läuft (Mik wählt: a Liste nach Art, b Regal nach Ablauf, c Schnell mit Vorlagen). */
-const VORRAT_ANSICHT = "a";
 /** Vorratsliste; beim ersten Start übernommen aus den Angaben von Nr. 34 (Liter, Essen-Tage, Licht), nichts geht verloren. */
 state.vorraete = (() => { const v = speicher.get("vorraete", null); if (Array.isArray(v)) return v.map(vorratEintrag); const neu = ausPolster(state.polster, state.haushaltV2?.personen ?? 1); speicher.set("vorraete", neu); return neu; })();
-state.vorratForm = null; state.vorratFilter = "";
+state.vorratForm = null;
 function haushaltSetzen(neu) {
   state.haushaltV2 = neu; speicher.set("haushalt-v2", neu);
   state.haushalt = haushaltMerkmale(neu); speicher.set("haushalt", state.haushalt);
@@ -260,7 +258,7 @@ function polsterHtml() {
       <p style="margin:.6rem 0 0"><button type="button" class="btn btn-sm of-btn of-btn--klein" data-vorrat-einkauf>Einkaufsliste</button></p>
     </div>
     ${state.vorratForm ? vorratFormularHtml(state.vorratForm) : ""}
-    <div class="vr vr--${VORRAT_ANSICHT}">${vorratListeHtml(VORRAT_ANSICHT, liste, heute, { filter: state.vorratFilter })}</div>
+    <div class="vr">${vorratListeHtml(liste, heute)}</div>
   </section>`;
 }
 /** Bereit-Abgleich (Nr. 34): Was die Vorräte erfüllen, gilt dort als erledigt; zurückgenommen wird nur, was sie selbst gesetzt haben. */
@@ -3018,6 +3016,7 @@ main.addEventListener("click", async (e) => {
   }
   if (b.dataset.merk) { const id = b.dataset.merk; state.merk = state.merk.includes(id) ? state.merk.filter((x) => x !== id) : [...state.merk, id]; speicher.set("merkliste", state.merk); return render(); }
   const gv = b.dataset.gv;
+  if (gv === "einkauf") return einkaufOeffnen(); // Nr. 42: der Knopf über der Checkliste öffnet die Einkaufsliste
   if (!gv) return;
   if (gv === "merkliste") { state.nurMerk = !state.nurMerk; return render(); }
   if (gv === "zuruecksetzen") { state.gvZurueck = true; render(); document.querySelector('[data-gv="zuruecksetzen-nein"]')?.focus(); return; }
@@ -3075,15 +3074,14 @@ function vorratFormLesen() {
 }
 const vorratFormZeigen = (f) => { state.vorratForm = f; render(); setTimeout(() => { const el = document.getElementById("vorrat-form"); el?.scrollIntoView({ block: "center" }); document.getElementById("vorrat-produkt")?.focus(); }, 30); };
 main.addEventListener("click", (e) => {
-  const b = e.target.closest("[data-vorrat-neu], [data-vorrat-vorlage], [data-vorrat-bearbeiten], [data-vorrat-weg], [data-vorrat-abbrechen], [data-vorrat-filter], [data-vorrat-einkauf]");
+  const b = e.target.closest("[data-vorrat-neu], [data-vorrat-vorlage], [data-vorrat-bearbeiten], [data-vorrat-weg], [data-vorrat-abbrechen], [data-vorrat-einkauf]");
   if (!b) return;
   if (b.hasAttribute("data-vorrat-neu")) return vorratFormZeigen({ art: b.dataset.vorratArtVor || "essen", einheit: "Stück", menge: 1 });
   if (b.dataset.vorratVorlage !== undefined) return vorratFormZeigen(vorratVorlage(Number(b.dataset.vorratVorlage)));
   if (b.dataset.vorratBearbeiten) return vorratFormZeigen({ ...state.vorraete.find((x) => x.id === b.dataset.vorratBearbeiten) });
   if (b.dataset.vorratWeg) return vorraeteSetzen(state.vorraete.filter((x) => x.id !== b.dataset.vorratWeg));
   if (b.hasAttribute("data-vorrat-abbrechen")) { state.vorratForm = null; return render(); }
-  if (b.dataset.vorratFilter !== undefined) { state.vorratFilter = b.dataset.vorratFilter; return render(); }
-  if (b.hasAttribute("data-vorrat-einkauf")) blattOeffnen("Einkaufsliste", einkaufHtml(einkaufsliste(state.vorraete, state.haushaltV2?.personen ?? 1, heuteDatum())));
+  if (b.hasAttribute("data-vorrat-einkauf")) einkaufOeffnen();
 });
 main.addEventListener("submit", (e) => {
   if (!e.target.closest("[data-vorrat-form]")) return;
@@ -3093,11 +3091,27 @@ main.addEventListener("submit", (e) => {
   const eintrag = vorratEintrag(f), liste = state.vorraete.filter((x) => x.id !== eintrag.id);
   state.vorratForm = null; vorraeteSetzen([...liste, eintrag]);
 });
+/** Nr. 42: Die Einkaufsliste ist eine Liste – die Sterne der Grundvorsorge („Auf die Einkaufsliste“) und was bei den Vorräten
+ *  abläuft oder fehlt. Die Sterne liegen wie bisher unter „merkliste“, bestehende Sterne sind also schon drin. */
+function einkaufSterne() {
+  const g = grund(); if (!g) return [];
+  const alle = g.bereiche.flatMap((b) => b.punkte);
+  return state.merk.map((id) => alle.find((p) => p.id === id)).filter(Boolean).map((p) => ({ id: p.id, text: p.text }));
+}
+const einkaufZeilen = () => [...einkaufSterne().map((x) => x.text), ...einkaufsliste(state.vorraete, state.haushaltV2?.personen ?? 1, heuteDatum()).map((x) => x.text)];
+function einkaufOeffnen() { blattOeffnen("Einkaufsliste", einkaufHtml(einkaufsliste(state.vorraete, state.haushaltV2?.personen ?? 1, heuteDatum()), einkaufSterne())); }
+// Stern im Blatt der Einkaufsliste entfernen: Liste und Blatt neu
+document.addEventListener("click", (e) => {
+  const b = e.target.closest(".blatt [data-merk]");
+  if (!b) return;
+  state.merk = state.merk.filter((x) => x !== b.dataset.merk); speicher.set("merkliste", state.merk);
+  render(); einkaufOeffnen();
+});
 // Einkaufsliste drucken oder teilen (wie die Checkliste)
 document.addEventListener("click", async (e) => {
   const b = e.target.closest(".blatt [data-einkauf]");
   if (!b) return;
-  const text = ["Einkaufsliste (OFFLINE)", ...einkaufsliste(state.vorraete, state.haushaltV2?.personen ?? 1, heuteDatum()).map((x) => `[ ] ${x.text}`)].join("\n");
+  const text = ["Einkaufsliste (OFFLINE)", ...einkaufZeilen().map((x) => `[ ] ${x}`)].join("\n");
   if (b.dataset.einkauf === "teilen") {
     if (navigator.share) { try { await navigator.share({ title: "Einkaufsliste", text }); return; } catch { /* abgebrochen */ } }
     if (desktop) { try { await client.textSpeichern("OFFLINE-Einkaufsliste.txt", text); } catch { /* still */ } return; }

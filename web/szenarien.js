@@ -108,7 +108,7 @@ export function haushaltHtml(haushalt = []) {
 export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = [], nurMerk = false, zuruecksetzen = false, faellig = new Map(), karten = [] } = {}) {
   const alle = grund.bereiche.flatMap((b) => punkteFuer(b, haushalt)), gesamt = fortschritt(alle, checks);
   const punkt = (p) => `<li class="gv-punkt" id="gvp-${esc(p.id)}"><label><input type="checkbox" data-check="${esc(p.id)}" ${checks[p.id] ? "checked" : ""}><span>${esc(p.text)}${faellig.has(p.id) ? ` <span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span>` : ""}</span></label>${faellig.has(p.id) ? ` <button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-bestaetigen="${esc(faellig.get(p.id))}">Erneuert</button>` : ""}
-      <button type="button" class="gv-merk" data-merk="${esc(p.id)}" aria-pressed="${merk.includes(p.id)}" aria-label="${merk.includes(p.id) ? "Von der Merkliste nehmen" : "Auf die Merkliste"}: ${esc(p.text)}">${merk.includes(p.id) ? "★" : "☆"}</button>
+      <button type="button" class="gv-merk" data-merk="${esc(p.id)}" aria-pressed="${merk.includes(p.id)}" aria-label="${merk.includes(p.id) ? "Von der Einkaufsliste nehmen" : "Auf die Einkaufsliste"}: ${esc(p.text)}">${merk.includes(p.id) ? "★" : "☆"}</button>
       ${p.detail ? `<details class="gv-detail" id="gvd-${esc(p.id)}"><summary class="of-klein">Erklärung</summary><p class="muted of-klein">${esc(p.detail)}</p></details>` : ""}</li>`;
   const bereiche = grund.bereiche.map((b) => {
     const punkte = punkteFuer(b, haushalt), f = fortschritt(punkte, checks), sicht = nurMerk ? punkte.filter((p) => merk.includes(p.id)) : punkte;
@@ -122,14 +122,14 @@ export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = []
     <div class="gv-kopf"><h2 id="gv-titel">Grundvorsorge</h2><span class="muted of-klein">${zahl(gesamt)} erledigt</span></div>
     <p class="muted of-klein">${esc(grund.einleitung)}</p>
     <div class="gv-werkzeug">
-      <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="merkliste" aria-pressed="${nurMerk}">${nurMerk ? "Alle Punkte" : `Merkliste (${merk.length})`}</button>
+      <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="einkauf">Einkaufsliste (${merk.length})</button>
       <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="export">Liste exportieren</button>
       <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="drucken">Drucken</button>
-      ${zuruecksetzen ? `<span class="gv-zurueck" role="group" aria-label="Zurücksetzen bestätigen"><span class="of-klein">Alle Häkchen und die Merkliste löschen?</span> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="zuruecksetzen-ja">Ja, zurücksetzen</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="zuruecksetzen-nein">Abbrechen</button></span>`
+      ${zuruecksetzen ? `<span class="gv-zurueck" role="group" aria-label="Zurücksetzen bestätigen"><span class="of-klein">Alle Häkchen und die Sterne (Einkaufsliste) löschen?</span> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="zuruecksetzen-ja">Ja, zurücksetzen</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="zuruecksetzen-nein">Abbrechen</button></span>`
         : `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="zuruecksetzen">Zurücksetzen</button>`}
     </div>
     <p class="form-msg of-meldung" id="gv-msg" role="status"></p>
-    ${nurMerk && !merk.length ? `<p class="muted">Noch nichts auf der Merkliste. Tipp auf ☆ neben einem Punkt.</p>` : ""}
+    ${nurMerk && !merk.length ? `<p class="muted">Noch nichts auf der Einkaufsliste. Tipp auf ☆ neben einem Punkt.</p>` : ""}
     <div class="grid grid-2 gv-bereiche">${bereiche}</div>
   </section>`;
 }

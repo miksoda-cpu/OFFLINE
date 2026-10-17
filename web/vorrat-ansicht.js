@@ -1,7 +1,6 @@
-// Vorratsliste (Nr. 42): drei Entwürfe für Mik, Unterschied nur in der Bedienung. Gemeinsam: Formular (gleiche Felder und Kennungen
-// in allen drei), Rechnung oben, Einkaufsliste. A: Liste nach Art · B: Regal nach Ablauf (Gruppen nur als Filter) · C: Schnell mit
-// Vorlagen. Welcher Entwurf läuft, steht in app.js (VORRAT_ANSICHT).
-import { EINHEITEN, ARTEN, ablaufend, ablaufText, mengeText, tageBisAblauf, abgelaufen } from "./vorrat.js";
+// Vorratsliste (Nr. 42, Miks Wahl 17.10.2026): Liste nach Art (Entwurf A), darüber die Vorlage-Knöpfe aus Entwurf C zum schnellen
+// Eintragen. Dazu Formular, Heute-Zeile „Bald ablaufend“ und die Einkaufsliste (mit den Sternen der Grundvorsorge, eine Liste).
+import { EINHEITEN, ARTEN, ablaufText, mengeText, tageBisAblauf, abgelaufen, ablaufend } from "./vorrat.js";
 
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const ARTNAME = Object.fromEntries(ARTEN);
@@ -52,28 +51,15 @@ const VORLAGEN = [
 ];
 export const vorlage = (i) => { const { knopf, ...v } = VORLAGEN[i] ?? {}; return v; };
 
-/** Die Liste im gewählten Entwurf. s: { filter } (nur B). */
-export function listeHtml(variante, eintraege, heute, s = {}) {
-  if (!eintraege.length && variante !== "c") return `<p class="muted vr-leer">Noch nichts eingetragen. Tippe auf „+ Eintrag“, dann rechnet die App, wie lange es reicht.</p>
-    <p><button type="button" class="btn of-btn" data-vorrat-neu>+ Eintrag</button></p>`;
-  if (variante === "a") {
-    return ARTEN.map(([k, n]) => { const z = eintraege.filter((e) => e.art === k); return `<section class="vr-gruppe" aria-labelledby="vr-g-${k}"><h3 id="vr-g-${k}">${esc(n)} <span class="muted of-klein">${z.length || ""}</span></h3>
-      ${z.length ? `<ul class="vr-liste">${z.map((e) => zeileHtml(e, heute)).join("")}</ul>` : ""}
-      <button type="button" class="btn btn-sm of-btn of-btn--klein" data-vorrat-neu data-vorrat-art-vor="${k}">+ Eintrag${z.length ? "" : ` ${esc(n)}`}</button></section>`; }).join("");
-  }
-  const nachDatum = [...eintraege].sort((a, b) => (tageBisAblauf(a, heute) ?? 1e9) - (tageBisAblauf(b, heute) ?? 1e9));
-  if (variante === "b") {
-    const zuerst = ablaufend(eintraege, heute, 90).slice(0, 5), f = s.filter ?? "";
-    const sicht = nachDatum.filter((e) => !f || e.art === f);
-    return `<div class="vr-regal" aria-label="Läuft zuerst ab">${zuerst.length ? zuerst.map(({ e, t }) => `<div class="vr-regal-fach${t < 0 ? " vr-regal-fach--ab" : ""}"><strong>${esc(mengeText(e))}</strong><span class="of-klein">${t < 0 ? "abgelaufen" : `läuft ${ablaufText(t)} ab`}</span></div>`).join("") : `<p class="muted of-klein">In den nächsten drei Monaten läuft nichts ab.</p>`}</div>
-      <div class="vr-filter" role="group" aria-label="Nach Art filtern"><button type="button" class="btn btn-sm of-btn of-btn--klein" data-vorrat-filter="" aria-pressed="${!f}">Alle</button>${ARTEN.map(([k, n]) => `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-vorrat-filter="${k}" aria-pressed="${f === k}">${esc(n)}</button>`).join("")}</div>
-      <ul class="vr-liste">${sicht.map((e) => zeileHtml(e, heute)).join("")}</ul>
-      <p><button type="button" class="btn of-btn" data-vorrat-neu>+ Eintrag</button></p>`;
-  }
-  return `<div class="vr-vorlagen" role="group" aria-label="Häufige Vorräte"><p class="of-klein" style="margin:0 0 .4rem">Antippen, dann Menge und Ablauf anpassen:</p>
-      ${VORLAGEN.map((v, i) => `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-vorrat-vorlage="${i}">${esc(v.knopf)}</button>`).join("")}
-      <button type="button" class="btn btn-sm of-btn of-btn--klein" data-vorrat-neu>Anderes …</button></div>
-    ${eintraege.length ? `<ul class="vr-liste">${nachDatum.map((e) => zeileHtml(e, heute)).join("")}</ul>` : `<p class="muted vr-leer">Noch nichts eingetragen.</p>`}`;
+/** Die Vorlagen (aus Entwurf C) über der Liste nach Art (Entwurf A). */
+const vorlagenHtml = () => `<div class="vr-vorlagen" role="group" aria-label="Häufige Vorräte"><p class="of-klein" style="margin:0 0 .4rem">Schnell eintragen – antippen, dann Menge und Ablauf anpassen:</p>
+  ${VORLAGEN.map((v, i) => `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-vorrat-vorlage="${i}">${esc(v.knopf)}</button>`).join("")}</div>`;
+
+/** Die Liste: Vorlagen, darunter je Art die Einträge mit „+ Eintrag“. */
+export function listeHtml(eintraege, heute) {
+  return vorlagenHtml() + ARTEN.map(([k, n]) => { const z = eintraege.filter((e) => e.art === k); return `<section class="vr-gruppe" aria-labelledby="vr-g-${k}"><h3 id="vr-g-${k}">${esc(n)} <span class="muted of-klein">${z.length || ""}</span></h3>
+    ${z.length ? `<ul class="vr-liste">${z.map((e) => zeileHtml(e, heute)).join("")}</ul>` : ""}
+    <button type="button" class="btn btn-sm of-btn of-btn--klein" data-vorrat-neu data-vorrat-art-vor="${k}">+ Eintrag${z.length ? "" : ` ${esc(n)}`}</button></section>`; }).join("");
 }
 
 /** Heute: „Bald ablaufend“ / „Abgelaufen“, ruhig, ohne Rot-Alarm. */
@@ -86,7 +72,10 @@ export function heuteAblaufHtml(eintraege, heute) {
 }
 
 /** Einkaufsliste als Blatt (Drucken und Teilen wie die Checkliste). */
-export function einkaufHtml(liste) {
-  return `<div class="vr-einkauf">${liste.length ? `<ul>${liste.map((x) => `<li class="vr-einkauf--${x.art}">${esc(x.text)}</li>`).join("")}</ul>` : `<p>Nichts einzukaufen. Eure Vorräte reichen für 14 Tage.</p>`}
+export function einkaufHtml(liste, sterne = []) {
+  return `<div class="vr-einkauf">
+    ${sterne.length ? `<h3>Aus der Checkliste <span class="muted of-klein">(mit Stern)</span></h3><ul>${sterne.map((x) => `<li class="vr-einkauf--stern">${esc(x.text)} <button type="button" class="btn btn-sm of-btn of-btn--klein" data-merk="${esc(x.id)}" aria-label="Von der Einkaufsliste nehmen: ${esc(x.text)}">entfernen</button></li>`).join("")}</ul>` : ""}
+    ${liste.length ? `${sterne.length ? "<h3>Aus den Vorräten</h3>" : ""}<ul>${liste.map((x) => `<li class="vr-einkauf--${x.art}">${esc(x.text)}</li>`).join("")}</ul>` : `<p>${sterne.length ? "Bei den Vorräten fehlt nichts" : "Nichts einzukaufen"}. Eure Vorräte reichen für 14 Tage.</p>`}
+    <p class="muted of-klein">Mit dem Stern in der Grundvorsorge kommt ein Punkt hierher.</p>
     <p class="vr-form-knoepfe"><button type="button" class="btn of-btn" data-einkauf="drucken">Drucken</button> <button type="button" class="btn of-btn" data-einkauf="teilen">Teilen</button></p></div>`;
 }
