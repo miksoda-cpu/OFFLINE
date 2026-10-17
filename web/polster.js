@@ -2,7 +2,7 @@
 // keine Oberfläche, kein Speicher; die Angaben bleiben am Gerät (app.js, Schlüssel „polster“). Ohne Angst-Wörter.
 
 export const ZIEL = 14;
-export const LITER_PRO_PERSON_UND_TAG = 2; // wie im Vorratsrechner unter Werkzeuge
+export const LITER_PRO_PERSON_UND_TAG = 2; // 2 Liter je Person und Tag (Zivilschutzverband)
 
 const ganz = (x, min, max) => Math.min(max, Math.max(min, Math.floor(Number(x) || 0)));
 /** Angaben bereinigen: Personen 1–20, Liter 0–5000, Essen-Tage 0–365, Licht true/false/null. */

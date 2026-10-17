@@ -56,7 +56,7 @@ export const POSITIONEN = [
 
   // Können
   { id: "kocher", quelle: "koennen", titel: "Campingkocher einmal angezündet", verfall: 12, hinweis: "Im Freien, einmal Wasser kochen." },
-  { id: "radio", quelle: "koennen", titel: "Radio getestet und den Sender des Österreichischen Rundfunks (ORF) gefunden", verfall: 12, hinweis: "Ö3 oder Radio Wien einstellen, Frequenz unter Werkzeuge eintragen." },
+  { id: "radio", quelle: "koennen", titel: "Radio getestet und den Sender des Österreichischen Rundfunks (ORF) gefunden", verfall: 12, hinweis: "Ö3 oder Radio Wien einstellen, Frequenz unter Notfall bei „Deine Frequenzen“ eintragen." },
   { id: "probeabend", quelle: "koennen", titel: "Probeabend ohne Strom gemacht", verfall: 12, gewicht: 2, fest: true, hinweis: "Ein Abend mit Sicherung aus. Danach weißt du, was fehlt." },
 ];
 

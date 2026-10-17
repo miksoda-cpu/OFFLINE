@@ -62,7 +62,7 @@ export const NOTFALL_KURZ = { at: "112 · 122 · 133 · 144, Sirenen", de: "112 
 const NEUTRAL_ROH = [
   ["Radio mit Batterie oder Kurbel – im Krisenfall informiert der ORF", "Radio mit Batterie oder Kurbel – im Krisenfall informiert dein öffentlich-rechtlicher Sender"],
   ["Radio getestet und den Sender des Österreichischen Rundfunks (ORF) gefunden", "Radio getestet und einen Sender für Krisenfälle gefunden"],
-  ["Ö3 oder Radio Wien einstellen, Frequenz unter Werkzeuge eintragen.", null],
+  ["Ö3 oder Radio Wien einstellen, Frequenz unter Notfall bei „Deine Frequenzen“ eintragen.", null],
   // Grundvorsorge „Notruf ohne Sprechen“: die österreichische Nummer (0800 133 133) und DEC112 gelten dort nicht
   ["Polizei per SMS oder Fax: 0800 133 133. Daneben gibt es den offiziellen Notruf-Chat DEC112. Stift und Papier helfen mit Einsatzkräften.",
     "Wie du ohne Sprechen einen Notruf absetzt, kommt mit dem Paket deines Landes. Stift und Papier helfen mit Einsatzkräften."],

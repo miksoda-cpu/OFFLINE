@@ -2683,11 +2683,11 @@ function suchIndex() {
       dazu(3, `Naturheilkunde · ${x.gr ? hk.gruppen[x.gr] : "Aus dem Vorrat"}`, x.n, [x.plak, x.wo, x.anbau, x.roh, ...(x.erkennen ?? []), ...verw, ...(x.s ?? []), x.folgen, ...(x.kueche ?? []), x.wer, ...(x.mehr ?? [])].filter(Boolean).join(" "), { hash: "#heilkunde", heilkunde: { m: x.id } });
     }
   }
+  // Nr. 41: das Radio steht auf Notfall (eigene Frequenzen), der Vorratsrechner ist durch die Vorräte in Vorsorge ersetzt
+  dazu(0, "Notfall", "Deine Frequenzen", l === "at" ? "Fällt Strom und Netz aus, informiert der Österreichische Rundfunk (ORF) über Radio – Ö3 ist der Verkehrs- und Krisenfunk, dazu das Landesstudio. Ein Batterie- oder Kurbelradio gehört in jede Vorsorge." : kommtMit(l), { hash: "#notfall", anker: "radio-eigene" });
   // 4 Werkzeuge
-  dazu(4, "Werkzeuge", "Radio im Krisenfall", l === "at" ? "Fällt Strom und Netz aus, informiert der Österreichische Rundfunk (ORF) über Radio – Ö3 ist der Verkehrs- und Krisenfunk, dazu das Landesstudio. Ein Batterie- oder Kurbelradio gehört in jede Vorsorge." : kommtMit(l), { hash: "#werkzeuge" });
   dazu(4, "Werkzeuge", "Sonne und Mond", "Dämmerung, Sonnenaufgang, Sonnenuntergang, Dunkel ab, Mondphase für einen Tag.", { hash: "#werkzeuge" });
   dazu(4, "Werkzeuge", "Einheiten umrechnen", "Länge, Gewicht, Volumen, Temperatur umrechnen, dazu Kochmaße.", { hash: "#werkzeuge" });
-  dazu(4, "Werkzeuge", "Vorratsrechner", "Wasser und Mahlzeiten für Personen und Tage berechnen: 2 Liter Wasser pro Person und Tag, haltbare Lebensmittel.", { hash: "#werkzeuge" });
   // 5 Info und Hilfe (nur Seiten, die es für diesen Nutzer gibt)
   for (const [seite, liste] of Object.entries(HILFE)) {
     const route = HILFE_ROUTE[seite];
