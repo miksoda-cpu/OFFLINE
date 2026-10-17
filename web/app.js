@@ -257,6 +257,25 @@ function polsterSetzen(neu) {
   speicher.set("checks", state.checks); speicher.set("bereit-v2", state.bestaetigt); speicher.set("polster-auto", auto);
   render();
 }
+/** Nr. 39 (Mik, 17.10.): Antippen der Bereit-Zahl zeigt, woraus sie besteht – je Quelle Punkte von möglichen, die Punkte mit Grund
+ *  und der nächste Schritt. Nur Anzeige; die Rechnung bleibt (web/bereit.js). */
+function bereitErklaerungHtml() {
+  const b = bereit(), polster = speicher.get("polster-auto", {}), schritt = naechsterSchritt(b);
+  const tag = (d) => (d ? new Date(d).toLocaleDateString("de-AT", { day: "numeric", month: "numeric", year: "numeric" }) : "");
+  const grund = (x) => {
+    if (x.auto === "paket") return x.id === "paket" ? "automatisch, weil die App es geladen hat" : `automatisch: Ausgabe vom ${tag(x.datum)}`;
+    if (x.auto === "wissen" || x.auto === "karte") return "automatisch, weil es auf diesem Gerät liegt";
+    if (x.auto === "notfallmappe") return "automatisch, weil sie im Tresor liegt";
+    if (x.check && polster[x.check]) return "über Euer Polster";
+    return `${x.check ? "von dir abgehakt" : "von dir bestätigt"} am ${tag(x.datum)}`;
+  };
+  return `<div class="bereit-erklaert">
+    ${b.sockel ? `<p class="muted of-klein">Deine Zahl hält noch den Stand aus der früheren Version der App (${b.wert}). Was du bestätigst, zählt zusätzlich.</p>` : ""}
+    ${b.quellen.map((q) => { const da = q.positionen.filter((x) => x.wert > 0); return `<section class="be-quelle"><h3><span>${esc(q.name)}</span> <span class="be-punkte">${q.punkte} von ${q.max}</span></h3>
+      ${da.length ? `<ul>${da.map((x) => `<li><strong>${esc(x.titel)}</strong> – ${esc(grund(x))}${x.stand === "faellig" ? " · bitte bald neu bestätigen" : ""}</li>`).join("")}</ul>` : `<p class="muted of-klein">Noch nichts.</p>`}</section>`; }).join("")}
+    <p class="be-schritt"><strong>Als Nächstes, bringt am meisten:</strong> <a href="${schritt.ziel}" data-blatt-zu>${esc(schritt.text)}</a></p>
+  </div>`;
+}
 /** Häkchen der alten Checkliste (bis 0.7) auf die Grundvorsorge übertragen, sobald beide Listen da sind (Abgleich über den Text). */
 function checksAngleichen() {
   const alt = D("alt/vorsorge-0.7") ?? D("vorsorge"), g = grund();
@@ -575,7 +594,7 @@ const seiten = {
         ${wesen.mitFigur() && !plan.sparmodus ? wesen.buehneHtml({ klein: true }) : ""}
         <div class="card of-karte bereit-kreis-karte">
           <div class="bereit-kreis-reihe">
-            <div class="bereit-kreis" role="img" aria-label="Bereit: ${b.wert} von 100" style="--wert:${b.wert}"><span class="bereit-zahl">${b.wert}</span></div>
+            <button type="button" class="bereit-kreis" data-bereit-erklaeren aria-label="Bereit: ${b.wert} von 100, Aufschlüsselung öffnen" style="--wert:${b.wert}"><span class="bereit-zahl" aria-hidden="true">${b.wert}</span></button>
             <div><strong>Bereit</strong><p class="muted of-klein bereit-satz" style="margin:.2rem 0 0">${punkt.dinge ? "Ein Punkt auf der Checkliste bringt am meisten:" : "Als Nächstes:"}</p></div>
           </div>
           <a class="btn btn-primary of-btn of-btn--primaer bereit-schritt" href="${punkt.ziel}">${esc(punkt.text)}</a>
@@ -684,7 +703,7 @@ const seiten = {
         ${ausland() ? "" : `<select class="of-select" id="bl" aria-label="Dein Bundesland">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select>`}</div>
       <div class="card of-karte bereit-kopf" style="margin-bottom:1rem">
         <span class="muted of-klein">Bereit</span>
-        <div class="bereit-zahl">${b.wert}</div>
+        <button type="button" class="bereit-zahl bereit-zahl-knopf" data-bereit-erklaeren aria-label="Bereit: ${b.wert} von 100, Aufschlüsselung öffnen">${b.wert}</button>
         ${fortschrittsbalken(b.wert, 100, `Bereit: ${b.wert} von 100`, "margin:.4rem 0 .8rem")}
         <p class="muted of-klein" style="margin:0 0 .5rem">${esc(bereitSatz(b.wert))}</p>
         <p style="margin:0 0 .6rem"><a class="btn btn-sm of-btn of-btn--klein" href="${schritt.ziel}">${esc(schritt.text)}</a></p>
@@ -2998,6 +3017,9 @@ main.addEventListener("click", async (e) => {
   }
 });
 main.addEventListener("click", (e) => { const l = e.target.closest("[data-tag-lesen]"); if (l) state.tag.lesen = l.dataset.tagLesen; });
+// Nr. 39: Bereit-Zahl antippen → Aufschlüsselung; der Link zum nächsten Schritt schließt das Blatt
+main.addEventListener("click", (e) => { if (e.target.closest("[data-bereit-erklaeren]")) blattOeffnen("So setzt sich deine Zahl zusammen", bereitErklaerungHtml()); });
+document.addEventListener("click", (e) => { if (e.target.closest(".blatt [data-blatt-zu]")) blattWeg(); });
 // Nr. 34: Polster mit Plus/Minus und Ja/Nein; der Knopf behält danach den Fokus
 main.addEventListener("click", (e) => {
   const b = e.target.closest("[data-polster-schritt], [data-polster-licht]");

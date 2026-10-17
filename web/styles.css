@@ -1013,3 +1013,13 @@ a.heute-polster:hover .heute-polster-titel, a.heute-polster:focus-visible .heute
 
 /* Nr. 38: Ton lässt sich nicht abspielen – sichtbar statt still */
 .sirene-meldung { margin: .4rem 0 0; font-weight: 600; }
+
+/* Nr. 39: Bereit-Zahl als Knopf, Aufschlüsselung im Blatt */
+button.bereit-kreis { border: 0; padding: 0; cursor: pointer; font: inherit; color: inherit; }
+button.bereit-kreis:focus-visible, .bereit-zahl-knopf:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.bereit-zahl-knopf { display: block; background: none; border: 0; padding: 0; cursor: pointer; color: inherit; text-align: left; min-height: 44px; }
+.bereit-erklaert .be-quelle { margin: 0 0 1rem; }
+.bereit-erklaert h3 { display: flex; justify-content: space-between; gap: .6rem; margin: 0 0 .4rem; }
+.bereit-erklaert .be-punkte { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bereit-erklaert ul { margin: 0; padding-left: 1.2rem; display: grid; gap: .3rem; }
+.bereit-erklaert .be-schritt { margin: 1rem 0 0; }
