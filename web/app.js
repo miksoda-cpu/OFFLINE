@@ -2792,6 +2792,7 @@ function render() {
   if (state.anker) { const ziel = document.getElementById(state.anker); state.anker = null; if (ziel) { if (ziel.tagName === "DETAILS") ziel.open = true; ziel.scrollIntoView({ block: "start" }); } }
   if (seite === "karte") karteStarten();
   if (seite === "bibliothek") vorschauenNachladen();
+  if (seite === "notfall") for (const b of main.querySelectorAll("[data-ton]")) tonVorbereiten(b.dataset.ton).catch(() => {}); // Nr. 38: Töne vorab bereit
   skinFuerSeite();
   sidebar.classList.remove("open");
   menu.setAttribute("aria-expanded", "false");
@@ -2915,6 +2916,45 @@ main.addEventListener("click", (e) => {
 });
 // 0.8.0: Szenarien, Grundvorsorge, Sirenen zum Anhören
 let sireneTon = null;
+/**
+ * Nr. 38 (Mik 17.10.: „Nix passiert, wenn man auf Anhören klickt“): Der Ton liegt schon bereit, bevor jemand tippt, damit play()
+ * im Antippen selbst läuft. Vorher kam die Adresse erst nach einem await (in der Desktop-App eine Anfrage an den Kern); WebKit
+ * erlaubt Ton aber nur aus der Geste heraus, und das Scheitern wurde still verschluckt. In der Desktop-App kommt der Ton per
+ * fetch vom lokalen Server und spielt als Blob, wie im Web (AVFoundation lädt dann nichts selbst über http).
+ */
+const tonUrls = new Map(), tonFertig = new Map();
+function tonVorbereiten(pfad) {
+  if (!tonUrls.has(pfad)) tonUrls.set(pfad, (async () => {
+    let url = await client.bildUrl?.(BASISPAKET, `inhalt/${pfad}`);
+    if (!url) throw new Error("Ton nicht im Paket");
+    if (!url.startsWith("blob:")) {
+      const r = await fetch(url);
+      if (!r.ok) throw new Error(`Ton: HTTP ${r.status}`);
+      url = URL.createObjectURL(new Blob([await r.arrayBuffer()], { type: "audio/mp4" }));
+    }
+    tonFertig.set(pfad, url);
+    return url;
+  })().catch((e) => { tonUrls.delete(pfad); throw e; }));
+  return tonUrls.get(pfad);
+}
+const TON_FEHLER = "Ton lässt sich auf diesem Gerät gerade nicht abspielen.";
+function tonMeldung(b, fehler) {
+  b.textContent = "▶ Anhören"; b.dataset.tonStand = fehler ? "fehler" : "";
+  let m = b.nextElementSibling?.classList.contains("sirene-meldung") ? b.nextElementSibling : null;
+  if (!fehler) { m?.remove(); return; }
+  if (!m) { m = document.createElement("p"); m.className = "sirene-meldung of-klein"; m.setAttribute("role", "status"); b.after(m); }
+  m.textContent = TON_FEHLER;
+}
+function tonSpielen(b, url) {
+  const audio = new Audio(url);
+  sireneTon = { pfad: b.dataset.ton, audio, knopf: b };
+  tonMeldung(b, false); b.textContent = "■ Anhalten";
+  const fehler = () => { if (sireneTon?.audio === audio) sireneTon = null; tonMeldung(b, true); };
+  audio.addEventListener("playing", () => { b.dataset.tonStand = "spielt"; });
+  audio.addEventListener("error", fehler);
+  audio.addEventListener("ended", () => { b.textContent = "▶ Anhören"; b.dataset.tonStand = ""; if (sireneTon?.audio === audio) sireneTon = null; });
+  audio.play().catch(fehler);
+}
 main.addEventListener("click", async (e) => {
   const a = e.target.closest("a");
   if (a?.classList.contains("sz-kachel")) state.szenarioVon = location.hash.startsWith("#vorsorge") ? "#vorsorge" : "#notfall";
@@ -2925,13 +2965,9 @@ main.addEventListener("click", async (e) => {
     const war = sireneTon?.pfad === b.dataset.ton;
     if (sireneTon) { sireneTon.audio.pause(); sireneTon.knopf.textContent = "▶ Anhören"; sireneTon = null; }
     if (war) return;
-    const url = await client.bildUrl?.(BASISPAKET, `inhalt/${b.dataset.ton}`);
-    if (!url) return;
-    const audio = new Audio(url);
-    sireneTon = { pfad: b.dataset.ton, audio, knopf: b };
-    b.textContent = "■ Anhalten";
-    audio.addEventListener("ended", () => { b.textContent = "▶ Anhören"; if (sireneTon?.audio === audio) sireneTon = null; });
-    audio.play().catch(() => { b.textContent = "▶ Anhören"; sireneTon = null; });
+    const fertig = tonFertig.get(b.dataset.ton);
+    if (fertig) { tonSpielen(b, fertig); return; } // im Antippen selbst
+    try { tonSpielen(b, await tonVorbereiten(b.dataset.ton)); } catch { tonMeldung(b, true); }
     return;
   }
   if (b.dataset.merk) { const id = b.dataset.merk; state.merk = state.merk.includes(id) ? state.merk.filter((x) => x !== id) : [...state.merk, id]; speicher.set("merkliste", state.merk); return render(); }

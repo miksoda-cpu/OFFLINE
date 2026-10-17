@@ -212,6 +212,17 @@ async function neu() {
   // Warten, bis Einträge da sind: eine leere Liste („Einen Moment …“, die Datei lädt noch) galt als fertig (16.10.2026, Fall D zweimal rot)
   const neues = await bis(async () => { const l = await js("return [...document.querySelectorAll('.neues-version h2')].map((h) => h.textContent)"); return l?.length ? l : null; }, "Was ist neu", 15_000).catch(() => []);
   pruefe("Was ist neu", neues[0] === `Version ${version}`, neues.slice(0, 2).join(" · ") || "keine Einträge");
+  // Nr. 38: Sirenen „Anhören“ spielt in der echten App (WebView2), oder es steht eine Meldung da – nie still. Die Ausgabe des
+  // Österreich-Pakets vor 0.8.0 hat noch keine Töne; dann gibt es keinen Knopf.
+  await gehe("#notfall");
+  const tonKnopf = await bis(() => js("return document.querySelector('#main h1') ? (document.querySelector('[data-ton]') ? 'ja' : 'nein') : null"), "Notfall", 20_000).catch(() => null);
+  if (tonKnopf === "ja") {
+    await warte(1500); // Töne vorab bereit
+    await klick("[data-ton]");
+    const ton = await bis(() => js("const b = document.querySelector('[data-ton]'); return b.dataset.tonStand ? b.dataset.tonStand + (document.querySelector('.sirene-meldung') ? ' (Meldung)' : '') : null"), "Sirene", 10_000).catch(() => "keine Reaktion");
+    pruefe("Sirene anhören spielt", ton === "spielt", ton);
+    await klick("[data-ton]").catch(() => null);
+  } else pruefe("Sirene anhören", tonKnopf === "nein", tonKnopf === "nein" ? "diese Ausgabe des Österreich-Pakets hat noch keine Töne" : "Notfall-Seite fehlt");
   // Pause hat einen eigenen Raum (0.4.2): in der Navigation unter Heute; ist Pause aus, fünf Knöpfe fürs Alter, kein Fenster
   await gehe("#pause");
   const raum = await bis(() => js("const h = document.querySelector('main h1'); return h && h.textContent === 'Pause' ? { alter: document.querySelectorAll('[data-pause=alter]').length, an: !!document.querySelector('.pause-liste'), nav: [...document.querySelectorAll('#nav a')].slice(0, 2).map((a) => a.dataset.route).join(','), fenster: !!document.querySelector('[role=dialog], .pause-rahmen') } : null"), "Raum Pause", 15_000).catch(() => null);
