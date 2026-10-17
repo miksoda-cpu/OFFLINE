@@ -9,6 +9,7 @@ import { mkdtempSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { dateiserver, chromeStarten, warteBis } from "./browser.mjs";
+import { vorratEintragen } from "./vorrat-hilfe.mjs";
 
 const WURZEL = path.resolve(import.meta.dirname, "..");
 const LAND = `try { if (localStorage.getItem("offline:land") === null) localStorage.setItem("offline:land", JSON.stringify("at")); } catch {}`;
@@ -81,7 +82,8 @@ test("(c) Die Vorräte rechnen mit der Personenzahl aus dem Haushalt", async () 
     assert.equal(await t.auswerten(`document.getElementById("hh-personen").value`), "4");
     await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.getElementById("polster")`);
     assert.equal(await t.auswerten(`!!document.getElementById("polster-personen")`), false, "kein eigenes Personen-Feld mehr im Polster");
-    for (const [f, w] of [["liter", 40], ["essen", 14]]) { await t.auswerten(`(() => { const i = document.getElementById("polster-${f}"); i.value = "${w}"; i.dispatchEvent(new Event("change", { bubbles: true })); })()`); await ruhig(t, 150); }
+    await vorratEintragen(t, [{ produkt: "Wasser", menge: 40, einheit: "Liter", art: "wasser" }, { produkt: "Essen", menge: 1, einheit: "Stück", art: "essen", mahlzeiten: 168 }]); // seit Nr. 42 als Einträge (4 Personen, 14 Tage)
+    await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.getElementById("polster")`);
     const e = await t.auswerten(`document.querySelector("#polster").innerText`);
     assert.match(e, /Für 4 Personen/); assert.match(e, /Eure Vorräte reichen für 5 Tage/, "40 Liter ÷ (2 × 4)");
   });

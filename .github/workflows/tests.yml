@@ -26,7 +26,7 @@ jobs:
           [ -n "$OFFLINE_INTERN_SCHLUESSEL" ] || { echo "Kein Kanal-Schlüssel: Inhaltstests werden übersprungen"; exit 0; }
           find . -type d -name verschluesselt -not -path "./node_modules/*" | while read -r v; do node werkzeug/intern.mjs entschluesseln "$v" "$(dirname "$v")" > /dev/null; done
       - run: node --test werkzeug/test.mjs werkzeug/klartext-wache.test.mjs werkzeug/probe-katalog.test.mjs werkzeug/bildvergleich.test.mjs
-      - run: node --test web/bereit.test.mjs web/wesen.test.mjs web/tag.test.mjs web/neues.test.mjs web/pause.test.mjs web/stil.test.mjs web/buch.test.mjs web/neuigkeiten.test.mjs web/meintag.test.mjs web/intern.test.mjs web/naturheilkunde.test.mjs web/naturbilder.test.mjs web/gedanken.test.mjs web/abkuerzungen.test.mjs web/spiele.test.mjs web/lumi-seite.test.mjs web/pause-inhalte.test.mjs web/startreife.test.mjs web/szenarien.test.mjs web/anker.test.mjs web/bibliothek-bald.test.mjs web/impressum.test.mjs web/heilkunde.test.mjs web/netz.test.mjs web/suche.test.mjs web/polster.test.mjs web/haushalt.test.mjs
+      - run: node --test web/bereit.test.mjs web/wesen.test.mjs web/tag.test.mjs web/neues.test.mjs web/pause.test.mjs web/stil.test.mjs web/buch.test.mjs web/neuigkeiten.test.mjs web/meintag.test.mjs web/intern.test.mjs web/naturheilkunde.test.mjs web/naturbilder.test.mjs web/gedanken.test.mjs web/abkuerzungen.test.mjs web/spiele.test.mjs web/lumi-seite.test.mjs web/pause-inhalte.test.mjs web/startreife.test.mjs web/szenarien.test.mjs web/anker.test.mjs web/bibliothek-bald.test.mjs web/impressum.test.mjs web/heilkunde.test.mjs web/netz.test.mjs web/suche.test.mjs web/polster.test.mjs web/haushalt.test.mjs web/vorrat.test.mjs
       - name: Paket-Kit gegen Beispiel und Vorlage
         run: |
           node paket-kit/pruefen.mjs paket-kit/beispiel/wichteln --kein-bericht
@@ -85,7 +85,7 @@ jobs:
         run: node --test werkzeug/akku.test.mjs
         env: { CHROME: google-chrome }
       - name: Blatt bleibt beim Neuzeichnen offen (Nr. 26), Rundgang-Prüfung Schweiz (Nr. 37), Sirenen anhören (Nr. 38)
-        run: node --test werkzeug/blatt.test.mjs werkzeug/rundgang-schweiz.test.mjs werkzeug/sirenen.test.mjs werkzeug/bereit-erklaert.test.mjs werkzeug/haushalt.test.mjs werkzeug/menue.test.mjs
+        run: node --test werkzeug/blatt.test.mjs werkzeug/rundgang-schweiz.test.mjs werkzeug/sirenen.test.mjs werkzeug/bereit-erklaert.test.mjs werkzeug/haushalt.test.mjs werkzeug/menue.test.mjs werkzeug/vorrat.test.mjs
         env: { CHROME: google-chrome }
       - name: Bildvergleich
         run: node werkzeug/bildvergleich.mjs --chrome --aus bildvergleich-aus --anker bildvergleich-aus/anker

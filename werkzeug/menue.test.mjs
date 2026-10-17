@@ -4,6 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { dateiserver, chromeStarten, warteBis } from "./browser.mjs";
+import { vorratEintragen } from "./vorrat-hilfe.mjs";
 
 const SEITEN = ["start", "notfall", "vorsorge", "uebersicht", "werkzeuge", "bibliothek", "einstellungen", "updates", "neues", "pause", "szenario-blackout", "notizen"];
 async function sitzung(fn) {
@@ -48,8 +49,7 @@ test("„Polster“ steht in keinem sichtbaren Text (leer und mit Vorräten); di
     const ohne = [];
     for (const s of SEITEN) if (/polster/i.test((await seite(t, s)).text)) ohne.push(s);
     assert.deepEqual(ohne, [], "leer");
-    await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.getElementById("polster-liter")`);
-    for (const [f, w] of [["liter", 56], ["essen", 14]]) { await t.auswerten(`(() => { const i = document.getElementById("polster-${f}"); i.value = "${w}"; i.dispatchEvent(new Event("change", { bubbles: true })); })()`); await ruhig(t, 150); }
+    await vorratEintragen(t, [{ produkt: "Wasser", menge: 56, einheit: "Liter", art: "wasser" }, { produkt: "Essen", menge: 1, einheit: "Stück", art: "essen", mahlzeiten: 42 }]); // seit Nr. 42 als Einträge
     const mit = [];
     for (const s of SEITEN) if (/polster/i.test((await seite(t, s)).text)) mit.push(s);
     assert.deepEqual(mit, [], "mit Vorräten");

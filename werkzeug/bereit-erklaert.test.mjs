@@ -4,6 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { dateiserver, chromeStarten, warteBis } from "./browser.mjs";
+import { vorratEintragen } from "./vorrat-hilfe.mjs";
 
 async function sitzung(fn) {
   const server = await dateiserver(), chrome = await chromeStarten(), t = await chrome.tab();
@@ -48,7 +49,7 @@ test("Mit Polster: Trinkwasser trägt den Grund „über eure Vorräte“, ein H
     await t.auswerten(`location.hash = "#einstellungen"`); await warteBis(t, `document.getElementById("hh-personen")`);
     await t.auswerten(`(() => { const i = document.getElementById("hh-personen"); i.value = "2"; i.dispatchEvent(new Event("change", { bubbles: true })); })()`);
     await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.getElementById("polster")`);
-    for (const [f, w] of [["liter", 56], ["essen", 3]]) { await t.auswerten(`(() => { const i = document.getElementById("polster-${f}"); i.value = "${w}"; i.dispatchEvent(new Event("change", { bubbles: true })); })()`); await t.auswerten(`new Promise((r) => setTimeout(r, 150))`); }
+    await vorratEintragen(t, [{ produkt: "Wasser", menge: 56, einheit: "Liter", art: "wasser" }, { produkt: "Essen", menge: 1, einheit: "Stück", art: "essen", mahlzeiten: 18 }]); // seit Nr. 42 als Einträge (2 Personen, 3 Tage)
     await t.auswerten(`document.querySelector('[data-check="radio"]').click()`); await t.auswerten(`new Promise((r) => setTimeout(r, 300))`);
     await t.auswerten(`location.hash = "#start"`); await warteBis(t, `document.querySelector("#main .bereit-kreis")`);
     await t.auswerten(`document.querySelector("#main .bereit-kreis").click()`); await warteBis(t, `document.querySelector(".blatt .bereit-erklaert")`);
