@@ -85,8 +85,8 @@ export const HILFE = {
     ["Warum fehlt ein Kästchen?", "Ein Kästchen gibt es nur für Pakete, die an sind. In der Bibliothek unter „Auf deinem Gerät“ schaltest du sie an oder aus. Dein Lesestand bleibt dabei."],
   ],
   werkzeuge: [
-    ["Was sind die Werkzeuge?", "Die Werkzeuge sind kleine Helfer ohne Internet: Radio, Sonne und Mond, Einheiten und Vorrat."],
-    ["Woher kommen die Radio-Frequenzen?", "Du trägst die Frequenzen für dein Bundesland selbst ein. Die App speichert sie auf diesem Gerät. Im Stromausfall hörst du die Lage im Radio, mit Batterie oder Kurbel."],
+    ["Was sind die Werkzeuge?", "Die Werkzeuge sind kleine Helfer ohne Internet: Sonne und Mond und Einheiten umrechnen. Das Radio steht unter Notfall, die Vorräte unter Vorsorge."],
+    ["Woher kommen die Radio-Frequenzen?", "Du trägst die Frequenzen für dein Bundesland selbst ein, unter Notfall bei „Deine Frequenzen“. Die App speichert sie auf diesem Gerät. Im Stromausfall hörst du die Lage im Radio, mit Batterie oder Kurbel."],
     ["Wie rechnet „Sonne und Mond“?", "Die App rechnet ohne Internet. Sie nimmt die Landeshauptstadt deines Bundeslandes. Sie nimmt nicht deinen Standort. Die Zeiten stimmen auf etwa zwei Minuten."],
     ["Was rechnet der Vorrat?", "Der Vorrat rechnet Wasser und Essen für deinen Haushalt. Er nimmt 2 Liter Wasser pro Person und Tag. Er speichert nichts."],
     ["Was rechnen die Einheiten?", "Länge, Gewicht, Volumen, Fläche und Temperatur. Dazu kommen Kochmaße."],

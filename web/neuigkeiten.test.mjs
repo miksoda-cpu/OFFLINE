@@ -67,6 +67,7 @@ test("0.5.4: Info und Hilfe auf sieben weiteren Seiten, Bills Texte Wort für Wo
   assert.deepEqual(Object.keys(soll), ["tresor", "bibliothek", "bereit", "pause-linie", "lumi", "werkzeuge", "lumi-buch"]);
   korrekturAnwenden(soll, await korrekturLesen());
   aenderungen070(soll);
+  aenderungen041(soll);
   for (const [k, v] of Object.entries(soll)) assert.deepEqual(HILFE[k], v, `Texte ${k} Wort für Wort`);
   assert.equal(HILFE.notfall, undefined, "Notfall bleibt ohne");
   const app = await readFile(new URL("./app.js", import.meta.url), "utf8");
@@ -101,6 +102,16 @@ function aenderungen070(soll) {
   soll.lumi.push(["Was steht auf der Lumi-Seite?", "Oben stehen die Lumi und der Satz des Tages. Darunter ist ein Menü: Übersicht, Alles Gesagte, Gelernt, Einstellungen und Hilfe. In der Übersicht steht ein Kästchen für jedes Paket der Lumi, dazu das Heft und deine Vorhaben."],
     ["Wie komme ich zur Lumi-Seite?", "Tippe auf „Heute“ auf die Lumi. Oder öffne „Mehr“ und dann „Lumi“."],
     ["Warum fehlt ein Kästchen?", "Ein Kästchen gibt es nur für Pakete, die an sind. In der Bibliothek unter „Auf deinem Gerät“ schaltest du sie an oder aus. Dein Lesestand bleibt dabei."]);
+}
+/**
+ * Nr. 41 (Menü neu geordnet, Bill 17.10.2026, Wortlaut freigegeben): Radio steht unter Notfall, die Vorräte unter Vorsorge. Nur diese
+ * zwei Antworten der Werkzeuge ändern sich; die Frage zu den Frequenzen bleibt bei den Werkzeugen, weil Notfall ohne Hilfe bleibt.
+ */
+function aenderungen041(soll) {
+  const i = (frage) => soll.werkzeuge.findIndex(([f]) => f === frage);
+  soll.werkzeuge[i("Was sind die Werkzeuge?")] = ["Was sind die Werkzeuge?", "Die Werkzeuge sind kleine Helfer ohne Internet: Sonne und Mond und Einheiten umrechnen. Das Radio steht unter Notfall, die Vorräte unter Vorsorge."];
+  const f = i("Woher kommen die Radio-Frequenzen?");
+  soll.werkzeuge[f] = [soll.werkzeuge[f][0], soll.werkzeuge[f][1].replace("Du trägst die Frequenzen für dein Bundesland selbst ein.", "Du trägst die Frequenzen für dein Bundesland selbst ein, unter Notfall bei „Deine Frequenzen“.")];
 }
 function korrekturAnwenden(soll, korr) {
   for (const [k, liste] of Object.entries(korr)) for (const [n, frage, antwort] of liste) soll[k][n - 1] = [frage ?? soll[k][n - 1][0], antwort];
