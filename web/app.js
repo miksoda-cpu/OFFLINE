@@ -27,6 +27,8 @@ import { LAENDER, SPAETER as LAENDER_SPAETER, kommtMit, landBestimmen, NOTFALL_K
 import { FRAGEN as NETZ_FRAGEN, NACHBAR_SATZ, rat as netzRat, STUFEN as NETZ_STUFEN, stufeFuer, dauerText as netzDauer, seite as netzSeite, zuletztText } from "./netz.js";
 import { indexBauen as suchIndexBauen, suchen as suchenIm, begriffe as suchBegriffe, hervorheben, zeile as suchZeile } from "./suche.js";
 import { TEILE as SZ_TEILE } from "./szenarien.js";
+import { vorratRechnen, eintragAngaben as vorratEintrag, einkaufsliste, ausPolster } from "./vorrat.js";
+import { listeHtml as vorratListeHtml, formularHtml as vorratFormularHtml, heuteAblaufHtml, einkaufHtml, vorlage as vorratVorlage } from "./vorrat-ansicht.js";
 import { haushaltAngaben, haushaltAusAlt, merkmale as haushaltMerkmale, zusammenfassung as haushaltZeile, haushaltEinstellungHtml, haushaltAendern } from "./haushalt.js";
 import { polsterRechnen, polsterAngaben, polsterSatz, polsterPunkte, heuteZeile as polsterHeute, tageText, LICHT_SATZ, ZIEL as POLSTER_ZIEL } from "./polster.js";
 import { PAKET as HEILKUNDE_PAKET, startZustand as heilkundeStart, seiteHtml as heilkundeSeiteHtml, klick as heilkundeKlick } from "./heilkunde.js";
@@ -218,13 +220,19 @@ function haushaltLaden() {
   speicher.set("haushalt", state.haushalt);
 }
 haushaltLaden();
+/** Nr. 42: Welcher Entwurf der Vorratsliste läuft (Mik wählt: a Liste nach Art, b Regal nach Ablauf, c Schnell mit Vorlagen). */
+const VORRAT_ANSICHT = "a";
+/** Vorratsliste; beim ersten Start übernommen aus den Angaben von Nr. 34 (Liter, Essen-Tage, Licht), nichts geht verloren. */
+state.vorraete = (() => { const v = speicher.get("vorraete", null); if (Array.isArray(v)) return v.map(vorratEintrag); const neu = ausPolster(state.polster, state.haushaltV2?.personen ?? 1); speicher.set("vorraete", neu); return neu; })();
+state.vorratForm = null; state.vorratFilter = "";
 function haushaltSetzen(neu) {
   state.haushaltV2 = neu; speicher.set("haushalt-v2", neu);
   state.haushalt = haushaltMerkmale(neu); speicher.set("haushalt", state.haushalt);
+  if (state.vorraete) bereitAbgleichen(); // die Tage hängen an der Personenzahl
   render();
 }
 /** Euer Polster rechnet mit der Personenzahl aus dem Haushalt (Nr. 40). */
-const polsterJetzt = () => polsterRechnen({ ...state.polster, personen: state.haushaltV2?.personen ?? 1 });
+const polsterJetzt = () => vorratRechnen(state.vorraete, state.haushaltV2?.personen ?? 1, heuteDatum()); // Nr. 42: aus der Liste
 /** Erledigt und gesamt der Grundvorsorge, nur Punkte, die zum Haushalt passen (für Bereit und die Kacheln). */
 function grundStand() {
   const g = grund();
@@ -237,35 +245,26 @@ function polsterHeuteHtml() {
   return z.knopf ? `<div class="heute-polster heute-polster--leer"><p class="heute-polster-titel">${esc(z.titel)}</p><a class="btn of-btn" href="#vorsorge" data-anker-ziel="polster">${esc(z.knopf)}</a></div>`
     : `<a class="heute-polster" href="#vorsorge" data-anker-ziel="polster"><span class="heute-polster-titel">${esc(z.titel)}</span><span class="muted of-klein">${esc(z.klein)}</span></a>`;
 }
-/** Vorsorge › Polster: Personen, Wasser, Essen, Licht; nur am Gerät. */
+/** Vorsorge › Vorräte (Nr. 42): Liste mit Ablaufdatum im gewählten Entwurf, darüber was sie reicht, dazu die Einkaufsliste. */
 function polsterHtml() {
-  const r = polsterJetzt();
-  const zahl = (feld, titel, wert, schritt, min, max, einheit) => `<div class="polster-feld"><label for="polster-${feld}">${titel}</label>
-      <div class="polster-zahl"><button type="button" class="btn of-btn polster-schritt" data-polster-schritt="${feld}" data-polster-um="${-schritt}" aria-label="${titel}: weniger">−</button>
-      <input class="of-input" id="polster-${feld}" data-polster-feld="${feld}" type="number" inputmode="numeric" min="${min}" max="${max}" step="1" value="${wert}">
-      <button type="button" class="btn of-btn polster-schritt" data-polster-schritt="${feld}" data-polster-um="${schritt}" aria-label="${titel}: mehr">+</button>${einheit ? `<span class="muted of-klein">${einheit}</span>` : ""}</div></div>`;
+  const r = polsterJetzt(), heute = heuteDatum(), liste = state.vorraete;
   return `<section class="card of-karte polster" id="polster" aria-labelledby="polster-titel" style="margin-bottom:1rem">
     <h2 id="polster-titel" style="margin-top:0">Vorräte</h2>
-    <p class="muted of-klein" style="margin:0 0 .8rem">Wie lange euer Haushalt mit Wasser und Essen auskommt. Ziel ${POLSTER_ZIEL} Tage. Bleibt auf diesem Gerät.</p>
-    <div class="polster-felder">
-      <p class="polster-personen of-klein">Für ${r.personen} ${r.personen === 1 ? "Person" : "Personen"} · aus „Dein Haushalt“ · <a href="#einstellungen" data-anker-ziel="haushalt">ändern</a></p>
-      ${zahl("liter", "Wasser", r.liter, 5, 0, 5000, "Liter")}
-      ${zahl("essen", "Essen für", r.essen, 1, 0, 365, "Tage")}
-      <fieldset class="polster-feld polster-licht"><legend>Taschenlampe mit Batterien oder Powerbank</legend>
-        ${[[true, "Ja"], [false, "Nein"]].map(([w, t]) => `<button type="button" class="btn of-btn${r.licht === w ? " polster-gewaehlt" : ""}" data-polster-licht="${w}" aria-pressed="${r.licht === w}">${t}</button>`).join(" ")}</fieldset>
-    </div>
+    <p class="muted of-klein" style="margin:0 0 .4rem">Was ihr zu Hause habt, mit Ablaufdatum. Die App rechnet, wie lange es reicht, und sagt rechtzeitig, was aufzubrauchen oder nachzukaufen ist. Ziel 14 Tage. Bleibt auf diesem Gerät.</p>
+    <p class="polster-personen of-klein">Für ${r.personen} ${r.personen === 1 ? "Person" : "Personen"} · aus „Dein Haushalt“ · <a href="#einstellungen" data-anker-ziel="haushalt">ändern</a></p>
     <div class="polster-ergebnis" role="status">
       <p class="polster-tage">${r.tage > 0 ? `Eure Vorräte reichen für ${tageText(r.tage)}` : "Tragt eure Vorräte ein – dann seht ihr, wie lange sie reichen."}</p>
-      <p class="muted of-klein" style="margin:.2rem 0 0">Wasser reicht für ${tageText(r.wasserTage)} (${r.personen === 1 ? "2 Liter am Tag" : `2 Liter je Person und Tag`}), Essen für ${tageText(r.essenTage)}.</p>
-      ${r.liter || r.essen ? `<p style="margin:.5rem 0 0">${esc(polsterSatz(r))}</p>` : ""}
-      ${r.licht === false ? `<p style="margin:.5rem 0 0">${esc(LICHT_SATZ)}</p>` : ""}
-    </div></section>`;
+      <p class="muted of-klein" style="margin:.2rem 0 0">Wasser reicht für ${tageText(r.wasserTage)} (${String(r.liter).replace(".", ",")} Liter), Essen für ${tageText(r.essenTage)} (${r.mahlzeiten} Mahlzeiten).</p>
+      ${liste.length ? `<p style="margin:.5rem 0 0">${esc(polsterSatz(r))}</p>` : ""}
+      ${liste.length && !r.licht ? `<p style="margin:.5rem 0 0">${esc(LICHT_SATZ)}</p>` : ""}
+      <p style="margin:.6rem 0 0"><button type="button" class="btn btn-sm of-btn of-btn--klein" data-vorrat-einkauf>Einkaufsliste</button></p>
+    </div>
+    ${state.vorratForm ? vorratFormularHtml(state.vorratForm) : ""}
+    <div class="vr vr--${VORRAT_ANSICHT}">${vorratListeHtml(VORRAT_ANSICHT, liste, heute, { filter: state.vorratFilter })}</div>
+  </section>`;
 }
-/** Angaben speichern und mit Bereit abgleichen: Was das Polster erfüllt, gilt dort als erledigt. Von Hand gesetzte Häkchen bleiben
- *  immer; zurückgenommen wird nur, was das Polster selbst gesetzt hat (gemerkt in „polster-auto“). */
-function polsterSetzen(neu) {
-  const { personen: _, ...angaben } = polsterAngaben({ ...state.polster, ...neu }); // Personen kommen seit Nr. 40 aus dem Haushalt
-  state.polster = angaben; speicher.set("polster", state.polster);
+/** Bereit-Abgleich (Nr. 34): Was die Vorräte erfüllen, gilt dort als erledigt; zurückgenommen wird nur, was sie selbst gesetzt haben. */
+function bereitAbgleichen() {
   const auto = speicher.get("polster-auto", {}), jetzt = new Date(testJetzt()).toISOString();
   for (const [check, erfuellt] of Object.entries(polsterPunkte(polsterJetzt()))) {
     const pos = BEREIT_POSITIONEN.find((p) => p.check === check);
@@ -273,7 +272,10 @@ function polsterSetzen(neu) {
     else if (!erfuellt && auto[check]) { state.checks[check] = false; delete auto[check]; if (pos) delete state.bestaetigt[pos.id]; }
   }
   speicher.set("checks", state.checks); speicher.set("bereit-v2", state.bestaetigt); speicher.set("polster-auto", auto);
-  render();
+}
+function vorraeteSetzen(liste) {
+  state.vorraete = liste.map(vorratEintrag); speicher.set("vorraete", state.vorraete);
+  bereitAbgleichen(); render();
 }
 /** Nr. 39 (Mik, 17.10.): Antippen der Bereit-Zahl zeigt, woraus sie besteht – je Quelle Punkte von möglichen, die Punkte mit Grund
  *  und der nächste Schritt. Nur Anzeige; die Rechnung bleibt (web/bereit.js). */
@@ -660,6 +662,7 @@ const seiten = {
           : `<div class="card of-karte tag-leer"><p style="margin:0">${pakete.length ? "Für heute liegt nichts in der Vorratskammer." : "Die Vorratskammer ist noch leer."} ${navigator.onLine ? "OFFLINE holt die nächsten Tage, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."} Alles andere funktioniert weiter.</p></div>`}
       </section>`}
       ${polsterHeuteHtml()}
+      ${heuteAblaufHtml(state.vorraete, heuteDatum())}
       ${tagesplanHtml()}
       </div>`;
   },
@@ -2644,7 +2647,7 @@ const HILFE_ROUTE = { updates: "updates", tresor: "tresor", bibliothek: "bibliot
 let suchMerk = null;
 function suchIndex() {
   const l = landId(), hkP = installiertesPaket(HEILKUNDE_PAKET);
-  const schluessel = [l, P()?.manifest.version, hkP?.manifest.version, state.haushalt.join(), state.notizbuch.map((n) => `${n.id}${n.geaendert}`).join(), wesen.nurVorschau, tresorBenutzt()].join("|");
+  const schluessel = [l, P()?.manifest.version, hkP?.manifest.version, state.haushalt.join(), state.notizbuch.map((n) => `${n.id}${n.geaendert}`).join(), (state.vorraete ?? []).map((v) => `${v.id}${v.produkt}${v.menge}${v.ablauf}`).join(), wesen.nurVorschau, tresorBenutzt()].join("|");
   if (suchMerk?.schluessel === schluessel) return suchMerk.index;
   const e = [], dazu = (rang, bereich, titel, text, ziel) => e.push({ rang, bereich, titel: titel ?? "", text: text ?? "", ziel });
   // 0 Notfall und die Seiten ohne Internet
@@ -2666,7 +2669,8 @@ function suchIndex() {
   // 2 Vorsorge: Haushalt und die Punkte der Grundvorsorge, die für den Haushalt angezeigt werden
   const g = grund();
   if (g) {
-    dazu(2, "Vorsorge", "Vorräte", `Vorrat, Polster: Wie lange euer Haushalt mit Wasser, Essen und Licht auskommt: Personen, Wasser in Litern, Essen für wie viele Tage, Taschenlampe. Ziel ${POLSTER_ZIEL} Tage.`, { hash: "#vorsorge", anker: "polster" });
+    for (const v of state.vorraete ?? []) dazu(2, "Vorsorge · Vorräte", v.produkt, `${v.menge} ${v.einheit}${v.ablauf ? `, läuft ab ${v.ablauf}` : ""}`, { hash: "#vorsorge", anker: "polster" });
+    dazu(2, "Vorsorge", "Vorräte", `Vorrat, Polster, Ablaufdatum, Einkaufsliste: Wie lange euer Haushalt mit Wasser, Essen und Licht auskommt: Personen, Wasser in Litern, Essen für wie viele Tage, Taschenlampe. Ziel ${POLSTER_ZIEL} Tage.`, { hash: "#vorsorge", anker: "polster" });
     dazu(2, "Einstellungen", "Dein Haushalt", "Wie viele Menschen leben bei dir. Wer lebt bei dir: Kinder, Babys, Ältere Menschen, Jemand braucht Pflege, Jemand mit Behinderung. Haustiere: Hund, Katze, Kaninchen, Vogel, Reptilien. Wie wohnst du: Eigenes Haus, Mietwohnung, Keller.", { hash: "#einstellungen", anker: "haushalt" });
     for (const b of g.bereiche) {
       dazu(2, "Vorsorge", b.titel, b.satz, { hash: "#vorsorge", anker: `gv-${b.id}` });
@@ -2891,7 +2895,7 @@ main.addEventListener("change", (e) => {
   if (t.id === "wz-art") { state.werkzeug.rechner = { ...state.werkzeug.rechner, art: t.value, von: Object.keys(EINHEITEN[t.value].e)[0], nach: Object.keys(EINHEITEN[t.value].e)[1] }; render(); }
   if (t.id === "wz-von") { state.werkzeug.rechner.von = t.value; render(); }
   if (t.id === "wz-nach") { state.werkzeug.rechner.nach = t.value; render(); }
-  if (t.dataset.polsterFeld) { polsterSetzen({ [t.dataset.polsterFeld]: t.value }); document.getElementById(t.id)?.focus(); return; }
+  if (t.dataset.vorratArt !== undefined && state.vorratForm) { state.vorratForm = { ...vorratFormLesen(), art: t.value }; render(); document.getElementById("vorrat-art")?.focus(); return; } // Liter/Mahlzeiten je nach Art
   if (t.id === "wz-personen" || t.id === "wz-tage") { state.werkzeug.vorrat[t.id === "wz-personen" ? "personen" : "tage"] = Math.max(1, +t.value || 1); render(); }
 });
 
@@ -3061,14 +3065,50 @@ main.addEventListener("click", (e) => {
   if (b.dataset.hhStart === "weiter") haushaltSetzen({ ...state.haushaltV2, personen: Math.min(20, Math.max(1, Number(document.getElementById("hh-personen")?.value) || 1)) });
   location.hash = "#start";
 });
-// Nr. 34: Polster mit Plus/Minus und Ja/Nein; der Knopf behält danach den Fokus
+// Nr. 42: Vorratsliste – neu, Vorlage, ändern, entfernen, Filter, Einkaufsliste
+function vorratFormLesen() {
+  const w = (id) => document.getElementById(id)?.value ?? "";
+  const m = w("vorrat-monat"), d = w("vorrat-tag");
+  return { ...state.vorratForm, produkt: w("vorrat-produkt"), menge: w("vorrat-menge"), einheit: w("vorrat-einheit"), art: w("vorrat-art"),
+    ablauf: m ? (d ? `${m}-${String(Math.min(31, Math.max(1, Number(d)))).padStart(2, "0")}` : m) : "",
+    liter: document.getElementById("vorrat-liter") ? w("vorrat-liter") : undefined, mahlzeiten: document.getElementById("vorrat-mahlzeiten") ? w("vorrat-mahlzeiten") : undefined };
+}
+const vorratFormZeigen = (f) => { state.vorratForm = f; render(); setTimeout(() => { const el = document.getElementById("vorrat-form"); el?.scrollIntoView({ block: "center" }); document.getElementById("vorrat-produkt")?.focus(); }, 30); };
 main.addEventListener("click", (e) => {
-  const b = e.target.closest("[data-polster-schritt], [data-polster-licht]");
+  const b = e.target.closest("[data-vorrat-neu], [data-vorrat-vorlage], [data-vorrat-bearbeiten], [data-vorrat-weg], [data-vorrat-abbrechen], [data-vorrat-filter], [data-vorrat-einkauf]");
   if (!b) return;
-  if (b.dataset.polsterLicht) { const w = b.dataset.polsterLicht === "true"; polsterSetzen({ licht: state.polster.licht === w ? null : w }); document.querySelector(`[data-polster-licht="${w}"]`)?.focus(); return; }
-  const f = b.dataset.polsterSchritt, um = Number(b.dataset.polsterUm);
-  polsterSetzen({ [f]: state.polster[f] + um }); document.querySelector(`[data-polster-schritt="${f}"][data-polster-um="${um}"]`)?.focus();
+  if (b.hasAttribute("data-vorrat-neu")) return vorratFormZeigen({ art: b.dataset.vorratArtVor || "essen", einheit: "Stück", menge: 1 });
+  if (b.dataset.vorratVorlage !== undefined) return vorratFormZeigen(vorratVorlage(Number(b.dataset.vorratVorlage)));
+  if (b.dataset.vorratBearbeiten) return vorratFormZeigen({ ...state.vorraete.find((x) => x.id === b.dataset.vorratBearbeiten) });
+  if (b.dataset.vorratWeg) return vorraeteSetzen(state.vorraete.filter((x) => x.id !== b.dataset.vorratWeg));
+  if (b.hasAttribute("data-vorrat-abbrechen")) { state.vorratForm = null; return render(); }
+  if (b.dataset.vorratFilter !== undefined) { state.vorratFilter = b.dataset.vorratFilter; return render(); }
+  if (b.hasAttribute("data-vorrat-einkauf")) blattOeffnen("Einkaufsliste", einkaufHtml(einkaufsliste(state.vorraete, state.haushaltV2?.personen ?? 1, heuteDatum())));
 });
+main.addEventListener("submit", (e) => {
+  if (!e.target.closest("[data-vorrat-form]")) return;
+  e.preventDefault();
+  const f = vorratFormLesen();
+  if (!f.produkt.trim()) { document.getElementById("vorrat-produkt")?.focus(); return; }
+  const eintrag = vorratEintrag(f), liste = state.vorraete.filter((x) => x.id !== eintrag.id);
+  state.vorratForm = null; vorraeteSetzen([...liste, eintrag]);
+});
+// Einkaufsliste drucken oder teilen (wie die Checkliste)
+document.addEventListener("click", async (e) => {
+  const b = e.target.closest(".blatt [data-einkauf]");
+  if (!b) return;
+  const text = ["Einkaufsliste (OFFLINE)", ...einkaufsliste(state.vorraete, state.haushaltV2?.personen ?? 1, heuteDatum()).map((x) => `[ ] ${x.text}`)].join("\n");
+  if (b.dataset.einkauf === "teilen") {
+    if (navigator.share) { try { await navigator.share({ title: "Einkaufsliste", text }); return; } catch { /* abgebrochen */ } }
+    if (desktop) { try { await client.textSpeichern("OFFLINE-Einkaufsliste.txt", text); } catch { /* still */ } return; }
+    const l = Object.assign(document.createElement("a"), { href: URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" })), download: "OFFLINE-Einkaufsliste.txt" });
+    document.body.append(l); l.click(); l.remove(); return;
+  }
+  document.getElementById("druck-bereich").replaceChildren(druckTeil(`<div class="druck-liste">${text.split("\n").map((z) => `<p>${esc(z).replace(/^\[ \]/, "☐")}</p>`).join("")}</div>`));
+  try { await client.drucken?.(); } catch { print(); }
+  if (!desktop) print();
+});
+
 // Lumi: Startablauf (Einladung, Einschalten, Namensgabe, Ausschalten mit Rückfrage), siehe wesen.js
 function lumiAktion(a) {
   if (a === "einladung-ja") wesen.einladung(true);

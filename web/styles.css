@@ -1042,3 +1042,29 @@ button.bereit-kreis:focus-visible, .bereit-zahl-knopf:focus-visible { outline: 3
 .hh-wahlen { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; }
 .hh-wahl { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; cursor: pointer; }
 .hh-wahl input { width: 1.1rem; height: 1.1rem; }
+
+/* Nr. 42: Vorratsliste (drei Entwürfe) */
+.vr-liste { list-style: none; margin: .4rem 0 .8rem; padding: 0; display: grid; gap: .1rem; }
+.vr-zeile { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .2rem .6rem; align-items: center; padding: .55rem 0; border-bottom: 1px solid var(--line, rgba(127,127,127,.2)); }
+.vr-zeile--ab .vr-was strong { text-decoration: line-through; text-decoration-thickness: 1px; }
+.vr-was { display: grid; min-width: 0; overflow-wrap: anywhere; }
+.vr-ablauf { font-size: .9rem; white-space: nowrap; }
+.vr-ablauf--bald, .vr-ablauf--ab { font-weight: 600; }
+.vr-knoepfe { grid-column: 1 / -1; display: flex; gap: .4rem; }
+.vr-gruppe { margin: 1rem 0 0; }
+.vr-gruppe h3 { margin: 0 0 .2rem; }
+.vr-form { margin: 1rem 0; }
+.vr-felder { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .6rem; }
+.vr-feld { display: grid; gap: .2rem; font-weight: 600; font-size: .95rem; }
+.vr-feld--breit { grid-column: 1 / -1; }
+.vr-feld .of-input, .vr-feld .of-select { width: 100%; min-height: 44px; }
+.vr-form-knoepfe { margin: .8rem 0 0; }
+.vr-regal { display: flex; gap: .5rem; overflow-x: auto; padding: .4rem 0 .8rem; }
+.vr-regal-fach { flex: 0 0 auto; min-width: 9rem; max-width: 12rem; display: grid; gap: .2rem; padding: .6rem .7rem; border: 1px solid var(--line, rgba(127,127,127,.25)); border-radius: 12px; overflow-wrap: anywhere; }
+.vr-filter { display: flex; flex-wrap: wrap; gap: .3rem; margin: 0 0 .4rem; }
+.vr-filter .btn[aria-pressed="true"] { font-weight: 600; border-color: currentColor; }
+.vr-vorlagen { display: flex; flex-wrap: wrap; gap: .4rem; margin: .8rem 0; }
+.vr-vorlagen p { flex-basis: 100%; }
+.vr-heute { display: grid; gap: .2rem; text-align: center; margin: -1rem auto 1.4rem; color: inherit; text-decoration: none; font-size: .95rem; }
+.vr-heute-zeile { display: block; }
+.vr-einkauf ul { padding-left: 1.2rem; display: grid; gap: .3rem; }

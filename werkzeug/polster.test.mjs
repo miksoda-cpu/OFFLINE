@@ -9,6 +9,7 @@ import { mkdtempSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { dateiserver, chromeStarten, warteBis } from "./browser.mjs";
+import { wieBisher, vorratEintragen } from "./vorrat-hilfe.mjs";
 
 const WURZEL = path.resolve(import.meta.dirname, "..");
 const LAND = `try { if (localStorage.getItem("offline:land") === null) localStorage.setItem("offline:land", JSON.stringify("at")); } catch {}`;
@@ -28,18 +29,8 @@ async function sitzung(fn, { alt = null, land = true } = {}) {
 const ruhig = (t, ms = 400) => t.auswerten(`new Promise((r) => setTimeout(r, ${ms}))`);
 const startBereit = (t) => warteBis(t, `localStorage.getItem("offline:paket:at-basis") && document.querySelector("#main h1")`, 60_000);
 const zeile = (t) => t.auswerten(`(() => { const z = document.querySelector("#main .heute-polster"); return z ? { text: z.innerText.replace(/\\s+/g, " ").trim(), knopf: z.querySelector("a.btn")?.textContent ?? null, link: (z.matches("a") ? z : z.querySelector("a"))?.getAttribute("href") } : null; })()`);
-/** Polster eintragen, wie ein Mensch: die Personenzahl seit Nr. 40 unter Einstellungen › Dein Haushalt, Wasser und Essen in
- *  Vorsorge › Polster (Zahlen ins Feld tippen, change). */
-async function eintragen(t, { personen, liter, essen }) {
-  await t.auswerten(`location.hash = "#einstellungen"`); await warteBis(t, `document.getElementById("hh-personen")`, 20_000);
-  await t.auswerten(`(() => { const i = document.getElementById("hh-personen"); i.value = "${personen}"; i.dispatchEvent(new Event("change", { bubbles: true })); })()`);
-  await ruhig(t, 150);
-  await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.getElementById("polster")`, 20_000);
-  for (const [f, w] of Object.entries({ liter, essen })) {
-    await t.auswerten(`(() => { const i = document.getElementById("polster-${f}"); i.value = "${w}"; i.dispatchEvent(new Event("change", { bubbles: true })); })()`);
-    await ruhig(t, 150);
-  }
-}
+/** Wie bisher eintragen (Personen, Liter, Essen-Tage) – seit Nr. 42 als Einträge in der Vorratsliste (werkzeug/vorrat-hilfe.mjs). */
+const eintragen = (t, a) => wieBisher(t, a);
 
 test("(a) frisch: Heute zeigt „Tragt eure Vorräte ein – …“ und „Vorräte eintragen“, keine Vorrat-Zeile (Wortlaut seit Nr. 41)", async () => {
   await sitzung(async (t, url) => {
@@ -62,23 +53,21 @@ test("(b) 2 Personen, 40 Liter, Essen 14 Tage → „Eure Vorräte reichen für 
     await eintragen(t, { personen: 2, liter: 40, essen: 14 });
     const e = await t.auswerten(`document.querySelector("#polster .polster-ergebnis").innerText`);
     assert.match(e, /^Eure Vorräte reichen für 10 Tage/); assert.ok(e.includes("Mit mehr Wasser reichen eure Vorräte am längsten."), e);
-    // Licht „Nein“: der freundliche Satz; die Tage bleiben
-    await t.auswerten(`document.querySelector('[data-polster-licht="false"]').click()`); await ruhig(t);
-    const e2 = await t.auswerten(`document.querySelector("#polster .polster-ergebnis").innerText`);
-    assert.ok(e2.includes("Denk auch an Licht: Taschenlampe und Batterien.") && /^Eure Vorräte reichen für 10 Tage/.test(e2), e2);
-    // Gewählte Taste deutlich gefüllt (Bill, 16.10.): Hintergrund in der Akzentfarbe, die andere nicht; aria-pressed bleibt
-    const knopf = await t.auswerten(`(() => { const f = (w) => { const b = document.querySelector('[data-polster-licht="' + w + '"]'); return { pressed: b.getAttribute("aria-pressed"), bg: getComputedStyle(b).backgroundColor }; }; return { nein: f("false"), ja: f("true"), akzent: getComputedStyle(document.querySelector('[data-polster-licht="false"]')).borderColor }; })()`);
-    assert.equal(knopf.nein.pressed, "true"); assert.equal(knopf.ja.pressed, "false");
-    assert.equal(knopf.nein.bg, knopf.akzent, "gewählt: gefüllt"); assert.notEqual(knopf.ja.bg, knopf.nein.bg, "nicht gewählt: nicht gefüllt");
-    // Plus/Minus: +5 Liter → 11 Tage (45 ÷ 4)
-    await t.auswerten(`document.querySelector('[data-polster-schritt="liter"][data-polster-um="5"]').click()`); await ruhig(t);
+    // Ohne Licht-Eintrag: der freundliche Satz; die Tage bleiben (seit Nr. 42 Einträge statt der Ja/Nein-Knöpfe aus Nr. 34)
+    assert.ok(e.includes("Denk auch an Licht: Taschenlampe und Batterien."), e);
+    // Noch 5 Liter dazu → 11 Tage (45 ÷ 4)
+    await vorratEintragen(t, [{ produkt: "Mineralwasser", menge: 5, einheit: "Liter", art: "wasser" }]);
     assert.match(await t.auswerten(`document.querySelector("#polster .polster-tage").textContent`), /^Eure Vorräte reichen für 11 Tage$/);
     // Heute: Zeile mit Tagen und dem kleinen Satz, führt zu Vorsorge › Polster
     await t.auswerten(`location.hash = "#start"`); await ruhig(t, 600);
     const z = await zeile(t);
     assert.equal(z.text, "Eure Vorräte reichen für 11 Tage Wasser, Essen, Licht · Ziel 14 Tage"); assert.equal(z.link, "#vorsorge"); assert.doesNotMatch(z.text, ANGST);
     // Alles bleibt am Gerät
-    assert.deepEqual(await t.auswerten(`({ polster: JSON.parse(localStorage.getItem("offline:polster")), personen: JSON.parse(localStorage.getItem("offline:haushalt-v2")).personen })`), { polster: { liter: 45, essen: 14, licht: false }, personen: 2 });
+    assert.deepEqual(await t.auswerten(`(() => { const v = JSON.parse(localStorage.getItem("offline:vorraete")); return { liter: v.reduce((s, e) => s + (e.liter ?? 0), 0), mahlzeiten: v.reduce((s, e) => s + (e.mahlzeiten ?? 0), 0), licht: v.some((e) => e.art === "licht"), personen: JSON.parse(localStorage.getItem("offline:haushalt-v2")).personen }; })()`), { liter: 45, mahlzeiten: 84, licht: false, personen: 2 });
+    // Licht eingetragen: Satz weg, Taschenlampen-Punkt in Bereit erledigt
+    await vorratEintragen(t, [{ produkt: "Taschenlampe", menge: 1, einheit: "Stück", art: "licht" }]);
+    assert.ok(!(await t.auswerten(`document.querySelector("#polster .polster-ergebnis").innerText`)).includes("Denk auch an Licht"));
+    assert.equal(await t.auswerten(`document.querySelector('[data-check="lampen"]').checked`), true, "Licht über die Vorräte");
     // Die Suche findet „Polster“
     await t.auswerten(`document.querySelector("[data-suche-auf]").click()`); await warteBis(t, `document.getElementById("suche-feld")`);
     await t.auswerten(`(() => { const f = document.getElementById("suche-feld"); f.value = "Polster"; f.dispatchEvent(new Event("input", { bubbles: true })); })()`); await ruhig(t);
@@ -121,22 +110,30 @@ test("Update von der zuletzt veröffentlichten Version: Häkchen und Notizen ble
   execFileSync("sh", ["-c", `git archive ${tags[0]} web | tar -x -C "${alt}"`], { cwd: WURZEL });
   await sitzung(async (t, url, fassung) => {
     await t.laden(`${url}/app.html#start`); await startBereit(t);
+    // In der alten Fassung (0.9.2) die Eingaben aus Nr. 34: 2 Personen, 40 Liter, Essen 14 Tage
+    await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.getElementById("polster-liter")`, 20_000);
+    for (const [f, w] of [["personen", 2], ["liter", 40], ["essen", 14]]) await t.auswerten(`(() => { const i = document.getElementById("polster-${f}"); if (i) { i.value = "${w}"; i.dispatchEvent(new Event("change", { bubbles: true })); } })()`).then(() => ruhig(t, 200));
     await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelectorAll("[data-check]").length > 3`, 20_000);
     const ids = await t.auswerten(`(() => { const a = [...document.querySelectorAll("[data-check]")].map((c) => c.dataset.check); return ["trinkwasser", "radio", ...a.slice(-2)]; })()`);
     for (const id of ids) { await t.auswerten(`document.querySelector('[data-check="${id}"]').click()`); await ruhig(t, 250); } // jeder Klick zeichnet neu
     await t.auswerten(`(() => { const n = JSON.parse(localStorage.getItem("offline:notizbuch") ?? "[]"); n.push({ id: "u1", titel: "Treffpunkt", text: "Bei der Kirche um 18 Uhr.", geaendert: new Date().toISOString() }); localStorage.setItem("offline:notizbuch", JSON.stringify(n)); })()`);
     const vorher = await t.auswerten(`({ checks: localStorage.getItem("offline:checks"), v2: localStorage.getItem("offline:bereit-v2"), notizen: localStorage.getItem("offline:notizbuch") })`);
-    assert.equal(Object.values(JSON.parse(vorher.checks)).filter(Boolean).length, 4);
+    assert.equal(Object.values(JSON.parse(vorher.checks)).filter(Boolean).length, 5, "vier von Hand, dazu Lebensmittel über die 14 Essen-Tage");
     fassung.alt = false;
     await t.laden(`${url}/app.html?neu#start`); await warteBis(t, `document.querySelector("#main .heute-polster")`, 30_000); await ruhig(t, 600);
     assert.deepEqual(await t.auswerten(`({ checks: localStorage.getItem("offline:checks"), v2: localStorage.getItem("offline:bereit-v2"), notizen: localStorage.getItem("offline:notizbuch") })`), vorher, "Häkchen, Bestätigungen und Notizen unverändert");
+    // Übernahme (Nr. 42): zwei Sammel-Einträge, gleiche Tage wie vorher
+    assert.deepEqual(await t.auswerten(`JSON.parse(localStorage.getItem("offline:vorraete")).map((e) => e.produkt)`), ["Wasser (bisherige Angabe)", "Essen für 14 Tage (bisherige Angabe)"]);
+    assert.equal((await zeile(t)).text, "Eure Vorräte reichen für 10 Tage Wasser, Essen, Licht · Ziel 14 Tage", "wie vor dem Update");
     // Mit Polster unter dem Ziel: kein Häkchen geht verloren (Trinkwasser war von Hand gesetzt)
     await eintragen(t, { personen: 2, liter: 10, essen: 2 });
     const nach = JSON.parse(await t.auswerten(`localStorage.getItem("offline:checks")`));
-    for (const [k, v] of Object.entries(JSON.parse(vorher.checks))) if (v) assert.equal(nach[k], true, k);
+    // was die Vorräte selbst gesetzt hatten (Lebensmittel über 14 Essen-Tage), dürfen sie zurücknehmen; Häkchen von Hand bleiben
+    for (const [k, v] of Object.entries(JSON.parse(vorher.checks))) if (v && k !== "lebensmittel") assert.equal(nach[k], true, `${k} (von Hand)`);
+    assert.equal(nach.lebensmittel, false, "Lebensmittel war über die Vorräte gesetzt und gilt bei 2 Tagen nicht mehr");
     // Neustart der neuen Fassung: Polster-Angaben, Notiz und Häkchen bleiben, Heute zeigt das Polster
     await t.laden(`${url}/app.html?nochmal#start`); await warteBis(t, `document.querySelector("#main .heute-polster")`, 30_000);
-    assert.deepEqual(await t.auswerten(`({ polster: JSON.parse(localStorage.getItem("offline:polster")), personen: JSON.parse(localStorage.getItem("offline:haushalt-v2")).personen })`), { polster: { liter: 10, essen: 2, licht: null }, personen: 2 });
+    assert.deepEqual(await t.auswerten(`(() => { const v = JSON.parse(localStorage.getItem("offline:vorraete")); return { liter: v.reduce((s, e) => s + (e.liter ?? 0), 0), mahlzeiten: v.reduce((s, e) => s + (e.mahlzeiten ?? 0), 0), personen: JSON.parse(localStorage.getItem("offline:haushalt-v2")).personen }; })()`), { liter: 10, mahlzeiten: 12, personen: 2 });
     assert.equal((await zeile(t)).text, "Eure Vorräte reichen für 2 Tage Wasser, Essen, Licht · Ziel 14 Tage");
     assert.equal(await t.auswerten(`localStorage.getItem("offline:notizbuch")`), vorher.notizen);
     await t.auswerten(`location.hash = "#notizen"`); await ruhig(t);
