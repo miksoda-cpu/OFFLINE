@@ -60,7 +60,7 @@ test("Deutschland: Notfall mit 112, 110, 116 117, keine 133 und keine 144; Szena
 // Nr. 28, Nachbesserung (Bill, 15.10.): Auch Bereit und Vorsorge zeigen bei Deutschland und Schweiz nichts Österreichisches
 const OESTERREICH = /\b(122|133|141)\b|Ö1|Ö3|ORF|Österreichischen Rundfunk|Radio Wien|Heulton/;
 for (const [land, nummern] of [["de", "112 · 110 · 116 117"], ["ch", "112 · 117 · 118 · 144 · 145"]]) {
-  test(`${land === "de" ? "Deutschland" : "Schweiz"}: Bereit und Vorsorge ohne österreichische Nummern und Sender; Notfall-Kachel mit den eigenen Nummern`, async () => {
+  test(`${land === "de" ? "Deutschland" : "Schweiz"}: Bereit und Vorsorge ohne österreichische Nummern und Sender; Notfall mit den eigenen Nummern`, async () => {
     await sitzung(null, async (t) => {
       await warteBis(t, `document.getElementById("land-frage")`, 30_000);
       await t.auswerten(`(() => { document.querySelector('input[name="land"][value="${land}"]').click(); document.querySelector("[data-land-weiter]").click(); })()`);
@@ -72,15 +72,15 @@ for (const [land, nummern] of [["de", "112 · 110 · 116 117"], ["ch", "112 · 1
         const text = await t.auswerten(`document.getElementById("main").innerText`);
         const treffer = text.split("\n").filter((z) => OESTERREICH.test(z));
         assert.deepEqual(treffer, [], `${seite}: ${treffer.join(" | ")}`);
-        if (seite === "uebersicht") {
-          const kachel = await t.auswerten(`document.querySelector('#main a.kachel[href="#notfall"]')?.innerText ?? ""`);
-          assert.ok(kachel.includes(nummern) && !kachel.includes("Sirenen"), kachel);
-        }
       }
       if (land === "de") {
         const v = await t.auswerten(`document.getElementById("main").innerText`);
         assert.ok(v.includes("Radio mit Batterie oder Kurbel – im Krisenfall informiert dein öffentlich-rechtlicher Sender"), "Vorsorge: Radio neutral");
       }
+      // Die Notfall-Kachel stand bis Nr. 41 auf Bereit; seither prüft das hier die Notfall-Seite selbst: eigene Nummern, keine Sirenen
+      await t.auswerten(`location.hash = "#notfall"`); await warteBis(t, `document.querySelector("#notrufe .notruf-nr")`);
+      const notfall = await t.auswerten(`({ nr: [...document.querySelectorAll("#notrufe .notruf-nr")].map((e) => e.textContent.trim()).join(" · "), text: document.getElementById("main").innerText })`);
+      assert.ok(notfall.nr === nummern && !/Sirenensignale/.test(notfall.text), JSON.stringify(notfall.nr));
     });
   });
 }

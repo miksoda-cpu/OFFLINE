@@ -85,7 +85,7 @@ jobs:
         run: node --test werkzeug/akku.test.mjs
         env: { CHROME: google-chrome }
       - name: Blatt bleibt beim Neuzeichnen offen (Nr. 26), Rundgang-Prüfung Schweiz (Nr. 37), Sirenen anhören (Nr. 38)
-        run: node --test werkzeug/blatt.test.mjs werkzeug/rundgang-schweiz.test.mjs werkzeug/sirenen.test.mjs werkzeug/bereit-erklaert.test.mjs werkzeug/haushalt.test.mjs
+        run: node --test werkzeug/blatt.test.mjs werkzeug/rundgang-schweiz.test.mjs werkzeug/sirenen.test.mjs werkzeug/bereit-erklaert.test.mjs werkzeug/haushalt.test.mjs werkzeug/menue.test.mjs
         env: { CHROME: google-chrome }
       - name: Bildvergleich
         run: node werkzeug/bildvergleich.mjs --chrome --aus bildvergleich-aus --anker bildvergleich-aus/anker

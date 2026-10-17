@@ -41,13 +41,13 @@ async function eintragen(t, { personen, liter, essen }) {
   }
 }
 
-test("(a) frisch: Heute zeigt „Euer Polster wächst mit jedem Vorrat.“ und „Ersten Vorrat eintragen“, keine Vorrat-Zeile", async () => {
+test("(a) frisch: Heute zeigt „Tragt eure Vorräte ein – …“ und „Vorräte eintragen“, keine Vorrat-Zeile (Wortlaut seit Nr. 41)", async () => {
   await sitzung(async (t, url) => {
     await t.laden(`${url}/app.html#start`); await startBereit(t); await ruhig(t, 800);
     const z = await zeile(t);
     assert.ok(z, "Polster-Zeile auf Heute");
-    assert.ok(z.text.startsWith("Euer Polster wächst mit jedem Vorrat."), z.text);
-    assert.equal(z.knopf, "Ersten Vorrat eintragen"); assert.equal(z.link, "#vorsorge");
+    assert.ok(z.text.startsWith("Tragt eure Vorräte ein – dann seht ihr, wie lange sie reichen."), z.text);
+    assert.equal(z.knopf, "Vorräte eintragen"); assert.equal(z.link, "#vorsorge");
     assert.doesNotMatch(z.text, ANGST);
     assert.equal(await t.auswerten(`/Vorrat: noch|Vorrat: leer|Neue Inhalte für/.test(document.getElementById("main").innerText)`), false, "die Tage der Tagespakete stehen nicht auf Heute");
     // Der Knopf führt zum Abschnitt Polster oben in Vorsorge
@@ -56,33 +56,33 @@ test("(a) frisch: Heute zeigt „Euer Polster wächst mit jedem Vorrat.“ und �
   });
 });
 
-test("(b) 2 Personen, 40 Liter, Essen 14 Tage → „Euer Polster: 10 Tage“ mit dem Wasser-Satz", async () => {
+test("(b) 2 Personen, 40 Liter, Essen 14 Tage → „Eure Vorräte reichen für 10 Tage“ mit dem Wasser-Satz", async () => {
   await sitzung(async (t, url) => {
     await t.laden(`${url}/app.html#start`); await startBereit(t);
     await eintragen(t, { personen: 2, liter: 40, essen: 14 });
     const e = await t.auswerten(`document.querySelector("#polster .polster-ergebnis").innerText`);
-    assert.match(e, /^Euer Polster: 10 Tage/); assert.ok(e.includes("Mehr Wasser bringt euer Polster am weitesten."), e);
+    assert.match(e, /^Eure Vorräte reichen für 10 Tage/); assert.ok(e.includes("Mit mehr Wasser reichen eure Vorräte am längsten."), e);
     // Licht „Nein“: der freundliche Satz; die Tage bleiben
     await t.auswerten(`document.querySelector('[data-polster-licht="false"]').click()`); await ruhig(t);
     const e2 = await t.auswerten(`document.querySelector("#polster .polster-ergebnis").innerText`);
-    assert.ok(e2.includes("Denk auch an Licht: Taschenlampe und Batterien.") && /^Euer Polster: 10 Tage/.test(e2), e2);
+    assert.ok(e2.includes("Denk auch an Licht: Taschenlampe und Batterien.") && /^Eure Vorräte reichen für 10 Tage/.test(e2), e2);
     // Gewählte Taste deutlich gefüllt (Bill, 16.10.): Hintergrund in der Akzentfarbe, die andere nicht; aria-pressed bleibt
     const knopf = await t.auswerten(`(() => { const f = (w) => { const b = document.querySelector('[data-polster-licht="' + w + '"]'); return { pressed: b.getAttribute("aria-pressed"), bg: getComputedStyle(b).backgroundColor }; }; return { nein: f("false"), ja: f("true"), akzent: getComputedStyle(document.querySelector('[data-polster-licht="false"]')).borderColor }; })()`);
     assert.equal(knopf.nein.pressed, "true"); assert.equal(knopf.ja.pressed, "false");
     assert.equal(knopf.nein.bg, knopf.akzent, "gewählt: gefüllt"); assert.notEqual(knopf.ja.bg, knopf.nein.bg, "nicht gewählt: nicht gefüllt");
     // Plus/Minus: +5 Liter → 11 Tage (45 ÷ 4)
     await t.auswerten(`document.querySelector('[data-polster-schritt="liter"][data-polster-um="5"]').click()`); await ruhig(t);
-    assert.match(await t.auswerten(`document.querySelector("#polster .polster-tage").textContent`), /^Euer Polster: 11 Tage$/);
+    assert.match(await t.auswerten(`document.querySelector("#polster .polster-tage").textContent`), /^Eure Vorräte reichen für 11 Tage$/);
     // Heute: Zeile mit Tagen und dem kleinen Satz, führt zu Vorsorge › Polster
     await t.auswerten(`location.hash = "#start"`); await ruhig(t, 600);
     const z = await zeile(t);
-    assert.equal(z.text, "Euer Polster: 11 Tage Wasser, Essen, Licht · Ziel 14 Tage"); assert.equal(z.link, "#vorsorge"); assert.doesNotMatch(z.text, ANGST);
+    assert.equal(z.text, "Eure Vorräte reichen für 11 Tage Wasser, Essen, Licht · Ziel 14 Tage"); assert.equal(z.link, "#vorsorge"); assert.doesNotMatch(z.text, ANGST);
     // Alles bleibt am Gerät
     assert.deepEqual(await t.auswerten(`({ polster: JSON.parse(localStorage.getItem("offline:polster")), personen: JSON.parse(localStorage.getItem("offline:haushalt-v2")).personen })`), { polster: { liter: 45, essen: 14, licht: false }, personen: 2 });
     // Die Suche findet „Polster“
     await t.auswerten(`document.querySelector("[data-suche-auf]").click()`); await warteBis(t, `document.getElementById("suche-feld")`);
     await t.auswerten(`(() => { const f = document.getElementById("suche-feld"); f.value = "Polster"; f.dispatchEvent(new Event("input", { bubbles: true })); })()`); await ruhig(t);
-    assert.ok(await t.auswerten(`document.querySelector(".suche-treffer, #suche-liste")?.innerText.includes("Euer Polster")`), "Suche findet das Polster");
+    assert.ok(await t.auswerten(`document.querySelector(".suche-treffer, #suche-liste")?.innerText.includes("Vorräte")`), "Suche findet die Vorräte unter „Polster“ (Synonym, Nr. 41)");
   });
 });
 
@@ -91,7 +91,7 @@ test("(c) 2 Personen, 56 Liter, Essen 14 Tage → Polster 14; Trinkwasser und Le
     await t.laden(`${url}/app.html#start`); await startBereit(t);
     await eintragen(t, { personen: 2, liter: 56, essen: 14 });
     const e = await t.auswerten(`document.querySelector("#polster .polster-ergebnis").innerText`);
-    assert.match(e, /^Euer Polster: 14 Tage/);
+    assert.match(e, /^Eure Vorräte reichen für 14 Tage/);
     const b = await t.auswerten(`({ wasser: document.querySelector('[data-check="trinkwasser"]').checked, essen: document.querySelector('[data-check="lebensmittel"]').checked, v2: JSON.parse(localStorage.getItem("offline:bereit-v2") ?? "{}") })`);
     assert.ok(b.wasser && b.essen, "Häkchen in der Grundvorsorge"); assert.ok(b.v2["c-0-0"] && b.v2["c-0-1"], "Bereit-Punkte Trinkwasser und Lebensmittel bestätigt");
     await t.auswerten(`location.hash = "#start"`); await ruhig(t, 600);
@@ -137,7 +137,7 @@ test("Update von der zuletzt veröffentlichten Version: Häkchen und Notizen ble
     // Neustart der neuen Fassung: Polster-Angaben, Notiz und Häkchen bleiben, Heute zeigt das Polster
     await t.laden(`${url}/app.html?nochmal#start`); await warteBis(t, `document.querySelector("#main .heute-polster")`, 30_000);
     assert.deepEqual(await t.auswerten(`({ polster: JSON.parse(localStorage.getItem("offline:polster")), personen: JSON.parse(localStorage.getItem("offline:haushalt-v2")).personen })`), { polster: { liter: 10, essen: 2, licht: null }, personen: 2 });
-    assert.equal((await zeile(t)).text, "Euer Polster: 2 Tage Wasser, Essen, Licht · Ziel 14 Tage");
+    assert.equal((await zeile(t)).text, "Eure Vorräte reichen für 2 Tage Wasser, Essen, Licht · Ziel 14 Tage");
     assert.equal(await t.auswerten(`localStorage.getItem("offline:notizbuch")`), vorher.notizen);
     await t.auswerten(`location.hash = "#notizen"`); await ruhig(t);
     assert.ok(await t.auswerten(`document.getElementById("main").innerText.includes("Treffpunkt")`), "Notiz da");

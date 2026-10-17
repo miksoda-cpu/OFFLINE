@@ -1,4 +1,4 @@
-// „Euer Polster“ (Nr. 34, Wortlaut Mik 16.10.2026): wie lange der Haushalt mit Wasser und Essen auskommt. Reine Rechnung,
+// „Vorräte“ (Nr. 34 als „Euer Polster“, seit Nr. 41 „Vorräte“, Wortlaut Mik 17.10.2026): wie lange der Haushalt mit Wasser und Essen auskommt. Reine Rechnung,
 // keine Oberfläche, kein Speicher; die Angaben bleiben am Gerät (app.js, Schlüssel „polster“). Ohne Angst-Wörter.
 
 export const ZIEL = 14;
@@ -24,16 +24,16 @@ export const tageText = (n) => `${n} ${n === 1 ? "Tag" : "Tage"}`;
 
 /** Ein Satz zum knappsten Teil. */
 export function polsterSatz(r) {
-  if (r.tage >= ZIEL) return `Euer Polster reicht für das Ziel von ${ZIEL} Tagen.`;
-  if (r.knapp === "wasser") return "Mehr Wasser bringt euer Polster am weitesten.";
-  if (r.knapp === "essen") return "Mehr Essen bringt euer Polster am weitesten.";
-  return "Wasser und Essen reichen gleich lang. Mit beidem wächst euer Polster.";
+  if (r.tage >= ZIEL) return `Eure Vorräte reichen für das Ziel von ${ZIEL} Tagen.`;
+  if (r.knapp === "wasser") return "Mit mehr Wasser reichen eure Vorräte am längsten.";
+  if (r.knapp === "essen") return "Mit mehr Essen reichen eure Vorräte am längsten.";
+  return "Wasser und Essen reichen gleich lang. Mit beidem reichen eure Vorräte länger.";
 }
 export const LICHT_SATZ = "Denk auch an Licht: Taschenlampe und Batterien.";
 
 /** Die Zeile auf Heute: mit Vorrat die Tage, bei 0 der Satz zum Wachsen. */
 export function heuteZeile(r) {
-  return r.tage > 0 ? { titel: `Euer Polster: ${tageText(r.tage)}`, klein: `Wasser, Essen, Licht · Ziel ${ZIEL} Tage` } : { titel: "Euer Polster wächst mit jedem Vorrat.", knopf: "Ersten Vorrat eintragen" };
+  return r.tage > 0 ? { titel: `Eure Vorräte reichen für ${tageText(r.tage)}`, klein: `Wasser, Essen, Licht · Ziel ${ZIEL} Tage` } : { titel: "Tragt eure Vorräte ein – dann seht ihr, wie lange sie reichen.", knopf: "Vorräte eintragen" };
 }
 
 /**

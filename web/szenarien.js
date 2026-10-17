@@ -172,7 +172,7 @@ export function radioHtml(radio, land, laender = []) {
   if (!bl) return "";
   return `<section class="card of-karte radio-box" id="radio" aria-labelledby="radio-titel">
     <div class="radio-kopf"><h2 id="radio-titel">Wie du informiert bleibst</h2>
-      <label class="of-klein">Bundesland <select class="of-select" id="bl3">${laender.map((n) => `<option ${n === bl.land ? "selected" : ""}>${esc(n)}</option>`).join("")}</select></label></div>
+      <span class="of-klein radio-bl">${esc(bl.land)} · <a href="#einstellungen" data-anker-ziel="einst-bl">Bundesland ändern</a></span></div>
     <table class="radio-tabelle"><thead><tr><th>Sender</th><th>MHz</th><th>Standort</th></tr></thead>
       <tbody>${bl.sender.map((s) => `<tr><td>${esc(s.name)}</td><td class="mono of-mono">${esc(s.mhz)}</td><td class="muted of-klein">${esc(s.ort)}</td></tr>`).join("")}</tbody></table>
     <p class="muted of-klein">${esc(radio.hinweis)}</p>

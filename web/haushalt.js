@@ -95,7 +95,7 @@ const schalter = (id, titel, an) => `<label class="hh-schalter"><input type="che
 /** Abschnitt in den Einstellungen. */
 export function haushaltEinstellungHtml(h) {
   return `<section class="card of-karte einst-teil hh" id="haushalt" aria-labelledby="hh-titel"><h2 id="hh-titel">Dein Haushalt</h2>
-    <p class="muted of-klein">Danach richten sich Grundvorsorge, Szenarien, Suche und „Euer Polster“. Ändert sich etwas, etwa ein Baby oder ein Hund kommt dazu, stellst du es hier um. Bleibt auf diesem Gerät.</p>
+    <p class="muted of-klein">Danach richten sich Grundvorsorge, Szenarien, Suche und deine Vorräte. Ändert sich etwas, etwa ein Baby oder ein Hund kommt dazu, stellst du es hier um. Bleibt auf diesem Gerät.</p>
     <div class="hh-zeile"><span class="hh-name">Wie viele Menschen leben bei dir?</span>${zahlFeld("personen", "Menschen im Haushalt", h.personen ?? 1, 1, 20)}</div>
     <fieldset class="hh-gruppe"><legend>Wer lebt bei dir</legend>
       ${GRUPPEN.map(([k, n]) => `<div class="hh-zeile">${schalter(k, n, !!h.gruppen[k])}${h.gruppen[k] ? zahlFeld(k, `${n}: Anzahl`, h.gruppen[k], 1, 20) : ""}</div>`).join("")}

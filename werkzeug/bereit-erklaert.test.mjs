@@ -42,7 +42,7 @@ test("Frisch: Kreis auf Heute ist ein Knopf; das Blatt zeigt „Inhalte 12 von 2
   });
 });
 
-test("Mit Polster: Trinkwasser trägt den Grund „über Euer Polster“, ein Häkchen von Hand „von dir abgehakt am …“", async () => {
+test("Mit Polster: Trinkwasser trägt den Grund „über eure Vorräte“, ein Häkchen von Hand „von dir abgehakt am …“", async () => {
   await sitzung(async (t) => {
     await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.getElementById("polster") && document.querySelector('[data-check="radio"]')`, 20_000);
     await t.auswerten(`location.hash = "#einstellungen"`); await warteBis(t, `document.getElementById("hh-personen")`);
@@ -53,7 +53,7 @@ test("Mit Polster: Trinkwasser trägt den Grund „über Euer Polster“, ein H�
     await t.auswerten(`location.hash = "#start"`); await warteBis(t, `document.querySelector("#main .bereit-kreis")`);
     await t.auswerten(`document.querySelector("#main .bereit-kreis").click()`); await warteBis(t, `document.querySelector(".blatt .bereit-erklaert")`);
     const b = await blatt(t);
-    assert.ok(b.punkte.includes("Trinkwasser für 14 Tage – über Euer Polster"), JSON.stringify(b.punkte));
+    assert.ok(b.punkte.includes("Trinkwasser für 14 Tage – über eure Vorräte"), JSON.stringify(b.punkte));
     assert.ok(b.punkte.some((p) => /^Radio mit Batterie oder Kurbel – von dir abgehakt am \d{1,2}\.\d{1,2}\.\d{4}$/.test(p)), JSON.stringify(b.punkte));
     assert.ok(/^Dinge [1-9]\d* von 35$/.test(b.quellen[1]), b.quellen[1]);
   });

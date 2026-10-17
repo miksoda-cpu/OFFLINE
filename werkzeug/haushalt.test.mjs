@@ -73,7 +73,7 @@ test("(b) Update von der zuletzt veröffentlichten Version: alte Haken übernomm
   }, { alt });
 });
 
-test("(c) Euer Polster rechnet mit der Personenzahl aus dem Haushalt", async () => {
+test("(c) Die Vorräte rechnen mit der Personenzahl aus dem Haushalt", async () => {
   await sitzung(async (t, url) => {
     await start(t, url);
     await einst(t);
@@ -83,7 +83,7 @@ test("(c) Euer Polster rechnet mit der Personenzahl aus dem Haushalt", async () 
     assert.equal(await t.auswerten(`!!document.getElementById("polster-personen")`), false, "kein eigenes Personen-Feld mehr im Polster");
     for (const [f, w] of [["liter", 40], ["essen", 14]]) { await t.auswerten(`(() => { const i = document.getElementById("polster-${f}"); i.value = "${w}"; i.dispatchEvent(new Event("change", { bubbles: true })); })()`); await ruhig(t, 150); }
     const e = await t.auswerten(`document.querySelector("#polster").innerText`);
-    assert.match(e, /Für 4 Personen/); assert.match(e, /Euer Polster: 5 Tage/, "40 Liter ÷ (2 × 4)");
+    assert.match(e, /Für 4 Personen/); assert.match(e, /Eure Vorräte reichen für 5 Tage/, "40 Liter ÷ (2 × 4)");
   });
 });
 

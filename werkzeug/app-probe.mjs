@@ -203,9 +203,9 @@ async function neu() {
   pruefe("Auch das erste Bild fällt nicht", ersteZahl >= vorher.wert, `erstes Bild ${ersteZahl}`);
   const worker = await jsAsync("const f = arguments[arguments.length - 1]; (navigator.serviceWorker ? navigator.serviceWorker.getRegistrations() : Promise.resolve([])).then((r) => f(r.length), () => f(-1));");
   pruefe("Kein Service Worker mehr", worker === 0, `${worker} Registrierung(en)`);
-  // Seit Nr. 34 steht an der Stelle der Vorrat-Zeile „Euer Polster“ (die Tage der Tagespakete unter „Updates & Abo“)
+  // Seit Nr. 34 steht an der Stelle der Vorrat-Zeile die Vorräte-Zeile (bis Nr. 41 „Euer Polster“) (die Tage der Tagespakete unter „Updates & Abo“)
   const polster = await js("return document.querySelector('.heute-polster-titel')?.textContent ?? null");
-  pruefe("Tagesseite ist der Startbildschirm", /^Euer Polster/.test(polster ?? "") && !!(await finde("#wesen-karte")), polster ?? "keine Tagesseite");
+  pruefe("Tagesseite ist der Startbildschirm", /^(Eure Vorräte reichen|Tragt eure Vorräte ein)/.test(polster ?? "") && !!(await finde("#wesen-karte")), polster ?? "keine Tagesseite");
   // „Was ist neu“: kommt mit der App (ohne Netz), Eintrag der eigenen Version oben
   const version = bericht.werte.app?.version;
   await gehe("#neues");

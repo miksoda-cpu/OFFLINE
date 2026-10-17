@@ -245,7 +245,7 @@ function polsterHtml() {
       <input class="of-input" id="polster-${feld}" data-polster-feld="${feld}" type="number" inputmode="numeric" min="${min}" max="${max}" step="1" value="${wert}">
       <button type="button" class="btn of-btn polster-schritt" data-polster-schritt="${feld}" data-polster-um="${schritt}" aria-label="${titel}: mehr">+</button>${einheit ? `<span class="muted of-klein">${einheit}</span>` : ""}</div></div>`;
   return `<section class="card of-karte polster" id="polster" aria-labelledby="polster-titel" style="margin-bottom:1rem">
-    <h2 id="polster-titel" style="margin-top:0">Polster</h2>
+    <h2 id="polster-titel" style="margin-top:0">Vorräte</h2>
     <p class="muted of-klein" style="margin:0 0 .8rem">Wie lange euer Haushalt mit Wasser und Essen auskommt. Ziel ${POLSTER_ZIEL} Tage. Bleibt auf diesem Gerät.</p>
     <div class="polster-felder">
       <p class="polster-personen of-klein">Für ${r.personen} ${r.personen === 1 ? "Person" : "Personen"} · aus „Dein Haushalt“ · <a href="#einstellungen" data-anker-ziel="haushalt">ändern</a></p>
@@ -255,7 +255,7 @@ function polsterHtml() {
         ${[[true, "Ja"], [false, "Nein"]].map(([w, t]) => `<button type="button" class="btn of-btn${r.licht === w ? " polster-gewaehlt" : ""}" data-polster-licht="${w}" aria-pressed="${r.licht === w}">${t}</button>`).join(" ")}</fieldset>
     </div>
     <div class="polster-ergebnis" role="status">
-      <p class="polster-tage">${r.tage > 0 ? `Euer Polster: ${tageText(r.tage)}` : "Euer Polster wächst mit jedem Vorrat."}</p>
+      <p class="polster-tage">${r.tage > 0 ? `Eure Vorräte reichen für ${tageText(r.tage)}` : "Tragt eure Vorräte ein – dann seht ihr, wie lange sie reichen."}</p>
       <p class="muted of-klein" style="margin:.2rem 0 0">Wasser reicht für ${tageText(r.wasserTage)} (${r.personen === 1 ? "2 Liter am Tag" : `2 Liter je Person und Tag`}), Essen für ${tageText(r.essenTage)}.</p>
       ${r.liter || r.essen ? `<p style="margin:.5rem 0 0">${esc(polsterSatz(r))}</p>` : ""}
       ${r.licht === false ? `<p style="margin:.5rem 0 0">${esc(LICHT_SATZ)}</p>` : ""}
@@ -287,7 +287,7 @@ function bereitErklaerungHtml() {
     if (x.auto === "paket") return x.id === "paket" ? "automatisch, weil die App es geladen hat" : `automatisch: Ausgabe vom ${tag(x.datum)}`;
     if (x.auto === "wissen" || x.auto === "karte") return "automatisch, weil es auf diesem Gerät liegt";
     if (x.auto === "notfallmappe") return "automatisch, weil sie im Tresor liegt";
-    if (x.check && polster[x.check]) return "über Euer Polster";
+    if (x.check && polster[x.check]) return "über eure Vorräte";
     return `${x.check ? "von dir abgehakt" : "von dir bestätigt"} am ${tag(x.datum)}`;
   };
   return `<div class="bereit-erklaert">
@@ -296,6 +296,29 @@ function bereitErklaerungHtml() {
       ${da.length ? `<ul>${da.map((x) => `<li><strong>${esc(x.titel)}</strong> – ${esc(grund(x))}${x.stand === "faellig" ? " · bitte bald neu bestätigen" : ""}</li>`).join("")}</ul>` : `<p class="muted of-klein">Noch nichts.</p>`}</section>`; }).join("")}
     <p class="be-schritt"><strong>Als Nächstes:</strong> <a href="${schritt.ziel}" data-blatt-zu>${esc(schritt.text)}</a></p>
   </div>`;
+}
+/** Nr. 41: „Installiert“ (Speicher und Paketliste) steht in der Bibliothek, bisher auf Bereit. */
+function installiertHtml() {
+  const installierte = installierteIds().map(paketRoh).filter(Boolean);
+  const belegt = installierte.reduce((s, x) => s + x.manifest.groesse, 0);
+  return `
+      <h2 style="margin-top:2rem">Installiert</h2>
+      <div class="card of-karte">
+        <div class="storage"><strong>${groesse(belegt)}</strong>${fortschrittsbalken(Math.min(100, (belegt / 64e9) * 100), 100, `Belegter Speicher: ${groesse(belegt)} von 64 GB`)}<span class="muted of-klein">${desktop ? esc(desktop.datenordner) : "von 64 GB auf „OFFLINE-Stick“"}</span></div>
+        <ul class="changelog" style="margin-top:.75rem">${installierte.map((x) =>
+          `<li><span class="tag of-plakette">${esc(ARTEN[x.manifest.art] ?? x.manifest.art)}</span><span>${esc(x.manifest.titel)} <span class="muted of-klein">· ${esc(x.manifest.version)} · ${groesse(x.manifest.groesse)} · Signatur geprüft ✓</span></span></li>`).join("")}</ul>
+      </div>`;
+}
+/** Nr. 41: Die eigenen Frequenzen (bisher Werkzeuge) stehen auf Notfall unter den Sendern des Bundeslands; gespeichert wie bisher unter „radio“. */
+function radioEigeneHtml() {
+  const laender = D("bundeslaender")?.laender ?? [], land = laender.find((l) => l.name === state.bundesland);
+  const radio = state.werkzeug.radio[state.bundesland] ?? {};
+  const sender = [["oe1", "Ö1"], ["oe2", land?.orf_radio ?? "ORF-Regionalradio"], ["oe3", "Ö3 (Verkehrs- und Krisenfunk)"]];
+  return `<div class="card of-karte radio-eigene" id="radio-eigene"><h3>📻 Deine Frequenzen</h3>
+          <p class="muted of-klein" style="margin:.3rem 0 .6rem">Fällt Strom und Netz aus, informiert der Österreichische Rundfunk (ORF) über Radio – Ö3 ist der Verkehrs- und Krisenfunk, dazu das Landesstudio. Ein <strong>Batterie- oder Kurbelradio</strong> gehört in jede Vorsorge. Die Frequenz hängt vom Sender in deiner Nähe ab: einmal am Radio suchen und hier eintragen, dann steht sie auch ohne Netz da.</p>
+          ${sender.map(([k, name]) => `<div class="switch of-liste__zeile"><span><strong>${esc(name)}</strong></span><span style="display:flex;align-items:center;gap:.3rem"><input class="of-input" type="text" data-radio="${k}" value="${esc(radio[k] ?? "")}" placeholder="z. B. 99,9" inputmode="decimal" style="width:7.5em;text-align:right" autocomplete="off"> <span class="muted of-klein">MHz</span></span></div>`).join("")}
+          <p class="muted of-klein" style="margin:.6rem 0 0;font-size:.85rem">Wien: Ö1 92,0 · Radio Wien 89,9 · Ö3 99,9 MHz (Sender Kahlenberg). Digital: DAB+ ist in Ballungsräumen zusätzlich verfügbar, im Blackout aber vom Sendernetz abhängig – UKW bleibt die sicherste Wahl.</p>
+        </div>`;
 }
 /** Häkchen der alten Checkliste (bis 0.7) auf die Grundvorsorge übertragen, sobald beide Listen da sind (Abgleich über den Text). */
 function checksAngleichen() {
@@ -637,6 +660,7 @@ const seiten = {
           : `<div class="card of-karte tag-leer"><p style="margin:0">${pakete.length ? "Für heute liegt nichts in der Vorratskammer." : "Die Vorratskammer ist noch leer."} ${navigator.onLine ? "OFFLINE holt die nächsten Tage, sobald der Katalog sie hat." : "Sobald du wieder online bist, holt OFFLINE die nächsten Tage."} Alles andere funktioniert weiter.</p></div>`}
       </section>`}
       ${polsterHeuteHtml()}
+      ${tagesplanHtml()}
       </div>`;
   },
 
@@ -724,17 +748,12 @@ const seiten = {
   uebersicht() {
     const p = P();
     if (!p) return fehlt();
-    const laender = D("bundeslaender")?.laender ?? [];
-    const { erledigt, gesamt } = grundStand();
-    const installierte = installierteIds().map(paketRoh).filter(Boolean);
-    const belegt = installierte.reduce((s, x) => s + x.manifest.groesse, 0);
-    const k = katalog();
-    const updates = k ? verfuegbareUpdates(k).length : 0;
-    const land = ausland() ? null : laender.find((l) => l.name === state.bundesland); // Nr. 28: Bundesland nur in Österreich
+    // Nr. 41 (Mik 17.10.): Bereit zeigt nur die Zahl, die Aufschlüsselung und was zu bestätigen ist. Bundesland → Einstellungen,
+    // „Installiert“ → Bibliothek, Tagesplan → Heute unten; Kacheln, Pause-/Lumi-Zeile, Updates-Hinweis und Bundesland-Info entfallen
+    // (doppelt: Menü, Spiele, Updates & Abo, Notfall).
     const b = bereit(); wesen.setScore(b); const schritt = naechsterSchritt(b);
     return `
       <div class="gruss of-gruss"><div><h1>Bereit</h1><p class="muted of-klein">Alles hier funktioniert ohne Internet.</p></div>
-        ${ausland() ? "" : `<select class="of-select" id="bl" aria-label="Dein Bundesland">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select>`}</div>
       <div class="card of-karte bereit-kopf" style="margin-bottom:1rem">
         <span class="muted of-klein">Bereit</span>
         <button type="button" class="bereit-zahl bereit-zahl-knopf" data-bereit-erklaeren aria-label="Bereit: ${b.wert} von 100, Aufschlüsselung öffnen">${b.wert}</button>
@@ -744,28 +763,11 @@ const seiten = {
         ${b.quellen.map((q) => { const st = quelleStand(q); return `<div class="bereit-quelle bereit-quelle--${st}"><span><span class="bq-punkt" aria-hidden="true"></span>${esc(q.name)} <span class="muted of-klein">· ${esc(q.text)}</span><span class="sr-only">, ${QUELLE_STAENDE[st]}</span></span><span class="mono of-mono">${q.punkte}/${q.max}</span><span class="bq-balken" aria-hidden="true"><span style="width:${Math.round((q.roh / q.max) * 100)}%"></span></span></div>`; }).join("")}
         ${hilfeZeile("bereit", "bereit-hilfe")}
       </div>
-      <div class="kacheln">
-        ${kachel("notfall", "rose", "Notfall", NOTFALL_KURZ[landId()] ?? NOTFALL_KURZ.at)}
-        ${kachel("vorsorge", "moos", "Vorsorge", `${erledigt} von ${gesamt} erledigt`)}
-        ${kachel("bibliothek", "eisblau", "Bibliothek", `${installierte.length} Paket${installierte.length === 1 ? "" : "e"} am Gerät`)}
-        ${kachel("werkzeuge", "flieder", "Werkzeuge", "Radio, Sonne, Vorrat")}
-      </div>
       ${b.hinweis ? `<div class="card of-karte" style="margin-bottom:1rem"><strong>${esc(b.hinweis)}</strong></div>` : ""}
       <div class="card of-karte" style="margin-bottom:1rem"><h3>Menschen und Können</h3><p class="muted of-klein" style="margin:.2rem 0 .4rem">Dinge, die verfallen. Einmal bestätigen, dann ist Ruhe, bis es wieder so weit ist.${b.faellig.some((x) => x.check) ? " Fällige Punkte der Checkliste stehen darunter." : ""}</p>
         ${b.positionen.filter((x) => (!x.check && !x.auto) || (x.check && x.stand === "faellig")).map((x) => `<div class="bestaetigung of-liste__zeile"><span><strong>${esc(x.titel)}</strong><br><span class="muted of-klein">${x.stand === "gut" ? `gültig noch ${x.rest} Tage` : x.stand === "faellig" ? `<span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span> seit ${-x.rest} Tagen` : esc(x.hinweis ?? "")}</span></span><button class="btn btn-sm of-btn of-btn--klein" data-bestaetigen="${x.id}">${x.stand === "gut" ? "Erneut bestätigen" : "Bestätigen"}</button></div>`).join("")}
       </div>
-      ${tagesplanHtml()}
-      <a class="card of-karte pause-zeile" href="#pause" style="margin-bottom:1rem"><strong>⏸ Pause</strong> <span class="muted of-klein">· ${pauseE().an ? `ein · Appetit ${esc(pauseE().appetit)}` : "aus"} · Happen für zwischendurch, jetzt mit eigenem Raum</span></a>
-      ${wesen.nurVorschau ? "" : `<a class="card of-karte pause-zeile" href="#lumi" style="margin-bottom:1rem"><strong>Lumi</strong> <span class="muted of-klein">· ${wesen.mitFigur() ? esc(wesen.anzeigename()) : wesen.aktiv() ? "Textkarten" : "Tipps aus"} · Tipps, Buch, Heft und Einstellungen auf der Lumi-Seite</span></a>`}
-      ${updates ? `<a class="card of-karte" href="#updates" style="text-decoration:none;display:block;margin-bottom:1rem"><span class="tag tag-warn of-plakette of-plakette--warnung">${updates} Update${updates > 1 ? "s" : ""} verfügbar</span> <span class="muted of-klein">· ${intervallText()}</span></a>` : ""}
-      ${land ? `<div class="card of-karte" style="margin-top:0"><strong>${esc(land.name)}</strong> <span class="muted of-klein">· Landeshauptstadt ${esc(land.hauptstadt)} · im Krisenfall informiert <strong>${esc(land.orf_radio)}</strong></span></div>` : ""}
-      <h2 style="margin-top:2rem">Installiert</h2>
-      <div class="card of-karte">
-        <div class="storage"><strong>${groesse(belegt)}</strong>${fortschrittsbalken(Math.min(100, (belegt / 64e9) * 100), 100, `Belegter Speicher: ${groesse(belegt)} von 64 GB`)}<span class="muted of-klein">${desktop ? esc(desktop.datenordner) : "von 64 GB auf „OFFLINE-Stick“"}</span></div>
-        <ul class="changelog" style="margin-top:.75rem">${installierte.map((x) =>
-          `<li><span class="tag of-plakette">${esc(ARTEN[x.manifest.art] ?? x.manifest.art)}</span><span>${esc(x.manifest.titel)} <span class="muted of-klein">· ${esc(x.manifest.version)} · ${groesse(x.manifest.groesse)} · Signatur geprüft ✓</span></span></li>`).join("")}</ul>
-        <a class="btn btn-sm of-btn of-btn--klein" href="#bibliothek" style="margin-top:.75rem">Pakete verwalten</a>
-      </div>`;
+`;
   },
 
   notfall() {
@@ -784,6 +786,7 @@ const seiten = {
       <p class="muted of-klein" style="margin-top:1rem">${esc(n.hinweis)}</p>
       ${Object.keys(karten).length ? `<h2 style="margin-top:2rem">Was tun bei …</h2>${kachelnHtml(karten, szReihe(), state.szChecks)}` : ""}
       ${radio ? radioHtml(radio, state.bundesland, laender) : ""}
+      ${radio ? radioEigeneHtml() : ""}
       <h2 style="margin-top:2rem">Sirenensignale</h2>
       <p class="muted of-klein">${esc(s.einleitung)}</p>
       <div class="grid grid-3">${s.signale.map((x) => `
@@ -909,16 +912,8 @@ const seiten = {
     const r = w.rechner; const art = EINHEITEN[r.art]; const einh = Object.keys(art.e);
     const von = einh.includes(r.von) ? r.von : einh[0], nach = einh.includes(r.nach) ? r.nach : einh[1];
     const erg = umrechnen(r.art, parseFloat(String(r.wert).replace(",", ".")), von, nach);
-    const radio = w.radio[state.bundesland] ?? {};
-    const sender = [["oe1", "Ö1"], ["oe2", land?.orf_radio ?? "ORF-Regionalradio"], ["oe3", "Ö3 (Verkehrs- und Krisenfunk)"]];
-    const v = w.vorrat; const wasser = v.personen * v.tage * 2, essen = v.personen * v.tage;
-    return `${kopf("Werkzeuge", "Radio, Sonne und Mond, Rechner – alles ohne Netz.", ausland() ? "" : `<div class="switch of-liste__zeile" style="border:0;padding:0"><label class="muted of-klein" for="bl2">Bundesland</label><select class="of-select" id="bl2">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select></div>`)}
+    return `${kopf("Werkzeuge", "Sonne und Mond, Einheiten – alles ohne Netz.")}
       <div class="grid grid-2">
-        ${ausland() ? `<div class="card of-karte"><h3>📻 Radio im Krisenfall</h3>${landVorschauHtml()}</div>` : `<div class="card of-karte"><h3>📻 Radio im Krisenfall</h3>
-          <p class="muted of-klein" style="margin:.3rem 0 .6rem">Fällt Strom und Netz aus, informiert der Österreichische Rundfunk (ORF) über Radio – Ö3 ist der Verkehrs- und Krisenfunk, dazu das Landesstudio. Ein <strong>Batterie- oder Kurbelradio</strong> gehört in jede Vorsorge. Die Frequenz hängt vom Sender in deiner Nähe ab: einmal am Radio suchen und hier eintragen, dann steht sie auch ohne Netz da.</p>
-          ${sender.map(([k, name]) => `<div class="switch of-liste__zeile"><span><strong>${esc(name)}</strong></span><span style="display:flex;align-items:center;gap:.3rem"><input class="of-input" type="text" data-radio="${k}" value="${esc(radio[k] ?? "")}" placeholder="z. B. 99,9" inputmode="decimal" style="width:7.5em;text-align:right" autocomplete="off"> <span class="muted of-klein">MHz</span></span></div>`).join("")}
-          <p class="muted of-klein" style="margin:.6rem 0 0;font-size:.85rem">Wien: Ö1 92,0 · Radio Wien 89,9 · Ö3 99,9 MHz (Sender Kahlenberg). Digital: DAB+ ist in Ballungsräumen zusätzlich verfügbar, im Blackout aber vom Sendernetz abhängig – UKW bleibt die sicherste Wahl.</p>
-        </div>`}
         <div class="card of-karte"><h3>☀️ Sonne und Mond</h3>
           <div class="switch of-liste__zeile" style="border:0;padding:.2rem 0 .6rem"><label class="muted of-klein" for="wz-datum">Tag</label><input class="of-input" type="date" id="wz-datum" value="${esc(w.datum ?? new Date().toISOString().slice(0, 10))}"></div>
           <div class="grid grid-2" style="gap:.5rem">
@@ -941,15 +936,6 @@ const seiten = {
           <div style="font-size:1.4rem;font-weight:500" id="wz-ergebnis">${zahl(erg)} ${esc(nach)}</div>
           <details style="margin-top:.8rem"><summary class="muted of-klein">Kochmaße</summary><table style="width:100%;margin-top:.4rem;font-size:.9rem;border-collapse:collapse">${KOCHMASSE.map(([a, b]) => `<tr><td style="padding:.2rem 0;border-top:1px solid var(--line)">${esc(a)}</td><td class="mono of-mono" style="padding:.2rem 0;border-top:1px solid var(--line);text-align:right">${esc(b)}</td></tr>`).join("")}</table></details>
         </div>
-        <div class="card of-karte"><h3>🥫 Vorratsrechner</h3>
-          <p class="muted of-klein" style="margin:.3rem 0 .6rem">Der Zivilschutzverband empfiehlt Vorräte für <strong>14 Tage</strong>: 2 Liter Wasser pro Person und Tag (Trinken und Kochen), dazu haltbare Lebensmittel.</p>
-          <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center"><label>Personen <input class="of-input" type="number" id="wz-personen" min="1" max="20" value="${v.personen}" style="width:4.5em"></label><label>Tage <input class="of-input" type="number" id="wz-tage" min="1" max="60" value="${v.tage}" style="width:4.5em"></label></div>
-          <div class="grid grid-2" style="gap:.5rem;margin-top:.8rem">
-            <div><div class="muted of-klein" style="font-size:.85rem">Wasser</div><div class="mono of-mono" style="font-size:1.3rem">${wasser} l</div><div class="muted of-klein" style="font-size:.8rem">${Math.ceil(wasser / 9)} Kisten à 6 × 1,5 l</div></div>
-            <div><div class="muted of-klein" style="font-size:.85rem">Mahlzeiten</div><div class="mono of-mono" style="font-size:1.3rem">${essen * 3}</div><div class="muted of-klein" style="font-size:.8rem">${essen} Personentage · ca. ${essen * 2000} kcal</div></div>
-          </div>
-          <p class="muted of-klein" style="margin:.8rem 0 0;font-size:.85rem">Dazu: Medikamente für 14 Tage, Hygieneartikel, Bargeld in kleinen Scheinen, Taschenlampe, Batterien, Campingkocher. Die Checkliste dazu steht unter <a href="#vorsorge">Vorsorge</a>.</p>
-        </div>
       </div>`;
   },
 
@@ -960,7 +946,7 @@ const seiten = {
    */
   bibliothek() {
     const k = katalog();
-    if (!k) return `${kopf("Bibliothek", "Der Paketkatalog wurde noch nie geladen.")}<div class="card of-karte"><p class="muted of-klein">Geh einmal online, dann holt OFFLINE den Katalog und merkt ihn sich.</p><button class="btn btn-primary of-btn of-btn--primaer" data-katalog>Katalog laden</button><p class="form-msg of-meldung" id="bib-msg"></p></div>`;
+    if (!k) return `${kopf("Bibliothek", "Der Paketkatalog wurde noch nie geladen.")}<div class="card of-karte"><p class="muted of-klein">Geh einmal online, dann holt OFFLINE den Katalog und merkt ihn sich.</p><button class="btn btn-primary of-btn of-btn--primaer" data-katalog>Katalog laden</button><p class="form-msg of-meldung" id="bib-msg"></p></div>${installiertHtml()}`;
     const inst = installierteIds().map(paketRoh).filter(Boolean);
     const { neu, bald, geraet } = ladenAbschnitte(k, inst, { versionVergleich, bald: BALD.filter((b) => b.nurOhne !== "tresor" || !tresorBenutzt()), nichtLadbar: NICHT_LADBAR });
     const abschnitt = (titel, satz, karten, leer) => `<section class="laden-abschnitt" aria-label="${esc(titel)}"><h2>${esc(titel)}</h2><p class="laden-satz of-klein">${esc(satz)}</p>${karten.length ? `<div class="grid grid-2">${karten.join("")}</div>` : `<p class="muted of-klein">${esc(leer)}</p>`}</section>`;
@@ -974,6 +960,7 @@ const seiten = {
         <p class="muted of-klein" style="margin:0 0 .75rem">Ohne Internet: Paketordner vom Stick auswählen. Der Kern prüft Signatur und jede Datei, bevor etwas übernommen wird.</p>
         <button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-stick-suchen>Datenträger durchsuchen</button> <button class="btn btn-sm of-btn of-btn--klein" data-ordner-waehlen>Ordner wählen …</button>
         <div id="stick-funde" style="margin-top:.75rem">${(state.funde ?? []).map((f) => `<div class="switch of-liste__zeile"><span><strong>${esc(f.titel)}</strong> <span class="muted of-klein">${esc(f.version)} · ${groesse(f.groesse)}</span><br><span class="muted mono of-klein of-mono" style="font-size:.8rem">${esc(f.pfad)}</span></span><button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-stick="${esc(f.pfad)}">Einspielen</button></div>`).join("")}</div></div>` : ""}
+      ${installiertHtml()}
       ${desktop ? lokaleQuelleHtml() : ""}`;
   },
 
@@ -1607,7 +1594,7 @@ function einstellungenHtml() {
     <section class="card of-karte einst-teil" aria-labelledby="einst-alter-titel"><h2 id="einst-alter-titel">Alter</h2>
       <p class="muted of-klein">Für Pause: Welche Happen passen. Pause gibt es ab 14 Jahren.</p>
       <div class="land-auswahl" role="radiogroup" aria-labelledby="einst-alter-titel">${Object.entries(LEBENSABSCHNITTE).map(([k, t]) => `<label class="land-opt"><input type="radio" name="einst-alter" value="${k}" ${k === alter ? "checked" : ""}><span>${esc(t)}</span></label>`).join("")}</div></section>
-    <section class="card of-karte einst-teil" aria-labelledby="einst-bl-titel"><h2 id="einst-bl-titel">${esc(LAENDER[l]?.region ?? "Bundesland")}</h2>
+    <section class="card of-karte einst-teil" id="einst-bl" aria-labelledby="einst-bl-titel"><h2 id="einst-bl-titel">${esc(LAENDER[l]?.region ?? "Bundesland")}</h2>
       ${l === "at" && laender.length ? `<label class="muted of-klein" for="bl-einst">Für Radio, Werkzeuge und Bereit</label><br><select class="of-select" id="bl-einst">${laender.map((b) => `<option ${b.name === state.bundesland ? "selected" : ""}>${esc(b.name)}</option>`).join("")}</select>`
         : `<p class="muted of-klein">${esc(kommtMit(l))}</p>`}</section>`;
 }
@@ -2679,7 +2666,7 @@ function suchIndex() {
   // 2 Vorsorge: Haushalt und die Punkte der Grundvorsorge, die für den Haushalt angezeigt werden
   const g = grund();
   if (g) {
-    dazu(2, "Vorsorge", "Euer Polster", `Wie lange euer Haushalt mit Wasser, Essen und Licht auskommt: Personen, Wasser in Litern, Essen für wie viele Tage, Taschenlampe. Ziel ${POLSTER_ZIEL} Tage.`, { hash: "#vorsorge", anker: "polster" });
+    dazu(2, "Vorsorge", "Vorräte", `Vorrat, Polster: Wie lange euer Haushalt mit Wasser, Essen und Licht auskommt: Personen, Wasser in Litern, Essen für wie viele Tage, Taschenlampe. Ziel ${POLSTER_ZIEL} Tage.`, { hash: "#vorsorge", anker: "polster" });
     dazu(2, "Einstellungen", "Dein Haushalt", "Wie viele Menschen leben bei dir. Wer lebt bei dir: Kinder, Babys, Ältere Menschen, Jemand braucht Pflege, Jemand mit Behinderung. Haustiere: Hund, Katze, Kaninchen, Vogel, Reptilien. Wie wohnst du: Eigenes Haus, Mietwohnung, Keller.", { hash: "#einstellungen", anker: "haushalt" });
     for (const b of g.bereiche) {
       dazu(2, "Vorsorge", b.titel, b.satz, { hash: "#vorsorge", anker: `gv-${b.id}` });
