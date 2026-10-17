@@ -28,10 +28,14 @@ async function sitzung(fn, { alt = null, land = true } = {}) {
 const ruhig = (t, ms = 400) => t.auswerten(`new Promise((r) => setTimeout(r, ${ms}))`);
 const startBereit = (t) => warteBis(t, `localStorage.getItem("offline:paket:at-basis") && document.querySelector("#main h1")`, 60_000);
 const zeile = (t) => t.auswerten(`(() => { const z = document.querySelector("#main .heute-polster"); return z ? { text: z.innerText.replace(/\\s+/g, " ").trim(), knopf: z.querySelector("a.btn")?.textContent ?? null, link: (z.matches("a") ? z : z.querySelector("a"))?.getAttribute("href") } : null; })()`);
-/** Polster in Vorsorge eintragen, wie ein Mensch: Zahlen ins Feld tippen (change), Licht über den Knopf. */
+/** Polster eintragen, wie ein Mensch: die Personenzahl seit Nr. 40 unter Einstellungen › Dein Haushalt, Wasser und Essen in
+ *  Vorsorge › Polster (Zahlen ins Feld tippen, change). */
 async function eintragen(t, { personen, liter, essen }) {
+  await t.auswerten(`location.hash = "#einstellungen"`); await warteBis(t, `document.getElementById("hh-personen")`, 20_000);
+  await t.auswerten(`(() => { const i = document.getElementById("hh-personen"); i.value = "${personen}"; i.dispatchEvent(new Event("change", { bubbles: true })); })()`);
+  await ruhig(t, 150);
   await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.getElementById("polster")`, 20_000);
-  for (const [f, w] of Object.entries({ personen, liter, essen })) {
+  for (const [f, w] of Object.entries({ liter, essen })) {
     await t.auswerten(`(() => { const i = document.getElementById("polster-${f}"); i.value = "${w}"; i.dispatchEvent(new Event("change", { bubbles: true })); })()`);
     await ruhig(t, 150);
   }
@@ -74,7 +78,7 @@ test("(b) 2 Personen, 40 Liter, Essen 14 Tage → „Euer Polster: 10 Tage“ mi
     const z = await zeile(t);
     assert.equal(z.text, "Euer Polster: 11 Tage Wasser, Essen, Licht · Ziel 14 Tage"); assert.equal(z.link, "#vorsorge"); assert.doesNotMatch(z.text, ANGST);
     // Alles bleibt am Gerät
-    assert.deepEqual(await t.auswerten(`JSON.parse(localStorage.getItem("offline:polster"))`), { personen: 2, liter: 45, essen: 14, licht: false });
+    assert.deepEqual(await t.auswerten(`({ polster: JSON.parse(localStorage.getItem("offline:polster")), personen: JSON.parse(localStorage.getItem("offline:haushalt-v2")).personen })`), { polster: { liter: 45, essen: 14, licht: false }, personen: 2 });
     // Die Suche findet „Polster“
     await t.auswerten(`document.querySelector("[data-suche-auf]").click()`); await warteBis(t, `document.getElementById("suche-feld")`);
     await t.auswerten(`(() => { const f = document.getElementById("suche-feld"); f.value = "Polster"; f.dispatchEvent(new Event("input", { bubbles: true })); })()`); await ruhig(t);
@@ -132,7 +136,7 @@ test("Update von der zuletzt veröffentlichten Version: Häkchen und Notizen ble
     for (const [k, v] of Object.entries(JSON.parse(vorher.checks))) if (v) assert.equal(nach[k], true, k);
     // Neustart der neuen Fassung: Polster-Angaben, Notiz und Häkchen bleiben, Heute zeigt das Polster
     await t.laden(`${url}/app.html?nochmal#start`); await warteBis(t, `document.querySelector("#main .heute-polster")`, 30_000);
-    assert.deepEqual(await t.auswerten(`JSON.parse(localStorage.getItem("offline:polster"))`), { personen: 2, liter: 10, essen: 2, licht: null });
+    assert.deepEqual(await t.auswerten(`({ polster: JSON.parse(localStorage.getItem("offline:polster")), personen: JSON.parse(localStorage.getItem("offline:haushalt-v2")).personen })`), { polster: { liter: 10, essen: 2, licht: null }, personen: 2 });
     assert.equal((await zeile(t)).text, "Euer Polster: 2 Tage Wasser, Essen, Licht · Ziel 14 Tage");
     assert.equal(await t.auswerten(`localStorage.getItem("offline:notizbuch")`), vorher.notizen);
     await t.auswerten(`location.hash = "#notizen"`); await ruhig(t);

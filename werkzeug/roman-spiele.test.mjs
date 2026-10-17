@@ -94,8 +94,11 @@ test("Update von der letzten veröffentlichten Version: Land, Haushalt, Häkchen
     await ruhig(t, 800);
     assert.deepEqual(await lesen(), vorher, "Gerätespeicher unverändert");
     // Und die App zeigt es: Notiz, Haushalt, Häkchen, Roman weggelegt auf Spiele
-    await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelector('[data-haushalt="kinder"]')`, 20_000);
-    assert.deepEqual(await t.auswerten(`({ kinder: document.querySelector('[data-haushalt="kinder"]').checked, haekchen: [...document.querySelectorAll("[data-check]")].filter((c) => c.checked).length })`), { kinder: true, haekchen: 1 });
+    // Haushalt steht seit Nr. 40 unter Einstellungen (Haken „Kinder“ → Ja); die Häkchen in Vorsorge
+    await t.auswerten(`location.hash = "#einstellungen"`); await warteBis(t, `document.querySelector('[data-hh-an="kinder"]')`, 20_000);
+    assert.equal(await t.auswerten(`document.querySelector('[data-hh-an="kinder"]').checked`), true, "Kinder übernommen");
+    await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelector("[data-check]")`, 20_000);
+    assert.equal(await t.auswerten(`[...document.querySelectorAll("[data-check]")].filter((c) => c.checked).length`), 1, "Häkchen");
     await t.auswerten(`location.hash = "#notizen"`); await ruhig(t);
     assert.ok(await t.auswerten(`document.getElementById("main").innerText.includes("Treffpunkt")`), "Notiz da");
     await t.auswerten(`location.hash = "#pause"`); await warteBis(t, `document.querySelector("#main .spiele-roman")`, 20_000);

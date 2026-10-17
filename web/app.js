@@ -20,13 +20,14 @@ import { hoerenZeigen, sprechen as lumischSprechen } from "./stimme.js";
 import { freiLaden as buchFreiLaden, freischalten as buchFreischalten, anteil as buchAnteil, buchMitLuecken, linkErlaubt as buchLinkErlaubt, vorleseTeile as buchVorleseTeile, absatz as buchAbsatz, LUECKE as BUCH_LUECKE, LUECKE_WARTET as BUCH_LUECKE_WARTET, wartendeAbsaetze as buchWartend, mitSchluss as buchMitSchluss } from "./buch.js";
 import { SCHLUSS, KARTEN as TAG_KARTEN, PLAN_STANDARD, TIEFEN, datumVon, plusTage, kartenFuer, vorratTage, vorzuladen, bereichVorbei, tagesKarten, schlussErreicht, textkarteFuer, lernen as tagLernen, antwortRichtig } from "./tag.js";
 import { ModulRahmen, druckTeil } from "./modul-host.js";
-import { haushaltHtml, grundvorsorgeHtml, kachelnHtml, karteHtml, radioHtml, checksUebertragen, punkteFuer, fortschritt as gvFortschritt, fortschrittsbalken, verweisZiel, exportText as gvExportText } from "./szenarien.js";
+import { grundvorsorgeHtml, kachelnHtml, karteHtml, radioHtml, checksUebertragen, punkteFuer, fortschritt as gvFortschritt, fortschrittsbalken, verweisZiel, exportText as gvExportText } from "./szenarien.js";
 import { BEREICHE, bereichVon, bereichName, pflicht as paketPflicht, paketAn, umschalten as paketUmschalten, abschnitte as ladenAbschnitte, stilleUpdates } from "./pakete.js";
 import { BALD, NICHT_LADBAR, baldEintrag } from "./bald.js";
 import { LAENDER, SPAETER as LAENDER_SPAETER, kommtMit, landBestimmen, NOTFALL_KURZ, fuerLand, fuerLandTief } from "./laender.js";
 import { FRAGEN as NETZ_FRAGEN, NACHBAR_SATZ, rat as netzRat, STUFEN as NETZ_STUFEN, stufeFuer, dauerText as netzDauer, seite as netzSeite, zuletztText } from "./netz.js";
 import { indexBauen as suchIndexBauen, suchen as suchenIm, begriffe as suchBegriffe, hervorheben, zeile as suchZeile } from "./suche.js";
 import { TEILE as SZ_TEILE } from "./szenarien.js";
+import { haushaltAngaben, haushaltAusAlt, merkmale as haushaltMerkmale, zusammenfassung as haushaltZeile, haushaltEinstellungHtml, haushaltAendern } from "./haushalt.js";
 import { polsterRechnen, polsterAngaben, polsterSatz, polsterPunkte, heuteZeile as polsterHeute, tageText, LICHT_SATZ, ZIEL as POLSTER_ZIEL } from "./polster.js";
 import { PAKET as HEILKUNDE_PAKET, startZustand as heilkundeStart, seiteHtml as heilkundeSeiteHtml, klick as heilkundeKlick } from "./heilkunde.js";
 
@@ -102,7 +103,7 @@ const state = {
   natur: { weg: "start" }, internFeld: null, internMeldung: null, // 0.6.0: Naturheilkunde, interner Kanal
   checks: speicher.get("checks", {}),
   // 0.8.0 (Auftrag Nr. 20): Haushalt (lokal), Merkliste der Grundvorsorge, Häkchen der Szenario-Checklisten
-  haushalt: speicher.get("haushalt", []), polster: polsterAngaben(speicher.get("polster", {})), merk: speicher.get("merkliste", []), nurMerk: false, gvZurueck: false, szChecks: speicher.get("szenario-checks", {}), szenarioVon: "#notfall", anker: null,
+  haushalt: [], haushaltV2: null, polster: polsterAngaben(speicher.get("polster", {})), merk: speicher.get("merkliste", []), nurMerk: false, gvZurueck: false, szChecks: speicher.get("szenario-checks", {}), szenarioVon: "#notfall", anker: null,
   bestaetigt: null, // Bereit Version 2: positionId → ISO-Datum der letzten Bestätigung (siehe bereit.js), unten geladen
   wesenLog: { filter: "", suche: "" },
   abo: speicher.get("abo", { intervall: "woechentlich", nurWlan: true, fenster: true, von: "02:00", bis: "05:00", aktiv: true }),
@@ -208,6 +209,22 @@ const szReihe = () => D("szenarien")?.reihenfolge ?? [];
 /** Karten aus inhalt/karten.json des Österreich-Pakets (Nr. 36), ab der Ausgabe, die sie mitbringt; ältere Ausgaben haben keine. */
 const infoKarten = () => D("karten")?.karten ?? [];
 const szKarten = () => Object.fromEntries(szReihe().map((id) => [id, D(`szenarien/${id}`)]).filter(([, k]) => k));
+/** Nr. 40: Haushalt laden; beim ersten Start mit 0.9.3 aus den alten Haken übernommen (Haken → Ja mit 1, Personen aus dem Polster). */
+function haushaltLaden() {
+  let v2 = speicher.get("haushalt-v2", null);
+  if (!v2) { v2 = haushaltAusAlt(speicher.get("haushalt", []), speicher.get("polster", {})?.personen ?? null); speicher.set("haushalt-v2", v2); }
+  state.haushaltV2 = haushaltAngaben(v2);
+  state.haushalt = haushaltMerkmale(state.haushaltV2);
+  speicher.set("haushalt", state.haushalt);
+}
+haushaltLaden();
+function haushaltSetzen(neu) {
+  state.haushaltV2 = neu; speicher.set("haushalt-v2", neu);
+  state.haushalt = haushaltMerkmale(neu); speicher.set("haushalt", state.haushalt);
+  render();
+}
+/** Euer Polster rechnet mit der Personenzahl aus dem Haushalt (Nr. 40). */
+const polsterJetzt = () => polsterRechnen({ ...state.polster, personen: state.haushaltV2?.personen ?? 1 });
 /** Erledigt und gesamt der Grundvorsorge, nur Punkte, die zum Haushalt passen (für Bereit und die Kacheln). */
 function grundStand() {
   const g = grund();
@@ -216,13 +233,13 @@ function grundStand() {
 }
 /** Nr. 34 „Euer Polster“ (Wortlaut Mik, 16.10.2026): Zeile auf Heute, an der Stelle der bisherigen Vorrat-Zeile. */
 function polsterHeuteHtml() {
-  const z = polsterHeute(polsterRechnen(state.polster));
+  const z = polsterHeute(polsterJetzt());
   return z.knopf ? `<div class="heute-polster heute-polster--leer"><p class="heute-polster-titel">${esc(z.titel)}</p><a class="btn of-btn" href="#vorsorge" data-anker-ziel="polster">${esc(z.knopf)}</a></div>`
     : `<a class="heute-polster" href="#vorsorge" data-anker-ziel="polster"><span class="heute-polster-titel">${esc(z.titel)}</span><span class="muted of-klein">${esc(z.klein)}</span></a>`;
 }
 /** Vorsorge › Polster: Personen, Wasser, Essen, Licht; nur am Gerät. */
 function polsterHtml() {
-  const r = polsterRechnen(state.polster);
+  const r = polsterJetzt();
   const zahl = (feld, titel, wert, schritt, min, max, einheit) => `<div class="polster-feld"><label for="polster-${feld}">${titel}</label>
       <div class="polster-zahl"><button type="button" class="btn of-btn polster-schritt" data-polster-schritt="${feld}" data-polster-um="${-schritt}" aria-label="${titel}: weniger">−</button>
       <input class="of-input" id="polster-${feld}" data-polster-feld="${feld}" type="number" inputmode="numeric" min="${min}" max="${max}" step="1" value="${wert}">
@@ -231,7 +248,7 @@ function polsterHtml() {
     <h2 id="polster-titel" style="margin-top:0">Polster</h2>
     <p class="muted of-klein" style="margin:0 0 .8rem">Wie lange euer Haushalt mit Wasser und Essen auskommt. Ziel ${POLSTER_ZIEL} Tage. Bleibt auf diesem Gerät.</p>
     <div class="polster-felder">
-      ${zahl("personen", "Personen im Haushalt", r.personen, 1, 1, 20, "")}
+      <p class="polster-personen of-klein">Für ${r.personen} ${r.personen === 1 ? "Person" : "Personen"} · aus „Dein Haushalt“ · <a href="#einstellungen" data-anker-ziel="haushalt">ändern</a></p>
       ${zahl("liter", "Wasser", r.liter, 5, 0, 5000, "Liter")}
       ${zahl("essen", "Essen für", r.essen, 1, 0, 365, "Tage")}
       <fieldset class="polster-feld polster-licht"><legend>Taschenlampe mit Batterien oder Powerbank</legend>
@@ -247,9 +264,10 @@ function polsterHtml() {
 /** Angaben speichern und mit Bereit abgleichen: Was das Polster erfüllt, gilt dort als erledigt. Von Hand gesetzte Häkchen bleiben
  *  immer; zurückgenommen wird nur, was das Polster selbst gesetzt hat (gemerkt in „polster-auto“). */
 function polsterSetzen(neu) {
-  state.polster = polsterAngaben({ ...state.polster, ...neu }); speicher.set("polster", state.polster);
+  const { personen: _, ...angaben } = polsterAngaben({ ...state.polster, ...neu }); // Personen kommen seit Nr. 40 aus dem Haushalt
+  state.polster = angaben; speicher.set("polster", state.polster);
   const auto = speicher.get("polster-auto", {}), jetzt = new Date(testJetzt()).toISOString();
-  for (const [check, erfuellt] of Object.entries(polsterPunkte(polsterRechnen(state.polster)))) {
+  for (const [check, erfuellt] of Object.entries(polsterPunkte(polsterJetzt()))) {
     const pos = BEREIT_POSITIONEN.find((p) => p.check === check);
     if (erfuellt && !state.checks[check]) { state.checks[check] = true; auto[check] = true; if (pos) state.bestaetigt[pos.id] = jetzt; }
     else if (!erfuellt && auto[check]) { state.checks[check] = false; delete auto[check]; if (pos) delete state.bestaetigt[pos.id]; }
@@ -635,6 +653,19 @@ const seiten = {
   "netz-andere"() { return netzSeiteHtml("andere"); },
   /** Einstellungen (Nr. 28, Nachtrag Mik): Land, Alter (für Pause), Bundesland. */
   einstellungen() { return einstellungenHtml(); },
+  /** Nr. 40: erster Start, Schritt 2 nach der Länderfrage. */
+  "haushalt-start"() {
+    const p = state.haushaltV2.personen ?? 1;
+    return `<div class="land-frage hh-start" id="hh-start"><h1>Wer lebt bei dir?</h1>
+      <p class="land-frage-text">Wie viele Menschen leben in deinem Haushalt?</p>
+      <div class="hh-zahl"><button type="button" class="btn of-btn hh-schritt" data-hh-schritt="personen" data-hh-um="-1" aria-label="Menschen im Haushalt: weniger">−</button>
+        <input class="of-input" id="hh-personen" type="number" inputmode="numeric" min="1" max="20" value="${p}" aria-label="Menschen im Haushalt">
+        <button type="button" class="btn of-btn hh-schritt" data-hh-schritt="personen" data-hh-um="1" aria-label="Menschen im Haushalt: mehr">+</button></div>
+      <button type="button" class="btn btn-primary of-btn of-btn--primaer land-weiter" data-hh-start="weiter">Weiter</button>
+      <button type="button" class="btn of-btn" data-hh-start="spaeter">Später</button>
+      <p class="muted of-klein">Davon hängt ab, wie viel Wasser und Essen ihr braucht. Kinder, Haustiere und mehr stellst du später unter Einstellungen → Dein Haushalt ein. Bleibt auf deinem Gerät.</p>
+    </div>`;
+  },
   /** Ein laufender Happen (Fokus-Bildschirm). render() baut ihn selbst ein; ohne laufenden Happen geht es in den Raum. */
   happen() { return ""; },
   /** Pause › Deine Linie */
@@ -778,7 +809,7 @@ const seiten = {
     return `
       ${kopf("Vorsorge", "Grundvorsorge, Szenarien und dein Haushalt.", `<div style="min-width:220px"><div class="muted of-klein" style="font-size:.9rem;margin-bottom:.3rem">${st.erledigt} von ${st.gesamt} erledigt</div>${fortschrittsbalken(st.erledigt, st.gesamt, `Vorsorge: ${st.erledigt} von ${st.gesamt} erledigt`)}</div>`)}
       ${polsterHtml()}
-      ${haushaltHtml(state.haushalt)}
+      <p class="card of-karte hh-kurz" id="haushalt-kurz"><strong>Dein Haushalt:</strong> ${esc(haushaltZeile(state.haushaltV2) || "noch nicht eingestellt – die App zeigt alles")} · <a href="#einstellungen" data-anker-ziel="haushalt">ändern</a></p>
       ${vorhabenHtml}
       ${grundvorsorgeHtml(g, { checks: state.checks, haushalt: state.haushalt, merk: state.merk, nurMerk: state.nurMerk, zuruecksetzen: state.gvZurueck, faellig, karten: infoKarten().filter((c) => c.ort?.bereich) })}
       ${ausland() ? `<h2 style="margin-top:2rem">Szenarien</h2>${landVorschauHtml()}` : Object.keys(karten).length ? `<h2 style="margin-top:2rem">Szenarien</h2><p class="muted of-klein">Was du für jeden Ernstfall zusätzlich brauchst und wie du richtig reagierst.</p>${kachelnHtml(karten, szReihe(), state.szChecks)}` : ""}
@@ -1563,7 +1594,7 @@ function einstellungenHtml() {
   const l = land(), alter = (speicher.get("pause", null) ?? {}).alter ?? null;
   const laender = D("bundeslaender")?.laender ?? [];
   const pakete = installierteIds().map(paketRoh).filter(Boolean).reduce((s, x) => s + (x.manifest.groesse ?? 0), 0);
-  return `${kopf("Einstellungen", "Land, Alter und Bundesland. Alles bleibt auf diesem Gerät.")}
+  return `${kopf("Einstellungen", "Land, Haushalt, Alter und Bundesland. Alles bleibt auf diesem Gerät.")}
     <section class="card of-karte einst-teil ueber-offline" id="ueber-offline" aria-labelledby="ueber-offline-titel"><h2 id="ueber-offline-titel">Über OFFLINE</h2>
       <p>OFFLINE kommt von der digitalworld Academy OG in Wien, einem kleinen Bildungsinstitut. Entwicklung und Server bezahlen wir selbst. Später gibt es eine Pro-Stufe mit zusätzlichen Inhalten. Was heute gratis ist, bleibt gratis. Keine Werbung, kein Konto, keine Daten über dich auf unseren Servern.</p>
       <p class="muted of-klein">Die App spielt von selbst keine Töne. Sirenen hörst du nur, wenn du auf ‚Anhören‘ tippst.</p>
@@ -1572,6 +1603,7 @@ function einstellungenHtml() {
     <section class="card of-karte einst-teil" aria-labelledby="einst-land-titel"><h2 id="einst-land-titel">Land</h2>
       <p class="muted of-klein">Davon hängen Notrufnummern, Radiosender und Szenarien ab.</p>
       ${landAuswahlHtml("einst-land", l)}</section>
+    ${haushaltEinstellungHtml(state.haushaltV2)}
     <section class="card of-karte einst-teil" aria-labelledby="einst-alter-titel"><h2 id="einst-alter-titel">Alter</h2>
       <p class="muted of-klein">Für Pause: Welche Happen passen. Pause gibt es ab 14 Jahren.</p>
       <div class="land-auswahl" role="radiogroup" aria-labelledby="einst-alter-titel">${Object.entries(LEBENSABSCHNITTE).map(([k, t]) => `<label class="land-opt"><input type="radio" name="einst-alter" value="${k}" ${k === alter ? "checked" : ""}><span>${esc(t)}</span></label>`).join("")}</div></section>
@@ -2648,7 +2680,7 @@ function suchIndex() {
   const g = grund();
   if (g) {
     dazu(2, "Vorsorge", "Euer Polster", `Wie lange euer Haushalt mit Wasser, Essen und Licht auskommt: Personen, Wasser in Litern, Essen für wie viele Tage, Taschenlampe. Ziel ${POLSTER_ZIEL} Tage.`, { hash: "#vorsorge", anker: "polster" });
-    dazu(2, "Vorsorge", "Haushalt und Wohnsituation", "Wer lebt bei dir: Kinder, Ältere Menschen, Jemand braucht Pflege, Jemand mit Behinderung, Haustiere. Wie wohnst du: Eigenes Haus, Mietwohnung, Keller.", { hash: "#vorsorge", anker: "haushalt" });
+    dazu(2, "Einstellungen", "Dein Haushalt", "Wie viele Menschen leben bei dir. Wer lebt bei dir: Kinder, Babys, Ältere Menschen, Jemand braucht Pflege, Jemand mit Behinderung. Haustiere: Hund, Katze, Kaninchen, Vogel, Reptilien. Wie wohnst du: Eigenes Haus, Mietwohnung, Keller.", { hash: "#einstellungen", anker: "haushalt" });
     for (const b of g.bereiche) {
       dazu(2, "Vorsorge", b.titel, b.satz, { hash: "#vorsorge", anker: `gv-${b.id}` });
       for (const c of infoKarten().filter((c) => c.ort?.bereich === b.id)) dazu(2, `Vorsorge · ${b.titel}`, c.titel, (c.punkte ?? []).map((x) => `${x.t} ${x.text}`).join(" "), { hash: "#vorsorge", anker: `karte-${c.id}` });
@@ -2842,10 +2874,9 @@ main.addEventListener("change", (e) => {
     const pos = BEREIT_POSITIONEN.find((p) => p.check === t.dataset.check);
     return pos ? bestaetigen(pos.id, t.checked) : render();
   }
-  if (t.dataset.haushalt) { // Haushalt und Wohnsituation: nur auf diesem Gerät
-    const k = t.dataset.haushalt; state.haushalt = t.checked ? [...new Set([...state.haushalt, k])] : state.haushalt.filter((x) => x !== k);
-    speicher.set("haushalt", state.haushalt); render(); const d = document.getElementById("haushalt"); if (d) d.open = true; return; // offen lassen, solange man wählt
-  }
+  if (t.dataset.hhAn) { haushaltSetzen(haushaltAendern(state.haushaltV2, t.dataset.hhAn, t.checked)); document.querySelector(`[data-hh-an="${t.dataset.hhAn}"]`)?.focus(); return; } // Nr. 40
+  if (t.dataset.hhZahl) { haushaltSetzen(haushaltAendern(state.haushaltV2, t.dataset.hhZahl, Number(t.value))); document.getElementById(t.id)?.focus(); return; }
+
   if (t.dataset.szCheck) { // Checkliste einer Szenario-Karte: gemerkt wird der Satz, nicht die Stelle
     const k = szKarten()[t.dataset.szCheck], satz = k?.checkliste_spezifisch[Number(t.dataset.szPunkt)];
     if (!satz) return;
@@ -2934,6 +2965,7 @@ main.addEventListener("click", (e) => {
 main.addEventListener("click", (e) => {
   if (!e.target.closest("[data-land-weiter]")) return;
   landSetzen(main.querySelector('input[name="land"]:checked')?.value ?? "at");
+  if (!speicher.get("haushalt-gefragt", false)) { speicher.set("haushalt-gefragt", true); location.hash = "#haushalt-start"; return; } // Nr. 40: Schritt 2
   if (location.hash && location.hash !== "#start") location.hash = "#start"; else render();
 });
 // 0.8.0: Szenarien, Grundvorsorge, Sirenen zum Anhören
@@ -3023,6 +3055,24 @@ main.addEventListener("click", (e) => { const l = e.target.closest("[data-tag-le
 // Nr. 39: Bereit-Zahl antippen → Aufschlüsselung; der Link zum nächsten Schritt schließt das Blatt
 main.addEventListener("click", (e) => { if (e.target.closest("[data-bereit-erklaeren]")) blattOeffnen("So setzt sich deine Zahl zusammen", bereitErklaerungHtml()); });
 document.addEventListener("click", (e) => { if (e.target.closest(".blatt [data-blatt-zu]")) blattWeg(); });
+// Nr. 40: Haushalt mit Plus/Minus (Einstellungen und erster Start); der Knopf behält danach den Fokus
+main.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-hh-schritt]");
+  if (!b) return;
+  const f = b.dataset.hhSchritt, um = Number(b.dataset.hhUm), h = state.haushaltV2;
+  const jetzt = f === "personen" ? h.personen ?? 1 : f.startsWith("tier-") ? h.tiere.arten[f.slice(5)] ?? 0 : h.gruppen[f] ?? 0;
+  const neu = jetzt + um;
+  if (f !== "personen" && neu < 1) return; // auf 0 nur über den Schalter
+  haushaltSetzen(haushaltAendern(h, f, neu));
+  document.querySelector(`[data-hh-schritt="${f}"][data-hh-um="${um}"]`)?.focus();
+});
+// Nr. 40: erster Start, Schritt 2 „Wer lebt bei dir?“ – nur die Personenzahl, überspringbar
+main.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-hh-start]");
+  if (!b) return;
+  if (b.dataset.hhStart === "weiter") haushaltSetzen({ ...state.haushaltV2, personen: Math.min(20, Math.max(1, Number(document.getElementById("hh-personen")?.value) || 1)) });
+  location.hash = "#start";
+});
 // Nr. 34: Polster mit Plus/Minus und Ja/Nein; der Knopf behält danach den Fokus
 main.addEventListener("click", (e) => {
   const b = e.target.closest("[data-polster-schritt], [data-polster-licht]");
