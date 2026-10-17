@@ -260,7 +260,10 @@ function polsterSetzen(neu) {
 /** Nr. 39 (Mik, 17.10.): Antippen der Bereit-Zahl zeigt, woraus sie besteht – je Quelle Punkte von möglichen, die Punkte mit Grund
  *  und der nächste Schritt. Nur Anzeige; die Rechnung bleibt (web/bereit.js). */
 function bereitErklaerungHtml() {
-  const b = bereit(), polster = speicher.get("polster-auto", {}), schritt = naechsterSchritt(b);
+  const b = bereit(), polster = speicher.get("polster-auto", {}), s0 = naechsterSchritt(b);
+  // wie auf Heute: statt „Ein Punkt auf der Checkliste …“ der Punkt selbst, der am meisten bringt
+  const ding = s0.text === "Ein Punkt auf der Checkliste bringt am meisten." ? b.positionen.filter((x) => x.quelle === "dinge" && x.check && x.stand !== "gut").sort((x, y) => (y.gewicht ?? 1) - (x.gewicht ?? 1))[0] : null;
+  const schritt = ding ? { text: ding.titel, ziel: "#vorsorge" } : s0;
   const tag = (d) => (d ? new Date(d).toLocaleDateString("de-AT", { day: "numeric", month: "numeric", year: "numeric" }) : "");
   const grund = (x) => {
     if (x.auto === "paket") return x.id === "paket" ? "automatisch, weil die App es geladen hat" : `automatisch: Ausgabe vom ${tag(x.datum)}`;
@@ -273,7 +276,7 @@ function bereitErklaerungHtml() {
     ${b.sockel ? `<p class="muted of-klein">Deine Zahl hält noch den Stand aus der früheren Version der App (${b.wert}). Was du bestätigst, zählt zusätzlich.</p>` : ""}
     ${b.quellen.map((q) => { const da = q.positionen.filter((x) => x.wert > 0); return `<section class="be-quelle"><h3><span>${esc(q.name)}</span> <span class="be-punkte">${q.punkte} von ${q.max}</span></h3>
       ${da.length ? `<ul>${da.map((x) => `<li><strong>${esc(x.titel)}</strong> – ${esc(grund(x))}${x.stand === "faellig" ? " · bitte bald neu bestätigen" : ""}</li>`).join("")}</ul>` : `<p class="muted of-klein">Noch nichts.</p>`}</section>`; }).join("")}
-    <p class="be-schritt"><strong>Als Nächstes, bringt am meisten:</strong> <a href="${schritt.ziel}" data-blatt-zu>${esc(schritt.text)}</a></p>
+    <p class="be-schritt"><strong>Als Nächstes:</strong> <a href="${schritt.ziel}" data-blatt-zu>${esc(schritt.text)}</a></p>
   </div>`;
 }
 /** Häkchen der alten Checkliste (bis 0.7) auf die Grundvorsorge übertragen, sobald beide Listen da sind (Abgleich über den Text). */
