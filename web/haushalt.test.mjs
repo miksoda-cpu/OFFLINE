@@ -6,8 +6,8 @@ import { passt } from "./szenarien.js";
 
 test("Alte Haken werden übernommen: Ja mit Anzahl 1, Wohnen bleibt, Merkmale gleich wie vorher", () => {
   const h = haushaltAusAlt(["kinder", "tiere", "miete"], 3);
-  assert.deepEqual(h, { personen: 3, gruppen: { kinder: 1 }, tiere: { an: true, arten: {} }, wohnen: ["miete"], eingestellt: true });
-  assert.deepEqual(merkmale(h), ["kinder", "tiere", "miete"], "die Filter sehen dasselbe wie vor dem Update");
+  assert.deepEqual(h, { personen: 3, gruppen: { kinder: 1 }, tiere: { an: true, arten: {} }, wohnen: { form: "wohnung", besitz: "miete", keller: null, stock: null }, eingestellt: true });
+  assert.deepEqual(merkmale(h), ["kinder", "tiere", "wohnung", "miete"], "die bisherigen Merkmale bleiben, dazu „wohnung“");
   assert.deepEqual(merkmale(haushaltAusAlt([], null)), [], "nichts eingestellt: die App zeigt alles");
 });
 
@@ -30,4 +30,18 @@ test("Babys zählen auch als Kinder; Zusammenfassung in Alltagsdeutsch", () => {
   h = haushaltAendern(haushaltAendern(h, "tiere", true), "tier-hund", 2);
   assert.deepEqual(merkmale(h), ["babys", "kinder", "tiere", "tier-hund"]);
   assert.equal(zusammenfassung(h), "3 Personen, Babys, 2 Hunde");
+});
+
+test("Nachtrag: Wohnen als vier Fragen; alte Haken übernommen, Widersprüchliches nicht geraten", () => {
+  assert.deepEqual(haushaltAusAlt(["haus"]).wohnen, { form: "haus", besitz: "eigentum", keller: null, stock: null });
+  assert.deepEqual(haushaltAusAlt(["miete"]).wohnen, { form: "wohnung", besitz: "miete", keller: null, stock: null });
+  assert.deepEqual(haushaltAusAlt(["keller"]).wohnen, { form: null, besitz: null, keller: true, stock: null }, "Keller ohne Wohnform: Wohnform leer");
+  assert.deepEqual(haushaltAusAlt(["haus", "miete"]).wohnen, { form: null, besitz: null, keller: null, stock: null }, "beides: nicht raten");
+  assert.deepEqual(merkmale(haushaltAusAlt(["haus", "keller"])), ["haus", "eigentum", "keller"]);
+  let h = haushaltAendern(haushaltAngaben({}), "wohnen-form", "wohnung");
+  h = haushaltAendern(haushaltAendern(h, "wohnen-stock", 5), "wohnen-keller", "nein");
+  assert.deepEqual(h.wohnen, { form: "wohnung", besitz: null, keller: false, stock: 5 });
+  assert.deepEqual(merkmale(h), ["wohnung", "stock-hoch"]);
+  assert.equal(zusammenfassung(h), "Wohnung im 5. Stock");
+  assert.equal(haushaltAendern(h, "wohnen-form", "haus").wohnen.stock, null, "Stock nur bei Wohnung");
 });

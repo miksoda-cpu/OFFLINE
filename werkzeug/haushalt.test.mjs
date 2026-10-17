@@ -67,9 +67,9 @@ test("(b) Update von der zuletzt veröffentlichten Version: alte Haken übernomm
     fassung.alt = false;
     await t.laden(`${url}/app.html?neu#start`); await warteBis(t, `document.querySelector("#main .bereit-zahl")`, 30_000); await ruhig(t, 600);
     assert.equal(await t.auswerten(`document.querySelector("#main .bereit-zahl").textContent`), vorher, "Bereit-Zahl unverändert");
-    assert.deepEqual(await t.auswerten(`JSON.parse(localStorage.getItem("offline:haushalt-v2"))`), { personen: null, gruppen: { kinder: 1 }, tiere: { an: true, arten: {} }, wohnen: ["miete"], eingestellt: true });
+    assert.deepEqual(await t.auswerten(`JSON.parse(localStorage.getItem("offline:haushalt-v2"))`), { personen: null, gruppen: { kinder: 1 }, tiere: { an: true, arten: {} }, wohnen: { form: "wohnung", besitz: "miete", keller: null, stock: null }, eingestellt: true });
     await einst(t);
-    assert.deepEqual(await t.auswerten(`({ kinder: document.querySelector('[data-hh-an="kinder"]').checked, anzahl: document.getElementById("hh-kinder")?.value, tiere: document.querySelector('[data-hh-an="tiere"]').checked, miete: document.querySelector('[data-hh-an="wohnen-miete"]').checked })`), { kinder: true, anzahl: "1", tiere: true, miete: true });
+    assert.deepEqual(await t.auswerten(`({ kinder: document.querySelector('[data-hh-an="kinder"]').checked, anzahl: document.getElementById("hh-kinder")?.value, tiere: document.querySelector('[data-hh-an="tiere"]').checked, miete: document.querySelector('[data-hh-wahl="wohnen-besitz"][value="miete"]').checked, wohnung: document.querySelector('[data-hh-wahl="wohnen-form"][value="wohnung"]').checked })`), { kinder: true, anzahl: "1", tiere: true, miete: true, wohnung: true });
   }, { alt });
 });
 

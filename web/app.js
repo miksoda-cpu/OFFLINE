@@ -2875,6 +2875,7 @@ main.addEventListener("change", (e) => {
     return pos ? bestaetigen(pos.id, t.checked) : render();
   }
   if (t.dataset.hhAn) { haushaltSetzen(haushaltAendern(state.haushaltV2, t.dataset.hhAn, t.checked)); document.querySelector(`[data-hh-an="${t.dataset.hhAn}"]`)?.focus(); return; } // Nr. 40
+  if (t.dataset.hhWahl) { haushaltSetzen(haushaltAendern(state.haushaltV2, t.dataset.hhWahl, t.value)); document.querySelector(`[data-hh-wahl="${t.dataset.hhWahl}"][value="${t.value}"]`)?.focus(); return; }
   if (t.dataset.hhZahl) { haushaltSetzen(haushaltAendern(state.haushaltV2, t.dataset.hhZahl, Number(t.value))); document.getElementById(t.id)?.focus(); return; }
 
   if (t.dataset.szCheck) { // Checkliste einer Szenario-Karte: gemerkt wird der Satz, nicht die Stelle
@@ -3060,9 +3061,9 @@ main.addEventListener("click", (e) => {
   const b = e.target.closest("[data-hh-schritt]");
   if (!b) return;
   const f = b.dataset.hhSchritt, um = Number(b.dataset.hhUm), h = state.haushaltV2;
-  const jetzt = f === "personen" ? h.personen ?? 1 : f.startsWith("tier-") ? h.tiere.arten[f.slice(5)] ?? 0 : h.gruppen[f] ?? 0;
+  const jetzt = f === "personen" ? h.personen ?? 1 : f === "wohnen-stock" ? h.wohnen.stock ?? 0 : f.startsWith("tier-") ? h.tiere.arten[f.slice(5)] ?? 0 : h.gruppen[f] ?? 0;
   const neu = jetzt + um;
-  if (f !== "personen" && neu < 1) return; // auf 0 nur über den Schalter
+  if (f === "wohnen-stock" ? neu < 0 : f !== "personen" && neu < 1) return; // Anzahl auf 0 nur über den Schalter; Stock ab 0
   haushaltSetzen(haushaltAendern(h, f, neu));
   document.querySelector(`[data-hh-schritt="${f}"][data-hh-um="${um}"]`)?.focus();
 });
