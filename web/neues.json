@@ -2,6 +2,15 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.9.3",
+      "datum": "2026-10-17",
+      "punkte": [
+        "Sirenen: „Anhören“ spielt den Ton jetzt sofort ab. Klappt es auf einem Gerät nicht, steht ein Hinweis unter dem Knopf.",
+        "Tippe auf deine Bereit-Zahl: Dann siehst du, woraus sie besteht und was als Nächstes am meisten bringt.",
+        "Neu im Szenario Blackout und in der Vorsorge: wie das Handy lange durchhält und wie du es ohne Steckdose lädst."
+      ]
+    },
+    {
       "version": "0.9.2",
       "datum": "2026-10-16",
       "punkte": [

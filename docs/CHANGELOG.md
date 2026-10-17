@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.9.3 · 17.10.2026 · Sirenen hörbar, Bereit erklärt, Akku-Karten
+
+- **Sirenen** (Auftrag Nr. 38): „Anhören“ spielt im Antippen selbst; der Ton liegt beim Öffnen von Notfall bereit (Desktop: vom lokalen Server als Blob, wie im Web). Scheitert es, steht „Ton lässt sich auf diesem Gerät gerade nicht abspielen.“ unter dem Knopf statt still nichts.
+- **Bereit erklärt** (Auftrag Nr. 39): Antippen der Zahl öffnet „So setzt sich deine Zahl zusammen“ – je Quelle Punkte von möglichen, die Punkte mit Grund, der nächste Schritt. Rechnung unverändert.
+- **Akku-Karten** (Auftrag Nr. 36): Die App zeigt Karten aus dem Österreich-Paket (seit at-basis 2026.10.16) im Szenario Blackout und in der Grundvorsorge; Abkürzungen je Karte nur einmal erklärt. Service Worker `offline-v49`.
+
 ## 0.9.2 · 16.10.2026 · Euer Polster
 
 - **Euer Polster** (Auftrag Nr. 34): Auf der Startseite seht ihr, wie viele Tage Wasser und Essen reichen. Eintragen unter Vorsorge (Personen, Wasser, Essen, Licht); ab 14 Tagen sind die passenden Punkte in Bereit erledigt, Häkchen von Hand bleiben (`web/polster.js`).
