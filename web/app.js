@@ -68,7 +68,7 @@ async function internFreischalten(schluessel) {
   if (k) { history.replaceState(null, "", `${location.pathname}${location.search}#updates`); await internFreischalten(k); }
   else if (location.hash.startsWith("#kanal=")) history.replaceState(null, "", `${location.pathname}${location.search}#updates`);
 }
-const APP_VERSION = "0.9.3";
+const APP_VERSION = "0.9.4";
 // app_min: Pakete für eine neuere App bleiben sichtbar, lassen sich aber nicht laden (ältere Apps bis 0.1.8 prüften das nicht).
 const appVersion = () => desktop?.info?.version ?? APP_VERSION;
 const appPasst = (e) => !e?.app_min || versionVergleich(appVersion(), e.app_min) >= 0;
@@ -211,7 +211,7 @@ const szReihe = () => D("szenarien")?.reihenfolge ?? [];
 /** Karten aus inhalt/karten.json des Österreich-Pakets (Nr. 36), ab der Ausgabe, die sie mitbringt; ältere Ausgaben haben keine. */
 const infoKarten = () => D("karten")?.karten ?? [];
 const szKarten = () => Object.fromEntries(szReihe().map((id) => [id, D(`szenarien/${id}`)]).filter(([, k]) => k));
-/** Nr. 40: Haushalt laden; beim ersten Start mit 0.9.3 aus den alten Haken übernommen (Haken → Ja mit 1, Personen aus dem Polster). */
+/** Nr. 40: Haushalt laden; beim ersten Start mit 0.9.4 aus den alten Haken übernommen (Haken → Ja mit 1, Personen aus dem Polster). */
 function haushaltLaden() {
   let v2 = speicher.get("haushalt-v2", null);
   if (!v2) { v2 = haushaltAusAlt(speicher.get("haushalt", []), speicher.get("polster", {})?.personen ?? null); speicher.set("haushalt-v2", v2); }

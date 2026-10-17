@@ -2,6 +2,16 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.9.4",
+      "datum": "2026-10-17",
+      "punkte": [
+        "Dein Haushalt unter Einstellungen: wie viele Personen, ob Kinder, Babys oder Haustiere dabei sind und wie ihr wohnt. Die Checklisten zeigen dann, was zu euch passt.",
+        "Das Menü ist aufgeräumt: Radio und eure eigenen Frequenzen stehen unter Notfall, „Installiert“ in der Bibliothek. Bereit zeigt deine Zahl und was noch zu bestätigen ist.",
+        "Vorräte als Liste: Tragt ein, was ihr zu Hause habt, mit Ablaufdatum. Die App rechnet, wie lange es reicht, und sagt rechtzeitig, was bald abläuft.",
+        "Der Stern in der Grundvorsorge setzt einen Punkt auf die Einkaufsliste. Eure bisherigen Sterne stehen schon drauf."
+      ]
+    },
+    {
       "version": "0.9.3",
       "datum": "2026-10-17",
       "punkte": [

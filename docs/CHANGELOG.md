@@ -1,5 +1,12 @@
 # Änderungen
 
+## 0.9.4 · 17.10.2026 · Dein Haushalt, Menü neu geordnet, Vorräte als Liste
+
+- **Dein Haushalt** (Auftrag Nr. 40): Unter Einstellungen Personen, Gruppen (Kinder, Babys zählen als Kinder, …), Haustiere nach Art und Wohnen in vier Fragen (Wohnform, Miete/Eigentum, Keller, Stock). Die alten Haken werden beim ersten Start übernommen, Widersprüchliches wird nicht geraten; die Personenzahl allein filtert nichts (`web/haushalt.js`).
+- **Menü neu geordnet** (Auftrag Nr. 41): Radio samt eigenen Frequenzen auf Notfall, Bundesland-Auswahl nur in den Einstellungen, „Installiert“ in der Bibliothek, Bereit nur mit Zahl, Aufschlüsselung und dem zu Bestätigenden, Tagesplan auf Heute. „Polster“ heißt überall „Vorräte“; die Suche findet das alte Wort als Synonym.
+- **Vorräte als Liste** (Auftrag Nr. 42, Entwurf A mit den Vorlage-Knöpfen aus C): Einträge nach Art mit Menge und Ablaufdatum, Rechnung der Tage für Wasser und Essen, Hinweis auf Heute bei baldigem Ablauf. Die bisherigen Angaben werden als Sammel-Einträge übernommen (`web/vorrat.js`, `web/vorrat-ansicht.js`).
+- **Stern = Einkaufsliste** (Nr. 42): Der Stern der Grundvorsorge und die Einkaufsliste sind eine Liste; bestehende Sterne bleiben. Service Worker `offline-v53`.
+
 ## 0.9.3 · 17.10.2026 · Sirenen hörbar, Bereit erklärt, Akku-Karten
 
 - **Sirenen** (Auftrag Nr. 38): „Anhören“ spielt im Antippen selbst; der Ton liegt beim Öffnen von Notfall bereit (Desktop: vom lokalen Server als Blob, wie im Web). Scheitert es, steht „Ton lässt sich auf diesem Gerät gerade nicht abspielen.“ unter dem Knopf statt still nichts.
