@@ -2682,7 +2682,7 @@ function suchIndex() {
   const g = grund();
   if (g) {
     for (const v of state.vorraete ?? []) dazu(2, "Vorsorge · Vorräte", v.produkt, `${v.menge} ${v.einheit}${v.ablauf ? `, läuft ab ${v.ablauf}` : ""}`, { hash: "#vorsorge", anker: "polster" });
-    dazu(2, "Vorsorge", "Vorräte", `Vorrat, Polster, Ablaufdatum, Einkaufsliste: Wie lange dein Haushalt mit Wasser, Essen und Licht auskommt: Personen, Wasser in Litern, Essen für wie viele Tage, Taschenlampe. Ziel ${POLSTER_ZIEL} Tage.`, { hash: "#vorsorge", anker: "polster" });
+    dazu(2, "Vorsorge", "Vorräte", `Vorrat, Polster, Ablaufdatum, Einkaufsliste, Eingekochtes, Einkochen, Einmachgläser, Marmelade: Wie lange dein Haushalt mit Wasser, Essen und Licht auskommt: Personen, Wasser in Litern, Essen für wie viele Tage, Taschenlampe. Ziel ${POLSTER_ZIEL} Tage.`, { hash: "#vorsorge", anker: "polster" });
     dazu(2, "Einstellungen", "Dein Haushalt", "Wie viele Menschen leben bei dir. Wer lebt bei dir: Kinder, Babys, Ältere Menschen, Jemand braucht Pflege, Jemand mit Behinderung. Haustiere: Hund, Katze, Kaninchen, Vogel, Reptilien. Wie wohnst du: Eigenes Haus, Mietwohnung, Keller.", { hash: "#einstellungen", anker: "haushalt" });
     for (const b of g.bereiche) {
       dazu(2, "Vorsorge", b.titel, b.satz, { hash: "#vorsorge", anker: `gv-${b.id}` });
@@ -2907,6 +2907,7 @@ main.addEventListener("change", (e) => {
   if (t.id === "wz-art") { state.werkzeug.rechner = { ...state.werkzeug.rechner, art: t.value, von: Object.keys(EINHEITEN[t.value].e)[0], nach: Object.keys(EINHEITEN[t.value].e)[1] }; render(); }
   if (t.id === "wz-von") { state.werkzeug.rechner.von = t.value; render(); }
   if (t.id === "wz-nach") { state.werkzeug.rechner.nach = t.value; render(); }
+  if (t.dataset.vorratEinheit !== undefined && state.vorratForm) { state.vorratForm = vorratFormLesen(); render(); document.getElementById("vorrat-einheit")?.focus(); return; } // Nr. 45: Hinweis bei „Gläser“
   if (t.dataset.vorratArt !== undefined && state.vorratForm) { state.vorratForm = { ...vorratFormLesen(), art: t.value }; render(); document.getElementById("vorrat-art")?.focus(); return; } // Liter/Mahlzeiten je nach Art
   if (t.id === "wz-personen" || t.id === "wz-tage") { state.werkzeug.vorrat[t.id === "wz-personen" ? "personen" : "tage"] = Math.max(1, +t.value || 1); render(); }
 });
@@ -3028,7 +3029,14 @@ main.addEventListener("click", async (e) => {
     try { tonSpielen(b, await tonVorbereiten(b.dataset.ton)); } catch { tonMeldung(b, true); }
     return;
   }
-  if (b.dataset.merk) { const id = b.dataset.merk; state.merk = state.merk.includes(id) ? state.merk.filter((x) => x !== id) : [...state.merk, id]; speicher.set("merkliste", state.merk); return render(); }
+  if (b.dataset.merk) {
+    const id = b.dataset.merk, dazu = !state.merk.includes(id);
+    state.merk = dazu ? [...state.merk, id] : state.merk.filter((x) => x !== id); speicher.set("merkliste", state.merk); render();
+    // Nr. 45 Nachtrag (Mik 19.10.): beim ersten Mal kurz sagen, wohin der Punkt kommt; danach nicht mehr
+    if (dazu && !speicher.get("liste-hinweis", false)) { speicher.set("liste-hinweis", true); zeige("gv-msg", "Auf die Einkaufsliste gesetzt"); }
+    document.querySelector(`.gv-merk[data-merk="${CSS.escape(id)}"]`)?.focus();
+    return;
+  }
   const gv = b.dataset.gv;
   if (gv === "einkauf") return einkaufOeffnen(); // Nr. 42: der Knopf über der Checkliste öffnet die Einkaufsliste
   if (!gv) return;
@@ -3091,7 +3099,7 @@ main.addEventListener("click", (e) => {
   const b = e.target.closest("[data-vorrat-neu], [data-vorrat-vorlage], [data-vorrat-bearbeiten], [data-vorrat-weg], [data-vorrat-abbrechen], [data-vorrat-einkauf]");
   if (!b) return;
   if (b.hasAttribute("data-vorrat-neu")) return vorratFormZeigen({ art: b.dataset.vorratArtVor || "essen", einheit: "Stück", menge: 1 });
-  if (b.dataset.vorratVorlage !== undefined) return vorratFormZeigen(vorratVorlage(Number(b.dataset.vorratVorlage)));
+  if (b.dataset.vorratVorlage !== undefined) return vorratFormZeigen(vorratVorlage(Number(b.dataset.vorratVorlage), heuteDatum()));
   if (b.dataset.vorratBearbeiten) return vorratFormZeigen({ ...state.vorraete.find((x) => x.id === b.dataset.vorratBearbeiten) });
   if (b.dataset.vorratWeg) return vorraeteSetzen(state.vorraete.filter((x) => x.id !== b.dataset.vorratWeg));
   if (b.hasAttribute("data-vorrat-abbrechen")) { state.vorratForm = null; return render(); }

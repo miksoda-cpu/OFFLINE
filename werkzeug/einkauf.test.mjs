@@ -30,12 +30,13 @@ const liste = async (t) => {
   return x;
 };
 
-test("Stern setzen → Punkt steht in der Einkaufsliste; „entfernen“ nimmt den Stern weg; Stern heißt „Auf die Einkaufsliste“", async () => {
+test("„+ Liste“ (früher Stern) → Punkt steht in der Einkaufsliste; „entfernen“ nimmt ihn weg; Name „Auf die Einkaufsliste“", async () => {
   await sitzung(async (t) => {
     const p = await t.auswerten(`(() => { const b = document.querySelector('[data-merk="radio"]'); return { label: b.getAttribute("aria-label"), text: b.closest("li").querySelector("span").textContent.trim() }; })()`);
     assert.match(p.label, /^Auf die Einkaufsliste: /);
     await t.auswerten(`document.querySelector('[data-merk="radio"]').click()`); await ruhig(t);
-    assert.match(await t.auswerten(`document.querySelector('[data-merk="radio"]').getAttribute("aria-label")`), /^Von der Einkaufsliste nehmen: /);
+    // Nr. 45 Nachtrag: Knopf mit gleichbleibendem Namen, der Zustand steht in aria-pressed
+    assert.equal(await t.auswerten(`document.querySelector('[data-merk="radio"]').getAttribute("aria-pressed")`), "true");
     assert.match(await t.auswerten(`document.querySelector('[data-gv="einkauf"]').textContent`), /^Einkaufsliste \(1\)$/);
     assert.deepEqual(await liste(t), [p.text]);
     await t.auswerten(`document.querySelector('.blatt [data-merk="radio"]').click()`); await ruhig(t);

@@ -2,11 +2,11 @@
 // Vorräte (Wasser-Tage, Essen-Tage, Licht), was bald abläuft und was einzukaufen ist. Reine Rechnung, kein Speicher, keine
 // Oberfläche (die drei Ansichten stehen in vorrat-ansicht.js). Alles bleibt am Gerät.
 
-export const EINHEITEN = ["Stück", "Dosen", "Flaschen", "Packungen", "Liter", "kg"];
+export const EINHEITEN = ["Stück", "Dosen", "Gläser", "Flaschen", "Packungen", "Liter", "kg"]; // Gläser seit Nr. 45 (Eingekochtes)
 export const ARTEN = [["wasser", "Wasser"], ["essen", "Essen"], ["licht", "Licht & Batterien"], ["medizin", "Medizin"], ["tier", "Tier"], ["sonstiges", "Sonstiges"]];
 export const ZIEL_TAGE = 14, LITER_JE_TAG = 2, MAHLZEITEN_JE_TAG = 3, BALD_TAGE = 30;
 const FLASCHE_LITER = 1.5;
-const MAHLZEITEN_JE = { "Stück": 1, "Dosen": 1, "Flaschen": 1, "Packungen": 2, "Liter": 2, "kg": 4 };
+const MAHLZEITEN_JE = { "Stück": 1, "Dosen": 1, "Gläser": 1, "Flaschen": 1, "Packungen": 2, "Liter": 2, "kg": 4 };
 
 const zahl = (x, min = 0, max = 1e6) => { const n = Number(String(x ?? "").replace(",", ".")); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : 0; };
 /** Vorschlag Liter (Wasser) bzw. Mahlzeiten (Essen) aus Menge und Einheit; der Mensch kann ihn ändern. */

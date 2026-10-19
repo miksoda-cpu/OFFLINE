@@ -1,7 +1,8 @@
 // node --test web/vorrat.test.mjs – Nr. 42 Vorratsliste: Rechnung, Ablauf, Einkaufsliste, Übernahme aus Nr. 34.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { vorratRechnen, eintragAngaben, ablaufDatum, abgelaufen, ablaufend, einkaufsliste, ausPolster, literVorschlag, mahlzeitenVorschlag } from "./vorrat.js";
+import { vorratRechnen, eintragAngaben, ablaufDatum, abgelaufen, ablaufend, einkaufsliste, ausPolster, literVorschlag, mahlzeitenVorschlag, EINHEITEN } from "./vorrat.js";
+import { vorlage, formularHtml, GLAESER_HINWEIS } from "./vorrat-ansicht.js";
 import { polsterSatz } from "./polster.js";
 
 const HEUTE = "2026-10-17";
@@ -41,4 +42,27 @@ test("Vorschläge aus Menge und Einheit", () => {
   assert.equal(mahlzeitenVorschlag(6, "Dosen"), 6); assert.equal(mahlzeitenVorschlag(2, "kg"), 8);
   assert.equal(e({ produkt: "Wasser", menge: 6, einheit: "Flaschen", art: "wasser" }).liter, 9);
   assert.equal(e({ produkt: "Wasser", menge: 6, einheit: "Flaschen", art: "wasser", liter: 12 }).liter, 12, "änderbar");
+});
+
+// Nr. 45 (Mik 19.10.2026): Eingekochtes in Gläsern
+test("Nr. 45: Einheit „Gläser“; Vorlage Eingekochtes = 6 Mahlzeiten, Ablauf in 12 Monaten; Marmelade 0 Mahlzeiten", () => {
+  assert.ok(EINHEITEN.includes("Gläser"));
+  assert.equal(mahlzeitenVorschlag(6, "Gläser"), 6, "1 Mahlzeit je Glas wie bei Dosen");
+  const alle = Array.from({ length: 20 }, (_, i) => vorlage(i, "2026-10-19")).filter((v) => v.produkt);
+  const ein = alle.find((v) => v.produkt === "Eingekochtes"), mar = alle.find((v) => v.produkt === "Marmelade");
+  assert.deepEqual(ein, { produkt: "Eingekochtes", menge: 6, einheit: "Gläser", art: "essen", ablauf: "2027-10" });
+  assert.equal(eintragAngaben(ein).mahlzeiten, 6);
+  assert.equal(mar.ablauf, "2027-10"); assert.equal(eintragAngaben(mar).mahlzeiten, 0, "Marmelade zählt nicht zum Essen");
+  assert.equal(vorlage(alle.indexOf(ein), "2026-12-05").ablauf, "2027-12", "über den Jahreswechsel");
+  // Reihenfolge: gleich nach „Dosen“
+  const namen = alle.map((v) => v.produkt);
+  assert.deepEqual(namen.slice(namen.indexOf("Bohnen"), namen.indexOf("Bohnen") + 3), ["Bohnen", "Eingekochtes", "Marmelade"]);
+  // Bestehende Einträge bleiben: Rechnung mit Gläsern wie mit Dosen
+  assert.equal(vorratRechnen([e({ produkt: "Eingekochtes", menge: 6, einheit: "Gläser", art: "essen" })], 1, HEUTE).mahlzeiten, 6);
+});
+test("Nr. 45: Hinweis wortgleich und nur bei der Einheit „Gläser“; ohne Einkochzeiten oder Temperaturen", () => {
+  assert.equal(GLAESER_HINWEIS, "Selbst Eingekochtes hält etwa ein Jahr – kühl, dunkel und trocken gelagert. Ist der Deckel lose oder gewölbt, der Inhalt trüb oder riecht er komisch: nicht essen. Gewölbte Gläser ungeöffnet wegwerfen. Gemüse und Fleisch vor dem Essen noch einmal ganz durchkochen.");
+  assert.ok(formularHtml({ einheit: "Gläser", art: "essen" }).includes(GLAESER_HINWEIS));
+  for (const einheit of ["Stück", "Dosen", "Packungen"]) assert.ok(!formularHtml({ einheit, art: "essen" }).includes("Eingekochtes hält"), einheit);
+  assert.doesNotMatch(GLAESER_HINWEIS, /°|Minuten|Grad|\d/, "keine Zahlen außer „etwa ein Jahr“");
 });

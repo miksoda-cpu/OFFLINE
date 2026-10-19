@@ -817,7 +817,8 @@ body.blatt-offen { overflow: hidden; }
 .gv-liste { margin-top: .6rem; }
 .gv-punkt { display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 0 .4rem; }
 .gv-punkt > label { grid-column: 1; }
-.gv-merk { grid-column: 2; grid-row: 1; min-width: 44px; min-height: 44px; background: none; border: 0; font-size: 1.2rem; color: var(--warn); cursor: pointer; }
+.gv-merk { grid-column: 2; grid-row: 1; align-self: start; min-width: 44px; min-height: 44px; padding: 0 .6rem; background: none; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: .85rem; white-space: nowrap; color: inherit; cursor: pointer; }
+.gv-merk[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); font-weight: 600; } /* Nr. 45 Nachtrag: Knopf „+ Liste“ statt Stern */
 .gv-detail { grid-column: 1 / -1; margin: -.2rem 0 .3rem 1.8rem; }
 .gv-detail summary { color: var(--eis-ink); cursor: pointer; }
 .gv-detail p { margin: .3rem 0 0; }
@@ -1059,6 +1060,7 @@ button.bereit-kreis:focus-visible, .bereit-zahl-knopf:focus-visible { outline: 3
 .vr-feld--breit { grid-column: 1 / -1; }
 .vr-feld .of-input, .vr-feld .of-select { width: 100%; min-height: 44px; }
 .vr-form-knoepfe { margin: .8rem 0 0; }
+.vr-hinweis { margin: .8rem 0 0; padding: .5rem .8rem; border-left: 3px solid var(--accent); line-height: 1.5; }
 .vr-regal { display: flex; gap: .5rem; overflow-x: auto; padding: .4rem 0 .8rem; }
 .vr-regal-fach { flex: 0 0 auto; min-width: 9rem; max-width: 12rem; display: grid; gap: .2rem; padding: .6rem .7rem; border: 1px solid var(--line, rgba(127,127,127,.25)); border-radius: 12px; overflow-wrap: anywhere; }
 .vr-filter { display: flex; flex-wrap: wrap; gap: .3rem; margin: 0 0 .4rem; }

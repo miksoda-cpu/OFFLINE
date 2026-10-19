@@ -1,5 +1,5 @@
 // Vorratsliste (Nr. 42, Miks Wahl 17.10.2026): Liste nach Art (Entwurf A), darüber die Vorlage-Knöpfe aus Entwurf C zum schnellen
-// Eintragen. Dazu Formular, Heute-Zeile „Bald ablaufend“ und die Einkaufsliste (mit den Sternen der Grundvorsorge, eine Liste).
+// Eintragen. Dazu Formular, Heute-Zeile „Bald ablaufend“ und die Einkaufsliste (mit „+ Liste“ aus der Grundvorsorge, eine Liste).
 import { EINHEITEN, ARTEN, ablaufText, mengeText, tageBisAblauf, abgelaufen, ablaufend } from "./vorrat.js";
 
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
@@ -28,28 +28,40 @@ export function formularHtml(f) {
     <div class="vr-felder">
       <label class="vr-feld vr-feld--breit">Produkt <input class="of-input" id="vorrat-produkt" required maxlength="80" value="${esc(f.produkt ?? "")}" placeholder="z. B. Bohnen"></label>
       <label class="vr-feld">Menge <input class="of-input" id="vorrat-menge" type="number" inputmode="decimal" min="0" step="any" value="${esc(f.menge ?? 1)}"></label>
-      <label class="vr-feld">Einheit <select class="of-select" id="vorrat-einheit">${opt(EINHEITEN.map((x) => [x, x]), f.einheit ?? "Stück")}</select></label>
+      <label class="vr-feld">Einheit <select class="of-select" id="vorrat-einheit" data-vorrat-einheit>${opt(EINHEITEN.map((x) => [x, x]), f.einheit ?? "Stück")}</select></label>
       <label class="vr-feld">Art <select class="of-select" id="vorrat-art" data-vorrat-art>${opt(ARTEN, f.art ?? "essen")}</select></label>
       <label class="vr-feld">Läuft ab (Monat) <input class="of-input" id="vorrat-monat" type="month" value="${esc(monat(f.ablauf))}"></label>
       <label class="vr-feld">Tag (wenn bekannt) <input class="of-input" id="vorrat-tag" type="number" inputmode="numeric" min="1" max="31" value="${esc(tag(f.ablauf))}"></label>
       ${(f.art ?? "essen") === "wasser" ? `<label class="vr-feld">Liter zusammen <input class="of-input" id="vorrat-liter" type="number" inputmode="decimal" min="0" step="any" value="${esc(f.liter ?? "")}" placeholder="aus der Menge"></label>` : ""}
       ${(f.art ?? "essen") === "essen" ? `<label class="vr-feld">Reicht für … Mahlzeiten <input class="of-input" id="vorrat-mahlzeiten" type="number" inputmode="numeric" min="0" value="${esc(f.mahlzeiten ?? "")}" placeholder="aus der Menge"></label>` : ""}
     </div>
+    ${f.einheit === "Gläser" ? `<p class="vr-hinweis of-klein" id="vorrat-glaeser" role="note">${GLAESER_HINWEIS}</p>` : ""}
     <p class="vr-form-knoepfe"><button type="submit" class="btn btn-primary of-btn of-btn--primaer" data-vorrat-speichern>Speichern</button> <button type="button" class="btn of-btn" data-vorrat-abbrechen>Abbrechen</button></p>
   </form>`;
 }
+
+/** Nr. 45 (Mik 19.10.2026, Wortlaut Bill): erscheint im Formular nur bei der Einheit „Gläser“. */
+export const GLAESER_HINWEIS = "Selbst Eingekochtes hält etwa ein Jahr – kühl, dunkel und trocken gelagert. Ist der Deckel lose oder gewölbt, der Inhalt trüb oder riecht er komisch: nicht essen. Gewölbte Gläser ungeöffnet wegwerfen. Gemüse und Fleisch vor dem Essen noch einmal ganz durchkochen.";
 
 const VORLAGEN = [
   { produkt: "Wasser", menge: 6, einheit: "Flaschen", art: "wasser", knopf: "Wasser 6 × 1,5 l" },
   { produkt: "Nudeln 500 g", menge: 2, einheit: "Packungen", art: "essen", knopf: "Nudeln 500 g" },
   { produkt: "Reis", menge: 1, einheit: "kg", art: "essen", knopf: "Reis 1 kg" },
   { produkt: "Bohnen", menge: 4, einheit: "Dosen", art: "essen", knopf: "Dosen (Bohnen, Eintopf)" },
+  // Nr. 45: Eingekochtes zählt wie Dosen (1 Mahlzeit je Glas), Marmelade nur für den Ablauf; beide etwa ein Jahr haltbar
+  { produkt: "Eingekochtes", menge: 6, einheit: "Gläser", art: "essen", monate: 12, knopf: "Eingekochtes (Gläser)" },
+  { produkt: "Marmelade", menge: 4, einheit: "Gläser", art: "essen", mahlzeiten: 0, monate: 12, knopf: "Marmelade (Gläser)" },
   { produkt: "Knäckebrot", menge: 2, einheit: "Packungen", art: "essen", knopf: "Knäckebrot" },
   { produkt: "Kerzen", menge: 10, einheit: "Stück", art: "licht", knopf: "Kerzen" },
   { produkt: "Batterien AA", menge: 8, einheit: "Stück", art: "licht", knopf: "Batterien" },
   { produkt: "Taschenlampe", menge: 1, einheit: "Stück", art: "licht", knopf: "Taschenlampe" },
 ];
-export const vorlage = (i) => { const { knopf, ...v } = VORLAGEN[i] ?? {}; return v; };
+/** Eine Vorlage als Formularangaben; „monate“ belegt den Ablauf vor (heutiger Monat + n, heute als „JJJJ-MM-TT“). */
+export const vorlage = (i, heute = new Date().toISOString().slice(0, 10)) => {
+  const { knopf, monate, ...v } = VORLAGEN[i] ?? {};
+  if (monate) { const [j, m] = heute.split("-").map(Number), z = j * 12 + (m - 1) + monate; v.ablauf = `${Math.floor(z / 12)}-${String((z % 12) + 1).padStart(2, "0")}`; }
+  return v;
+};
 
 /** Die Vorlagen (aus Entwurf C) über der Liste nach Art (Entwurf A). */
 const vorlagenHtml = () => `<div class="vr-vorlagen" role="group" aria-label="Häufige Vorräte"><p class="of-klein" style="margin:0 0 .4rem">Schnell eintragen – antippen, dann Menge und Ablauf anpassen:</p>
@@ -74,8 +86,8 @@ export function heuteAblaufHtml(eintraege, heute) {
 /** Einkaufsliste als Blatt (Drucken und Teilen wie die Checkliste). */
 export function einkaufHtml(liste, sterne = []) {
   return `<div class="vr-einkauf">
-    ${sterne.length ? `<h3>Aus der Checkliste <span class="muted of-klein">(mit Stern)</span></h3><ul>${sterne.map((x) => `<li class="vr-einkauf--stern">${esc(x.text)} <button type="button" class="btn btn-sm of-btn of-btn--klein" data-merk="${esc(x.id)}" aria-label="Von der Einkaufsliste nehmen: ${esc(x.text)}">entfernen</button></li>`).join("")}</ul>` : ""}
+    ${sterne.length ? `<h3>Aus der Checkliste</h3><ul>${sterne.map((x) => `<li class="vr-einkauf--stern">${esc(x.text)} <button type="button" class="btn btn-sm of-btn of-btn--klein" data-merk="${esc(x.id)}" aria-label="Von der Einkaufsliste nehmen: ${esc(x.text)}">entfernen</button></li>`).join("")}</ul>` : ""}
     ${liste.length ? `${sterne.length ? "<h3>Aus den Vorräten</h3>" : ""}<ul>${liste.map((x) => `<li class="vr-einkauf--${x.art}">${esc(x.text)}</li>`).join("")}</ul>` : `<p>${sterne.length ? "Bei den Vorräten fehlt nichts" : "Nichts einzukaufen"}. Die Vorräte reichen für 14 Tage.</p>`}
-    <p class="muted of-klein">Mit dem Stern in der Grundvorsorge kommt ein Punkt hierher.</p>
+    <p class="muted of-klein">Mit „+ Liste“ in der Grundvorsorge kommt ein Punkt hierher.</p>
     <p class="vr-form-knoepfe"><button type="button" class="btn of-btn" data-einkauf="drucken">Drucken</button> <button type="button" class="btn of-btn" data-einkauf="teilen">Teilen</button></p></div>`;
 }
