@@ -24,6 +24,12 @@ Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Bl
 
 ## Einträge
 
+### 2026-10-19 · Postfach · Parkmodus über den Stop-Hook von Claude Code
+- Idee: Statt stehen zu bleiben, blockiert der Stop-Hook (`_briefkasten/postfach-hook.py stop`) jede Runde und wartet bis zu 9 Minuten im Postfach; kommt nichts, eine Zeile „Leerlauf N“
+- Kill-Kriterium: Die Session steht still, während Post an sie liegt
+- Ausgang: eingetreten. 19.10.: nach „Leerlauf 9“ gegen 13:55 kam keine Runde mehr; Bills Freigabe von 15:11 lag auf dem Rechner (Datei 15:11, kein Sync-Problem) und wurde erst gelesen, als Mik um 18:10 in die Session schrieb. 18.10.: nach 10:15 keine Runde mehr, Nr. 43/44 lagen bis zum nächsten Morgen. Ursache nicht belegt; Vermutung: Claude Code begrenzt, wie oft ein Stop-Hook hintereinander blockieren darf, oder die Session wurde von außen beendet. Offen
+- Lehre: Der Parkmodus ist kein verlässlicher Weckruf. Eilige Freigaben zusätzlich in der Session anstoßen, bis die Ursache geklärt ist; Code meldet sich nach jedem Auftrag mit dem Stand, damit eine stille Pause auffällt
+
 ### 2026-10-16 · Auftrag Nr. 37 · Unveröffentlichter Klartext nur über die .gitignore des eigenen Branches geschützt
 - Idee: Die Klartext-Datei der Akku-Karten (Nr. 36) liegt lokal neben der verschlüsselten Fassung; die Zeile im Block „Klartext-Wache“ steht nur auf dem Branch des Auftrags
 - Kill-Kriterium: Auf einem anderen Branch nimmt `git add -A` die Datei mit, und die Wache sieht sie nicht, weil dort die Zeile fehlt
