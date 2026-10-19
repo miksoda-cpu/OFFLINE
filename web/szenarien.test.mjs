@@ -15,6 +15,8 @@ const karten = Object.fromEntries(await Promise.all(reihe.map(async (id) => [id,
 const grund = await json(`${I}grundvorsorge.json`), radio = await json(`${I}radio.json`), sirenen = await json(`${I}sirenen.json`);
 const alt = await json(`${I}alt/vorsorge-0.7.json`);
 const HAUSHALT_KEYS = ["alle", "kinder", "aeltere", "pflege", "behinderung", "tiere", "haus", "miete", "keller"];
+// Nr. 44: Punkte je Tierart (nur in der Grundvorsorge, nie ohne gewählte Tiere)
+const TIER_KEYS = ["tier", "tier-hund", "tier-katze", "tier-kaninchen", "tier-vogel", "tier-reptilien", "tier-andere"];
 
 test("Inhalte: zwölf Karten in Bills Reihenfolge, alle Teile da, Verweise führen irgendwohin", async () => {
   assert.deepEqual(reihe, ["hochwasser", "starkregen", "wildbach", "hitze", "hagel", "schnee-eis", "lawine", "erdbeben", "waldbrand", "kernkraftwerk", "krankheiten", "blackout"]);
@@ -38,11 +40,12 @@ test("Verweise wie im Auftrag: Karten, Grundvorsorge, Hausapotheke, Radio, Notru
   assert.equal(verweisZiel("notrufe", grund, karten).anker, "notrufe");
 });
 
-test("Grundvorsorge: sechs Bereiche, 74 Punkte mit eindeutiger id, alle 20 alten Punkte wortgleich enthalten", () => {
-  assert.deepEqual(grund.bereiche.map((b) => b.id), ["wasser-essen", "licht-strom-info", "gesundheit-hygiene", "dokumente-geld", "notfallplan", "notfall-rucksack"]);
+test("Grundvorsorge: sechs Bereiche und „Haustiere“ (Nr. 44), 95 Punkte mit eindeutiger id, alle 20 alten Punkte wortgleich enthalten", () => {
+  assert.deepEqual(grund.bereiche.map((b) => b.id), ["wasser-essen", "licht-strom-info", "gesundheit-hygiene", "dokumente-geld", "notfallplan", "notfall-rucksack", "haustiere"]);
   const punkte = grund.bereiche.flatMap((b) => b.punkte);
-  assert.equal(punkte.length, 74); assert.equal(new Set(punkte.map((p) => p.id)).size, 74);
-  for (const p of punkte) for (const f of p.fuer) assert.ok(HAUSHALT_KEYS.includes(f), `${p.id}: ${f}`);
+  assert.equal(punkte.length, 95); assert.equal(new Set(punkte.map((p) => p.id)).size, 95); // Nr. 44: −3 ersetzte Tier-Punkte, +24 je Tierart
+  for (const p of punkte) for (const f of p.fuer) assert.ok(HAUSHALT_KEYS.includes(f) || TIER_KEYS.includes(f), `${p.id}: ${f}`);
+  assert.deepEqual(grund.bereiche.at(-1).punkte.flatMap((p) => p.fuer).filter((f) => !TIER_KEYS.includes(f)), [], "Haustiere: nur Tier-Punkte");
   const texte = new Set(punkte.map((p) => p.text));
   for (const g of alt.gruppen) for (const t of g.punkte) assert.ok(texte.has(t), t);
 });
@@ -71,7 +74,7 @@ test("Haushalt: ohne Angabe alles; „alle“ immer; sonst nur, was passt – au
   assert.equal(passt(["haus", "keller"], ["miete", "keller"]), true);
   const alle = grund.bereiche.flatMap((b) => punkteFuer(b, [])).length;
   const miete = grund.bereiche.flatMap((b) => punkteFuer(b, ["miete"])).length;
-  assert.equal(alle, 74); assert.ok(miete < alle && miete >= 35, String(miete));
+  assert.equal(alle, 71, "Nr. 44: ohne Angabe alles außer den Tier-Punkten (die brauchen gewählte Tiere)"); assert.ok(miete < alle && miete >= 35, String(miete));
   const hw = karten.hochwasser;
   assert.deepEqual(zusaetze(hw, ["tiere", "miete"]).map((z) => z.key), ["tiere"], "Miete hat bei Hochwasser keinen Zusatz");
   assert.deepEqual(zusaetze(hw, []).map((z) => z.key), Object.keys(hw.zusatz).filter((k) => hw.zusatz[k].length));
@@ -109,7 +112,7 @@ test("Der Name der staatlichen Zivilschutz-App kommt nirgends vor (Prüfung übe
 test("Kein Inhalt im Code; Notfallseiten ohne Skin; Seiten bauen aus dem Paket", async () => {
   const app = await lies("./app.js"), modul = await lies("./szenarien.js");
   for (const k of Object.values(karten)) for (const m of k.merksaetze) assert.ok(!app.includes(m) && !modul.includes(m), m);
-  for (const p of grund.bereiche.flatMap((b) => b.punkte)) assert.ok(!app.includes(p.detail) && !modul.includes(p.detail), p.id);
+  for (const p of grund.bereiche.flatMap((b) => b.punkte)) if (p.detail) assert.ok(!app.includes(p.detail) && !modul.includes(p.detail), p.id); // Nr. 44: manche Punkte haben keine Erklärung
   assert.ok(app.includes('const notfallSeite = route === "notfall" || route.startsWith("szenario-");'));
   assert.ok(app.includes('if (route.startsWith("szenario-")) { state.szenario = route.slice(9); route = "szenario"; }'));
   assert.ok(app.includes("kachelnHtml(karten, szReihe(), state.szChecks)"), "Kacheln auf Notfall und Vorsorge");

@@ -67,6 +67,20 @@ export function merkmale(h) {
   return m;
 }
 
+/** Nr. 44: „2 Hunde“, „1 Katze“ – Anzahl einer Tierart samt passender Form. */
+const tierAnzahl = (h, k) => { const t = TIERE.find(([x]) => x === k), n = h?.tiere?.arten?.[k] ?? 0; return t && n ? `${n} ${n === 1 ? t[2] : t[3]}` : null; };
+/**
+ * Nr. 44: Tierzahl in Vorsorge-Texten einsetzen. {anzahl} = die Tierart des Punkts („für 2 Hunde“), {tiere} = alle gewählten
+ * („für 2 Hunde und 1 Katze“). Ohne Zahl bleibt es allgemein („deine Tiere“, „dein Tier“).
+ */
+export function tierText(text, fuer = [], h = null) {
+  if (!text?.includes("{")) return text;
+  const art = fuer.find((f) => f.startsWith("tier-"))?.slice(5);
+  const alle = TIERE.map(([k]) => tierAnzahl(h, k)).filter(Boolean);
+  const liste = alle.length > 1 ? `${alle.slice(0, -1).join(", ")} und ${alle.at(-1)}` : alle[0] ?? "deine Tiere";
+  return text.replace("{tiere}", liste).replace("{anzahl}", (art && tierAnzahl(h, art)) ?? "dein Tier");
+}
+
 /** Eine Zeile wie „3 Personen, 1 Hund, Kinder“. */
 export function zusammenfassung(h) {
   const teile = [];

@@ -29,7 +29,7 @@ import { indexBauen as suchIndexBauen, suchen as suchenIm, begriffe as suchBegri
 import { TEILE as SZ_TEILE } from "./szenarien.js";
 import { vorratRechnen, eintragAngaben as vorratEintrag, einkaufsliste, ausPolster } from "./vorrat.js";
 import { listeHtml as vorratListeHtml, formularHtml as vorratFormularHtml, heuteAblaufHtml, einkaufHtml, vorlage as vorratVorlage } from "./vorrat-ansicht.js";
-import { haushaltAngaben, haushaltAusAlt, merkmale as haushaltMerkmale, zusammenfassung as haushaltZeile, haushaltEinstellungHtml, haushaltAendern } from "./haushalt.js";
+import { haushaltAngaben, haushaltAusAlt, merkmale as haushaltMerkmale, zusammenfassung as haushaltZeile, haushaltEinstellungHtml, haushaltAendern, tierText } from "./haushalt.js";
 import { polsterRechnen, polsterAngaben, polsterSatz, polsterPunkte, heuteZeile as polsterHeute, tageText, LICHT_SATZ, ZIEL as POLSTER_ZIEL, vorraeteTitel, vorraeteLeer } from "./polster.js";
 import { PAKET as HEILKUNDE_PAKET, startZustand as heilkundeStart, seiteHtml as heilkundeSeiteHtml, klick as heilkundeKlick } from "./heilkunde.js";
 
@@ -206,7 +206,21 @@ function bestaetigen(id, ja = true) {
 const D = (name) => texte(P(), `inhalt/${name}.json`);
 // 0.8.0: zwölf Szenarien und Grundvorsorge aus dem Österreich-Paket
 let grundMerk = null;
-const grund = () => { const g = D("grundvorsorge"), l = landId(); if (grundMerk?.g !== g || grundMerk.l !== l) grundMerk = { g, l, d: fuerLandTief(g, l) }; return grundMerk.d; }; // Nr. 28: Texte je Land
+/**
+ * Nr. 44: Tierzahl aus „Dein Haushalt“ in die Punkte einsetzen („Futter für 14 Tage für 2 Hunde“). Sind Tiere gewählt, gilt bei
+ * Punkten mit „mit_tieren“ deren Fassung (der Sammelpunkt Haustiere/Babynahrung wird zu „Babynahrung, falls nötig“).
+ */
+const mitTieren = (g, h) => {
+  if (!g?.bereiche) return g;
+  const tiere = !!h?.tiere?.an;
+  const punkt = (p) => { const q = tiere && p.mit_tieren ? { ...p, ...p.mit_tieren } : p; return q.text?.includes("{") ? { ...q, text: tierText(q.text, q.fuer, h) } : q; };
+  return { ...g, bereiche: g.bereiche.map((b) => ({ ...b, punkte: b.punkte.map(punkt) })) };
+};
+const grund = () => { // Nr. 28: Texte je Land
+  const g = D("grundvorsorge"), l = landId(), t = JSON.stringify(state.haushaltV2?.tiere ?? null);
+  if (grundMerk?.g !== g || grundMerk.l !== l || grundMerk.t !== t) grundMerk = { g, l, t, d: mitTieren(fuerLandTief(g, l), state.haushaltV2) };
+  return grundMerk.d;
+};
 const szReihe = () => D("szenarien")?.reihenfolge ?? [];
 /** Karten aus inhalt/karten.json des Österreich-Pakets (Nr. 36), ab der Ausgabe, die sie mitbringt; ältere Ausgaben haben keine. */
 const infoKarten = () => D("karten")?.karten ?? [];

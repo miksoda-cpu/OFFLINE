@@ -1,7 +1,7 @@
 // node --test web/haushalt.test.mjs – Nr. 40 „Dein Haushalt“: Übernahme der alten Haken, Merkmale für die Filter, Zusammenfassung.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { haushaltAngaben, haushaltAusAlt, merkmale, zusammenfassung, haushaltAendern } from "./haushalt.js";
+import { haushaltAngaben, haushaltAusAlt, merkmale, zusammenfassung, haushaltAendern, tierText } from "./haushalt.js";
 import { passt } from "./szenarien.js";
 
 test("Alte Haken werden übernommen: Ja mit Anzahl 1, Wohnen bleibt, Merkmale gleich wie vorher", () => {
@@ -44,4 +44,28 @@ test("Nachtrag: Wohnen als vier Fragen; alte Haken übernommen, Widersprüchlich
   assert.deepEqual(merkmale(h), ["wohnung", "stock-hoch"]);
   assert.equal(zusammenfassung(h), "Wohnung im 5. Stock");
   assert.equal(haushaltAendern(h, "wohnen-form", "haus").wohnen.stock, null, "Stock nur bei Wohnung");
+});
+
+test("Nr. 44: Tier-Punkte nie ohne gewählte Tiere, auch nicht, wenn nichts eingestellt ist; je Tierart nur bei dieser Art", () => {
+  assert.equal(passt(["tier"], []), false); assert.equal(passt(["tier-hund"], []), false);
+  let h = haushaltAendern(haushaltAendern(haushaltAngaben({}), "tiere", true), "tier-hund", 2);
+  h = haushaltAendern(h, "tier-katze", 1);
+  const m = merkmale(h);
+  assert.equal(passt(["tier"], m), true); assert.equal(passt(["tier-hund"], m), true); assert.equal(passt(["tier-katze"], m), true);
+  assert.equal(passt(["tier-vogel"], m), false); assert.equal(passt(["tier-andere"], m), false);
+  assert.equal(passt(["tier"], merkmale(haushaltAendern(haushaltAngaben({}), "kinder", true))), false, "Kinder, keine Tiere");
+  // bisherige Punkte für Tiere (mit „tiere“) verhalten sich wie vorher
+  assert.equal(passt(["tiere"], []), true); assert.equal(passt(["tiere", "behinderung"], ["behinderung"]), true);
+});
+
+test("Nr. 44: Anzahl im Text – {anzahl} je Tierart, {tiere} alle gewählten, sonst allgemein", () => {
+  let h = haushaltAendern(haushaltAendern(haushaltAngaben({}), "tiere", true), "tier-hund", 2);
+  h = haushaltAendern(h, "tier-katze", 1);
+  assert.equal(tierText("Futter für 14 Tage für {tiere}", ["tier"], h), "Futter für 14 Tage für 2 Hunde und 1 Katze");
+  assert.equal(tierText("Wasser für {anzahl}: etwa 50–60 ml je kg Körpergewicht und Tag", ["tier-hund"], h), "Wasser für 2 Hunde: etwa 50–60 ml je kg Körpergewicht und Tag");
+  assert.equal(tierText("Wasser für {anzahl}: frisch und frei verfügbar", ["tier-katze"], h), "Wasser für 1 Katze: frisch und frei verfügbar");
+  const drei = haushaltAendern(haushaltAendern(h, "tier-vogel", 3), "tier-reptilien", 1);
+  assert.equal(tierText("Futter für 14 Tage für {tiere}", ["tier"], drei), "Futter für 14 Tage für 2 Hunde, 1 Katze, 3 Vögel und 1 Reptil");
+  assert.equal(tierText("Futter für 14 Tage für {tiere}", ["tier"], haushaltAendern(haushaltAngaben({}), "tiere", true)), "Futter für 14 Tage für deine Tiere", "Tiere an, keine Art gewählt");
+  assert.equal(tierText("Kotbeutel", ["tier-hund"], h), "Kotbeutel");
 });

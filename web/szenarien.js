@@ -16,6 +16,9 @@ export const TEILE = [["verstehen", "Gefahren verstehen"], ["vorsorgen", "Jetzt 
 
 /** Passt ein Punkt zum Haushalt? Ohne Angabe passt alles; „alle“ passt immer. */
 export function passt(fuer = ["alle"], haushalt = []) {
+  // Nr. 44: Punkte nur für Tiere („tier“ = irgendein Tier, „tier-hund“ …) erscheinen nie ohne gewählte Tiere, auch nicht,
+  // wenn der Haushalt noch nicht eingestellt ist
+  if (fuer.length && fuer.every((f) => f === "tier" || f.startsWith("tier-"))) return fuer.some((f) => haushalt?.includes(f === "tier" ? "tiere" : f));
   if (!haushalt?.length) return true;
   return fuer.includes("alle") || fuer.some((f) => haushalt.includes(f));
 }
@@ -104,7 +107,7 @@ export function haushaltHtml(haushalt = []) {
   </details>`;
 }
 
-/** Grundvorsorge in sechs Bereichen, mit Fortschritt je Bereich, Lesezeichen (Merkliste), Export und Zurücksetzen. */
+/** Grundvorsorge in sechs Bereichen (mit Haustieren sieben), mit Fortschritt je Bereich, Lesezeichen (Merkliste), Export und Zurücksetzen. */
 export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = [], nurMerk = false, zuruecksetzen = false, faellig = new Map(), karten = [] } = {}) {
   const alle = grund.bereiche.flatMap((b) => punkteFuer(b, haushalt)), gesamt = fortschritt(alle, checks);
   const punkt = (p) => `<li class="gv-punkt" id="gvp-${esc(p.id)}"><label><input type="checkbox" data-check="${esc(p.id)}" ${checks[p.id] ? "checked" : ""}><span>${esc(p.text)}${faellig.has(p.id) ? ` <span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span>` : ""}</span></label>${faellig.has(p.id) ? ` <button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-bestaetigen="${esc(faellig.get(p.id))}">Erneuert</button>` : ""}
@@ -112,7 +115,7 @@ export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = []
       ${p.detail ? `<details class="gv-detail" id="gvd-${esc(p.id)}"><summary class="of-klein">Erklärung</summary><p class="muted of-klein">${esc(p.detail)}</p></details>` : ""}</li>`;
   const bereiche = grund.bereiche.map((b) => {
     const punkte = punkteFuer(b, haushalt), f = fortschritt(punkte, checks), sicht = nurMerk ? punkte.filter((p) => merk.includes(p.id)) : punkte;
-    if (nurMerk && !sicht.length) return "";
+    if (!punkte.length || (nurMerk && !sicht.length)) return ""; // Nr. 44: „Haustiere“ nur mit Tieren
     return `<section class="card of-karte gv-bereich" id="gv-${esc(b.id)}" aria-labelledby="gv-t-${esc(b.id)}">
       <h3 id="gv-t-${esc(b.id)}">${esc(b.titel)}</h3><p class="muted of-klein">${esc(b.satz)}</p>
       <div class="gv-stand of-klein">${zahl(f)} erledigt</div>${balken(f, b.titel)}
