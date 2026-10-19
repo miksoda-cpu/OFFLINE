@@ -13,12 +13,15 @@ const WURZEL = path.resolve(import.meta.dirname, "..");
 const IHR = /\b(Eure[nmrs]?|eure[nmrs]?|[Ee]uch|[Ee]uer|[Ii]hr|Tragt|seht|habt|könnt|braucht ihr)\b/g;
 const SEITEN = { heute: "start", vorsorge: "vorsorge", bereit: "uebersicht", einstellungen: "einstellungen" };
 
-/** Alle Texte aus den Inhalten des Österreich-Pakets, längste zuerst (damit Teilsätze nicht vorher herausfallen). */
+/** Alle Texte aus dem Österreich-Paket (Quelltext und veröffentlichte Ausgabe), längste zuerst (damit Teilsätze nicht vorher herausfallen). */
 const PAKETTEXTE = (() => {
   const l = [];
   const walk = (o) => { if (typeof o === "string") { if (o.length > 12) l.push(o); } else if (o && typeof o === "object") Object.values(o).forEach(walk); };
   const ordner = (d) => { for (const n of readdirSync(d)) { const p = path.join(d, n); if (statSync(p).isDirectory()) ordner(p); else if (n.endsWith(".json")) walk(JSON.parse(readFileSync(p, "utf8"))); } };
   ordner(path.join(WURZEL, "pakete/at-basis/inhalt"));
+  // dazu die veröffentlichte Ausgabe, die die App im Test lädt (web/pakete/at-basis-<v>): Quelltext und Ausgabe können sich
+  // zwischen zwei Katalog-Läufen unterscheiden (Nr. 43: Pakettexte geändert, Ausgabe kommt gesammelt mit Miks Freigabe)
+  for (const n of readdirSync(path.join(WURZEL, "web/pakete"))) if (n.startsWith("at-basis-")) ordner(path.join(WURZEL, "web/pakete", n, "inhalt"));
   return l.sort((a, b) => b.length - a.length);
 })();
 const ohnePaket = (text) => PAKETTEXTE.reduce((t, s) => t.split(s).join(" "), text);
