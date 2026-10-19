@@ -1,0 +1,193 @@
+{
+  "id": "blackout",
+  "titel": "Blackout",
+  "verstehen": [
+    "Ein Blackout ist kein gewöhnlicher Stromausfall. Der Strom fällt großflächig aus, über mehrere Regionen oder Länder, und bleibt lange weg. Ein Ausfall im eigenen Haus oder Straßenzug ist noch keiner.",
+    "Mit dem Strom gehen nach und nach Handynetz, Internet, Bankomat, Kartenzahlung, Tankstellen und Supermarktkassen. Heizung und Kühlschrank bleiben stehen. Wo Wasser gepumpt werden muss, kommt irgendwann keines mehr aus der Leitung, in hohen Häusern oft zuerst.",
+    "Auch wenn der Strom zurück ist, kann es Tage dauern, bis Geschäfte, Telefon und Versorgung wieder normal laufen. Darum rechnet der Zivilschutz mit zwei Wochen: Plane so, als wärst du 14 Tage auf Campingurlaub in der eigenen Wohnung."
+  ],
+  "vorsorgen": [
+    {
+      "t": "Wasser für zwei Wochen",
+      "text": "Rechne mit 2,5 Litern pro Person und Tag, also rund 35 Liter pro Person. Dazu Wasser zum Waschen und für die WC-Spülung, etwa in Kanistern."
+    },
+    {
+      "t": "Essen, das keinen Kühlschrank braucht",
+      "text": "Haltbares, das ihr ohnehin esst, für 10 bis 14 Tage. Babynahrung, Schonkost und Tierfutter nicht vergessen. Den Tiefkühler nicht als Vorrat einplanen, er hält ohne Strom nur einige Stunden kalt."
+    },
+    {
+      "t": "Radio, Licht, Kocher",
+      "text": "Ein Batterie- oder Kurbelradio mit Ersatzbatterien, Taschen- oder Stirnlampen statt Kerzen, ein Kocher, der ohne Strom geht. Bei jedem Gerät klären: Darf es in die Wohnung oder nur ins Freie?"
+    },
+    {
+      "t": "Wärme ohne Strom",
+      "text": "Auch Öl-, Pellets-, Fernwärme- und Wärmepumpenheizungen fallen ohne Strom meist aus. Warme Decken, Schlafsäcke und Kleidung reichen für den Anfang. Wer einen Ofen oder ein Heizgerät hat, braucht genug Brennstoff und ein Gerät, das für Innenräume zugelassen ist."
+    },
+    {
+      "t": "Medikamente und Bargeld",
+      "text": "Dauermedikamente für mindestens zehn Tage. Bargeld in kleinen Scheinen und Münzen, als Richtwert etwa ein doppelter Wocheneinkauf. Halt den Autotank nie fast leer."
+    },
+    {
+      "t": "Absprechen, wer was tut",
+      "text": "Vereinbart einen Treffpunkt, falls das Handy nicht geht, und wer Kinder oder Pflegebedürftige übernimmt. Frag bei deiner Gemeinde, wo im Ernstfall die Anlaufstelle ist, oft Gemeindeamt oder Feuerwehrhaus."
+    }
+  ],
+  "reagieren": [
+    {
+      "t": "Ist jemand in Gefahr?",
+      "text": "Dann Notruf: Euro-Notruf (112), Feuerwehr (122), Polizei (133), Rettung (144). Sonst keine Notrufnummern wählen, die Netze sind überlastet. Geht kein Telefon, hilft die nächste Polizeiinspektion, Feuerwehr oder Anlaufstelle der Gemeinde."
+    },
+    {
+      "t": "Nur bei dir oder überall?",
+      "text": "Schau, ob auch Nachbarhäuser und Straßenlampen dunkel sind. Dann Radio einschalten und auf Meldungen warten. Ruhe bewahren, Familie kurz per SMS informieren, solange es geht."
+    },
+    {
+      "t": "Geräte aus, eine Lampe an",
+      "text": "Schalte Herd, Bügeleisen und alles ab, was gerade lief, oder zieh den Stecker. Lass eine Lampe eingeschaltet, dann merkst du, wann der Strom zurückkommt."
+    },
+    {
+      "t": "Aufzug prüfen",
+      "text": "Gibt es im Haus einen Lift, schau nach, ob jemand darin festsitzt, und hol Hilfe. Benutz den Lift selbst nicht mehr, bis der Strom sicher wieder da ist."
+    },
+    {
+      "t": "Wasser sichern und sparen",
+      "text": "Füll gleich Töpfe, Kübel und Kanister, solange noch Wasser kommt. Spül das WC sparsam, denn auch Abwasserpumpen brauchen Strom."
+    },
+    {
+      "t": "Kühlschrank zu, Verderbliches zuerst",
+      "text": "Öffne Kühl- und Tiefkühlschrank nur kurz und selten. Iss zuerst, was verdirbt. Leg Tücher bereit, falls Tauwasser ausläuft."
+    },
+    {
+      "t": "Warm bleiben, sicher heizen",
+      "text": "Halte Türen und Fenster zu und lüfte kurz, aber regelmäßig. Grill, Campingkocher und Notstromaggregat gehören ins Freie: Kohlenmonoxid riechst und schmeckst du nicht."
+    }
+  ],
+  "danach": [
+    {
+      "t": "Langsam wieder einschalten",
+      "text": "Prüf, ob Herd, Bügeleisen und Föhn wirklich aus sind. Schalte nur ein, was du wirklich brauchst, Computer und Fernseher möglichst spät, denn die Spannung kann noch schwanken."
+    },
+    {
+      "t": "Kühlschrank durchsehen",
+      "text": "Was aufgetaut, warm geworden oder komisch riecht, kommt weg. Im Zweifel lieber wegwerfen."
+    },
+    {
+      "t": "Wenig telefonieren",
+      "text": "Die Netze brauchen Zeit. Schreib lieber eine SMS und ruf nur an, wenn es wirklich nötig ist."
+    },
+    {
+      "t": "Weiter sparsam bleiben",
+      "text": "Geschäfte, Tankstellen und Lieferungen brauchen oft Tage, bis alles wieder läuft. Bleib in der Nähe, spar Treibstoff und hör weiter Radio."
+    },
+    {
+      "t": "Nachbarn und Vorrat",
+      "text": "Schau bei Nachbarn vorbei, die allein leben. Füll deinen Vorrat wieder auf, sobald es ruhig ist, nicht am ersten Tag."
+    }
+  ],
+  "informiert": [
+    "Im Krisenfall informiert der ORF im Radio rund um die Uhr. Ein Batterie-, Kurbel- oder Autoradio funktioniert ohne Strom. Die Frequenzen für dein Bundesland stehen in der Karte Radio.",
+    "Hör mindestens einmal zu jeder vollen Stunde Radio, dann verpasst du keine Durchsage.",
+    "Die Gemeinde richtet Anlaufstellen ein, etwa im Gemeindeamt oder Feuerwehrhaus. Polizeiinspektionen bleiben besetzt. Manchmal gibt es Lautsprecherdurchsagen.",
+    "Solange Netz da ist: Hinweise zum Verhalten findest du bei oesterreich.gv.at, beim Zivilschutzverband deines Bundeslands und bei deiner Gemeinde."
+  ],
+  "merksaetze": [
+    "Radio an, Geräte aus, eine Lampe an.",
+    "Licht aus Batterie oder Kurbel, nicht aus der Kerze.",
+    "Grill, Kocher und Aggregat nur im Freien: Kohlenmonoxid riechst du nicht."
+  ],
+  "zusatz": {
+    "kinder": [
+      "Frag in Kindergarten und Schule, was dort bei einem Blackout gilt. Klärt vorher, wer die Kinder abholt, wenn kein Telefon geht.",
+      "Eine Stirnlampe für jedes Kind macht das Dunkel weniger unheimlich."
+    ],
+    "aeltere": [
+      "Räum Stolperfallen weg, bevor es dunkel wird. Ein Sturz ohne Telefon ist das größere Risiko.",
+      "Wer allein lebt, vereinbart mit Nachbarn, dass jemand vorbeischaut."
+    ],
+    "pflege": [
+      "Pflegedienst und Essen auf Rädern kommen bei einem Blackout vielleicht nicht. Sprecht vorher ab, wer dann einspringt, am besten mehrere Personen.",
+      "Medikamente, die gekühlt werden müssen, etwa Insulin: Frag in Apotheke oder Arztpraxis, wie lange deines ohne Kühlschrank hält und wie du es dann lagerst. Plane das, bevor es nötig ist.",
+      "Gib Helfern einen Wohnungsschlüssel. Klingel und Türöffner gehen ohne Strom nicht."
+    ],
+    "behinderung": [
+      "Lift, Treppenlift und E-Rollstuhl gehen ohne Strom nicht oder nur mit Akku. Ersatzakkus, ein Klapprollstuhl und ein Plan, wie du aus dem Haus kommst, helfen.",
+      "Hängt dein Leben an einem Gerät wie Beatmung, frag beim Hersteller nach, wie lange der Akku hält und was danach passiert."
+    ],
+    "tiere": [
+      "Aquarium, Terrarium und Brutkasten brauchen Wärme und Sauerstoff. Überleg dir vorher, wie du ein paar Tage überbrückst.",
+      "Futter und Wasser für die Tiere gehören in den Vorrat."
+    ],
+    "haus": [
+      "Kontrollier die Rückstauklappe zum Kanal. Ohne Pumpen kann Abwasser zurückdrücken.",
+      "Eine Heizung, die ohne Strom überhitzen kann, im Blick behalten. Wer ein Notstromaggregat will, lässt es von Fachleuten anschließen."
+    ],
+    "miete": [
+      "In hohen Häusern brauchen die oberen Stockwerke Pumpen für das Wasser. Dort fällt es oft zuerst aus, also früh Kanister füllen."
+    ],
+    "keller": []
+  },
+  "checkliste_spezifisch": [
+    "Batterie- oder Kurbelradio mit Ersatzbatterien",
+    "Taschen- oder Stirnlampen für alle, Ersatzbatterien",
+    "Kanister und Kübel für Wasser",
+    "Kocher mit Brennstoff, für innen zugelassen oder nur im Freien verwenden",
+    "Kohlenmonoxid-Melder, wenn ein Ofen oder Heizgerät im Einsatz ist",
+    "Bargeld in kleinen Scheinen und Münzen",
+    "Geladene Powerbank",
+    "Müllsäcke, weil die Müllabfuhr ausfallen kann"
+  ],
+  "verweise": [
+    "radio",
+    "grundvorsorge",
+    "notrufe",
+    "notfall-rucksack"
+  ],
+  "quellen": [
+    {
+      "name": "oesterreich.gv.at / Bundesministerium für Inneres: Verhalten bei Blackout",
+      "url": "https://www.oesterreich.gv.at/de/themen/notfaelle_unfaelle_und_kriminalitaet/katastrophenfaelle/1/Seite.29500329",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "OÖ Zivilschutz: Blackout – zum Eigendruck (Stand Jänner 2022)",
+      "url": "https://www.land-oberoesterreich.gv.at/Mediendateien/LK/Blackout-A4-zum-Eigendruck.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "OÖ Zivilschutz: Folder Blackout (Stand Juni 2021)",
+      "url": "https://www.wels.gv.at/fileadmin/data/Leben_in_Wels/Katastrophenschutz/Folder_Blackout_Zivilschutzverband.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Zivilschutzverband Steiermark: Blackout-Folder",
+      "url": "https://www.zivilschutz.steiermark.at/wp-content/uploads/Blackout-Folder_A5.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Samariterbund Wien: Blackout-Folder (April 2023)",
+      "url": "https://wien.samariterbund.net/fileadmin/Landesverbaende/Wien/Downloads/samariterbund-wien-blackout-folder-2023-04.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Stadt Graz, Sicherheitsmanagement und Bevölkerungsschutz: Blackout – Menschen mit Behinderung (Juni 2025)",
+      "url": "https://www.graz.at/cms/dokumente/10448767_8106444/631109c8/Blackout%20-%20Menschen%20mit%20Behinderung_Web.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Stadt Klagenfurt: Infoblatt Blackout barrierefrei (2026)",
+      "url": "https://www.klagenfurt.at/fileadmin/user_upload/Stadt_Klagenfurt/01-StadtSERVICE/Sicherheit/Zivil-___Katastrophenschutz/2026-Infoblatt_Blackout_Barrierefrei.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Bundesamt für Bevölkerungsschutz und Katastrophenhilfe (BBK, Deutschland): Ratgeber Vorsorgen für Krisen und Katastrophen, 2. Auflage 11/2025 (Kochen und Heizen ohne Strom)",
+      "url": "https://www.bbk.bund.de/vorsorge",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Stadt Wien: Black-out – Wasser an?",
+      "url": "https://wien.gv.at/spezial/klimatour/wasser/black-out-wasser-an/",
+      "abgerufen": "2026-10-08"
+    }
+  ],
+  "stand": "2026-10-08"
+}

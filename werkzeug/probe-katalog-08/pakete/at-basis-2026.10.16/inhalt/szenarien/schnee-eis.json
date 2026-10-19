@@ -1,0 +1,143 @@
+{
+  "id": "schnee-eis",
+  "titel": "Schnee & Eis",
+  "verstehen": [
+    "Viel Schnee in kurzer Zeit oder gefrierender Regen machen Gehsteige und Straßen spiegelglatt. Oft reicht ein Schritt vor die eigene Haustür für einen bösen Sturz.",
+    "Nasser Schnee ist schwer. Feuchter Altschnee wiegt rund zehnmal so viel wie trockener Neuschnee. Flachdächer und Hallen kommen da an ihre Grenze, und Bäume brechen unter der Last.",
+    "Wo Bäume brechen, reißen sie Stromleitungen mit und blockieren Straßen. Dann fällt in ganzen Tälern der Strom aus, und Orte sind für Stunden oder Tage schwer erreichbar."
+  ],
+  "vorsorgen": [
+    {
+      "t": "Für Stromausfall gerüstet",
+      "text": "Taschenlampe, Ersatzbatterien, ein Batterieradio und ein Vorrat an Essen und Trinken für ein paar Tage. Mehr dazu auf der Blackout-Karte."
+    },
+    {
+      "t": "Auto winterfit",
+      "text": "Im Kofferraum: Schneeketten, Klappschaufel, Decke, Stiefel, wetterfeste Jacke, Eiskratzer, Antibeschlagtuch und etwas zu essen. Tank nie fast leer, Handy geladen."
+    },
+    {
+      "t": "Dach im Blick",
+      "text": "Hast du ein Haus mit Flachdach oder großem Dach, bereite die Dachräumung vor: Lass Sicherungspunkte anbringen, an denen man sich anseilen kann. Im Zweifel prüft ein Statiker, wie viel das Dach trägt."
+    },
+    {
+      "t": "Streumittel und Schaufel",
+      "text": "Besorg sie vor dem ersten Schnee. Im Ernstfall sind sie schnell ausverkauft."
+    },
+    {
+      "t": "Gut zu Fuß",
+      "text": "Schuhe mit gutem Profil und helle Kleidung mit Reflektoren, damit dich Autofahrer sehen."
+    }
+  ],
+  "reagieren": [
+    {
+      "t": "Gefahr? Notruf",
+      "text": "Kracht oder knackt das Dach, liegen Leitungen am Boden oder ist ein Baum auf ein Haus gestürzt: Feuerwehr (122). Bei Verletzten die Rettung (144). Bei Einsturzgefahr raus aus dem Raum oder Gebäude."
+    },
+    {
+      "t": "Leitung am Boden",
+      "text": "Halte mindestens zehn Meter Abstand zu heruntergerissenen Stromleitungen, auch wenn sie tot wirken. Auch Bäume, die auf Leitungen liegen, nicht angreifen."
+    },
+    {
+      "t": "Glatteis",
+      "text": "Geh nur, wenn es sein muss. Kleine Schritte, Hände aus den Taschen, damit du dich abfangen kannst."
+    },
+    {
+      "t": "Dach räumen",
+      "text": "Nach starkem Schneefall prüfst du Flachdächer und schaufelst sie frei, aber nur gesichert und nie allein. Ist das nicht gefahrlos möglich, ruf die Feuerwehr."
+    },
+    {
+      "t": "Gehsteig räumen",
+      "text": "Im Ortsgebiet müssen Liegenschaftseigentümer zwischen 6 und 22 Uhr den Gehsteig entlang ihres Grundstücks räumen und bei Glätte streuen. Schneewechten und Eiszapfen auf straßenseitigen Dächern müssen weg, Gefahrenstellen werden abgesperrt."
+    },
+    {
+      "t": "Auto",
+      "text": "Fahr nur, wenn es nötig ist. Vorher Schnee und Eis von Dach, Motorhaube und Heck holen, denn herabfallende Platten gefährden andere."
+    }
+  ],
+  "danach": [
+    {
+      "t": "Tauwetter",
+      "text": "Wenn es wärmer wird, rutschen Dachlawinen und fallen Eiszapfen. Geh nicht direkt an Dachkanten entlang."
+    },
+    {
+      "t": "Wald meiden",
+      "text": "Nach Schneebruch hängen Äste und Bäume oft noch lose. Bleib aus dem Wald, bis aufgeräumt ist."
+    },
+    {
+      "t": "Schäden melden",
+      "text": "Fotografier Schäden an Haus und Auto und melde sie der Versicherung, größere auch der Gemeinde."
+    },
+    {
+      "t": "Auffüllen",
+      "text": "Streumittel, Batterien, Vorräte und Notfallsachen im Auto wieder ergänzen."
+    }
+  ],
+  "informiert": [
+    "GeoSphere Austria, der staatliche Wetterdienst, warnt vor Schneefall und Glatteis in Gelb, Orange und Rot. Bei Orange ist Schneebruch möglich, bei Rot sind Straßensperren, Stromausfälle und Lawinen wahrscheinlich.",
+    "Die Glatteiswarnung gilt für gefrierenden Regen. Glätte durch überfrierende Nässe ist darin meist nicht enthalten, die gibt es also auch ohne Warnung.",
+    "Bei Warnstufe Rot folgst du den Anweisungen der Behörden und des Zivilschutzes. Sie kommen über Radio und Fernsehen.",
+    "Die Räumpflicht steht in der Straßenverkehrsordnung (StVO), Paragraf 93. Außerhalb des Ortsgebiets gilt sie nicht."
+  ],
+  "merksaetze": [
+    "Nasser Schnee ist schwer: nie allein und nie ungesichert aufs Dach.",
+    "Leitung am Boden: zehn Meter Abstand.",
+    "Hände aus den Taschen."
+  ],
+  "zusatz": {
+    "kinder": [],
+    "aeltere": [
+      "Bei Glatteis lieber daheim bleiben und Einkäufe oder Apothekenwege von Nachbarn oder Angehörigen erledigen lassen."
+    ],
+    "pflege": [],
+    "behinderung": [],
+    "tiere": [],
+    "haus": [
+      "Als Eigentümer bist du im Ortsgebiet für Gehsteig, Dachlawinen und Eiszapfen zuständig. Du kannst das an eine Firma übertragen, dann trägt sie die Pflicht.",
+      "Sicherungspunkte am Dach und, wenn nötig, ein Blick vom Statiker."
+    ],
+    "miete": [
+      "Die Räumpflicht trifft die Eigentümer. Frag die Hausverwaltung, wer bei euch räumt, und melde Eiszapfen oder Schneewechten über dem Eingang."
+    ],
+    "keller": []
+  },
+  "checkliste_spezifisch": [
+    "Streumittel und Schneeschaufel",
+    "Schuhe mit gutem Profil, eventuell Schuhkrallen",
+    "Im Auto: Schneeketten, Klappschaufel, Decke, Eiskratzer, Antibeschlagtuch, Snacks",
+    "Taschenlampe, Ersatzbatterien, Batterieradio",
+    "Für Hausbesitzer: Sicherungsgurt und Seil fürs Dach"
+  ],
+  "verweise": [
+    "blackout",
+    "notrufe",
+    "radio"
+  ],
+  "quellen": [
+    {
+      "name": "OÖ Zivilschutz: Schneemassen (Merkblatt)",
+      "url": "https://www.land-oberoesterreich.gv.at/Mediendateien/Formulare/Dokumente_BH_KI/Schneemassen.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "OÖ Zivilschutz: Wintergefahren",
+      "url": "https://alt.rainbach.at/uploads/pdfs/Zivilschutz/Wintergefahren.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "oesterreich.gv.at: Schneeräumung und Streupflicht",
+      "url": "https://www.oesterreich.gv.at/themen/bauen_und_wohnen/wohnen/Seite.210311.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "oesterreich.gv.at: Verhalten bei Unwetter",
+      "url": "https://www.oesterreich.gv.at/de/themen/notfaelle_unfaelle_und_kriminalitaet/katastrophenfaelle/1/Seite.29500325",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "GeoSphere Austria: Warninformationen",
+      "url": "https://portale.geosphere.at/portallib/html/warninfo/warninfo_alle.php",
+      "abgerufen": "2026-10-08"
+    }
+  ],
+  "stand": "2026-10-08"
+}

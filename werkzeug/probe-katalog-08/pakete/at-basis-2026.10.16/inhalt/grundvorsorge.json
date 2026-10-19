@@ -1,0 +1,718 @@
+{
+  "stand": "2026-10-08",
+  "einleitung": "Ziel: 14 Tage zu Hause zurechtkommen – ohne Einkaufen, ohne Strom und ohne fließendes Wasser. Das empfiehlt der Österreichische Zivilschutzverband jedem Haushalt.",
+  "bereiche": [
+    {
+      "id": "wasser-essen",
+      "titel": "Wasser & Essen",
+      "satz": "Wenn Geschäfte zu sind und kein Wasser aus der Leitung kommt, zählt, was schon im Regal steht.",
+      "punkte": [
+        {
+          "id": "trinkwasser",
+          "text": "Trinkwasser: mindestens 2 Liter pro Person und Tag, Vorrat für 14 Tage",
+          "detail": "Für zwei Wochen sind das rund 28 Liter pro Person. Mineralwasser in Flaschen hält lange, und Leitungswasser kann ausfallen oder verunreinigt sein.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "lebensmittel",
+          "text": "Haltbare Lebensmittel, die ohne Kühlschrank und ohne Kochen auskommen",
+          "detail": "Kauf, was ihr ohnehin esst, und stell Neues nach hinten. So wird der Vorrat laufend verbraucht und nichts läuft ab.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "tier-baby-nahrung",
+          "text": "Essen für Haustiere und Babynahrung, falls nötig",
+          "detail": "Babynahrung ist meist lange haltbar. Für Tiere gilt dasselbe Ziel wie für Menschen: Futter und Wasser für 14 Tage.",
+          "fuer": [
+            "alle",
+            "kinder",
+            "tiere"
+          ]
+        },
+        {
+          "id": "kocher",
+          "text": "Campingkocher mit Brennstoff – nur im Freien oder bei offenem Fenster verwenden",
+          "detail": "Ohne Strom fällt bei vielen auch der Herd aus. Genug Gas oder Brennpaste mitkaufen und den Kocher einmal ausprobieren, bevor du ihn brauchst.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "oeffner-feuer",
+          "text": "Dosenöffner, Feuerzeug, Streichhölzer",
+          "detail": "Ein elektrischer Dosenöffner hilft ohne Strom nichts. Ein mechanischer kostet wenig und gehört zum Vorrat.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "wenig-platz",
+          "text": "Wenig Platz? Dann eben halb so viel",
+          "detail": "Auch ein Vorrat für etwa sieben Tage hilft schon viel. Lieber klein anfangen als gar nicht.",
+          "fuer": [
+            "miete"
+          ]
+        },
+        {
+          "id": "kinder-essen",
+          "text": "Essen, das Kinder auch wirklich essen",
+          "detail": "Haltbare Lieblingssnacks, Milchpulver oder Fläschchennahrung und Wasser, das für Babynahrung geeignet ist. Vertrautes Essen beruhigt.",
+          "fuer": [
+            "kinder"
+          ]
+        },
+        {
+          "id": "sonderkost",
+          "text": "Schonkost und Spezialnahrung einplanen",
+          "detail": "Wer eine Diät braucht, schlecht schlucken kann oder Trinknahrung bekommt, legt dafür einen eigenen Vorrat an.",
+          "fuer": [
+            "aeltere",
+            "pflege"
+          ]
+        },
+        {
+          "id": "tierwasser",
+          "text": "Wasser für Tiere extra rechnen",
+          "detail": "Tiere trinken aus demselben Vorrat. Plane ihr Wasser dazu, auch für ein Assistenztier.",
+          "fuer": [
+            "tiere",
+            "behinderung"
+          ]
+        },
+        {
+          "id": "vorrat-hochwasser",
+          "text": "Vorrat im Keller nicht auf den Boden stellen",
+          "detail": "Regale mit Abstand zum Boden schützen vor Wasser. Wo Hochwasser droht, gehört das Wichtigste in ein oberes Stockwerk.",
+          "fuer": [
+            "keller"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "licht-strom-info",
+      "titel": "Licht, Strom & Information",
+      "satz": "Ohne Strom wird es dunkel, kalt und still – Radio, Licht und Wärme halten dich handlungsfähig.",
+      "punkte": [
+        {
+          "id": "radio",
+          "text": "Radio mit Batterie oder Kurbel – im Krisenfall informiert der ORF",
+          "detail": "Wenn Handynetz und Internet ausfallen, sendet das Radio weiter. Ersatzbatterien dazulegen.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "lampen",
+          "text": "Taschenlampen oder Stirnlampen und Ersatzbatterien",
+          "detail": "Stirnlampen lassen beide Hände frei. Lege für jede Person eine bereit, an einem Ort, den alle im Dunkeln finden.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "powerbanks",
+          "text": "Geladene Powerbanks",
+          "detail": "Damit hält das Handy länger durch. Lade sie alle paar Monate nach, sie entladen sich auch ungenutzt.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "kerzen-loeschen",
+          "text": "Kerzen, Zünder, Feuerlöscher oder Löschdecke",
+          "detail": "Kerzen nie unbeaufsichtigt brennen lassen. Brennendes Fett nie mit Wasser löschen, nur mit Löschdecke oder einem geeigneten Feuerlöscher.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "waerme",
+          "text": "Warme Decken und Kleidung – die Heizung fällt meist mit dem Strom aus",
+          "detail": "Auch Gas- und Ölheizungen brauchen Strom für Pumpe und Steuerung. Schlafsäcke und Mützen helfen mehr als man denkt.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "rauchmelder-licht",
+          "text": "Rauchmelder mit Licht- oder Vibrationsalarm",
+          "detail": "Wer schlecht hört, bemerkt einen normalen Rauchmelder nicht. Es gibt Melder, die blinken oder vibrieren.",
+          "fuer": [
+            "behinderung"
+          ]
+        },
+        {
+          "id": "hilfsmittel-akku",
+          "text": "Ersatzakkus und Ladegeräte für Hilfsmittel",
+          "detail": "Hörgerät, elektrischer Rollstuhl, Sprechhilfe: Halte Ersatzbatterien und Ladekabel bereit und lade alles, sobald eine Warnung kommt.",
+          "fuer": [
+            "behinderung",
+            "aeltere"
+          ]
+        },
+        {
+          "id": "geraete-strom",
+          "text": "Klären, wie lange medizinische Geräte ohne Strom laufen",
+          "detail": "Sauerstoffgerät, Beatmung, Absaugpumpe oder Pflegebett: Frag beim Pflegedienst oder Lieferanten nach Akkulaufzeit und was zu tun ist, wenn sie leer wird.",
+          "fuer": [
+            "pflege"
+          ]
+        },
+        {
+          "id": "radio-hoeren",
+          "text": "Informationen auch ohne Radio bekommen",
+          "detail": "Wer das Radio nicht hören kann, vereinbart mit Nachbarn oder Familie, dass sie Meldungen weitergeben – persönlich oder per SMS.",
+          "fuer": [
+            "behinderung"
+          ]
+        },
+        {
+          "id": "hauptschalter",
+          "text": "Hauptschalter, Gas- und Wasserhaupthahn kennen",
+          "detail": "Wisse, wo sie sind und wie sie gehen. Bei einem langen Stromausfall kann man das Haus auch als Ganzes vom Netz nehmen.",
+          "fuer": [
+            "haus",
+            "keller"
+          ]
+        },
+        {
+          "id": "rauchmelder",
+          "text": "Rauchmelder in jedem Wohn- und Schlafraum",
+          "detail": "Bad und Küche ausgenommen. Gerade wenn Kerzen und Kocher im Einsatz sind, warnt er früh.",
+          "fuer": [
+            "haus",
+            "miete"
+          ]
+        },
+        {
+          "id": "co-melder",
+          "text": "Kohlenmonoxid-Melder bei Ofen, Kamin oder Gastherme",
+          "detail": "Kohlenmonoxid riecht man nicht. Ein Melder schlägt an, bevor es gefährlich wird.",
+          "fuer": [
+            "haus"
+          ]
+        },
+        {
+          "id": "aquarium",
+          "text": "Tiere mit Technik im Blick haben",
+          "detail": "Aquarium, Terrarium und Brutkasten brauchen Strom für Wärme und Sauerstoff. Überleg dir vorher, wie du sie ein paar Tage überbrückst.",
+          "fuer": [
+            "tiere"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gesundheit-hygiene",
+      "titel": "Gesundheit & Hygiene",
+      "satz": "Apotheke und Arztpraxis können zu sein, und ohne Wasser wird Sauberkeit zur Aufgabe.",
+      "punkte": [
+        {
+          "id": "hausapotheke",
+          "text": "Hausapotheke und Erste-Hilfe-Set",
+          "detail": "Verbandsmaterial, Fieber- und Schmerzmittel, Mittel gegen Durchfall, Desinfektion. Einmal im Jahr Ablaufdaten prüfen.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "dauermedikamente",
+          "text": "Dauermedikamente für mindestens 14 Tage",
+          "detail": "Sprich mit deiner Ärztin oder deinem Arzt, ob ein kleiner Vorrat möglich ist. Achte auf Lagerung und Haltbarkeit.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "hygieneartikel",
+          "text": "Hygieneartikel, Müllsäcke, Toilettenpapier",
+          "detail": "Müll wird im Ernstfall vielleicht tagelang nicht abgeholt. Gut verschließbare Säcke halten Gerüche und Ungeziefer fern.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "wc-wasser",
+          "text": "Wasser für die WC-Spülung (Kanister, gefüllte Badewanne)",
+          "detail": "Für den Fall, dass gar kein Wasser kommt: stabile Müllsäcke, die man ins WC einhängt, oder ein Kübel mit Deckel.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "desinfektion",
+          "text": "Desinfektionsmittel, Handschuhe, Masken",
+          "detail": "Wenn Händewaschen kaum möglich ist, schützt Desinfektion vor Durchfall und Infekten. FFP2-Masken helfen auch bei Staub und Rauch.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "windeln",
+          "text": "Windeln, Feuchttücher, Fieberthermometer",
+          "detail": "Bei kleinen Kindern geht das schneller aus, als man denkt. Plane die Mengen für zwei Wochen.",
+          "fuer": [
+            "kinder"
+          ]
+        },
+        {
+          "id": "medikamentenplan",
+          "text": "Medikamentenplan auf Papier",
+          "detail": "Welches Mittel, wie viel, wann. Hilft Helfern, Ärzten und dir selbst, wenn alles durcheinander ist.",
+          "fuer": [
+            "aeltere",
+            "pflege",
+            "behinderung"
+          ]
+        },
+        {
+          "id": "pflegematerial",
+          "text": "Pflegematerial für zwei Wochen",
+          "detail": "Inkontinenzmaterial, Verbände, Handschuhe, Spritzen oder Sondennahrung. Pflegedienst und Essen auf Rädern kommen im Ernstfall vielleicht nicht.",
+          "fuer": [
+            "pflege"
+          ]
+        },
+        {
+          "id": "hilfsmittel-ersatz",
+          "text": "Ersatzbrille und Ersatz für Hörgeräte",
+          "detail": "Eine alte Brille in der Lade ist besser als keine. Bei Hörgeräten an Batterien und Reinigungszeug denken.",
+          "fuer": [
+            "aeltere",
+            "behinderung"
+          ]
+        },
+        {
+          "id": "stolperfallen",
+          "text": "Stolperfallen wegräumen",
+          "detail": "Im Dunkeln sind Teppichkanten, Kabel und Kisten gefährlich. Ein Sturz ohne erreichbare Hilfe wiegt schwer.",
+          "fuer": [
+            "aeltere",
+            "behinderung"
+          ]
+        },
+        {
+          "id": "tierapotheke",
+          "text": "Tiermedikamente und Katzenstreu",
+          "detail": "Wenn dein Tier Medikamente braucht, gilt dasselbe wie bei Menschen: Vorrat für zwei Wochen. Dazu Streu oder Kotsackerl.",
+          "fuer": [
+            "tiere"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dokumente-geld",
+      "titel": "Dokumente & Geld",
+      "satz": "Wenn Karten und Bankomat nicht gehen und Papiere verloren sind, wird alles Weitere mühsam.",
+      "punkte": [
+        {
+          "id": "bargeld",
+          "text": "Bargeld in kleinen Scheinen – Bankomat und Kartenzahlung fallen aus",
+          "detail": "Als Richtwert reicht Geld für ein paar Tage Einkäufe. Kleine Scheine und Münzen, weil niemand wechseln kann.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "dokumentenmappe",
+          "text": "Wichtige Dokumente in einer Mappe (auch als Kopie auf USB-Stick)",
+          "detail": "Ausweise, Geburts- und Heiratsurkunde, Meldezettel, Staatsbürgerschaftsnachweis, Versicherungen, Zeugnisse, Testament. Alle im Haushalt wissen, wo die Mappe liegt.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "wertsachen-fotos",
+          "text": "Wertsachen und Wohnung fotografieren",
+          "detail": "Fotos von Möbeln, Geräten und Schmuck helfen bei der Versicherung. Speicher sie mit den anderen Kopien.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "kopie-auswaerts",
+          "text": "Eine Kopie außer Haus aufbewahren",
+          "detail": "Bei Verwandten, Freunden oder im Bankschließfach. Wenn die Wohnung brennt oder unter Wasser steht, ist die zweite Kopie noch da.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "vollmacht",
+          "text": "Vollmacht, Patientenverfügung, Pflegeunterlagen",
+          "detail": "Wer für jemanden entscheiden darf, braucht das schriftlich. Pflegegeldbescheid und Befunde gehören in dieselbe Mappe.",
+          "fuer": [
+            "aeltere",
+            "pflege"
+          ]
+        },
+        {
+          "id": "notfallausweis",
+          "text": "Notfallausweis",
+          "detail": "Darauf steht, wie du kommunizierst, welche Krankheiten, Allergien und Hilfsmittel du hast und wen man anrufen soll. Viele Handys können das auch im Sperrbildschirm zeigen.",
+          "fuer": [
+            "behinderung",
+            "pflege",
+            "aeltere"
+          ]
+        },
+        {
+          "id": "tierpapiere",
+          "text": "Heimtierausweis und Chipnummer",
+          "detail": "Der Ausweis zeigt Impfungen. Mit der Chipnummer findet ein entlaufenes Tier zurück, wenn es registriert ist.",
+          "fuer": [
+            "tiere"
+          ]
+        },
+        {
+          "id": "mietvertrag",
+          "text": "Miet- oder Kaufvertrag und Versicherungspolizzen",
+          "detail": "Nach einem Schaden brauchst du sie für Vermieter, Hausverwaltung und Versicherung.",
+          "fuer": [
+            "miete",
+            "haus"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notfallplan",
+      "titel": "Notfallplan",
+      "satz": "Wenn das Handy schweigt, muss jede und jeder schon wissen, wohin und wer was macht.",
+      "punkte": [
+        {
+          "id": "treffpunkt",
+          "text": "Treffpunkt mit Familie vereinbaren, falls das Handynetz ausfällt",
+          "detail": "Am besten zwei: einen gleich vor dem Haus, falls es brennt, und einen weiter weg, falls ihr nicht nach Hause könnt.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "telefonliste",
+          "text": "Liste wichtiger Telefonnummern auf Papier",
+          "detail": "Familie, Nachbarn, Arbeit, Hausarzt, Schule, Notrufe. Die meisten Nummern kennt man nur noch aus dem Handy.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "tank",
+          "text": "Volltank oder halbvoller Tank – Tankstellen brauchen Strom",
+          "detail": "Ohne Strom laufen die Zapfsäulen nicht. Lass das Auto nie fast leer stehen.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "wer-macht-was",
+          "text": "Wer macht was – einmal am Küchentisch klären",
+          "detail": "Wer holt wen, wer kümmert sich um die Oma, wer um das Tier. Was besprochen ist, muss im Ernstfall niemand erst entscheiden.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "kinder-abholen",
+          "text": "Wer holt die Kinder?",
+          "detail": "Frag in Schule und Kindergarten, was dort im Notfall passiert. Leg fest, wer abholt, wenn ihr selbst nicht hinkommt, und sag es dort auch an.",
+          "fuer": [
+            "kinder"
+          ]
+        },
+        {
+          "id": "kinder-karte",
+          "text": "Name und Adresse beim Kind",
+          "detail": "Ein Zettel im Rucksack oder eine Notfallkapsel mit Name, Geburtsdatum, Adresse und einer Telefonnummer. Kleine Kinder wissen das oft nicht auswendig.",
+          "fuer": [
+            "kinder"
+          ]
+        },
+        {
+          "id": "kinder-reden",
+          "text": "Mit Kindern darüber reden",
+          "detail": "Ruhig, ehrlich, ohne Details, die Angst machen: \"Wir sind vorbereitet.\" Zeig ihnen den Treffpunkt und lass sie beim Packen mitmachen.",
+          "fuer": [
+            "kinder"
+          ]
+        },
+        {
+          "id": "nachbarn",
+          "text": "Nachbarn kennen und Hilfe ausmachen",
+          "detail": "Sprich vorher ab, wer bei wem nachschaut. Das ist für dich genauso wichtig wie für die alte Dame im zweiten Stock.",
+          "fuer": [
+            "aeltere",
+            "pflege",
+            "behinderung",
+            "miete"
+          ]
+        },
+        {
+          "id": "pflegedienst-plan",
+          "text": "Ausfallplan mit dem Pflegedienst",
+          "detail": "Frag nach, was passiert, wenn Pflege oder Essen auf Rädern nicht kommen. Wer übernimmt, und was muss die Familie dann können?",
+          "fuer": [
+            "pflege"
+          ]
+        },
+        {
+          "id": "fluchtweg",
+          "text": "Fluchtwege kennen – und wer dir hilft, wenn du sie nicht nutzen kannst",
+          "detail": "Treppe statt Lift: Wer im Rollstuhl sitzt oder schlecht geht, braucht einen Plan, wer ihn wie hinausbringt.",
+          "fuer": [
+            "behinderung",
+            "aeltere"
+          ]
+        },
+        {
+          "id": "hoer-notruf",
+          "text": "Notruf ohne Sprechen",
+          "detail": "Polizei per SMS oder Fax: 0800 133 133. Daneben gibt es den offiziellen Notruf-Chat DEC112. Stift und Papier helfen mit Einsatzkräften.",
+          "fuer": [
+            "behinderung"
+          ]
+        },
+        {
+          "id": "keller-wasser",
+          "text": "Bei Hochwasser nicht in den Keller",
+          "detail": "Steht Wasser im Keller, bleib draußen – das kann lebensgefährlich sein. Plane vorher, was oben gelagert sein muss.",
+          "fuer": [
+            "keller"
+          ]
+        },
+        {
+          "id": "keller-schutz",
+          "text": "Keller als Schutzraum kennen",
+          "detail": "Ein fensterloser Kellerraum schützt bei Sturm und Gefahrstoffen gut. Halte ihn so frei, dass ihr dort ein paar Stunden sitzen könnt.",
+          "fuer": [
+            "keller",
+            "haus"
+          ]
+        },
+        {
+          "id": "tier-unterkunft",
+          "text": "Wo darf das Tier mit hin?",
+          "detail": "Nicht jede Notunterkunft nimmt Tiere. Überleg dir, wer dein Tier im Ernstfall aufnehmen könnte.",
+          "fuer": [
+            "tiere"
+          ]
+        },
+        {
+          "id": "lift",
+          "text": "Lift und Stiegenhaus mitdenken",
+          "detail": "Bei Stromausfall kann jemand im Lift steckenbleiben. Schaut gemeinsam nach, und haltet das Stiegenhaus frei.",
+          "fuer": [
+            "miete"
+          ]
+        },
+        {
+          "id": "hausverwaltung",
+          "text": "Hausverwaltung und Hausbesorger auf der Liste",
+          "detail": "Wer ist bei Wasserschaden oder Stromausfall im Haus zuständig? Nummer gehört auf die Papierliste.",
+          "fuer": [
+            "miete"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notfall-rucksack",
+      "titel": "Notfall-Rucksack",
+      "satz": "Wenn ihr schnell raus müsst, nimmt jede Person einen Rucksack – gepackt, bevor es eilt.",
+      "punkte": [
+        {
+          "id": "r-mappe",
+          "text": "Dokumentenmappe oder Kopien davon",
+          "detail": "Am besten in einer wasserdichten Hülle. Originale nimmst du mit, wenn Zeit ist.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "r-medikamente",
+          "text": "Persönliche Medikamente und Erste-Hilfe-Material",
+          "detail": "Für ein paar Tage, dazu der Medikamentenplan. In einer Notunterkunft gibt es nicht sofort einen Arzt.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "r-kleidung",
+          "text": "Warme Kleidung, Regenschutz, feste Schuhe, Wechselwäsche",
+          "detail": "Lieber mehrere dünne Schichten. Dazu Mütze und Arbeitshandschuhe.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "r-ladegeraet",
+          "text": "Ladegerät und geladene Powerbank",
+          "detail": "Damit bleibst du erreichbar und kannst Schäden fotografieren.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "r-bargeld",
+          "text": "Bargeld in kleinen Scheinen",
+          "detail": "Zusätzlich zum Vorrat zu Hause.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "r-schluessel",
+          "text": "Ersatzschlüssel für Wohnung und Auto",
+          "detail": "Ein zweiter Satz im Rucksack, falls der erste im Chaos liegen bleibt.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "r-essen",
+          "text": "Essen für zwei Tage und eine Trinkflasche",
+          "detail": "Luftdicht verpackt. Dazu Taschenmesser, Löffel und Dosenöffner.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "r-licht-radio",
+          "text": "Taschenlampe und kleines Radio",
+          "detail": "Mit Ersatzbatterien. Ein Notizblock und Stift passen auch noch hinein.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "r-hygiene",
+          "text": "Hygieneartikel und FFP2-Maske",
+          "detail": "Zahnbürste, Seife, Taschentücher, bei Bedarf Monatshygiene.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "r-schlafen",
+          "text": "Decke oder Schlafsack",
+          "detail": "Notunterkünfte sind oft kühl und laut.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "r-wertvolles",
+          "text": "Was dir am Herzen liegt",
+          "detail": "Ein paar Fotos, ein Brief, ein kleines Erinnerungsstück. Dinge, die man nicht ersetzen kann, gehören auch hinein.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "r-mitnehmen",
+          "text": "Im letzten Moment: Ausweis, Handy, Geldbörse, e-card",
+          "detail": "Das kann man nicht vorpacken. Leg es immer an denselben Platz, dann findest du es auch nachts.",
+          "fuer": [
+            "alle"
+          ]
+        },
+        {
+          "id": "r-kinder",
+          "text": "Kinderrucksack mit Kuscheltier",
+          "detail": "Windeln, Snacks, Wechselgewand und etwas Vertrautes zum Festhalten. Größere Kinder tragen ihren eigenen kleinen Rucksack.",
+          "fuer": [
+            "kinder"
+          ]
+        },
+        {
+          "id": "r-hilfsmittel",
+          "text": "Hilfsmittel griffbereit",
+          "detail": "Brille, Hörgerät, Gehhilfe, Rollator: Sie stehen dort, wo du sie im Dunkeln findest, nicht im Kasten.",
+          "fuer": [
+            "aeltere",
+            "behinderung"
+          ]
+        },
+        {
+          "id": "r-pflege",
+          "text": "Pflegetasche",
+          "detail": "Medikamente, Pflegematerial, Notfallausweis und eine Kopie der Pflegeunterlagen in einer eigenen Tasche, die mitkommt.",
+          "fuer": [
+            "pflege"
+          ]
+        },
+        {
+          "id": "r-tier",
+          "text": "Tierrucksack: Leine, Transportbox, Futter",
+          "detail": "Futter und Wasser für ein paar Tage, Napf, Medikamente, Heimtierausweis. Die Box steht so, dass du sie schnell erreichst.",
+          "fuer": [
+            "tiere"
+          ]
+        }
+      ]
+    }
+  ],
+  "quellen": [
+    {
+      "name": "Österreichischer Zivilschutzverband – Folder Bevorratung (14 Tage, Mengen, Notgepäck, Dokumentenmappe)",
+      "url": "https://www.zivilschutz.at/wp-content/uploads/2022/11/Folder-Bevorratung.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Österreichischer Zivilschutzverband – Blackout-Checkliste",
+      "url": "https://www.zivilschutz.at/wp-content/uploads/2023/10/Blackout_Folder_0923_Web.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Salzburger Zivilschutzverband – Krisenfester Haushalt",
+      "url": "https://salzburg.zivilschutz.at/thema/krisenfester-haushalt/",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Bundesministerium für Inneres (BMI) auf oesterreich.gv.at – Allgemeines zum Selbstschutz im Katastrophenfall",
+      "url": "https://www.oesterreich.gv.at/de/themen/notfaelle_unfaelle_und_kriminalitaet/katastrophenfaelle/1/Seite.29500328",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "oesterreich.gv.at – Notrufnummern (Notruf für gehörlose Menschen)",
+      "url": "https://www.oesterreich.gv.at/de/themen/notfaelle_unfaelle_und_kriminalitaet/notrufnummern.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Österreichisches Rotes Kreuz – Stromausfall",
+      "url": "https://www.roteskreuz.at/stromausfall",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Österreichisches Rotes Kreuz – Katastrophenvorsorge",
+      "url": "https://www.roteskreuz.at/katastrophenvorsorge",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Bundesamt für Bevölkerungsschutz und Katastrophenhilfe (BBK) – Ratgeber Vorsorgen für Krisen und Katastrophen",
+      "url": "https://www.bbk.bund.de/SharedDocs/Downloads/DE/Mediathek/Publikationen/Buergerinformationen/Ratgeber/ratgeber-notfallvorsorge.pdf?__blob=publicationFile&v=37",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BBK – Notgepäck",
+      "url": "https://www.bbk.bund.de/DE/Warnung-Vorsorge/Vorsorge/So-koennen-Sie-sich-vorbereiten/Notgepaeck/notgepaeck_node.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BBK – Dokumente sichern",
+      "url": "https://www.bbk.bund.de/DE/Warnung-Vorsorge/Vorsorge/So-koennen-Sie-sich-vorbereiten/Dokumente-sichern/dokumente-sichern_node.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BBK – Vorsorge für Menschen mit Beeinträchtigungen",
+      "url": "https://www.bbk.bund.de/DE/Warnung-Vorsorge/Vorsorge/So-koennen-Sie-sich-vorbereiten/Vorsorge-Menschen-mit-Beeintraechtigungen/vorsorge-menschen-mit-beeintraechti_node.html",
+      "abgerufen": "2026-10-08"
+    }
+  ]
+}

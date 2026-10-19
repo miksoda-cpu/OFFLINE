@@ -1,0 +1,190 @@
+{
+  "id": "erdbeben",
+  "titel": "Erdbeben",
+  "verstehen": [
+    "Österreich ist kein Hochrisikoland, aber die Erde bebt hier regelmäßig. Im Schnitt der letzten zehn Jahre haben Menschen rund 78 Beben pro Jahr gespürt. Die meisten merkst du nur als kurzes Rütteln oder Rumpeln.",
+    "Beben gibt es fast überall, gehäuft im Wiener Becken, am Semmering, im Mur- und Mürztal, im Inntal und im Rheintal. Vorhersagen lassen sie sich nicht.",
+    "Gefährlich wird es selten durch das Wackeln selbst, sondern durch das, was herunterfällt: Kaminteile, Dachziegel, Regale, Glas. Dazu kommen Nachbeben und beschädigte Gas- und Stromleitungen."
+  ],
+  "vorsorgen": [
+    {
+      "t": "Schwere Möbel festmachen",
+      "text": "Hohe Kästen und Regale an der Wand verschrauben, den Warmwasserboiler gut befestigen. Über dem Bett keine schweren Bilder oder Regale aufhängen."
+    },
+    {
+      "t": "Sichere Plätze aussuchen",
+      "text": "Such dir in jedem Raum einen Platz: neben einer tragenden Innenwand, unter einem Türstock oder unter einem stabilen Tisch. Zeig ihn allen, die bei dir wohnen."
+    },
+    {
+      "t": "Hauptschalter und Haupthähne kennen",
+      "text": "Merk dir, wo Stromhauptschalter und die Absperrhähne für Gas und Wasser sind. Sag es auch deinen Nachbarn."
+    },
+    {
+      "t": "Haus in Schuss halten",
+      "text": "Kamin, Balkongeländer und Dachrinnen sind das, was bei einem Beben zuerst herunterkommt. Lass sie regelmäßig prüfen."
+    },
+    {
+      "t": "Notgepäck griffbereit",
+      "text": "Wenn du nach einem Beben schnell raus musst, ist keine Zeit zum Packen. Ein fertiger Rucksack beim Ausgang spart dir das."
+    }
+  ],
+  "reagieren": [
+    {
+      "t": "Ist jemand verletzt oder verschüttet?",
+      "text": "Euro-Notruf (112), Rettung (144) oder Feuerwehr (122). Bei Gasgeruch zuerst raus, dann den Gasnotruf (128) wählen."
+    },
+    {
+      "t": "Drinnen: bleib drinnen",
+      "text": "Lauf nicht ins Freie, denn draußen fällt am meisten herunter. Geh zu deinem sicheren Platz, weg von Fenstern, und warte, bis es aufhört. Kein Lift, kein Stiegenhaus."
+    },
+    {
+      "t": "Draußen: bleib draußen",
+      "text": "Halte Abstand zu Gebäuden und Stromleitungen, rund 5 Meter, bei hohen Häusern die halbe Gebäudehöhe. In einer engen Gasse stell dich in den nächsten Hauseingang oder eine Einfahrt."
+    },
+    {
+      "t": "Im Auto: anhalten",
+      "text": "Ein Beben fühlt sich beim Fahren oft an wie ein geplatzter Reifen. Fahr an den Rand, bleib stehen, schalte das Radio ein. Nimm das Auto nicht zur Flucht, die Straßen sind bald verstopft."
+    },
+    {
+      "t": "Wenn es aufhört: Feuer aus, Gas zu",
+      "text": "Kerzen und offenes Feuer löschen, Strom am Hauptschalter aus, Haupthähne für Gas und Wasser zudrehen."
+    },
+    {
+      "t": "Riecht es nach Gas?",
+      "text": "Nichts anzünden, keinen Lichtschalter drücken, nicht rauchen. Alle raus aus dem Haus, dann von draußen den Gasnotruf (128) anrufen."
+    },
+    {
+      "t": "Risse, schiefer Kamin? Raus",
+      "text": "Wenn das Haus einsturzgefährdet wirkt, verlass es sofort mit dem Notgepäck und halte draußen Abstand."
+    }
+  ],
+  "danach": [
+    {
+      "t": "Mit Nachbeben rechnen",
+      "text": "Nachbeben können beschädigte Häuser noch zum Einsturz bringen oder Teile herunterwerfen. Halte weiter Abstand zu Mauern und Fassaden."
+    },
+    {
+      "t": "Erst rein, wenn es freigegeben ist",
+      "text": "Nach Schäden an Mauern oder Kamin gehst du erst wieder hinein, wenn Fachleute oder die Behörde das Gebäude freigegeben haben."
+    },
+    {
+      "t": "Radio an, Anweisungen abwarten",
+      "text": "Über das Radio erfährst du, wo Hilfe ist und was die Einsatzkräfte von dir brauchen."
+    },
+    {
+      "t": "Schäden fotografieren",
+      "text": "Mach Fotos von Rissen und Schäden, bevor du etwas wegräumst. Die brauchst du später für die Versicherung."
+    },
+    {
+      "t": "Beben melden",
+      "text": "Solange Netz da ist: Deine Wahrnehmung hilft dem Erdbebendienst der GeoSphere Austria, die Lage schnell einzuschätzen. Dafür gibt es ein Meldeformular auf deren Seite."
+    }
+  ],
+  "informiert": [
+    "Der Erdbebendienst der GeoSphere Austria (früher Zentralanstalt für Meteorologie und Geodynamik, ZAMG) überwacht die Bodenbewegungen rund um die Uhr und veröffentlicht nach jedem gespürten Beben Ort, Stärke und Tiefe.",
+    "Im Ernstfall informiert der ORF über Radio und Fernsehen. Ein Batterie- oder Kurbelradio funktioniert auch ohne Strom und Netz.",
+    "Sirene 3 Minuten Dauerton heißt Warnung: Radio oder Fernsehen (ORF) einschalten. Auf- und abschwellender Ton 1 Minute heißt Alarm: geschützten Raum aufsuchen. 1 Minute Dauerton heißt Entwarnung.",
+    "Gasnotruf: 128. Feuerwehr: 122. Euro-Notruf: 112."
+  ],
+  "merksaetze": [
+    "Drinnen bleibst du drinnen, draußen bleibst du draußen.",
+    "Nach dem Beben: Feuer aus, Gas zu, Strom aus.",
+    "Ein Riss in der Wand heißt: erst wieder rein, wenn es jemand freigibt."
+  ],
+  "zusatz": {
+    "kinder": [
+      "Übt die sicheren Plätze wie ein Spiel: Wo im Kinderzimmer, wo in der Küche?",
+      "Gib kleinen Kindern einen Brustbeutel mit Name, Geburtsdatum und Adresse ins Notgepäck."
+    ],
+    "aeltere": [
+      "Über dem Bett hängt nichts Schweres, und neben dem Bett steht kein Regal, das kippen kann. Ein Beben in der Nacht trifft dich dort, wo du schläfst."
+    ],
+    "pflege": [
+      "Wichtige Medikamente und eine Liste davon gehören ins Notgepäck, nicht nur in den Kasten."
+    ],
+    "behinderung": [],
+    "tiere": [
+      "Tierfutter für ein paar Tage gehört in den Vorrat und ins Notgepäck."
+    ],
+    "haus": [
+      "Bei Neubau oder Umbau gilt in Österreich die Erdbebennorm ÖNORM EN 1998-1. Frag deinen Planer, ob sie berücksichtigt ist.",
+      "Kamin, Dachrinnen und Geländer regelmäßig prüfen lassen."
+    ],
+    "miete": [
+      "Frag die Hausverwaltung, wo Haupthahn und Hauptschalter für dein Haus sind, falls sie nicht in deiner Wohnung liegen."
+    ],
+    "keller": [
+      "Gas sammelt sich gern im Keller. Riecht es dort nach Gas, geh nicht hinunter und mach kein Licht."
+    ]
+  },
+  "checkliste_spezifisch": [
+    "Winkel, Dübel und Schrauben, um Kästen und Regale an der Wand zu befestigen",
+    "Feste Schuhe und Arbeitshandschuhe im Notgepäck (Glasscherben, Schutt)",
+    "Taschenlampe mit Ersatzbatterien",
+    "FFP2-Masken gegen Staub",
+    "Handy oder Kamera, um Schäden zu dokumentieren"
+  ],
+  "verweise": [
+    "notfall-rucksack",
+    "radio",
+    "notrufe"
+  ],
+  "quellen": [
+    {
+      "name": "oesterreich.gv.at / Bundesministerium für Inneres: Verhalten bei Erdbeben",
+      "url": "https://www.oesterreich.gv.at/de/themen/notfaelle_unfaelle_und_kriminalitaet/katastrophenfaelle/1/Seite.29500324",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Salzburger Zivilschutzverband: Erdbeben",
+      "url": "https://salzburg.zivilschutz.at/thema/erdbeben/",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Land Oberösterreich / OÖ Zivilschutz: Selbstschutztipp Erdbeben",
+      "url": "https://www.land-oberoesterreich.gv.at/Mediendateien/Formulare/Dokumente_BH_GM/Erdbeben.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "GeoSphere Austria: Erdbeben (Erdbebendienst)",
+      "url": "https://www.geosphere.at/en/topics/disaster-protection/earthquakes",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "GeoSphere Austria: Durchschnittliches Erdbebenjahr",
+      "url": "https://www.geosphere.at/en/news-and-events/news/average-earthquake-year",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "GeoSphere Austria: Erdbeben melden",
+      "url": "https://www.geosphere.at/de/daten/citizen-science/erdbeben-melden/erdbeben-melden-formular",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Auswärtiges Amt, Deutsche Botschaft Jakarta: Merkblatt zum Verhalten bei Erdbeben (Abschnitt Auto)",
+      "url": "https://jakarta.diplo.de/resource/blob/2124324/55e29b1fd42c8cdf6a19e4a6ecc89353/merkblatt-zum-verhalten-bei-erdbeben-data.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Österreichischer Bundesfeuerwehrverband: Merkblatt Erdgas",
+      "url": "https://www.bundesfeuerwehrverband.at/wp-content/uploads/2017/08/E07_Erdgas.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "oesterreich.gv.at: Notrufnummern",
+      "url": "https://www.oesterreich.gv.at/en/themen/notfaelle_unfaelle_und_kriminalitaet/notrufnummern",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Salzburger Zivilschutzverband: Sirenensignale in Österreich",
+      "url": "https://salzburg.zivilschutz.at/sirenensignale-in-oesterreich/",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Bundesamt für Bevölkerungsschutz und Katastrophenhilfe (BBK): Notgepäck",
+      "url": "https://www.bbk.bund.de/DE/Warnung-Vorsorge/Vorsorge/Notgepaeck/notgepaeck_node.html",
+      "abgerufen": "2026-10-08"
+    }
+  ],
+  "stand": "2026-10-08"
+}

@@ -1,0 +1,86 @@
+{
+  "id": "krankheiten",
+  "titel": "Übertragbare Krankheiten",
+  "verstehen": [
+    "Eine Epidemie ist eine Krankheit, die in einer Region plötzlich gehäuft auftritt. Breitet sie sich weltweit aus, spricht man von einer Pandemie. Das passiert vor allem, wenn ein neuer Erreger auftaucht, gegen den kaum jemand geschützt ist.",
+    "Das Tückische: Bei der Grippe steckst du andere schon etwa einen Tag an, bevor du dich krank fühlst. Die meisten Erreger reisen über Tröpfchen beim Husten und Niesen oder über Hände und Oberflächen. Magen-Darm-Viren wie Noroviren stecken in Stuhl und Erbrochenem, schon winzige Mengen reichen.",
+    "Bei einer großen Welle ist nicht nur die Krankheit selbst das Problem. Wenn viele gleichzeitig ausfallen, sind Arztpraxen und Spitäler voll, und auch Geschäfte, Schulen und Betriebe laufen nur eingeschränkt. Wer vorbereitet ist, kann zu Hause bleiben, ohne rauszumüssen."
+  ],
+  "vorsorgen": [
+    { "t": "Impfungen aktuell halten", "text": "Die jährliche Grippeimpfung ist laut der Österreichischen Agentur für Gesundheit und Ernährungssicherheit (AGES) der wirksamste Schutz gegen Influenza. Frag deine Hausärztin oder deinen Hausarzt, welche Impfungen für dich und deine Familie gerade sinnvoll sind." },
+    { "t": "Vorrat für zwei Wochen", "text": "Halte Essen, Getränke und Hygieneartikel für mindestens 14 Tage daheim. Dann musst du nicht krank einkaufen gehen und andere anstecken." },
+    { "t": "Hausapotheke prüfen", "text": "Fieberthermometer, Taschentücher, Masken und Elektrolytlösung aus der Apotheke gehören hinein. Lass dir Dauermedikamente rechtzeitig verschreiben, damit du nicht im Wartezimmer sitzen musst." },
+    { "t": "Hilfe ausmachen", "text": "Klär jetzt, wer für dich einkauft oder die Kinder betreut, wenn du krank bist. Und wem du selbst helfen kannst." }
+  ],
+  "reagieren": [
+    { "t": "Ist jemand in Gefahr?", "text": "Bei Atemnot, Schmerzen in der Brust, Verwirrtheit, starker Schwäche oder wenn jemand kaum noch Harn lässt: sofort Rettung (144) oder Euro-Notruf (112). Nachts und am Wochenende hilft der Ärztenotdienst (141)." },
+    { "t": "Krank? Daheim bleiben und 1450 anrufen", "text": "Geh nicht einfach in die Praxis oder Ambulanz. Ruf die Gesundheitsberatung 1450 an: Diplomierte Pflegekräfte sagen dir rund um die Uhr, ob und wohin du gehen sollst." },
+    { "t": "Zu Hause Abstand halten", "text": "Wenn möglich bekommt die kranke Person ein eigenes Zimmer, eigene Handtücher und eigenes Geschirr. Lüfte regelmäßig. Wenn Kontakt nicht zu vermeiden ist, trägt die kranke Person eine Maske." },
+    { "t": "Richtig Hände waschen", "text": "Mit Seife 20 bis 30 Sekunden lang, auch Daumen, Fingerkuppen und Nägel. Immer nach dem Heimkommen, nach dem Klo, nach dem Naseputzen, vor dem Essen und vor und nach dem Kontakt mit Kranken." },
+    { "t": "In die Armbeuge husten", "text": "Dreh dich von anderen weg, huste oder niese in die Armbeuge oder ein Taschentuch. Taschentuch gleich wegwerfen, Hände waschen, Finger weg vom Gesicht." },
+    { "t": "Trinken und schonen", "text": "Viel trinken und ausruhen, bis die Beschwerden weg sind. Bei Durchfall und Erbrechen gleichen Elektrolytlösungen aus der Apotheke den Verlust aus. Welche Mittel gegen Fieber und Schmerzen für dich passen, klär mit Ärztin, Arzt oder 1450." },
+    { "t": "Anordnungen befolgen", "text": "Ordnet die Gesundheitsbehörde an, dass du zu Hause bleiben musst, gilt das verbindlich, auch wenn du dich schon besser fühlst." }
+  ],
+  "danach": [
+    { "t": "Noch eine Weile vorsichtig", "text": "Nach einer Grippe kannst du noch bis zu einer Woche ansteckend sein, also Kontakte klein halten. Nach Noroviren bist du mindestens zwei Tage nach den Beschwerden noch hoch ansteckend: In dieser Zeit kochst du nicht für andere." },
+    { "t": "Putzen und waschen", "text": "Klo, Waschbecken, Türklinken und Lichtschalter gründlich reinigen. Handtücher und Bettwäsche heiß waschen. Für den normalen Haushalt reichen übliche Reiniger." },
+    { "t": "Auf Rückfälle achten", "text": "Kommen Fieber oder Husten nach einer Besserung zurück, ist das ein Warnzeichen. Dann ärztlich abklären lassen." },
+    { "t": "Vorrat auffüllen", "text": "Was du verbraucht hast, wieder nachkaufen, solange die Regale voll sind." }
+  ],
+  "informiert": [
+    "Gesundheitsberatung 1450: kostenlos, rund um die Uhr, ohne Vorwahl aus jedem Netz. Dort erfährst du auch, welche Apotheke gerade Dienst hat.",
+    "Für Maßnahmen vor Ort ist die Bezirksverwaltungsbehörde zuständig, also die Bezirkshauptmannschaft oder in Statutarstädten der Magistrat. Sie klärt Fälle ab und meldet sich, wenn du betroffen bist.",
+    "Bei einer Pandemie informieren Gesundheitsministerium und Behörden über ORF-Radio und -Fernsehen. Regeln können sich schnell ändern, hör regelmäßig rein.",
+    "Solange Netz da ist: Das Öffentliche Gesundheitsportal Österreichs (gesundheit.gv.at) erklärt Krankheiten und Warnzeichen. Die AGES zeigt, wie stark Grippe und andere Infekte gerade umgehen, unter anderem über Messungen im Abwasser."
+  ],
+  "merksaetze": [
+    "Krank? Daheim bleiben, 1450 anrufen.",
+    "Atemnot ist kein Fall für die Hotline. Dann 144.",
+    "Seife schlägt Abspülen: lang genug waschen, jedes Mal."
+  ],
+  "zusatz": {
+    "kinder": [
+      "Kranke Kinder bleiben zu Hause und gehen nicht in Kindergarten oder Schule.",
+      "Sofort Hilfe holen bei blaugrauen Lippen, eingezogenen Rippen beim Atmen, wenn das Kind schwer aufzuwecken ist, bei Krampfanfällen oder hohem Fieber. Bei Babys unter zwölf Wochen ist jedes Fieber ein Warnzeichen.",
+      "Acetylsalicylsäure (Aspirin) ist für Kinder und Jugendliche nicht geeignet. Fieber- und Schmerzmittel für Kinder nur nach ärztlicher Rücksprache.",
+      "Bei Durchfall und Erbrechen trocknen Kinder schnell aus. Wenn sie kaum trinken oder kaum Harn lassen, sofort ärztliche Hilfe holen."
+    ],
+    "aeltere": [
+      "Ab 60 ist das Risiko für einen schweren Verlauf höher. Lass dich impfen und melde dich bei Beschwerden früh bei deiner Hausärztin oder deinem Hausarzt.",
+      "Austrocknung ist bei Magen-Darm-Infekten auch für Ältere gefährlich. Lieber früh Hilfe holen."
+    ],
+    "pflege": [
+      "Wasch dir vor und nach jedem Kontakt die Hände und trag eine Maske, wenn du nah an die kranke Person musst.",
+      "Klär vorher, wer einspringt, wenn du selbst krank wirst."
+    ],
+    "behinderung": [
+      "Menschen mit geschwächtem Immunsystem haben ein höheres Risiko für schwere Verläufe. Sprich mit deiner Ärztin oder deinem Arzt, was du im Ernstfall tun sollst."
+    ],
+    "tiere": [],
+    "haus": [],
+    "miete": [],
+    "keller": []
+  },
+  "checkliste_spezifisch": [
+    "Fieberthermometer",
+    "Medizinische Masken oder FFP2-Masken",
+    "Flüssigseife und Einmaltaschentücher",
+    "Elektrolytlösung aus der Apotheke",
+    "Reserve an Dauermedikamenten (mit der Ärztin oder dem Arzt absprechen)",
+    "Haushaltshandschuhe und dichte Müllsäcke",
+    "Tee und leicht verdauliche Lebensmittel"
+  ],
+  "verweise": ["notrufe", "vorrat", "hausapotheke", "radio"],
+  "quellen": [
+    { "name": "Öffentliches Gesundheitsportal Österreichs (Gesundheitsministerium): Influenza, Therapie und Warnzeichen", "url": "https://www.gesundheit.gv.at/krankheiten/atemwege/grippe/diagnose.html", "abgerufen": "2026-10-08" },
+    { "name": "Öffentliches Gesundheitsportal Österreichs: Ursachen von Grippepandemien", "url": "https://www.gesundheit.gv.at/krankheiten/atemwege/grippe/grippepandemien.html", "abgerufen": "2026-10-08" },
+    { "name": "Öffentliches Gesundheitsportal Österreichs: Händewaschen", "url": "https://www.gesundheit.gv.at/krankheiten/immunsystem/haendewaschen.html", "abgerufen": "2026-10-08" },
+    { "name": "Öffentliches Gesundheitsportal Österreichs: Gesundheitsberatung 1450", "url": "https://www.gesundheit.gv.at/news/aktuelles/aktuell-2023/gesundheitshotline.html", "abgerufen": "2026-10-08" },
+    { "name": "Öffentliches Gesundheitsportal Österreichs: Grippewelle, einer Ansteckung vorbeugen", "url": "https://gesundheit.gv.at/aktuelles/grippewelle", "abgerufen": "2026-10-08" },
+    { "name": "Gesundheitsministerium (sozialministerium.gv.at): Meldung übertragbarer Krankheiten und rechtliche Grundlagen", "url": "https://www.sozialministerium.gv.at/Themen/Gesundheit/Uebertragbare-Krankheiten/Rechtliches.html", "abgerufen": "2026-10-08" },
+    { "name": "AGES: Grippe (Influenza)", "url": "https://www.ages.at/mensch/krankheit/krankheitserreger-von-a-bis-z/grippe", "abgerufen": "2026-10-08" },
+    { "name": "AGES: Norovirus", "url": "https://www.ages.at/mensch/krankheit/krankheitserreger-von-a-bis-z/norovirus", "abgerufen": "2026-10-08" },
+    { "name": "Land Tirol: Selbstschutz und Bevorratung", "url": "https://tirol.gv.at/sicherheit/katziv/einsatzorganisationen/zivilschutz-und-krisenvorsorge/selbstschutz-und-bevorratung", "abgerufen": "2026-10-08" }
+  ],
+  "stand": "2026-10-08"
+}

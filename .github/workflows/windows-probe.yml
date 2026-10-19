@@ -127,6 +127,9 @@ jobs:
           eingefroren="http://127.0.0.1:8898/katalog.json"
           live="https://offline-pakete.fsn1.your-objectstorage.com/katalog/katalog.json"
           pakete="$(cygpath -w "$PWD/werkzeug/probe-katalog/pakete")"
+          # 0.8.0 bekommt das Österreich-Paket so, wie es heutige Nutzer von 0.8.0 haben: at-basis 2026.10.16 (app_min 0.8.0),
+          # echt signiert und eingefroren. Seit at-basis 2026.10.19 verlangt das Paket im Live-Katalog app_min 0.9.5 (Nr. 44).
+          pakete08="$(cygpath -w "$PWD/werkzeug/probe-katalog-08/pakete")"
           ziel="$LOCALAPPDATA/OFFLINE"
           installieren() { taskkill //F //IM offline-app.exe >/dev/null 2>&1 || true; sleep 2; "$1" //S; sleep 5; }
           exe() { find "$ziel" -maxdepth 1 -name "*.exe" ! -iname "uninstall*" ! -iname "kiwix*" | head -1; }
@@ -166,16 +169,16 @@ jobs:
           aufraeumen
           installieren "$neu"
           node werkzeug/app-probe.mjs module --app "$(cygpath -w "$(exe)")" --boese "$(cygpath -w "$PWD/werkzeug/testmodule/boese")" --quelle "$(cygpath -w "$PWD/redaktion/freigegeben")" --frisch --aus probe/c-frisch.json || fehler=1
-          # D und E (Nr. 25): der Weg heutiger Nutzer, 0.8.0 → neu, beide gegen den Live-Katalog; mit und ohne Namen
+          # D und E (Nr. 25): der Weg heutiger Nutzer, 0.8.0 → neu; die neue App gegen den Live-Katalog; mit und ohne Namen
           aufraeumen
           installieren "$alt08"
-          node werkzeug/app-probe.mjs alt --stand 0.8 --app "$(cygpath -w "$(exe)")" --name Betty --aus probe/d-alt08.json || fehler=1
+          node werkzeug/app-probe.mjs alt --stand 0.8 --app "$(cygpath -w "$(exe)")" --name Betty --pakete "$pakete08" --aus probe/d-alt08.json || fehler=1
           installieren "$neu"
           node werkzeug/app-probe.mjs neu --app "$(cygpath -w "$(exe)")" --vorher probe/d-alt08.json --aus probe/d-neu.json || fehler=1
           eintraege "Fall D"
           aufraeumen
           installieren "$alt08"
-          node werkzeug/app-probe.mjs alt --stand 0.8 --app "$(cygpath -w "$(exe)")" --aus probe/e-alt08.json || fehler=1
+          node werkzeug/app-probe.mjs alt --stand 0.8 --app "$(cygpath -w "$(exe)")" --pakete "$pakete08" --aus probe/e-alt08.json || fehler=1
           installieren "$neu"
           node werkzeug/app-probe.mjs neu --app "$(cygpath -w "$(exe)")" --vorher probe/e-alt08.json --aus probe/e-neu.json || fehler=1
           exit $fehler

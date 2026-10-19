@@ -1,0 +1,16 @@
+{
+  "reihenfolge": [
+    "hochwasser",
+    "starkregen",
+    "wildbach",
+    "hitze",
+    "hagel",
+    "schnee-eis",
+    "lawine",
+    "erdbeben",
+    "waldbrand",
+    "kernkraftwerk",
+    "krankheiten",
+    "blackout"
+  ]
+}

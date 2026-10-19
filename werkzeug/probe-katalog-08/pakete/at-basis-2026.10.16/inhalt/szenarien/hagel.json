@@ -1,0 +1,148 @@
+{
+  "id": "hagel",
+  "titel": "Hagel",
+  "verstehen": [
+    "Hagel kommt mit schweren Gewittern, meist im Sommer, oft innerhalb weniger Minuten. Er verbeult Autos, zerschlägt Dachfenster, Wintergärten und Rollläden und kann ganze Ernten zerstören.",
+    "Für dich selbst wird es vor allem draußen gefährlich: Große Körner verletzen, dazu kommen Sturmböen und Starkregen. Auf der Straße liegt danach eine Schicht aus Eis, die so glatt ist wie im Winter.",
+    "GeoSphere Austria, der staatliche Wetterdienst, warnt vor Gewittern in drei Stufen. Ab Orange ist mit Hagel zu rechnen, bei Rot mit teils großem Hagel. Das ist dein Zeichen, Auto und Gartenmöbel jetzt in Sicherheit zu bringen."
+  ],
+  "vorsorgen": [
+    {
+      "t": "Bei Warnung sofort handeln",
+      "text": "Stell das Auto in eine Garage oder unter ein Carport. Geht das nicht, hilft eine Hageldecke oder Plane."
+    },
+    {
+      "t": "Lose Sachen wegräumen",
+      "text": "Sonnenschirm, Sonnensegel, Polster und leichte Gartenmöbel kommen rein. Markisen einfahren, empfindliche Pflanzen abdecken."
+    },
+    {
+      "t": "Plane und Kübel bereit",
+      "text": "Eine Plane zum Noteindecken und Kübel oder Wannen für eindringendes Wasser sparen dir im Ernstfall viel Schaden."
+    },
+    {
+      "t": "Abflüsse freihalten",
+      "text": "Dachrinnen und Abflüsse regelmäßig säubern, damit Hagel und Regen abrinnen können."
+    },
+    {
+      "t": "Versicherung checken",
+      "text": "Schau nach, ob deine Versicherungen für Haus, Haushalt und Auto Hagelschäden abdecken."
+    }
+  ],
+  "reagieren": [
+    {
+      "t": "Ist jemand verletzt?",
+      "text": "Ruf die Rettung (144). Bei Schäden, die gefährlich werden, etwa ein offenes Dach oder eindringendes Wasser, die Feuerwehr (122). Halte das Gespräch kurz und rechne damit, dass Hilfe länger braucht, weil viele gleichzeitig anrufen."
+    },
+    {
+      "t": "Ins Haus",
+      "text": "Ein festes Gebäude ist der sicherste Ort, sicherer als das Auto. Fenster, Türen, Rollläden und Fensterläden schließen."
+    },
+    {
+      "t": "Weg vom Glas",
+      "text": "Halte Abstand zu Dachfenstern, Oberlichten und Glasflächen, die du nicht zusätzlich schützen kannst."
+    },
+    {
+      "t": "Draußen erwischt",
+      "text": "Such sofort Schutz in einem Gebäude. Verlass Wald, Alleen und Ufer. Schütz deinen Kopf mit Rucksack oder Jacke."
+    },
+    {
+      "t": "Im Auto",
+      "text": "Langsam fahren, viel Abstand halten, mit winterglatter Fahrbahn rechnen. Am besten anhalten und abwarten, aber nicht unter Bäumen und nicht in einer Unterführung."
+    },
+    {
+      "t": "Nicht mehr rauslaufen",
+      "text": "Wenn es schon hagelt, renn nicht noch zum Auto oder in den Garten. Blech und Pflanzen lassen sich ersetzen."
+    }
+  ],
+  "danach": [
+    {
+      "t": "Abstand halten",
+      "text": "Bleib weg von beschädigten Dächern, Fassaden und Bäumen. Zu Stromleitungen, die am Boden liegen, hältst du mindestens zehn Meter Abstand."
+    },
+    {
+      "t": "Erst fotografieren",
+      "text": "Fotografier alle Schäden mit Datum und Uhrzeit, bevor du aufräumst. Melde sie rasch deiner Versicherung, bei größeren Schäden auch der Gemeinde. Rechnungen und Angebote aufheben."
+    },
+    {
+      "t": "Notdürftig abdichten",
+      "text": "Ein kaputtes Dachfenster oder Dach deckst du mit Plane ab, aber nur vom sicheren Stand aus. Aufs nasse Dach steigt man nicht."
+    },
+    {
+      "t": "Vorsicht auf der Straße",
+      "text": "Hagelkörner und Matsch bleiben eine Weile liegen. Fahr langsam, als wäre Winter."
+    }
+  ],
+  "informiert": [
+    "GeoSphere Austria warnt vor Gewittern in Gelb, Orange und Rot. Orange bedeutet strichweise Hagel, Rot teils großen Hagel, dazu schwere Sturmböen.",
+    "Warnungen kommen über Radio und Fernsehen. Solange Netz da ist, findest du sie auf den Warnseiten von GeoSphere Austria.",
+    "Wie stark dein Wohnort hagelgefährdet ist, zeigt die Hagelkarte auf HORA, der Naturgefahrenplattform des Bundes.",
+    "Für Neubau und Sanierung: Das Hagelregister listet Bauprodukte wie Fenster, Dachziegel oder Rollläden mit ihrer geprüften Hagelwiderstandsklasse.",
+    "Die Österreichische Hagelversicherung ist der Spezialversicherer der Landwirtschaft, für Felder, Obst, Wein und Gemüse. Für Auto und Haus ist deine eigene Versicherung zuständig."
+  ],
+  "merksaetze": [
+    "Haus schlägt Auto.",
+    "Erst fotografieren, dann aufräumen.",
+    "Bei Orange räumst du den Garten."
+  ],
+  "zusatz": {
+    "kinder": [
+      "Bei einer Gewitterwarnung holst du die Kinder rechtzeitig vom Spielplatz, Badeteich oder Fußballplatz."
+    ],
+    "aeltere": [],
+    "pflege": [],
+    "behinderung": [],
+    "tiere": [],
+    "haus": [
+      "Dachfenster, Wintergärten und Lichtkuppeln sind die Schwachstellen. Bei Sanierung auf hagelgeprüfte Produkte achten.",
+      "Die Dachrinne vor dem Sommer kontrollieren."
+    ],
+    "miete": [
+      "Schäden am Gebäude, etwa an Fenstern oder Rollläden, meldest du sofort der Hausverwaltung. Für deine eigenen Sachen ist die Haushaltsversicherung zuständig."
+    ],
+    "keller": []
+  },
+  "checkliste_spezifisch": [
+    "Hageldecke oder Plane fürs Auto",
+    "Plane zum Noteindecken",
+    "Kübel oder Wannen",
+    "Klebeband und Seil zum Befestigen",
+    "Handy geladen, um Schäden zu fotografieren"
+  ],
+  "verweise": [
+    "notrufe",
+    "radio"
+  ],
+  "quellen": [
+    {
+      "name": "OÖ Zivilschutz: Hagel (Merkblatt)",
+      "url": "https://www.land-oberoesterreich.gv.at/Mediendateien/Formulare/Dokumente_BH_RO/Hagel.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "oesterreich.gv.at (Bundeskanzleramt): Verhalten bei Unwetter",
+      "url": "https://www.oesterreich.gv.at/de/themen/notfaelle_unfaelle_und_kriminalitaet/katastrophenfaelle/1/Seite.29500325",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "GeoSphere Austria: Warninformationen zu Gewitter, Glatteis, Hitze",
+      "url": "https://portale.geosphere.at/portallib/html/warninfo/warninfo_alle.php",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Österreichische Hagelversicherung",
+      "url": "https://www.hagel.at",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Hagelregister (EPZ Elementarschaden Präventionszentrum)",
+      "url": "https://www.hagelregister.at",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Helvetia: Hagel in Österreich (ergänzend, Versicherer)",
+      "url": "https://www.helvetia.com/at/web/de/ueber-helvetia/helvetia-blog/tipps/hagel-oesterreich.html",
+      "abgerufen": "2026-10-08"
+    }
+  ],
+  "stand": "2026-10-08"
+}

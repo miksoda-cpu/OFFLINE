@@ -6,7 +6,8 @@
 //        Eine installierte 0.1.8 mit Daten füllen (Checkliste, Bestätigungen, Wesen mit oder ohne Namen) und die
 //        Bereit-Zahl ablesen. --pakete: die signierten Paketordner des eingefrorenen Katalogs (werkzeug/probe-katalog,
 //        Nr. 25) einspielen wie vom Stick, weil die Adresse in diesem Katalog die alten Ausgaben nicht mehr liefert.
-//        --stand 0.8: dieselben Daten in einer installierten 0.8.0 (Grundvorsorge, Bereit Version 2), Weg 0.8.0 → neu.
+//        --stand 0.8: dieselben Daten in einer installierten 0.8.0 (Grundvorsorge, Bereit Version 2), Weg 0.8.0 → neu;
+//        mit --pakete werkzeug/probe-katalog-08/pakete (at-basis 2026.10.16, die letzte Ausgabe für 0.8.0).
 //   node werkzeug/app-probe.mjs neu    --app <exe> --vorher <datei.json> --aus <datei.json>
 //        Nach dem Update: Die Bereit-Zahl darf nicht fallen, die Daten sind noch da, ein benanntes Wesen ist an,
 //        ein unbenanntes ist aus und die Einladung kommt erst nach einer Woche.
@@ -161,6 +162,9 @@ async function alt() {
 /** Weg 0.8.0 → neu (Nr. 25): dieselben Daten wie bei 0.1.8, in der Form von 0.8.0 (Grundvorsorge-ids, Bereit Version 2). */
 async function alt08() {
   await starten(opt("app"));
+  // Seit at-basis 2026.10.19 (app_min 0.9.5) kann 0.8.0 das Paket nicht mehr aus dem Live-Katalog holen; heutige Nutzer von
+  // 0.8.0 haben die Ausgabe 2026.10.16. Die bekommt die App eingefroren und echt signiert eingespielt (werkzeug/probe-katalog-08).
+  if (opt("pakete")) await einspielen(opt("pakete"));
   await gehe("#start");
   await bis(async () => (await invoke("installierte", {})).ok?.some((p) => p.manifest.id === "at-basis" && p.inhalt?.["inhalt/grundvorsorge.json"]), "Österreich-Paket mit Grundvorsorge installiert", 180_000);
   // dieselben 14 Punkte wie bei 0.1.8 (Gruppe-Punkt bis „2-3“), unter ihrer id in der Grundvorsorge

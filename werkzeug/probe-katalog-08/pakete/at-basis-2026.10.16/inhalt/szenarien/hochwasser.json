@@ -1,0 +1,208 @@
+{
+  "id": "hochwasser",
+  "titel": "Hochwasser",
+  "verstehen": [
+    "Bei Hochwasser steigt ein Fluss, Bach oder See so stark, dass er über die Ufer tritt. Große Flüsse wie Donau, Inn oder Mur bauen das über Tage auf, nach langem Regen oder Schneeschmelze. Das heißt: Meistens gibt es eine Vorwarnung, und die solltest du nutzen.",
+    "Gefährlich wird es vor allem in Kellern, Tiefgaragen und auf überfluteten Straßen. Strom und Wasser zusammen sind lebensgefährlich, und einen Keller voll Wasser kannst du von innen oft nicht mehr verlassen.",
+    "Nach dem Wasser kommt der Schlamm. Das Wasser bringt Keime und oft Heizöl mit, Hausbrunnen können verunreinigt sein. Aufräumen ist Arbeit für Wochen, Trocknen manchmal für Monate."
+  ],
+  "vorsorgen": [
+    {
+      "t": "Gefahr deiner Adresse prüfen",
+      "text": "Auf der Plattform HORA des Bundesministeriums für Land- und Forstwirtschaft, Klima- und Umweltschutz, Regionen und Wasserwirtschaft (BMLUK) siehst du, ob dein Haus im Überflutungsbereich liegt. Am Gemeindeamt kannst du den Gefahrenzonenplan einsehen."
+    },
+    {
+      "t": "Hauptschalter kennen",
+      "text": "Alle im Haushalt sollen wissen, wo Strom, Gas, Wasser und Heizung abgedreht werden. Im Ernstfall ist keine Zeit zum Suchen."
+    },
+    {
+      "t": "Keller entschärfen",
+      "text": "Dokumente, Elektrogeräte, Wertsachen und Chemikalien gehören nicht in den Keller. Rückstauklappe einbauen und regelmäßig warten lassen."
+    },
+    {
+      "t": "Heizöltank sichern",
+      "text": "Den Tank gegen Aufschwimmen verankern und alle Öffnungen dicht machen. Ausgelaufenes Öl macht den Schaden um vieles größer."
+    },
+    {
+      "t": "Plan mit Familie und Nachbarn",
+      "text": "Klärt, wohin die Kinder gehen, wenn niemand daheim ist, und wo ihr notfalls schlafen könnt. Tauscht Nummern mit den Nachbarn, das Telefonnetz kann ausfallen."
+    },
+    {
+      "t": "Notgepäck und Dokumentenmappe",
+      "text": "Beides griffbereit, nicht im Keller. Wenn evakuiert wird, nimmst du nur das mit."
+    }
+  ],
+  "reagieren": [
+    {
+      "t": "Menschen in Gefahr: Notruf",
+      "text": "Feuerwehr (122), Euro-Notruf (112), Rettung (144), Polizei (133). Kurz sprechen, die Leitungen sind voll. Die Feuerwehr rettet zuerst Menschen und Tiere, Keller kommen später."
+    },
+    {
+      "t": "Warnung ernst nehmen",
+      "text": "Radio einschalten, Anweisungen der Behörden befolgen. Nicht auf das letzte Hochwasser verlassen, jedes verläuft anders."
+    },
+    {
+      "t": "Strom ab, Keller räumen",
+      "text": "Strom in gefährdeten Räumen über die Sicherungen abschalten, Gas und Öl zudrehen. Was nicht nass werden darf, nach oben."
+    },
+    {
+      "t": "Auto raus, bevor das Wasser kommt",
+      "text": "Fahrzeuge früh aus Tiefgaragen und von tiefen Parkplätzen holen. Durch überflutete Straßen nicht fahren und nicht gehen, Kanaldeckel können offen sein."
+    },
+    {
+      "t": "Nicht in den Keller",
+      "text": "Steht Wasser im Keller oder in der Tiefgarage, geh nicht hinein. Geh nach oben, in ein höheres Stockwerk."
+    },
+    {
+      "t": "Bei Evakuierung gehen",
+      "text": "Wird geräumt, geh mit Notgepäck und Dokumenten. Nutztiere rechtzeitig aus der Gefahrenzone bringen."
+    }
+  ],
+  "danach": [
+    {
+      "t": "Erst rein, wenn es sicher ist",
+      "text": "Das Haus erst betreten, wenn Einsatzkräfte es geprüft haben. Risse, klemmende Türen oder unterspülte Mauern lässt du von Fachleuten anschauen."
+    },
+    {
+      "t": "Keller nicht zu früh auspumpen",
+      "text": "Erst pumpen, wenn draußen das Wasser und das Grundwasser gesunken sind. Sonst kann der Wasserdruck Boden und Wände eindrücken."
+    },
+    {
+      "t": "Wasser nur, wenn es freigegeben ist",
+      "text": "Wasser aus überfluteten Hausbrunnen gilt als verunreinigt, auch wenn es klar aussieht. Abkochen oder Flaschenwasser, bis ein Befund passt. Obst und Gemüse aus überfluteten Gärten nicht essen."
+    },
+    {
+      "t": "Geräte prüfen lassen",
+      "text": "Nasse Elektrogeräte, Leitungen und Heizöltanks erst nach Prüfung durch Fachleute wieder verwenden. Öl im Wasser sofort der Feuerwehr (122) melden."
+    },
+    {
+      "t": "Fotografieren, dann aufräumen",
+      "text": "Wasserstand markieren, Schäden fotografieren, Versicherung und Gemeinde informieren. Über die Gemeinde läuft die Hilfe aus dem Katastrophenfonds, frag dort nach der Frist."
+    },
+    {
+      "t": "Rasch trocknen",
+      "text": "Schlamm schnell raus, er wird hart. Kräftig quer lüften, Trockengeräte ausleihen. Schutzhandschuhe tragen, Hautkontakt mit dem Hochwasser vermeiden."
+    }
+  ],
+  "informiert": [
+    "Wenn das Netz weg ist: ORF-Radio mit Batterie oder Kurbel. Dort kommen die Anweisungen der Behörden, dazu Lautsprecherdurchsagen von Feuerwehr und Gemeinde.",
+    "Solange Netz da ist: Pegelstände zeigt der Hydrographische Dienst deines Bundeslandes, österreichweit die Plattform Pegel Aktuell des BMLUK. Für Hochwasserwarnungen sind Land und Gemeinde zuständig.",
+    "Sirenen: 3 Minuten gleichbleibender Ton heißt Warnung, Radio einschalten. 1 Minute auf- und abschwellender Ton heißt Alarm, geschützten Ort aufsuchen. 1 Minute gleichbleibender Ton heißt Entwarnung. 15 Sekunden sind nur die Probe.",
+    "In manchen Tälern unter Staudämmen gibt es ein eigenes Signal für Wasseralarm. Frag deine Gemeinde, ob das bei dir gilt."
+  ],
+  "merksaetze": [
+    "Bei Hochwasser geht man nach oben, nie in den Keller.",
+    "Erst Strom aus, dann Sachen retten.",
+    "Brunnenwasser nach Hochwasser ist schmutzig, bis ein Befund das Gegenteil sagt."
+  ],
+  "zusatz": {
+    "kinder": [
+      "Kinder müssen wissen, wohin sie gehen, wenn sie allein sind. Bring sie aus dem Hochwassergebiet, bevor es ernst wird.",
+      "Babynahrung nur mit abgekochtem Wasser oder geeignetem Mineralwasser zubereiten."
+    ],
+    "aeltere": [
+      "Schau bei alleinstehenden und gebrechlichen Nachbarn vorbei, bevor das Wasser kommt."
+    ],
+    "pflege": [
+      "Kläre vorher, wer eine pflegebedürftige Person versorgt, wie sie rechtzeitig rauskommt und wohin."
+    ],
+    "behinderung": [
+      "Wer nicht selbst gehen oder Treppen steigen kann, braucht einen fixen Plan mit Namen: Wer hilft, wohin geht es?"
+    ],
+    "tiere": [
+      "Haus- und Nutztiere früh aus der Gefahrenzone bringen, Unterbringung und Futter vorher klären."
+    ],
+    "haus": [
+      "Heizungen und Stromverteiler gehören nach oben, Stromkreise im Keller getrennt abschaltbar.",
+      "Lichtschächte, Kellerabgänge und Garagentore für mobile Sperren vorbereiten."
+    ],
+    "miete": [],
+    "keller": [
+      "Rückstauklappe oder Hebeanlage einbauen und warten. Sonst drückt das Kanalwasser über WC und Abflüsse herein."
+    ]
+  },
+  "checkliste_spezifisch": [
+    "Sandsäcke oder mobile Sperren für Türen und Lichtschächte",
+    "Gummistiefel, regenfeste Kleidung, feste Arbeitshandschuhe",
+    "Tauchpumpe, Schaufel, Besen",
+    "Dokumentenmappe, oben im Haus gelagert",
+    "Trinkwasser in Flaschen",
+    "Insektenschutzmittel für die Zeit danach"
+  ],
+  "verweise": [
+    "notfall-rucksack",
+    "radio",
+    "notrufe",
+    "starkregen",
+    "wildbach",
+    "blackout"
+  ],
+  "quellen": [
+    {
+      "name": "Zivilschutzverband Österreich: Ratgeber Hochwasser",
+      "url": "https://zivilschutz.at/wp-content/uploads/2023/09/Ratgeber-Hochwasser.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Salzburger Zivilschutzverband: Hochwasser",
+      "url": "https://salzburg.zivilschutz.at/thema/hochwasser/",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Steirischer Zivilschutzverband: Hochwasser",
+      "url": "https://www.zivilschutz.steiermark.at/wp-content/uploads/Hochwasser.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Land Oberösterreich: Verhalten vor, während, nach dem Hochwasser",
+      "url": "https://www.land-oberoesterreich.gv.at/213916.htm",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Land Niederösterreich: Trinkwasser in Hochwassergebieten",
+      "url": "https://noe.gv.at/noe/Gesundheitsvorsorge-Forschung/Trinkwasser_Hochwasserinformation.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Land Niederösterreich: Hygieneempfehlungen für Bewohner im Hochwassergebiet",
+      "url": "https://noe.gv.at/noe/Gesundheitsvorsorge-Forschung/Hygieneempfehlungen.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Österreichisches Rotes Kreuz: Hochwasser",
+      "url": "https://www.roteskreuz.at/hochwasser",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "oesterreich.gv.at: Hochwasser – Pegelstände und Warnung",
+      "url": "https://www.oesterreich.gv.at/de/themen/notfaelle_unfaelle_und_kriminalitaet/katastrophenfaelle/2/Seite.29500312",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "naturgefahren.at (BMLUK): Hochwasser und Muren",
+      "url": "https://www.naturgefahren.at/schwerpunkte/hydrologischenaturgefahren/hochwasserundmuren.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BMLUK: HORA – Naturgefahren-Plattform, Update 2026",
+      "url": "https://www.bmluk.gv.at/themen/wasser/schutz-vor-hochwasser/hora-update-2026.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BBK: Handeln bei Hochwasser",
+      "url": "https://www.bbk.bund.de/DE/Warnung-Vorsorge/Vorsorge/Mit-Naturgefahren-umgehen/Hochwasser/_documents/hochwasser-handeln_dossier2.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BBK: Handeln nach dem Hochwasser",
+      "url": "https://www.bbk.bund.de/DE/Warnung-Vorsorge/Vorsorge/Mit-Naturgefahren-umgehen/Hochwasser/_documents/hochwasser-danach_dossier3.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Land Steiermark, Katastrophenschutz: Zivilschutz-Probealarm und Signale",
+      "url": "https://katastrophenschutz.steiermark.at/cms/beitrag/12925951/443",
+      "abgerufen": "2026-10-08"
+    }
+  ],
+  "stand": "2026-10-08"
+}

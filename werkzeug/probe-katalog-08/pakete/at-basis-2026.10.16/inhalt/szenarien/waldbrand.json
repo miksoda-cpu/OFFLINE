@@ -1,0 +1,194 @@
+{
+  "id": "waldbrand",
+  "titel": "Waldbrand",
+  "verstehen": [
+    "Rund 85 Prozent der Waldbrände in Österreich gehen auf Menschen zurück: eine weggeworfene Zigarette, ein schlecht gelöschtes Lagerfeuer, heiße Asche, Funkenflug. Nur der Rest kommt vom Blitz. Das heißt auch: Die meisten Brände wären vermeidbar.",
+    "Die meisten Brände gibt es im Frühjahr, wenn das alte Laub trocken ist, und dann wieder im Hochsommer. Besonders gefährdet sind trockene Alpentäler, das östliche Niederösterreich, Teile Kärntens und große Föhrenwälder.",
+    "Ein Feuer läuft bergauf schneller als bergab. Wind trägt Glut weit voraus und zündet neue Brände an, oft hinter dir. Und der Rauch macht krank, auch kilometerweit vom Feuer entfernt."
+  ],
+  "vorsorgen": [
+    {
+      "t": "Im Wald kein Feuer, keine Zigarette",
+      "text": "Feuer machen ist im Wald und am Waldrand ohne Erlaubnis des Waldbesitzers verboten. Zigaretten mitnehmen, nie wegwerfen, auch nicht aus dem Autofenster."
+    },
+    {
+      "t": "Wissen, was gerade gilt",
+      "text": "Bei Trockenheit erlassen viele Bezirke eine Waldbrandverordnung: dann ist im und am Wald jedes Feuer, Rauchen und Feuerwerk verboten, manchmal sogar das Betreten. Ob sie gilt, steht an der Amtstafel, auf Tafeln am Waldrand und bei Gemeinde oder Bezirkshauptmannschaft."
+    },
+    {
+      "t": "Kein Grill, kein Gaskocher",
+      "text": "Lagerfeuer, Einweggrill und Gaskocher gehören nicht in den Wald und nicht an den Waldrand."
+    },
+    {
+      "t": "Auto nicht ins trockene Gras",
+      "text": "Auspuff und Katalysator werden so heiß, dass sie trockenes Gras entzünden können. Park auf Asphalt oder Schotter."
+    },
+    {
+      "t": "Kein Glas in der Natur",
+      "text": "Flaschen und Scherben wirken in der Sonne wie ein Brennglas. Nimm sie wieder mit."
+    },
+    {
+      "t": "Zufahrten frei lassen",
+      "text": "Forststraßen und Waldeinfahrten nicht zuparken. Die Feuerwehr muss im Ernstfall schnell durch."
+    }
+  ],
+  "reagieren": [
+    {
+      "t": "Ist jemand in Gefahr?",
+      "text": "Bring dich und andere zuerst in Sicherheit, dann Feuerwehr (122) oder Euro-Notruf (112). Leben geht vor Sachwerten."
+    },
+    {
+      "t": "Rauch oder Feuer gesehen? Sofort 122",
+      "text": "Sag: Wo genau (Weg, Hütte, markanter Baum, Felsen), was brennt (nur der Boden oder auch die Baumkronen), wer oder was in Gefahr ist, und unter welcher Nummer du erreichbar bist. Wenn es sicher ist, warte und weise die Feuerwehr ein."
+    },
+    {
+      "t": "Kleines Feuer nur ohne Risiko löschen",
+      "text": "Ein ganz kleiner Brand lässt sich austreten oder mit Erde und Sand abdecken. Sobald es größer ist: weg. Ruf die Feuerwehr auch dann, wenn du glaubst, es ist aus, denn Glut glimmt im Boden weiter."
+    },
+    {
+      "t": "Im Wald: gegen den Wind, nicht bergauf",
+      "text": "Geh gegen den Wind vom Feuer weg und flieh nie hangaufwärts, denn dort ist das Feuer schneller als du. Schau, dass dich vorausfliegende Glut nicht einschließt."
+    },
+    {
+      "t": "Rauch zieht ins Dorf",
+      "text": "Bleib drinnen, wenn es dort sicher ist. Fenster und Jalousien zu, Lüftung aus, nicht rauchen, nicht grillen. Wenn du raus musst, trag eine FFP2-Maske. Im Auto auch tagsüber mit Licht fahren."
+    },
+    {
+      "t": "Evakuierung: tu, was die Einsatzkräfte sagen",
+      "text": "Wenn Feuerwehr oder Polizei zum Gehen auffordern, geh. Nimm Notgepäck, Ausweis, Medikamente, Handy und Schlüssel mit und sag deinen Nachbarn Bescheid."
+    },
+    {
+      "t": "Nicht schauen fahren",
+      "text": "Fahr nicht zum Brand, um zu schauen. Jedes Auto auf der Forststraße blockiert die Feuerwehr."
+    }
+  ],
+  "danach": [
+    {
+      "t": "Erst zurück, wenn es freigegeben ist",
+      "text": "Ein gelöschter Wald kann im Boden und in den Wurzeln noch lange weiterglimmen. Geh erst wieder hinein, wenn die Behörde Sperren aufgehoben hat."
+    },
+    {
+      "t": "Sperren ernst nehmen",
+      "text": "Wälder und Grillplätze können auch nach dem Löschen gesperrt bleiben. Halte dich daran, auch wenn nichts mehr raucht."
+    },
+    {
+      "t": "Bei Atembeschwerden zum Arzt",
+      "text": "Rauch reizt Augen und Atemwege und kann Asthma verschlimmern. Wer nach einem Brand Husten, Atemnot oder Druck auf der Brust hat, lässt das abklären, oder ruft die Gesundheitsberatung (1450) an."
+    },
+    {
+      "t": "Brandwunden kühlen",
+      "text": "Brennende Kleidung mit Decke, Wälzen oder Wasser löschen, die Stelle eine Weile mit kühlem, nicht eiskaltem Wasser kühlen. Kein Eis, keine Creme, kein Öl. Große Wunden: Rettung (144)."
+    }
+  ],
+  "informiert": [
+    "Ob in deinem Bezirk eine Waldbrandverordnung gilt, erfährst du bei Gemeinde oder Bezirkshauptmannschaft, an der Amtstafel und auf Tafeln am Waldrand.",
+    "Die aktuelle Waldbrandgefahr zeigen, solange Netz da ist, die Waldbrandgefahrenkarte der GeoSphere Austria und die Waldbrand-Seiten des Landwirtschaftsministeriums (BMLUK).",
+    "Im Ernstfall informiert der ORF über Radio und Fernsehen. Ein Batterie- oder Kurbelradio funktioniert auch ohne Strom und Netz.",
+    "Sirene 3 mal 15 Sekunden heißt: Die Feuerwehr wird gerufen, für dich gibt es nichts zu tun. 3 Minuten Dauerton heißt Warnung: Radio oder Fernsehen (ORF) einschalten."
+  ],
+  "merksaetze": [
+    "Im Wald brennt nichts außer der Sonne.",
+    "Rauch gesehen? 122, auch wenn es klein aussieht.",
+    "Gegen den Wind, nie bergauf."
+  ],
+  "zusatz": {
+    "kinder": [
+      "Kinder reagieren empfindlicher auf Rauch als Erwachsene. Liegt Rauch über dem Ort, spielen sie drinnen.",
+      "Gib kleinen Kindern einen Brustbeutel mit Name, Geburtsdatum und Adresse ins Notgepäck."
+    ],
+    "aeltere": [
+      "Ältere Menschen, Schwangere und alle mit Herz- oder Lungenkrankheit reagieren besonders empfindlich auf Rauch. Bei Rauch im Ort den kühlsten Raum suchen und Fenster zu lassen."
+    ],
+    "pflege": [
+      "Wichtige Medikamente und eine Liste davon gehören ins Notgepäck. Bei einer Evakuierung bleibt keine Zeit, sie zusammenzusuchen."
+    ],
+    "behinderung": [],
+    "tiere": [
+      "Tierfutter für ein paar Tage gehört ins Notgepäck, falls du evakuiert wirst."
+    ],
+    "haus": [
+      "Wenn du am Waldrand wohnst: Zufahrt für die Feuerwehr freihalten und Gartenabfälle bei Trockenheit nicht verbrennen."
+    ],
+    "miete": [],
+    "keller": []
+  },
+  "checkliste_spezifisch": [
+    "FFP2-Masken für alle im Haushalt",
+    "Feuerlöscher, im Auto und zu Hause",
+    "Notgepäck mit Kopie der wichtigsten Dokumente, griffbereit beim Ausgang",
+    "Taschenaschenbecher für Raucher"
+  ],
+  "verweise": [
+    "notfall-rucksack",
+    "radio",
+    "notrufe"
+  ],
+  "quellen": [
+    {
+      "name": "Bundesministerium für Land- und Forstwirtschaft, Klima- und Umweltschutz, Regionen und Wasserwirtschaft (BMLUK): Waldbrand",
+      "url": "https://www.bmluk.gv.at/themen/wald/wald-und-naturgefahren/waldbrand.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BMLUK: Waldbrand in Österreich und Tipps zur Vermeidung",
+      "url": "https://www.bmluk.gv.at/themen/wald/wald-und-naturgefahren/waldbrand/waldbrand_oe.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BMLUK: Ist das Feueranzünden im Wald gestattet?",
+      "url": "https://www.bmluk.gv.at/themen/wald/wald-freizeit/verhalten_wald/feuerimwald.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BMLUK, Presse 29.07.2026: Trockenheit birgt Waldbrandgefahr",
+      "url": "https://www.bmluk.gv.at/service/presse/wald/2026/totschnig-trockenheit-birgt-waldbrandgefahr.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BMLUK: Waldbrandprävention",
+      "url": "https://www.bmluk.gv.at/themen/wald/wald-und-naturgefahren/waldbrand/praevention.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "naturgefahren.at (BMLUK): Waldbrand",
+      "url": "https://www.naturgefahren.at/schwerpunkte/klimabezogenenaturgefahren/waldbrand.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Rechtsinformationssystem des Bundes: Forstgesetz 1975, § 40 und § 41",
+      "url": "https://www.ris.bka.gv.at/NormDokument.wxe?Abfrage=Bundesnormen&Gesetzesnummer=10010371&Paragraf=41",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Oberösterreichischer Landes-Feuerwehrverband: Erhöhte Waldbrandgefahr 2026",
+      "url": "https://www.ooelfv.at/aktuelles/news/beitrag/erhoehte-waldbrandgefahr-2026-feuerwehr-mahnt-zur-vorsicht",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Bundesamt für Bevölkerungsschutz und Katastrophenhilfe (BBK): Faltblatt Waldbrand",
+      "url": "https://www.kriseninformation.niederbayern.bayern.de/download/waldbrand_faltblatt.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "waldwissen.net (FVA Baden-Württemberg): Verhaltensregeln bei Waldbrand",
+      "url": "https://www.waldwissen.net/de/waldwirtschaft/schadensmanagement/waldbrand/verhaltensregeln-bei-waldbrand",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Weltgesundheitsorganisation (WHO) Europa: Gesundheitshinweise zu Waldbränden",
+      "url": "https://www.who.int/europe/de/news/item/12-08-2021-health-advice-wildfires-in-the-who-european-region",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BBK: Notgepäck",
+      "url": "https://www.bbk.bund.de/DE/Warnung-Vorsorge/Vorsorge/Notgepaeck/notgepaeck_node.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Salzburger Zivilschutzverband: Sirenensignale in Österreich",
+      "url": "https://salzburg.zivilschutz.at/sirenensignale-in-oesterreich/",
+      "abgerufen": "2026-10-08"
+    }
+  ],
+  "stand": "2026-10-08"
+}

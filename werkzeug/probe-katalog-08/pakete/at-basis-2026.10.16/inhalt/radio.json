@@ -1,0 +1,483 @@
+{
+  "stand": "2026-10-08",
+  "hinweis": "UKW-Frequenzen der stärksten ORF-Sender je Bundesland: Ö3, Ö1 und das ORF-Regionalradio. „ort“ ist der Senderstandort, nicht dein Wohnort. Welcher Sender bei dir am besten ankommt, hängt von Lage und Gelände ab: Probier die Frequenzen des nächstgelegenen Standorts zuerst und such sonst die Skala ab. In Tälern und am Rand eines Bundeslands gibt es viele kleinere Umsetzer mit anderen Frequenzen. Im Krisenfall informiert der ORF im Radio rund um die Uhr. Ein Batterie-, Kurbel- oder Autoradio funktioniert auch ohne Strom.",
+  "bundeslaender": [
+    {
+      "land": "Wien",
+      "sender": [
+        {
+          "name": "Ö3",
+          "mhz": "99,9",
+          "ort": "Wien – Kahlenberg"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "92,0",
+          "ort": "Wien – Kahlenberg"
+        },
+        {
+          "name": "Radio Wien",
+          "mhz": "89,9",
+          "ort": "Wien – Kahlenberg"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "101,3",
+          "ort": "Wien – Himmelhof"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "87,8",
+          "ort": "Wien – Himmelhof"
+        },
+        {
+          "name": "Radio Wien",
+          "mhz": "95,3",
+          "ort": "Wien – Himmelhof"
+        }
+      ]
+    },
+    {
+      "land": "Niederösterreich",
+      "sender": [
+        {
+          "name": "Ö3",
+          "mhz": "89,4",
+          "ort": "St. Pölten – Jauerling"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "97,0",
+          "ort": "St. Pölten – Jauerling"
+        },
+        {
+          "name": "Radio Niederösterreich",
+          "mhz": "91,5",
+          "ort": "St. Pölten – Jauerling"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "88,2",
+          "ort": "Semmering – Sonnwendstein"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "90,3",
+          "ort": "Semmering – Sonnwendstein"
+        },
+        {
+          "name": "Radio Niederösterreich",
+          "mhz": "95,8",
+          "ort": "Semmering – Sonnwendstein"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "98,1",
+          "ort": "Weitra – Wachberg"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "92,7",
+          "ort": "Weitra – Wachberg"
+        },
+        {
+          "name": "Radio Niederösterreich",
+          "mhz": "95,7",
+          "ort": "Weitra – Wachberg"
+        }
+      ]
+    },
+    {
+      "land": "Oberösterreich",
+      "sender": [
+        {
+          "name": "Ö3",
+          "mhz": "88,8",
+          "ort": "Linz – Lichtenberg"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "97,5",
+          "ort": "Linz – Lichtenberg"
+        },
+        {
+          "name": "Radio Oberösterreich",
+          "mhz": "95,2",
+          "ort": "Linz – Lichtenberg"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "88,2",
+          "ort": "Schärding"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "92,5",
+          "ort": "Schärding"
+        },
+        {
+          "name": "Radio Oberösterreich",
+          "mhz": "99,5",
+          "ort": "Schärding"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "88,1",
+          "ort": "Bad Ischl – Katrin"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "97,2",
+          "ort": "Bad Ischl – Katrin"
+        },
+        {
+          "name": "Radio Oberösterreich",
+          "mhz": "92,4",
+          "ort": "Bad Ischl – Katrin"
+        }
+      ]
+    },
+    {
+      "land": "Salzburg",
+      "sender": [
+        {
+          "name": "Ö3",
+          "mhz": "99,0",
+          "ort": "Salzburg – Gaisberg"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "90,9",
+          "ort": "Salzburg – Gaisberg"
+        },
+        {
+          "name": "Radio Salzburg",
+          "mhz": "94,8",
+          "ort": "Salzburg – Gaisberg"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "88,8",
+          "ort": "Zell am See – Lechnereck"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "92,4",
+          "ort": "Zell am See – Lechnereck"
+        },
+        {
+          "name": "Radio Salzburg",
+          "mhz": "96,6",
+          "ort": "Zell am See – Lechnereck"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "87,9",
+          "ort": "Eben im Pongau"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "89,3",
+          "ort": "Eben im Pongau"
+        },
+        {
+          "name": "Radio Salzburg",
+          "mhz": "95,2",
+          "ort": "Eben im Pongau"
+        }
+      ]
+    },
+    {
+      "land": "Steiermark",
+      "sender": [
+        {
+          "name": "Ö3",
+          "mhz": "89,2",
+          "ort": "Graz – Schöckl"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "91,2",
+          "ort": "Graz – Schöckl"
+        },
+        {
+          "name": "Radio Steiermark",
+          "mhz": "95,4",
+          "ort": "Graz – Schöckl"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "98,7",
+          "ort": "Bruck an der Mur – Mugel"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "87,6",
+          "ort": "Bruck an der Mur – Mugel"
+        },
+        {
+          "name": "Radio Steiermark",
+          "mhz": "93,2",
+          "ort": "Bruck an der Mur – Mugel"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "101,3",
+          "ort": "Schladming – Hauser Kaibling"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "94,3",
+          "ort": "Schladming – Hauser Kaibling"
+        },
+        {
+          "name": "Radio Steiermark",
+          "mhz": "96,3",
+          "ort": "Schladming – Hauser Kaibling"
+        }
+      ]
+    },
+    {
+      "land": "Kärnten",
+      "sender": [
+        {
+          "name": "Ö3",
+          "mhz": "90,4",
+          "ort": "Dobratsch (Sender Klagenfurt 1)"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "92,8",
+          "ort": "Dobratsch (Sender Klagenfurt 1)"
+        },
+        {
+          "name": "Radio Kärnten",
+          "mhz": "97,8",
+          "ort": "Dobratsch (Sender Klagenfurt 1)"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "88,8",
+          "ort": "Klagenfurt – Viktring"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "90,9",
+          "ort": "Klagenfurt – Viktring"
+        },
+        {
+          "name": "Radio Kärnten",
+          "mhz": "95,7",
+          "ort": "Klagenfurt – Viktring"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "87,9",
+          "ort": "Spittal an der Drau – Goldeck"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "91,6",
+          "ort": "Spittal an der Drau – Goldeck"
+        },
+        {
+          "name": "Radio Kärnten",
+          "mhz": "100,4",
+          "ort": "Spittal an der Drau – Goldeck"
+        }
+      ]
+    },
+    {
+      "land": "Tirol",
+      "sender": [
+        {
+          "name": "Ö3",
+          "mhz": "88,5",
+          "ort": "Innsbruck – Patscherkofel"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "92,5",
+          "ort": "Innsbruck – Patscherkofel"
+        },
+        {
+          "name": "Radio Tirol",
+          "mhz": "96,4",
+          "ort": "Innsbruck – Patscherkofel"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "103,9",
+          "ort": "Kufstein – Kitzbüheler Horn"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "97,5",
+          "ort": "Kufstein – Kitzbüheler Horn"
+        },
+        {
+          "name": "Radio Tirol",
+          "mhz": "95,4",
+          "ort": "Kufstein – Kitzbüheler Horn"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "99,3",
+          "ort": "Lienz – Rauchkofel"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "89,3",
+          "ort": "Lienz – Rauchkofel"
+        },
+        {
+          "name": "Radio Tirol",
+          "mhz": "95,9",
+          "ort": "Lienz – Rauchkofel"
+        }
+      ]
+    },
+    {
+      "land": "Vorarlberg",
+      "sender": [
+        {
+          "name": "Ö3",
+          "mhz": "89,6",
+          "ort": "Bregenz – Pfänder"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "93,3",
+          "ort": "Bregenz – Pfänder"
+        },
+        {
+          "name": "Radio Vorarlberg",
+          "mhz": "98,2",
+          "ort": "Bregenz – Pfänder"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "98,8",
+          "ort": "Bludenz – Dünserberg"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "87,6",
+          "ort": "Bludenz – Dünserberg"
+        },
+        {
+          "name": "Radio Vorarlberg",
+          "mhz": "96,0",
+          "ort": "Bludenz – Dünserberg"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "99,5",
+          "ort": "Feldkirch – Vorderälpele"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "90,8",
+          "ort": "Feldkirch – Vorderälpele"
+        },
+        {
+          "name": "Radio Vorarlberg",
+          "mhz": "97,3",
+          "ort": "Feldkirch – Vorderälpele"
+        }
+      ]
+    },
+    {
+      "land": "Burgenland",
+      "sender": [
+        {
+          "name": "Ö3",
+          "mhz": "100,9",
+          "ort": "Mattersburg – Heuberg"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "89,0",
+          "ort": "Mattersburg – Heuberg"
+        },
+        {
+          "name": "Radio Burgenland",
+          "mhz": "96,2",
+          "ort": "Mattersburg – Heuberg"
+        },
+        {
+          "name": "Ö3",
+          "mhz": "87,9",
+          "ort": "Rechnitz – Hirschenstein"
+        },
+        {
+          "name": "Ö1",
+          "mhz": "90,6",
+          "ort": "Rechnitz – Hirschenstein"
+        },
+        {
+          "name": "Radio Burgenland",
+          "mhz": "93,5",
+          "ort": "Rechnitz – Hirschenstein"
+        }
+      ]
+    }
+  ],
+  "quellen": [
+    {
+      "name": "Big Blue Marble / Österreichische Rundfunksender (ORS): Hörfunk- und Fernsehfrequenzen Wien, Stand 17.10.2025",
+      "url": "https://www.bigbluemarble.com/content/uploads/2025/10/Senderliste-Wien-2025-10-17.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Big Blue Marble / Österreichische Rundfunksender (ORS): Hörfunk- und Fernsehfrequenzen Niederösterreich, Stand 17.10.2025",
+      "url": "https://www.bigbluemarble.com/content/uploads/2025/10/Senderliste-NO-2025-10-17.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Big Blue Marble / Österreichische Rundfunksender (ORS): Hörfunk- und Fernsehfrequenzen Oberösterreich, Stand 02.12.2025",
+      "url": "https://www.bigbluemarble.com/content/uploads/2025/12/Senderliste-OO-2025-12-02.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Big Blue Marble / Österreichische Rundfunksender (ORS): Hörfunk- und Fernsehfrequenzen Salzburg, Stand 17.10.2025",
+      "url": "https://www.bigbluemarble.com/content/uploads/2025/10/Senderliste-Salzburg-2025-10-17.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Big Blue Marble / Österreichische Rundfunksender (ORS): Hörfunk- und Fernsehfrequenzen Steiermark, Stand 03.04.2026",
+      "url": "https://www.bigbluemarble.com/content/uploads/2026/04/Senderliste-Steiermark-2026-04-03.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Big Blue Marble / Österreichische Rundfunksender (ORS): Hörfunk- und Fernsehfrequenzen Kärnten, Stand 02.12.2025",
+      "url": "https://www.bigbluemarble.com/content/uploads/2025/12/Senderliste-Karnten-2025-12-02.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Big Blue Marble / Österreichische Rundfunksender (ORS): Hörfunk- und Fernsehfrequenzen Tirol, Stand 02.12.2025",
+      "url": "https://www.bigbluemarble.com/content/uploads/2025/12/Senderliste-Tirol-2025-12-02.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Big Blue Marble / Österreichische Rundfunksender (ORS): Hörfunk- und Fernsehfrequenzen Vorarlberg, Stand 17.10.2025",
+      "url": "https://www.bigbluemarble.com/content/uploads/2025/10/Senderliste-Vorarlberg-2025-10-17.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Big Blue Marble / Österreichische Rundfunksender (ORS): Hörfunk- und Fernsehfrequenzen Burgenland, Stand 17.10.2025",
+      "url": "https://www.bigbluemarble.com/content/uploads/2025/10/Senderliste-Burgenland-2025-10-17.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Ö1: Frequenzen (Gegenprobe für Ö1)",
+      "url": "https://oe1.orf.at/frequenzen",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "oesterreich.gv.at / Bundesministerium für Inneres: Verhalten bei Blackout (ORF-Radio rund um die Uhr)",
+      "url": "https://www.oesterreich.gv.at/de/themen/notfaelle_unfaelle_und_kriminalitaet/katastrophenfaelle/1/Seite.29500329",
+      "abgerufen": "2026-10-08"
+    }
+  ]
+}

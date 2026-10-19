@@ -1,0 +1,171 @@
+{
+  "id": "starkregen",
+  "titel": "Starkregen",
+  "verstehen": [
+    "Starkregen kommt meist aus einer Gewitterwolke und trifft einen kleinen Fleck, dafür heftig. Fachleute sprechen davon ab etwa 25 Millimeter Regen in einer Stunde. Boden und Kanal schaffen das nicht, das Wasser sucht sich den Weg nach unten.",
+    "Dafür braucht es keinen Fluss in der Nähe. Es trifft Straßen in Senken, Unterführungen, Tiefgaragen und Keller, auch mitten in der Stadt. Und es geht schnell: Oft bleibt kaum Zeit.",
+    "Dazu kommt der Rückstau. Ist der Kanal voll, drückt das Abwasser zurück ins Haus und kommt im Keller aus WC, Dusche oder Bodenablauf."
+  ],
+  "vorsorgen": [
+    {
+      "t": "Rückstausicherung",
+      "text": "Liegen Abflüsse im Keller unter Straßenniveau, brauchst du eine Rückstauklappe, für WC oder Waschmaschine im Keller oft eine Hebeanlage. Beides regelmäßig warten lassen."
+    },
+    {
+      "t": "Abläufe frei halten",
+      "text": "Dachrinnen, Bodeneinläufe und Kanalgitter von Laub befreien. Ein verstopfter Ablauf reicht für einen nassen Keller."
+    },
+    {
+      "t": "Kellereingänge sichern",
+      "text": "Kleine Schwellen an Kellertreppen und Lichtschächten halten Oberflächenwasser draußen. Lichtschächte sollen entwässert sein."
+    },
+    {
+      "t": "Nichts Wichtiges am Kellerboden",
+      "text": "Dokumente, Elektrogeräte, Notgepäck, Farben und Öle nicht im Keller und nicht direkt auf dem Boden lagern. Stromspeicher und Wärmepumpe möglichst hoch."
+    },
+    {
+      "t": "Senken auf HORA prüfen",
+      "text": "Die Starkregen-Hinweiskarte auf HORA zeigt, wo sich bei dir Wasser sammeln kann."
+    }
+  ],
+  "reagieren": [
+    {
+      "t": "Menschen in Gefahr: Notruf",
+      "text": "Feuerwehr (122), Euro-Notruf (112), Rettung (144). Bei vielen Einsätzen kann es dauern, halte das Gespräch kurz."
+    },
+    {
+      "t": "Raus aus der Tiefe",
+      "text": "Keller, Tiefgarage und Unterführung jetzt meiden. Sie laufen in kurzer Zeit voll. Dringt Wasser in die Wohnung, geh ins obere Stockwerk."
+    },
+    {
+      "t": "Kein Schritt in den nassen Keller",
+      "text": "Steht Wasser im Keller, bleib draußen: Stromschlag, und die Tür lässt sich gegen den Wasserdruck oft nicht mehr öffnen. Türen und Fenster mit eindringendem Wasser nur vorsichtig öffnen."
+    },
+    {
+      "t": "Strom abschalten, wenn gefahrlos",
+      "text": "Betroffene Bereiche früh über die Sicherungen stromlos machen. Nasse Geräte und Steckdosen nicht anfassen."
+    },
+    {
+      "t": "Unterwegs anhalten",
+      "text": "Nicht in überflutete Straßen oder Unterführungen fahren. Fahrt unterbrechen, Gebäude aufsuchen, nicht unter Bäumen parken. Zu Fuß nicht durch Wasser gehen, Kanaldeckel können offen sein."
+    },
+    {
+      "t": "Auto nicht in die Tiefgarage stellen",
+      "text": "Bei Unwetterwarnung parkst du nicht in tief liegenden Garagen. Zufahrten für Einsatzkräfte frei lassen."
+    }
+  ],
+  "danach": [
+    {
+      "t": "Kanalwasser ist Schmutzwasser",
+      "text": "Zurückgedrücktes Abwasser bringt Keime mit. Handschuhe, Hautkontakt meiden, Hände gründlich waschen."
+    },
+    {
+      "t": "Rasch trocknen",
+      "text": "Nasse Räume schnell lüften und trocknen, sonst kommt Schimmel. Teppiche und nasse Möbel raus."
+    },
+    {
+      "t": "Prüfen lassen",
+      "text": "Elektrik, Heizöltank und beschädigte Mauern von Fachleuten prüfen lassen. Heizöl oder Chemikalien im Wasser sofort der Feuerwehr (122) melden."
+    },
+    {
+      "t": "Dokumentieren und melden",
+      "text": "Schäden fotografieren, bevor du wegräumst. Versicherung und Gemeinde rasch informieren."
+    },
+    {
+      "t": "Schwachstellen merken",
+      "text": "Wo kam das Wasser rein? Das ist die Stelle, die du vor dem nächsten Gewitter dicht machst."
+    }
+  ],
+  "informiert": [
+    "Unwetterwarnungen gibt die GeoSphere Austria in vier Stufen heraus, Gelb und Orange kennst du aus dem Wetterbericht. Orange ist Stufe drei und heißt: Pläne anpassen, nicht nur aufpassen.",
+    "Starkregen ist schwer vorherzusagen. Schau bei Gewitterlage selbst zum Himmel und auf die Abläufe am Haus.",
+    "Wenn das Netz weg ist: ORF-Radio mit Batterie oder Kurbel. Dort kommen die Anweisungen der Behörden, dazu Lautsprecherdurchsagen von Feuerwehr und Gemeinde.",
+    "Sirenen: 3 Minuten gleichbleibender Ton heißt Warnung, Radio einschalten. 1 Minute auf- und abschwellender Ton heißt Alarm, geschützten Ort aufsuchen. 1 Minute gleichbleibender Ton heißt Entwarnung. 15 Sekunden sind nur die Probe."
+  ],
+  "merksaetze": [
+    "Bei Starkregen sind Keller, Tiefgarage und Unterführung tabu.",
+    "Nie durch Wasser fahren, wenn du den Boden nicht siehst.",
+    "Rückstauklappe warten ist billiger als Keller ausräumen."
+  ],
+  "zusatz": {
+    "kinder": [
+      "Erklär Kindern: Bei Gewitter nicht in die Unterführung, nicht in Pfützen über Kanaldeckeln spielen, weg von Bächen und Gräben."
+    ],
+    "aeltere": [
+      "Wer im Souterrain oder Erdgeschoß wohnt und schlecht zu Fuß ist: vorher klären, bei wem im oberen Stock du unterkommst."
+    ],
+    "pflege": [],
+    "behinderung": [],
+    "tiere": [],
+    "haus": [
+      "Dach- und Bodenabläufe bei Gewitter im Blick behalten, damit du bei Stau noch reagieren kannst."
+    ],
+    "miete": [
+      "Im Kellerabteil nichts lagern, was nicht nass werden darf. Bei Wasser im Haus die Feuerwehr rufen und die Hausverwaltung informieren."
+    ],
+    "keller": [
+      "WC, Dusche oder Waschmaschine im Keller ohne Hebeanlage sind die typische Eintrittsstelle für Rückstau."
+    ]
+  },
+  "checkliste_spezifisch": [
+    "Schwellen oder Dichtbretter für Kellertür und Lichtschächte",
+    "Wenige Sandsäcke oder Wassersperren für den Eingang",
+    "Tauchpumpe",
+    "Dokumente und Notgepäck außerhalb des Kellers"
+  ],
+  "verweise": [
+    "notfall-rucksack",
+    "radio",
+    "notrufe",
+    "hochwasser",
+    "wildbach"
+  ],
+  "quellen": [
+    {
+      "name": "Zivilschutzverband Österreich: Starkregen",
+      "url": "https://zivilschutz.at/en/thema/extreme-heavy-rainfall/",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Salzburger Zivilschutzverband: Starkregen",
+      "url": "https://salzburg.zivilschutz.at/thema/starkregen/",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "OÖ Zivilschutz: Unwetter – Vorsorge- und Verhaltensmaßnahmen",
+      "url": "https://zivilschutz-ooe.at/wp-content/uploads/2023/07/Unwetter2022-Web.pdf",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "oesterreich.gv.at: Verhalten bei Unwetter",
+      "url": "https://www.oesterreich.gv.at/de/themen/notfaelle_unfaelle_und_kriminalitaet/katastrophenfaelle/1/Seite.29500325",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Land Tirol: Orange Unwetterwarnung der GeoSphere Austria, Verhaltensempfehlungen",
+      "url": "https://www.tirol.gv.at/presse/meldungen/meldung/orange-unwetterwarnung-fuer-innsbruck-und-unterland",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BMLUK: HORA – Naturgefahren-Plattform, Update 2026",
+      "url": "https://www.bmluk.gv.at/themen/wasser/schutz-vor-hochwasser/hora-update-2026.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BBK: Ratgeber Vorsorgen für Krisen und Katastrophen (2025)",
+      "url": "https://www.bbk.bund.de/SharedDocs/Downloads/DE/Mediathek/Publikationen/Buergerinformationen/Ratgeber/BBK-Vorsorgen-fuer-Krisen-und-Katastrophen.pdf?__blob=publicationFile&v=44",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "BBK: Handeln bei Hochwasser",
+      "url": "https://www.bbk.bund.de/DE/Warnung-Vorsorge/Vorsorge/Mit-Naturgefahren-umgehen/Hochwasser/_documents/hochwasser-handeln_dossier2.html",
+      "abgerufen": "2026-10-08"
+    },
+    {
+      "name": "Land Steiermark, Katastrophenschutz: Zivilschutz-Probealarm und Signale",
+      "url": "https://katastrophenschutz.steiermark.at/cms/beitrag/12925951/443",
+      "abgerufen": "2026-10-08"
+    }
+  ],
+  "stand": "2026-10-08"
+}
