@@ -1,9 +1,9 @@
 {
   "format": 1,
   "id": "at-basis",
-  "version": "2026.10.16",
+  "version": "2026.10.19",
   "titel": "Österreich-Paket · Grundversion",
-  "beschreibung": "Notrufe, Sirenensignale zum Anhören, zwölf Szenarien von Hochwasser bis Blackout, Grundvorsorge in sechs Bereichen, Radio je Bundesland und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
+  "beschreibung": "Notrufe, Sirenensignale zum Anhören, zwölf Szenarien von Hochwasser bis Blackout, Grundvorsorge in sechs Bereichen (mit Haustieren sieben), Radio je Bundesland und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
   "art": "inhalt",
   "sprache": "de-AT",
   "lizenz": "CC BY-SA 4.0",
@@ -14,9 +14,9 @@
   "alter_ab": 0,
   "bereich": "ernstfall",
   "pflicht": true,
-  "app_min": "0.8.0",
-  "erstellt": "2026-10-16T20:39:06Z",
-  "aenderungen": "Zwei neue Karten zu Akku und Strom: wie das Handy lange durchhält (im Szenario Blackout) und wie du ohne Steckdose lädst (in der Vorsorge unter Licht, Strom & Information).",
+  "app_min": "0.9.5",
+  "erstellt": "2026-10-19T16:01:42Z",
+  "aenderungen": "Neu in der Grundvorsorge: ein eigener Bereich „Haustiere“ mit Punkten je Tierart. Er erscheint, wenn du unter „Dein Haushalt“ Tiere einträgst. Dazu sprechen die Texte dich jetzt mit „du“ an.",
   "quellen": [
     {
       "name": "Österreichischer Zivilschutzverband",
@@ -44,8 +44,8 @@
     },
     {
       "pfad": "inhalt/grundvorsorge.json",
-      "sha256": "c9e91881616f4d17a1074a6b9ee02df779002554617ee60bd06ad770d0ecd577",
-      "groesse": 27026
+      "sha256": "02a5b64c970e51e32f011f4a8906409ee3ca201d4edb2b2db0ed68226591535c",
+      "groesse": 32159
     },
     {
       "pfad": "inhalt/karten.json",
@@ -89,8 +89,8 @@
     },
     {
       "pfad": "inhalt/szenarien/blackout.json",
-      "sha256": "001b2fb84cad5f98393ec7b925c4633676c49744d498876298bc9803560bff3c",
-      "groesse": 10649
+      "sha256": "07691d6bfa397f8fa857c691625b6e3b1fdfea35640764f94c86292441723b80",
+      "groesse": 10646
     },
     {
       "pfad": "inhalt/szenarien/erdbeben.json",
@@ -109,13 +109,13 @@
     },
     {
       "pfad": "inhalt/szenarien/hochwasser.json",
-      "sha256": "2f9bc2854b911aa08f027eae0250f743e6430d6a3164b1147e2b361abfd42b63",
-      "groesse": 10075
+      "sha256": "287cd5252019684a6cc5a881e822ffd9f532b97ed2087885de136cb709b6c560",
+      "groesse": 10073
     },
     {
       "pfad": "inhalt/szenarien/kernkraftwerk.json",
-      "sha256": "0a5fff70b6fb650a4918d64c4b578ffa50166d222c84bcc294dfc6042dc22082",
-      "groesse": 10261
+      "sha256": "e8d3986f7b609f9471f3c9aa1a3c6d3f1cf199e8465165418892c210ea0bf339",
+      "groesse": 10278
     },
     {
       "pfad": "inhalt/szenarien/krankheiten.json",
@@ -124,13 +124,13 @@
     },
     {
       "pfad": "inhalt/szenarien/lawine.json",
-      "sha256": "d40867f0ec67d53e8d6054665bc211f603daa46334286d95469521be84186982",
+      "sha256": "d8d9c05404fdc186da51dde4918870cb35d4f9301aae4d816cca19dfc02dc66f",
       "groesse": 6983
     },
     {
       "pfad": "inhalt/szenarien/schnee-eis.json",
-      "sha256": "73d29ade1b21aebc29d535ef7d184cb47aff25f318a5f72a5f17504c55228e7f",
-      "groesse": 6584
+      "sha256": "c2537e868b2274b66cda09400c48f99844becb5c4d15abff670760be30ecbac1",
+      "groesse": 6591
     },
     {
       "pfad": "inhalt/szenarien/starkregen.json",
@@ -153,5 +153,5 @@
       "groesse": 225
     }
   ],
-  "groesse": 292654
+  "groesse": 297806
 }

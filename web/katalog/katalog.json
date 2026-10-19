@@ -1,14 +1,14 @@
 {
   "format": 1,
-  "erstellt": "2026-10-16T20:41:17Z",
-  "gueltig_bis": "2027-01-14T20:41:17Z",
+  "erstellt": "2026-10-19T16:51:55Z",
+  "gueltig_bis": "2027-01-17T16:51:55Z",
   "basis": "https://offline-liart.vercel.app/pakete/",
   "pakete": [
     {
       "id": "at-basis",
-      "version": "2026.10.16",
+      "version": "2026.10.19",
       "titel": "Österreich-Paket · Grundversion",
-      "beschreibung": "Notrufe, Sirenensignale zum Anhören, zwölf Szenarien von Hochwasser bis Blackout, Grundvorsorge in sechs Bereichen, Radio je Bundesland und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
+      "beschreibung": "Notrufe, Sirenensignale zum Anhören, zwölf Szenarien von Hochwasser bis Blackout, Grundvorsorge in sechs Bereichen (mit Haustieren sieben), Radio je Bundesland und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
       "art": "inhalt",
       "pro": false,
       "preis": "gratis",
@@ -16,12 +16,12 @@
       "alter_ab": 0,
       "bereich": "ernstfall",
       "pflicht": true,
-      "groesse": 292654,
-      "app_min": "0.8.0",
-      "erstellt": "2026-10-16T20:39:06Z",
-      "aenderungen": "Zwei neue Karten zu Akku und Strom: wie das Handy lange durchhält (im Szenario Blackout) und wie du ohne Steckdose lädst (in der Vorsorge unter Licht, Strom & Information).",
-      "pfad": "at-basis-2026.10.16/",
-      "sha256_manifest": "640fc4e58c2bde1c23e844395a373885e3fe82bf890476d30a2bb9a2f4173cb3",
+      "groesse": 297806,
+      "app_min": "0.9.5",
+      "erstellt": "2026-10-19T16:01:42Z",
+      "aenderungen": "Neu in der Grundvorsorge: ein eigener Bereich „Haustiere“ mit Punkten je Tierart. Er erscheint, wenn du unter „Dein Haushalt“ Tiere einträgst. Dazu sprechen die Texte dich jetzt mit „du“ an.",
+      "pfad": "at-basis-2026.10.19/",
+      "sha256_manifest": "502196e586c0990f55b6ff05a09600b6cc9622b64f63c24c5d7f323a5f5b8089",
       "status": "verfuegbar"
     },
     {

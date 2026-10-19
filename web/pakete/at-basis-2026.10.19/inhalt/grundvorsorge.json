@@ -18,7 +18,7 @@
         {
           "id": "lebensmittel",
           "text": "Haltbare Lebensmittel, die ohne Kühlschrank und ohne Kochen auskommen",
-          "detail": "Kauf, was ihr ohnehin esst, und stell Neues nach hinten. So wird der Vorrat laufend verbraucht und nichts läuft ab.",
+          "detail": "Kauf, was du ohnehin isst, und stell Neues nach hinten. So wird der Vorrat laufend verbraucht und nichts läuft ab.",
           "fuer": [
             "alle"
           ]
@@ -31,7 +31,14 @@
             "alle",
             "kinder",
             "tiere"
-          ]
+          ],
+          "mit_tieren": {
+            "text": "Babynahrung, falls nötig",
+            "detail": "Babynahrung ist meist lange haltbar.",
+            "fuer": [
+              "kinder"
+            ]
+          }
         },
         {
           "id": "kocher",
@@ -79,7 +86,6 @@
           "text": "Wasser für Tiere extra rechnen",
           "detail": "Tiere trinken aus demselben Vorrat. Plane ihr Wasser dazu, auch für ein Assistenztier.",
           "fuer": [
-            "tiere",
             "behinderung"
           ]
         },
@@ -295,14 +301,6 @@
             "aeltere",
             "behinderung"
           ]
-        },
-        {
-          "id": "tierapotheke",
-          "text": "Tiermedikamente und Katzenstreu",
-          "detail": "Wenn dein Tier Medikamente braucht, gilt dasselbe wie bei Menschen: Vorrat für zwei Wochen. Dazu Streu oder Kotsackerl.",
-          "fuer": [
-            "tiere"
-          ]
         }
       ]
     },
@@ -363,14 +361,6 @@
           ]
         },
         {
-          "id": "tierpapiere",
-          "text": "Heimtierausweis und Chipnummer",
-          "detail": "Der Ausweis zeigt Impfungen. Mit der Chipnummer findet ein entlaufenes Tier zurück, wenn es registriert ist.",
-          "fuer": [
-            "tiere"
-          ]
-        },
-        {
           "id": "mietvertrag",
           "text": "Miet- oder Kaufvertrag und Versicherungspolizzen",
           "detail": "Nach einem Schaden brauchst du sie für Vermieter, Hausverwaltung und Versicherung.",
@@ -421,7 +411,7 @@
         {
           "id": "kinder-abholen",
           "text": "Wer holt die Kinder?",
-          "detail": "Frag in Schule und Kindergarten, was dort im Notfall passiert. Leg fest, wer abholt, wenn ihr selbst nicht hinkommt, und sag es dort auch an.",
+          "detail": "Frag in Schule und Kindergarten, was dort im Notfall passiert. Leg fest, wer abholt, wenn du selbst nicht hinkommst, und sag es dort auch an.",
           "fuer": [
             "kinder"
           ]
@@ -489,24 +479,16 @@
         {
           "id": "keller-schutz",
           "text": "Keller als Schutzraum kennen",
-          "detail": "Ein fensterloser Kellerraum schützt bei Sturm und Gefahrstoffen gut. Halte ihn so frei, dass ihr dort ein paar Stunden sitzen könnt.",
+          "detail": "Ein fensterloser Kellerraum schützt bei Sturm und Gefahrstoffen gut. Halte ihn so frei, dass du dort ein paar Stunden sitzen kannst.",
           "fuer": [
             "keller",
             "haus"
           ]
         },
         {
-          "id": "tier-unterkunft",
-          "text": "Wo darf das Tier mit hin?",
-          "detail": "Nicht jede Notunterkunft nimmt Tiere. Überleg dir, wer dein Tier im Ernstfall aufnehmen könnte.",
-          "fuer": [
-            "tiere"
-          ]
-        },
-        {
           "id": "lift",
           "text": "Lift und Stiegenhaus mitdenken",
-          "detail": "Bei Stromausfall kann jemand im Lift steckenbleiben. Schaut gemeinsam nach, und haltet das Stiegenhaus frei.",
+          "detail": "Bei Stromausfall kann jemand im Lift steckenbleiben. Schau mit den Nachbarn nach und halte das Stiegenhaus frei.",
           "fuer": [
             "miete"
           ]
@@ -524,7 +506,7 @@
     {
       "id": "notfall-rucksack",
       "titel": "Notfall-Rucksack",
-      "satz": "Wenn ihr schnell raus müsst, nimmt jede Person einen Rucksack – gepackt, bevor es eilt.",
+      "satz": "Wenn du schnell raus musst, nimmt jede Person einen Rucksack – gepackt, bevor es eilt.",
       "punkte": [
         {
           "id": "r-mappe",
@@ -653,6 +635,199 @@
           "detail": "Futter und Wasser für ein paar Tage, Napf, Medikamente, Heimtierausweis. Die Box steht so, dass du sie schnell erreichst.",
           "fuer": [
             "tiere"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "haustiere",
+      "titel": "Haustiere",
+      "satz": "Was deine Tiere für 14 Tage brauchen, je nach Tierart.",
+      "punkte": [
+        {
+          "id": "tier-futter",
+          "text": "Futter für 14 Tage für {tiere}",
+          "detail": "Die gewohnte Sorte. Ein plötzlicher Futterwechsel schlägt vielen Tieren auf den Magen.",
+          "fuer": [
+            "tier"
+          ]
+        },
+        {
+          "id": "tier-wasser",
+          "text": "Wasser für die Tiere zusätzlich einplanen",
+          "detail": "Das Trinkwasser für die Menschen reicht nicht für die Tiere mit. Rechne es extra dazu.",
+          "fuer": [
+            "tier"
+          ]
+        },
+        {
+          "id": "tier-medikamente",
+          "text": "Medikamente der Tiere für 14 Tage und den Heimtierausweis",
+          "detail": "Impfpass bzw. Heimtierausweis griffbereit, damit du ihn bei einer Evakuierung mitnehmen kannst.",
+          "fuer": [
+            "tier"
+          ]
+        },
+        {
+          "id": "tier-transport",
+          "text": "Transportbox oder Leine, beschriftet",
+          "detail": "Mit Name des Tiers und deiner Telefonnummer.",
+          "fuer": [
+            "tier"
+          ]
+        },
+        {
+          "id": "tier-foto",
+          "text": "Ein aktuelles Foto jedes Tiers",
+          "detail": "Hilft, wenn ein Tier verloren geht.",
+          "fuer": [
+            "tier"
+          ]
+        },
+        {
+          "id": "tier-notfallkarte",
+          "text": "Notfallkarte in der Geldbörse",
+          "detail": "„Zuhause warten Tiere“ plus eine Kontaktperson, die sie versorgen kann, falls dir etwas zustößt.",
+          "fuer": [
+            "tier"
+          ]
+        },
+        {
+          "id": "tier-adressen",
+          "text": "Adresse der Tierärztin und einer Notunterkunft, die Tiere nimmt",
+          "detail": "Nicht jede Notunterkunft nimmt Tiere auf. Kläre das vorher.",
+          "fuer": [
+            "tier"
+          ]
+        },
+        {
+          "id": "hund-wasser",
+          "text": "Wasser für {anzahl}: etwa 50–60 ml je kg Körpergewicht und Tag",
+          "detail": "Richtwert. Bei Hitze und Trockenfutter mehr.",
+          "fuer": [
+            "tier-hund"
+          ]
+        },
+        {
+          "id": "hund-leine",
+          "text": "Leine, Halsband oder Geschirr mit Marke, Maulkorb",
+          "detail": "In Notquartieren wird ein Maulkorb oft verlangt.",
+          "fuer": [
+            "tier-hund"
+          ]
+        },
+        {
+          "id": "hund-kotbeutel",
+          "text": "Kotbeutel",
+          "fuer": [
+            "tier-hund"
+          ]
+        },
+        {
+          "id": "katze-wasser",
+          "text": "Wasser für {anzahl}: frisch und frei verfügbar",
+          "detail": "Die Menge klärst du am besten mit der Tierärztin.",
+          "fuer": [
+            "tier-katze"
+          ]
+        },
+        {
+          "id": "katze-streu",
+          "text": "Katzenstreu für 14 Tage und ein Ersatz-Katzenklo",
+          "detail": "Zur Not ein Karton mit Folie.",
+          "fuer": [
+            "tier-katze"
+          ]
+        },
+        {
+          "id": "katze-box",
+          "text": "Transportbox mit einer Decke darin",
+          "fuer": [
+            "tier-katze"
+          ]
+        },
+        {
+          "id": "kaninchen-heu",
+          "text": "Heu für 14 Tage für {anzahl}",
+          "detail": "Heu ist das Hauptfutter. Trocken lagern.",
+          "fuer": [
+            "tier-kaninchen"
+          ]
+        },
+        {
+          "id": "kaninchen-wasser",
+          "text": "Wasser frei verfügbar, Trinkflasche",
+          "detail": "Die Menge klärst du am besten mit der Tierärztin.",
+          "fuer": [
+            "tier-kaninchen"
+          ]
+        },
+        {
+          "id": "kaninchen-einstreu",
+          "text": "Einstreu, und an Hitze denken",
+          "detail": "Bei Stromausfall im Sommer einen kühlen Platz suchen.",
+          "fuer": [
+            "tier-kaninchen"
+          ]
+        },
+        {
+          "id": "vogel-futter",
+          "text": "Körnerfutter für 14 Tage für {anzahl} und ein Ersatz-Trinkgefäß",
+          "fuer": [
+            "tier-vogel"
+          ]
+        },
+        {
+          "id": "vogel-kaefig",
+          "text": "Kleiner Transportkäfig und ein Tuch zum Abdecken",
+          "fuer": [
+            "tier-vogel"
+          ]
+        },
+        {
+          "id": "vogel-zugluft",
+          "text": "Zugluft und Kälte vermeiden, wenn die Heizung ausfällt",
+          "fuer": [
+            "tier-vogel"
+          ]
+        },
+        {
+          "id": "reptil-waerme",
+          "text": "Plan für Wärme bei Stromausfall",
+          "detail": "Wärmflasche, Isolierbox oder Taschenwärmer, nie direkt am Tier.",
+          "fuer": [
+            "tier-reptilien"
+          ]
+        },
+        {
+          "id": "reptil-futter",
+          "text": "Futter für 14 Tage für {anzahl}",
+          "detail": "Hält Lebendfutter so lange? Sonst einen Ersatz mit der Tierärztin klären.",
+          "fuer": [
+            "tier-reptilien"
+          ]
+        },
+        {
+          "id": "reptil-thermometer",
+          "text": "Thermometer, das ohne Strom geht",
+          "fuer": [
+            "tier-reptilien"
+          ]
+        },
+        {
+          "id": "andere-futter",
+          "text": "Futter und Wasser für 14 Tage",
+          "detail": "Die Mengen klärst du am besten mit der Tierärztin.",
+          "fuer": [
+            "tier-andere"
+          ]
+        },
+        {
+          "id": "andere-strom",
+          "text": "Was braucht dein Tier ohne Strom?",
+          "detail": "Wärme, Luftpumpe, Licht? Trag es selbst ein.",
+          "fuer": [
+            "tier-andere"
           ]
         }
       ]
