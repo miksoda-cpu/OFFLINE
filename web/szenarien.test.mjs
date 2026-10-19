@@ -123,5 +123,5 @@ test("Kein Inhalt im Code; Notfallseiten ohne Skin; Seiten bauen aus dem Paket",
   assert.ok(app.includes('const offen = render.seite === location.hash ? [...main.querySelectorAll("details[open][id]")].map((d) => d.id) : [];'));
   assert.ok(modul.includes('<details class="gv-detail" id="gvd-') && modul.includes('id="sz-${id}"'));
   const q = await json("../pakete/at-basis/paket.quelle.json");
-  assert.equal(q.app_min, "0.8.0");
+  assert.equal(q.app_min, "0.9.5", "seit Nr. 44: ältere Apps kennen die Tier-Tags nicht (Bill 19.10.2026)");
 });

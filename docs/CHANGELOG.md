@@ -1,5 +1,11 @@
 # Änderungen
 
+## 0.9.5 · 19.10.2026 · Die App sagt „du“, Vorsorge für Haustiere
+
+- **Die App sagt „du“** (Auftrag Nr. 43, Miks Regel 18.10.): „Eure Vorräte reichen …“ und „Tragt eure Vorräte ein …“ nur ab 2 Personen im Haushalt (`anrede(personen)` in `web/polster.js`), sonst überall „du“; die Sätze darunter neutral („die Vorräte“). 13 Sätze in at-basis auf „du“ (Freigabe Bill 19.10.).
+- **Haustiere** (Auftrag Nr. 44, Text von Mik freigegeben 18.10.): eigener Bereich „Haustiere“ in der Grundvorsorge mit 24 Punkten je Tierart, nur mit gewählten Tieren, auch nicht bei nicht eingestelltem Haushalt; die Anzahl aus „Dein Haushalt“ steht im Text („Futter für 14 Tage für 2 Hunde und 1 Katze“). Drei bisherige Tier-Punkte ersetzt; der Sammelpunkt wird mit Tieren zu „Babynahrung, falls nötig“ (`mit_tieren`). Bereit-Zahl unverändert.
+- **at-basis** neue Ausgabe mit `app_min` 0.9.5 (ältere Apps kennen die Tier-Tags nicht). Update-Tests von Haushalt und Vorräten starten fest bei v0.9.3. Service Worker `offline-v56`.
+
 ## 0.9.4 · 17.10.2026 · Dein Haushalt, Menü neu geordnet, Vorräte als Liste
 
 - **Dein Haushalt** (Auftrag Nr. 40): Unter Einstellungen Personen, Gruppen (Kinder, Babys zählen als Kinder, …), Haustiere nach Art und Wohnen in vier Fragen (Wohnform, Miete/Eigentum, Keller, Stock). Die alten Haken werden beim ersten Start übernommen, Widersprüchliches wird nicht geraten; die Personenzahl allein filtert nichts (`web/haushalt.js`).

@@ -1,7 +1,7 @@
 {
   "id": "at-basis",
   "titel": "Österreich-Paket · Grundversion",
-  "beschreibung": "Notrufe, Sirenensignale zum Anhören, zwölf Szenarien von Hochwasser bis Blackout, Grundvorsorge in sechs Bereichen, Radio je Bundesland und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
+  "beschreibung": "Notrufe, Sirenensignale zum Anhören, zwölf Szenarien von Hochwasser bis Blackout, Grundvorsorge in sechs Bereichen (mit Haustieren sieben), Radio je Bundesland und die Bundesländer – das Nötigste für den Fall, dass nichts mehr geht.",
   "art": "inhalt",
   "sprache": "de-AT",
   "lizenz": "CC BY-SA 4.0",
@@ -12,8 +12,8 @@
   "bereich": "ernstfall",
   "pflicht": true,
   "alter_ab": 0,
-  "app_min": "0.8.0",
-  "aenderungen": "Zwei neue Karten zu Akku und Strom: wie das Handy lange durchhält (im Szenario Blackout) und wie du ohne Steckdose lädst (in der Vorsorge unter Licht, Strom & Information).",
+  "app_min": "0.9.5",
+  "aenderungen": "Neu in der Grundvorsorge: ein eigener Bereich „Haustiere“ mit Punkten je Tierart. Er erscheint, wenn du unter „Dein Haushalt“ Tiere einträgst. Dazu sprechen die Texte dich jetzt mit „du“ an.",
   "quellen": [
     {
       "name": "Österreichischer Zivilschutzverband",
