@@ -41,14 +41,15 @@ test("(a) Eingestellt ohne Haustiere: kein Tier-Punkt in Vorsorge und Suche; mit
     await start(t, url);
     await einst(t); await schalten(t, "kinder", true); await schalten(t, "tiere", false);
     await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelector("[data-check]")`, 20_000);
-    assert.equal(await t.auswerten(`!!document.querySelector('[data-check="tierwasser"], [data-check="tierapotheke"]')`), false, "ohne Tiere: kein Tier-Punkt in Vorsorge");
+    assert.equal(await t.auswerten(`!!document.querySelector('[data-check="tierwasser"], [data-check="tier-futter"], [data-check="hund-wasser"]')`), false, "ohne Tiere: kein Tier-Punkt in Vorsorge");
     assert.ok(await t.auswerten(`document.getElementById("haushalt-kurz").innerText.includes("Kinder")`), "Zeile „Dein Haushalt“ in Vorsorge");
-    assert.equal((await suche(t, "Tiermedikamente")).length, 0, "ohne Tiere: nicht in der Suche");
+    assert.equal((await suche(t, "Kotbeutel")).length, 0, "ohne Tiere: nicht in der Suche"); // seit Nr. 44 Punkte je Tierart
     await einst(t); await schalten(t, "tiere", true); await schalten(t, "tier-hund", true);
     assert.equal(await t.auswerten(`document.getElementById("hh-tier-hund").value`), "1", "Hund mit Anzahl 1");
-    await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelector('[data-check="tierapotheke"]')`, 20_000);
+    await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelector('[data-check="hund-wasser"]')`, 20_000);
+    assert.match(await t.auswerten(`document.querySelector('#gvp-hund-wasser label span').firstChild.textContent`), /^Wasser für 1 Hund: /, "Anzahl im Text");
     assert.ok(await t.auswerten(`document.getElementById("haushalt-kurz").innerText.includes("1 Hund")`));
-    assert.ok((await suche(t, "Tiermedikamente")).length > 0, "mit Hund: in der Suche");
+    assert.ok((await suche(t, "Kotbeutel")).length > 0, "mit Hund: in der Suche");
     assert.deepEqual(await t.auswerten(`JSON.parse(localStorage.getItem("offline:haushalt"))`), ["kinder", "tiere", "tier-hund"]);
   });
 });
