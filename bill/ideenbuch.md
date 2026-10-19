@@ -6,11 +6,23 @@ Nur Ansätze, keine unveröffentlichten Inhalte (Regel Nr. 13, `docs/INTERN.md`)
 
 ## Lehren
 
-Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Block gehört zur Startlektüre; die Einträge darunter werden gezielt aufgeschlagen, wenn ein Ansatz wiederkommt. Stand: Faltung 12.10.2026.
+Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Block gehört zur Startlektüre; die Einträge darunter werden gezielt aufgeschlagen, wenn ein Ansatz wiederkommt. Stand: Faltung 19.10.2026.
 
-- Jede Arbeit auf eigenem Branch, zusammenführen erst nach grüner Prüferkette (seit 0.2.1, Festlegung 30.09.).
-- Fremde Programmteile gehören in die App, nicht ins Netz. Vor jedem Store-Build die Verbindungen gegen die Datenschutz-Angaben prüfen (seit 0.7.2).
-- Große Downloads: Fortschritt je 64-MB-Teil ist offen, nicht gelöst (Auftrag Nr. 19).
+- Eigener Branch je Auftrag, zusammenführen erst nach grüner Prüferkette (0.2.1, Festlegung 30.09.).
+- Fremde Programmteile liegen in der App, nicht im Netz; vor jedem Store-Build Verbindungen gegen die Datenschutz-Angaben prüfen (0.7.2).
+- Neuer Klartext-Pfad: zuerst `.git/info/exclude` und die `.gitignore`-Zeile auf dem Hauptbranch, vor jedem Commit `git status` lesen statt `git add -A` (0759dc6, Nr. 37).
+- Ändert ein Auftrag Katalog oder `web.yml`, werden die Referenzbilder im selben Schritt neu gesetzt (0.9.0).
+- Referenzbilder entstehen in der CI, wo geprüft wird, nicht lokal (Systemschriften, Nr. 21).
+- Eine Aufnahme des neuen Zustands vor dem Push findet, was die Textprüfung übersieht (Nr. 23).
+- Neue Knöpfe in festen Leisten mit negativem Rand; Höhe der Leiste vor dem Bildvergleich messen (Nr. 30).
+- Browser-Tests setzen Gerätespeicher im neuen Dokument vor dem App-Start, nicht per Neuladen (Nr. 30).
+- Signiertes im Repo braucht `-text` in `.gitattributes`, sonst bricht die Signatur unter Windows (Nr. 25).
+- Update-Tests laufen gegen einen eingefrorenen Katalog, nicht gegen den öffentlichen (Nr. 22, 25).
+- Ein Prüfer, der „zufällig“ rot wird, zeigt oft einen echten Fehler in der App (Nr. 25, behoben mit Nr. 26).
+- Ankündigungen leben in der App (`web/bald.js`), nicht im Katalog (Nr. 24).
+- Gegen „zu klein“ hilft, den Menschen den Ausschnitt wählen zu lassen (Nr. 23).
+- Gebaut wird nur, was im Auftragsordner oder im Postfach steht (Nr. 29).
+- Offen: Fortschritt großer Downloads je 64-MB-Teil (Nr. 19). Branches löschen geht im Nachtlauf nicht (HTTP 403).
 
 ## Vorlage
 
