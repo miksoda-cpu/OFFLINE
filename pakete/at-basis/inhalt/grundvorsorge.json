@@ -18,7 +18,7 @@
         {
           "id": "lebensmittel",
           "text": "Haltbare Lebensmittel, die ohne Kühlschrank und ohne Kochen auskommen",
-          "detail": "Kauf, was ihr ohnehin esst, und stell Neues nach hinten. So wird der Vorrat laufend verbraucht und nichts läuft ab.",
+          "detail": "Kauf, was du ohnehin isst, und stell Neues nach hinten. So wird der Vorrat laufend verbraucht und nichts läuft ab.",
           "fuer": [
             "alle"
           ]
@@ -421,7 +421,7 @@
         {
           "id": "kinder-abholen",
           "text": "Wer holt die Kinder?",
-          "detail": "Frag in Schule und Kindergarten, was dort im Notfall passiert. Leg fest, wer abholt, wenn ihr selbst nicht hinkommt, und sag es dort auch an.",
+          "detail": "Frag in Schule und Kindergarten, was dort im Notfall passiert. Leg fest, wer abholt, wenn du selbst nicht hinkommst, und sag es dort auch an.",
           "fuer": [
             "kinder"
           ]
@@ -489,7 +489,7 @@
         {
           "id": "keller-schutz",
           "text": "Keller als Schutzraum kennen",
-          "detail": "Ein fensterloser Kellerraum schützt bei Sturm und Gefahrstoffen gut. Halte ihn so frei, dass ihr dort ein paar Stunden sitzen könnt.",
+          "detail": "Ein fensterloser Kellerraum schützt bei Sturm und Gefahrstoffen gut. Halte ihn so frei, dass du dort ein paar Stunden sitzen kannst.",
           "fuer": [
             "keller",
             "haus"
@@ -506,7 +506,7 @@
         {
           "id": "lift",
           "text": "Lift und Stiegenhaus mitdenken",
-          "detail": "Bei Stromausfall kann jemand im Lift steckenbleiben. Schaut gemeinsam nach, und haltet das Stiegenhaus frei.",
+          "detail": "Bei Stromausfall kann jemand im Lift steckenbleiben. Schau mit den Nachbarn nach und halte das Stiegenhaus frei.",
           "fuer": [
             "miete"
           ]
@@ -524,7 +524,7 @@
     {
       "id": "notfall-rucksack",
       "titel": "Notfall-Rucksack",
-      "satz": "Wenn ihr schnell raus müsst, nimmt jede Person einen Rucksack – gepackt, bevor es eilt.",
+      "satz": "Wenn du schnell raus musst, nimmt jede Person einen Rucksack – gepackt, bevor es eilt.",
       "punkte": [
         {
           "id": "r-mappe",
