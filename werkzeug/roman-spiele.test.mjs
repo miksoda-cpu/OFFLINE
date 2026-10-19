@@ -77,8 +77,14 @@ test("Update von der letzten veröffentlichten Version: Land, Haushalt, Häkchen
     if (!(await t.auswerten(`!!document.querySelector('#main [data-tag="weg"][data-tag-id="${kapitelId}"]')`))) await t.auswerten(`location.hash = "#pause"`);
     await warteBis(t, `document.querySelector('#main [data-tag="weg"][data-tag-id="${kapitelId}"]')`, 20_000);
     await t.auswerten(`document.querySelector('#main [data-tag="weg"][data-tag-id="${kapitelId}"]').click()`); await ruhig(t);
-    await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelector('[data-haushalt="kinder"]') && document.querySelector("[data-check]")`, 20_000);
-    await t.auswerten(`document.querySelector('[data-haushalt="kinder"]').click()`); await ruhig(t);
+    // Haushalt dort einstellen, wo die alte Fassung ihn hat: bis 0.9.3 als Haken in der Vorsorge, seit 0.9.4 unter Einstellungen
+    await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelector("[data-check]")`, 20_000);
+    if (await t.auswerten(`!!document.querySelector('[data-haushalt="kinder"]')`)) { await t.auswerten(`document.querySelector('[data-haushalt="kinder"]').click()`); await ruhig(t); }
+    else {
+      await t.auswerten(`location.hash = "#einstellungen"`); await warteBis(t, `document.querySelector('[data-hh-an="kinder"]')`, 20_000);
+      await t.auswerten(`document.querySelector('[data-hh-an="kinder"]').click()`); await ruhig(t);
+      await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelector("[data-check]")`, 20_000);
+    }
     await t.auswerten(`document.querySelector("[data-check]").click()`); await ruhig(t);
     await t.auswerten(`(() => { const n = JSON.parse(localStorage.getItem("offline:notizbuch") ?? "[]"); n.push({ id: "u1", titel: "Treffpunkt", text: "Bei der Kirche um 18 Uhr.", geaendert: new Date().toISOString() }); localStorage.setItem("offline:notizbuch", JSON.stringify(n)); })()`);
     const SCHLUESSEL = ["land", "haushalt", "checks", "notizbuch", `tag:${TAG}`];
