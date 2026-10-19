@@ -36,6 +36,12 @@ Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Bl
 
 ## Einträge
 
+### 2026-10-19 · Faltung (Nachtlauf) · Update-Test der Vorräte nimmt den höchsten Tag v* als alte Fassung
+- Idee: `werkzeug/polster.test.mjs` („Update von der zuletzt veröffentlichten Version …“) packt den höchsten Tag `v*` aus und trägt dort die Polster-Felder `polster-personen/-liter/-essen` ein (Formular aus 0.9.2/0.9.3).
+- Kill-Kriterium: Der höchste Tag hat das Formular nicht mehr.
+- Ausgang: eingetreten mit Tag `v0.9.4` (Vorräte als Liste, Nr. 42): Zeitüberschreitung bei `polster-liter`, Lauf 39180314459 auf dem Branch `faltung-2026-10-19`, der nur Markdown ändert. Auf dem Hauptbranch zuletzt grün am 18.10. (Lauf 39108249269), vor dem Push des Tags. Die Faltung wurde deshalb nicht zusammengeführt.
+- Lehre: Ein Update-Test, der Eingaben in der alten Oberfläche macht, hängt an der Oberfläche dieses einen Tags; der zweite Update-Test im selben Lauf (Land, Haushalt, Häkchen, Notizen, Lesestand) war mit v0.9.4 grün.
+
 ### 2026-10-16 · Auftrag Nr. 37 · Unveröffentlichter Klartext nur über die .gitignore des eigenen Branches geschützt
 - Idee: Die Klartext-Datei der Akku-Karten (Nr. 36) liegt lokal neben der verschlüsselten Fassung; die Zeile im Block „Klartext-Wache“ steht nur auf dem Branch des Auftrags
 - Kill-Kriterium: Auf einem anderen Branch nimmt `git add -A` die Datei mit, und die Wache sieht sie nicht, weil dort die Zeile fehlt
