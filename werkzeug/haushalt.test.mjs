@@ -56,8 +56,10 @@ test("(a) Eingestellt ohne Haustiere: kein Tier-Punkt in Vorsorge und Suche; mit
 test("(b) Update von der zuletzt veröffentlichten Version: alte Haken übernommen, Bereit-Zahl unverändert", async () => {
   const tags = execFileSync("git", ["tag", "--list", "v*", "--sort=-v:refname"], { cwd: WURZEL, encoding: "utf8" }).split("\n").filter((x) => /^v\d+\.\d+\.\d+$/.test(x));
   assert.ok(tags.length, "Tag der veröffentlichten Version (CI: fetch-depth 0)");
+  // Seit 0.9.4 hat die neueste Version die neue Oberfläche; der Umstieg wird von v0.9.3 aus geprüft, die letzte Version mit den alten Haushalt-Haken (vor Nr. 40).
+  const VON = "v0.9.3"; assert.ok(tags.includes(VON), VON);
   const alt = mkdtempSync(path.join(os.tmpdir(), "offline-alt-"));
-  execFileSync("sh", ["-c", `git archive ${tags[0]} web | tar -x -C "${alt}"`], { cwd: WURZEL });
+  execFileSync("sh", ["-c", `git archive ${VON} web | tar -x -C "${alt}"`], { cwd: WURZEL });
   await sitzung(async (t, url, fassung) => {
     await start(t, url);
     await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelector('[data-haushalt="kinder"]') && document.querySelector("[data-check]")`, 20_000);

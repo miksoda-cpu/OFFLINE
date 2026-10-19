@@ -54,7 +54,7 @@ test("„Polster“ steht in keinem sichtbaren Text (leer und mit Vorräten); di
     for (const s of SEITEN) if (/polster/i.test((await seite(t, s)).text)) mit.push(s);
     assert.deepEqual(mit, [], "mit Vorräten");
     await t.auswerten(`location.hash = "#start"`); await warteBis(t, `document.querySelector("#main .bereit-kreis")`);
-    assert.match(await t.auswerten(`document.querySelector(".heute-polster-titel").textContent`), /^Eure Vorräte reichen für 14 Tage$/);
+    assert.match(await t.auswerten(`document.querySelector(".heute-polster-titel").textContent`), /^Deine Vorräte reichen für 14 Tage$/); // Nr. 43: 1 Person sagt „du“
     await t.auswerten(`document.querySelector("#main .bereit-kreis").click()`); await warteBis(t, `document.querySelector(".blatt .bereit-erklaert")`);
     assert.doesNotMatch(await t.auswerten(`document.querySelector(".blatt").innerText`), /polster/i, "Aufschlüsselung");
     await t.auswerten(`document.querySelector(".blatt-zu")?.click()`); await warteBis(t, `!document.querySelector(".blatt")`);

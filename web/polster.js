@@ -22,18 +22,27 @@ export function polsterRechnen(roh) {
 
 export const tageText = (n) => `${n} ${n === 1 ? "Tag" : "Tage"}`;
 
+/**
+ * Nr. 43 (Miks Regel, 18.10.2026): Die App sagt „du“. „Ihr/eure“ nur ab 2 Personen im Haushalt und nur in der Vorräte-Überschrift
+ * und im Leer-Satz; sonst überall „du“. Personenzahl aus „Dein Haushalt“, nicht eingestellt = 1.
+ */
+export const anrede = (personen) => ((Number(personen) || 1) > 1 ? "ihr" : "du");
+/** Überschrift „Deine/Eure Vorräte reichen für …“ und der Satz, wenn noch nichts eingetragen ist. */
+export const vorraeteTitel = (tage, personen) => `${anrede(personen) === "ihr" ? "Eure" : "Deine"} Vorräte reichen für ${tageText(tage)}`;
+export const vorraeteLeer = (personen) => (anrede(personen) === "ihr" ? "Tragt eure Vorräte ein – dann seht ihr, wie lange sie reichen." : "Trag deine Vorräte ein – dann siehst du, wie lange sie reichen.");
+
 /** Ein Satz zum knappsten Teil. */
 export function polsterSatz(r) {
-  if (r.tage >= ZIEL) return `Eure Vorräte reichen für das Ziel von ${ZIEL} Tagen.`;
-  if (r.knapp === "wasser") return "Mit mehr Wasser reichen eure Vorräte am längsten.";
-  if (r.knapp === "essen") return "Mit mehr Essen reichen eure Vorräte am längsten.";
-  return "Wasser und Essen reichen gleich lang. Mit beidem reichen eure Vorräte länger.";
+  if (r.tage >= ZIEL) return `Die Vorräte reichen für das Ziel von ${ZIEL} Tagen.`;
+  if (r.knapp === "wasser") return "Mit mehr Wasser reichen die Vorräte am längsten.";
+  if (r.knapp === "essen") return "Mit mehr Essen reichen die Vorräte am längsten.";
+  return "Wasser und Essen reichen gleich lang. Mit beidem reichen die Vorräte länger.";
 }
 export const LICHT_SATZ = "Denk auch an Licht: Taschenlampe und Batterien.";
 
 /** Die Zeile auf Heute: mit Vorrat die Tage, bei 0 der Satz zum Wachsen. */
 export function heuteZeile(r) {
-  return r.tage > 0 ? { titel: `Eure Vorräte reichen für ${tageText(r.tage)}`, klein: `Wasser, Essen, Licht · Ziel ${ZIEL} Tage` } : { titel: "Tragt eure Vorräte ein – dann seht ihr, wie lange sie reichen.", knopf: "Vorräte eintragen" };
+  return r.tage > 0 ? { titel: vorraeteTitel(r.tage, r.personen), klein: `Wasser, Essen, Licht · Ziel ${ZIEL} Tage` } : { titel: vorraeteLeer(r.personen), knopf: "Vorräte eintragen" };
 }
 
 /**

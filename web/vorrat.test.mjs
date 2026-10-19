@@ -10,7 +10,7 @@ const e = (x) => eintragAngaben(x);
 test("2 Personen, 40 l, 42 Mahlzeiten → 7 Tage Essen, 10 Tage Wasser → reichen für 7 Tage, Satz zum Essen", () => {
   const r = vorratRechnen([e({ produkt: "Wasser", menge: 40, einheit: "Liter", art: "wasser" }), e({ produkt: "Nudeln", menge: 21, einheit: "Packungen", art: "essen" })], 2, HEUTE);
   assert.equal(r.mahlzeiten, 42); assert.equal(r.essenTage, 7); assert.equal(r.wasserTage, 10); assert.equal(r.tage, 7);
-  assert.equal(polsterSatz(r), "Mit mehr Essen reichen eure Vorräte am längsten.");
+  assert.equal(polsterSatz(r), "Mit mehr Essen reichen die Vorräte am längsten.");
 });
 
 test("Abgelaufenes zählt nicht mit; Monat/Jahr gilt bis Monatsende", () => {

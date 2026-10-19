@@ -32,12 +32,12 @@ const zeile = (t) => t.auswerten(`(() => { const z = document.querySelector("#ma
 /** Wie bisher eintragen (Personen, Liter, Essen-Tage) – seit Nr. 42 als Einträge in der Vorratsliste (werkzeug/vorrat-hilfe.mjs). */
 const eintragen = (t, a) => wieBisher(t, a);
 
-test("(a) frisch: Heute zeigt „Tragt eure Vorräte ein – …“ und „Vorräte eintragen“, keine Vorrat-Zeile (Wortlaut seit Nr. 41)", async () => {
+test("(a) frisch: Heute zeigt „Trag deine Vorräte ein – …“ (Nr. 43: 1 Person, du) und „Vorräte eintragen“, keine Vorrat-Zeile (Wortlaut seit Nr. 41)", async () => {
   await sitzung(async (t, url) => {
     await t.laden(`${url}/app.html#start`); await startBereit(t); await ruhig(t, 800);
     const z = await zeile(t);
     assert.ok(z, "Polster-Zeile auf Heute");
-    assert.ok(z.text.startsWith("Tragt eure Vorräte ein – dann seht ihr, wie lange sie reichen."), z.text);
+    assert.ok(z.text.startsWith("Trag deine Vorräte ein – dann siehst du, wie lange sie reichen."), z.text);
     assert.equal(z.knopf, "Vorräte eintragen"); assert.equal(z.link, "#vorsorge");
     assert.doesNotMatch(z.text, ANGST);
     assert.equal(await t.auswerten(`/Vorrat: noch|Vorrat: leer|Neue Inhalte für/.test(document.getElementById("main").innerText)`), false, "die Tage der Tagespakete stehen nicht auf Heute");
@@ -52,7 +52,7 @@ test("(b) 2 Personen, 40 Liter, Essen 14 Tage → „Eure Vorräte reichen für 
     await t.laden(`${url}/app.html#start`); await startBereit(t);
     await eintragen(t, { personen: 2, liter: 40, essen: 14 });
     const e = await t.auswerten(`document.querySelector("#polster .polster-ergebnis").innerText`);
-    assert.match(e, /^Eure Vorräte reichen für 10 Tage/); assert.ok(e.includes("Mit mehr Wasser reichen eure Vorräte am längsten."), e);
+    assert.match(e, /^Eure Vorräte reichen für 10 Tage/); assert.ok(e.includes("Mit mehr Wasser reichen die Vorräte am längsten."), e);
     // Ohne Licht-Eintrag: der freundliche Satz; die Tage bleiben (seit Nr. 42 Einträge statt der Ja/Nein-Knöpfe aus Nr. 34)
     assert.ok(e.includes("Denk auch an Licht: Taschenlampe und Batterien."), e);
     // Noch 5 Liter dazu → 11 Tage (45 ÷ 4)
@@ -106,8 +106,10 @@ test("(d) „Neue Inhalte für … Tage“ steht unter Updates & Abo, nicht auf 
 test("Update von der zuletzt veröffentlichten Version: Häkchen und Notizen bleiben, Polster-Angaben überleben den Neustart", async () => {
   const tags = execFileSync("git", ["tag", "--list", "v*", "--sort=-v:refname"], { cwd: WURZEL, encoding: "utf8" }).split("\n").filter((x) => /^v\d+\.\d+\.\d+$/.test(x));
   assert.ok(tags.length, "Tag der veröffentlichten Version (CI: fetch-depth 0)");
+  // Seit 0.9.4 hat die neueste Version die neue Oberfläche; der Umstieg wird von v0.9.3 aus geprüft, die letzte Version mit den Vorräte-Feldern Personen/Liter/Essen (vor Nr. 42).
+  const VON = "v0.9.3"; assert.ok(tags.includes(VON), VON);
   const alt = mkdtempSync(path.join(os.tmpdir(), "offline-alt-"));
-  execFileSync("sh", ["-c", `git archive ${tags[0]} web | tar -x -C "${alt}"`], { cwd: WURZEL });
+  execFileSync("sh", ["-c", `git archive ${VON} web | tar -x -C "${alt}"`], { cwd: WURZEL });
   await sitzung(async (t, url, fassung) => {
     await t.laden(`${url}/app.html#start`); await startBereit(t);
     // In der alten Fassung (0.9.2) die Eingaben aus Nr. 34: 2 Personen, 40 Liter, Essen 14 Tage

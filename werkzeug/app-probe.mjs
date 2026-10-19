@@ -205,7 +205,7 @@ async function neu() {
   pruefe("Kein Service Worker mehr", worker === 0, `${worker} Registrierung(en)`);
   // Seit Nr. 34 steht an der Stelle der Vorrat-Zeile die Vorräte-Zeile (bis Nr. 41 „Euer Polster“) (die Tage der Tagespakete unter „Updates & Abo“)
   const polster = await js("return document.querySelector('.heute-polster-titel')?.textContent ?? null");
-  pruefe("Tagesseite ist der Startbildschirm", /^(Eure Vorräte reichen|Tragt eure Vorräte ein)/.test(polster ?? "") && !!(await finde("#wesen-karte")), polster ?? "keine Tagesseite");
+  pruefe("Tagesseite ist der Startbildschirm", /^(Deine Vorräte reichen|Eure Vorräte reichen|Trag deine Vorräte ein|Tragt eure Vorräte ein)/.test(polster ?? "") && !!(await finde("#wesen-karte")), polster ?? "keine Tagesseite");
   // „Was ist neu“: kommt mit der App (ohne Netz), Eintrag der eigenen Version oben
   const version = bericht.werte.app?.version;
   await gehe("#neues");

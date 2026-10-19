@@ -30,7 +30,7 @@ import { TEILE as SZ_TEILE } from "./szenarien.js";
 import { vorratRechnen, eintragAngaben as vorratEintrag, einkaufsliste, ausPolster } from "./vorrat.js";
 import { listeHtml as vorratListeHtml, formularHtml as vorratFormularHtml, heuteAblaufHtml, einkaufHtml, vorlage as vorratVorlage } from "./vorrat-ansicht.js";
 import { haushaltAngaben, haushaltAusAlt, merkmale as haushaltMerkmale, zusammenfassung as haushaltZeile, haushaltEinstellungHtml, haushaltAendern } from "./haushalt.js";
-import { polsterRechnen, polsterAngaben, polsterSatz, polsterPunkte, heuteZeile as polsterHeute, tageText, LICHT_SATZ, ZIEL as POLSTER_ZIEL } from "./polster.js";
+import { polsterRechnen, polsterAngaben, polsterSatz, polsterPunkte, heuteZeile as polsterHeute, tageText, LICHT_SATZ, ZIEL as POLSTER_ZIEL, vorraeteTitel, vorraeteLeer } from "./polster.js";
 import { PAKET as HEILKUNDE_PAKET, startZustand as heilkundeStart, seiteHtml as heilkundeSeiteHtml, klick as heilkundeKlick } from "./heilkunde.js";
 
 // Im Browser prüft und speichert paket-client.js selbst; in der Desktop-App macht das der Rust-Kern.
@@ -229,7 +229,7 @@ function haushaltSetzen(neu) {
   if (state.vorraete) bereitAbgleichen(); // die Tage hängen an der Personenzahl
   render();
 }
-/** Euer Polster rechnet mit der Personenzahl aus dem Haushalt (Nr. 40). */
+/** Die Vorräte rechnen mit der Personenzahl aus dem Haushalt (Nr. 40). */
 const polsterJetzt = () => vorratRechnen(state.vorraete, state.haushaltV2?.personen ?? 1, heuteDatum()); // Nr. 42: aus der Liste
 /** Erledigt und gesamt der Grundvorsorge, nur Punkte, die zum Haushalt passen (für Bereit und die Kacheln). */
 function grundStand() {
@@ -248,10 +248,10 @@ function polsterHtml() {
   const r = polsterJetzt(), heute = heuteDatum(), liste = state.vorraete;
   return `<section class="card of-karte polster" id="polster" aria-labelledby="polster-titel" style="margin-bottom:1rem">
     <h2 id="polster-titel" style="margin-top:0">Vorräte</h2>
-    <p class="muted of-klein" style="margin:0 0 .4rem">Was ihr zu Hause habt, mit Ablaufdatum. Die App rechnet, wie lange es reicht, und sagt rechtzeitig, was aufzubrauchen oder nachzukaufen ist. Ziel 14 Tage. Bleibt auf diesem Gerät.</p>
+    <p class="muted of-klein" style="margin:0 0 .4rem">Was du zu Hause hast, mit Ablaufdatum. Die App rechnet, wie lange es reicht, und sagt rechtzeitig, was aufzubrauchen oder nachzukaufen ist. Ziel 14 Tage. Bleibt auf diesem Gerät.</p>
     <p class="polster-personen of-klein">Für ${r.personen} ${r.personen === 1 ? "Person" : "Personen"} · aus „Dein Haushalt“ · <a href="#einstellungen" data-anker-ziel="haushalt">ändern</a></p>
     <div class="polster-ergebnis" role="status">
-      <p class="polster-tage">${r.tage > 0 ? `Eure Vorräte reichen für ${tageText(r.tage)}` : "Tragt eure Vorräte ein – dann seht ihr, wie lange sie reichen."}</p>
+      <p class="polster-tage">${esc(r.tage > 0 ? vorraeteTitel(r.tage, r.personen) : vorraeteLeer(r.personen))}</p>
       <p class="muted of-klein" style="margin:.2rem 0 0">Wasser reicht für ${tageText(r.wasserTage)} (${String(r.liter).replace(".", ",")} Liter), Essen für ${tageText(r.essenTage)} (${r.mahlzeiten} Mahlzeiten).</p>
       ${liste.length ? `<p style="margin:.5rem 0 0">${esc(polsterSatz(r))}</p>` : ""}
       ${liste.length && !r.licht ? `<p style="margin:.5rem 0 0">${esc(LICHT_SATZ)}</p>` : ""}
@@ -287,7 +287,7 @@ function bereitErklaerungHtml() {
     if (x.auto === "paket") return x.id === "paket" ? "automatisch, weil die App es geladen hat" : `automatisch: Ausgabe vom ${tag(x.datum)}`;
     if (x.auto === "wissen" || x.auto === "karte") return "automatisch, weil es auf diesem Gerät liegt";
     if (x.auto === "notfallmappe") return "automatisch, weil sie im Tresor liegt";
-    if (x.check && polster[x.check]) return "über eure Vorräte";
+    if (x.check && polster[x.check]) return "über die Vorräte";
     return `${x.check ? "von dir abgehakt" : "von dir bestätigt"} am ${tag(x.datum)}`;
   };
   return `<div class="bereit-erklaert">
@@ -688,7 +688,7 @@ const seiten = {
         <button type="button" class="btn of-btn hh-schritt" data-hh-schritt="personen" data-hh-um="1" aria-label="Menschen im Haushalt: mehr">+</button></div>
       <button type="button" class="btn btn-primary of-btn of-btn--primaer land-weiter" data-hh-start="weiter">Weiter</button>
       <button type="button" class="btn of-btn" data-hh-start="spaeter">Später</button>
-      <p class="muted of-klein">Davon hängt ab, wie viel Wasser und Essen ihr braucht. Kinder, Haustiere und mehr stellst du später unter Einstellungen → Dein Haushalt ein. Bleibt auf deinem Gerät.</p>
+      <p class="muted of-klein">Davon hängt ab, wie viel Wasser und Essen du brauchst. Kinder, Haustiere und mehr stellst du später unter Einstellungen → Dein Haushalt ein. Bleibt auf deinem Gerät.</p>
     </div>`;
   },
   /** Ein laufender Happen (Fokus-Bildschirm). render() baut ihn selbst ein; ohne laufenden Happen geht es in den Raum. */
@@ -2668,7 +2668,7 @@ function suchIndex() {
   const g = grund();
   if (g) {
     for (const v of state.vorraete ?? []) dazu(2, "Vorsorge · Vorräte", v.produkt, `${v.menge} ${v.einheit}${v.ablauf ? `, läuft ab ${v.ablauf}` : ""}`, { hash: "#vorsorge", anker: "polster" });
-    dazu(2, "Vorsorge", "Vorräte", `Vorrat, Polster, Ablaufdatum, Einkaufsliste: Wie lange euer Haushalt mit Wasser, Essen und Licht auskommt: Personen, Wasser in Litern, Essen für wie viele Tage, Taschenlampe. Ziel ${POLSTER_ZIEL} Tage.`, { hash: "#vorsorge", anker: "polster" });
+    dazu(2, "Vorsorge", "Vorräte", `Vorrat, Polster, Ablaufdatum, Einkaufsliste: Wie lange dein Haushalt mit Wasser, Essen und Licht auskommt: Personen, Wasser in Litern, Essen für wie viele Tage, Taschenlampe. Ziel ${POLSTER_ZIEL} Tage.`, { hash: "#vorsorge", anker: "polster" });
     dazu(2, "Einstellungen", "Dein Haushalt", "Wie viele Menschen leben bei dir. Wer lebt bei dir: Kinder, Babys, Ältere Menschen, Jemand braucht Pflege, Jemand mit Behinderung. Haustiere: Hund, Katze, Kaninchen, Vogel, Reptilien. Wie wohnst du: Eigenes Haus, Mietwohnung, Keller.", { hash: "#einstellungen", anker: "haushalt" });
     for (const b of g.bereiche) {
       dazu(2, "Vorsorge", b.titel, b.satz, { hash: "#vorsorge", anker: `gv-${b.id}` });

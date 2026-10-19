@@ -75,7 +75,7 @@ export function heuteAblaufHtml(eintraege, heute) {
 export function einkaufHtml(liste, sterne = []) {
   return `<div class="vr-einkauf">
     ${sterne.length ? `<h3>Aus der Checkliste <span class="muted of-klein">(mit Stern)</span></h3><ul>${sterne.map((x) => `<li class="vr-einkauf--stern">${esc(x.text)} <button type="button" class="btn btn-sm of-btn of-btn--klein" data-merk="${esc(x.id)}" aria-label="Von der Einkaufsliste nehmen: ${esc(x.text)}">entfernen</button></li>`).join("")}</ul>` : ""}
-    ${liste.length ? `${sterne.length ? "<h3>Aus den Vorräten</h3>" : ""}<ul>${liste.map((x) => `<li class="vr-einkauf--${x.art}">${esc(x.text)}</li>`).join("")}</ul>` : `<p>${sterne.length ? "Bei den Vorräten fehlt nichts" : "Nichts einzukaufen"}. Eure Vorräte reichen für 14 Tage.</p>`}
+    ${liste.length ? `${sterne.length ? "<h3>Aus den Vorräten</h3>" : ""}<ul>${liste.map((x) => `<li class="vr-einkauf--${x.art}">${esc(x.text)}</li>`).join("")}</ul>` : `<p>${sterne.length ? "Bei den Vorräten fehlt nichts" : "Nichts einzukaufen"}. Die Vorräte reichen für 14 Tage.</p>`}
     <p class="muted of-klein">Mit dem Stern in der Grundvorsorge kommt ein Punkt hierher.</p>
     <p class="vr-form-knoepfe"><button type="button" class="btn of-btn" data-einkauf="drucken">Drucken</button> <button type="button" class="btn of-btn" data-einkauf="teilen">Teilen</button></p></div>`;
 }

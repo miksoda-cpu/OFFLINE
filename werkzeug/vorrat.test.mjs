@@ -23,7 +23,7 @@ test("2 Personen, 40 l Wasser, 42 Mahlzeiten → reichen für 7 Tage, Satz zum E
     await personenSetzen(t, 2);
     await vorratEintragen(t, [{ produkt: "Wasser", menge: 40, einheit: "Liter", art: "wasser", ablauf: tag(400) }, { produkt: "Nudeln", menge: 21, einheit: "Packungen", art: "essen", ablauf: tag(300) }]);
     let e = await ergebnis(t);
-    assert.match(e, /^Eure Vorräte reichen für 7 Tage/); assert.ok(e.includes("Mit mehr Essen reichen eure Vorräte am längsten."), e);
+    assert.match(e, /^Eure Vorräte reichen für 7 Tage/); assert.ok(e.includes("Mit mehr Essen reichen die Vorräte am längsten."), e);
     assert.ok(e.includes("Essen für 7 Tage (42 Mahlzeiten)") && e.includes("Wasser reicht für 10 Tage (40 Liter)"), e);
     // Abgelaufenes Wasser zählt nicht, steht aber in der Liste
     await vorratEintragen(t, [{ produkt: "Altes Wasser", menge: 20, einheit: "Liter", art: "wasser", ablauf: tag(-40).slice(0, 7) }]);
