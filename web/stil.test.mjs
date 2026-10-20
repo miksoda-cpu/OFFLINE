@@ -75,10 +75,10 @@ test("Schrift: in der App nirgends schwerer als 600 (Ausnahme Notrufnummern), Ü
   assert.ok(ueber.get("strong") <= 600 && ueber.get("b") <= 600);
 });
 
-test("Knöpfe: Hauptknopf zartes Rot ohne Schatten, Nebenknopf Haarlinie, Tippfläche 44 px", () => {
+test("Knöpfe: Hauptknopf zartes Blau (seit Nr. 48, Rot nur Warnung) ohne Schatten, Nebenknopf Haarlinie, Tippfläche 44 px", () => {
   const r = Object.fromEntries(regeln(css).map(([s, d]) => [s, d]));
-  assert.match(r[".of-app .btn-primary"], /color: var\(--accent\)/); assert.match(r[".of-app .btn-primary"], /box-shadow: none/);
-  assert.match(r[".of-app .btn-primary::before"], /background: var\(--accent-soft\)/);
+  assert.match(r[".of-app .btn-primary"], /color: var\(--aktiv\)/); assert.match(r[".of-app .btn-primary"], /box-shadow: none/);
+  assert.match(r[".of-app .btn-primary::before"], /background: var\(--aktiv-soft\)/);
   assert.match(r[".of-app .btn::before"], /border: 1px solid var\(--z-hair\)/);
   assert.match(r[".of-app .btn"], /min-height: 44px/); assert.match(r[".of-app .btn"], /background: transparent/);
   assert.match(r[".of-app .card"], /border: 0/);
