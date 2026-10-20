@@ -3,7 +3,7 @@
 .wesen-buehne { position: relative; width: var(--wb, 240px); aspect-ratio: 4 / 3; border-radius: 14px; overflow: hidden; background: #1c1e23; box-shadow: 0 6px 24px rgb(0 0 0 / .25); }
 .wesen-buehne canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 #wesen-pixel { image-rendering: pixelated; image-rendering: crisp-edges; cursor: pointer; }
-#wesen-pixel:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+#wesen-pixel:focus-visible { outline: 3px solid var(--aktiv); outline-offset: -3px; }
 #wesen-glut { image-rendering: auto; mix-blend-mode: screen; pointer-events: none; }
 .wesen-blase-platz { width: var(--wb, 240px); max-width: 100%; min-height: 6.2rem; margin-top: 10px; } /* wächst mit den Knöpfen unter dem Satz */
 /* 0.7.1 (Bill zu 0.7.0): ohne Sprechblase keine leere Fläche zwischen Bild und Name */
@@ -36,7 +36,7 @@
 /* ---------- Lumi: Foto-Ansicht (ein freigestelltes Bild je Zustand, Licht als Ebene, Neigung als Drehung) ---------- */
 .lumi-buehne { position: relative; width: min(var(--wb, 240px), 100%); aspect-ratio: 3 / 2; border-radius: 14px; overflow: hidden; cursor: pointer;
   background: radial-gradient(ellipse at 50% 110%, #2b3a4a 0%, #161c24 55%, #0e1116 100%); box-shadow: 0 6px 24px rgb(0 0 0 / .25); }
-.lumi-buehne:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.lumi-buehne:focus-visible { outline: 3px solid var(--aktiv); outline-offset: 2px; }
 .lumi-figur { position: absolute; inset: 0; transform-origin: 50% 90%; transition: transform .45s ease; }
 .lumi-figur img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 .lumi-licht { position: absolute; width: 22%; aspect-ratio: 1; background-size: contain; background-repeat: no-repeat; background-position: center;
@@ -70,7 +70,7 @@
 .lumi-balken { list-style: none; padding: 0; margin: 0; display: grid; gap: .35rem; }
 .lumi-balken li { display: grid; grid-template-columns: 5.5rem 1fr 4.5rem; gap: .5rem; align-items: center; font-size: .9rem; }
 .lumi-balken-spur { height: .55rem; border-radius: 99px; background: var(--line, #ddd); overflow: hidden; }
-.lumi-balken-spur > span { display: block; height: 100%; border-radius: inherit; background: var(--accent, #c8102e); }
+.lumi-balken-spur > span { display: block; height: 100%; border-radius: inherit; background: var(--aktiv, #1a56b0); }
 .lumi-aus, .lumi-heft { list-style: none; padding: 0; margin: 0; display: grid; gap: .6rem; }
 .lumi-aus li { display: flex; gap: .5rem; align-items: center; justify-content: space-between; flex-wrap: wrap; font-size: .9rem; }
 .lumi-aus .btn, .lumi-heft .btn, .lumi-gelernt .btn, .vorhaben .btn { min-height: 44px; }
