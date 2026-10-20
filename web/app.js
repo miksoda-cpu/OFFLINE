@@ -1430,7 +1430,7 @@ function spielFarben() {
   const hex = (n) => { const v = s.getPropertyValue(n).trim(); if (!v || !c) return undefined; c.fillStyle = "#000000"; c.fillStyle = v; return /^#[0-9a-f]{6}$/i.test(c.fillStyle) ? c.fillStyle : undefined; };
   const grund = hex("--eis") ?? "#eef3f6", [r, g, b] = [1, 3, 5].map((i) => parseInt(grund.substr(i, 2), 16));
   const dunkel = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 < 0.45;
-  return { grund, text: hex("--text"), leise: hex("--muted"), ink: hex("--eis-ink"), ruhig: hex("--eis-ruhig"), karte: hex("--z-karte"), haupt: hex("--accent-soft"), hauptInk: hex("--accent"), warn: hex("--accent"), licht: hex("--warn"), lichtZart: hex(dunkel ? "--warn-soft" : "--sand"), dunkel };
+  return { grund, text: hex("--text"), leise: hex("--muted"), ink: hex("--eis-ink"), ruhig: hex("--eis-ruhig"), karte: hex("--z-karte"), haupt: hex("--aktiv-soft"), hauptInk: hex("--aktiv"), warn: hex("--accent"), licht: hex("--warn"), lichtZart: hex(dunkel ? "--warn-soft" : "--sand"), dunkel };
 }
 let pauseModulLaeuft = null; // { id, rahmen } – ein Spiel aus einem Modul im Happen
 function pauseModulZu() {
