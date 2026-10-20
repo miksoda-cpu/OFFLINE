@@ -10,6 +10,7 @@
   --accent-soft: #fbe6e9;
   --ok: #1f7a4d;
   --ok-soft: #e1f2e8;
+  --hab-bg: #e6f4ea; --hab-ink: #18692b; --brauch-bg: #e8f0fb; --brauch-ink: #1a56b0; /* Nr. 47, Mik 20.10.: Grün/Blau, Rot nur für Warnung */
   --warn: #8a5a00;
   --warn-soft: #fbf0d9;
   --radius: 20px;
@@ -33,14 +34,14 @@
   :root:not([data-theme="light"]) {
     --bg: #000000; --surface: #141517; --surface-2: #1f2124; --text: #ecebe7; --muted: #a3a09a;
     --line: #33363b; --accent: #ff4d63; --accent-ink: #1a0005; --accent-soft: #3a1419;
-    --ok: #5fd39a; --ok-soft: #13301f; --warn: #f0c060; --warn-soft: #362a0e;
+    --ok: #5fd39a; --ok-soft: #13301f; --hab-bg: #13301f; --hab-ink: #7fdca6; --brauch-bg: #132743; --brauch-ink: #9dc3ff; --warn: #f0c060; --warn-soft: #362a0e;
     --shadow: none; color-scheme: dark; --line: #26282c; --z-hair: rgb(232 231 227 / .14); --z-karte: #141517; --z-schatten: none; --eis: #1d2529; --eis-ink: #a9c4d1; --eis-strich: rgb(169 196 209 / .25); --eis-ruhig: #171e22; --z-ok: #79b893; --lumi-ton: #f0a060;
   }
 }
 :root[data-theme="dark"] {
   --bg: #000000; --surface: #141517; --surface-2: #1f2124; --text: #ecebe7; --muted: #a3a09a;
   --line: #33363b; --accent: #ff4d63; --accent-ink: #1a0005; --accent-soft: #3a1419;
-  --ok: #5fd39a; --ok-soft: #13301f; --warn: #f0c060; --warn-soft: #362a0e;
+  --ok: #5fd39a; --ok-soft: #13301f; --hab-bg: #13301f; --hab-ink: #7fdca6; --brauch-bg: #132743; --brauch-ink: #9dc3ff; --warn: #f0c060; --warn-soft: #362a0e;
   --shadow: none; color-scheme: dark; --line: #26282c; --z-hair: rgb(232 231 227 / .14); --z-karte: #141517; --z-schatten: none; --eis: #1d2529; --eis-ink: #a9c4d1; --eis-strich: rgb(169 196 209 / .25); --eis-ruhig: #171e22; --z-ok: #79b893; --lumi-ton: #f0a060;
 }
 
@@ -815,10 +816,14 @@ body.blatt-offen { overflow: hidden; }
 .gv-bereich h3 { margin-bottom: .2rem; }
 .gv-stand { color: var(--muted); margin: .3rem 0 .2rem; }
 .gv-liste { margin-top: .6rem; }
-.gv-punkt { display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 0 .4rem; }
-.gv-punkt > label { grid-column: 1; }
-.gv-merk { grid-column: 2; grid-row: 1; align-self: start; min-width: 44px; min-height: 44px; padding: 0 .6rem; background: none; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: .85rem; white-space: nowrap; color: inherit; cursor: pointer; }
-.gv-merk[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); font-weight: 600; } /* Nr. 45 Nachtrag: Knopf „+ Liste“ statt Stern */
+.gv-punkt { padding: .7rem 0; } /* Nr. 47: Titel, darunter „Hab ich“ / „Brauch ich“ */
+.gv-text { margin: 0 0 .5rem; }
+.gv-punkt--hab .gv-text { color: var(--muted); }
+.gv-wahl { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+.gv-hab, .gv-brauch { display: flex; align-items: center; justify-content: center; gap: .45rem; min-height: 44px; padding: .4rem .5rem; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
+.gv-icon { width: 1.3rem; height: 1.3rem; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.gv-hab[aria-pressed="true"] { background: var(--hab-bg); border-color: var(--hab-ink); color: var(--hab-ink); }
+.gv-brauch[aria-pressed="true"] { background: var(--brauch-bg); border-color: var(--brauch-ink); color: var(--brauch-ink); }
 .gv-detail { grid-column: 1 / -1; margin: -.2rem 0 .3rem 1.8rem; }
 .gv-detail summary { color: var(--eis-ink); cursor: pointer; }
 .gv-detail p { margin: .3rem 0 0; }

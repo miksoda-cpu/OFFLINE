@@ -59,27 +59,27 @@ test("Suche: „Einkochen“, „Eingekochtes“, „Einmachgläser“ und „Ma
   });
 });
 
-test("Nachtrag: „+ Liste“ setzt und nimmt den Punkt; Hinweis nur beim ersten Mal; 44 px; Name „Auf die Einkaufsliste: …“", async () => {
+test("Nachtrag (seit Nr. 47 „Brauch ich“): setzt und nimmt den Punkt; Hinweis nur beim ersten Mal; 44 px; Name „Brauch ich: …“", async () => {
   await sitzung(async (t) => {
-    const knopf = (id) => t.auswerten(`(() => { const b = document.querySelector('.gv-merk[data-merk="${id}"]'); const r = b.getBoundingClientRect(); return { text: b.textContent.trim(), gedrueckt: b.getAttribute("aria-pressed"), name: b.getAttribute("aria-label"), h: r.height, w: r.width }; })()`);
+    const knopf = (id) => t.auswerten(`(() => { const b = document.querySelector('.gv-brauch[data-merk="${id}"]'); const r = b.getBoundingClientRect(); return { text: b.textContent.trim(), gedrueckt: b.getAttribute("aria-pressed"), name: b.getAttribute("aria-label"), h: r.height, w: r.width }; })()`);
     let k = await knopf("radio");
-    assert.equal(k.text, "+ Liste"); assert.equal(k.gedrueckt, "false"); assert.match(k.name, /^Auf die Einkaufsliste: /); assert.ok(k.h >= 44 && k.w >= 44, JSON.stringify(k));
-    assert.equal(await t.auswerten(`document.querySelectorAll("#grundvorsorge .gv-merk").length > 0 && ![...document.querySelectorAll("#grundvorsorge .gv-merk")].some((b) => /[☆★]/.test(b.textContent))`), true, "kein Stern mehr");
-    await t.auswerten(`document.querySelector('.gv-merk[data-merk="radio"]').click()`); await ruhig(t);
+    assert.equal(k.text, "Brauch ich"); assert.equal(k.gedrueckt, "false"); assert.match(k.name, /^Brauch ich: /); assert.ok(k.h >= 44 && k.w >= 44, JSON.stringify(k));
+    assert.equal(await t.auswerten(`document.querySelectorAll("#grundvorsorge .gv-brauch").length > 0 && ![...document.querySelectorAll("#grundvorsorge .gv-brauch")].some((b) => /[☆★]/.test(b.textContent))`), true, "kein Stern mehr");
+    await t.auswerten(`document.querySelector('.gv-brauch[data-merk="radio"]').click()`); await ruhig(t);
     k = await knopf("radio");
-    assert.equal(k.text, "✓ Auf der Liste"); assert.equal(k.gedrueckt, "true");
+    assert.equal(k.text, "Auf der Liste"); assert.equal(k.gedrueckt, "true");
     assert.equal(await t.auswerten(`document.getElementById("gv-msg").textContent.trim()`), "Auf die Einkaufsliste gesetzt", "Hinweis beim ersten Mal");
     assert.deepEqual(await t.auswerten(`JSON.parse(localStorage.getItem("offline:merkliste"))`), ["radio"]);
-    await t.auswerten(`document.querySelector('.gv-merk[data-merk="radio"]').click()`); await ruhig(t);
-    assert.equal((await knopf("radio")).text, "+ Liste"); assert.deepEqual(await t.auswerten(`JSON.parse(localStorage.getItem("offline:merkliste"))`), []);
-    await t.auswerten(`document.querySelector('.gv-merk[data-merk="lampen"]').click()`); await ruhig(t);
+    await t.auswerten(`document.querySelector('.gv-brauch[data-merk="radio"]').click()`); await ruhig(t);
+    assert.equal((await knopf("radio")).text, "Brauch ich"); assert.deepEqual(await t.auswerten(`JSON.parse(localStorage.getItem("offline:merkliste"))`), []);
+    await t.auswerten(`document.querySelector('.gv-brauch[data-merk="lampen"]').click()`); await ruhig(t);
     assert.equal(await t.auswerten(`document.getElementById("gv-msg").textContent.trim()`), "", "kein Hinweis beim zweiten Mal");
   });
 });
 
-test("Nachtrag: gesetzte Sterne von früher erscheinen als „✓ Auf der Liste“", async () => {
+test("Nachtrag: gesetzte Sterne von früher erscheinen als „Auf der Liste“ (Nr. 47)", async () => {
   await sitzung(async (t) => {
-    for (const id of ["radio", "lampen"]) assert.equal(await t.auswerten(`document.querySelector('.gv-merk[data-merk="${id}"]').textContent.trim()`), "✓ Auf der Liste", id);
+    for (const id of ["radio", "lampen"]) assert.equal(await t.auswerten(`document.querySelector('.gv-brauch[data-merk="${id}"]').textContent.trim()`), "Auf der Liste", id);
     assert.equal(await t.auswerten(`document.querySelector('[data-gv="einkauf"]').textContent`), "Einkaufsliste (2)");
   }, { merkliste: ["radio", "lampen"] });
 });

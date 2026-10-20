@@ -197,6 +197,15 @@ const testJetzt = () => (desktop?.info?.entwickler ? Date.now() + speicher.get("
 const testLeiste = () => desktop?.info?.entwickler ? `<div class="card of-karte" style="margin-bottom:1rem;border-style:dashed"><strong>Entwickler-Build:</strong> Datum für Bereit ${speicher.get("test-monate", 0) ? `+${speicher.get("test-monate", 0)} Monate` : "heute"}
   ${[0, 7, 13, 16].map((m) => `<button class="btn btn-sm of-btn of-btn--klein" data-test-monate="${m}">${m ? `+${m} Monate` : "heute"}</button>`).join(" ")}
   <br><span class="muted of-klein">Tagesseite: ${speicher.get("test-tage", 0) ? `+${speicher.get("test-tage", 0)} Tage` : "heute"}</span> ${[0, 1, 7, 30, 60, 62].map((t) => `<button class="btn btn-sm of-btn of-btn--klein" data-test-tage="${t}">${t ? `+${t} Tage` : "heute"}</button>`).join(" ")}</div>` : "";
+/** Grundvorsorge (0.8.0: Punkte über ihre id), seit Nr. 47 über „Hab ich“: zählt ein Punkt für Bereit, gilt die Bestätigung seiner
+ *  Position; „Hab ich“ nimmt den Punkt von der Einkaufsliste. */
+function habSetzen(id, ja) {
+  state.checks[id] = ja; speicher.set("checks", state.checks);
+  if (ja && state.merk.includes(id)) { state.merk = state.merk.filter((x) => x !== id); speicher.set("merkliste", state.merk); }
+  const auto = speicher.get("polster-auto", {}); if (auto[id]) { delete auto[id]; speicher.set("polster-auto", auto); } // von Hand: gehört dir
+  const pos = BEREIT_POSITIONEN.find((p) => p.check === id);
+  return pos ? bestaetigen(pos.id, ja) : render();
+}
 function bestaetigen(id, ja = true) {
   if (ja) state.bestaetigt[id] = new Date(testJetzt()).toISOString(); else delete state.bestaetigt[id];
   speicher.set("bereit-v2", state.bestaetigt);
@@ -284,6 +293,7 @@ function bereitAbgleichen() {
     else if (!erfuellt && auto[check]) { state.checks[check] = false; delete auto[check]; if (pos) delete state.bestaetigt[pos.id]; }
   }
   speicher.set("checks", state.checks); speicher.set("bereit-v2", state.bestaetigt); speicher.set("polster-auto", auto);
+  listeBereinigen(); // Nr. 47: was die Vorräte erfüllen, gilt als „Hab ich“ und fällt von der Einkaufsliste
 }
 function vorraeteSetzen(liste) {
   state.vorraete = liste.map(vorratEintrag); speicher.set("vorraete", state.vorraete);
@@ -336,10 +346,16 @@ function radioEigeneHtml() {
 }
 /** Häkchen der alten Checkliste (bis 0.7) auf die Grundvorsorge übertragen, sobald beide Listen da sind (Abgleich über den Text). */
 function checksAngleichen() {
+  listeBereinigen();
   const alt = D("alt/vorsorge-0.7") ?? D("vorsorge"), g = grund();
   if (!alt || !g) return;
   const { checks, geaendert } = checksUebertragen(state.checks, alt, g);
-  if (geaendert) { state.checks = checks; speicher.set("checks", checks); }
+  if (geaendert) { state.checks = checks; speicher.set("checks", checks); listeBereinigen(); }
+}
+/** Nr. 47: „Hab ich“ und „Brauch ich“ schließen sich aus. Hat ein Punkt beides (alte Daten), gilt „Hab ich“ und er fällt von der Liste. */
+function listeBereinigen() {
+  const rest = state.merk.filter((id) => !state.checks[id]);
+  if (rest.length !== state.merk.length) { state.merk = rest; speicher.set("merkliste", rest); }
 }
 const katalog = () => katalogAusSpeicher()?.katalog ?? null;
 
@@ -2871,12 +2887,6 @@ main.addEventListener("change", (e) => {
     p[k] = k === "sparmodus" ? t.checked : k === "schluss" ? (t.value === "" ? null : Number(t.value)) : Number(t.value);
     planSpeichern(p); if (k === "schluss" || k === "aufstehen") { wesen.zustandBerechnen?.(); render(); } if (k === "tiefe") vorratAuffuellen(); return;
   }
-  if (t.dataset.check) { // Grundvorsorge (0.8.0: Punkte über ihre id); zählt ein Punkt für Bereit, gilt die Bestätigung seiner Position
-    state.checks[t.dataset.check] = t.checked; speicher.set("checks", state.checks);
-    const auto = speicher.get("polster-auto", {}); if (auto[t.dataset.check]) { delete auto[t.dataset.check]; speicher.set("polster-auto", auto); } // von Hand: gehört dir
-    const pos = BEREIT_POSITIONEN.find((p) => p.check === t.dataset.check);
-    return pos ? bestaetigen(pos.id, t.checked) : render();
-  }
   if (t.dataset.hhAn) { haushaltSetzen(haushaltAendern(state.haushaltV2, t.dataset.hhAn, t.checked)); document.querySelector(`[data-hh-an="${t.dataset.hhAn}"]`)?.focus(); return; } // Nr. 40
   if (t.dataset.hhWahl) { haushaltSetzen(haushaltAendern(state.haushaltV2, t.dataset.hhWahl, t.value)); document.querySelector(`[data-hh-wahl="${t.dataset.hhWahl}"][value="${t.value}"]`)?.focus(); return; }
   if (t.dataset.hhZahl) { haushaltSetzen(haushaltAendern(state.haushaltV2, t.dataset.hhZahl, Number(t.value))); document.getElementById(t.id)?.focus(); return; }
@@ -3029,12 +3039,19 @@ main.addEventListener("click", async (e) => {
     try { tonSpielen(b, await tonVorbereiten(b.dataset.ton)); } catch { tonMeldung(b, true); }
     return;
   }
-  if (b.dataset.merk) {
-    const id = b.dataset.merk, dazu = !state.merk.includes(id);
-    state.merk = dazu ? [...state.merk, id] : state.merk.filter((x) => x !== id); speicher.set("merkliste", state.merk); render();
+  if (b.dataset.check && b.classList.contains("gv-hab")) { // Nr. 47 „Hab ich“ (das bisherige Häkchen); nimmt den Punkt von der Einkaufsliste
+    const id = b.dataset.check;
+    habSetzen(id, !state.checks[id]);
+    document.querySelector(`.gv-hab[data-check="${CSS.escape(id)}"]`)?.focus();
+    return;
+  }
+  if (b.dataset.merk) { // „Brauch ich“ (Nr. 47; vorher Stern bzw. „+ Liste“): auf die Einkaufsliste, nimmt „Hab ich“ zurück
+    const id = b.dataset.merk, dazu = !state.merk.includes(id) || !!state.checks[id];
+    state.merk = dazu ? [...new Set([...state.merk, id])] : state.merk.filter((x) => x !== id); speicher.set("merkliste", state.merk);
+    if (dazu && state.checks[id]) habSetzen(id, false); else render();
     // Nr. 45 Nachtrag (Mik 19.10.): beim ersten Mal kurz sagen, wohin der Punkt kommt; danach nicht mehr
     if (dazu && !speicher.get("liste-hinweis", false)) { speicher.set("liste-hinweis", true); zeige("gv-msg", "Auf die Einkaufsliste gesetzt"); }
-    document.querySelector(`.gv-merk[data-merk="${CSS.escape(id)}"]`)?.focus();
+    document.querySelector(`.gv-brauch[data-merk="${CSS.escape(id)}"]`)?.focus();
     return;
   }
   const gv = b.dataset.gv;

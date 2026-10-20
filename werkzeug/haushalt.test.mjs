@@ -47,7 +47,7 @@ test("(a) Eingestellt ohne Haustiere: kein Tier-Punkt in Vorsorge und Suche; mit
     await einst(t); await schalten(t, "tiere", true); await schalten(t, "tier-hund", true);
     assert.equal(await t.auswerten(`document.getElementById("hh-tier-hund").value`), "1", "Hund mit Anzahl 1");
     await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelector('[data-check="hund-wasser"]')`, 20_000);
-    assert.match(await t.auswerten(`document.querySelector('#gvp-hund-wasser label span').firstChild.textContent`), /^Wasser für 1 Hund: /, "Anzahl im Text");
+    assert.match(await t.auswerten(`document.querySelector('#gvp-hund-wasser .gv-text').firstChild.textContent`), /^Wasser für 1 Hund: /, "Anzahl im Text");
     assert.ok(await t.auswerten(`document.getElementById("haushalt-kurz").innerText.includes("1 Hund")`));
     assert.ok((await suche(t, "Kotbeutel")).length > 0, "mit Hund: in der Suche");
     assert.deepEqual(await t.auswerten(`JSON.parse(localStorage.getItem("offline:haushalt"))`), ["kinder", "tiere", "tier-hund"]);

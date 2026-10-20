@@ -67,7 +67,7 @@ test("(b) 2 Personen, 40 Liter, Essen 14 Tage → „Eure Vorräte reichen für 
     // Licht eingetragen: Satz weg, Taschenlampen-Punkt in Bereit erledigt
     await vorratEintragen(t, [{ produkt: "Taschenlampe", menge: 1, einheit: "Stück", art: "licht" }]);
     assert.ok(!(await t.auswerten(`document.querySelector("#polster .polster-ergebnis").innerText`)).includes("Denk auch an Licht"));
-    assert.equal(await t.auswerten(`document.querySelector('[data-check="lampen"]').checked`), true, "Licht über die Vorräte");
+    assert.equal(await t.auswerten(`document.querySelector('[data-check="lampen"]').getAttribute("aria-pressed") === "true"`), true, "Licht über die Vorräte");
     // Die Suche findet „Polster“
     await t.auswerten(`document.querySelector("[data-suche-auf]").click()`); await warteBis(t, `document.getElementById("suche-feld")`);
     await t.auswerten(`(() => { const f = document.getElementById("suche-feld"); f.value = "Polster"; f.dispatchEvent(new Event("input", { bubbles: true })); })()`); await ruhig(t);
@@ -81,7 +81,7 @@ test("(c) 2 Personen, 56 Liter, Essen 14 Tage → Polster 14; Trinkwasser und Le
     await eintragen(t, { personen: 2, liter: 56, essen: 14 });
     const e = await t.auswerten(`document.querySelector("#polster .polster-ergebnis").innerText`);
     assert.match(e, /^Eure Vorräte reichen für 14 Tage/);
-    const b = await t.auswerten(`({ wasser: document.querySelector('[data-check="trinkwasser"]').checked, essen: document.querySelector('[data-check="lebensmittel"]').checked, v2: JSON.parse(localStorage.getItem("offline:bereit-v2") ?? "{}") })`);
+    const b = await t.auswerten(`({ wasser: document.querySelector('[data-check="trinkwasser"]').getAttribute("aria-pressed") === "true", essen: document.querySelector('[data-check="lebensmittel"]').getAttribute("aria-pressed") === "true", v2: JSON.parse(localStorage.getItem("offline:bereit-v2") ?? "{}") })`);
     assert.ok(b.wasser && b.essen, "Häkchen in der Grundvorsorge"); assert.ok(b.v2["c-0-0"] && b.v2["c-0-1"], "Bereit-Punkte Trinkwasser und Lebensmittel bestätigt");
     await t.auswerten(`location.hash = "#start"`); await ruhig(t, 600);
     assert.notEqual(await t.auswerten(`document.querySelector(".bereit-schritt")?.textContent`), "Trinkwasser für 14 Tage", "Trinkwasser ist nicht mehr der nächste Schritt");
@@ -89,7 +89,7 @@ test("(c) 2 Personen, 56 Liter, Essen 14 Tage → Polster 14; Trinkwasser und Le
     await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.getElementById("polster")`);
     for (let i = 0; i < 2; i++) { await t.auswerten(`document.querySelector('[data-check="lebensmittel"]').click()`); await ruhig(t); } // von Hand: aus und wieder an (jeder Klick zeichnet neu)
     await eintragen(t, { personen: 2, liter: 20, essen: 3 });
-    assert.deepEqual(await t.auswerten(`({ wasser: document.querySelector('[data-check="trinkwasser"]').checked, essen: document.querySelector('[data-check="lebensmittel"]').checked })`), { wasser: false, essen: true });
+    assert.deepEqual(await t.auswerten(`({ wasser: document.querySelector('[data-check="trinkwasser"]').getAttribute("aria-pressed") === "true", essen: document.querySelector('[data-check="lebensmittel"]').getAttribute("aria-pressed") === "true" })`), { wasser: false, essen: true });
   });
 });
 

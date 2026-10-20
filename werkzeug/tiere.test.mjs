@@ -38,7 +38,7 @@ async function haushalt(t, feld, wert) {
 async function vorsorge(t) {
   await t.auswerten(`location.hash = "#__"`); await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelector("#grundvorsorge [data-check]")`, 20_000); await ruhig(t);
   return t.auswerten(`({ bereich: !!document.getElementById("gv-haustiere"), checks: [...document.querySelectorAll("#grundvorsorge [data-check]")].map((i) => i.dataset.check),
-    texte: Object.fromEntries([...document.querySelectorAll("#grundvorsorge .gv-punkt")].map((li) => [li.querySelector("[data-check]").dataset.check, li.querySelector("label span").firstChild.textContent.trim()])) })`);
+    texte: Object.fromEntries([...document.querySelectorAll("#grundvorsorge .gv-punkt")].map((li) => [li.querySelector("[data-check]").dataset.check, li.querySelector(".gv-text").firstChild.textContent.trim()])) })`);
 }
 const bereitZahl = async (t) => { await t.auswerten(`location.hash = "#uebersicht"`); await warteBis(t, `document.querySelector("#main .bereit-zahl-knopf")`, 20_000); return t.auswerten(`document.querySelector("#main .bereit-zahl-knopf").textContent.replace(/\\D+/g, "")`); };
 

@@ -107,12 +107,24 @@ export function haushaltHtml(haushalt = []) {
   </details>`;
 }
 
+/** Nr. 47: Kreis mit Haken („Hab ich“) und Klemmbrett mit Zeilen („Brauch ich“), in der App gezeichnet (kein Laden aus dem Netz). */
+const ICON_HAB = `<svg class="gv-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg>`;
+const ICON_BRAUCH = `<svg class="gv-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5.5" y="4.5" width="13" height="16.5" rx="2"/><rect x="9" y="3" width="6" height="3.5" rx="1"/><path d="M9 11h6M9 14.5h6M9 18h4"/></svg>`;
+
 /** Grundvorsorge in sechs Bereichen (mit Haustieren sieben), mit Fortschritt je Bereich, Lesezeichen (Merkliste), Export und Zurücksetzen. */
 export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = [], nurMerk = false, zuruecksetzen = false, faellig = new Map(), karten = [] } = {}) {
   const alle = grund.bereiche.flatMap((b) => punkteFuer(b, haushalt)), gesamt = fortschritt(alle, checks);
-  const punkt = (p) => `<li class="gv-punkt" id="gvp-${esc(p.id)}"><label><input type="checkbox" data-check="${esc(p.id)}" ${checks[p.id] ? "checked" : ""}><span>${esc(p.text)}${faellig.has(p.id) ? ` <span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span>` : ""}</span></label>${faellig.has(p.id) ? ` <button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-bestaetigen="${esc(faellig.get(p.id))}">Erneuert</button>` : ""}
-      <button type="button" class="gv-merk" data-merk="${esc(p.id)}" aria-pressed="${merk.includes(p.id)}" aria-label="Auf die Einkaufsliste: ${esc(p.text)}">${merk.includes(p.id) ? "✓ Auf der Liste" : "+ Liste"}</button>
+  const punkt = (p) => {
+    // Nr. 47 (Mik 20.10.2026): zwei Knöpfe statt Kästchen und „+ Liste“. „Hab ich“ ist das bisherige Häkchen (zählt für Bereit),
+    // „Brauch ich“ setzt den Punkt auf die Einkaufsliste; beides schließt sich aus (app.js), „Hab ich“ gewinnt.
+    const hab = !!checks[p.id], brauch = !hab && merk.includes(p.id);
+    return `<li class="gv-punkt${hab ? " gv-punkt--hab" : ""}" id="gvp-${esc(p.id)}"><p class="gv-text">${esc(p.text)}${faellig.has(p.id) ? ` <span class="tag tag-warn of-plakette of-plakette--warnung">fällig</span> <button class="btn btn-sm btn-primary of-btn of-btn--klein of-btn--primaer" data-bestaetigen="${esc(faellig.get(p.id))}">Erneuert</button>` : ""}</p>
+      <div class="gv-wahl">
+        <button type="button" class="gv-hab" data-check="${esc(p.id)}" aria-pressed="${hab}" aria-label="Hab ich: ${esc(p.text)}">${ICON_HAB}<span>Hab ich</span></button>
+        <button type="button" class="gv-merk gv-brauch" data-merk="${esc(p.id)}" aria-pressed="${brauch}" aria-label="Brauch ich: ${esc(p.text)}">${ICON_BRAUCH}<span>${brauch ? "Auf der Liste" : "Brauch ich"}</span></button>
+      </div>
       ${p.detail ? `<details class="gv-detail" id="gvd-${esc(p.id)}"><summary class="of-klein">Erklärung</summary><p class="muted of-klein">${esc(p.detail)}</p></details>` : ""}</li>`;
+  };
   const bereiche = grund.bereiche.map((b) => {
     const punkte = punkteFuer(b, haushalt), f = fortschritt(punkte, checks), sicht = nurMerk ? punkte.filter((p) => merk.includes(p.id)) : punkte;
     if (!punkte.length || (nurMerk && !sicht.length)) return ""; // Nr. 44: „Haustiere“ nur mit Tieren
@@ -128,11 +140,11 @@ export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = []
       <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="einkauf">Einkaufsliste (${merk.length})</button>
       <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="export">Liste exportieren</button>
       <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="drucken">Drucken</button>
-      ${zuruecksetzen ? `<span class="gv-zurueck" role="group" aria-label="Zurücksetzen bestätigen"><span class="of-klein">Alle Häkchen und die Punkte auf der Einkaufsliste löschen?</span> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="zuruecksetzen-ja">Ja, zurücksetzen</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="zuruecksetzen-nein">Abbrechen</button></span>`
+      ${zuruecksetzen ? `<span class="gv-zurueck" role="group" aria-label="Zurücksetzen bestätigen"><span class="of-klein">Alle „Hab ich“ und die Punkte auf der Einkaufsliste löschen?</span> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="zuruecksetzen-ja">Ja, zurücksetzen</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="zuruecksetzen-nein">Abbrechen</button></span>`
         : `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="zuruecksetzen">Zurücksetzen</button>`}
     </div>
     <p class="form-msg of-meldung" id="gv-msg" role="status"></p>
-    ${nurMerk && !merk.length ? `<p class="muted">Noch nichts auf der Einkaufsliste. Tipp auf „+ Liste“ neben einem Punkt.</p>` : ""}
+    ${nurMerk && !merk.length ? `<p class="muted">Noch nichts auf der Einkaufsliste. Tipp bei einem Punkt auf „Brauch ich“.</p>` : ""}
     <div class="grid grid-2 gv-bereiche">${bereiche}</div>
   </section>`;
 }

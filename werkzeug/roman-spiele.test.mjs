@@ -104,7 +104,7 @@ test("Update von der letzten veröffentlichten Version: Land, Haushalt, Häkchen
     await t.auswerten(`location.hash = "#einstellungen"`); await warteBis(t, `document.querySelector('[data-hh-an="kinder"]')`, 20_000);
     assert.equal(await t.auswerten(`document.querySelector('[data-hh-an="kinder"]').checked`), true, "Kinder übernommen");
     await t.auswerten(`location.hash = "#vorsorge"`); await warteBis(t, `document.querySelector("[data-check]")`, 20_000);
-    assert.equal(await t.auswerten(`[...document.querySelectorAll("[data-check]")].filter((c) => c.checked).length`), 1, "Häkchen");
+    assert.equal(await t.auswerten(`[...document.querySelectorAll("[data-check]")].filter((c) => c.getAttribute("aria-pressed") === "true").length`), 1, "Hab ich (früher Häkchen, Nr. 47)");
     await t.auswerten(`location.hash = "#notizen"`); await ruhig(t);
     assert.ok(await t.auswerten(`document.getElementById("main").innerText.includes("Treffpunkt")`), "Notiz da");
     await t.auswerten(`location.hash = "#pause"`); await warteBis(t, `document.querySelector("#main .spiele-roman")`, 20_000);

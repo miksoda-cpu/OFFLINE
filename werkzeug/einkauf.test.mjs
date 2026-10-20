@@ -30,10 +30,10 @@ const liste = async (t) => {
   return x;
 };
 
-test("„+ Liste“ (früher Stern) → Punkt steht in der Einkaufsliste; „entfernen“ nimmt ihn weg; Name „Auf die Einkaufsliste“", async () => {
+test("„Brauch ich“ (früher Stern, „+ Liste“) → Punkt steht in der Einkaufsliste; „entfernen“ nimmt ihn weg; Name „Brauch ich“", async () => {
   await sitzung(async (t) => {
-    const p = await t.auswerten(`(() => { const b = document.querySelector('[data-merk="radio"]'); return { label: b.getAttribute("aria-label"), text: b.closest("li").querySelector("span").textContent.trim() }; })()`);
-    assert.match(p.label, /^Auf die Einkaufsliste: /);
+    const p = await t.auswerten(`(() => { const b = document.querySelector('[data-merk="radio"]'); return { label: b.getAttribute("aria-label"), text: b.closest("li").querySelector(".gv-text").firstChild.textContent.trim() }; })()`);
+    assert.match(p.label, /^Brauch ich: /); // Nr. 47: „Brauch ich“ statt „+ Liste“
     await t.auswerten(`document.querySelector('[data-merk="radio"]').click()`); await ruhig(t);
     // Nr. 45 Nachtrag: Knopf mit gleichbleibendem Namen, der Zustand steht in aria-pressed
     assert.equal(await t.auswerten(`document.querySelector('[data-merk="radio"]').getAttribute("aria-pressed")`), "true");

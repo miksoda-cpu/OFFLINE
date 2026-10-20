@@ -1,5 +1,5 @@
 // Vorratsliste (Nr. 42, Miks Wahl 17.10.2026): Liste nach Art (Entwurf A), darüber die Vorlage-Knöpfe aus Entwurf C zum schnellen
-// Eintragen. Dazu Formular, Heute-Zeile „Bald ablaufend“ und die Einkaufsliste (mit „+ Liste“ aus der Grundvorsorge, eine Liste).
+// Eintragen. Dazu Formular, Heute-Zeile „Bald ablaufend“ und die Einkaufsliste (mit „Brauch ich“ aus der Grundvorsorge, eine Liste).
 import { EINHEITEN, ARTEN, ablaufText, mengeText, tageBisAblauf, abgelaufen, ablaufend } from "./vorrat.js";
 
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
@@ -88,6 +88,6 @@ export function einkaufHtml(liste, sterne = []) {
   return `<div class="vr-einkauf">
     ${sterne.length ? `<h3>Aus der Checkliste</h3><ul>${sterne.map((x) => `<li class="vr-einkauf--stern">${esc(x.text)} <button type="button" class="btn btn-sm of-btn of-btn--klein" data-merk="${esc(x.id)}" aria-label="Von der Einkaufsliste nehmen: ${esc(x.text)}">entfernen</button></li>`).join("")}</ul>` : ""}
     ${liste.length ? `${sterne.length ? "<h3>Aus den Vorräten</h3>" : ""}<ul>${liste.map((x) => `<li class="vr-einkauf--${x.art}">${esc(x.text)}</li>`).join("")}</ul>` : `<p>${sterne.length ? "Bei den Vorräten fehlt nichts" : "Nichts einzukaufen"}. Die Vorräte reichen für 14 Tage.</p>`}
-    <p class="muted of-klein">Mit „+ Liste“ in der Grundvorsorge kommt ein Punkt hierher.</p>
+    <p class="muted of-klein">Mit „Brauch ich“ in der Grundvorsorge kommt ein Punkt hierher.</p>
     <p class="vr-form-knoepfe"><button type="button" class="btn of-btn" data-einkauf="drucken">Drucken</button> <button type="button" class="btn of-btn" data-einkauf="teilen">Teilen</button></p></div>`;
 }

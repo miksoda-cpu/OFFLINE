@@ -50,9 +50,9 @@ export const HILFE = {
   vorsorge: [
     ["Was ist die Grundvorsorge?", "Was jeder Haushalt für 14 Tage ohne Einkaufen, Strom und fließendes Wasser braucht, in sechs Bereichen, mit Haustieren sieben. Jeder Bereich zeigt, wie viel du schon hast."],
     ["Was bewirkt „Dein Haushalt“?", "Du gibst einmal an, wer bei dir lebt und wie du wohnst. Dann zeigt die App nur die Punkte, die dazu passen, und in den Szenarien nur die Zusätze für dich. Ohne Angabe zeigt sie alles. Die Angabe bleibt auf diesem Gerät."],
-    ["Wozu ist „+ Liste“?", "Mit „+ Liste“ kommt ein Punkt auf die Einkaufsliste. Steht dort „✓ Auf der Liste“, nimmt ein zweites Antippen ihn wieder herunter."],
-    ["Wie nehme ich die Liste mit?", "„Liste exportieren“ speichert sie als Textdatei, „Drucken“ druckt sie aus. Beide zeigen nur die Punkte, die zu deinem Haushalt passen, mit deinen Häkchen."],
-    ["Was macht „Zurücksetzen“?", "Es löscht alle Häkchen der Grundvorsorge und die Punkte, die du auf die Einkaufsliste gesetzt hast. Die App fragt vorher noch einmal. Dein Haushalt bleibt eingestellt."],
+    ["Was heißt „Hab ich“ und „Brauch ich“?", "„Hab ich“ heißt: Das ist schon da. Es zählt für deine Bereit-Zahl. „Brauch ich“ setzt den Punkt auf die Einkaufsliste, dann steht dort „Auf der Liste“. Es gilt immer nur eines von beiden. Nochmal antippen nimmt es zurück."],
+    ["Wie nehme ich die Liste mit?", "„Liste exportieren“ speichert sie als Textdatei, „Drucken“ druckt sie aus. Beide zeigen nur die Punkte, die zu deinem Haushalt passen, mit dem, was du schon hast."],
+    ["Was macht „Zurücksetzen“?", "Es löscht alle „Hab ich“ der Grundvorsorge und die Punkte, die du auf die Einkaufsliste gesetzt hast. Die App fragt vorher noch einmal. Dein Haushalt bleibt eingestellt."],
     ["Zählen alle Punkte für die Bereit-Zahl?", "Für die Zahl zählen die 20 Punkte, die es schon vor den sechs Bereichen gab, mit ihren Fristen. Die übrigen Punkte und die Checklisten der Szenarien helfen dir beim Vorbereiten. Die Zahl ändern sie nicht."],
     ["Was sind die Szenarien?", "Zwölf Ernstfälle von Hochwasser bis Blackout. Jede Karte erklärt die Gefahr, was du vorher tun kannst, wie du richtig reagierst und was danach kommt. Dazu kommt eine eigene Checkliste."],
   ],
