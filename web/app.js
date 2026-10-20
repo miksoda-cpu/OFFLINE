@@ -845,7 +845,7 @@ const seiten = {
       ${polsterHtml()}
       <p class="card of-karte hh-kurz" id="haushalt-kurz"><strong>Dein Haushalt:</strong> ${esc(haushaltZeile(state.haushaltV2) || "noch nicht eingestellt – die App zeigt alles")} · <a href="#einstellungen" data-anker-ziel="haushalt">ändern</a></p>
       ${vorhabenHtml}
-      ${grundvorsorgeHtml(g, { checks: state.checks, haushalt: state.haushalt, merk: state.merk, nurMerk: state.nurMerk, zuruecksetzen: state.gvZurueck, faellig, karten: infoKarten().filter((c) => c.ort?.bereich) })}
+      ${grundvorsorgeHtml(g, { checks: state.checks, haushalt: state.haushalt, merk: state.merk, nurMerk: state.nurMerk, zuruecksetzen: state.gvZurueck, faellig, karten: infoKarten().filter((c) => c.ort?.bereich), meldung: state.gvMeldung && Date.now() < state.gvMeldung.bis ? state.gvMeldung.text : "" })}
       ${ausland() ? `<h2 style="margin-top:2rem">Szenarien</h2>${landVorschauHtml()}` : Object.keys(karten).length ? `<h2 style="margin-top:2rem">Szenarien</h2><p class="muted of-klein">Was du für jeden Ernstfall zusätzlich brauchst und wie du richtig reagierst.</p>${kachelnHtml(karten, szReihe(), state.szChecks)}` : ""}
       ${g.quellen?.length ? `<details class="sz-quellen" style="margin-top:1.5rem"><summary class="muted of-klein">Quellen der Grundvorsorge (Stand ${esc(g.stand ?? "")})</summary><ul class="muted of-klein">${g.quellen.map((q) => `<li>${q.url ? `<a href="${esc(q.url)}" rel="noopener">${esc(q.name)}</a>` : esc(q.name)}</li>`).join("")}</ul></details>` : ""}`;
   },
@@ -3040,17 +3040,18 @@ main.addEventListener("click", async (e) => {
     return;
   }
   if (b.dataset.check && b.classList.contains("gv-hab")) { // Nr. 47 „Hab ich“ (das bisherige Häkchen); nimmt den Punkt von der Einkaufsliste
-    const id = b.dataset.check;
+    const id = b.dataset.check; state.gvMeldung = null;
     habSetzen(id, !state.checks[id]);
     document.querySelector(`.gv-hab[data-check="${CSS.escape(id)}"]`)?.focus();
     return;
   }
   if (b.dataset.merk) { // „Brauch ich“ (Nr. 47; vorher Stern bzw. „+ Liste“): auf die Einkaufsliste, nimmt „Hab ich“ zurück
-    const id = b.dataset.merk, dazu = !state.merk.includes(id) || !!state.checks[id];
+    const id = b.dataset.merk, dazu = !state.merk.includes(id) || !!state.checks[id]; state.gvMeldung = null;
     state.merk = dazu ? [...new Set([...state.merk, id])] : state.merk.filter((x) => x !== id); speicher.set("merkliste", state.merk);
     if (dazu && state.checks[id]) habSetzen(id, false); else render();
     // Nr. 45 Nachtrag (Mik 19.10.): beim ersten Mal kurz sagen, wohin der Punkt kommt; danach nicht mehr
-    if (dazu && !speicher.get("liste-hinweis", false)) { speicher.set("liste-hinweis", true); zeige("gv-msg", "Auf die Einkaufsliste gesetzt"); }
+    // die Meldung wird ein paar Sekunden mitgezeichnet, damit ein Neuzeichnen (z. B. nach einem Paket-Update) sie nicht löscht
+    if (dazu && !speicher.get("liste-hinweis", false)) { speicher.set("liste-hinweis", true); state.gvMeldung = { text: "Auf die Einkaufsliste gesetzt", bis: Date.now() + 8000 }; zeige("gv-msg", "Auf die Einkaufsliste gesetzt"); }
     document.querySelector(`.gv-brauch[data-merk="${CSS.escape(id)}"]`)?.focus();
     return;
   }

@@ -112,7 +112,7 @@ const ICON_HAB = `<svg class="gv-icon" viewBox="0 0 24 24" aria-hidden="true" fo
 const ICON_BRAUCH = `<svg class="gv-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5.5" y="4.5" width="13" height="16.5" rx="2"/><rect x="9" y="3" width="6" height="3.5" rx="1"/><path d="M9 11h6M9 14.5h6M9 18h4"/></svg>`;
 
 /** Grundvorsorge in sechs Bereichen (mit Haustieren sieben), mit Fortschritt je Bereich, Lesezeichen (Merkliste), Export und Zurücksetzen. */
-export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = [], nurMerk = false, zuruecksetzen = false, faellig = new Map(), karten = [] } = {}) {
+export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = [], nurMerk = false, zuruecksetzen = false, faellig = new Map(), karten = [], meldung = "" } = {}) {
   const alle = grund.bereiche.flatMap((b) => punkteFuer(b, haushalt)), gesamt = fortschritt(alle, checks);
   const punkt = (p) => {
     // Nr. 47 (Mik 20.10.2026): zwei Knöpfe statt Kästchen und „+ Liste“. „Hab ich“ ist das bisherige Häkchen (zählt für Bereit),
@@ -143,7 +143,7 @@ export function grundvorsorgeHtml(grund, { checks = {}, haushalt = [], merk = []
       ${zuruecksetzen ? `<span class="gv-zurueck" role="group" aria-label="Zurücksetzen bestätigen"><span class="of-klein">Alle „Hab ich“ und die Punkte auf der Einkaufsliste löschen?</span> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="zuruecksetzen-ja">Ja, zurücksetzen</button> <button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="zuruecksetzen-nein">Abbrechen</button></span>`
         : `<button type="button" class="btn btn-sm of-btn of-btn--klein" data-gv="zuruecksetzen">Zurücksetzen</button>`}
     </div>
-    <p class="form-msg of-meldung" id="gv-msg" role="status"></p>
+    <p class="form-msg of-meldung" id="gv-msg" role="status">${esc(meldung)}</p>
     ${nurMerk && !merk.length ? `<p class="muted">Noch nichts auf der Einkaufsliste. Tipp bei einem Punkt auf „Brauch ich“.</p>` : ""}
     <div class="grid grid-2 gv-bereiche">${bereiche}</div>
   </section>`;
