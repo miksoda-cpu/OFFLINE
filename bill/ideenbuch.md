@@ -34,6 +34,11 @@ Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Bl
 
 ## Einträge
 
+### 2026-11-02 · Faltung · Tagesrätsel auf „Spiele“ erscheint erst nach dem nächsten Neuzeichnen
+- Idee: Die Vorratskammer (`vorratAuffuellen` in `web/app.js`) holt beim ersten Start die Tagespakete und zeichnet danach nur neu, wenn „Heute“ offen ist; der Browser-Test zu Nr. 29 wartet beim Start auf `tage-2026-10`
+- Kill-Kriterium: Die Tests werden rot, ohne dass sich an der App etwas geändert hat
+- Ausgang: eingetreten ab 01.11.: Seit dem Monatswechsel liegt das heutige Rätsel in `tage-2026-11`. Auf dem Faltungs-Branch (nur Dateien in `bill/`) war „(c) Kein Tagesrätsel auf Heute; es steht oben auf ‚Spiele‘“ zweimal rot (Lauf 41371907142), derselbe Stand auf dem Hauptbranch einmal grün (Lauf 41372543153), lokal sechsmal grün. Eine lokale Probe, die gleich auf `#pause` startet, zeigte: Der November kommt an, das Rätsel erscheint auf „Spiele“ nicht, bis neu gezeichnet wird. Offen, kein Auftrag
+
 ### 2026-10-19 · Postfach · Parkmodus über den Stop-Hook von Claude Code
 - Idee: Statt stehen zu bleiben, blockiert der Stop-Hook (`_briefkasten/postfach-hook.py stop`) jede Runde und wartet bis zu 9 Minuten im Postfach; kommt nichts, eine Zeile „Leerlauf N“
 - Kill-Kriterium: Die Session steht still, während Post an sie liegt
