@@ -20,6 +20,7 @@ Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (An
 
 ## Offen bei Code
 - `bill/todo/` ist leer (02.11.); seit dem 26.10. kein neuer Auftrag.
+- Tagesrätsel auf „Spiele“ erscheint beim ersten Start erst nach dem nächsten Neuzeichnen; seit dem Monatswechsel macht das den Test „(c) Kein Tagesrätsel auf Heute“ unzuverlässig. Vorschlag in `bill/rueckmeldung/2026-11-02-faltung.md`, kein Auftrag.
 - Nr. 48 „Blau für aktiv/gewählt, Rot nur für Warnung und Alarm“ (Mik 20.10.): auf Branch `nr-48-blau` mit Referenzbildern (Lauf 39410511283), nicht zusammengeführt. Der Branch zweigt vor der Faltung vom 26.10. ab und geht nicht mehr per fast-forward; vor dem Zusammenführen auf den Hauptbranch setzen und neu prüfen.
 - Abnahme durch Bill für Nr. 26 und Nr. 38 bis 47 ist im Repo nicht vermerkt.
 - Große Downloads: Fortschritt und Abbruch nur je 64-MB-Teil (Ideenbuch, offen).
