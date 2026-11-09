@@ -6,7 +6,7 @@ Nur Ansätze, keine unveröffentlichten Inhalte (Regel Nr. 13, `docs/INTERN.md`)
 
 ## Lehren
 
-Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Block gehört zur Startlektüre; die Einträge darunter werden gezielt aufgeschlagen, wenn ein Ansatz wiederkommt. Stand: Faltung 02.11.2026.
+Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Block gehört zur Startlektüre; die Einträge darunter werden gezielt aufgeschlagen, wenn ein Ansatz wiederkommt. Stand: Faltung 09.11.2026.
 
 - Jede Arbeit auf eigenem Branch, zusammenführen erst nach grüner Prüferkette (0.2.1, Festlegung 30.09.).
 - Klartext: neue Klartext-Pfade auch in `.git/info/exclude`; vor jedem Commit `git status` lesen statt `git add -A` (Nr. 37, Vorfall 0759dc6).
@@ -20,6 +20,7 @@ Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Bl
 - Ankündigungen leben in der App (`web/bald.js`), nicht im Katalog (Nr. 24).
 - Fremde Programmteile gehören in die App, nicht ins Netz; Verbindungen vor dem Store-Build gegen die Datenschutz-Angaben geprüft (0.7.2).
 - Ein Auftrags-Branch, der lange liegt, verliert den fast-forward, sobald der Hauptbranch weiterläuft (Nr. 48 nach der Faltung 26.10.).
+- Ein Test, der beim Start fest auf `tage-2026-10` wartete, wurde nach dem Monatswechsel unzuverlässig; dahinter lag eine Lücke im Neuzeichnen von „Spiele“ (Faltung 02.11.).
 - Offen: Fortschritt großer Downloads nur je 64-MB-Teil (Nr. 19); Parkmodus im Postfach weckt nicht verlässlich (19.10.).
 
 ## Vorlage
