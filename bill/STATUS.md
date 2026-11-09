@@ -20,7 +20,7 @@ Kinder-Modus ab 6, Einstellungen in drei Schichten, „Wohin“, Mesh, Handy (An
 
 ## Offen bei Code
 - `bill/todo/` leer (09.11.); letzter Auftrag vom 26.10.
-- Tagesrätsel auf „Spiele“ erscheint beim ersten Start erst nach dem nächsten Neuzeichnen; seit dem Monatswechsel macht das den Test „(c) Kein Tagesrätsel auf Heute“ unzuverlässig. Vorschlag in `bill/rueckmeldung/2026-11-02-faltung.md`, noch kein Auftrag.
+- **Prüferkette rot seit 08.11., auf jedem Branch:** `werkzeug/heute-neu.test.mjs` und `werkzeug/roman-spiele.test.mjs` warten beim Start fest auf `tage-2026-10`; die App räumt den Oktober seit dem 08.11. ab (`bereichVorbei`: mehr als 7 Tage nach Monatsende) und holt ihn nicht mehr. Vier Tests im Schritt „Lumi im MVP … (Nr. 28)“ laufen in die Zeitüberschreitung (Lauf 42544931150). Solange das so ist, kann kein Branch zusammengeführt werden. Dazu die Lücke aus `bill/rueckmeldung/2026-11-02-faltung.md`: Tagesrätsel auf „Spiele“ erst nach dem nächsten Neuzeichnen. Vorschlag in `bill/rueckmeldung/2026-11-09-faltung.md`, noch kein Auftrag.
 - Nr. 48 „Blau für aktiv/gewählt, Rot nur für Warnung und Alarm“ (Mik 20.10.): Branch `nr-48-blau` mit Referenzbildern (Lauf 39410511283), nicht zusammengeführt; geht nicht mehr per fast-forward, vor dem Zusammenführen auf den Hauptbranch setzen und neu prüfen.
 - Abnahme durch Bill für Nr. 26 und Nr. 38 bis 47 ist im Repo nicht vermerkt.
 - Große Downloads: Fortschritt und Abbruch nur je 64-MB-Teil.
@@ -46,4 +46,4 @@ Wörter der Startlektüre (README, dieser Stand, Lehren; Grenze 2.500), eine Zei
 - 12.10.2026 · vorher 1.904 · nachher 1.824 (Nachtlauf; README unverändert, Stand gestrafft)
 - 26.10.2026 · vorher 2.459 · nachher 2.251 (Nachtlauf; README unverändert, Stand mit Nr. 38–48 neu, Lehren aus den Ideenbuch-Einträgen ergänzt)
 - 02.11.2026 · vorher 2.253 · nachher 2.274 (Nachtlauf; README unverändert, seit 26.10. nichts Neues; Stand gestrafft, Nr. 48 ohne fast-forward vermerkt, Vorrat neu gemessen)
-- 09.11.2026 · vorher 2.303 · nachher 2.321 (Nachtlauf; README unverändert, seit 02.11. nichts Neues; Stand gestrafft, Vorrat neu gemessen, Lehren um den Tagesrätsel-Befund ergänzt)
+- 09.11.2026 · vorher 2.303 · nachher 2.321 (Nachtlauf; README unverändert, seit 02.11. nichts Neues; Stand gestrafft, Vorrat neu gemessen, Lehren um den Tagesrätsel-Befund ergänzt; Faltung nicht zusammengeführt, weil die Prüferkette rot ist)
