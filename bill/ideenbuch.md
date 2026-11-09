@@ -35,6 +35,11 @@ Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Bl
 
 ## Einträge
 
+### 2026-11-09 · Faltung · Start der Browser-Tests wartet auf einen Monat, den die App schon abgeräumt hat
+- Idee: `werkzeug/heute-neu.test.mjs` und `werkzeug/roman-spiele.test.mjs` warten beim Start fest auf `offline:paket:tage-2026-10`
+- Kill-Kriterium: Die Tests werden rot, ohne dass sich an der App etwas geändert hat
+- Ausgang: eingetreten ab 08.11.: `bereichVorbei` in `web/tag.js` räumt einen Monat mehr als 7 Tage nach seinem Ende ab, die Vorratskammer holt den Oktober nicht mehr. Auf dem Faltungs-Branch (nur Dateien in `bill/`) liefen vier Tests im Schritt „Lumi im MVP nur als Vorschau (Nr. 27) …“ in die Zeitüberschreitung (Lauf 42544931150): (a) Offline, (b) Leiste, (c) Tagesrätsel, Nachbesserung „gestern online“. Die Faltung wurde nicht zusammengeführt. Offen, kein Auftrag
+
 ### 2026-11-02 · Faltung · Tagesrätsel auf „Spiele“ erscheint erst nach dem nächsten Neuzeichnen
 - Idee: Die Vorratskammer (`vorratAuffuellen` in `web/app.js`) holt beim ersten Start die Tagespakete und zeichnet danach nur neu, wenn „Heute“ offen ist; der Browser-Test zu Nr. 29 wartet beim Start auf `tage-2026-10`
 - Kill-Kriterium: Die Tests werden rot, ohne dass sich an der App etwas geändert hat
