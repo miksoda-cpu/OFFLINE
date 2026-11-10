@@ -130,28 +130,56 @@ jobs:
           releaseName: ${{ startsWith(github.ref, 'refs/tags/v') && format('OFFLINE {0}', github.ref_name) || '' }}
           releaseDraft: true
           prerelease: true
-      - name: "macOS: Sidecar und Bundle ad-hoc signieren, prüfen, DMG bauen"
+      - name: "macOS: Sidecar und Bundle signieren (Developer ID + Notarisierung, sonst ad-hoc), prüfen, DMG bauen"
         if: runner.os == 'macOS'
         run: |
           set -euo pipefail
           app=$(find app/src-tauri/target -type d -path "*/release/bundle/macos/*.app" | head -1)
           [ -n "$app" ] || { echo ".app nicht gefunden"; exit 1; }
           echo "Bundle: $app"
-          # 1) mitgelieferte Programme und Hauptprogramm einzeln ad-hoc signieren (zuerst kiwix-serve)
-          for b in "$app/Contents/MacOS/"*; do
-            echo "signiere $b"; codesign --force --timestamp=none -s - "$b"
-          done
+          mkdir -p dist
+          name="OFFLINE-$(echo '${{ matrix.name }}' | tr ' ' '-')"
+          # Developer ID (Apple-Konto digitalworld Academy OG, Team 6JJ785S87M; Mik 10.11.2026): nur mit allen fünf Secrets und nicht
+          # beim Store-Build (der braucht später eine eigene Signatur für den App Store). Sonst wie bisher ad-hoc.
+          if [ "${{ inputs.store }}" != "true" ] && [ -n "$APPLE_CERTIFICATE" ] && [ -n "$APPLE_CERTIFICATE_PASSWORD" ] && [ -n "$APPLE_API_PRIVATE_KEY" ] && [ -n "$APPLE_API_KEY" ] && [ -n "$APPLE_API_ISSUER" ]; then
+            entwickler=ja
+            kc="$RUNNER_TEMP/offline-signatur.keychain-db"; kcpw="$(uuidgen)"
+            security create-keychain -p "$kcpw" "$kc"; security set-keychain-settings -lut 21600 "$kc"; security unlock-keychain -p "$kcpw" "$kc"
+            printf '%s' "$APPLE_CERTIFICATE" | base64 --decode > "$RUNNER_TEMP/zert.p12"
+            security import "$RUNNER_TEMP/zert.p12" -k "$kc" -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign >/dev/null
+            rm -f "$RUNNER_TEMP/zert.p12"
+            security set-key-partition-list -S apple-tool:,apple: -s -k "$kcpw" "$kc" >/dev/null
+            security list-keychains -d user -s "$kc" $(security list-keychains -d user | tr -d '"')
+            id=$(security find-identity -v -p codesigning "$kc" | sed -n 's/.*"\(Developer ID Application:.*\)"/\1/p' | head -1)
+            [ -n "$id" ] || { echo "Kein Zertifikat „Developer ID Application“ im Secret APPLE_CERTIFICATE"; exit 1; }
+            echo "Signiere mit: $id"
+            signieren() { codesign --force --timestamp --options runtime -s "$id" "$@"; }
+          else
+            entwickler=nein
+            echo "::notice::Ohne Apple-Secrets (oder Store-Build): ad-hoc signiert wie bisher, nicht notarisiert"
+            signieren() { codesign --force --timestamp=none -s - "$@"; }
+          fi
+          # 1) mitgelieferte Programme und Hauptprogramm einzeln signieren (zuerst kiwix-serve)
+          for b in "$app/Contents/MacOS/"*; do echo "signiere $b"; signieren "$b"; done
           # 2) dann das Bundle als Ganzes
-          codesign --force --deep --timestamp=none -s - "$app"
+          if [ "$entwickler" = ja ]; then signieren "$app"; else signieren --deep "$app"; fi
           # 3) prüfen – bricht ab, wenn die Signatur nicht zu den Ressourcen passt
           codesign --verify --deep --strict --verbose=2 "$app"
           codesign -dv --verbose=2 "$app" 2>&1 | head -12
           # 4) frisches DMG aus dem signierten Bundle (ein DMG bewahrt Rechte und Struktur – ein ZIP nicht immer)
-          mkdir -p dist
-          name="OFFLINE-$(echo '${{ matrix.name }}' | tr ' ' '-')"
           # DMG mit dem Bundle und einem Verweis auf „Programme“, damit man die App hineinzieht statt sie vom Abbild zu starten
           rm -rf dmg-inhalt && mkdir dmg-inhalt && cp -R "$app" dmg-inhalt/ && ln -s /Applications "dmg-inhalt/Programme"
           hdiutil create -volname OFFLINE -srcfolder dmg-inhalt -ov -format UDZO "dist/$name.dmg"
+          # 4b) Developer ID: DMG signieren, bei Apple notarisieren (prüft auch die App darin), Ergebnis an DMG und App heften
+          if [ "$entwickler" = ja ]; then
+            codesign --force --timestamp -s "$id" "dist/$name.dmg"
+            schluessel="$RUNNER_TEMP/AuthKey.p8"; printf '%s\n' "$APPLE_API_PRIVATE_KEY" > "$schluessel"
+            xcrun notarytool submit "dist/$name.dmg" --key "$schluessel" --key-id "$APPLE_API_KEY" --issuer "$APPLE_API_ISSUER" --wait --timeout 30m --output-format json | tee notar.json
+            rm -f "$schluessel"
+            grep -q '"status" *: *"Accepted"' notar.json || { echo "Notarisierung nicht angenommen"; exit 1; }
+            xcrun stapler staple "dist/$name.dmg"; xcrun stapler staple "$app"
+            xcrun stapler validate "$app"; spctl -a -vv --type execute "$app"
+          fi
           # 5) Updater-Datei aus dem *signierten* Bundle (die von Tauri erzeugte enthält das unsignierte) und mit dem Updater-Schlüssel signieren
           if [ "${{ steps.updater.outputs.aktiv }}" = "ja" ]; then
             tgz="dist/OFFLINE-${{ matrix.plattform }}.app.tar.gz"
@@ -162,6 +190,14 @@ jobs:
           ls -la dist
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_API_PRIVATE_KEY: ${{ secrets.APPLE_API_PRIVATE_KEY }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+      - name: "macOS: Signatur-Schlüsselbund entfernen"
+        if: always() && runner.os == 'macOS'
+        run: security delete-keychain "$RUNNER_TEMP/offline-signatur.keychain-db" 2>/dev/null || true
       - name: Installer als Artefakt (macOS)
         if: runner.os == 'macOS'
         uses: actions/upload-artifact@v5
