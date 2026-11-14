@@ -11,7 +11,8 @@ async function sitzung(fn) {
     await t.s("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
     await t.s("Page.addScriptToEvaluateOnNewDocument", { source: `try { if (localStorage.getItem("offline:land") === null) localStorage.setItem("offline:land", JSON.stringify("at")); } catch {}` });
     await t.laden(`${server.url}/app.html#start`);
-    await warteBis(t, `localStorage.getItem("offline:paket:at-basis") && localStorage.getItem("offline:paket:tage-2026-10") && document.querySelector("#main h1")`, 60_000);
+    // Tagespaket des laufenden Monats (der Test läuft mit dem echten Datum; fest „tage-2026-10“ lief seit November in die Zeitüberschreitung)
+    await warteBis(t, `(() => { const d = new Date(), m = \`tage-\${d.getFullYear()}-\${String(d.getMonth() + 1).padStart(2, "0")}\`; return localStorage.getItem("offline:paket:at-basis") && localStorage.getItem("offline:paket:" + m) && document.querySelector("#main h1"); })()`, 60_000);
     return await fn(t, server.url);
   } finally { await t.schliessen(); await chrome.beenden(); server.schliessen(); }
 }
