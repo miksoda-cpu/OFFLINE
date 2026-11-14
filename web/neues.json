@@ -2,6 +2,16 @@
   "hinweis": "Was ist neu – für Nutzerinnen und Nutzer, neueste Version oben. Jede Version bekommt ihren Eintrag, bevor der Tag gesetzt wird (bill/README.md). Die technische Fassung steht in docs/CHANGELOG.md.",
   "versionen": [
     {
+      "version": "0.9.6",
+      "datum": "2026-11-14",
+      "punkte": [
+        "Eingekochtes und Marmelade: Bei den Vorräten gibt es die Einheit „Gläser“ und zwei Vorlagen. Bei Gläsern steht ein kurzer Hinweis, wie lange Eingekochtes hält.",
+        "In der Grundvorsorge hat jeder Punkt zwei Knöpfe: „Hab ich“ und „Brauch ich“. „Brauch ich“ setzt den Punkt auf die Einkaufsliste.",
+        "Deine bisherigen Häkchen und Sterne sind übernommen.",
+        "Rot steht nur noch für Warnungen. Was du gewählt oder angetippt hast, ist jetzt blau."
+      ]
+    },
+    {
       "version": "0.9.5",
       "datum": "2026-10-19",
       "punkte": [

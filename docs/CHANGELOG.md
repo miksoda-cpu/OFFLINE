@@ -1,5 +1,12 @@
 # Änderungen
 
+## 0.9.6 · 14.11.2026 · Eingekochtes, „Hab ich“ / „Brauch ich“, Blau statt Rot
+
+- **Eingekochtes** (Auftrag Nr. 45): Einheit „Gläser“ (1 Mahlzeit je Glas), Vorlagen „Eingekochtes (Gläser)“ und „Marmelade (Gläser)“ (0 Mahlzeiten), beide mit Ablauf in 12 Monaten; Hinweis zur Haltbarkeit nur bei Gläsern; die Suche findet die Vorräte unter Einkochen, Eingekochtes, Einmachgläser, Marmelade.
+- **„Hab ich“ / „Brauch ich“** (Nr. 47, vorher Stern bzw. „+ Liste“, Nr. 45 Nachtrag): zwei Knöpfe je Grundvorsorge-Punkt, schließen sich aus; „Hab ich“ ist das bisherige Häkchen (Bereit-Rechnung unverändert), „Brauch ich“ die Einkaufsliste. Alte Häkchen und Sterne bleiben, beides zugleich wird „Hab ich“.
+- **Rot nur für Warnung** (Nr. 48): aktiv/gewählt/Fokus blau (`--aktiv`), Rot (`--accent`) nur noch bei Notruf, Sirenen, Fehlern, Warnungen; Logo unverändert.
+- **Mac-App**: Der Release-Ablauf signiert mit Developer ID und notarisiert, sobald die Apple-Secrets eingetragen sind; bis dahin ad-hoc wie bisher. Windows-Probe: 0.8.0 bekommt at-basis 2026.10.16 eingefroren. Service Worker `offline-v60`.
+
 ## 0.9.5 · 19.10.2026 · Die App sagt „du“, Vorsorge für Haustiere
 
 - **Die App sagt „du“** (Auftrag Nr. 43, Miks Regel 18.10.): „Eure Vorräte reichen …“ und „Tragt eure Vorräte ein …“ nur ab 2 Personen im Haushalt (`anrede(personen)` in `web/polster.js`), sonst überall „du“; die Sätze darunter neutral („die Vorräte“). 13 Sätze in at-basis auf „du“ (Freigabe Bill 19.10.).
