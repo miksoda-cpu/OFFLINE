@@ -6,7 +6,7 @@ Nur Ansätze, keine unveröffentlichten Inhalte (Regel Nr. 13, `docs/INTERN.md`)
 
 ## Lehren
 
-Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Block gehört zur Startlektüre; die Einträge darunter werden gezielt aufgeschlagen, wenn ein Ansatz wiederkommt. Stand: Faltung 16.11.2026.
+Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Block gehört zur Startlektüre; die Einträge darunter werden gezielt aufgeschlagen, wenn ein Ansatz wiederkommt. Stand: Faltung 23.11.2026.
 
 - Jede Arbeit auf eigenem Branch, zusammenführen erst nach grüner Prüferkette (0.2.1, Festlegung 30.09.).
 - Klartext: neue Klartext-Pfade auch in `.git/info/exclude`; vor jedem Commit `git status` lesen statt `git add -A` (Nr. 37, Vorfall 0759dc6).
@@ -17,8 +17,8 @@ Wird bei jeder Faltung neu geschrieben, höchstens zwanzig Zeilen. Nur dieser Bl
 - Code baute nur, was im Auftragsordner oder im Postfach stand (Nr. 29).
 - Ankündigungen leben in der App (`web/bald.js`), nicht im Katalog (Nr. 24).
 - Fremde Programmteile gehören in die App, nicht ins Netz; Verbindungen vor dem Store-Build gegen die Datenschutz-Angaben geprüft (0.7.2).
-- Ein Auftrags-Branch, der lange liegt, verliert den fast-forward, sobald der Hauptbranch weiterläuft (Nr. 48, erst am 14.11. neu aufgesetzt und zusammengeführt).
-- Ein Browser-Test mit fest eingetragenem Monat (`tage-2026-10`) war ab 08.11. auf jedem Branch rot; grün mit dem Paket des laufenden Monats bzw. fester Uhr (Fix 14.11.).
+- Ein Auftrags-Branch, der lange liegt, verlor den fast-forward, sobald der Hauptbranch weiterlief (Nr. 48, am 14.11. neu aufgesetzt).
+- Ein Browser-Test mit fest eingetragenem Monat (`tage-2026-10`) war ab 08.11. auf jedem Branch rot; grün mit dem Monat des laufenden Tages bzw. fester Uhr (Fix 14.11.).
 - Offen: Tagesrätsel auf „Spiele“ erst nach Neuzeichnen (02.11.); Fortschritt großer Downloads nur je 64-MB-Teil (Nr. 19); Parkmodus im Postfach weckt nicht verlässlich (19.10.).
 
 ## Vorlage
